@@ -28,39 +28,57 @@ package org.hisp.dhis.fileresource;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.hash.HashCode;
+import com.google.common.io.ByteSource;
+import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.HibernateConfigurationProvider;
+import org.jclouds.ContextBuilder;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.domain.Credentials;
+import org.jclouds.domain.Location;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
- * TODO Merge with BaseJCloudsFileResourceContentStore ?
  * @author Halvdan Hoem Grelland
  */
 public class DefaultFileResourceContentStore
-    extends BaseJCloudsFileResourceContentStore
+    implements FileResourceContentStore
 {
     private static final Log log = LogFactory.getLog( DefaultFileResourceContentStore.class );
 
+    private BlobStore blobStore;
+    private BlobStoreContext blobStoreContext;
+    private String container;
+
     // -------------------------------------------------------------------------
-    // Provider constants
+    // Providers
     // -------------------------------------------------------------------------
 
     private static final String JCLOUDS_PROVIDER_KEY_FILESYSTEM = "filesystem";
     private static final String JCLOUDS_PROVIDER_KEY_AWS_S3 = "aws-s3";
+    private static final String JCLOUDS_PROVIDER_KEY_TRANSIENT = "transient";
 
-    private static final List<String> AVAILABLE_PROVIDERS = new ArrayList<String>() {{
-        addAll( Arrays.asList( JCLOUDS_PROVIDER_KEY_FILESYSTEM, JCLOUDS_PROVIDER_KEY_AWS_S3 ) );
+    private static final List<String> SUPPORTED_PROVIDERS = new ArrayList<String>() {{
+        addAll( Arrays.asList(
+            JCLOUDS_PROVIDER_KEY_FILESYSTEM,
+            JCLOUDS_PROVIDER_KEY_AWS_S3
+        ) );
     }};
 
     // -------------------------------------------------------------------------
@@ -79,20 +97,7 @@ public class DefaultFileResourceContentStore
     // Defaults
     // -------------------------------------------------------------------------
 
-    private static final String DEFAULT_PROVIDER = "filesystem";
     private static final String DEFAULT_CONTAINER = "dhis2_filestore";
-
-    // -------------------------------------------------------------------------
-    // Configuration
-    // -------------------------------------------------------------------------
-
-    private Map<String, String> filestoreConfiguration;
-
-    private String provider;
-    private String container;
-    private Credentials credentials;
-    private String location;
-    private Properties overrides = new Properties();
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -113,115 +118,163 @@ public class DefaultFileResourceContentStore
     }
 
     // -------------------------------------------------------------------------
-    // Lifecycle
+    // Life cycle management
     // -------------------------------------------------------------------------
 
+    // TODO Untangle and split up
     public void init()
     {
+        // -------------------------------------------------------------------------
+        // Parse properties
+        // -------------------------------------------------------------------------
+
         Properties properties = configurationProvider.getConfiguration().getProperties();
-        
-        filestoreConfiguration = properties
-            .entrySet().stream().filter(
-                p -> ( (String) p.getKey() ).startsWith( FILESTORE_CONFIG_NAMESPACE ) )
+
+        Map<String, String> filestoreConfiguration = properties
+            .entrySet().stream().filter( p -> ((String) p.getKey()).startsWith( FILESTORE_CONFIG_NAMESPACE ) )
             .collect( Collectors.toMap(
                 p -> StringUtils.strip( (String) p.getKey() ),
                 p -> StringUtils.strip( (String) p.getValue() )
             ) );
 
-        provider = filestoreConfiguration.getOrDefault( KEY_FILESTORE_PROVIDER, DEFAULT_PROVIDER );
+        String provider = filestoreConfiguration.getOrDefault( KEY_FILESTORE_PROVIDER, JCLOUDS_PROVIDER_KEY_FILESYSTEM );
 
-        if ( !AVAILABLE_PROVIDERS.contains( provider ) )
+        if ( !SUPPORTED_PROVIDERS.contains( provider ) )
         {
-            log.info( "Ignored unsupported file store provider '" + provider + "', falling back to file system." );
-            provider = DEFAULT_PROVIDER;
+            log.warn( "Ignored unsupported file store provider '" + provider + "', falling back to file system." );
+            provider = JCLOUDS_PROVIDER_KEY_FILESYSTEM;
+        }
+
+        if ( provider.equals( JCLOUDS_PROVIDER_KEY_FILESYSTEM ) && !locationManager.externalDirectorySet() )
+        {
+            log.warn( "File system store provider configured but external directory is not set. Falling back to transient file store." );
+            provider = JCLOUDS_PROVIDER_KEY_TRANSIENT;
         }
 
         container = filestoreConfiguration.getOrDefault( KEY_FILESTORE_CONTAINER, DEFAULT_CONTAINER );
 
-        location = filestoreConfiguration.getOrDefault( KEY_FILESTORE_LOCATION, null );
+        String location = filestoreConfiguration.getOrDefault( KEY_FILESTORE_LOCATION, null );
+        Properties overrides = new Properties();
+        Credentials credentials = new Credentials( "Unused", "Unused" );
 
-        switch ( provider )
+        // -------------------------------------------------------------------------
+        // Provider specific configuration
+        // -------------------------------------------------------------------------
+
+        if ( provider.equals( JCLOUDS_PROVIDER_KEY_FILESYSTEM ) && locationManager.externalDirectorySet() )
         {
-            case JCLOUDS_PROVIDER_KEY_FILESYSTEM:
-                configureFilesystemProvider();
-                break;
-            case JCLOUDS_PROVIDER_KEY_AWS_S3:
-                configureAWSS3Provider();
-                break;
-            default:
-                throw new IllegalArgumentException( "The filestore provider " + provider + " is not supported." );
+            overrides.setProperty( FilesystemConstants.PROPERTY_BASEDIR, locationManager.getExternalDirectoryPath() );
+
+            log.info( "File system store provider configured" );
+        }
+        else if ( provider.equals( JCLOUDS_PROVIDER_KEY_AWS_S3 ) )
+        {
+            credentials = new Credentials( filestoreConfiguration.getOrDefault(
+                KEY_FILESTORE_IDENTITY, "" ), filestoreConfiguration.getOrDefault( KEY_FILESTORE_SECRET, "" ) );
+
+            log.info( "AWS S3 filestore provider configured." );
+
+            if ( credentials.identity.isEmpty() || credentials.credential.isEmpty() )
+            {
+                log.info( "AWS S3 store configured with empty credentials, authentication not possible" );
+            }
         }
 
-        super.init();
+        // -------------------------------------------------------------------------
+        // Set up BlobStore
+        // -------------------------------------------------------------------------
+
+        blobStoreContext = ContextBuilder.newBuilder( provider )
+            .credentials( credentials.identity, credentials.credential )
+            .overrides( overrides ).build( BlobStoreContext.class );
+
+        blobStore = blobStoreContext.getBlobStore();
+
+        Optional<? extends Location> configuredLocation = blobStore.listAssignableLocations()
+            .stream().filter( l -> l.getId().equals( location ) ).findFirst();
+
+        blobStore.createContainerInLocation( configuredLocation.isPresent() ? configuredLocation.get() : null, container );
     }
 
     public void cleanUp()
     {
-        super.cleanUp();
+        blobStoreContext.close();
     }
 
     // -------------------------------------------------------------------------
-    // Configuration implementation
+    // FileResourceContentStore implementation
     // -------------------------------------------------------------------------
 
-    @Override
-    protected Properties getOverrides()
+    public ByteSource getFileResourceContent( String key )
     {
-        return overrides;
+        final Blob blob = getBlob( key );
+
+        if ( blob == null )
+        {
+            return null;
+        }
+
+        return new ByteSource()
+        {
+            @Override
+            public InputStream openStream()
+            {
+                try
+                {
+                    return blob.getPayload().openStream();
+                }
+                catch ( IOException e )
+                {
+                    return new NullInputStream( 0 );
+                }
+            }
+        };
     }
 
-    @Override
-    protected Credentials getCredentials()
+    public String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 )
     {
-        return credentials;
+        Blob blob = createBlob( key, content, size, contentMd5 );
+
+        if ( blob == null )
+        {
+            return null;
+        }
+
+        putBlob( blob );
+
+        return key;
     }
 
-    @Override
-    protected String getContainer()
+    public void deleteFileResourceContent( String key )
     {
-        return container;
-    }
-
-    @Override
-    protected String getLocation()
-    {
-        return location;
-    }
-
-    @Override
-    protected String getJCloudsProviderKey()
-    {
-        return provider;
+        deleteBlob( key );
     }
 
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void configureFilesystemProvider()
+    private Blob getBlob( String key )
     {
-        if ( locationManager.externalDirectorySet() )
-        {
-            overrides.setProperty( FilesystemConstants.PROPERTY_BASEDIR, locationManager.getExternalDirectoryPath() );
-            credentials = super.getCredentials();
-            
-            log.info( "File system store provider configured" );
-        }
-        else
-        {
-            log.warn( "File system store could not be configured, external directory not set" );
-        }
+        return blobStore.getBlob( container, key );
     }
 
-    private void configureAWSS3Provider()
+    private void deleteBlob( String key )
     {
-        credentials = new Credentials( filestoreConfiguration.getOrDefault(
-            KEY_FILESTORE_IDENTITY, "" ), filestoreConfiguration.getOrDefault( KEY_FILESTORE_SECRET, "" ) );
-        log.info( "AWS S3 filestore provider configured." );
+        blobStore.removeBlob( container, key );
+    }
 
-        if ( credentials.identity.isEmpty() || credentials.credential.isEmpty() )
-        {
-            log.info( "AWS S3 store configured with empty credentials, authentication not possible" );
-        }
+    private String putBlob( Blob blob )
+    {
+        return blobStore.putBlob( container, blob );
+    }
+
+    private Blob createBlob( String key, ByteSource content, long size, String contentMd5 )
+    {
+        return blobStore.blobBuilder( key )
+            .payload( content )
+            .contentLength( size )
+            .contentMD5( HashCode.fromString( contentMd5 ) )
+            .build();
     }
 }
