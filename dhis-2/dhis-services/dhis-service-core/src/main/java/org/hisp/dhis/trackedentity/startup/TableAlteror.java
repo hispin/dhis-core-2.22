@@ -305,6 +305,7 @@ public class TableAlteror
         executeSql( "ALTER TABLE programindicator ALTER expression TYPE text" );
         executeSql( "alter table programindicator drop column valuetype" );
         executeSql( "alter table programindicator drop column rootdate" );
+        executeSql( "alter table programindicator drop column eventoutputtype" );
         
         executeSql( "ALTER TABLE programstage ALTER description TYPE text" );
         

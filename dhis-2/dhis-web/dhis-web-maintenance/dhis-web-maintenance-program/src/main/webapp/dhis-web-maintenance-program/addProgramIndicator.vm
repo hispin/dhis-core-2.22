@@ -67,16 +67,6 @@ jQuery( document ).ready( function()
 	            </select>
 	        </td>
 	    </tr>
-	    <tr>
-	    	<td><label for="eventOutputType">$i18n.getString( "event_output_type" )</label></td>
-	    	<td>
-	    		<select id="eventOutputType" name="eventOutputType">
-	    			<option value="EVENT">$i18n.getString( "event" )</option>
-	    			<option value="ENROLLMENT">$i18n.getString( "enrollment" )</option>
-	    			<option value="TRACKED_ENTITY_INSTANCE">$i18n.getString( "tracked_entity_instance" )</option>
-	    		</select>
-	    	</td>
-	    </tr>
 		<tr>
 			<td><label for="decimals">$i18n.getString( "decimals_in_data_output" )</label></td>
 			<td>
