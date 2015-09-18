@@ -12,6 +12,9 @@ Ext.onReady( function() {
 		extendCore,
 		createViewport,
 		dimConf,
+        styleConf,
+        finalsStyleConf,
+        finalsDataTypeConf,
 
 		ns = {
 			core: {},
@@ -1198,12 +1201,12 @@ Ext.onReady( function() {
 
                 this.reset(layout.dataType);
 
-                if (layout.dataType === 'aggregated_values') {
+                if (layout.dataType === finalsDataTypeConf.aggregated_values) {
                     this.statusCmp.setText(response.rows.length + ' values');
                     return;
                 }
 
-                if (layout.dataType === 'individual_cases') {
+                if (layout.dataType === finalsDataTypeConf.individual_cases) {
                     var maxVal = this.pager.page * this.pager.pageSize,
 						from = maxVal - this.pager.pageSize + 1,
 						to = Ext.Array.min([maxVal, this.pager.total]);
@@ -1216,7 +1219,7 @@ Ext.onReady( function() {
                 }
             },
             reset: function(dataType) {
-                if (!dataType || dataType === 'aggregated_values') {
+                if (!dataType || dataType === finalsDataTypeConf.aggregated_values) {
 					this.showHideQueryCmps('hide');
                     this.pageCmp.setValue(1);
                     this.totalPageCmp.setText('');
@@ -1224,7 +1227,7 @@ Ext.onReady( function() {
                     return;
                 }
 
-                if (dataType === 'individual_cases') {
+                if (dataType === finalsDataTypeConf.individual_cases) {
 					this.showHideQueryCmps('show');
                     this.pageCmp.setValue(1);
                     this.totalPageCmp.setText(' of 1');
@@ -1475,7 +1478,7 @@ Ext.onReady( function() {
 			defaultHeight = 220,
 			maxHeight = (ns.app.viewport.getHeight() - 100) / 2,
 
-			dataType = 'aggregated_values',
+			dataType = finalsDataTypeConf.aggregated_values,
             defaultValueId = 'default';
 
 		getStore = function(applyConfig) {
@@ -2096,7 +2099,7 @@ Ext.onReady( function() {
 			defaultHeight = 158,
 			maxHeight = (ns.app.viewport.getHeight() - 100) / 2,
 
-			dataType = 'individual_cases';
+			dataType = finalsDataTypeConf.individual_cases;
 
 		getStore = function(data) {
 			var config = {};
@@ -2505,13 +2508,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'normal',
+            value: finalsStyleConf.normal,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'comfortable', text: NS.i18n.comfortable},
-					{id: 'normal', text: NS.i18n.normal},
-					{id: 'compact', text: NS.i18n.compact}
+					{id: finalsStyleConf.compact, text: NS.i18n.compact},
+					{id: finalsStyleConf.normal, text: NS.i18n.normal},
+					{id: finalsStyleConf.comfortable, text: NS.i18n.comfortable}
 				]
 			})
 		});
@@ -2526,13 +2529,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'normal',
+			value: finalsStyleConf.normal,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'large', text: NS.i18n.large},
-					{id: 'normal', text: NS.i18n.normal},
-					{id: 'small', text: NS.i18n.small_}
+					{id: finalsStyleConf.large, text: NS.i18n.large},
+					{id: finalsStyleConf.normal, text: NS.i18n.normal},
+					{id: finalsStyleConf.small, text: NS.i18n.small_}
 				]
 			})
 		});
@@ -2547,12 +2550,12 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'space',
+			value: finalsStyleConf.space,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'comma', text: 'Comma'},
-					{id: 'space', text: 'Space'},
+					{id: finalsStyleConf.comma, text: NS.i18n.comma},
+					{id: finalsStyleConf.space, text: NS.i18n.space},
 					{id: 'none', text: 'None'}
 				]
 			})
@@ -2637,9 +2640,9 @@ Ext.onReady( function() {
 				limit.setValues(layout.sortOrder, layout.topLimit);
                 //aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : 'default');
 				showHierarchy.setValue(Ext.isBoolean(layout.showHierarchy) ? layout.showHierarchy : false);
-				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : 'normal');
-				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : 'normal');
-				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : 'space');
+				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : finalsStyleConf.normal);
+				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : finalsStyleConf.normal);
+				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : finalsStyleConf.space);
 				//legendSet.setValue(Ext.isObject(layout.legendSet) && Ext.isString(layout.legendSet.id) ? layout.legendSet.id : 0);
 				//reportingPeriod.setValue(Ext.isBoolean(layout.reportingPeriod) ? layout.reportingPeriod : false);
 				//organisationUnit.setValue(Ext.isBoolean(layout.organisationUnit) ? layout.organisationUnit : false);
@@ -2765,13 +2768,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'normal',
+            value: finalsStyleConf.normal,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'comfortable', text: NS.i18n.comfortable},
-					{id: 'normal', text: NS.i18n.normal},
-					{id: 'compact', text: NS.i18n.compact}
+					{id: finalsStyleConf.compact, text: NS.i18n.compact},
+					{id: finalsStyleConf.normal, text: NS.i18n.normal},
+					{id: finalsStyleConf.comfortable, text: NS.i18n.comfortable}
 				]
 			})
 		});
@@ -2786,13 +2789,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'normal',
+			value: finalsStyleConf.normal,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'large', text: NS.i18n.large},
-					{id: 'normal', text: NS.i18n.normal},
-					{id: 'small', text: NS.i18n.small_}
+					{id: finalsStyleConf.large, text: NS.i18n.large},
+					{id: finalsStyleConf.normal, text: NS.i18n.normal},
+					{id: finalsStyleConf.small, text: NS.i18n.small_}
 				]
 			})
 		});
@@ -2807,13 +2810,13 @@ Ext.onReady( function() {
 			queryMode: 'local',
 			valueField: 'id',
 			editable: false,
-			value: 'space',
+			value: finalsStyleConf.space,
 			store: Ext.create('Ext.data.Store', {
 				fields: ['id', 'text'],
 				data: [
-					{id: 'comma', text: 'Comma'},
-					{id: 'space', text: 'Space'},
-					{id: 'none', text: 'None'}
+					{id: finalsStyleConf.none, text: NS.i18n.none},
+					{id: finalsStyleConf.space, text: NS.i18n.space},
+					{id: finalsStyleConf.comma, text: NS.i18n.comma}
 				]
 			})
 		});
@@ -2846,15 +2849,17 @@ Ext.onReady( function() {
 			hideOnBlur: true,
 			getOptions: function() {
 				return {
-					showColTotals: false,
-					showRowTotals: false,
-					showSubTotals: false,
+                    showColTotals: true,
+                    showColSubTotals: true,
+                    showRowTotals: false,
+                    showRowSubTotals: false,
+                    showDimensionLabels: true,
+                    showHierarchy: false,
 					hideEmptyRows: false,
                     hideNaData: false,
 					completedOnly: completedOnly.getValue(),
                     sortOrder: 0,
                     topLimit: 0,
-					showHierarchy: false,
 					displayDensity: displayDensity.getValue(),
 					fontSize: fontSize.getValue(),
 					digitGroupSeparator: digitGroupSeparator.getValue()
@@ -2863,9 +2868,9 @@ Ext.onReady( function() {
 			},
 			setOptions: function(layout) {
                 completedOnly.setValue(Ext.isBoolean(layout.completedOnly) ? layout.completedOnly : false);
-				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : 'normal');
-				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : 'normal');
-				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : 'space');
+				displayDensity.setValue(Ext.isString(layout.displayDensity) ? layout.displayDensity : finalsStyleConf.normal);
+				fontSize.setValue(Ext.isString(layout.fontSize) ? layout.fontSize : finalsStyleConf.normal);
+				digitGroupSeparator.setValue(Ext.isString(layout.digitGroupSeparator) ? layout.digitGroupSeparator : finalsStyleConf.space);
 			},
 			items: [
 				{
@@ -4171,12 +4176,15 @@ Ext.onReady( function() {
 				isOugc = false,
 				levels = [],
 				groups = [],
+				winMap = {},
+				optionsWindow;
 
-				winMap = {
-					'aggregated_values': ns.app.aggregateOptionsWindow,
-					'individual_cases': ns.app.queryOptionsWindow
-				},
-				optionsWindow = winMap[layout.dataType];
+            winMap[finalsDataTypeConf.aggregated_values] = ns.app.aggregateOptionsWindow;
+            winMap[finalsDataTypeConf.individual_cases] = ns.app.queryOptionsWindow;
+
+            optionsWindow = winMap[layout.dataType];
+
+            // set layout
 
             reset();
 
@@ -4817,7 +4825,7 @@ Ext.onReady( function() {
 			}
 
             // favorite
-			if (layout && layout.dataType === 'aggregated_values') {
+			if (layout && layout.dataType === finalsDataTypeConf.aggregated_values) {
 
                 aggWindow.reset(true, true);
 
@@ -7095,10 +7103,10 @@ Ext.onReady( function() {
 					};
 				}
 
-                if (layout.dataType === 'aggregated_values') {
+                if (layout.dataType === finalsDataTypeConf.aggregated_values) {
                     web.report.createReport(layout, response);
                 }
-                else if (layout.dataType === 'individual_cases') {
+                else if (layout.dataType === finalsDataTypeConf.individual_cases) {
                     web.report.getData(layout);
                 }
 			};
@@ -7121,7 +7129,7 @@ Ext.onReady( function() {
                     return;
                 }
 
-                if (view.dataType === 'aggregated_values') {
+                if (view.dataType === finalsDataTypeConf.aggregated_values) {
                     Ext.applyIf(view, ns.app.aggregateOptionsWindow.getOptions());
                     Ext.applyIf(view, ns.app.aggregateLayoutWindow.getOptions());
 
@@ -7134,7 +7142,7 @@ Ext.onReady( function() {
                     }
                 }
 
-                if (view.dataType === 'individual_cases') {
+                if (view.dataType === finalsDataTypeConf.individual_cases) {
                     Ext.applyIf(view, ns.app.queryOptionsWindow.getOptions());
 
                     view.paging = {
@@ -7303,7 +7311,7 @@ Ext.onReady( function() {
                     }
                 };
 
-				map['aggregated_values'] = function() {
+				map[finalsDataTypeConf.aggregated_values] = function() {
 					var xLayout,
                         xResponse,
 						xColAxis,
@@ -7400,7 +7408,7 @@ Ext.onReady( function() {
                     getXResponse();
 				};
 
-				map['individual_cases'] = function() {
+				map[finalsDataTypeConf.individual_cases] = function() {
 					var xResponse,
                         getReport;
 
@@ -7533,7 +7541,7 @@ Ext.onReady( function() {
 
         aggregateButton = Ext.create('Ext.button.Button', {
             width: 223,
-			param: 'aggregated_values',
+			param: finalsDataTypeConf.aggregated_values,
             text: '<b>Aggregated values</b><br/>Show aggregated event report',
             style: 'margin-right:1px',
             pressed: true,
@@ -7547,7 +7555,7 @@ Ext.onReady( function() {
 
 		caseButton = Ext.create('Ext.button.Button', {
             width: 224,
-			param: 'individual_cases',
+			param: finalsDataTypeConf.individual_cases,
             text: '<b>Events</b><br/>Show individual event overview',
             style: 'margin-right:1px',
 			listeners: {
@@ -8175,11 +8183,11 @@ Ext.onReady( function() {
         getLayoutWindow = function(dataType) {
             dataType = dataType || typeToolbar.getType();
 
-            if (dataType === 'aggregated_values') {
+            if (dataType === finalsDataTypeConf.aggregated_values) {
                 return ns.app.aggregateLayoutWindow;
             }
 
-            if (dataType === 'individual_cases') {
+            if (dataType === finalsDataTypeConf.individual_cases) {
                 return ns.app.queryLayoutWindow;
             }
 
@@ -8189,11 +8197,11 @@ Ext.onReady( function() {
         getOptionsWindow = function(dataType) {
             dataType = dataType || typeToolbar.getType();
 
-            if (dataType === 'aggregated_values') {
+            if (dataType === finalsDataTypeConf.aggregated_values) {
                 return ns.app.aggregateOptionsWindow;
             }
 
-            if (dataType === 'individual_cases') {
+            if (dataType === finalsDataTypeConf.individual_cases) {
                 return ns.app.queryOptionsWindow;
             }
 
@@ -8304,6 +8312,10 @@ Ext.onReady( function() {
 				extendCore(ns.core);
 
 				dimConf = ns.core.conf.finals.dimension;
+                finalsStyleConf = ns.core.conf.finals.style;
+                styleConf = ns.core.conf.style;
+                finalsDataTypeConf = ns.core.conf.finals.dataType;
+                
 				ns.app.viewport = createViewport();
 
                 ns.core.app.getViewportWidth = function() { return ns.app.viewport.getWidth(); };
