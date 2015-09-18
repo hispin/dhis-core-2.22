@@ -2470,11 +2470,14 @@ Ext.onReady( function() {
                 var paramString,
                     dimensions = Ext.Array.clean([].concat(view.columns || [], view.rows || [])),
                     ignoreKeys = ['dy', 'longitude', 'latitude'],
-                    dataTypeMap = {
+                    dataTypeMap = {},
                         'aggregated_values': 'aggregate',
                         'individual_cases': 'query'
                     },
                     nameItemsMap;
+
+                dataTypeMap[conf.finals.dataType.aggregated_values] = 'aggregate';
+                dataTypeMap[conf.finals.dataType.individual_cases] = 'query';
 
                 format = format || 'json';
 
@@ -4099,6 +4102,7 @@ Ext.onReady( function() {
                 config.failure = failure;
 
                 ns.ajax(config, ns);
+                
 			};
 
 			web.report.getData = function(layout, isUpdateGui) {

@@ -115,7 +115,26 @@ Ext.onReady( function() {
 				},
 				root: {
 					id: 'root'
-				}
+				},
+                style: {
+                    'normal': 'NORMAL',
+                    'compact': 'COMPACT',
+                    'xcompact': 'XCOMPACT',
+                    'comfortable': 'COMFORTABLE',
+                    'xcomfortable': 'XCOMFORTABLE',
+                    'small': 'SMALL',
+                    'xsmall': 'XSMALL',
+                    'large': 'LARGE',
+                    'xlarge': 'XLARGE',
+                    'space': 'SPACE',
+                    'comma': 'COMMA',
+                    'none': 'NONE',
+                    'default_': 'DEFAULT'
+                },
+                dataType: {
+                    'aggregated_values': 'AGGREGATED_VALUES',
+                    'individual_cases': 'EVENTS'
+                }
 			};
 
 			dimConf = conf.finals.dimension;
@@ -173,6 +192,14 @@ Ext.onReady( function() {
                     'LAST_5_YEARS'
                 ]
 			};
+
+            conf.valueType = {
+            	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+            	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
+            	dateTypes: ['DATE','DATETIME'],
+            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            };
 
                 // aggregation type
             conf.aggregationType = {
@@ -237,23 +264,34 @@ Ext.onReady( function() {
 				multiselect_fill_reportingrates: 315
 			};
 
-            // report
-			conf.report = {
-				digitGroupSeparator: {
-					'comma': ',',
-					'space': '&nbsp;'
-				},
-				displayDensity: {
-					'compact': '3px',
-					'normal': '5px',
-					'comfortable': '10px',
-				},
-				fontSize: {
-					'small': '10px',
-					'normal': '11px',
-					'large': '13px'
-				}
-			};
+			conf.style = {
+				displayDensity: {},
+				fontSize: {},
+				digitGroupSeparator: {}
+            };
+
+            (function() {
+                var map = conf.finals.style,
+                    displayDensity = conf.style.displayDensity,
+                    fontSize = conf.style.fontSize,
+                    digitGroupSeparator = conf.style.digitGroupSeparator;
+
+                displayDensity[map.xcompact] = '2px';
+                displayDensity[map.compact] = '4px';
+                displayDensity[map.normal] = '6px';
+                displayDensity[map.comfortable] = '8px';
+                displayDensity[map.xcomfortable] = '10px';
+
+                fontSize[map.xsmall] = '9px';
+                fontSize[map.small] = '10px';
+                fontSize[map.normal] = '11px';
+                fontSize[map.large] = '12px';
+                fontSize[map.xlarge] = '14px';
+
+                digitGroupSeparator[map.space] = '&nbsp;';
+                digitGroupSeparator[map.comma] = ',';
+                digitGroupSeparator[map.none] = '';
+            })();
 
             // url
             conf.url = {
@@ -397,11 +435,11 @@ Ext.onReady( function() {
 
 				// showHierarchy: boolean (false)
 
-				// displayDensity: string ('normal') - 'compact', 'normal', 'comfortable'
+				// displayDensity: string ('NORMAL') - 'COMPACT', 'NORMAL', 'COMFORTABLE'
 
-				// fontSize: string ('normal') - 'small', 'normal', 'large'
+				// fontSize: string ('NORMAL') - 'SMALL', 'NORMAL', 'LARGE'
 
-				// digitGroupSeparator: string ('space') - 'none', 'comma', 'space'
+				// digitGroupSeparator: string ('SPACE') - 'NONE', 'COMMA', 'SPACE'
 
 				// legendSet: object
 
@@ -553,7 +591,7 @@ Ext.onReady( function() {
 					layout.rows = config.rows;
 					layout.filters = config.filters;
 
-                    layout.dataType = Ext.isString(config.dataType) ? config.dataType : 'aggregated_values';
+                    layout.dataType = Ext.isString(config.dataType) ? config.dataType : conf.finals.dataType.aggregated_values;
                     layout.program = config.program;
                     layout.programStage = config.programStage;
 
@@ -578,9 +616,9 @@ Ext.onReady( function() {
                     layout.completedOnly = Ext.isBoolean(config.completedOnly) ? config.completedOnly : false;
 
 					layout.showHierarchy = Ext.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
-					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : 'normal';
-					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : 'normal';
-					layout.digitGroupSeparator = Ext.isString(config.digitGroupSeparator) && !Ext.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : 'space';
+					layout.displayDensity = Ext.isString(config.displayDensity) && !Ext.isEmpty(config.displayDensity) ? config.displayDensity : conf.finals.style.normal;
+					layout.fontSize = Ext.isString(config.fontSize) && !Ext.isEmpty(config.fontSize) ? config.fontSize : conf.finals.style.normal;
+					layout.digitGroupSeparator = Ext.isString(config.digitGroupSeparator) && !Ext.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : conf.finals.style.space;
 					layout.legendSet = Ext.isObject(config.legendSet) && Ext.isString(config.legendSet.id) ? config.legendSet : null;
 
                     // value
@@ -977,13 +1015,13 @@ Ext.onReady( function() {
 			};
 
 			support.prototype.number.prettyPrint = function(number, separator) {
-				separator = separator || 'space';
+				separator = separator || conf.finals.style.space;
 
-				if (separator === 'none') {
+				if (separator === conf.finals.style.none) {
 					return number;
 				}
 
-				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.report.digitGroupSeparator[separator]);
+				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, conf.style.digitGroupSeparator[separator]);
 			};
 
                 // date
@@ -1935,15 +1973,15 @@ Ext.onReady( function() {
 					delete layout.showHierarchy;
 				}
 
-				if (layout.displayDensity === 'normal') {
+				if (layout.displayDensity === conf.finals.style.normal) {
 					delete layout.displayDensity;
 				}
 
-				if (layout.fontSize === 'normal') {
+				if (layout.fontSize === conf.finals.style.normal) {
 					delete layout.fontSize;
 				}
 
-				if (layout.digitGroupSeparator === 'space') {
+				if (layout.digitGroupSeparator === conf.finals.style.space) {
 					delete layout.digitGroupSeparator;
 				}
 
@@ -2323,7 +2361,7 @@ Ext.onReady( function() {
 			web.window = web.window || {};
 
 			web.window.setAnchorPosition = function(w, target) {
-				var vpw = ns.app.viewport.getWidth(),
+				var vpw = app.getViewportWidth(),
 					targetx = target ? target.getPosition()[0] : 4,
 					winw = w.getWidth(),
 					y = target ? target.getPosition()[1] + target.getHeight() + 4 : 33;
@@ -2410,7 +2448,7 @@ Ext.onReady( function() {
                 config.html += obj.message + (obj.message.substr(obj.message.length - 1) === '.' ? '' : '.');
 
                 // bodyStyle
-                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + ns.app.centerRegion.getHeight() / 2 + 'px';
+                config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + app.getCenterRegionHeight() / 2 + 'px';
 
                 // destroy handler
                 config.modal = true;
@@ -2439,11 +2477,11 @@ Ext.onReady( function() {
                 var paramString,
                     dimensions = Ext.Array.clean([].concat(view.columns || [], view.rows || [])),
                     ignoreKeys = ['dy', 'longitude', 'latitude'],
-                    dataTypeMap = {
-                        'aggregated_values': 'aggregate',
-                        'individual_cases': 'query'
-                    },
+                    dataTypeMap = {},
                     nameItemsMap;
+
+                dataTypeMap[conf.finals.dataType.aggregated_values] = 'aggregate';
+                dataTypeMap[conf.finals.dataType.individual_cases] = 'query';
 
                 format = format || 'json';
 
@@ -2457,7 +2495,7 @@ Ext.onReady( function() {
 					for (var i = 0, dim; i < dimensions.length; i++) {
 						dim = dimensions[i];
 
-						if (Ext.Array.contains(ignoreKeys, dim.dimension) || (dim.dimension === 'pe' && !dim.items && !dim.filter)) {
+						if (Ext.Array.contains(ignoreKeys, dim.dimension) || (dim.dimension === 'pe' && (!(dim.items && dim.items.length) && !dim.filter))) {
 							continue;
 						}
 
@@ -2535,12 +2573,12 @@ Ext.onReady( function() {
 				paramString += view.showHierarchy ? '&hierarchyMeta=true' : '';
 
                 // limit
-                if (view.dataType === 'aggregated_values' && (view.sortOrder && view.topLimit)) {
+                if (view.dataType === conf.finals.dataType.aggregated_values && (view.sortOrder && view.topLimit)) {
                     paramString += '&limit=' + view.topLimit + '&sortOrder=' + (view.sortOrder < 0 ? 'ASC' : 'DESC');
                 }
 
                 // output type
-                if (view.dataType === 'aggregated_values' && view.outputType) {
+                if (view.dataType === conf.finals.dataType.aggregated_values && view.outputType) {
                     paramString += '&outputType=' + view.outputType;
                 }
 
@@ -2550,14 +2588,14 @@ Ext.onReady( function() {
 				}
                 
                 // sorting
-                if (view.dataType === 'individual_cases' && view.sorting) {
+                if (view.dataType === conf.finals.dataType.individual_cases && view.sorting) {
                     if (view.sorting.id && view.sorting.direction) {
                         paramString += '&' + view.sorting.direction.toLowerCase() + '=' + view.sorting.id;
                     }
                 }
 
                 // paging
-                if (view.dataType === 'individual_cases' && view.paging && !skipPaging) {
+                if (view.dataType === conf.finals.dataType.individual_cases && view.paging && !skipPaging) {
                     paramString += view.paging.pageSize ? '&pageSize=' + view.paging.pageSize : '';
                     paramString += view.paging.page ? '&page=' + view.paging.page : '';
                 }
@@ -3439,8 +3477,8 @@ Ext.onReady( function() {
                     var cls = 'pivot',
                         table;
 
-                    cls += xLayout.displayDensity && xLayout.displayDensity !== 'normal' ? ' displaydensity-' + xLayout.displayDensity : '';
-                    cls += xLayout.fontSize && xLayout.fontSize !== 'normal' ? ' fontsize-' + xLayout.fontSize : '';
+                    cls += xLayout.displayDensity && xLayout.displayDensity !== conf.finals.style.normal ? ' displaydensity-' + xLayout.displayDensity : '';
+                    cls += xLayout.fontSize && xLayout.fontSize !== conf.finals.style.normal ? ' fontsize-' + xLayout.fontSize : '';
 
 					table = '<table id="' + xLayout.tableUuid + '" class="' + cls + '">';
 
@@ -3509,8 +3547,8 @@ Ext.onReady( function() {
 
 				xResponse.sortableIdObjects = [];
 
-                cls += layout.displayDensity && layout.displayDensity !== 'normal' ? ' displaydensity-' + layout.displayDensity : '';
-                cls += layout.fontSize && layout.fontSize !== 'normal' ? ' fontsize-' + layout.fontSize : '';
+                cls += layout.displayDensity && layout.displayDensity !== conf.finals.style.none ? ' displaydensity-' + layout.displayDensity : '';
+                cls += layout.fontSize && layout.fontSize !== conf.finals.style.normal ? ' fontsize-' + layout.fontSize : '';
 
 				html += '<table class="' + cls + '"><tr>';
                 html += '<td class="pivot-dim pivot-dim-subtotal">' + '#' + '</td>';
