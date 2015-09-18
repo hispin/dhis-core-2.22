@@ -32,7 +32,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -289,10 +288,6 @@ public class DataElementCategoryOptionCombo
         return name != null && name.equals( DEFAULT_TOSTRING );
     }
 
-    /**
-     * Gets the name. Orders the options after the order of the category in
-     * category combo for which it is part of.
-     */
     @Override
     public String getName()
     {
@@ -300,31 +295,7 @@ public class DataElementCategoryOptionCombo
         {
             return name;
         }
-        
-        StringBuilder builder = new StringBuilder();
-        
-        List<DataElementCategory> categories = this.categoryCombo.getCategories();
-        
-        for ( DataElementCategory category : categories )
-        {
-            builder.append( "(" );
-            
-            List<DataElementCategoryOption> options = category.getCategoryOptions();
-            
-            for ( DataElementCategoryOption option : this.categoryOptions )
-            {
-                if ( options.contains( option ) )
-                {
-                    builder.append( option.getDisplayName() ).append( ", " );
-                }
-            }
-            
-            builder.delete( Math.max( builder.length() - 2, 0 ), builder.length() ).append( ")" );
-        }
-        
-        return  builder.toString();
-        
-        /*
+
         StringBuilder name = new StringBuilder();
 
         if ( categoryOptions != null && categoryOptions.size() > 0 )
@@ -352,7 +323,6 @@ public class DataElementCategoryOptionCombo
         }
 
         return name.toString();
-        */
     }
 
     @Override
