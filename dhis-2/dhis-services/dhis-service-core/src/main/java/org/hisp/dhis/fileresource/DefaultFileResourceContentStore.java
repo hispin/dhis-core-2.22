@@ -118,7 +118,9 @@ public class DefaultFileResourceContentStore
 
     public void init()
     {
-        filestoreConfiguration = configurationProvider.getConfiguration().getProperties()
+        Properties properties = configurationProvider.getConfiguration().getProperties();
+        
+        filestoreConfiguration = properties
             .entrySet().stream().filter(
                 p -> ( (String) p.getKey() ).startsWith( FILESTORE_CONFIG_NAMESPACE ) )
             .collect( Collectors.toMap(
@@ -198,9 +200,17 @@ public class DefaultFileResourceContentStore
 
     private void configureFilesystemProvider()
     {
-        overrides.setProperty( FilesystemConstants.PROPERTY_BASEDIR, locationManager.getExternalDirectoryPath() );
-        credentials = super.getCredentials();
-        log.info( "File system filestore provider configured." );
+        if ( locationManager.externalDirectorySet() )
+        {
+            overrides.setProperty( FilesystemConstants.PROPERTY_BASEDIR, locationManager.getExternalDirectoryPath() );
+            credentials = super.getCredentials();
+            
+            log.info( "File system store provider configured" );
+        }
+        else
+        {
+            log.warn( "File system store could not be configured, external directory not set" );
+        }
     }
 
     private void configureAWSS3Provider()
@@ -211,7 +221,7 @@ public class DefaultFileResourceContentStore
 
         if ( credentials.identity.isEmpty() || credentials.credential.isEmpty() )
         {
-            log.info( "AWS S3 configured with empty credentials. Authentication will fail" );
+            log.info( "AWS S3 store configured with empty credentials, authentication not possible" );
         }
     }
 }

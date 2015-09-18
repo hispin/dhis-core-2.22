@@ -28,13 +28,14 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -44,12 +45,13 @@ import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author Abyot Aselefew
@@ -287,6 +289,10 @@ public class DataElementCategoryOptionCombo
         return name != null && name.equals( DEFAULT_TOSTRING );
     }
 
+    /**
+     * Gets the name. Orders the options after the order of the category in
+     * category combo for which it is part of.
+     */
     @Override
     public String getName()
     {
@@ -294,7 +300,31 @@ public class DataElementCategoryOptionCombo
         {
             return name;
         }
-
+        
+        StringBuilder builder = new StringBuilder();
+        
+        List<DataElementCategory> categories = this.categoryCombo.getCategories();
+        
+        for ( DataElementCategory category : categories )
+        {
+            builder.append( "(" );
+            
+            List<DataElementCategoryOption> options = category.getCategoryOptions();
+            
+            for ( DataElementCategoryOption option : this.categoryOptions )
+            {
+                if ( options.contains( option ) )
+                {
+                    builder.append( option.getDisplayName() ).append( ", " );
+                }
+            }
+            
+            builder.delete( Math.max( builder.length() - 2, 0 ), builder.length() ).append( ")" );
+        }
+        
+        return  builder.toString();
+        
+        /*
         StringBuilder name = new StringBuilder();
 
         if ( categoryOptions != null && categoryOptions.size() > 0 )
@@ -322,6 +352,7 @@ public class DataElementCategoryOptionCombo
         }
 
         return name.toString();
+        */
     }
 
     @Override

@@ -81,7 +81,7 @@ public abstract class BaseJCloudsFileResourceContentStore
     protected abstract String getLocation();
 
     // -------------------------------------------------------------------------
-    // Lifecycle management
+    // Life cycle management
     // -------------------------------------------------------------------------
 
     public void init()
