@@ -39,17 +39,23 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.chart.Chart;
+import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
+import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.mock.MockCurrentUserService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -73,6 +79,9 @@ public class AnalyticsServiceTest
     private DataElement deE;
     private DataElement deF;
     
+    private DataSet dsA;
+    private DataSet dsB;
+    
     private TrackedEntityAttribute paA;
     private TrackedEntityAttribute paB;
     
@@ -88,11 +97,16 @@ public class AnalyticsServiceTest
     
     private OrganisationUnitGroupSet ouGroupSetA;
     
+    private PeriodType monthly = PeriodType.getPeriodTypeByName( MonthlyPeriodType.NAME );
+    
     @Autowired
     private AnalyticsService analyticsService;
     
     @Autowired
     private DataElementService dataElementService;
+    
+    @Autowired
+    private DataSetService dataSetService;
     
     @Autowired
     private OrganisationUnitService organisationUnitService;
@@ -123,6 +137,12 @@ public class AnalyticsServiceTest
         dataElementService.addDataElement( deE );
         dataElementService.addDataElement( deF );
 
+        dsA = createDataSet( 'A', monthly );
+        dsB = createDataSet( 'B', monthly );
+        
+        dataSetService.addDataSet( dsA );
+        dataSetService.addDataSet( dsB );
+        
         paA = createTrackedEntityAttribute( 'A' );
         paB = createTrackedEntityAttribute( 'B' );
         
@@ -182,6 +202,51 @@ public class AnalyticsServiceTest
         CurrentUserService currentUserService = new MockCurrentUserService( user );
         
         setDependency( analyticsService, "currentUserService", currentUserService );
+    }
+    
+    @Test
+    public void testGetDimensionData()
+    {
+        List<NameableObject> items = Lists.newArrayList( deA, deB, deC, dsA, dsB );
+        
+        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        
+        DimensionalObject actual = analyticsService.getDimension( DimensionalObject.DATA_X_DIM_ID, itemUids, null, null, null, false );
+        
+        assertEquals( DimensionalObject.DATA_X_DIM_ID, actual.getDimension() );
+        assertEquals( DimensionType.DATA_X, actual.getDimensionType() );
+        assertEquals( DataQueryParams.DISPLAY_NAME_DATA_X, actual.getDisplayName() );
+        assertEquals( items, actual.getItems() );
+    }
+    
+    @Test
+    public void testGetDimensionOrgUnit()
+    {
+        List<NameableObject> items = Lists.newArrayList( ouA, ouB, ouC );
+        
+        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+
+        DimensionalObject actual = analyticsService.getDimension( DimensionalObject.ORGUNIT_DIM_ID, itemUids, null, null, null, false );
+        
+        assertEquals( DimensionalObject.ORGUNIT_DIM_ID, actual.getDimension() );
+        assertEquals( DimensionType.ORGANISATIONUNIT, actual.getDimensionType() );
+        assertEquals( DataQueryParams.DISPLAY_NAME_ORGUNIT, actual.getDisplayName() );
+        assertEquals( items, actual.getItems() );        
+    }
+    
+    @Test
+    public void testGetDimensionOrgUnitGroupSet()
+    {
+        List<NameableObject> items = Lists.newArrayList( ouGroupA, ouGroupB );
+        
+        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        
+        DimensionalObject actual = analyticsService.getDimension( ouGroupSetA.getUid(), itemUids, null, null, null, false );
+        
+        assertEquals( ouGroupSetA.getUid(), actual.getDimension() );
+        assertEquals( DimensionType.ORGANISATIONUNIT_GROUPSET, actual.getDimensionType() );
+        assertEquals( ouGroupSetA.getName(), actual.getDisplayName() );
+        assertEquals( items, actual.getItems() );  
     }
     
     @Test
