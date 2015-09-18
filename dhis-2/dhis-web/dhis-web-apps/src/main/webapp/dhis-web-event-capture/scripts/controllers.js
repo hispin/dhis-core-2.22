@@ -420,7 +420,13 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 bodyText: 'unsaved_data_exists_proceed'
             };
 
-            ModalService.showModal({}, modalOptions).then(function(result){            
+            ModalService.showModal({}, modalOptions).then(function(result){
+                for(var i=0; i<$scope.dhis2Events.length; i++){
+                    if($scope.dhis2Events[i].event === $scope.currentEvent.event){
+                        $scope.dhis2Events[i] = $scope.currentEventOriginialValue;                        
+                        break;
+                    }
+                }                
                 $scope.showEventList();
             });
         }
