@@ -886,6 +886,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     //listen for rule effect changes
+    $scope.warningMessages = [];
     $scope.$on('ruleeffectsupdated', function(event, args) {
         if($rootScope.ruleeffects[args.event]) {
             //Establish which event was affected:
@@ -898,9 +899,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     }
                 });
             }
-            
-            angular.forEach($rootScope.ruleeffects[args.event], function(effect) {
-                if( effect.dataElement ) {
+            angular.forEach($rootScope.ruleeffects[args.event], function(effect) {                
+                if( effect.dataElement && effect.ineffect ) {
                     //in the data entry controller we only care about the "hidefield" actions
                     if(effect.action === "HIDEFIELD") {
                         if(effect.dataElement) {
@@ -924,6 +924,23 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                         else {
                             $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
                         }
+                    }
+                    if(effect.action === "SHOWERROR" && effect.dataElement.id){
+                        var dialogOptions = {
+                            headerText: 'validation_error',
+                            bodyText: effect.content
+                        };
+                        DialogService.showDialog({}, dialogOptions);
+            
+                        $scope.currentEvent[effect.dataElement.id] = $scope.currentEventOriginialValue[effect.dataElement.id];
+                    }
+                    if(effect.action === "SHOWWARNING"){
+                        $scope.warningMessages[effect.dataElement.id] = effect.content + '<br>';
+                        var dialogOptions = {
+                            headerText: 'validation_warning',
+                            bodyText: effect.content
+                        };
+                        DialogService.showDialog({}, dialogOptions);
                     }
                 }
             });
@@ -959,7 +976,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }
     }; 
     
-    $scope.saveDatavalue = function(){
+    $scope.saveDatavalue = function(){        
         $scope.executeRules();
     };
     /*$scope.getInputNotifcationClass = function(id, custom, event){
