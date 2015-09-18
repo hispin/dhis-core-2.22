@@ -28,11 +28,12 @@ package org.hisp.dhis.fileresource;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.hash.HashCode;
-import com.google.common.io.ByteSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
+import java.util.Properties;
+
 import org.apache.commons.io.input.NullInputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
@@ -40,10 +41,8 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
-import java.util.Properties;
+import com.google.common.hash.HashCode;
+import com.google.common.io.ByteSource;
 
 /**
  * @author Halvdan Hoem Grelland
@@ -51,8 +50,6 @@ import java.util.Properties;
 public abstract class BaseJCloudsFileResourceContentStore
     implements FileResourceContentStore
 {
-    Log log = LogFactory.getLog( BaseJCloudsFileResourceContentStore.class );
-
     private BlobStore blobStore;
     private BlobStoreContext blobStoreContext;
 
@@ -86,9 +83,13 @@ public abstract class BaseJCloudsFileResourceContentStore
 
     public void init()
     {
-        blobStoreContext = ContextBuilder.newBuilder( getJCloudsProviderKey() )
-            .credentials( getCredentials().identity, getCredentials().credential )
-            .overrides( getOverrides() ).build( BlobStoreContext.class );
+        Credentials credentials = getCredentials();
+        Properties overrides = getOverrides();
+        String providerKey = getJCloudsProviderKey();
+        
+        blobStoreContext = ContextBuilder.newBuilder( providerKey )
+            .credentials( credentials.identity, credentials.credential )
+            .overrides( overrides ).build( BlobStoreContext.class );
 
         blobStore = blobStoreContext.getBlobStore();
 
@@ -133,9 +134,9 @@ public abstract class BaseJCloudsFileResourceContentStore
         };
     }
 
-    public String saveFileResourceContent( String key, ByteSource content, long size, String contentMD5 )
+    public String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 )
     {
-        Blob blob = createBlob( key, content, size, contentMD5 );
+        Blob blob = createBlob( key, content, size, contentMd5 );
 
         if ( blob == null )
         {
@@ -171,12 +172,12 @@ public abstract class BaseJCloudsFileResourceContentStore
         return blobStore.putBlob( getContainer(), blob );
     }
 
-    private Blob createBlob( String key, ByteSource content, long size, String contentMD5 )
+    private Blob createBlob( String key, ByteSource content, long size, String contentMd5 )
     {
         return blobStore.blobBuilder( key )
             .payload( content )
             .contentLength( size )
-            .contentMD5( HashCode.fromString( contentMD5 ) )
+            .contentMD5( HashCode.fromString( contentMd5 ) )
             .build();
     }
 }
