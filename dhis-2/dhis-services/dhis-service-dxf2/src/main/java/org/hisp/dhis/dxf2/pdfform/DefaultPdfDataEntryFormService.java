@@ -289,7 +289,7 @@ public class DefaultPdfDataEntryFormService
                 {
                     addCell_WithCheckBox( table, writer, PdfDataEntryFormUtil.getPdfPCell( hasBorder ), strFieldLabel );
                 }
-                if ( ValueType.BOOLEAN == valueType )
+                else if ( ValueType.BOOLEAN == valueType )
                 {
                     // Create Yes - true, No - false, Select..
                     String[] optionList = new String[]{ "[No Value]", "Yes", "No" };
@@ -298,11 +298,11 @@ public class DefaultPdfDataEntryFormService
                     // addCell_WithRadioButton(table, writer, strFieldLabel);
                     addCell_WithDropDownListField( table, rectangle, writer, PdfDataEntryFormUtil.getPdfPCell( hasBorder ), strFieldLabel, optionList, valueList );
                 }
-                if ( valueType.isNumeric() )
+                else if ( valueType.isNumeric() )
                 {
-                    rectangle = new Rectangle( TEXTBOXWIDTH_NUMBERTYPE, PdfDataEntryFormUtil.CONTENT_HEIGHT_DEFAULT );
+                    Rectangle rectNum = new Rectangle( TEXTBOXWIDTH_NUMBERTYPE, PdfDataEntryFormUtil.CONTENT_HEIGHT_DEFAULT );
 
-                    addCell_WithTextField( table, rectangle, writer, PdfDataEntryFormUtil.getPdfPCell( hasBorder ), strFieldLabel, PdfFieldCell.TYPE_TEXT_NUMBER );
+                    addCell_WithTextField( table, rectNum, writer, PdfDataEntryFormUtil.getPdfPCell( hasBorder ), strFieldLabel, PdfFieldCell.TYPE_TEXT_NUMBER );
                 }
                 else
                 {
