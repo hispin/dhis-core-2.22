@@ -36,9 +36,14 @@ import com.google.common.io.ByteSource;
 public interface FileResourceService
 {
     FileResource getFileResource( String uid );
+    
     String saveFileResource( FileResource fileResource, ByteSource content );
+    
     void deleteFileResource( String uid );
+    
     ByteSource getFileResourceContent( FileResource fileResource );
+    
     boolean fileResourceExists( String uid );
+    
     void updateFileResource( FileResource fileResource );
 }
