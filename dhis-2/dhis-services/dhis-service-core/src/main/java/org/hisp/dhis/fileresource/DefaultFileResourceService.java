@@ -28,14 +28,13 @@ package org.hisp.dhis.fileresource;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.io.ByteSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.BlobStoreContext;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.io.ByteSource;
 
 /**
  * @author Halvdan Hoem Grelland
@@ -44,10 +43,6 @@ public class DefaultFileResourceService
     implements FileResourceService
 {
     private static final Log log = LogFactory.getLog( DefaultFileResourceService.class );
-
-    private BlobStore blobStore;
-
-    private BlobStoreContext blobStoreContext;
 
     // -------------------------------------------------------------------------
     // Dependencies
