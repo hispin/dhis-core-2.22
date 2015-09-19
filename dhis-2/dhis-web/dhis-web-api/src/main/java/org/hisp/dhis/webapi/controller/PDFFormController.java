@@ -128,9 +128,9 @@ public class PdfFormController
             pdfFormFontSettings, i18nManager.getI18nFormat() );
 
         String fileName = dataSetService.getDataSet( dataSetUid ).getName() + " " + (new SimpleDateFormat(
-            Period.DEFAULT_DATE_FORMAT )).format( new Date() );
+            Period.DEFAULT_DATE_FORMAT )).format( new Date() ) + ".pdf";
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.NO_CACHE, fileName, false );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.NO_CACHE, fileName, true );
         response.setContentLength( baos.size() );
 
         baos.writeTo( out );
@@ -177,9 +177,9 @@ public class PdfFormController
             pdfFormFontSettings, i18nManager.getI18nFormat() );
 
         String fileName = programStageService.getProgramStage( programStageUid ).getName() + " "
-            + (new SimpleDateFormat( Period.DEFAULT_DATE_FORMAT )).format( new Date() );
+            + (new SimpleDateFormat( Period.DEFAULT_DATE_FORMAT )).format( new Date() ) + ".pdf";
 
-        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.NO_CACHE, fileName, false );
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.NO_CACHE, fileName, true );
         response.setContentLength( baos.size() );
 
         baos.writeTo( out );
