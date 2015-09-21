@@ -32,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -72,6 +73,8 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.hisp.dhis.common.DimensionalObject.*;
 
 /**
  * @author Lars Helge Overland
@@ -246,6 +249,32 @@ public class AnalyticsServiceTest
         
         setDependency( analyticsService, "currentUserService", currentUserService );
     }
+
+    @Test
+    public void testGetDimensionalObjects()
+    {
+        Set<String> dimensionParams = new LinkedHashSet<>();
+        dimensionParams.add( DimensionalObject.DATA_X_DIM_ID + DIMENSION_NAME_SEP + deA.getUid() + OPTION_SEP + deB.getUid() + OPTION_SEP + dsA.getUid() );
+        dimensionParams.add( DimensionalObject.ORGUNIT_DIM_ID + DIMENSION_NAME_SEP + ouA.getUid() + OPTION_SEP + ouB.getUid() );
+        
+        List<DimensionalObject> dimensionalObject = analyticsService.getDimensionalObjects( dimensionParams, null, null, null );
+        
+        DimensionalObject dxObject = dimensionalObject.get( 0 );
+        DimensionalObject ouObject = dimensionalObject.get( 1 );
+
+        List<NameableObject> dxItems = Lists.newArrayList( deA, deB, dsA );
+        List<NameableObject> ouItems = Lists.newArrayList( ouA, ouB );
+
+        assertEquals( DimensionalObject.DATA_X_DIM_ID, dxObject.getDimension() );
+        assertEquals( DimensionType.DATA_X, dxObject.getDimensionType() );
+        assertEquals( DataQueryParams.DISPLAY_NAME_DATA_X, dxObject.getDisplayName() );
+        assertEquals( dxItems, dxObject.getItems() );
+
+        assertEquals( DimensionalObject.ORGUNIT_DIM_ID, ouObject.getDimension() );
+        assertEquals( DimensionType.ORGANISATIONUNIT, ouObject.getDimensionType() );
+        assertEquals( DataQueryParams.DISPLAY_NAME_ORGUNIT, ouObject.getDisplayName() );
+        assertEquals( ouItems, ouObject.getItems() );
+    }
     
     @Test
     public void testGetDimensionData()
@@ -293,7 +322,7 @@ public class AnalyticsServiceTest
         assertEquals( DimensionalObject.ORGUNIT_DIM_ID, actual.getDimension() );
         assertEquals( DimensionType.ORGANISATIONUNIT, actual.getDimensionType() );
         assertEquals( DataQueryParams.DISPLAY_NAME_ORGUNIT, actual.getDisplayName() );
-        assertEquals( items, actual.getItems() );        
+        assertEquals( items, actual.getItems() );
     }
 
     @Test
