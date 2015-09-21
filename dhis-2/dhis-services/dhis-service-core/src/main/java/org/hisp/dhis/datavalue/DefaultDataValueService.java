@@ -186,25 +186,10 @@ public class DefaultDataValueService
 
         if ( dataValue.getDataElement().isFileType() )
         {
-            // TODO Consider for deleteDataValuesBySource and deleteDataValuesByDataElement
             fileResourceService.deleteFileResource( dataValue.getValue() );
         }
 
         dataValueStore.deleteDataValue( dataValue );
-    }
-
-    @Override
-    @Transactional
-    public int deleteDataValuesBySource( OrganisationUnit source )
-    {
-        return dataValueStore.deleteDataValuesBySource( source );
-    }
-
-    @Override
-    @Transactional
-    public int deleteDataValuesByDataElement( DataElement dataElement )
-    {
-        return dataValueStore.deleteDataValuesByDataElement( dataElement );
     }
 
     @Override

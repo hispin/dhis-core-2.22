@@ -133,28 +133,6 @@ public class HibernateDataValueStore
     }
 
     @Override
-    public int deleteDataValuesBySource( OrganisationUnit source )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        Query query = session.createQuery( "delete DataValue where source = :source" );
-        query.setEntity( "source", source );
-
-        return query.executeUpdate();
-    }
-
-    @Override
-    public int deleteDataValuesByDataElement( DataElement dataElement )
-    {
-        Session session = sessionFactory.getCurrentSession();
-
-        Query query = session.createQuery( "delete DataValue where dataElement = :dataElement" );
-        query.setEntity( "dataElement", dataElement );
-
-        return query.executeUpdate();
-    }
-
-    @Override
     public DataValue getDataValue( DataElement dataElement, Period period, OrganisationUnit source,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
     {

@@ -79,22 +79,6 @@ public interface DataValueStore
     void deleteDataValue( DataValue dataValue );
     
     /**
-     * Deletes all DataValues registered for the given Source.
-     * 
-     * @param source the Source for which the DataValues should be deleted.
-     * @return the number of deleted DataValues.
-     */
-    int deleteDataValuesBySource( OrganisationUnit source );
-    
-    /**
-     * Deletes all DataValues registered for the given DataElement.
-     * 
-     * @param dataElement the DataElement for which the DataValues should be deleted.
-     * @return the number of deleted DataValues.
-     */
-    int deleteDataValuesByDataElement( DataElement dataElement );
-    
-    /**
      * Returns a DataValue.
      * 
      * @param dataElement the DataElement of the DataValue.
