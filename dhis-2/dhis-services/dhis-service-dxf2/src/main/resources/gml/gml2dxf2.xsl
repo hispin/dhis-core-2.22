@@ -42,7 +42,7 @@
 
   <!-- GML feature matchers -->
   <xsl:template match="gml:Polygon">
-    <featureType>Polygon</featureType>
+    <featureType>POLYGON</featureType>
     <coordinates>
       <xsl:text>[[</xsl:text>
       <xsl:apply-templates select=".//gml:coordinates" mode="multipleCoordinates"/>
@@ -55,7 +55,7 @@
   </xsl:template>
 
   <xsl:template match="gml:MultiPolygon">
-    <featureType>MultiPolygon</featureType>
+    <featureType>MULTI_POLYGON</featureType>
     <coordinates>
       <xsl:text>[</xsl:text>
       <xsl:apply-templates select=".//gml:polygonMember"/>
@@ -64,7 +64,7 @@
   </xsl:template>
 
   <xsl:template match="gml:Point">
-    <featureType>Point</featureType>
+    <featureType>POINT</featureType>
     <coordinates>
       <xsl:apply-templates select=".//gml:coordinates" mode="singleCoordinate"/>
       <xsl:apply-templates select=".//gml:pos"/>
