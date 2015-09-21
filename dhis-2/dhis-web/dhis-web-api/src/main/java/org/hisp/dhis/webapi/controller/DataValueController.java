@@ -413,7 +413,6 @@ public class DataValueController
         HttpServletResponse response )
         throws WebMessageException, IOException
     {
-
         boolean strictPeriods = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
         boolean strictCategoryOptionCombos = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
         boolean strictOrgUnits = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS, false );
@@ -427,7 +426,7 @@ public class DataValueController
 
         DataElementCategoryOptionCombo categoryOptionCombo = getAndValidateCategoryOptionCombo( co, requireCategoryOptionCombo );
 
-        DataElementCategoryOptionCombo attributeOptionCombo = getAndValidateAttributeOptionCombo( cc, cp );
+        getAndValidateAttributeOptionCombo( cc, cp );
 
         Period period = getAndValidatePeriod( pe );
 
