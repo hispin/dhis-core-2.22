@@ -274,7 +274,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,type,version,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]],validationCriterias[id,name,operator,value,property]'
+            data: 'fields=id,name,type,version,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,reportDateDescription,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
         }).done( function( program ){            
             var ou = {};
             if(program.organisationUnits){
@@ -290,22 +290,7 @@ function getProgram( id )
                     ur[u.id] = u.name;
                 });
             }
-            program.userRoles = ur;
-            
-            var vc = {};
-            if(program.validationCriterias){
-                _.each(_.values( program.validationCriterias), function(c){
-                    if(vc[c.property]){
-                        vc[c.property].push(c);
-                    }
-                    else{
-                        vc[c.property] = [];
-                        vc[c.property].push(c);
-                    }
-                });
-            }            
-            program.validationCriterias = vc;
-            
+            program.userRoles = ur;            
             dhis2.tc.store.set( 'programs', program );  
         });
     };
