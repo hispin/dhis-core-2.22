@@ -35,9 +35,26 @@ import com.google.common.io.ByteSource;
  */
 public interface FileResourceContentStore
 {
+    /**
+     * Get the content bytes of a FileResource from the file store.
+     * @param key the key.
+     * @return a ByteSource which provides a stream to the content or null if the content cannot be found or read.
+     */
     ByteSource getFileResourceContent( String key );
-    
+
+    /**
+     * Save the content bytes of a FileResource to the file store.
+     * @param key the key to use. Must be unique in the file store.
+     * @param content a ByteSource providing a stream of the content to save.
+     * @param size the byte length of the content.
+     * @param contentMd5 the MD5 digest of the content.
+     * @return the key on success or null if saving failed.
+     */
     String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 );
-    
+
+    /**
+     * Delete the content bytes of a file resource.
+     * @param key the key.
+     */
     void deleteFileResourceContent( String key );
 }
