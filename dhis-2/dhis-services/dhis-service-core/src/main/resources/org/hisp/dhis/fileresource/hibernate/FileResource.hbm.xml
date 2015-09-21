@@ -22,7 +22,7 @@
 
     <property name="contentLength" column="contentlength" not-null="true" unique="false" />
 
-    <property name="contentMD5" column="contentmd5" not-null="true" length="32" />
+    <property name="contentMd5" column="contentmd5" not-null="true" length="32" />
 
     <property name="storageKey" column="storagekey" not-null="true" unique="true" length="1024" />
 

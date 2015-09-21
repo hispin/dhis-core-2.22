@@ -79,7 +79,7 @@ public class DefaultFileResourceService
         String storageKey = getRelativeStorageKey( fileResource );
 
         String key = fileResourceContentStore.saveFileResourceContent(
-            storageKey, content, fileResource.getContentLength(), fileResource.getContentMD5() );
+            storageKey, content, fileResource.getContentLength(), fileResource.getContentMd5() );
 
         if ( key == null )
         {

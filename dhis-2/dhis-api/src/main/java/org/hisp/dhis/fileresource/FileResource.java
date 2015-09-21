@@ -57,7 +57,7 @@ public class FileResource
     /**
      * MD5 digest of content
      */
-    private String contentMD5;
+    private String contentMd5;
 
     /**
      * Key used for content storage at external location
@@ -84,12 +84,12 @@ public class FileResource
     {
     }
 
-    public FileResource( String name, String contentType, long contentLength, String contentMD5, FileResourceDomain domain )
+    public FileResource( String name, String contentType, long contentLength, String contentMd5, FileResourceDomain domain )
     {
         this.name = name;
         this.contentType = contentType;
         this.contentLength = contentLength;
-        this.contentMD5 = contentMD5;
+        this.contentMd5 = contentMd5;
         this.domain = domain;
         this.storageKey = generateStorageKey();
     }
@@ -150,14 +150,14 @@ public class FileResource
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getContentMD5()
+    public String getContentMd5()
     {
-        return contentMD5;
+        return contentMd5;
     }
 
-    public void setContentMD5( String contentMD5 )
+    public void setContentMd5( String contentMd5 )
     {
-        this.contentMD5 = contentMD5;
+        this.contentMd5 = contentMd5;
     }
 
     public String getStorageKey()
