@@ -84,22 +84,6 @@ public interface DataValueService
      * @param dataValue the DataValue to delete.
      */
     void deleteDataValue( DataValue dataValue );
-    
-    /**
-     * Deletes all DataValues connected to a Source.
-     * 
-     * @param source the Source for which the DataValues should be deleted.
-     * @return the number of deleted DataValues.
-     */
-    int deleteDataValuesBySource( OrganisationUnit source );
-
-    /**
-     * Deletes all DataValues registered for the given DataElement.
-     * 
-     * @param dataElement the DataElement for which the DataValues should be deleted.
-     * @return the number of deleted DataValues.
-     */
-    int deleteDataValuesByDataElement( DataElement dataElement );
 
     /**
      * Returns a DataValue.
@@ -107,7 +91,7 @@ public interface DataValueService
      * @param dataElement the DataElement of the DataValue.
      * @param period the Period of the DataValue.
      * @param source the Source of the DataValue.
-     * @param categoryOptionCombo the category option combo.
+     * @param optionCombo the category option combo.
      * @return the DataValue which corresponds to the given parameters, or null
      *         if no match.
      */
@@ -134,7 +118,6 @@ public interface DataValueService
      * @param periodId period id
      * @param sourceId source id
      * @param categoryOptionComboId category option combo id
-     * @param attributeOptionComboId attribute option combo id
      */
     DataValue getDataValue( int dataElementId, int periodId, int sourceId, int categoryOptionComboId );
     
