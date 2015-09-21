@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of QueryService which works with IdObjects.
@@ -103,10 +104,7 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
             return criterions;
         }
 
-        for ( String candidate : candidates )
-        {
-            criterions.add( getRestriction( schema, candidate ) );
-        }
+        criterions.addAll( candidates.stream().map( candidate -> getRestriction( schema, candidate ) ).collect( Collectors.toList() ) );
 
         return criterions;
     }
@@ -120,6 +118,23 @@ public class DefaultQueryService<T extends IdentifiableObject> implements QueryS
         while ( iterator.hasNext() )
         {
             String candidate = iterator.next();
+
+            // if there are no translations available, we can simply map display fields to their real (persisted) fields
+            if ( !schema.isTranslated() )
+            {
+                if ( candidate.startsWith( "displayName" ) && schema.havePersistedProperty( "name" ) )
+                {
+                    candidate = candidate.replace( "displayName:", "name:" );
+                }
+                else if ( candidate.startsWith( "displayShortName" ) && schema.havePersistedProperty( "shortName" ) )
+                {
+                    candidate = candidate.replace( "displayShortName:", "shortName:" );
+                }
+                else if ( candidate.startsWith( "displayDescription" ) && schema.havePersistedProperty( "description" ) )
+                {
+                    candidate = candidate.replace( "displayDescription:", "description:" );
+                }
+            }
 
             if ( !candidate.contains( "." ) && getRestriction( schema, candidate ) != null )
             {
