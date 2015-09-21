@@ -28,21 +28,10 @@ package org.hisp.dhis.webapi.utils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.io.IOUtils;
-import org.hisp.dhis.common.DimensionalObjectUtils;
-import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.common.cache.CacheStrategy;
-import org.hisp.dhis.commons.util.CodecUtils;
-import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.system.util.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
+import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_CACHE_STRATEGY;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -53,9 +42,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_CACHE_STRATEGY;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
+import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.cache.CacheStrategy;
+import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.util.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author Lars Helge Overland
@@ -271,7 +272,7 @@ public class ContextUtils
 
         for ( String dim : dimensions )
         {
-            String[] dims = dim.split( DimensionalObjectUtils.DIMENSION_NAME_SEP );
+            String[] dims = dim.split( DimensionalObject.DIMENSION_NAME_SEP );
 
             if ( dims.length == 2 && dims[0] != null && dims[1] != null )
             {

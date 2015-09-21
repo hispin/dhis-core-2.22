@@ -71,7 +71,11 @@ public interface DimensionalObject
 
     String LONGITUDE_DIM_ID = "longitude";
     String LATITUDE_DIM_ID = "latitude";
-   
+
+    String DIMENSION_NAME_SEP = ":";
+    String OPTION_SEP = ";";
+    String ITEM_SEP = "-";
+        
     List<String> STATIC_DIMS = Arrays.asList( 
         LONGITUDE_DIM_ID, LATITUDE_DIM_ID );
     
