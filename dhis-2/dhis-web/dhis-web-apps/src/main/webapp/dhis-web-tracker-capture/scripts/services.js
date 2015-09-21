@@ -480,39 +480,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 return def.promise;
             }            
         },
-        processForm: function(existingTei, formTei, attributesById, program){
-            var tei = angular.copy(existingTei);
-            var enrollmentValidation = {valid: true, messages: [], attributes: []};
-            if(program && program.validationCriterias){
-                for(var key in program.validationCriterias){
-                    angular.forEach(program.validationCriterias[key], function(vc){
-                        var att = attributesById[key];
-                        var operator = '';
-                        if(vc.property && vc.value && att && att.valueType){
-                            if(att.valueType === 'NUMBER' && dhis2.validation.isNumber(vc.value)){
-                                vc.value = parseInt(vc.value);
-                            }
-                            if(vc.operator === 0){
-                                enrollmentValidation.valid = formTei[key] === vc.value;
-                                operator = $translate.instant('equals_to');
-                            }
-                            else if(vc.operator === 1){                                
-                                enrollmentValidation.valid = formTei[key] > vc.value;
-                                operator = $translate.instant('greater_than');
-                            }
-                            else{
-                                enrollmentValidation.valid = formTei[key] < vc.value;
-                                operator = $translate.instant('less_than');
-                            }
-
-                            if(!enrollmentValidation.valid){
-                                enrollmentValidation.messages.push({name: attributesById[key].name, operator: operator, expected: vc.value, found: formTei[key] ? formTei[key] : $translate.instant('empty')});
-                            }                                
-                        }
-                    });                    
-                }
-            }            
-            
+        processForm: function(existingTei, formTei, attributesById){
+            var tei = angular.copy(existingTei);            
             tei.attributes = [];
             var formEmpty = true;            
             for(var k in attributesById){
@@ -523,7 +492,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }
                 delete tei[k];
             }
-            return {tei: tei, formEmpty: formEmpty, validation: enrollmentValidation};
+            return {tei: tei, formEmpty: formEmpty};
         }
     };
 })
@@ -1132,7 +1101,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             
                             var pushDirectAddressedVariable = function(variableWithCurls) {
                                 var variableName = $filter('trimvariablequalifiers')(variableWithCurls);
-;
                                 var variableNameParts = variableName.split('.');
 
                                 var newVariableObject;

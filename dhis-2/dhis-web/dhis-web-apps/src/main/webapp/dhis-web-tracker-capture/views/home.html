@@ -76,10 +76,10 @@
 
         <!--- search and registration menu begins -->
         <div class="row vertical-spacing not-for-screen">
-            <div class="col-md-4">
+            <div class="col-sm-6 col-md-4">
                 <h4>{{orgUnitLabel}}</h4>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-6 col-md-4">
                 <input type="text" class="form-control" ng-disabled='true' value="{{selectedOrgUnit.name}}">
             </div>
         </div>
@@ -108,11 +108,11 @@
             <div id="searchDropDownParent" class="input-group col-md-4 hideInPrint">
                 <input type="text" placeholder="{{searchCriteriaLabel}}" ng-model="searchText" class="form-control expanded" d2-enter="search(searchMode.freeText)" ng-class="{true: 'invalid - input'} [!searchText && emptySearchText]" ng-focus="showHideSearch()" ng-disabled="showRegistrationDiv" d2-set-focus={{doSearch}}>
                 <div class="input-group-btn">
-                    <button class="btn btn-default search-dropdown-button trim" type="button" title="{{advancedSearchLabel}}" data-toggle="dropdown" ng-click="showHideSearch()" ng-disabled="showRegistrationDiv"><i class="fa fa-caret-down"></i></button>
+                    <button class="btn btn-default search-dropdown-button trim" type="button" title="{{advancedSearchLabel}}" data-toggle="dropdown" ng-disabled="showRegistrationDiv"><i class="fa fa-caret-down"></i></button>
                     <button class="btn btn-primary trim" type="button" title="{{searchLabel}}" ng-disabled="showRegistrationDiv" ng-click="search(searchMode.freeText)"><i class="fa fa-search"></i></button>
                     <div id="searchDropDown" class="dropdown-menu dropdown-menu-right">
                         <form name="searchForm">
-                            <div ng-if="showSearchDiv" ng-include="'views/advanced-search.html'"></div>
+                            <div ng-include="'views/advanced-search.html'"></div>
                         </form>
                     </div>
                 </div>                
@@ -145,24 +145,20 @@
         <!--- search and registration menu ends -->
 
         <!--- Error display for search begins -->
-        <div class="row" ng-if="emptySearchAttribute || !searchText && emptySearchText">
-            <div class="col-md-8 vertical-spacing">
-                <div class="alert alert-warning">{{'search_input_required'| translate}}</div>         
-            </div>
+        <div class="row col-sm-12 vertical-spacing" ng-if="emptySearchAttribute || !searchText && emptySearchText">
+            <div class="alert alert-warning">{{'search_input_required'| translate}}</div>
         </div>
         <!--- Error display for search ends -->
 
         <!--registration form begins -->
-        <div class="row" ng-if="showRegistrationDiv">
-            <div class="col-md-8">
-                <div ng-include="'components/registration/registration.html'"></div>             
-            </div>
+        <div class="row col-sm-12" ng-if="showRegistrationDiv">
+            <div ng-include="'components/registration/registration.html'"></div>
         </div>
         <!-- registration form ends -->        
 
         <!-- entity grid begins -->
         <i ng-if="!teiFetched" class="fa fa-spinner fa-spin fa-2x"></i>
-        <div class="row col-md-12" ng-include="'views/tei.html'"></div>
+        <div class="row col-sm-12" ng-if="!showRegistrationDiv" ng-include="'views/tei.html'"></div>
         <!-- entity grid ends -->
     </div>
 

@@ -324,7 +324,11 @@ div#orgUnitTree {
     font-size: 14pt;
     color: #585D61;
     border-bottom: 1px solid #e3e3e3;
-    //text-align: center;
+}
+
+.warning-message-label {
+    height: 34px;
+    font-size: 14px;
 }
 
 .selectionGroup{
@@ -364,7 +368,6 @@ div#orgUnitTree {
     padding: 5px !important;
 }
 
-.form-control-label {
-    height: 34px;
-    font-size: 14px;
+.bold {
+    font-weight: bold;
 }
