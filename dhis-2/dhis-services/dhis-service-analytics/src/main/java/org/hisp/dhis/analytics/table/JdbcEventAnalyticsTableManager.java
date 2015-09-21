@@ -318,7 +318,7 @@ public class JdbcEventAnalyticsTableManager
         String[] pi = { quote( "pi" ), "character(11) not null", "pi.uid" };
         String[] ps = { quote( "ps" ), "character(11) not null", "ps.uid" };
         String[] erd = { quote( "enrollmentdate" ), "timestamp", "pi.enrollmentdate" };
-        String[] idd = { quote( "incidentdate" ), "timestamp", "pi.incidentdate" };
+        String[] id = { quote( "incidentdate" ), "timestamp", "pi.incidentdate" };
         String[] ed = { quote( "executiondate" ), "timestamp", "psi.executiondate" };
         String[] dd = { quote( "duedate" ), "timestamp", "psi.duedate" };
         String[] cd = { quote( "completeddate" ), "timestamp", "psi.completeddate" };
@@ -328,7 +328,7 @@ public class JdbcEventAnalyticsTableManager
         String[] oun = { quote( "ouname" ), "character varying(230) not null", "ou.name" };
         String[] ouc = { quote( "oucode" ), "character varying(50)", "ou.code" };
 
-        columns.addAll( Lists.newArrayList( psi, pi, ps, erd, idd, ed, dd, cd, longitude, latitude, ou, oun, ouc ) );
+        columns.addAll( Lists.newArrayList( psi, pi, ps, erd, id, ed, dd, cd, longitude, latitude, ou, oun, ouc ) );
 
         if ( table.hasProgram() && table.getProgram().isRegistration() )
         {
