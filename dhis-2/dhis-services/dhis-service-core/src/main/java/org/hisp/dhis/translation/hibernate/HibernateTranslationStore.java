@@ -28,9 +28,6 @@ package org.hisp.dhis.translation.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -39,6 +36,9 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.system.util.LocaleUtils;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationStore;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Oyvind Brucker
@@ -175,5 +175,18 @@ public class HibernateTranslationStore
         {
             session.delete( object );
         }
+    }
+
+    @Override
+    public boolean haveTranslations( String className )
+    {
+        Session session = sessionFactory.getCurrentSession();
+
+        Criteria criteria = session.createCriteria( Translation.class );
+        criteria.add( Restrictions.eq( "className", className ) );
+
+        criteria.setCacheable( true );
+
+        return !criteria.list().isEmpty();
     }
 }

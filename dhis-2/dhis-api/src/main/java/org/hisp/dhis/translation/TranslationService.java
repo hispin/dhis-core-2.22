@@ -42,7 +42,7 @@ public interface TranslationService
 
     /**
      * Adds a Translation.
-     * 
+     *
      * @param translation the Translation.
      */
     void addTranslation( Translation translation );
@@ -56,19 +56,17 @@ public interface TranslationService
 
     /**
      * Updates a Translation.
-     * 
+     *
      * @param translation the Translation.
      */
     void updateTranslation( Translation translation );
 
     /**
      * Retrieves a Translation.
-     * 
-     *
      *
      * @param className the class name.
-     * @param locale the locale.
-     * @param property the property.
+     * @param locale    the locale.
+     * @param property  the property.
      * @param objectUid
      * @return a Translation.
      */
@@ -77,12 +75,10 @@ public interface TranslationService
     /**
      * Retrieves a Translation. Only exact matches on the given
      * Locale will be returned.
-     * 
-     *
      *
      * @param className the class name.
-     * @param locale the locale.
-     * @param property the property.
+     * @param locale    the locale.
+     * @param property  the property.
      * @param objectUid
      * @return a Translation.
      */
@@ -90,10 +86,9 @@ public interface TranslationService
 
     /**
      * Retrieves a Collection of Translations.
-     * 
      *
      * @param className the class name.
-     * @param locale the locale.
+     * @param locale    the locale.
      * @return a List of Translations.
      */
     List<Translation> getTranslations( String className, Locale locale, String objectUid );
@@ -101,11 +96,9 @@ public interface TranslationService
     /**
      * Retrieves a Collection of Translations. Only exact matches on the given
      * Locale will be returned.
-     * 
-     *
      *
      * @param className the class name.
-     * @param locale the locale.
+     * @param locale    the locale.
      * @param objectUid the id.
      * @return a List of Translations.
      */
@@ -113,16 +106,16 @@ public interface TranslationService
 
     /**
      * Retrieves a List of Translations.
-     * 
+     *
      * @param className the class name.
-     * @param locale the locale.
+     * @param locale    the locale.
      * @return a List of Translations.
      */
     List<Translation> getTranslations( String className, Locale locale );
 
     /**
      * Retrieves a List of Translations.
-     * 
+     *
      * @param locale the locale.
      * @return a List of Translations.
      */
@@ -130,14 +123,14 @@ public interface TranslationService
 
     /**
      * Retrieves a List of all Translations.
-     * 
+     *
      * @return a List of all Translations.
      */
     List<Translation> getAllTranslations();
 
     /**
      * Deletes a Translation.
-     * 
+     *
      * @param translation the Translation.
      */
     void deleteTranslation( Translation translation );
@@ -151,4 +144,6 @@ public interface TranslationService
     void deleteTranslations( String className, String objectUid );
 
     void createOrUpdate( Translation translation );
+
+    boolean haveTranslations( String className );
 }
