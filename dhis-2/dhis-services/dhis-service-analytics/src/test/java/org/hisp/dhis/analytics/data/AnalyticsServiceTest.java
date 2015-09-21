@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
+
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
@@ -58,6 +59,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -231,6 +233,20 @@ public class AnalyticsServiceTest
         assertEquals( DimensionType.ORGANISATIONUNIT, actual.getDimensionType() );
         assertEquals( DataQueryParams.DISPLAY_NAME_ORGUNIT, actual.getDisplayName() );
         assertEquals( items, actual.getItems() );        
+    }
+    
+    @Test
+    public void testGetDimensionPeriod()
+    {
+        List<String> itemUids = Lists.newArrayList( "199501", "1999", 
+            RelativePeriodEnum.LAST_4_QUARTERS.toString(), RelativePeriodEnum.THIS_YEAR.toString() );
+
+        DimensionalObject actual = analyticsService.getDimension( DimensionalObject.PERIOD_DIM_ID, itemUids, null, null, null, false );
+        
+        assertEquals( DimensionalObject.PERIOD_DIM_ID, actual.getDimension() );
+        assertEquals( DimensionType.PERIOD, actual.getDimensionType() );
+        assertEquals( DataQueryParams.DISPLAY_NAME_PERIOD, actual.getDisplayName() );
+        assertEquals( 7, actual.getItems().size() );
     }
     
     @Test
