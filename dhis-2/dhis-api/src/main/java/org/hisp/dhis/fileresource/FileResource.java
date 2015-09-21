@@ -191,7 +191,7 @@ public class FileResource
     }
 
     // ---------------------------------------------------------------------
-    // Getters and setters
+    // Supportive methods
     // ---------------------------------------------------------------------
 
     private String generateStorageKey()
