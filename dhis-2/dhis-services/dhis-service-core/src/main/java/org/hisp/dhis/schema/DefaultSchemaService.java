@@ -34,6 +34,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.system.util.ReflectionUtils;
+import org.hisp.dhis.translation.TranslationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.OrderComparator;
 import org.springframework.util.StringUtils;
@@ -65,6 +66,9 @@ public class DefaultSchemaService implements SchemaService
     @Autowired
     private SessionFactory sessionFactory;
 
+    @Autowired
+    private TranslationService translationService;
+
     @PostConstruct
     public void init()
     {
@@ -75,6 +79,7 @@ public class DefaultSchemaService implements SchemaService
             if ( sessionFactory.getClassMetadata( schema.getKlass() ) != null )
             {
                 schema.setPersisted( true );
+                schema.setTranslated( translationService.haveTranslations( schema.getKlass().getSimpleName() ) );
             }
 
             schema.setDisplayName( beautify( schema.getName() ) );
