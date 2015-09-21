@@ -5,11 +5,14 @@
   xmlns:java="org.hisp.dhis.dxf2.gml.GmlConversionUtils"
   exclude-result-prefixes="java">
 
-  <xsl:param name="precision">4</xsl:param>
+  <!-- Decimal precision used for Point and Polygon type elements -->
+  <xsl:param name="pointPrecision">6</xsl:param>
+  <xsl:param name="polygonPrecision">4</xsl:param>
 
+  <!-- GML basic element matchers -->
   <xsl:template match="gml:coordinates" mode="multipleCoordinates">
     <xsl:text>[</xsl:text>
-    <xsl:value-of select="java:gmlCoordinatesToString(normalize-space(.),$precision)"
+    <xsl:value-of select="java:gmlCoordinatesToString(normalize-space(.),$polygonPrecision)"
       disable-output-escaping="yes"/>
     <xsl:text>]</xsl:text>
     <xsl:if test="position() != last()">
@@ -18,18 +21,18 @@
   </xsl:template>
 
   <xsl:template match="gml:coordinates" mode="singleCoordinate">
-    <xsl:value-of select="java:gmlCoordinatesToString(normalize-space(.),$precision)"
+    <xsl:value-of select="java:gmlCoordinatesToString(normalize-space(.),$pointPrecision)"
       disable-output-escaping="yes"/>
   </xsl:template>
 
   <xsl:template match="gml:pos">
-    <xsl:value-of select="java:gmlPosToString(normalize-space(.),$precision)"
+    <xsl:value-of select="java:gmlPosToString(normalize-space(.),$pointPrecision)"
       disable-output-escaping="yes" />
   </xsl:template>
 
   <xsl:template match="gml:posList">
     <xsl:text>[</xsl:text>
-    <xsl:value-of select="java:gmlPosListToString(normalize-space(.),$precision)"
+    <xsl:value-of select="java:gmlPosListToString(normalize-space(.),$polygonPrecision)"
       disable-output-escaping="yes"/>
     <xsl:text>]</xsl:text>
     <xsl:if test="position() != last()">
@@ -37,6 +40,7 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- GML feature matchers -->
   <xsl:template match="gml:Polygon">
     <featureType>Polygon</featureType>
     <coordinates>
@@ -77,6 +81,7 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- FeatureMember => OrganisationUnit conversion -->
   <xsl:template match="gml:featureMember">
     <xsl:variable name="uid"  select=".//*[local-name()='uid'  or local-name()='UID'  or local-name()='Uid']" />
     <xsl:variable name="code" select=".//*[local-name()='code' or local-name()='CODE' or local-name()='Code']" />
@@ -104,6 +109,7 @@
     </organisationUnit>
   </xsl:template>
 
+  <!-- Entry point -->
   <xsl:template match="/">
     <dxf xmlns="http://dhis2.org/schema/dxf/2.0">
       <organisationUnits>
