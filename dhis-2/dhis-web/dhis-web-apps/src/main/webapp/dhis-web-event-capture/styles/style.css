@@ -363,3 +363,8 @@ div#orgUnitTree {
     color: black;
     padding: 5px !important;
 }
+
+.form-control-label {
+    height: 34px;
+    font-size: 14px;
+}

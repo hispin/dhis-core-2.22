@@ -98,13 +98,15 @@
                     <span ng-if="editingEventInFull">{{'event_details'| translate}}</span>                       
                     <span ng-if="eventRegistration">{{'new_event'| translate}}</span>                            
                 </h3>
-                <div class="bordered-div" ng-if="displayCustomForm">
-                    <!--<div ng-if="programIndicators.length > 0" ng-include="'views/indicators.html'"></div>-->
-                    <div ng-include="'views/ec-custom-form.html'"></div>  
+                <div class="bordered-div col-sm-8">
+                    <div ng-if="displayCustomForm" ng-include="'views/ec-custom-form.html'"></div>  
+                    <div ng-if="!displayCustomForm" ng-include="'views/defaultForm.html'"></div>
+                    <div ng-include="'views/comments-section.html'"></div>
+                    <div ng-include="'views/buttons-section.html'"></div>
                 </div>
-                <div class="bordered-div container-default-form" ng-if="!displayCustomForm">
-                    <!--<div ng-if="programIndicators.length > 0" ng-include="'views/indicators.html'"></div>-->
-                    <div ng-include="'views/defaultForm.html'"></div>                
+                <div class="bordered-div col-sm-4"ng-if="allProgramRules.programIndicators.rules && allProgramRules.programIndicators.rules.length > 0">
+                    <div ng-if="allProgramRules.programIndicators.rules && allProgramRules.programIndicators.rules.length > 0" ng-include="'views/indicators.html'"></div>
+                    <div ng-if="warningMessages.length > 0" ng-include="'views/warnings.html'"></div>
                 </div>
             </div>
         </form>
