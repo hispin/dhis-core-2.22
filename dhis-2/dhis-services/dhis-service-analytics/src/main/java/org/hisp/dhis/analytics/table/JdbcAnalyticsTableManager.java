@@ -175,7 +175,7 @@ public class JdbcAnalyticsTableManager
 
             populateTable( table, "cast(dv.value as " + dbl + ")", "null", ValueType.NUMERIC_TYPES, intClause, approvalClause );
 
-            populateTable( table, "1", "null", Lists.newArrayList( ValueType.BOOLEAN ), "dv.value = 'true'", approvalClause );
+            populateTable( table, "1", "null", Lists.newArrayList( ValueType.BOOLEAN, ValueType.TRUE_ONLY ), "dv.value = 'true'", approvalClause );
 
             populateTable( table, "0", "null", Lists.newArrayList( ValueType.BOOLEAN ), "dv.value = 'false'", approvalClause );
 
