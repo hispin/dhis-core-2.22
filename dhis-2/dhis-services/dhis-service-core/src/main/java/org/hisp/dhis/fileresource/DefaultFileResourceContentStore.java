@@ -130,14 +130,14 @@ public class DefaultFileResourceContentStore
 
         Properties properties = configurationProvider.getConfiguration().getProperties();
 
-        Map<String, String> filestoreConfiguration = properties
+        Map<String, String> fileStoreConfiguration = properties
             .entrySet().stream().filter( p -> ((String) p.getKey()).startsWith( FILESTORE_CONFIG_NAMESPACE ) )
             .collect( Collectors.toMap(
                 p -> StringUtils.strip( (String) p.getKey() ),
                 p -> StringUtils.strip( (String) p.getValue() )
             ) );
 
-        String provider = filestoreConfiguration.getOrDefault( KEY_FILESTORE_PROVIDER, JCLOUDS_PROVIDER_KEY_FILESYSTEM );
+        String provider = fileStoreConfiguration.getOrDefault( KEY_FILESTORE_PROVIDER, JCLOUDS_PROVIDER_KEY_FILESYSTEM );
 
         if ( !SUPPORTED_PROVIDERS.contains( provider ) )
         {
@@ -151,9 +151,9 @@ public class DefaultFileResourceContentStore
             provider = JCLOUDS_PROVIDER_KEY_TRANSIENT;
         }
 
-        container = filestoreConfiguration.getOrDefault( KEY_FILESTORE_CONTAINER, DEFAULT_CONTAINER );
+        container = fileStoreConfiguration.getOrDefault( KEY_FILESTORE_CONTAINER, DEFAULT_CONTAINER );
 
-        String location = filestoreConfiguration.getOrDefault( KEY_FILESTORE_LOCATION, null );
+        String location = fileStoreConfiguration.getOrDefault( KEY_FILESTORE_LOCATION, null );
         Properties overrides = new Properties();
         Credentials credentials = new Credentials( "Unused", "Unused" );
 
@@ -169,8 +169,8 @@ public class DefaultFileResourceContentStore
         }
         else if ( provider.equals( JCLOUDS_PROVIDER_KEY_AWS_S3 ) )
         {
-            credentials = new Credentials( filestoreConfiguration.getOrDefault(
-                KEY_FILESTORE_IDENTITY, "" ), filestoreConfiguration.getOrDefault( KEY_FILESTORE_SECRET, "" ) );
+            credentials = new Credentials( fileStoreConfiguration.getOrDefault(
+                KEY_FILESTORE_IDENTITY, "" ), fileStoreConfiguration.getOrDefault( KEY_FILESTORE_SECRET, "" ) );
 
             log.info( "AWS S3 filestore provider configured." );
 
