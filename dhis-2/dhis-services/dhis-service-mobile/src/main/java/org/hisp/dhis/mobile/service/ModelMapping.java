@@ -46,7 +46,7 @@ public class ModelMapping
         DataElement de = new DataElement();
         de.setId( dataElement.getId() );
         de.setName( dataElement.getFormNameFallback() );
-        // de.setType( dataElement.getType() );
+        de.setType( dataElement.getValueType() );
 
         de.setCategoryOptionCombos( getCategoryOptionCombos( dataElement ) );
 
@@ -64,8 +64,7 @@ public class ModelMapping
         ProgramStageDataElement de = new ProgramStageDataElement();
         de.setId( dataElement.getId() );
         de.setName( dataElement.getFormNameFallback() );
-        // de.setType( dataElement.getType() );
-
+        de.setType( dataElement.getValueType() );
         de.setCategoryOptionCombos( getCategoryOptionCombos( dataElement ) );
 
         // Limit the optionset transfer to the client
@@ -85,7 +84,7 @@ public class ModelMapping
         {
             mobileOptionSet.setId( dhisOptionSet.getId() );
             mobileOptionSet.setName( dhisOptionSet.getName() );
-//            mobileOptionSet.setOptions( dhisOptionSet.getOptions() );
+            mobileOptionSet.setOptions( dhisOptionSet.getOptionValues() );
         }
         else
         {

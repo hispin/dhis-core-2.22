@@ -218,7 +218,6 @@ public class Program
         }
         dout.writeInt( getRelatedProgramId() );
         dout.writeInt( relationshipType );
-
     }
 
     @Override

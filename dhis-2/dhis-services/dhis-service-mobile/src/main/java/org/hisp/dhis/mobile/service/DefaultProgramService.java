@@ -249,10 +249,11 @@ public class DefaultProgramService
             for ( ProgramStageDataElement programStageDataElement : programStageDataElements )
             {
                 org.hisp.dhis.dataelement.DataElement dataElement = programStageDataElement.getDataElement();
-                org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement de = ModelMapping.getDataElementLWUIT( dataElement );
+                org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement de = ModelMapping
+                    .getDataElementLWUIT( dataElement );
 
                 de.setCompulsory( programStageDataElement.isCompulsory() );
-                // de.setNumberType( programStageDataElement.getDataElement().getNumberType() );
+                de.setNumberType( null );
 
                 des.add( de );
             }
@@ -274,7 +275,8 @@ public class DefaultProgramService
                     // data element list of program stage
                     List<Integer> dataElementIds = new ArrayList<>();
 
-                    for ( ProgramStageDataElement eachPogramStageDataElement : eachSection.getProgramStageDataElements() )
+                    for ( ProgramStageDataElement eachPogramStageDataElement : eachSection
+                        .getProgramStageDataElements() )
                     {
                         dataElementIds.add( eachPogramStageDataElement.getDataElement().getId() );
                     }
@@ -290,8 +292,7 @@ public class DefaultProgramService
 
         pr.setProgramStages( prStgs );
 
-        List<ProgramTrackedEntityAttribute> programPatientAttributes = new ArrayList<>(
-            program.getProgramAttributes() );
+        List<ProgramTrackedEntityAttribute> programPatientAttributes = new ArrayList<>( program.getProgramAttributes() );
 
         for ( ProgramTrackedEntityAttribute ppa : programPatientAttributes )
         {
@@ -315,7 +316,7 @@ public class DefaultProgramService
 
         org.hisp.dhis.api.mobile.model.PatientAttribute mobileAttribute = new org.hisp.dhis.api.mobile.model.PatientAttribute();
         mobileAttribute.setName( pa.getName() );
-        // mobileAttribute.setType( pa.getValueType() );
+        mobileAttribute.setType( pa.getValueType() );
         mobileAttribute.setValue( "" );
 
         if ( ppa.isDisplayInList() )

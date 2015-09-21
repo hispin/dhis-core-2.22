@@ -36,6 +36,7 @@ import java.util.List;
 import org.hisp.dhis.api.mobile.model.Model;
 import org.hisp.dhis.api.mobile.model.ModelList;
 import org.hisp.dhis.api.mobile.model.OptionSet;
+import org.hisp.dhis.common.ValueType;
 
  /**
  * @author Nguyen Kim Lai
@@ -55,6 +56,28 @@ public class ProgramStageDataElement extends Model
     private OptionSet optionSet;
     
     private String value;
+    
+    public static final String TYPE_STRING = "string";
+
+    public static final String TYPE_PHONE_NUMBER = "phoneNumber";
+
+    public static final String TYPE_EMAIL = "email";
+
+    public static final String TYPE_NUMBER = "number";
+
+    public static final String TYPE_LETTER = "letter";
+
+    public static final String TYPE_BOOL = "bool";
+
+    public static final String TYPE_TRUE_ONLY = "trueOnly";
+
+    public static final String TYPE_DATE = "date";
+
+    public static final String TYPE_OPTION_SET = "optionSet";
+
+    public static final String TYPE_TRACKER_ASSOCIATE = "trackerAssociate";
+
+    public static final String TYPE_USERS = "users";
     
     @Override
     public void serialize( DataOutputStream dout )
@@ -178,6 +201,57 @@ public class ProgramStageDataElement extends Model
     public void setType( String type )
     {
         this.type = type;
+    }
+    
+    public void setType (ValueType type) {
+        if ( type == ValueType.BOOLEAN )
+        {
+            this.setType( TYPE_BOOL );
+        }
+        else if ( type == ValueType.DATE || type == ValueType.DATETIME )
+        {
+            this.setType( TYPE_DATE );
+        }
+        else if ( type == ValueType.EMAIL )
+        {
+            this.setType( TYPE_EMAIL );
+        }
+        else if ( type == ValueType.INTEGER || type == ValueType.NUMBER )
+        {
+            this.setType( TYPE_NUMBER );
+        }
+        else if ( type == ValueType.LETTER )
+        {
+            this.setType( TYPE_LETTER );
+        }
+        else if ( type == ValueType.LONG_TEXT )
+        {
+            this.setType( TYPE_STRING );
+        }
+        else if ( type == ValueType.OPTION_SET )
+        {
+            this.setType( TYPE_OPTION_SET );
+        }
+        else if ( type == ValueType.PHONE_NUMBER )
+        {
+            this.setType( TYPE_PHONE_NUMBER );
+        }
+        else if ( type == ValueType.TRACKER_ASSOCIATE )
+        {
+            this.setType( TYPE_TRACKER_ASSOCIATE );
+        }
+        else if ( type == ValueType.TRUE_ONLY )
+        {
+            this.setType( TYPE_TRUE_ONLY );
+        }
+        else if ( type == ValueType.USERNAME )
+        {
+            this.setType( TYPE_USERS );
+        }
+        else
+        {
+            this.setType( TYPE_STRING );
+        }
     }
 
     public boolean isCompulsory()
