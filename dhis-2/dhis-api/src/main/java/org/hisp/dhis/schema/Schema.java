@@ -112,6 +112,12 @@ public class Schema implements Ordered, Klass
     private boolean shareable;
 
     /**
+     * Does this type have any translations.
+     * Please remember that this is only updated at server start, so if any translation was added later, this flag is not updated.
+     */
+    private boolean translated;
+
+    /**
      * Points to relative Web-API endpoint (if exposed).
      */
     private String relativeApiEndpoint;
@@ -287,6 +293,18 @@ public class Schema implements Ordered, Klass
     public void setShareable( boolean shareable )
     {
         this.shareable = shareable;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isTranslated()
+    {
+        return translated;
+    }
+
+    public void setTranslated( boolean translated )
+    {
+        this.translated = translated;
     }
 
     @JsonProperty
