@@ -141,7 +141,6 @@ public class GmlImportServiceTest
     // -------------------------------------------------------------------------
 
     @Test
-    @Ignore
     public void testImportGml()
         throws Exception
     {
