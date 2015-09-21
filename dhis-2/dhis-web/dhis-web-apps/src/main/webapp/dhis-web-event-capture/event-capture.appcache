@@ -122,7 +122,8 @@ views/home.html
 views/modal.html
 views/notes.html
 views/buttons-section.html
-views/indicators-section.html
+views/indicators.html
+views/warnings.html
 
 ../dhis-web-commons/fonts/LiberationSans-Regular-webfont.eot
 ../dhis-web-commons/fonts/LiberationSans-Regular-webfont.woff
