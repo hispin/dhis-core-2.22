@@ -47,7 +47,10 @@ import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementDomain;
+import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
@@ -80,6 +83,8 @@ public class AnalyticsServiceTest
     private DataElement deE;
     private DataElement deF;
     
+    private DataElementCategoryOptionCombo cocA;
+    
     private DataSet dsA;
     private DataSet dsB;
     
@@ -105,6 +110,9 @@ public class AnalyticsServiceTest
     
     @Autowired
     private DataElementService dataElementService;
+    
+    @Autowired
+    private DataElementCategoryService categoryService;
     
     @Autowired
     private DataSetService dataSetService;
@@ -137,6 +145,8 @@ public class AnalyticsServiceTest
         dataElementService.addDataElement( deD );
         dataElementService.addDataElement( deE );
         dataElementService.addDataElement( deF );
+        
+        cocA = categoryService.getDefaultDataElementCategoryOptionCombo();
 
         dsA = createDataSet( 'A', monthly );
         dsB = createDataSet( 'B', monthly );
@@ -209,6 +219,25 @@ public class AnalyticsServiceTest
     public void testGetDimensionData()
     {
         List<NameableObject> items = Lists.newArrayList( deA, deB, deC, dsA, dsB );
+        
+        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        
+        DimensionalObject actual = analyticsService.getDimension( DimensionalObject.DATA_X_DIM_ID, itemUids, null, null, null, false );
+        
+        assertEquals( DimensionalObject.DATA_X_DIM_ID, actual.getDimension() );
+        assertEquals( DimensionType.DATA_X, actual.getDimensionType() );
+        assertEquals( DataQueryParams.DISPLAY_NAME_DATA_X, actual.getDisplayName() );
+        assertEquals( items, actual.getItems() );
+    }
+
+    @Test
+    public void testGetDimensionOperand()
+    {
+        DataElementOperand opA = new DataElementOperand( deA, cocA );
+        DataElementOperand opB = new DataElementOperand( deB, cocA );
+        DataElementOperand opC = new DataElementOperand( deC, cocA );
+        
+        List<NameableObject> items = Lists.newArrayList( opA, opB, opC );
         
         List<String> itemUids = IdentifiableObjectUtils.getUids( items );
         
