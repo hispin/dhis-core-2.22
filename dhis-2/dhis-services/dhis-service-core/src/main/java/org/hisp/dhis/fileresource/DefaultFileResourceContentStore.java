@@ -85,19 +85,19 @@ public class DefaultFileResourceContentStore
     // Property keys
     // -------------------------------------------------------------------------
 
-    private static final String FILESTORE_CONFIG_NAMESPACE = "filestore";
+    private static final String FILE_STORE_CONFIG_NAMESPACE = "filestore";
 
-    private static final String KEY_FILESTORE_PROVIDER = FILESTORE_CONFIG_NAMESPACE + ".provider";
-    private static final String KEY_FILESTORE_CONTAINER = FILESTORE_CONFIG_NAMESPACE + ".container";
-    private static final String KEY_FILESTORE_LOCATION = FILESTORE_CONFIG_NAMESPACE + ".location";
-    private static final String KEY_FILESTORE_IDENTITY = FILESTORE_CONFIG_NAMESPACE + ".identity";
-    private static final String KEY_FILESTORE_SECRET = FILESTORE_CONFIG_NAMESPACE + ".secret";
+    private static final String KEY_FILE_STORE_PROVIDER  = FILE_STORE_CONFIG_NAMESPACE + ".provider";
+    private static final String KEY_FILE_STORE_CONTAINER = FILE_STORE_CONFIG_NAMESPACE + ".container";
+    private static final String KEY_FILE_STORE_LOCATION  = FILE_STORE_CONFIG_NAMESPACE + ".location";
+    private static final String KEY_FILE_STORE_IDENTITY  = FILE_STORE_CONFIG_NAMESPACE + ".identity";
+    private static final String KEY_FILE_STORE_SECRET    = FILE_STORE_CONFIG_NAMESPACE + ".secret";
 
     // -------------------------------------------------------------------------
     // Defaults
     // -------------------------------------------------------------------------
 
-    private static final String DEFAULT_CONTAINER = "dhis2_filestore";
+    private static final String DEFAULT_CONTAINER = "dhis2-file-store";
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -131,13 +131,13 @@ public class DefaultFileResourceContentStore
         Properties properties = configurationProvider.getConfiguration().getProperties();
 
         Map<String, String> fileStoreConfiguration = properties
-            .entrySet().stream().filter( p -> ((String) p.getKey()).startsWith( FILESTORE_CONFIG_NAMESPACE ) )
+            .entrySet().stream().filter( p -> ((String) p.getKey()).startsWith( FILE_STORE_CONFIG_NAMESPACE ) )
             .collect( Collectors.toMap(
                 p -> StringUtils.strip( (String) p.getKey() ),
                 p -> StringUtils.strip( (String) p.getValue() )
             ) );
 
-        String provider = fileStoreConfiguration.getOrDefault( KEY_FILESTORE_PROVIDER, JCLOUDS_PROVIDER_KEY_FILESYSTEM );
+        String provider = fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_PROVIDER, JCLOUDS_PROVIDER_KEY_FILESYSTEM );
 
         if ( !SUPPORTED_PROVIDERS.contains( provider ) )
         {
@@ -151,9 +151,9 @@ public class DefaultFileResourceContentStore
             provider = JCLOUDS_PROVIDER_KEY_TRANSIENT;
         }
 
-        container = fileStoreConfiguration.getOrDefault( KEY_FILESTORE_CONTAINER, DEFAULT_CONTAINER );
+        container = fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_CONTAINER, DEFAULT_CONTAINER );
 
-        String location = fileStoreConfiguration.getOrDefault( KEY_FILESTORE_LOCATION, null );
+        String location = fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_LOCATION, null );
         Properties overrides = new Properties();
         Credentials credentials = new Credentials( "Unused", "Unused" );
 
@@ -170,7 +170,7 @@ public class DefaultFileResourceContentStore
         else if ( provider.equals( JCLOUDS_PROVIDER_KEY_AWS_S3 ) )
         {
             credentials = new Credentials( fileStoreConfiguration.getOrDefault(
-                KEY_FILESTORE_IDENTITY, "" ), fileStoreConfiguration.getOrDefault( KEY_FILESTORE_SECRET, "" ) );
+                KEY_FILE_STORE_IDENTITY, "" ), fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_SECRET, "" ) );
 
             log.info( "AWS S3 filestore provider configured." );
 
