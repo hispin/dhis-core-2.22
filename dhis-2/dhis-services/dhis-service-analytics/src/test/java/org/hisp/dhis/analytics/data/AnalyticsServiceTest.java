@@ -51,6 +51,8 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementDomain;
+import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
@@ -103,6 +105,12 @@ public class AnalyticsServiceTest
     private OrganisationUnitGroup ouGroupC;
     
     private OrganisationUnitGroupSet ouGroupSetA;
+    
+    private DataElementGroup deGroupA;
+    private DataElementGroup deGroupB;
+    private DataElementGroup deGroupC;
+    
+    private DataElementGroupSet deGroupSetA;
     
     private PeriodType monthly = PeriodType.getPeriodTypeByName( MonthlyPeriodType.NAME );
     
@@ -185,11 +193,7 @@ public class AnalyticsServiceTest
         ouGroupA = createOrganisationUnitGroup( 'A' );
         ouGroupB = createOrganisationUnitGroup( 'B' );
         ouGroupC = createOrganisationUnitGroup( 'C' );
-        
-        ouGroupA.setGroupSet( ouGroupSetA );
-        ouGroupB.setGroupSet( ouGroupSetA );
-        ouGroupC.setGroupSet( ouGroupSetA );
-        
+                
         ouGroupA.addOrganisationUnit( ouA );
         ouGroupA.addOrganisationUnit( ouB );
         ouGroupA.addOrganisationUnit( ouC );
@@ -198,12 +202,39 @@ public class AnalyticsServiceTest
         organisationUnitGroupService.addOrganisationUnitGroup( ouGroupB );
         organisationUnitGroupService.addOrganisationUnitGroup( ouGroupC );
         
-        ouGroupSetA.getOrganisationUnitGroups().add( ouGroupA );
-        ouGroupSetA.getOrganisationUnitGroups().add( ouGroupB );
-        ouGroupSetA.getOrganisationUnitGroups().add( ouGroupC );
+        ouGroupSetA.addOrganisationUnitGroup( ouGroupA );
+        ouGroupSetA.addOrganisationUnitGroup( ouGroupB );
+        ouGroupSetA.addOrganisationUnitGroup( ouGroupC );
         
         organisationUnitGroupService.updateOrganisationUnitGroupSet( ouGroupSetA );
 
+        deGroupSetA = createDataElementGroupSet( 'A' );
+        
+        dataElementService.addDataElementGroupSet( deGroupSetA );
+        
+        deGroupA = createDataElementGroup( 'A' );
+        deGroupB = createDataElementGroup( 'B' );
+        deGroupC = createDataElementGroup( 'C' );
+        
+        deGroupA.setGroupSet( deGroupSetA );
+        deGroupB.setGroupSet( deGroupSetA );
+        deGroupC.setGroupSet( deGroupSetA );
+        
+        deGroupA.setGroupSet( deGroupSetA );
+        deGroupA.addDataElement( deA );
+        deGroupA.addDataElement( deB );
+        deGroupA.addDataElement( deC );
+                
+        dataElementService.addDataElementGroup( deGroupA );
+        dataElementService.addDataElementGroup( deGroupB );
+        dataElementService.addDataElementGroup( deGroupC );
+        
+        deGroupSetA.addDataElementGroup( deGroupA );
+        deGroupSetA.addDataElementGroup( deGroupB );
+        deGroupSetA.addDataElementGroup( deGroupC );
+        
+        dataElementService.updateDataElementGroupSet( deGroupSetA );
+        
         // ---------------------------------------------------------------------
         // Mock injection
         // ---------------------------------------------------------------------
@@ -306,6 +337,21 @@ public class AnalyticsServiceTest
         assertEquals( ouGroupSetA.getUid(), actual.getDimension() );
         assertEquals( DimensionType.ORGANISATIONUNIT_GROUPSET, actual.getDimensionType() );
         assertEquals( ouGroupSetA.getName(), actual.getDisplayName() );
+        assertEquals( items, actual.getItems() );  
+    }
+
+    @Test
+    public void testGetDimensionDataElementGroupSet()
+    {
+        List<NameableObject> items = Lists.newArrayList( deGroupA, deGroupB );
+        
+        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        
+        DimensionalObject actual = analyticsService.getDimension( deGroupSetA.getUid(), itemUids, null, null, null, false );
+        
+        assertEquals( deGroupSetA.getUid(), actual.getDimension() );
+        assertEquals( DimensionType.DATAELEMENT_GROUPSET, actual.getDimensionType() );
+        assertEquals( deGroupSetA.getName(), actual.getDisplayName() );
         assertEquals( items, actual.getItems() );  
     }
     
