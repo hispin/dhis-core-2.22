@@ -50,7 +50,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.DimensionalObjectUtils;
+import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IllegalQueryException;
@@ -464,7 +464,7 @@ public class DefaultTrackedEntityInstanceService
      */
     private QueryItem getQueryItem( String item )
     {
-        String[] split = item.split( DimensionalObjectUtils.DIMENSION_NAME_SEP );
+        String[] split = item.split( DimensionalObject.DIMENSION_NAME_SEP );
 
         if ( split == null || (split.length % 2 != 1) )
         {
@@ -509,13 +509,13 @@ public class DefaultTrackedEntityInstanceService
             return null;
         }
 
-        if ( !query.contains( DimensionalObjectUtils.DIMENSION_NAME_SEP ) )
+        if ( !query.contains( DimensionalObject.DIMENSION_NAME_SEP ) )
         {
             return new QueryFilter( QueryOperator.EQ, query );
         }
         else
         {
-            String[] split = query.split( DimensionalObjectUtils.DIMENSION_NAME_SEP );
+            String[] split = query.split( DimensionalObject.DIMENSION_NAME_SEP );
 
             if ( split == null || split.length != 2 )
             {

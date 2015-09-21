@@ -1088,11 +1088,11 @@ public class DataQueryParams
         
         Map<MeasureFilter, Double> map = new HashMap<>();
         
-        String[] criteria = param.split( DimensionalObjectUtils.OPTION_SEP );
+        String[] criteria = param.split( DimensionalObject.OPTION_SEP );
         
         for ( String c : criteria )
         {
-            String[] criterion = c.split( DimensionalObjectUtils.DIMENSION_NAME_SEP );
+            String[] criterion = c.split( DimensionalObject.DIMENSION_NAME_SEP );
             
             if ( criterion != null && criterion.length == 2 && MathUtils.isNumeric( criterion[1] ) )
             {

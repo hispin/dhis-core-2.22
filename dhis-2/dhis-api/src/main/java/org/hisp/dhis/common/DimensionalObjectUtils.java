@@ -28,6 +28,10 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.hisp.dhis.common.DimensionalObject.DIMENSION_NAME_SEP;
+import static org.hisp.dhis.common.DimensionalObject.ITEM_SEP;
+import static org.hisp.dhis.common.DimensionalObject.OPTION_SEP;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,10 +54,6 @@ import com.google.common.collect.Sets;
  */
 public class DimensionalObjectUtils
 {
-    public static final String DIMENSION_NAME_SEP = ":";
-    public static final String OPTION_SEP = ";";
-    public static final String ITEM_SEP = "-";
-    
     private static final Pattern INT_PATTERN = Pattern.compile( "^(0|-?[1-9]\\d*)$" );
     private static final Pattern DIMENSIONAL_OPERAND_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
     

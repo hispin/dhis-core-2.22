@@ -203,7 +203,7 @@ public class BaseDimensionalObject
 
         String filterItems = filter.substring( opLen, filter.length() );
 
-        return new ArrayList<>( Arrays.asList( filterItems.split( DimensionalObjectUtils.OPTION_SEP ) ) );
+        return new ArrayList<>( Arrays.asList( filterItems.split( DimensionalObject.OPTION_SEP ) ) );
     }
 
     //--------------------------------------------------------------------------
