@@ -28,12 +28,12 @@ package org.hisp.dhis.translation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.system.util.LocaleUtils;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-
-import org.hisp.dhis.system.util.LocaleUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Lars Helge Overland
@@ -154,5 +154,11 @@ public class DefaultTranslationService
         {
             deleteTranslation( translationNoFallback );
         }
+    }
+
+    @Override
+    public boolean haveTranslations( String className )
+    {
+        return translationStore.haveTranslations( className );
     }
 }

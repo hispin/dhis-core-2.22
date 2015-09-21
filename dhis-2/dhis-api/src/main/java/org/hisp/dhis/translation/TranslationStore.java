@@ -28,10 +28,10 @@ package org.hisp.dhis.translation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+
 import java.util.List;
 import java.util.Locale;
-
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 
 /**
  * @author Oyvind Brucker
@@ -109,4 +109,6 @@ public interface TranslationStore
      * @param objectUid the id.
      */
     void deleteTranslations( String className, String objectUid );
+
+    boolean haveTranslations( String className );
 }
