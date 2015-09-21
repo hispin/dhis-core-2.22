@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AnalyticsService;
@@ -262,6 +263,21 @@ public class AnalyticsServiceTest
         assertEquals( DimensionType.ORGANISATIONUNIT, actual.getDimensionType() );
         assertEquals( DataQueryParams.DISPLAY_NAME_ORGUNIT, actual.getDisplayName() );
         assertEquals( items, actual.getItems() );        
+    }
+
+    @Test
+    public void testGetDimensionOrgUnitGroup()
+    {        
+        String ouGroupAUid = OrganisationUnit.KEY_ORGUNIT_GROUP + ouGroupA.getUid();
+        
+        List<String> itemUids = Lists.newArrayList( ouGroupAUid );
+
+        DimensionalObject actual = analyticsService.getDimension( DimensionalObject.ORGUNIT_DIM_ID, itemUids, null, null, null, false );
+        
+        assertEquals( DimensionalObject.ORGUNIT_DIM_ID, actual.getDimension() );
+        assertEquals( DimensionType.ORGANISATIONUNIT, actual.getDimensionType() );
+        assertEquals( DataQueryParams.DISPLAY_NAME_ORGUNIT, actual.getDisplayName() );
+        assertEquals( ouGroupA.getMembers(), Sets.newHashSet( actual.getItems() ) );        
     }
     
     @Test
