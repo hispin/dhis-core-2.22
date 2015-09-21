@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.dataelement.DataElement;
@@ -55,6 +57,8 @@ import org.hisp.dhis.commons.filter.FilterUtils;
 public class AnalyticsDataSetReportStore
     implements DataSetReportStore
 {
+    private static final Log log = LogFactory.getLog( AnalyticsDataSetReportStore.class );
+    
     private AnalyticsService analyticsService;
     
     public void setAnalyticsService( AnalyticsService analyticsService )
@@ -72,7 +76,7 @@ public class AnalyticsDataSetReportStore
     {
         List<DataElement> dataElements = new ArrayList<>( dataSet.getDataElements() );
         
-        FilterUtils.filter( dataElements, new AggregatableDataElementFilter() );
+        FilterUtils.filter( dataElements, AggregatableDataElementFilter.INSTANCE );
         
         if ( dataElements.isEmpty() )
         {
@@ -114,7 +118,7 @@ public class AnalyticsDataSetReportStore
             List<DataElement> dataElements = new ArrayList<>( section.getDataElements() );
             List<DataElementCategory> categories = section.hasCategoryCombo() ? section.getCategoryCombo().getCategories() : null;
 
-            FilterUtils.filter( dataElements, new AggregatableDataElementFilter() );
+            FilterUtils.filter( dataElements, AggregatableDataElementFilter.INSTANCE );
 
             if ( dataElements.isEmpty() || categories == null || categories.isEmpty() )
             {
@@ -125,6 +129,12 @@ public class AnalyticsDataSetReportStore
             {
                 if ( category.isDefault() )
                 {
+                    continue; // No need for sub-total for default
+                }
+                
+                if ( !category.isDataDimension() )
+                {
+                    log.warn( "Could not get sub-total for category: " + category.getUid() + " for data set report: " + dataSet + ", not a data dimension" );
                     continue;
                 }
                 
@@ -158,7 +168,7 @@ public class AnalyticsDataSetReportStore
     {
         List<DataElement> dataElements = new ArrayList<>( dataSet.getDataElements() );
 
-        FilterUtils.filter( dataElements, new AggregatableDataElementFilter() );
+        FilterUtils.filter( dataElements, AggregatableDataElementFilter.INSTANCE );
 
         if ( dataElements.isEmpty() )
         {
