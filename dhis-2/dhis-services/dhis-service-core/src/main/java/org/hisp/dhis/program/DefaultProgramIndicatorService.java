@@ -747,6 +747,10 @@ public class DefaultProgramIndicatorService
         {
             return "enrollmentdate";
         }
+        else if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( var ) )
+        {
+            return "incidentdate";
+        }
         else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( var ) )
         {
             return "'" + DateUtils.getLongDateString() + "'";
