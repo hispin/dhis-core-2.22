@@ -34,6 +34,9 @@ import java.io.IOException;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
+import org.h2.value.Value;
+import org.hisp.dhis.common.ValueType;
+
 public class PatientAttribute
     implements DataStreamSerializable
 {
@@ -51,11 +54,34 @@ public class PatientAttribute
 
     private OptionSet optionSet;
 
+    public static final String TYPE_STRING = "string";
+
+    public static final String TYPE_PHONE_NUMBER = "phoneNumber";
+
+    public static final String TYPE_EMAIL = "email";
+
+    public static final String TYPE_NUMBER = "number";
+
+    public static final String TYPE_LETTER = "letter";
+
+    public static final String TYPE_BOOL = "bool";
+
+    public static final String TYPE_TRUE_ONLY = "trueOnly";
+
+    public static final String TYPE_DATE = "date";
+
+    public static final String TYPE_OPTION_SET = "optionSet";
+
+    public static final String TYPE_TRACKER_ASSOCIATE = "trackerAssociate";
+
+    public static final String TYPE_USERS = "users";
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
-    public PatientAttribute( String name, String value, String type, boolean isMandatory, boolean isDisplayedInList, OptionSet optionSet )
+    public PatientAttribute( String name, String value, String type, boolean isMandatory, boolean isDisplayedInList,
+        OptionSet optionSet )
     {
         this.name = name;
         this.value = value;
@@ -115,6 +141,58 @@ public class PatientAttribute
         this.type = type;
     }
 
+    public void setType( ValueType type )
+    {
+        if ( type == ValueType.BOOLEAN )
+        {
+            this.setType( TYPE_BOOL );
+        }
+        else if ( type == ValueType.DATE || type == ValueType.DATETIME )
+        {
+            this.setType( TYPE_DATE );
+        }
+        else if ( type == ValueType.EMAIL )
+        {
+            this.setType( TYPE_EMAIL );
+        }
+        else if ( type == ValueType.INTEGER || type == ValueType.NUMBER )
+        {
+            this.setType( TYPE_NUMBER );
+        }
+        else if ( type == ValueType.LETTER )
+        {
+            this.setType( TYPE_LETTER );
+        }
+        else if ( type == ValueType.LONG_TEXT )
+        {
+            this.setType( TYPE_STRING );
+        }
+        else if ( type == ValueType.OPTION_SET )
+        {
+            this.setType( TYPE_OPTION_SET );
+        }
+        else if ( type == ValueType.PHONE_NUMBER )
+        {
+            this.setType( TYPE_PHONE_NUMBER );
+        }
+        else if ( type == ValueType.TRACKER_ASSOCIATE )
+        {
+            this.setType( TYPE_TRACKER_ASSOCIATE );
+        }
+        else if ( type == ValueType.TRUE_ONLY )
+        {
+            this.setType( TYPE_TRUE_ONLY );
+        }
+        else if ( type == ValueType.USERNAME )
+        {
+            this.setType( TYPE_USERS );
+        }
+        else
+        {
+            this.setType( TYPE_STRING );
+        }
+    }
+
     public OptionSet getOptionSet()
     {
         return optionSet;
@@ -154,7 +232,7 @@ public class PatientAttribute
         dout.writeUTF( this.type );
         dout.writeBoolean( this.isMandatory );
         dout.writeBoolean( this.isDisplayedInList );
-        
+
         int optionSize = (this.optionSet == null || this.optionSet.getOptions() == null) ? 0 : this.optionSet
             .getOptions().size();
         dout.writeInt( optionSize );
