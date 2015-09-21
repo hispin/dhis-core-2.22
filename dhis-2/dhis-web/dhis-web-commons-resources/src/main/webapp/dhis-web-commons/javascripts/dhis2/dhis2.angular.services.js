@@ -1464,6 +1464,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     action:action.programRuleActionType,
                                     dataElement:action.dataElement,
                                     trackedEntityAttribute:action.trackedEntityAttribute,
+                                    programStageSection: action.programStageSection && action.programStageSection.id ? action.programStageSection.id : null,
                                     content:action.content,
                                     data:action.data,
                                     ineffect:undefined
