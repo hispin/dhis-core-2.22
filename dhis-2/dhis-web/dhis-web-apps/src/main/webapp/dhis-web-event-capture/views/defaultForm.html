@@ -115,7 +115,7 @@
                             <div ng-switch-when="NUMBER">
                                 <input type="number"                                         
                                        d2-number-validator
-                                       number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
+                                       number-type={{eventGridColumn.valueType}}
                                        ng-model="currentEvent[eventGridColumn.id]"                                        
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
@@ -126,7 +126,7 @@
                             <div ng-switch-when="INTEGER">
                                 <input type="number"                                         
                                        d2-number-validator
-                                       number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
+                                       number-type={{eventGridColumn.valueType}}
                                        ng-model="currentEvent[eventGridColumn.id]"                                        
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
@@ -137,7 +137,7 @@
                             <div ng-switch-when="INTEGER_POSITIVE">
                                 <input type="number"                                         
                                        d2-number-validator
-                                       number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
+                                       number-type={{eventGridColumn.valueType}}
                                        ng-model="currentEvent[eventGridColumn.id]"                                        
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
@@ -148,7 +148,7 @@
                             <div ng-switch-when="INTEGER_NEGATIVE">
                                 <input type="number"                                         
                                        d2-number-validator
-                                       number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
+                                       number-type={{eventGridColumn.valueType}}
                                        ng-model="currentEvent[eventGridColumn.id]"                                        
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
@@ -159,7 +159,7 @@
                             <div ng-switch-when="INTEGER_ZERO_OR_POSITIVE">
                                 <input type="number"                                         
                                        d2-number-validator
-                                       number-type={{prStDes[eventGridColumn.id].dataElement.numberType}}
+                                       number-type={{eventGridColumn.valueType}}
                                        ng-model="currentEvent[eventGridColumn.id]"                                        
                                        ng-required={{eventGridColumn.compulsory}}
                                        name="foo" 
@@ -377,7 +377,7 @@
                                 <div ng-switch-when="NUMBER">
                                     <input type="number"                                                
                                            d2-number-validator 
-                                           number-type={{prStDes[de.dataElement.id].dataElement.numberType}}
+                                           number-type={{prStDes[de.dataElement.id].dataElement.valueType}}
                                            ng-model="currentEvent[de.dataElement.id]"                                                
                                            ng-required={{prStDes[de.dataElement.id].compulsory}}
                                            name="foo" 
