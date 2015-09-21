@@ -214,7 +214,7 @@ public class DefaultFileResourceContentStore
             return null;
         }
 
-        return new ByteSource()
+        ByteSource byteSource = new ByteSource()
         {
             @Override
             public InputStream openStream()
@@ -229,6 +229,19 @@ public class DefaultFileResourceContentStore
                 }
             }
         };
+
+        boolean isEmptyOrFailed;
+
+        try
+        {
+            isEmptyOrFailed = byteSource.isEmpty();
+        }
+        catch ( IOException e )
+        {
+            isEmptyOrFailed = true;
+        }
+
+        return isEmptyOrFailed ? null : byteSource;
     }
 
     public String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 )
