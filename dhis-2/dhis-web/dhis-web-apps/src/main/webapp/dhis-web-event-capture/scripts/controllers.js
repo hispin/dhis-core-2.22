@@ -888,6 +888,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     //listen for rule effect changes    
     $scope.$on('ruleeffectsupdated', function(event, args) {
         $scope.warningMessages = [];
+        $scope.hiddenSections = [];
         //console.log('args.event:  ', $rootScope.ruleeffects['SINGLE_EVENT'][0]);
         if($rootScope.ruleeffects[args.event]) {
             //Establish which event was affected:
@@ -928,7 +929,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                         }
                     }
                     if(effect.action === "HIDESECTION") {
-                        //get section id
+                        if(effect.programStageSection){
+                            $scope.hiddenSections[effect.programStageSection] = effect.programStageSection;
+                        }
                     }
                     if(effect.action === "SHOWERROR" && effect.dataElement.id){
                         var dialogOptions = {

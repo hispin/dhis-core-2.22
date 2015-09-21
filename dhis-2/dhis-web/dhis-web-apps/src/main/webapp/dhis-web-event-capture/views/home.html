@@ -62,7 +62,7 @@
                                 name="section"                             
                                 ng-model="selectedSection.id">
                             <option value="ALL">{{'show_all'| translate}}</option>
-                            <option ng-repeat="section in selectedProgramStage.programStageSections" value={{section.id}}>{{section.name}}</option>
+                            <option ng-if="!hiddenSections[section.id]" ng-repeat="section in selectedProgramStage.programStageSections" value={{section.id}}>{{section.name}}</option>
                         </select>
                     </div>
                 </div>
