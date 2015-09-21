@@ -1020,14 +1020,18 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
             //add context variables:
             //last parameter "valuefound" is always true for event date
-            variables = pushVariable(variables, 'incident_date', executingEvent.eventDate, null, 'DATE', true, 'V' );
             variables = pushVariable(variables, 'current_date', DateUtils.getToday(), null, 'DATE', true, 'V' );
-            if(selectedEnrollment){
-                variables = pushVariable(variables, 'enrollment_date', selectedEnrollment.dateOfEnrollment, null, 'DATE', true, 'V' );
-                variables = pushVariable(variables, 'enrollment_id', selectedEnrollment.enrollment, null, 'TEXT', true, 'V');
-            }
-
-                        
+            
+            variables = pushVariable(variables, 'event_date', executingEvent.eventDate, null, 'DATE', true, 'V' );
+            variables = pushVariable(variables, 'due_date', executingEvent.eventDate, null, 'DATE', true, 'V' );
+            variables = pushVariable(variables, 'event_count', evs ? evs.all.length : 0, null, 'INTEGER', true, 'V' );
+    
+            variables = pushVariable(variables, 'enrollment_date', selectedEnrollment ? selectedEnrollment.enrollmentDate : '', null, 'DATE', selectedEnrollment ? true : false, 'V' );
+            variables = pushVariable(variables, 'enrollment_id', selectedEnrollment ? selectedEnrollment.enrollment : '', null, 'TEXT',  selectedEnrollment ? true : false, 'V');
+            variables = pushVariable(variables, 'incident_date', selectedEnrollment ? selectedEnrollment.incidentDate : '', null, 'DATE',  selectedEnrollment ? true : false, 'V');
+            variables = pushVariable(variables, 'enrollment_count', selectedEnrollment ? 1 : 0, null, 'INTEGER', true, 'V');
+            variables = pushVariable(variables, 'tei_count', selectedEnrollment ? 1 : 0, null, 'INTEGER', true, 'V');
+    
             //Push all constant values:
             angular.forEach(allProgramRules.constants, function(constant){
                 variables = pushVariable(variables, constant.id, constant.value, null, 'INTEGER', true, 'C' );
@@ -1138,17 +1142,19 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     var runDhisFunctions = function(expression, variablesHash, flag){
         //Called from "runExpression". Only proceed with this logic in case there seems to be dhis function calls: "d2:" is present.
         if(angular.isDefined(expression) && expression.indexOf("d2:") !== -1){   
-            var dhisFunctions = [{name:"d2:daysbetween",parameters:2},
-                                {name:"d2:yearsbetween",parameters:2},
+            var dhisFunctions = [{name:"d2:daysBetween",parameters:2},
+                                {name:"d2:yearsBetween",parameters:2},
                                 {name:"d2:floor",parameters:1},
                                 {name:"d2:modulus",parameters:2},
                                 {name:"d2:concatenate"},
-                                {name:"d2:adddays",parameters:2},
+                                {name:"d2:addDays",parameters:2},
                                 {name:"d2:zing",parameters:1},
                                 {name:"d2:oizp",parameters:1},
                                 {name:"d2:count",parameters:1},
-                                {name:"d2:countifzeropos",parameters:1},
-                                {name:"d2:countifvalue",parameters:2}];
+                                {name:"d2:countIfZeroPos",parameters:1},
+                                {name:"d2:countIfValue",parameters:2},
+                                {name:"d2:ceil",parameters:1},
+                                {name:"d2:round",parameters:1}];
             var continueLooping = true;
             //Safety harness on 10 loops, in case of unanticipated syntax causing unintencontinued looping
             for(var i = 0; i < 10 && continueLooping; i++ ) { 
@@ -1181,7 +1187,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         }
 
                         //Special block for d2:weeksBetween(*,*) - add such a block for all other dhis functions.
-                        if(dhisFunction.name === "d2:daysbetween") {
+                        if(dhisFunction.name === "d2:daysBetween") {
                             var firstdate = $filter('trimquotes')(parameters[0]);
                             var seconddate = $filter('trimquotes')(parameters[1]);
                             firstdate = moment(firstdate);
@@ -1190,7 +1196,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'days'));
                             successfulExecution = true;
                         } 
-                        else if(dhisFunction.name === "d2:yearsbetween") {
+                        else if(dhisFunction.name === "d2:yearsBetween") {
                             var firstdate = $filter('trimquotes')(parameters[0]);
                             var seconddate = $filter('trimquotes')(parameters[1]);
                             firstdate = moment(firstdate);
@@ -1222,7 +1228,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             expression = expression.replace(callToThisFunction, returnString);
                             successfulExecution = true;
                         } 
-                        else if(dhisFunction.name === "d2:adddays") {
+                        else if(dhisFunction.name === "d2:addDays") {
                             var date = $filter('trimquotes')(parameters[0]);
                             var daystoadd = $filter('trimquotes')(parameters[1]);
                             var newdate = DateUtils.format( moment(date, CalendarService.getSetting().momentFormat).add(daystoadd, 'days') );
@@ -1278,7 +1284,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             expression = expression.replace(callToThisFunction, count);
                             successfulExecution = true;
                         }
-                        else if(dhisFunction.name === "d2:countifzeropos") {
+                        else if(dhisFunction.name === "d2:countIfZeroPos") {
                             var variableName = $filter('trimvariablequalifiers') (parameters[0]);
                             var variableObject = variablesHash[variableName];
 
@@ -1312,7 +1318,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             expression = expression.replace(callToThisFunction, count);
                             successfulExecution = true;
                         }
-                        else if(dhisFunction.name === "d2:countifvalue") {
+                        else if(dhisFunction.name === "d2:countIfValue") {
                             var variableName = parameters[0];
                             var variableObject = variablesHash[variableName];
 
@@ -1349,8 +1355,21 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             expression = expression.replace(callToThisFunction, count);
                             successfulExecution = true;
                         }
+                        else if(dhisFunction.name === "d2:ceil") {
+                            var ceiled = Math.ceil(parameters[0]);
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, ceiled);
+                            successfulExecution = true;
+                        }
+                        else if(dhisFunction.name === "d2:round") {
+                            var rounded = Math.round(parameters[0]);
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, rounded);
+                            successfulExecution = true;
+                        }
                     });
                 });
+                
                 //We only want to continue looping until we made a successful replacement,
                 //and there is still occurrences of "d2:" in the code. In cases where d2: occur outside
                 //the expected d2: function calls, one unneccesary iteration will be done and the 
