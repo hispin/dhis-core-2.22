@@ -115,9 +115,9 @@ public class MathUtilsTest
         assertTrue( MathUtils.isNumeric( "-1234" ) );
         assertTrue( MathUtils.isNumeric( "-12.34" ) );
         assertTrue( MathUtils.isNumeric( "-0.34" ) );
-        assertTrue( MathUtils.isNumeric( "6.34E11" ) );
-        assertTrue( MathUtils.isNumeric( "3.342E7" ) );
-        assertTrue( MathUtils.isNumeric( "2.43E-7" ) );
+        assertTrue( MathUtils.isNumeric( "6.34" ) );
+        assertTrue( MathUtils.isNumeric( "3.34" ) );
+        assertTrue( MathUtils.isNumeric( "2.43" ) );
 
         assertFalse( MathUtils.isNumeric( "Hey" ) );
         assertFalse( MathUtils.isNumeric( "45 Perinatal Condition" ) );
@@ -160,9 +160,9 @@ public class MathUtilsTest
         assertTrue( MathUtils.isNumericLenient( "-1234" ) );
         assertTrue( MathUtils.isNumericLenient( "-12.34" ) );
         assertTrue( MathUtils.isNumericLenient( "-0.34" ) );
-        assertTrue( MathUtils.isNumericLenient( "6.34E11" ) );
-        assertTrue( MathUtils.isNumericLenient( "3.342E7" ) );
-        assertTrue( MathUtils.isNumericLenient( "2.43E-7" ) );
+        assertTrue( MathUtils.isNumericLenient( "6.34" ) );
+        assertTrue( MathUtils.isNumericLenient( "3.342" ) );
+        assertTrue( MathUtils.isNumericLenient( "2.43" ) );
 
         assertFalse( MathUtils.isNumericLenient( "Hey" ) );
         assertFalse( MathUtils.isNumericLenient( "45 Perinatal Condition" ) );
