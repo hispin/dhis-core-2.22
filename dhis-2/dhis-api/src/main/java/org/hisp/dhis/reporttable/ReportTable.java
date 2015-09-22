@@ -968,13 +968,15 @@ public class ReportTable
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isSkipRounding() {
-		return skipRounding;
-	}
+    public boolean isSkipRounding()
+    {
+        return skipRounding;
+    }
 
-	public void setSkipRounding(boolean skipRounding) {
-		this.skipRounding = skipRounding;
-	}    
+    public void setSkipRounding( boolean skipRounding )
+    {
+        this.skipRounding = skipRounding;
+    }
 
     // -------------------------------------------------------------------------
     // Get- and set-methods for transient properties
