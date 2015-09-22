@@ -515,6 +515,7 @@ Ext.onReady( function() {
             showRowSubTotals,
 			showDimensionLabels,
 			hideEmptyRows,
+            skipRounding,
             aggregationType,
             dataApprovalLevel,
 			showHierarchy,
@@ -570,7 +571,12 @@ Ext.onReady( function() {
 
 		hideEmptyRows = Ext.create('Ext.form.field.Checkbox', {
 			boxLabel: NS.i18n.hide_empty_rows,
-			style: 'margin-bottom:' + checkboxBottomMargin + 'px',
+			style: 'margin-bottom:' + checkboxBottomMargin + 'px'
+		});
+
+		skipRounding = Ext.create('Ext.form.field.Checkbox', {
+			boxLabel: NS.i18n.skip_rounding,
+			style: 'margin-top:' + separatorTopMargin + 'px; margin-bottom:' + comboBottomMargin + 'px'
 		});
 
 		aggregationType = Ext.create('Ext.form.field.ComboBox', {
@@ -796,6 +802,7 @@ Ext.onReady( function() {
                 showRowSubTotals,
                 showDimensionLabels,
 				hideEmptyRows,
+                skipRounding,
                 aggregationType,
                 dataApprovalLevel
 			]
@@ -859,6 +866,7 @@ Ext.onReady( function() {
                     showRowSubTotals: showRowSubTotals.getValue(),
                     showDimensionLabels: showDimensionLabels.getValue(),
 					hideEmptyRows: hideEmptyRows.getValue(),
+					skipRounding: skipRounding.getValue(),
                     aggregationType: aggregationType.getValue(),
                     dataApprovalLevel: {id: dataApprovalLevel.getValue()},
 					showHierarchy: showHierarchy.getValue(),
@@ -883,6 +891,7 @@ Ext.onReady( function() {
 				showRowSubTotals.setValue(Ext.isBoolean(layout.showRowSubTotals) ? layout.showRowSubTotals : true);
 				showDimensionLabels.setValue(Ext.isBoolean(layout.showDimensionLabels) ? layout.showDimensionLabels : true);
 				hideEmptyRows.setValue(Ext.isBoolean(layout.hideEmptyRows) ? layout.hideEmptyRows : false);
+                skipRounding.setValue(Ext.isBoolean(layout.skipRounding) ? layout.skipRounding : false);
                 aggregationType.setValue(Ext.isString(layout.aggregationType) ? layout.aggregationType : finalsStyleConf.default_);
 				dataApprovalLevel.setValue(Ext.isObject(layout.dataApprovalLevel) && Ext.isString(layout.dataApprovalLevel.id) ? layout.dataApprovalLevel.id : finalsStyleConf.default_);
 				showHierarchy.setValue(Ext.isBoolean(layout.showHierarchy) ? layout.showHierarchy : false);
@@ -1009,6 +1018,7 @@ Ext.onReady( function() {
 					w.showRowSubTotals = showRowSubTotals;
                     w.showDimensionLabels = showDimensionLabels;
 					w.hideEmptyRows = hideEmptyRows;
+                    w.skipRounding = skipRounding;
                     w.aggregationType = aggregationType;
                     w.dataApprovalLevel = dataApprovalLevel;
 					w.showHierarchy = showHierarchy;
@@ -6673,6 +6683,7 @@ Ext.onReady( function() {
 				url += '&columns=' + columnNames.join(';');
 				url += '&rows=' + rowNames.join(';');
 				url += ns.app.layout.hideEmptyRows ? '&hideEmptyRows=true' : '';
+                url += ns.app.layout.skipRounding ? '&skipRounding=true' : '';
 
 				window.open(url, isNewTab ? '_blank' : '_top');
 			}

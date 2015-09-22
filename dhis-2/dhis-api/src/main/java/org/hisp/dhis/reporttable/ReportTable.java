@@ -191,6 +191,11 @@ public class ReportTable
      */
     private boolean showDimensionLabels;
 
+    /**
+     * Indicates rounding values.
+     */
+    private boolean skipRounding;
+
     // -------------------------------------------------------------------------
     // Transient properties
     // -------------------------------------------------------------------------
@@ -960,11 +965,22 @@ public class ReportTable
         this.showDimensionLabels = showDimensionLabels;
     }
 
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class, DimensionalView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isSkipRounding() {
+		return skipRounding;
+	}
+
+	public void setSkipRounding(boolean skipRounding) {
+		this.skipRounding = skipRounding;
+	}    
+
     // -------------------------------------------------------------------------
     // Get- and set-methods for transient properties
     // -------------------------------------------------------------------------
 
-    @JsonIgnore
+	@JsonIgnore
     public String getReportingPeriodName()
     {
         return reportingPeriodName;
@@ -1027,6 +1043,7 @@ public class ReportTable
             hideEmptyRows = reportTable.isHideEmptyRows();
             showHierarchy = reportTable.isShowHierarchy();
             showDimensionLabels = reportTable.isShowDimensionLabels();
+            skipRounding = reportTable.isSkipRounding();
             hideEmptyRows = reportTable.isHideEmptyRows();
             topLimit = reportTable.getTopLimit();
             sortOrder = reportTable.getSortOrder();

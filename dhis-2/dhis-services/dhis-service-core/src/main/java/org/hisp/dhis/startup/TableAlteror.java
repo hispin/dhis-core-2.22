@@ -448,6 +448,7 @@ public class TableAlteror
         executeSql( "update eventchart set hidenadata = false where hidenadata is null" );
         executeSql( "update reporttable set showdimensionlabels = false where showdimensionlabels is null" );
         executeSql( "update eventreport set showdimensionlabels = false where showdimensionlabels is null" );
+        executeSql( "update reporttable set skiprounding = false where skiprounding is null" );
 
         // move timelydays from system setting => dataset property
         executeSql( "update dataset set timelydays = 15 where timelydays is null" );

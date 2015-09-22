@@ -407,6 +407,8 @@ Ext.onReady( function() {
 
 				// hideEmptyRows: boolean (false)
 
+                // skipRounding: boolean (false)
+
                 // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
 
                 // dataApprovalLevel: object
@@ -588,6 +590,7 @@ Ext.onReady( function() {
 					layout.showRowSubTotals = Ext.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (Ext.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
+                    layout.skipRounding = Ext.isBoolean(config.skipRounding) ? config.skipRounding : false;
                     layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : conf.finals.style.default_;
 					layout.dataApprovalLevel = Ext.isObject(config.dataApprovalLevel) && Ext.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
 
@@ -1748,6 +1751,10 @@ Ext.onReady( function() {
 					delete layout.hideEmptyRows;
 				}
 
+				if (!layout.skipRounding) {
+					delete layout.skipRounding;
+				}
+
 				if (!layout.showHierarchy) {
 					delete layout.showHierarchy;
 				}
@@ -2180,6 +2187,11 @@ Ext.onReady( function() {
                 // relative period date
                 if (xLayout.relativePeriodDate) {
                     paramString += '&relativePeriodDate=' + xLayout.relativePeriodDate;
+                }
+
+                // skip rounding
+                if (xLayout.skipRounding) {
+                    paramString += '&skipRounding=true';
                 }
 
 				return paramString.replace(/#/g, '.');

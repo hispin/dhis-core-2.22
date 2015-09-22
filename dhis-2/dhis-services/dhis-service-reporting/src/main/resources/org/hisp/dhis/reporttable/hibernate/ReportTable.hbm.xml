@@ -182,6 +182,8 @@
     <property name="showHierarchy" />
 
     <property name="showDimensionLabels" />
+    
+    <property name="skipRounding" />
 
     <!-- Access properties -->
     <property name="externalAccess" />
