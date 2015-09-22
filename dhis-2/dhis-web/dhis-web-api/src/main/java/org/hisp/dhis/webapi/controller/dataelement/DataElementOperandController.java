@@ -60,26 +60,28 @@ public class DataElementOperandController extends AbstractCrudController<DataEle
     @Override
     protected List<DataElementOperand> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
     {
-        List<DataElementOperand> dataElementOperands;
-
+        List<DataElementOperand> dataElementOperands = Lists.newArrayList();
+        
         if ( options.isTrue( "persisted" ) )
         {
             dataElementOperands = Lists.newArrayList( manager.getAll( DataElementOperand.class ) );
         }
         else
         {
+            boolean totals = options.isTrue( "totals" );
+            
             String deGroup = CollectionUtils.popStartsWith( filters, "dataElement.dataElementGroups.id:eq:" );
             deGroup = deGroup != null ? deGroup.substring( "dataElement.dataElementGroups.id:eq:".length() ) : null;
 
             if ( deGroup != null )
             {
                 DataElementGroup dataElementGroup = manager.get( DataElementGroup.class, deGroup );
-                dataElementOperands = new ArrayList<>( dataElementCategoryService.getOperands( dataElementGroup.getMembers() ) );
+                dataElementOperands = new ArrayList<>( dataElementCategoryService.getOperands( dataElementGroup.getMembers(), totals ) );
             }
             else
             {
                 List<DataElement> dataElements = new ArrayList<>( manager.getAllSorted( DataElement.class ) );
-                dataElementOperands = new ArrayList<>( dataElementCategoryService.getOperands( dataElements ) );
+                dataElementOperands = new ArrayList<>( dataElementCategoryService.getOperands( dataElements, totals ) );
             }
         }
 
