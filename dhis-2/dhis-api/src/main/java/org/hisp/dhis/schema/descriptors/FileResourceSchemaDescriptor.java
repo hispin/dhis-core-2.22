@@ -33,10 +33,12 @@ import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaDescriptor;
 import org.hisp.dhis.security.Authority;
 import org.hisp.dhis.security.AuthorityType;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Halvdan Hoem Grelland
  */
+@Component
 public class FileResourceSchemaDescriptor
     implements SchemaDescriptor
 {
@@ -46,7 +48,8 @@ public class FileResourceSchemaDescriptor
 
     public static final String API_ENDPOINT = "/" + PLURAL;
 
-    @Override public Schema getSchema()
+    @Override 
+    public Schema getSchema()
     {
         Schema schema = new Schema( FileResource.class, SINGULAR, PLURAL );
         schema.setRelativeApiEndpoint( API_ENDPOINT );
