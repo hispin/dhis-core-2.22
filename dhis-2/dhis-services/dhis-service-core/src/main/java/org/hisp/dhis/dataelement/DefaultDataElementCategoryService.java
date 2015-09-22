@@ -870,7 +870,7 @@ public class DefaultDataElementCategoryService
             {
                 if ( !dataElement.getCategoryCombo().isDefault() && includeTotals )
                 {
-                    DataElementOperand operand = new DataElementOperand();
+                    DataElementOperand operand = new DataElementOperand( dataElement );
                     operand.updateProperties( dataElement );
     
                     operands.add( operand );
@@ -878,32 +878,10 @@ public class DefaultDataElementCategoryService
     
                 for ( DataElementCategoryOptionCombo categoryOptionCombo : dataElement.getCategoryCombo().getSortedOptionCombos() )
                 {
-                    DataElementOperand operand = new DataElementOperand();
+                    DataElementOperand operand = new DataElementOperand( dataElement, categoryOptionCombo );
                     operand.updateProperties( dataElement, categoryOptionCombo );
     
                     operands.add( operand );
-                }
-            }
-        }
-
-        return operands;
-    }
-
-    @Override
-    public List<DataElementOperand> getFullOperands( Collection<DataElement> dataElements )
-    {
-        List<DataElementOperand> operands = new ArrayList<>();
-
-        for ( DataElement dataElement : dataElements )
-        {
-            if ( dataElement != null && dataElement.getCategoryCombo() != null )
-            {
-                for ( DataElementCategoryOptionCombo categoryOptionCombo : dataElement.getCategoryCombo().getOptionCombos() )
-                {
-                    DataElementOperand dataElementOperand = new DataElementOperand( dataElement, categoryOptionCombo );
-                    dataElementOperand.updateProperties( dataElement, categoryOptionCombo );
-    
-                    operands.add( dataElementOperand );
                 }
             }
         }

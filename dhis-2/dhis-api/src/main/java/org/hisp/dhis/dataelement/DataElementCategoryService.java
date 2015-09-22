@@ -618,15 +618,6 @@ public interface DataElementCategoryService
      */
     List<DataElementOperand> getOperands( Collection<DataElement> dataElements, boolean includeTotals );
 
-    /**
-     * Gets the Operands for the given Collection of DataElements. Operands will
-     * contain DataElement and CategoryOptionCombo object
-     * 
-     * @param dataElements the Collection of DataElements.
-     * @return the Operands for the given Collection of DataElements.
-     */
-    List<DataElementOperand> getFullOperands( Collection<DataElement> dataElements );
-
     // -------------------------------------------------------------------------
     // CategoryOptionGroup
     // -------------------------------------------------------------------------

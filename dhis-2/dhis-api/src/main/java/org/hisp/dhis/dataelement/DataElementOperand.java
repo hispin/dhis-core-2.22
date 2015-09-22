@@ -112,6 +112,11 @@ public class DataElementOperand
     {
     }
 
+    public DataElementOperand( DataElement dataElement )
+    {
+        this.dataElement = dataElement;
+    }
+
     public DataElementOperand( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo )
     {
         this.dataElement = dataElement;
