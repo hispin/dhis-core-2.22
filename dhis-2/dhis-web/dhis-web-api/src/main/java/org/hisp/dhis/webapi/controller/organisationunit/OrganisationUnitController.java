@@ -28,19 +28,28 @@ package org.hisp.dhis.webapi.controller.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.organisationunit.comparator.OrganisationUnitByLevelComparator;
 import org.hisp.dhis.query.Order;
 import org.hisp.dhis.query.Query;
 import org.hisp.dhis.schema.descriptors.OrganisationUnitSchemaDescriptor;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.util.ObjectUtils;
 import org.hisp.dhis.version.VersionService;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -53,14 +62,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.google.common.collect.Lists;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -89,19 +93,6 @@ public class OrganisationUnitController
         Integer maxLevel = options.getInt( "maxLevel" );
         boolean levelSorted = options.isTrue( "levelSorted" );
 
-        if ( maxLevel != null )
-        {
-            if ( organisationUnitService.getOrganisationUnitLevelByLevel( maxLevel ) == null )
-            {
-                maxLevel = null;
-            }
-
-            if ( level == null )
-            {
-                level = 1;
-            }
-        }
-
         if ( options.isTrue( "userOnly" ) )
         {
             entityList = new ArrayList<>( currentUserService.getCurrentUser().getOrganisationUnits() );
@@ -123,23 +114,13 @@ public class OrganisationUnitController
                 entityList = new ArrayList<>( organisationUnitService.getOrganisationUnitsAtLevel( 1 ) );
             }
         }
-        else if ( maxLevel != null || level != null )
+        else if ( ObjectUtils.firstNonNull( level, maxLevel ) != null )
         {
-            entityList = new ArrayList<>();
-
-            if ( maxLevel == null )
-            {
-                entityList.addAll( organisationUnitService.getOrganisationUnitsAtLevel( level ) );
-            }
-            else
-            {
-                entityList.addAll( organisationUnitService.getOrganisationUnitsAtLevel( level ) );
-
-                while ( !level.equals( maxLevel ) )
-                {
-                    entityList.addAll( organisationUnitService.getOrganisationUnitsAtLevel( ++level ) );
-                }
-            }
+            OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+            params.setLevel( level );
+            params.setMaxLevels( maxLevel );
+                        
+            entityList = organisationUnitService.getOrganisationUnitsByQuery( params );
         }
         else if ( levelSorted )
         {
