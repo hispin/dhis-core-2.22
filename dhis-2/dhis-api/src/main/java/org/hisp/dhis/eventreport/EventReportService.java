@@ -45,5 +45,5 @@ public interface EventReportService
     
     void deleteEventReport( EventReport report );
     
-    List<EventReport> getAllEventReprots();
+    List<EventReport> getAllEventReports();
 }

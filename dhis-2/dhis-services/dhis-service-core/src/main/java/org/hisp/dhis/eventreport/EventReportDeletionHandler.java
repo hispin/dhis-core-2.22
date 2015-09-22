@@ -61,7 +61,7 @@ public class EventReportDeletionHandler
     @Override
     public void deleteProgramStage( ProgramStage programStage )
     {
-        Collection<EventReport> charts = eventReportService.getAllEventReprots();
+        Collection<EventReport> charts = eventReportService.getAllEventReports();
         
         for( EventReport chart : charts )
         {
@@ -75,7 +75,7 @@ public class EventReportDeletionHandler
     @Override
     public void deleteProgram( Program program )
     {
-        Collection<EventReport> charts = eventReportService.getAllEventReprots();
+        Collection<EventReport> charts = eventReportService.getAllEventReports();
         
         for( EventReport chart : charts )
         {

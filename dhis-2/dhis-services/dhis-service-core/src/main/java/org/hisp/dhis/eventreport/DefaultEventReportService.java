@@ -82,7 +82,7 @@ public class DefaultEventReportService
     }
     
     @Override
-    public List<EventReport> getAllEventReprots()
+    public List<EventReport> getAllEventReports()
     {
         return eventReportStore.getAll();
     }
