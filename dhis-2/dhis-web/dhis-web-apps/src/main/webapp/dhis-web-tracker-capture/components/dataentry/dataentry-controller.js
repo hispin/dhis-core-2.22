@@ -736,30 +736,29 @@ trackerCapture.controller('DataEntryController',
 
     };
 
-    /*$scope.getInputNotifcationClass = function(id, custom, event){
-     if(!event) {
-     event = $scope.currentEvent;
-     }
-     if($scope.currentElement.id && $scope.currentElement.event){
-     if($scope.currentElement.saved && ($scope.currentElement.id === id && $scope.currentElement.event === event.event)){
-
-     if(custom){
-     return 'input-success';
-     }
-     return 'form-control input-success';
-     }            
-     if(!$scope.currentElement.saved && ($scope.currentElement.id === id && $scope.currentElement.event === event.event)){
-     if(custom){
-     return 'input-error';
-     }
-     return 'form-control input-error';
-     }            
-     }  
-     if(custom){
-     return '';
-     }
-     return 'form-control';
-     };*/
+    $scope.getInputNotifcationClass = function(id, custom, event){
+        if(!event) {
+            event = $scope.currentEvent;
+        }
+        if($scope.currentElement.id && $scope.currentElement.id === id && $scope.currentElement.event && $scope.currentElement.event === event.event){
+            if($scope.currentElement.saved){
+                if(custom){
+                    return 'input-success';
+                }
+                return 'form-control input-success';
+            }            
+            else{
+                if(custom){
+                    return 'input-error';
+                }
+                return 'form-control input-error';
+            }            
+        }  
+        if(custom){
+            return '';
+        }
+        return 'form-control';
+    };
 
     //Infinite Scroll
     $scope.infiniteScroll = {};
@@ -772,20 +771,6 @@ trackerCapture.controller('DataEntryController',
 
     $scope.addMoreOptions = function () {
         $scope.infiniteScroll.currentOptions += $scope.infiniteScroll.optionsToAdd;
-    };
-
-    $scope.getInputNotifcationClass = function (id, custom, event) {
-        if (!event) {
-            event = $scope.currentEvent;
-        }
-        if ($scope.currentElement.id &&
-                $scope.currentElement.event &&
-                $scope.currentElement.id === id &&
-                $scope.currentElement.event === event.event) {
-            return $scope.currentElement.saved ? 'input-success; ' : 'input-error; ';
-        }
-
-        return '';
     };
 
     var completeEnrollment = function () {

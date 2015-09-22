@@ -442,6 +442,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.editingEventInGrid = false;
         $scope.currentElement.updated = false;        
         $scope.currentEvent = {};
+        $scope.currentElement = {};
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
     };
     
@@ -973,15 +974,25 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.saveDatavalue = function(){        
         $scope.executeRules();
     };
-    /*$scope.getInputNotifcationClass = function(id, custom, event){
-        var style = "";
-        if($scope.currentElement.id && $scope.currentElement.id === id){            
-            style = $scope.currentElement.updated ? 'update-success' : 'update-error';
-        }
-        return style + ' form-control'; 
-    };*/
     
-    $scope.getInputNotifcationClass = function(id, custom){        
-        return '; ';
+    $scope.getInputNotifcationClass = function(id, custom){
+        if($scope.currentElement.id && $scope.currentElement.id === id){
+            if($scope.currentElement.updated){
+                if(custom){
+                    return 'input-success';
+                }
+                return 'form-control input-success';
+            }            
+            else{
+                if(custom){
+                    return 'input-error';
+                }
+                return 'form-control input-error';
+            }            
+        }  
+        if(custom){
+            return '';
+        }
+        return 'form-control';
     };
 });
