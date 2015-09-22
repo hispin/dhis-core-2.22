@@ -589,7 +589,7 @@ public class DataValueController
 
         if ( fileResource.getDomain() != FileResourceDomain.DATA_VALUE )
         {
-            throw  new WebMessageException( WebMessageUtils.conflict( "File resource domain must be of type DATA_VALUE" ) );
+            throw  new WebMessageException( WebMessageUtils.conflict( "File resource domain must be DATA_VALUE" ) );
         }
 
         ByteSource content = fileResourceService.getFileResourceContent( fileResource );
@@ -612,7 +612,7 @@ public class DataValueController
         try
         {
             inputStream = content.openStream();
-            IOUtils.copyLarge( inputStream, response.getOutputStream() );
+            IOUtils.copy( inputStream, response.getOutputStream() );
         }
         catch ( IOException e )
         {
