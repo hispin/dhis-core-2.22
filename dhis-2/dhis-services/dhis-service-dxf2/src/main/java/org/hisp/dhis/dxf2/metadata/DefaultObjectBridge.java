@@ -61,6 +61,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -131,11 +132,7 @@ public class DefaultObjectBridge
     {
         registeredTypes.add( PeriodType.class );
         registeredTypes.add( UserCredentials.class );
-
-        for ( Schema schema : schemaService.getMetadataSchemas() )
-        {
-            registeredTypes.add( schema.getKlass() );
-        }
+        registeredTypes.addAll( schemaService.getMetadataSchemas().stream().map( Schema::getKlass ).collect( Collectors.toList() ) );
     }
 
     @Override
@@ -286,13 +283,9 @@ public class DefaultObjectBridge
         {
             Collection<UserCredentials> allUserCredentials = userService.getAllUserCredentials();
 
-            for ( UserCredentials userCredentials : allUserCredentials )
-            {
-                if ( userCredentials.getUsername() != null )
-                {
-                    usernameMap.put( userCredentials.getUsername(), userCredentials );
-                }
-            }
+            allUserCredentials.stream().filter( userCredentials -> userCredentials.getUsername() != null ).forEach( userCredentials -> {
+                usernameMap.put( userCredentials.getUsername(), userCredentials );
+            } );
         }
     }
 
