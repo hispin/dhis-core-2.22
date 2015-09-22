@@ -115,6 +115,14 @@ public class OrganisationUnitQueryParams
         return CODE_SEP_LENGTH * level;
     }
     
+    public void setLevel( Integer level )
+    {
+        if ( level != null )
+        {
+            levels.add( level );
+        }
+    }
+        
     @Override
     public String toString()
     {
