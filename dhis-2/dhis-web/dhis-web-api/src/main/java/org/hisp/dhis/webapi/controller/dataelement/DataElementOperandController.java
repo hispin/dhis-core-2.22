@@ -69,7 +69,7 @@ public class DataElementOperandController extends AbstractCrudController<DataEle
         else
         {
             String deGroup = CollectionUtils.popStartsWith( filters, "dataElement.dataElementGroups.id:eq:" );
-            deGroup = deGroup.substring( "dataElement.dataElementGroups.id:eq:".length() );
+            deGroup = deGroup != null ? deGroup.substring( "dataElement.dataElementGroups.id:eq:".length() ) : null;
 
             if ( deGroup != null )
             {
