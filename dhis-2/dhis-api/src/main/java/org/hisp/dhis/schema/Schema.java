@@ -48,6 +48,8 @@ import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -440,6 +442,16 @@ public class Schema implements Ordered, Klass
     public void setPropertyMap( Map<String, Property> propertyMap )
     {
         this.propertyMap = propertyMap;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "references", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "reference", namespace = DxfNamespaces.DXF_2_0 )
+    public Set<Class> getReferences()
+    {
+        return getProperties().stream()
+            .filter( p -> p.isCollection() ? PropertyType.REFERENCE == p.getItemPropertyType() : PropertyType.REFERENCE == p.getPropertyType() )
+            .map( p -> p.isCollection() ? p.getItemKlass() : p.getKlass() ).collect( Collectors.toSet() );
     }
 
     public Map<String, Property> getPersistedProperties()
