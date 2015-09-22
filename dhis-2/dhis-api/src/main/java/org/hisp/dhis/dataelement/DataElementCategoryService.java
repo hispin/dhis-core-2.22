@@ -545,50 +545,6 @@ public interface DataElementCategoryService
      */
     DataElementCategoryOptionCombo getDataElementCategoryOptionComboAcl( IdentifiableProperty property, String id );
     
-    /**
-     * Populates all transient properties on each Operand in the given
-     * collection.
-     * 
-     * @param operands the collection of Operands.
-     * @return a set of Operands.
-     */
-    List<DataElementOperand> populateOperands( List<DataElementOperand> operands );
-
-    /**
-     * Gets the Operands for the given Collection of DataElements.
-     * 
-     * @param dataElements the Collection of DataElements.
-     * @return the Operands for the given Collection of DataElements.
-     */
-    List<DataElementOperand> getOperands( Collection<DataElement> dataElements );
-
-    /**
-     * Gets the Operands for the given Collection of DataElements.
-     * 
-     * @param dataElements the Collection of DataElements.
-     * @param includeTotals whether to include DataElement totals in the
-     *        Collection of Operands.
-     * @return the Operands for the given Collection of DataElements.
-     */
-    List<DataElementOperand> getOperands( Collection<DataElement> dataElements, boolean includeTotals );
-
-    /**
-     * Gets the Operands for the DataElements with names like the given name.
-     * 
-     * @param name the name.
-     * @return the Operands for the DataElements with names like the given name.
-     */
-    List<DataElementOperand> getOperandsLikeName( String name );
-
-    /**
-     * Gets the Operands for the given Collection of DataElements. Operands will
-     * contain DataElement and CategoryOptionCombo object
-     * 
-     * @param dataElements the Collection of DataElements.
-     * @return the Operands for the given Collection of DataElements.
-     */
-    List<DataElementOperand> getFullOperands( Collection<DataElement> dataElements );
-
     List<DataElementCategory> getDataElementCategoriesBetween( int first, int max );
 
     List<DataElementCategory> getDataElementCategoriesBetweenByName( String name, int first, int max );
@@ -622,6 +578,54 @@ public interface DataElementCategoryService
     List<DataElementCategoryCombo> getDataElementCategoryCombosBetween( int first, int max );
 
     List<DataElementCategoryCombo> getDataElementCategoryCombosBetweenByName( String name, int first, int max );
+
+    // -------------------------------------------------------------------------
+    // DataElementOperand
+    // -------------------------------------------------------------------------
+
+    /**
+     * Populates all transient properties on each Operand in the given
+     * collection.
+     * 
+     * @param operands the collection of Operands.
+     * @return a set of Operands.
+     */
+    List<DataElementOperand> populateOperands( List<DataElementOperand> operands );
+
+    /**
+     * Gets the Operands for the given Collection of DataElements.
+     * 
+     * @param dataElements the Collection of DataElements.
+     * @return the Operands for the given Collection of DataElements.
+     */
+    List<DataElementOperand> getOperands( Collection<DataElement> dataElements );
+
+    /**
+     * Gets the Operands for the DataElements with names like the given name.
+     * 
+     * @param name the name.
+     * @return the Operands for the DataElements with names like the given name.
+     */
+    List<DataElementOperand> getOperandsLikeName( String name );
+
+    /**
+     * Gets the Operands for the given Collection of DataElements.
+     * 
+     * @param dataElements the Collection of DataElements.
+     * @param includeTotals whether to include DataElement totals in the
+     *        Collection of Operands.
+     * @return the Operands for the given Collection of DataElements.
+     */
+    List<DataElementOperand> getOperands( Collection<DataElement> dataElements, boolean includeTotals );
+
+    /**
+     * Gets the Operands for the given Collection of DataElements. Operands will
+     * contain DataElement and CategoryOptionCombo object
+     * 
+     * @param dataElements the Collection of DataElements.
+     * @return the Operands for the given Collection of DataElements.
+     */
+    List<DataElementOperand> getFullOperands( Collection<DataElement> dataElements );
 
     // -------------------------------------------------------------------------
     // CategoryOptionGroup
