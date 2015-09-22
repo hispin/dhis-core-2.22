@@ -170,16 +170,16 @@ public class HibernateTrackedEntityInstanceStore
                 {
                     String filter = queryFilter.getSqlFilter( StringUtils.lowerCase( queryFilter.getFilter() ) );
 
-                    hql += " and exists (from TrackedEntityAttributeValue teav where teav.entityInstance=tei";
+                    hql += hlp.whereAnd() + " exists (from TrackedEntityAttributeValue teav where teav.entityInstance=tei";
                     hql += " and teav.attribute.uid='" + queryItem.getItemId() + "'";
 
                     if ( queryItem.isNumeric() )
                     {
-                        hql += " and teav.value " + queryFilter.getSqlOperator() + filter + ")";
+                        hql += " and teav.value" + queryFilter.getSqlOperator() + filter + ")";
                     }
                     else
                     {
-                        hql += " and lower(teav.value) " + queryFilter.getSqlOperator() + filter + ")";
+                        hql += " and lower(teav.value)" + queryFilter.getSqlOperator() + filter + ")";
                     }
 
                 }
