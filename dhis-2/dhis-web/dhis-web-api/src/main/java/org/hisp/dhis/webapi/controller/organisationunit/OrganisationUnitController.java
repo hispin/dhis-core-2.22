@@ -123,15 +123,6 @@ public class OrganisationUnitController
                 entityList = new ArrayList<>( organisationUnitService.getOrganisationUnitsAtLevel( 1 ) );
             }
         }
-        else if ( options.contains( "query" ) )
-        {
-            entityList = new ArrayList<>( manager.filter( getEntityClass(), options.get( "query" ) ) );
-
-            if ( levelSorted )
-            {
-                Collections.sort( entityList, OrganisationUnitByLevelComparator.INSTANCE );
-            }
-        }
         else if ( maxLevel != null || level != null )
         {
             entityList = new ArrayList<>();
