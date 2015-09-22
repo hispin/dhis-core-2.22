@@ -111,7 +111,7 @@ public class GetDataElementOperandsAction
         {
             dataSet = dataSetService.getDataSet( dataSetId );
 
-            operands = new ArrayList<>( dataElementCategoryService.getFullOperands( dataSet
+            operands = new ArrayList<>( dataElementCategoryService.getOperands( dataSet
                 .getDataElements() ) );
         }
         else
