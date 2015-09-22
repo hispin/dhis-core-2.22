@@ -852,14 +852,6 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
-    public List<DataElementOperand> getOperandsLikeName( String name )
-    {
-        List<DataElement> dataElements = dataElementService.getDataElementsLikeName( name );
-
-        return getOperands( dataElements );
-    }
-
-    @Override
     public List<DataElementOperand> getOperands( Collection<DataElement> dataElements, boolean includeTotals )
     {
         List<DataElementOperand> operands = new ArrayList<>();

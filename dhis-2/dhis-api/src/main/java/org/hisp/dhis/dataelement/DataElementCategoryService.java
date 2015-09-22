@@ -601,14 +601,6 @@ public interface DataElementCategoryService
     List<DataElementOperand> getOperands( Collection<DataElement> dataElements );
 
     /**
-     * Gets the Operands for the DataElements with names like the given name.
-     * 
-     * @param name the name.
-     * @return the Operands for the DataElements with names like the given name.
-     */
-    List<DataElementOperand> getOperandsLikeName( String name );
-
-    /**
      * Gets the Operands for the given Collection of DataElements.
      * 
      * @param dataElements the Collection of DataElements.
