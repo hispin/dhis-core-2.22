@@ -53,11 +53,11 @@ div.paging a.active
 }
 
 .input-error {
-    background-color: #fffe8c;
+    background-color: #ff8a8a !important;
 }
 
-.update-success {
-    background-color: #b9ffb9;
+.input-success {
+    background-color: #b9ffb9 !important;
 }
 
 .red {

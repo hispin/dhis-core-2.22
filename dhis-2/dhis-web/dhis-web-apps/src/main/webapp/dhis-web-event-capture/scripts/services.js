@@ -382,7 +382,6 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
                             
                             var pushDirectAddressedVariable = function(variableWithCurls) {
                                 var variableName = $filter('trimvariablequalifiers')(variableWithCurls);
-;
                                 var variableNameParts = variableName.split('.');
 
                                 var newVariableObject;

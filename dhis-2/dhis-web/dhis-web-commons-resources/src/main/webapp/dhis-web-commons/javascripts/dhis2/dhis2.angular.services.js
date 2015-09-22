@@ -371,8 +371,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                             var commonInputFieldProperty = this.getAttributesAsString(attributes) +
                                     ' ng-model="currentEvent.' + fieldId + '" ' +
-                                    ' input-field-id="' + fieldId + '"' +
-                                    ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
+                                    ' input-field-id="' + fieldId + '"' +                                   
                                     ' ng-disabled="isHidden(prStDes.' + fieldId + '.dataElement.id) || selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
                                     ' ng-required="{{prStDes.' + fieldId + '.compulsory}}" ';
 
@@ -381,7 +380,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 if (prStDe.dataElement.optionSetValue) {
                                     var optionSetId = prStDe.dataElement.optionSet.id;                 
                                     newInputField = '<ui-select theme="select2" ' + commonInputFieldProperty + ' on-select="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')" >' +
-                                            '<ui-select-match allow-clear="true" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
+                                            '<ui-select-match ng-class="getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)" allow-clear="true" placeholder="' + $translate.instant('select_or_search') + '">{{$select.selected.name || $select.selected}}</ui-select-match>' +
                                             '<ui-select-choices ' +
                                             ' repeat="option.name as option in optionSets.' + optionSetId + '.options | filter: $select.search | limitTo:30">' +
                                             '<span ng-bind-html="option.name | highlight: $select.search"></span>' +
@@ -397,6 +396,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     		prStDe.dataElement.valueType === "INTEGER_ZERO_OR_POSITIVE") {
                                         newInputField = '<input type="number" ' +
                                                 ' d2-number-validator ' +
+                                                ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' number-type="' + prStDe.dataElement.valueType + '" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
@@ -404,6 +404,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     else if (prStDe.dataElement.valueType === "BOOLEAN") {
                                         newInputField = '<select ' +
                                                 ' ng-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')" ' +
+                                                ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 commonInputFieldProperty + '>' +
                                                 '<option value="">{{\'please_select\'| translate}}</option>' +
                                                 '<option value="false">{{\'no\'| translate}}</option>' +
@@ -414,6 +415,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                         var maxDate = prStDe.allowFutureDate ? '' : 0;
                                         newInputField = '<input type="text" ' +
                                                 ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
+                                                ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' d2-date ' +
                                                 ' d2-date-validator ' +
                                                 ' max-date="' + maxDate + '"' +
@@ -422,16 +424,19 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     }
                                     else if (prStDe.dataElement.valueType === "TRUE_ONLY") {
                                         newInputField = '<input type="checkbox" ' +
+                                                ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' ng-change="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
                                     else if (prStDe.dataElement.valueType === "LONG_TEXT") {
                                         newInputField = '<textarea row ="3" ' +
+                                                ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
                                     else {
                                         newInputField = '<input type="text" ' +
+                                                ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
                                                 commonInputFieldProperty + ' >';
                                     }
