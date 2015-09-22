@@ -29,9 +29,9 @@ package org.hisp.dhis.webapi.controller.dataelement;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.hisp.dhis.commons.collection.CollectionUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
@@ -68,20 +68,8 @@ public class DataElementOperandController extends AbstractCrudController<DataEle
         }
         else
         {
-            Iterator<String> iterator = filters.iterator();
-            String deGroup = null;
-
-            while ( iterator.hasNext() )
-            {
-                String filter = iterator.next();
-
-                if ( filter.startsWith( "dataElement.dataElementGroups.id:eq:" ) )
-                {
-                    deGroup = filter.substring( "dataElement.dataElementGroups.id:eq:".length() );
-                    iterator.remove();
-                    break;
-                }
-            }
+            String deGroup = CollectionUtils.popStartsWith( filters, "dataElement.dataElementGroups.id:eq:" );
+            deGroup = deGroup.substring( "dataElement.dataElementGroups.id:eq:".length() );
 
             if ( deGroup != null )
             {
