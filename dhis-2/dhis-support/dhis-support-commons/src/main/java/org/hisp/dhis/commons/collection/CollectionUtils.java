@@ -238,4 +238,30 @@ public class CollectionUtils
 
         return valueList;
     }
+    
+    /**
+     * Searches for and returns the first string which starts with the given
+     * prefix. Removes the match from the collection.
+     * 
+     * @param collection the collection.
+     * @param prefix the string prefix.
+     * @return a string, or null if no matches.
+     */
+    public static String popStartsWith( Collection<String> collection, String prefix )
+    {
+        Iterator<String> iterator = collection.iterator();
+        
+        while ( iterator.hasNext() )
+        {
+            String element = iterator.next();
+            
+            if ( element != null && element.startsWith( prefix ) )
+            {
+                iterator.remove();
+                return element;
+            }
+        }
+        
+        return null;
+    }
 }
