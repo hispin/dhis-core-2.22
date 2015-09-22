@@ -31,8 +31,6 @@ package org.hisp.dhis.schema.descriptors;
 import org.hisp.dhis.fileresource.FileResource;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaDescriptor;
-import org.hisp.dhis.security.Authority;
-import org.hisp.dhis.security.AuthorityType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -55,9 +53,6 @@ public class FileResourceSchemaDescriptor
         schema.setRelativeApiEndpoint( API_ENDPOINT );
         schema.setShareable( false );
         schema.setOrder( 1250 );
-
-        schema.getAuthorities().add( new Authority( AuthorityType.READ ) );
-
         return schema;
     }
 }
