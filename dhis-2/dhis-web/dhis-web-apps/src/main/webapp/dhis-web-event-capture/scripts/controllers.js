@@ -897,7 +897,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             }
             angular.forEach($rootScope.ruleeffects[args.event], function(effect) {
                 
-                if( effect.dataElement && effect.ineffect ) {
+                if( effect.dataElement ) {
                     //in the data entry controller we only care about the "hidefield" actions
                     if(effect.action === "HIDEFIELD") {
                         if(effect.dataElement) {
