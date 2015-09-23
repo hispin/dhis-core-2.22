@@ -1,7 +1,0 @@
-{	
-	"title":"$!encoder.jsEncode( $jchartData.title )",
-	"subtitle":"$!encoder.jsEncode( $jchartData.subtitle )",
-	"series":[ $jchartData.jsonSeries() ],
-	"categories": [ $jchartData.jsonCategories() ],
-	"legend": $jchartData.legend		
-}
