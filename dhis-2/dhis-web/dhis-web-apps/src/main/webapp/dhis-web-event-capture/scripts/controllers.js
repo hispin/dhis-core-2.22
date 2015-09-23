@@ -922,12 +922,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                             $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
                         }
                     }
-                    if(effect.action === "HIDESECTION") {
+                    if(effect.action === "HIDESECTION" && effect.ineffect) {
                         if(effect.programStageSection){
                             $scope.hiddenSections[effect.programStageSection] = effect.programStageSection;
                         }
                     }
-                    if(effect.action === "SHOWERROR" && effect.dataElement.id){
+                    if(effect.action === "SHOWERROR" && effect.ineffect && effect.dataElement.id){
                         var dialogOptions = {
                             headerText: 'validation_error',
                             bodyText: effect.content
@@ -936,7 +936,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
                         $scope.currentEvent[effect.dataElement.id] = $scope.currentEventOriginialValue[effect.dataElement.id];
                     }
-                    if(effect.action === "SHOWWARNING"){
+                    if(effect.action === "SHOWWARNING" && effect.ineffect){
                         $scope.warningMessages.push(effect.content);
                     }
                 }
