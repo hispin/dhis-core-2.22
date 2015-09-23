@@ -189,7 +189,7 @@ public class HibernateTrackedEntityInstanceStore
         if ( params.hasProgram() )
         {
             hql += hlp.whereAnd() + "exists (from ProgramInstance pi where pi.entityInstance=tei";
-            hql += hlp.whereAnd() + "pi.program.uid = '" + params.getProgram().getUid() + "'";
+            hql += " and pi.program.uid = '" + params.getProgram().getUid() + "'";
 
             if ( params.hasProgramStatus() )
             {
