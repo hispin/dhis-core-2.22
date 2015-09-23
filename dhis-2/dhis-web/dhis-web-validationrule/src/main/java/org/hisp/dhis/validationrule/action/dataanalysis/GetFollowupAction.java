@@ -28,7 +28,9 @@ package org.hisp.dhis.validationrule.action.dataanalysis;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hisp.dhis.dataanalysis.DataAnalysisService;
 import org.hisp.dhis.dataanalysis.FollowupAnalysisService;
 import org.hisp.dhis.datavalue.DeflatedDataValue;
@@ -36,8 +38,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.util.SessionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author Halvdan Hoem Grelland
@@ -69,14 +70,14 @@ public class GetFollowupAction
     // Output
     // -------------------------------------------------------------------------
 
-    private Collection<DeflatedDataValue> dataValues = new ArrayList<>();
+    private List<DeflatedDataValue> dataValues = new ArrayList<>();
 
-    public Collection<DeflatedDataValue> getDataValues()
+    public List<DeflatedDataValue> getDataValues()
     {
         return dataValues;
     }
 
-    private boolean maxExceeded;
+    private boolean maxExceeded = false;
 
     public boolean getMaxExceeded()
     {
@@ -92,17 +93,11 @@ public class GetFollowupAction
     {
         OrganisationUnit orgUnit = selectionTreeManager.getReloadedSelectedOrganisationUnit();
 
-        if( orgUnit != null )
+        if ( orgUnit != null )
         {
             dataValues = followupAnalysisService.getFollowupDataValues( orgUnit, DataAnalysisService.MAX_OUTLIERS + 1 ); // +1 to detect overflow
 
             maxExceeded = dataValues.size() > DataAnalysisService.MAX_OUTLIERS;
-        }
-        else
-        {
-            dataValues = new ArrayList<>();
-
-            maxExceeded = false;
         }
 
         SessionUtils.setSessionVar( KEY_ANALYSIS_DATA_VALUES, dataValues );

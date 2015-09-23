@@ -35,7 +35,14 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 public interface MinMaxDataAnalysisService
     extends DataAnalysisService
-{    
-    void generateMinMaxValues( Collection<OrganisationUnit> organisationUnits,
+{
+    /**
+     * Generate min-max values.
+     * 
+     * @param parents the parent organisation units.
+     * @param dataElements the data elements.
+     * @param stdDevFactor the std dev factor.
+     */
+    void generateMinMaxValues( Collection<OrganisationUnit> parents,
         Collection<DataElement> dataElements, Double stdDevFactor );
 }

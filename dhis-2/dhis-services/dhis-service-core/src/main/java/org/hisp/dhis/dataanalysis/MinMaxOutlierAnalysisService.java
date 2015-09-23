@@ -28,11 +28,17 @@ package org.hisp.dhis.dataanalysis;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.commons.filter.FilterUtils;
@@ -47,13 +53,6 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.filter.DataElementValueTypesFilter;
 import org.hisp.dhis.system.util.MathUtils;
 import org.joda.time.DateTime;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -95,7 +94,7 @@ public class MinMaxOutlierAnalysisService
     // -------------------------------------------------------------------------
 
     @Override
-    public List<DeflatedDataValue> analyse( Collection<OrganisationUnit> organisationUnits,
+    public List<DeflatedDataValue> analyse( Collection<OrganisationUnit> parents,
         Collection<DataElement> dataElements, Collection<Period> periods, Double stdDevFactor, Date from )
     {
         Set<DataElement> elements = new HashSet<>( dataElements );
@@ -109,22 +108,22 @@ public class MinMaxOutlierAnalysisService
             categoryOptionCombos.addAll( dataElement.getCategoryCombo().getOptionCombos() );
         }
 
-        log.debug( "Starting min-max analysis, no of data elements: " + elements.size() + ", no of org units: " + organisationUnits.size() );
+        log.debug( "Starting min-max analysis, no of data elements: " + elements.size() + ", no of parent org units: " + parents.size() );
 
-        return dataAnalysisStore.getMinMaxViolations( elements, categoryOptionCombos, periods, organisationUnits, MAX_OUTLIERS );
+        return dataAnalysisStore.getMinMaxViolations( elements, categoryOptionCombos, periods, parents, MAX_OUTLIERS );
     }
 
     @Override
-    public void generateMinMaxValues( Collection<OrganisationUnit> organisationUnits,
+    public void generateMinMaxValues( Collection<OrganisationUnit> parents,
         Collection<DataElement> dataElements, Double stdDevFactor )
     {
-        log.info( "Starting min-max value generation, no of data elements: " + dataElements.size() + ", no of org units: " + organisationUnits.size() );
+        log.info( "Starting min-max value generation, no of data elements: " + dataElements.size() + ", no of org units: " + parents.size() );
 
-        Set<Integer> orgUnitIds = new HashSet<>( IdentifiableObjectUtils.getIdentifiers( organisationUnits ) );
+        //Set<Integer> orgUnitIds = new HashSet<>( IdentifiableObjectUtils.getIdentifiers( organisationUnits ) );
 
         Date from = new DateTime( 1, 1, 1, 1, 1 ).toDate();
 
-        minMaxDataElementService.removeMinMaxDataElements( dataElements, organisationUnits );
+        minMaxDataElementService.removeMinMaxDataElements( dataElements, parents );
 
         log.debug( "Deleted existing min-max values" );
 
@@ -140,9 +139,9 @@ public class MinMaxOutlierAnalysisService
 
                 for ( DataElementCategoryOptionCombo categoryOptionCombo : categoryOptionCombos )
                 {
-                    Map<Integer, Double> standardDeviations = dataAnalysisStore.getStandardDeviation( dataElement, categoryOptionCombo, orgUnitIds, from );
+                    Map<Integer, Double> standardDeviations = dataAnalysisStore.getStandardDeviation( dataElement, categoryOptionCombo, parents, from );
 
-                    Map<Integer, Double> averages = dataAnalysisStore.getAverage( dataElement, categoryOptionCombo, standardDeviations.keySet(), from );
+                    Map<Integer, Double> averages = dataAnalysisStore.getAverage( dataElement, categoryOptionCombo, parents, from );
 
                     for ( Integer unit : averages.keySet() )
                     {

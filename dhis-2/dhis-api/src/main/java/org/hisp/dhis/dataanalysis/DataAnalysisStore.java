@@ -32,7 +32,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -53,11 +52,11 @@ public interface DataAnalysisStore
      * 
      * @param dataElement the DataElement.
      * @param categoryOptionCombo the DataElementCategoryOptionCombo.
-     * @param organisationUnits the set of OrganisationUnit identifiers.
+     * @param parent the parent OrganisationUnits.
      * @param from the from date for which to include data values.
-     * @return a mapping between organisation unit identifier and its standard deviation.
+     * @return a mapping between OrganisationUnit identifier and its standard deviation.
      */
-    Map<Integer, Double> getStandardDeviation( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo, Set<Integer> organisationUnits, Date from );
+    Map<Integer, Double> getStandardDeviation( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo, Collection<OrganisationUnit> parents, Date from );
     
     /**
      * Calculates the average of the DataValues registered for the given
@@ -65,11 +64,11 @@ public interface DataAnalysisStore
      * 
      * @param dataElement the DataElement.
      * @param categoryOptionCombo the DataElementCategoryOptionCombo.
-     * @param organisationUnits the set of OrganisationUnit identifiers.
+     * @param parent the parent OrganisationUnits.
      * @param from the from date for which to include data values.
-     * @return a mapping between organisation unit identifier and its average data value.
+     * @return a mapping between OrganisationUnit unit identifier and its average data value.
      */
-    Map<Integer, Double> getAverage( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo, Set<Integer> organisationUnits, Date from );
+    Map<Integer, Double> getAverage( DataElement dataElement, DataElementCategoryOptionCombo categoryOptionCombo, Collection<OrganisationUnit> parents, Date from );
     
     /**
      * Generates a collection of data value violations of min-max predefined values.
@@ -77,12 +76,12 @@ public interface DataAnalysisStore
      * @param dataElements the data elements.
      * @param categoryOptionCombos the category option combos.
      * @param periods the periods.
-     * @param organisationUnits the organisation units.
+     * @param parents the parent OrganisationUnit units.
      * @param limit the max limit of violations to return.
      * @return a list of data value violations.
      */
     List<DeflatedDataValue> getMinMaxViolations( Collection<DataElement> dataElements, Collection<DataElementCategoryOptionCombo> categoryOptionCombos,
-        Collection<Period> periods, Collection<OrganisationUnit> organisationUnits, int limit );
+        Collection<Period> periods, Collection<OrganisationUnit> parents, int limit );
     
     /**
      * Returns a collection of DeflatedDataValues for the given input.

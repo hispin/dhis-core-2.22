@@ -262,6 +262,7 @@ public class DataElementCategoryOptionCombo
      * Creates a mapping between the category option combo identifier and name
      * for the given collection of elements.
      */
+    @Deprecated
     public static Map<Integer, String> getCategoryOptionComboMap( Collection<DataElementCategoryOptionCombo> categoryOptionCombos )
     {
         Map<Integer, String> map = new HashMap<>();
