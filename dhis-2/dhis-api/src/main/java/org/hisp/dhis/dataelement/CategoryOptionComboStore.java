@@ -39,4 +39,6 @@ public interface CategoryOptionComboStore
     extends GenericIdentifiableObjectStore<DataElementCategoryOptionCombo>
 {
     DataElementCategoryOptionCombo getCategoryOptionCombo( DataElementCategoryCombo categoryCombo, Set<DataElementCategoryOption> categoryOptions );
+    
+    void updateNames();
 }

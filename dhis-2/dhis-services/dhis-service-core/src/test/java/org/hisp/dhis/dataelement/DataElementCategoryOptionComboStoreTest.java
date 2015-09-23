@@ -90,10 +90,10 @@ public class DataElementCategoryOptionComboStoreTest
         categoryA = new DataElementCategory( "Gender" );
         categoryB = new DataElementCategory( "Agegroup" );
         
-        categoryA.getCategoryOptions().add( categoryOptionA );
-        categoryA.getCategoryOptions().add( categoryOptionB );        
-        categoryB.getCategoryOptions().add( categoryOptionC );
-        categoryB.getCategoryOptions().add( categoryOptionD );
+        categoryA.addDataElementCategoryOption( categoryOptionA );
+        categoryA.addDataElementCategoryOption( categoryOptionB );        
+        categoryB.addDataElementCategoryOption( categoryOptionC );
+        categoryB.addDataElementCategoryOption( categoryOptionD );
         
         categoryService.addDataElementCategory( categoryA );
         categoryService.addDataElementCategory( categoryB );
@@ -101,9 +101,9 @@ public class DataElementCategoryOptionComboStoreTest
         categoryComboA = new DataElementCategoryCombo( "GenderAgegroup" );
         categoryComboB = new DataElementCategoryCombo( "Gender" );
         
-        categoryComboA.getCategories().add( categoryA );
-        categoryComboA.getCategories().add( categoryB );
-        categoryComboB.getCategories().add( categoryA );
+        categoryComboA.addDataElementCategory( categoryA );
+        categoryComboA.addDataElementCategory( categoryB );
+        categoryComboB.addDataElementCategory( categoryA );
         
         categoryService.addDataElementCategoryCombo( categoryComboA );
         categoryService.addDataElementCategoryCombo( categoryComboB ); 
@@ -118,7 +118,7 @@ public class DataElementCategoryOptionComboStoreTest
     {
         categoryOptionComboA = new DataElementCategoryOptionCombo();
 
-        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionB );        
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );        
         
         categoryOptionComboA.setCategoryCombo( categoryComboA );
         categoryOptionComboA.setCategoryOptions( categoryOptions );        
@@ -137,7 +137,7 @@ public class DataElementCategoryOptionComboStoreTest
     {
         categoryOptionComboA = new DataElementCategoryOptionCombo();
 
-        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionB );        
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );        
         
         categoryOptionComboA.setCategoryCombo( categoryComboA );
         categoryOptionComboA.setCategoryOptions( categoryOptions );        
@@ -168,7 +168,7 @@ public class DataElementCategoryOptionComboStoreTest
         categoryOptionComboB = new DataElementCategoryOptionCombo();
         categoryOptionComboC = new DataElementCategoryOptionCombo();
 
-        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionB );     
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );     
         
         categoryOptionComboA.setCategoryCombo( categoryComboA );
         categoryOptionComboB.setCategoryCombo( categoryComboA );
@@ -212,7 +212,7 @@ public class DataElementCategoryOptionComboStoreTest
         categoryOptionComboB = new DataElementCategoryOptionCombo();
         categoryOptionComboC = new DataElementCategoryOptionCombo();
 
-        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionB );     
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );     
         
         categoryOptionComboA.setCategoryCombo( categoryComboA );
         categoryOptionComboB.setCategoryCombo( categoryComboA );
