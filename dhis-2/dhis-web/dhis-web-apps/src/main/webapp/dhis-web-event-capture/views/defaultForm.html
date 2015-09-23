@@ -69,7 +69,7 @@
                     </div>
                 </td>                                                            
             </tr>            
-            <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'event_date' && !isHidden(eventGridColumn.id)">
+            <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'event_date' && !hiddenFields[eventGridColumn.id]">
                 <td >
                     {{eventGridColumn.name}}<span ng-if="eventGridColumn.compulsory" class="required">*</span>
                 </td>
@@ -330,7 +330,7 @@
                 </tr>                        
             </thead>
             <tbody>       
-                <tr ng-repeat="de in section.programStageDataElements" ng-if="!isHidden(de.dataElement.id)">
+                <tr ng-repeat="de in section.programStageDataElements" ng-if="!hiddenFields[de.dataElement.id]">
                     <td >
                         {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}                         
                         <span ng-if="prStDes[de.dataElement.id].compulsory" class="required">*</span>
