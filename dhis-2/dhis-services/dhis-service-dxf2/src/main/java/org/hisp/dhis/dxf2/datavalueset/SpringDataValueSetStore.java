@@ -46,10 +46,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.calendar.Calendar;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.datavalue.DataValue;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,8 +193,23 @@ public class SpringDataValueSetStore
             "join organisationunit ou on (dv.sourceid=ou.organisationunitid) " +
             "join categoryoptioncombo coc on (dv.categoryoptioncomboid=coc.categoryoptioncomboid) " +
             "join categoryoptioncombo aoc on (dv.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
-            "where de.dataelementid in (" + getCommaDelimitedString( getIdentifiers( getDataElements( params.getDataSets() ) ) ) + ") " +
-            "and dv.sourceid in (" + getCommaDelimitedString( getIdentifiers( params.getOrganisationUnits() ) ) + ") ";
+            "where de.dataelementid in (" + getCommaDelimitedString( getIdentifiers( getDataElements( params.getDataSets() ) ) ) + ") ";
+        
+        if ( params.isIncludeChildren() )
+        {
+            sql += "and (";
+            
+            for ( OrganisationUnit parent : params.getOrganisationUnits() )
+            {
+                sql += "ou.path like '%" + parent.getUid() + "%' or ";
+            }
+            
+            sql = TextUtils.removeLastOr( sql ) + ")";            
+        }
+        else
+        {
+            sql += "and dv.sourceid in (" + getCommaDelimitedString( getIdentifiers( params.getOrganisationUnits() ) ) + ") ";
+        }
         
         if ( params.hasStartEndDate() )
         {

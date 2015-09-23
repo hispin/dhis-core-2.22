@@ -29,13 +29,17 @@ package org.hisp.dhis.dxf2.datavalueset;
  */
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.common.IdentifiableProperty.UUID;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_STRICT_PERIODS;
 import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
 import static org.hisp.dhis.system.util.DateUtils.parseDate;
-import static org.hisp.dhis.setting.SystemSettingManager.*;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,7 +47,6 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -189,13 +192,6 @@ public class DefaultDataValueSetService
         if ( organisationUnits != null )
         {
             params.getOrganisationUnits().addAll( identifiableObjectManager.getByUid( OrganisationUnit.class, organisationUnits ) );
-            params.setRequestOrganisationUnits();
-            
-            if ( includeChildren )
-            {
-                params.getOrganisationUnits().addAll( new HashSet<>(
-                    organisationUnitService.getOrganisationUnitsWithChildren( getUids( params.getOrganisationUnits() ) ) ) );
-            }
         }
 
         params.setIncludeChildren( includeChildren );
@@ -231,7 +227,7 @@ public class DefaultDataValueSetService
             violation = "Start date must be before end date";
         }
         
-        if ( params.getRequestOrganisationUnits().isEmpty() )
+        if ( params.getOrganisationUnits().isEmpty() )
         {
             violation = "At least one valid organisation unit must be specified";
         }
@@ -252,7 +248,7 @@ public class DefaultDataValueSetService
     @Override
     public void decideAccess( DataExportParams params )
     {
-        for ( OrganisationUnit unit : params.getRequestOrganisationUnits() )
+        for ( OrganisationUnit unit : params.getOrganisationUnits() )
         {
             if ( !organisationUnitService.isInUserHierarchy( unit ) )
             {

@@ -63,15 +63,6 @@ public class DataExportParams
     private IdSchemes idSchemes;
 
     // -------------------------------------------------------------------------
-    // Transient properties
-    // -------------------------------------------------------------------------
-
-    /**
-     * Organisation units originally part of the request, excluding children.
-     */
-    private transient Set<OrganisationUnit> requestOrganisationUnits = new HashSet<>();
-    
-    // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
@@ -111,15 +102,6 @@ public class DataExportParams
     public boolean hasLimit()
     {
         return limit != null;
-    }
-    
-    /**
-     * Sets the request organisation units to the currently selected 
-     * organisation units.
-     */
-    public void setRequestOrganisationUnits()
-    {
-        this.requestOrganisationUnits.addAll( organisationUnits );
     }
     
     /**
@@ -234,15 +216,5 @@ public class DataExportParams
     public void setIdSchemes( IdSchemes idSchemes )
     {
         this.idSchemes = idSchemes;
-    }
-
-    public Set<OrganisationUnit> getRequestOrganisationUnits()
-    {
-        return requestOrganisationUnits;
-    }
-
-    public void setRequestOrganisationUnits( Set<OrganisationUnit> requestOrganisationUnits )
-    {
-        this.requestOrganisationUnits = requestOrganisationUnits;
     }
 }
