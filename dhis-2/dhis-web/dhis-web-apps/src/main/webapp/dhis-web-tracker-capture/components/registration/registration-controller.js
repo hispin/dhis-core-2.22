@@ -5,6 +5,7 @@ trackerCapture.controller('RegistrationController',
                 $scope,
                 $location,
                 $timeout,
+                $modal,
                 AttributesFactory,
                 DHIS2EventFactory,
                 TEService,
@@ -374,7 +375,40 @@ trackerCapture.controller('RegistrationController',
         return status;        
     };
     
-    $scope.getTrackerAssociate = function(attributeId){
-        console.log('the attribute is:  ', attributeId);
+    $scope.getTrackerAssociate = function(selectedAttribute){
+        
+        
+        var modalInstance = $modal.open({
+            templateUrl: 'components/teiadd/tei-add.html',
+            controller: 'TEIAddController',
+            windowClass: 'modal-full-window',
+            resolve: {
+                relationshipTypes: function () {
+                    return $scope.relationshipTypes;
+                },
+                addingRelationship: function(){
+                    return false;
+                },
+                selections: function () {
+                    return CurrentSelection.get();
+                },
+                selectedTei: function(){
+                    return $scope.selectedTei;
+                },
+                selectedAttribute: function(){
+                    return selectedAttribute;
+                },
+                selectedProgram: function(){
+                    return $scope.selectedProgram;
+                },
+                relatedProgramRelationship: function(){
+                    return $scope.relatedProgramRelationship;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (res) {
+            console.log('the result:  ', res);
+        });
     };    
 });
