@@ -28,6 +28,8 @@ trackerCapture.controller('RegistrationController',
     $scope.registrationMode = 'REGISTRATION';    
     $scope.hiddenFields = {};
     
+    //$scope.editingDisabled = angular.isUndefined($scope.editingDisabled) ? false : $scope.editingDisabled;
+    
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
         $scope.attributesById = [];
@@ -371,4 +373,8 @@ trackerCapture.controller('RegistrationController',
         }
         return status;        
     };
+    
+    $scope.getTrackerAssociate = function(attributeId){
+        console.log('the attribute is:  ', attributeId);
+    };    
 });
