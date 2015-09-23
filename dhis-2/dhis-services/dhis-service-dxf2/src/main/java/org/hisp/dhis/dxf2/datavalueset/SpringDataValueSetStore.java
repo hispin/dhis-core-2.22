@@ -201,7 +201,7 @@ public class SpringDataValueSetStore
             
             for ( OrganisationUnit parent : params.getOrganisationUnits() )
             {
-                sql += "ou.path like '%" + parent.getUid() + "%' or ";
+                sql += "ou.path like '" + parent.getPath() + "%' or ";
             }
             
             sql = TextUtils.removeLastOr( sql ) + ")";            

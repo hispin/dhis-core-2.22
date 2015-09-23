@@ -111,7 +111,7 @@ public class JdbcDataAnalysisStore
         
         for ( OrganisationUnit parent : parents )
         {
-            sql += "ou.path like '%" + parent.getUid() + "%' or ";
+            sql += "ou.path like '" + parent.getPath() + "%' or ";
         }
 
         sql = TextUtils.removeLastOr( sql ) + ")";
@@ -155,7 +155,7 @@ public class JdbcDataAnalysisStore
         
         for ( OrganisationUnit parent : parents )
         {
-            sql += "ou.path like '%" + parent.getUid() + "%' or ";
+            sql += "ou.path like '" + parent.getPath() + "%' or ";
         }
         
         sql = TextUtils.removeLastOr( sql ) + ")";
@@ -209,7 +209,7 @@ public class JdbcDataAnalysisStore
 
         for ( OrganisationUnit parent : parents )
         {
-            sql += "ou.path like '%" + parent.getUid() + "%' or ";
+            sql += "ou.path like '" + parent.getPath() + "%' or ";
         }
         
         sql = TextUtils.removeLastOr( sql ) + ")";
