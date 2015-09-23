@@ -33,12 +33,14 @@ trackerCapture.controller('TEIAddController',
     $scope.selectedTei = selectedTei;
     $scope.programs = selections.prs;
     $scope.attributesById = CurrentSelection.getAttributesById();
+    $scope.addingTeiAssociate = false;
     
     if($scope.addingRelationship){
         $scope.teiAddLabel = $translate.instant('add_relationship');
     }
     else{        
         $scope.teiAddLabel = $scope.selectedAttribute && $scope.selectedAttribute.name ? $scope.selectedAttribute.name : $translate.instant('tracker_associate');
+        $scope.addingTeiAssociate = true;
     }
     
     $scope.searchOuTree = false;
@@ -366,46 +368,70 @@ trackerCapture.controller('TEIAddController',
     };
     
     $scope.addRelationship = function(){
-        if($scope.selectedTei && $scope.teiForRelationship && $scope.relationship.selected){            
-            var tei = angular.copy($scope.selectedTei);
-            var relationship = {};
-            relationship.relationship = $scope.relationship.selected.id;
-            relationship.displayName = $scope.relationship.selected.name;
-            relationship.relative = {};
-            
-            
-            relationship.trackedEntityInstanceA = $scope.selectedRelationship.aIsToB === $scope.relationship.selected.aIsToB ? $scope.selectedTei.trackedEntityInstance : $scope.teiForRelationship.id;
-            relationship.trackedEntityInstanceB = $scope.selectedRelationship.bIsToA === $scope.relationship.selected.bIsToA ? $scope.teiForRelationship.id : $scope.selectedTei.trackedEntityInstance;
-            
-            tei.relationships = [];
-            angular.forEach($scope.selectedTei.relationships, function(rel){
-                tei.relationships.push({relationship: rel.relationship, displayName: rel.displayName, trackedEntityInstanceA: rel.trackedEntityInstanceA, trackedEntityInstanceB: rel.trackedEntityInstanceB});
-            });
-            tei.relationships.push(relationship);
-            
-            TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(response){
-                if(response.response && response.response.status !== 'SUCCESS'){//update has failed
-                    var dialogOptions = {
-                            headerText: 'relationship_error',
-                            bodyText: response.message
-                        };
-                    DialogService.showDialog({}, dialogOptions);
-                    return;
-                }
+        if($scope.addingRelationship){
+            if($scope.selectedTei && $scope.teiForRelationship && $scope.relationship.selected){            
+                var tei = angular.copy($scope.selectedTei);
+                var relationship = {};
+                relationship.relationship = $scope.relationship.selected.id;
+                relationship.displayName = $scope.relationship.selected.name;
+                relationship.relative = {};
+
+
+                relationship.trackedEntityInstanceA = $scope.selectedRelationship.aIsToB === $scope.relationship.selected.aIsToB ? $scope.selectedTei.trackedEntityInstance : $scope.teiForRelationship.id;
+                relationship.trackedEntityInstanceB = $scope.selectedRelationship.bIsToA === $scope.relationship.selected.bIsToA ? $scope.teiForRelationship.id : $scope.selectedTei.trackedEntityInstance;
+
+                tei.relationships = [];
+                angular.forEach($scope.selectedTei.relationships, function(rel){
+                    tei.relationships.push({relationship: rel.relationship, displayName: rel.displayName, trackedEntityInstanceA: rel.trackedEntityInstanceA, trackedEntityInstanceB: rel.trackedEntityInstanceB});
+                });
+                tei.relationships.push(relationship);
+
+                TEIService.update(tei, $scope.optionSets, $scope.attributesById).then(function(response){
+                    if(response.response && response.response.status !== 'SUCCESS'){//update has failed
+                        var dialogOptions = {
+                                headerText: 'relationship_error',
+                                bodyText: response.message
+                            };
+                        DialogService.showDialog({}, dialogOptions);
+                        return;
+                    }
+
+                    relationship.relative.processed = true;
+                    relationship.relative.attributes = $scope.teiForRelationship;
+
+                    if($scope.selectedTei.relationships){
+                        $scope.selectedTei.relationships.push(relationship);
+                    }
+                    else{
+                        $scope.selectedTei.relationships = [relationship];
+                    }
+
+                    $modalInstance.close($scope.selectedTei.relationships);
+                });
+            }
+            else{
+                var dialogOptions = {
+                        headerText: 'relationship_error',
+                        bodyText: $translate.instant('selected_tei_is_invalid')
+                    };
+                DialogService.showDialog({}, dialogOptions);
+                return;
+            }
+        }
+        else{
+            if($scope.teiForRelationship && $scope.teiForRelationship.id){
+                $modalInstance.close($scope.teiForRelationship);
+            }
+            else{
+                var dialogOptions = {
+                        headerText: 'tracker_associate_error',
+                        bodyText: $translate.instant('selected_tei_is_invalid')
+                    };
+                DialogService.showDialog({}, dialogOptions);
+                return;
+            }
                 
-                relationship.relative.processed = true;
-                relationship.relative.attributes = $scope.teiForRelationship;
-                
-                if($scope.selectedTei.relationships){
-                    $scope.selectedTei.relationships.push(relationship);
-                }
-                else{
-                    $scope.selectedTei.relationships = [relationship];
-                }
-                
-                $modalInstance.close($scope.selectedTei.relationships);                
-            });
-        }        
+        }                
     };
     
     //Get orgunits for the logged in user

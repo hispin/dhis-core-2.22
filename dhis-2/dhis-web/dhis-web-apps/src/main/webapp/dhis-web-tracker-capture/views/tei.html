@@ -28,10 +28,30 @@
                         </tr>                        
                     </thead>
                     <tbody id="list">
-                        <tr ng-repeat="trackedEntity in trackedEntityList.rows | orderBy:d2Sort:reverse" 
+                        <tr ng-if="!addingTeiAssociate"
+                            ng-repeat="trackedEntity in trackedEntityList.rows | orderBy:d2Sort:reverse" 
                             ng-click="selectedTei.trackedEntityInstance ? assignRelationship(trackedEntity) : showDashboard(trackedEntity)"
                             ng-class="{true: 'inactive-tei'} [trackedEntity.inactive]"
                             title="{{selectedTei.trackedEntityInstance ? 'select' : 'go_to_dashboard'| translate}}">
+                            <td ng-repeat="gridColumn in gridColumns| filter:{show: true}">
+                                <span ng-switch="gridColumn.valueType">
+                                    <span ng-switch-when="bool">
+                                        <span ng-if="trackedEntity[gridColumn.id] === 'true'">{{'yes'| translate}}</span>
+                                        <span ng-if="trackedEntity[gridColumn.id] === 'false'">{{ 'no' | translate}}</span>
+                                    </span>
+                                    <span ng-switch-when="trueOnly">
+                                        <span ng-if="trackedEntity[gridColumn.id] === 'true'"><i class="fa fa-check"></i></span>
+                                    </span>
+                                    <span ng-switch-default>{{trackedEntity[gridColumn.id]}}</span>
+                                </span>
+                            </td>
+                        </tr>
+                        
+                        <tr ng-if="addingTeiAssociate"
+                            ng-repeat="trackedEntity in trackedEntityList.rows | orderBy:d2Sort:reverse" 
+                            ng-click="assignRelationship(trackedEntity)"
+                            ng-class="{true: 'inactive-tei'} [trackedEntity.inactive]"
+                            title="{{'select' | translate}}">
                             <td ng-repeat="gridColumn in gridColumns| filter:{show: true}">
                                 <span ng-switch="gridColumn.valueType">
                                     <span ng-switch-when="bool">
