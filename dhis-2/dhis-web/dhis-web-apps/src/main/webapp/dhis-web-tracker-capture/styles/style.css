@@ -963,6 +963,7 @@ input.typeahead::-ms-input-placeholder {
 
 .disable-clicks {
     pointer-events: none;
+    color: #555;
 }
 
 @media print {

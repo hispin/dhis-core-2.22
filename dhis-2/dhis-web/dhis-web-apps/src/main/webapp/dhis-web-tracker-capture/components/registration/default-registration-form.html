@@ -73,7 +73,7 @@
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
-                     <span ng-switch-when="LONG_TEXT">
+                    <span ng-switch-when="LONG_TEXT">
                         <textarea row="3"
                                name="foo" 
                                class="form-control" 
@@ -82,6 +82,19 @@
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique">                                   
                         </textarea>/>                                    
+                    </span>
+                    <span ng-switch-when="TRACKER_ASSOCIATE">
+                        <input type="text" 
+                               name="foo" 
+                               class="form-control-trimmed" 
+                               ng-model="selectedTei[attribute.id]" 
+                               ng-disabled="true" 
+                               ng-blur="teiValueUpdated(selectedTei, attribute.id)"
+                               style="width:85%;"
+                               ng-required="attribute.mandatory || attribute.unique"/>
+                        <a href ng-class="{true: 'disable-clicks', false: ''} [editingDisabled]" ng-click="getTrackerAssociate(attribute.id)" title="{{'get'| translate}} {{attribute.name}}">
+                            <i class="fa fa-external-link fa-2x vertical-center"></i>
+                        </a>
                     </span>
                     <span ng-switch-default>
                         <input type="text" 
