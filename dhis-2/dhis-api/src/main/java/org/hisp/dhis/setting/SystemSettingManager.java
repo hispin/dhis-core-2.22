@@ -109,6 +109,8 @@ public interface SystemSettingManager
     String KEY_CORS_WHITELIST = "keyCorsWhitelist";
     String KEY_REQUIRE_ADD_TO_VIEW = "keyRequireAddToView";
     String KEY_ALLOW_OBJECT_ASSIGNMENT = "keyAllowObjectAssignment";
+    String KEY_USE_CUSTOM_LOGO_FRONT = "keyUseCustomLogoFront";
+    String KEY_USE_CUSTOM_LOGO_BANNER = "keyUseCustomLogoBanner";
     
     String KEY_DATA_IMPORT_STRICT_PERIODS = "keyDataImportStrictPeriods";
     String KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS = "keyDataImportStrictCategoryOptionCombos";
