@@ -30,7 +30,7 @@ package org.hisp.dhis.trackedentity.action.program;
 
 import com.opensymphony.xwork2.Action;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.program.Program;

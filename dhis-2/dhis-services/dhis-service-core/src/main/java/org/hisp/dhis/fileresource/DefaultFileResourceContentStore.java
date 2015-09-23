@@ -31,7 +31,7 @@ package org.hisp.dhis.fileresource;
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
 import org.apache.commons.io.input.NullInputStream;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.external.location.LocationManager;
