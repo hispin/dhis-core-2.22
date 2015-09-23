@@ -883,6 +883,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.$on('ruleeffectsupdated', function(event, args) {
         $scope.warningMessages = [];
         $scope.hiddenSections = [];
+        $scope.hiddenFields = [];
+        
         //console.log('args.event:  ', $rootScope.ruleeffects['SINGLE_EVENT'][0]);
         if($rootScope.ruleeffects[args.event]) {
             //Establish which event was affected:
@@ -897,11 +899,11 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             }
             angular.forEach($rootScope.ruleeffects[args.event], function(effect) {
                 
-                if( effect.dataElement ) {
+                if(effect.dataElement && effect.ineffect) {
                     //in the data entry controller we only care about the "hidefield" actions
                     if(effect.action === "HIDEFIELD") {
                         if(effect.dataElement) {
-                            if(effect.ineffect && affectedEvent[effect.dataElement.id]) {
+                            if(affectedEvent[effect.dataElement.id]) {
                                 //If a field is going to be hidden, but contains a value, we need to take action;
                                 if(effect.content) {
                                     //TODO: Alerts is going to be replaced with a proper display mecanism.
@@ -922,12 +924,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                             $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
                         }
                     }
-                    if(effect.action === "HIDESECTION" && effect.ineffect) {
+                    if(effect.action === "HIDESECTION") {
                         if(effect.programStageSection){
                             $scope.hiddenSections[effect.programStageSection] = effect.programStageSection;
                         }
                     }
-                    if(effect.action === "SHOWERROR" && effect.ineffect && effect.dataElement.id){
+                    if(effect.action === "SHOWERROR" && effect.dataElement.id){
                         var dialogOptions = {
                             headerText: 'validation_error',
                             bodyText: effect.content
@@ -936,7 +938,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
                         $scope.currentEvent[effect.dataElement.id] = $scope.currentEventOriginialValue[effect.dataElement.id];
                     }
-                    if(effect.action === "SHOWWARNING" && effect.ineffect){
+                    if(effect.action === "SHOWWARNING"){
                         $scope.warningMessages.push(effect.content);
                     }
                 }
@@ -958,18 +960,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.formatNumberResult = function(val){        
         return dhis2.validation.isNumber(val) ? val : '';
     };
-    
-    //check if field is hidden
-    $scope.isHidden = function(id) {
-        //In case the field contains a value, we cant hide it. 
-        //If we hid a field with a value, it would falsely seem the user was aware that the value was entered in the UI.
-        if($scope.currentEvent[id]) {
-           return false; 
-        }
-        else {
-            return $scope.hiddenFields[id];
-        }
-    }; 
     
     $scope.saveDatavalue = function(){        
         $scope.executeRules();
