@@ -11,6 +11,7 @@ trackerCapture.controller('TEIAddController',
             AttributesFactory,
             EntityQueryFactory,
             OrgUnitFactory,
+            ProgramFactory,
             TEIService,
             TEIGridService,
             DialogService,
@@ -30,18 +31,9 @@ trackerCapture.controller('TEIAddController',
     $scope.selectedAttribute = selectedAttribute;
     $scope.selectedProgram = selectedProgram;
     $scope.relatedProgramRelationship = relatedProgramRelationship;
-    $scope.selectedTei = selectedTei;
-    $scope.programs = selections.prs;
+    $scope.selectedTei = selectedTei;    
     $scope.attributesById = CurrentSelection.getAttributesById();
     $scope.addingTeiAssociate = false;
-    
-    if($scope.addingRelationship){
-        $scope.teiAddLabel = $translate.instant('add_relationship');
-    }
-    else{        
-        $scope.teiAddLabel = $scope.selectedAttribute && $scope.selectedAttribute.name ? $scope.selectedAttribute.name : $translate.instant('tracker_associate');
-        $scope.addingTeiAssociate = true;
-    }
     
     $scope.searchOuTree = false;
     $scope.orgUnitLabel = $translate.instant('org_unit');
@@ -80,6 +72,19 @@ trackerCapture.controller('TEIAddController',
    
     $scope.searchMode = {listAll: 'LIST_ALL', freeText: 'FREE_TEXT', attributeBased: 'ATTRIBUTE_BASED'};
     $scope.selectedSearchMode = $scope.searchMode.listAll;
+    
+    if($scope.addingRelationship){
+        $scope.teiAddLabel = $translate.instant('add_relationship');
+        $scope.programs = selections.prs;
+    }
+    else{        
+        $scope.teiAddLabel = $scope.selectedAttribute && $scope.selectedAttribute.name ? $scope.selectedAttribute.name : $translate.instant('tracker_associate');
+        $scope.addingTeiAssociate = true;
+        ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
+            $scope.programs = response.programs;
+            $scope.selectedProgram = response.selectedProgram;
+        });
+    }
     
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
         $scope.selectedProgramForRelative = $scope.programs[0];        
