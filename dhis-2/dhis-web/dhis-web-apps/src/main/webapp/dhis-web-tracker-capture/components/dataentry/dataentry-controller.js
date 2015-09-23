@@ -39,6 +39,7 @@ trackerCapture.controller('DataEntryController',
     $scope.hiddenFields = {};
     $scope.errorMessages = {};
     $scope.warningMessages = {};
+    $scope.hiddenSections = {};
     $scope.tableMaxNumberOfDataElements = 10;
     
     //Labels
@@ -135,7 +136,19 @@ trackerCapture.controller('DataEntryController',
                     else {
                         $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
                     }
+                } else if (effect.action === "HIDESECTION"){                    
+                    if(effect.programStageSection){
+                        if(effect.ineffect){
+                            $scope.hiddenSections[effect.programStageSection] = true;
+                        } else{
+                            $scope.hiddenSections[effect.programStageSection] = false;
+                        }
+                    }
+                    else {
+                        $log.warn("ProgramRuleAction " + effect.id + " is of type HIDESECTION, bot does not have a section defined");
+                    }
                 }
+                
             }
         });
     };
@@ -1172,8 +1185,6 @@ trackerCapture.controller('DataEntryController',
                 DialogService.showDialog({}, dialogOptions);
             }
         });
-
-
     };
 
     //If the caller wants to create right away, go ahead and save.

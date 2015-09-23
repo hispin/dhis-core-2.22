@@ -218,7 +218,7 @@
     <div ng-if='currentEvent && currentStage.programStageSections.length'>
         <accordion close-others='false'>
             <!-- The inline style was needed to override overflow:hidden in the css. Can possibly be replaced with a CSS update. --> 
-            <accordion-group heading="{{section.name}}" is-open="section.open" ng-repeat='section in currentStage.programStageSections' style="overflow:visible">
+            <accordion-group heading="{{section.name}}" is-open="section.open" ng-repeat='section in currentStage.programStageSections' ng-if="!hiddenSections[section.id]" style="overflow:visible">
                 <table class="dhis2-list-table-striped">                    
                     <thead>
                         <tr>
