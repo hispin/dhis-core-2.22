@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<reportXML>
-	<message type="success">$!encoder.xmlEncode( $message )</message>
-	$!xmlStructureResponse
-</reportXML>
