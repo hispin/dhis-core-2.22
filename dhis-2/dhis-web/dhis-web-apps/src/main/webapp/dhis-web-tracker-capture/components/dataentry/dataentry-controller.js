@@ -185,8 +185,6 @@ trackerCapture.controller('DataEntryController',
         } else {
             TrackerRulesExecutionService.executeRules($scope.allProgramRules, $scope.currentEvent, evs, $scope.prStDes, $scope.selectedTei, $scope.selectedEnrollment, flag);
         }
-        
-        processRuleEffect($scope.currentEvent);
     };
 
 
