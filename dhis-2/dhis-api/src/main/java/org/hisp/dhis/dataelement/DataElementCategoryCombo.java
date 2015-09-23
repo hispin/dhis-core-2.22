@@ -28,12 +28,10 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.CombinationGenerator;
@@ -45,11 +43,12 @@ import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author Abyot Aselefew
@@ -207,7 +206,6 @@ public class DataElementCategoryCombo
             {
                 if ( optionCombo.getCategoryOptions() != null && optionCombo.getCategoryOptions().equals( categoryOptionSet ) )
                 {
-                    optionCombo.setName( getNameFromCategoryOptions( categoryOptions ) );
                     list.add( optionCombo );
                     continue;
                 }
@@ -215,27 +213,6 @@ public class DataElementCategoryCombo
         }
 
         return list;
-    }
-
-    private String getNameFromCategoryOptions( List<DataElementCategoryOption> categoryOptions )
-    {
-        StringBuilder name = new StringBuilder();
-
-        if ( categoryOptions != null && categoryOptions.size() > 0 )
-        {
-            Iterator<DataElementCategoryOption> iterator = categoryOptions.iterator();
-
-            name.append( "(" ).append( iterator.next().getDisplayName() );
-
-            while ( iterator.hasNext() )
-            {
-                name.append( ", " ).append( iterator.next().getDisplayName() );
-            }
-
-            name.append( ")" );
-        }
-
-        return name.toString();
     }
 
     public void generateOptionCombos()

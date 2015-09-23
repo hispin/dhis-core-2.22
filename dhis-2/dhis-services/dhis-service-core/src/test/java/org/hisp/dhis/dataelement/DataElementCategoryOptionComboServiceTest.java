@@ -88,10 +88,10 @@ public class DataElementCategoryOptionComboServiceTest
         categoryA = new DataElementCategory( "Gender" );
         categoryB = new DataElementCategory( "Agegroup" );
         
-        categoryA.getCategoryOptions().add( categoryOptionA );
-        categoryA.getCategoryOptions().add( categoryOptionB );        
-        categoryB.getCategoryOptions().add( categoryOptionC );
-        categoryB.getCategoryOptions().add( categoryOptionD );
+        categoryA.addDataElementCategoryOption( categoryOptionA );
+        categoryA.addDataElementCategoryOption( categoryOptionB );        
+        categoryB.addDataElementCategoryOption( categoryOptionC );
+        categoryB.addDataElementCategoryOption( categoryOptionD );
         
         categoryService.addDataElementCategory( categoryA );
         categoryService.addDataElementCategory( categoryB );
@@ -99,9 +99,9 @@ public class DataElementCategoryOptionComboServiceTest
         categoryComboA = new DataElementCategoryCombo( "GenderAgegroup" );
         categoryComboB = new DataElementCategoryCombo( "Gender" );
         
-        categoryComboA.getCategories().add( categoryA );
-        categoryComboA.getCategories().add( categoryB );
-        categoryComboB.getCategories().add( categoryA );
+        categoryComboA.addDataElementCategory( categoryA );
+        categoryComboA.addDataElementCategory( categoryB );
+        categoryComboB.addDataElementCategory( categoryA );
         
         categoryService.addDataElementCategoryCombo( categoryComboA );
         categoryService.addDataElementCategoryCombo( categoryComboB ); 
@@ -148,7 +148,7 @@ public class DataElementCategoryOptionComboServiceTest
     {
         categoryOptionComboA = new DataElementCategoryOptionCombo();
 
-        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionB );        
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );        
         
         categoryOptionComboA.setCategoryCombo( categoryComboA );
         categoryOptionComboA.setCategoryOptions( categoryOptions );        
@@ -179,7 +179,7 @@ public class DataElementCategoryOptionComboServiceTest
         categoryOptionComboB = new DataElementCategoryOptionCombo();
         categoryOptionComboC = new DataElementCategoryOptionCombo();
 
-        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionB );     
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );     
         
         categoryOptionComboA.setCategoryCombo( categoryComboA );
         categoryOptionComboB.setCategoryCombo( categoryComboA );
@@ -223,7 +223,7 @@ public class DataElementCategoryOptionComboServiceTest
         categoryOptionComboB = new DataElementCategoryOptionCombo();
         categoryOptionComboC = new DataElementCategoryOptionCombo();
 
-        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionB );     
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );     
         
         categoryOptionComboA.setCategoryCombo( categoryComboA );
         categoryOptionComboB.setCategoryCombo( categoryComboA );
@@ -242,5 +242,22 @@ public class DataElementCategoryOptionComboServiceTest
         
         assertNotNull( categoryOptionCombos );
         assertEquals( 4, categoryOptionCombos.size() ); // Including default category option combo
+    }
+    
+    @Test
+    public void testGetDataElementCategoryOptionComboName()
+    {
+        categoryOptionComboA = new DataElementCategoryOptionCombo();
+
+        Set<DataElementCategoryOption> categoryOptions = Sets.newHashSet( categoryOptionA, categoryOptionC );        
+        
+        categoryOptionComboA.setCategoryCombo( categoryComboA );
+        categoryOptionComboA.setCategoryOptions( categoryOptions );        
+        
+        categoryService.addDataElementCategoryOptionCombo( categoryOptionComboA );
+        
+        String expected = "Male, 0-20";
+        
+        assertEquals( expected, categoryOptionComboA.getName() );
     }
 }

@@ -301,23 +301,23 @@ public class DataElementCategoryOptionCombo
         StringBuilder builder = new StringBuilder();
         
         List<DataElementCategory> categories = this.categoryCombo.getCategories();
-        
+            
         for ( DataElementCategory category : categories )
         {
-            builder.append( "(" );
-            
             List<DataElementCategoryOption> options = category.getCategoryOptions();
             
-            for ( DataElementCategoryOption option : this.categoryOptions )
+            optionLoop: for ( DataElementCategoryOption option : this.categoryOptions )
             {
                 if ( options.contains( option ) )
                 {
                     builder.append( option.getDisplayName() ).append( ", " );
+                    
+                    continue optionLoop;
                 }
             }
-            
-            builder.delete( Math.max( builder.length() - 2, 0 ), builder.length() ).append( ")" );
         }
+        
+        builder.delete( Math.max( builder.length() - 2, 0 ), builder.length() );
         
         return StringUtils.substring( builder.toString(), 0, 255 );
     }

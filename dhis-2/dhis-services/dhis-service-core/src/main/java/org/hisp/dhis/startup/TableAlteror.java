@@ -34,6 +34,7 @@ import org.amplecode.quick.StatementHolder;
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.dataelement.CategoryOptionComboStore;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.jdbc.batchhandler.RelativePeriodsBatchHandler;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -75,6 +76,9 @@ public class TableAlteror
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
+    @Autowired
+    private CategoryOptionComboStore categoryOptionComboStore;
+    
     // -------------------------------------------------------------------------
     // Execute
     // -------------------------------------------------------------------------
@@ -892,6 +896,8 @@ public class TableAlteror
         updateNameColumnLengths();
         
         organisationUnitService.updatePaths();
+        
+        categoryOptionComboStore.updateNames();
 
         log.info( "Tables updated" );
     }

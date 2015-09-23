@@ -525,17 +525,12 @@ public class DataApprovalServiceCategoryOptionGroupTest
         }
     }
 
-    private String getOptionNamesFromCombo( DataElementCategoryOptionCombo combo )
-    {
-        return combo.getName().substring( 1, combo.getName().length() - 1);
-    }
-
     private String getStatusString( DataApprovalStatus status )
     {
         DataApproval da = status.getDataApproval();
         String approval = da == null ? "approval=null" :
                 "ou=" + ( da.getOrganisationUnit() == null ? "(null)" : da.getOrganisationUnit().getName() )
-                        + " mechanism=" + ( da.getAttributeOptionCombo() == null ? "(null)" : getOptionNamesFromCombo( da.getAttributeOptionCombo() ) )
+                        + " mechanism=" + ( da.getAttributeOptionCombo() == null ? "(null)" : da.getAttributeOptionCombo().getName() )
                         + " level=" + ( da.getDataApprovalLevel() == null ? "(null)" : da.getDataApprovalLevel().getLevel() );
 
         DataApprovalPermissions permissions = status.getPermissions();

@@ -218,7 +218,7 @@ public class DefaultResourceTableService
             for ( DataElementCategoryOptionCombo coc : combo.getSortedOptionCombos() )
             {
                 List<Object> values = new ArrayList<>();
-
+                
                 values.add( coc.getId() );
                 values.add( coc.getName() );
                 values.add( coc.isIgnoreApproval() ? APPROVAL_LEVEL_HIGHEST : null );

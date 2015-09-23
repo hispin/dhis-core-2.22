@@ -28,9 +28,11 @@ package org.hisp.dhis.dataelement.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.CategoryOptionComboStore;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -64,5 +66,25 @@ public class HibernateCategoryOptionComboStore
         }
         
         return (DataElementCategoryOptionCombo) query.uniqueResult();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void updateNames()
+    {
+        List<DataElementCategoryOptionCombo> categoryOptionCombos = getQuery( "from DataElementCategoryOptionCombo co where co.name is null" ).list();
+        int counter = 0;
+        
+        Session session = getSession();
+        
+        for ( DataElementCategoryOptionCombo coc : categoryOptionCombos )
+        {
+            session.update( coc );
+            
+            if ( ( counter % 400 ) == 0 )
+            {
+                session.flush();
+            }
+        }
     }
 }

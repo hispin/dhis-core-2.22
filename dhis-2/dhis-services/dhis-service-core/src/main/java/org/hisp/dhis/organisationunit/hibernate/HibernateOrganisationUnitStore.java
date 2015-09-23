@@ -348,7 +348,7 @@ public class HibernateOrganisationUnitStore
         {
             session.update( organisationUnit );
 
-            if ( (counter % 400) == 0 )
+            if ( ( counter % 400 ) == 0 )
             {
                 dbmsManager.clearSession();
             }
