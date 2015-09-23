@@ -65,17 +65,15 @@ public class DeflatedDataValueNameMinMaxRowMapper
 {
     private Map<Integer, Integer> minMap;
     private Map<Integer, Integer> maxMap;
-    private Map<Integer, String> optionComboMap;
     
     public DeflatedDataValueNameMinMaxRowMapper()
     {
     }
     
-    public DeflatedDataValueNameMinMaxRowMapper( Map<Integer, Integer> minMap, Map<Integer, Integer> maxMap, Map<Integer, String> optionComboMap )
+    public DeflatedDataValueNameMinMaxRowMapper( Map<Integer, Integer> minMap, Map<Integer, Integer> maxMap )
     {
         this.minMap = minMap;
         this.maxMap = maxMap;
-        this.optionComboMap = optionComboMap;
     }
     
     @Override
@@ -102,7 +100,7 @@ public class DeflatedDataValueNameMinMaxRowMapper
             resultSet.getString( "startdate" ),
             resultSet.getString( "enddate" ) );
         value.setSourceName( resultSet.getString( "sourcename" ) );
-        value.setCategoryOptionComboName( optionComboMap != null ? optionComboMap.get( value.getCategoryOptionComboId() ) : resultSet.getString( "categoryoptioncomboname" ) );
+        value.setCategoryOptionComboName( resultSet.getString( "categoryoptioncomboname" ) );
         
         return value;
     }

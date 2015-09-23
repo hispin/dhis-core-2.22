@@ -32,14 +32,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.datavalue.DeflatedDataValue;
@@ -71,12 +69,10 @@ public class StdDevOutlierAnalysisService
     // -------------------------------------------------------------------------
 
     @Override
-    public final List<DeflatedDataValue> analyse( Collection<OrganisationUnit> organisationUnits,
+    public final List<DeflatedDataValue> analyse( Collection<OrganisationUnit> parents,
         Collection<DataElement> dataElements, Collection<Period> periods, Double stdDevFactor, Date from )
     {
-        log.info( "Starting std dev analysis, no of org units: " + organisationUnits.size() + ", factor: " + stdDevFactor + ", from: " + from );
-
-        Set<Integer> units = new HashSet<>( IdentifiableObjectUtils.getIdentifiers( organisationUnits ) );
+        log.info( "Starting std dev analysis, no of org units: " + parents.size() + ", factor: " + stdDevFactor + ", from: " + from );
 
         List<DeflatedDataValue> outlierCollection = new ArrayList<>();
 
@@ -91,9 +87,9 @@ public class StdDevOutlierAnalysisService
 
                 for ( DataElementCategoryOptionCombo categoryOptionCombo : categoryOptionCombos )
                 {
-                    Map<Integer, Double> standardDeviations = dataAnalysisStore.getStandardDeviation( dataElement, categoryOptionCombo, units, from );
+                    Map<Integer, Double> standardDeviations = dataAnalysisStore.getStandardDeviation( dataElement, categoryOptionCombo, parents, from );
 
-                    Map<Integer, Double> averages = dataAnalysisStore.getAverage( dataElement, categoryOptionCombo, standardDeviations.keySet(), from );
+                    Map<Integer, Double> averages = dataAnalysisStore.getAverage( dataElement, categoryOptionCombo, parents, from );
 
                     Map<Integer, Integer> lowBoundMap = new HashMap<>();
                     Map<Integer, Integer> highBoundMap = new HashMap<>();

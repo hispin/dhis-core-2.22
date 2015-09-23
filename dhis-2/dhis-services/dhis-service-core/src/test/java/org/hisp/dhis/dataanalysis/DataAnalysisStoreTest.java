@@ -101,7 +101,7 @@ public class DataAnalysisStoreTest
     private OrganisationUnit organisationUnitA;
     private OrganisationUnit organisationUnitB;
     
-    private Set<Integer> organisationUnits;
+    private Set<OrganisationUnit> organisationUnits;
     
     // ----------------------------------------------------------------------
     // Fixture
@@ -138,8 +138,8 @@ public class DataAnalysisStoreTest
         organisationUnitService.addOrganisationUnit( organisationUnitB );
         
         organisationUnits = new HashSet<>();
-        organisationUnits.add( organisationUnitA.getId() );
-        organisationUnits.add( organisationUnitB.getId() );
+        organisationUnits.add( organisationUnitA );
+        organisationUnits.add( organisationUnitB );
     }
 
     // ----------------------------------------------------------------------
