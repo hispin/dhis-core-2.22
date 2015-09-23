@@ -169,9 +169,6 @@ public interface StatementBuilder
     
     String getAverage( int dataElementId, int categoryOptionComboId, int organisationUnitId );
     
-    String getDeflatedDataValues( int dataElementId, String dataElementName, int categoryOptionComboId,
-    	String periodIds, int organisationUnitId, String organisationUnitName, int lowerBound, int upperBound );
-    
     String getAddDate( String dateField, int days );
     
     String queryDataElementStructureForOrgUnit();
