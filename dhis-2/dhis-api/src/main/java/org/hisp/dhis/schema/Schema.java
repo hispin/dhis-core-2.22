@@ -447,6 +447,7 @@ public class Schema implements Ordered, Klass
     @JsonProperty
     @JacksonXmlElementWrapper( localName = "references", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "reference", namespace = DxfNamespaces.DXF_2_0 )
+    @SuppressWarnings("rawtypes")
     public Set<Class> getReferences()
     {
         return getProperties().stream()

@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -318,7 +319,7 @@ public class DataElementCategoryOptionCombo
             builder.delete( Math.max( builder.length() - 2, 0 ), builder.length() ).append( ")" );
         }
         
-        return  builder.toString();
+        return StringUtils.substring( builder.toString(), 0, 255 );
     }
 
     @Override

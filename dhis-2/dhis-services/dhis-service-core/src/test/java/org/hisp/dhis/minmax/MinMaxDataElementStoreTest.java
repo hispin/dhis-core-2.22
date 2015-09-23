@@ -48,14 +48,13 @@ import static org.junit.Assert.*;
 
 /**
  * @author Kristian Nordal
- * @version $Id: MinMaxDataElementStoreTest.java 5012 2008-04-24 21:14:40Z larshelg $
  */
 public class MinMaxDataElementStoreTest
     extends DhisSpringTest
 {
     @Autowired
     private DataElementService dataElementService;
-
+    
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
@@ -107,26 +106,18 @@ public class MinMaxDataElementStoreTest
         dataElementService.addDataElement( dataElement3 );
         dataElementService.addDataElement( dataElement4 );
 
-        DataElementCategoryOptionCombo optionCombo1 = new DataElementCategoryOptionCombo();
-        categoryService.addDataElementCategoryOptionCombo( optionCombo1 );
-
-        DataElementCategoryOptionCombo optionCombo2 = new DataElementCategoryOptionCombo();
-        categoryService.addDataElementCategoryOptionCombo( optionCombo2 );
-
-        MinMaxDataElement minMaxDataElement1 = new MinMaxDataElement( source1, dataElement1, optionCombo1, 0, 100, false );
-        MinMaxDataElement minMaxDataElement2 = new MinMaxDataElement( source2, dataElement2, optionCombo1, 0, 100, false );
-        MinMaxDataElement minMaxDataElement3 = new MinMaxDataElement( source2, dataElement3, optionCombo1, 0, 100, false );
-        MinMaxDataElement minMaxDataElement4 = new MinMaxDataElement( source2, dataElement4, optionCombo1, 0, 100, false );
-
-        MinMaxDataElement minMaxDataElement5 = new MinMaxDataElement( source1, dataElement1, optionCombo2, 0, 100, false );
+        DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
+        
+        MinMaxDataElement minMaxDataElement1 = new MinMaxDataElement( source1, dataElement1, optionCombo, 0, 100, false );
+        MinMaxDataElement minMaxDataElement2 = new MinMaxDataElement( source2, dataElement2, optionCombo, 0, 100, false );
+        MinMaxDataElement minMaxDataElement3 = new MinMaxDataElement( source2, dataElement3, optionCombo, 0, 100, false );
+        MinMaxDataElement minMaxDataElement4 = new MinMaxDataElement( source2, dataElement4, optionCombo, 0, 100, false );
 
         int mmdeid1 = minMaxDataElementStore.save( minMaxDataElement1 );
-
         minMaxDataElementStore.save( minMaxDataElement2 );
         minMaxDataElementStore.save( minMaxDataElement3 );
         minMaxDataElementStore.save( minMaxDataElement4 );
-        minMaxDataElementStore.save( minMaxDataElement5 );
-
+        
         // ----------------------------------------------------------------------
         // Assertions
         // ----------------------------------------------------------------------
@@ -143,11 +134,11 @@ public class MinMaxDataElementStoreTest
         dataElements2.add( dataElement3 );
         dataElements2.add( dataElement4 );
 
-        assertNotNull( minMaxDataElementStore.get( source1, dataElement1, optionCombo1 ) );
-        assertNull( minMaxDataElementStore.get( source2, dataElement1, optionCombo1 ) );
+        assertNotNull( minMaxDataElementStore.get( source1, dataElement1, optionCombo ) );
+        assertNull( minMaxDataElementStore.get( source2, dataElement1, optionCombo ) );
 
-        assertTrue( minMaxDataElementStore.get( source1, dataElements1 ).size() == 2 );
-        assertTrue( minMaxDataElementStore.get( source2, dataElements2 ).size() == 3 );
+        assertEquals( 1, minMaxDataElementStore.get( source1, dataElements1 ).size() );
+        assertEquals( 3, minMaxDataElementStore.get( source2, dataElements2 ).size() );
 
         minMaxDataElementStore.delete( minMaxDataElement1 );
 
