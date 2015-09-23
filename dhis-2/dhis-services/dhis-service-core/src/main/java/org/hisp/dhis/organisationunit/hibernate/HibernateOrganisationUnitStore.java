@@ -327,7 +327,7 @@ public class HibernateOrganisationUnitStore
     @SuppressWarnings( "unchecked" )
     public void updatePaths()
     {
-        List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit ou where ou.path IS NULL" ).list() );
+        List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit ou where ou.path is null or ou.hierarchyLevel is null" ).list() );
         updatePaths( organisationUnits );
     }
 
