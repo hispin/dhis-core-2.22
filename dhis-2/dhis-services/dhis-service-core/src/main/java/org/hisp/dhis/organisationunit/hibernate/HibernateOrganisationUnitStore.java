@@ -214,7 +214,7 @@ public class HibernateOrganisationUnitStore
         {
             for ( OrganisationUnit parent : params.getParents() )
             {
-                query.setString( parent.getUid(), "%" + parent.getUid() + "%" );
+                query.setString( parent.getUid(), parent.getPath() + "%" );
             }
         }
         
