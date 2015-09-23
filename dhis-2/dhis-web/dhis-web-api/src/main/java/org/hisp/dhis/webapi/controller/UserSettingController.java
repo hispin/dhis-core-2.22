@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Locale;
 
+import static org.hisp.dhis.user.UserSettingService.*;
+
 /**
  * @author Lars Helge Overland
  */
@@ -95,19 +97,19 @@ public class UserSettingController
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
-    public void getSystemSetting( @PathVariable( "key" ) String key,
+    public void getUserSetting( @PathVariable( "key" ) String key,
         @RequestParam( value = "user", required = false ) String username,
         HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
     {
-        String value;
+        Serializable value;
 
         if ( username == null )
         {
-            value = getStringValue( key, userSettingService.getUserSetting( key ) );
+            value = userSettingService.getUserSetting( key );
         }
         else
         {
-            value = getStringValue( key, userSettingService.getUserSetting( key, username ) );
+            value = userSettingService.getUserSetting( key, username );
         }
 
         if ( value == null )
@@ -115,7 +117,9 @@ public class UserSettingController
             throw new WebMessageException( WebMessageUtils.notFound( "User setting not found." ) );
         }
 
-        String contentType;
+        String stringVal = getStringValue( key, value );
+        
+        String contentType = null;
 
         if ( request.getHeader( "Accept" ) == null || "*/*".equals( request.getHeader( "Accept" ) ) )
         {
@@ -127,7 +131,7 @@ public class UserSettingController
         }
 
         response.setContentType( contentType );
-        response.getWriter().println( value );
+        response.getWriter().println( stringVal );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.DELETE )
@@ -138,7 +142,7 @@ public class UserSettingController
 
     private Serializable valueToSet( String key, String value )
     {
-        if ( key.equals( UserSettingService.KEY_UI_LOCALE ) || key.equals( UserSettingService.KEY_DB_LOCALE ) )
+        if ( KEY_UI_LOCALE.equals( key ) || KEY_DB_LOCALE.equals( key ) )
         {
             return LocaleUtils.getLocale( value );
         }
@@ -150,7 +154,7 @@ public class UserSettingController
 
     private String getStringValue( String key, Serializable value )
     {
-        if ( key.equals( UserSettingService.KEY_UI_LOCALE ) || key.equals( UserSettingService.KEY_DB_LOCALE ) )
+        if ( KEY_UI_LOCALE.equals( key ) || KEY_DB_LOCALE.equals( key ) )
         {
             return ((Locale) value).getLanguage();
         }

@@ -205,7 +205,8 @@ public class DefaultUserSettingService
     public Serializable getUserSetting( String name )
     {
         User currentUser = currentUserService.getCurrentUser();
-        return getUserSetting(name, currentUser);
+        
+        return getUserSetting( name, currentUser );
     }
 
 
