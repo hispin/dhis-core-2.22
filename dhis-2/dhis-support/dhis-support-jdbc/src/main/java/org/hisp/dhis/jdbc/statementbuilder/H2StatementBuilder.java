@@ -158,26 +158,6 @@ public class H2StatementBuilder
     }
 
     @Override
-    public String getDeflatedDataValues( int dataElementId, String dataElementName, int categoryOptionComboId,
-    		String periodIds, int organisationUnitId, String organisationUnitName, int lowerBound, int upperBound )
-    {	
-    	return "SELECT dv.dataelementid, dv.periodid, dv.sourceid, dv.categoryoptioncomboid, dv.value, dv.storedby, dv.lastupdated, " +
-            "dv.comment, dv.followup, '" + lowerBound + "' AS minimumvalue, '" + upperBound + "' AS maximumvalue, " +
-            encode( dataElementName ) + " AS dataelementname, pt.name AS periodtypename, pe.startdate, pe.enddate, " + 
-            encode( organisationUnitName ) + " AS sourcename, cc.name " +
-            "FROM datavalue AS dv " +
-            "JOIN period AS pe USING (periodid) " +
-            "JOIN periodtype AS pt USING (periodtypeid) " +
-            "LEFT JOIN categoryoptioncombo AS cc USING (categoryoptioncomboid) " +
-            "WHERE dv.dataelementid='" + dataElementId + "' " +
-            "AND dv.categoryoptioncomboid='" + categoryOptionComboId + "' " +
-            "AND dv.periodid IN (" + periodIds + ") " +
-            "AND dv.sourceid='" + organisationUnitId + "' " +
-            "AND ( CAST( dv.value AS " + getDoubleColumnType() + " ) < '" + lowerBound + "' " +
-            "OR CAST( dv.value AS " + getDoubleColumnType() + " ) > '" + upperBound + "' )";
-    }
-
-    @Override
     public String getAddDate( String dateField, int days )
     {
         return "DATEADD('DAY'," + days + "," + dateField + ")";
