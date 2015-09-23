@@ -28,14 +28,21 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Sets;
+import static org.hisp.dhis.common.NameableObjectUtils.getDisplayProperty;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -57,20 +64,14 @@ import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.hisp.dhis.user.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.hisp.dhis.common.NameableObjectUtils.getDisplayProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 
 /**
  * @author Kristian Nordal
@@ -102,6 +103,8 @@ public class OrganisationUnit
 
     private String path;
 
+    private Integer hierarchyLevel;
+    
     private Date openingDate;
 
     private Date closedDate;
@@ -859,9 +862,40 @@ public class OrganisationUnit
         return path;
     }
 
+    /**
+     * Do not set directly.
+     */
     public void setPath( String path )
     {
         this.path = path;
+    }
+
+    /**
+     * Used by persistence layer. Purpose is to have a column for use in database 
+     * queries. For application use see {@link getLevel()} which has better performance.
+     */
+    public Integer getHierarchyLevel()
+    {
+        int count = 1;
+        
+        OrganisationUnit current = this;
+        
+        while ( ( current = current.getParent() ) != null )
+        {
+            count++;
+        }
+        
+        hierarchyLevel = count;
+        
+        return hierarchyLevel;
+    }
+
+    /**
+     * Do not set directly.
+     */
+    public void setHierarchyLevel( Integer hierarchyLevel )
+    {
+        this.hierarchyLevel = hierarchyLevel;
     }
 
     @JsonProperty
