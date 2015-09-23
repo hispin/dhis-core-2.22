@@ -850,8 +850,7 @@ public class OrganisationUnit
             }
             else
             {
-                // we have tests in the system which needs cyclic OU graphs, so we need to short-circuit here if we encounter that
-                currentParent = null;
+                currentParent = null; // Protect against cyclic org unit graphs
             }
         }
 
@@ -876,16 +875,21 @@ public class OrganisationUnit
      */
     public Integer getHierarchyLevel()
     {
-        int count = 1;
+        Set<String> uids = Sets.newHashSet( uid );
         
         OrganisationUnit current = this;
         
         while ( ( current = current.getParent() ) != null )
         {
-            count++;
+            boolean add = uids.add( current.getUid() );
+            
+            if ( !add )
+            {
+                break; // Protect against cyclic org unit graphs
+            }
         }
         
-        hierarchyLevel = count;
+        hierarchyLevel = uids.size();
         
         return hierarchyLevel;
     }
