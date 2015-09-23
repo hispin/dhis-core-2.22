@@ -381,7 +381,7 @@ public class JdbcResourceTableStore
     {
         String sql = 
             "insert into " + CreateCategoryTableStatement.TABLE_NAME + " " +
-            "select coc.categoryoptioncomboid as cocid, con.categoryoptioncomboname as cocname, ";
+            "select coc.categoryoptioncomboid as cocid, coc.name as cocname, ";
         
         for ( DataElementCategory category : categories )
         {
@@ -404,8 +404,7 @@ public class JdbcResourceTableStore
 
         sql = TextUtils.removeLastComma( sql ) + " ";
         sql += 
-            "from categoryoptioncombo coc " +
-            "inner join _categoryoptioncomboname con on coc.categoryoptioncomboid = con.categoryoptioncomboid";
+            "from categoryoptioncombo coc ";
         
         log.info( "Populate category structure SQL: " + sql );
         
