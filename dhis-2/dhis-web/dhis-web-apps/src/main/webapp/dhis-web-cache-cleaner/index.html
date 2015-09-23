@@ -49,22 +49,21 @@
     </head>
 
     <body>
-        <d2-header-bar></d2-header-bar>
+    <d2-header-bar></d2-header-bar>
 
-        <div id="leftBar"></div>
-        <div class="page" id="mainPage" ng-controller="MainController">
+    <div id="leftBar"></div>
+    <div class="page" id="mainPage" ng-controller="MainController">
 
-            <!-- top bar begins -->
-            <div class="row top-bar">        
-                <div class="col-sm-12">            
-                    {{'clearing_dhis2_browser_cache'| translate}}
-                </div>        
-            </div>
-            <!-- top bar ends -->
+        <!-- top bar begins -->
+        <div class="row top-bar">        
+            <div class="col-sm-12">            
+                {{'clearing_dhis2_browser_cache'| translate}}
+            </div>        
+        </div>
+        <!-- top bar ends -->
 
-
-            <div class="row col-sm-6" ng-if="ssCacheExists || lsCacheExists || idCacheExists">
-                <h3 ng-if="ssCacheExists">{{'session_storage'| translate}}</h3>
+        <div class="row" ng-if="ssCacheExists || lsCacheExists || idCacheExists">
+            <div class="col-sm-6"><h3 ng-if="ssCacheExists">{{'session_storage'| translate}}</h3>
                 <table class="table table-bordered table-striped" ng-if="ssCacheExists">
                     <tr ng-repeat="ssKey in ssKeys">
                         <td>
@@ -75,7 +74,7 @@
                         </td>
                     </tr>                                    
                 </table>
-                
+
                 <h3 ng-if="lsCacheExists">{{'local_storage'| translate}}</h3>
                 <table class="table table-bordered table-striped" ng-if="lsCacheExists">
                     <tr ng-repeat="lsKey in lsKeys">
@@ -99,17 +98,20 @@
                         </td>
                     </tr>                                    
                 </table>
-                
+
                 <!--<span class="alert alert-warning">{{'clears_local_cache'| translate}}</span>-->
                 <a href ng-click="clearCache()" class="btn btn-danger">{{'clear'| translate}}</a>
-                <a href ng-click="selectAll()" class="btn btn-primary">{{ (ssKeys  | filter: {remove: true}).length > 0 || (lsKeys  | filter: {remove: true}).length > 0 || (dbKeys  | filter: {remove: true}).length > 0 ? 'unselect_all' : 'select_all' | translate}}</a>                
+                <a href ng-click="selectAll()" class="btn btn-primary">{{ (ssKeys | filter: {remove: true}).length > 0 || (lsKeys | filter: {remove: true}).length > 0 || (dbKeys | filter: {remove: true}).length > 0 ? 'unselect_all' : 'select_all' | translate}}</a>                
+
             </div>
-            
-            <div class="row col-sm-6" ng-if="!lsCacheExists && !idCacheExists">                
-                <div class="alert alert-info">{{ afterClearing ? 'cache_cleared' : 'nothing_to_clear' | translate}}</div>                
-            </div>
-            
+
         </div>
 
-    </body>
+        <div class="row col-sm-6" ng-if="!lsCacheExists && !idCacheExists">
+            <div class="alert alert-info">{{ afterClearing ? 'cache_cleared' : 'nothing_to_clear' | translate}}</div>                
+        </div>
+
+    </div>
+
+</body>
 </html>
