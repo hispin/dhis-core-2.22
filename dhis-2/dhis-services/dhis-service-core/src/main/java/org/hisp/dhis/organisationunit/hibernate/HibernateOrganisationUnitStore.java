@@ -328,22 +328,7 @@ public class HibernateOrganisationUnitStore
     public void updatePaths()
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit ou where ou.path IS NULL" ).list() );
-        Session session = sessionFactory.getCurrentSession();
-        int counter = 0;
-
-        // Use session directly since we don't need to check for access
-        
-        for ( OrganisationUnit organisationUnit : organisationUnits )
-        {
-            session.update( organisationUnit );
-
-            if ( (counter % 400) == 0 )
-            {
-                dbmsManager.clearSession();
-            }
-
-            counter++;
-        }
+        updatePaths( organisationUnits );
     }
 
     @Override
@@ -351,11 +336,14 @@ public class HibernateOrganisationUnitStore
     public void forceUpdatePaths()
     {
         List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit" ).list() );
+        updatePaths( organisationUnits );
+    }
+    
+    private void updatePaths( List<OrganisationUnit> organisationUnits )
+    {
         Session session = sessionFactory.getCurrentSession();
         int counter = 0;
 
-        // Use session directly since we don't need to check for access
-        
         for ( OrganisationUnit organisationUnit : organisationUnits )
         {
             session.update( organisationUnit );
