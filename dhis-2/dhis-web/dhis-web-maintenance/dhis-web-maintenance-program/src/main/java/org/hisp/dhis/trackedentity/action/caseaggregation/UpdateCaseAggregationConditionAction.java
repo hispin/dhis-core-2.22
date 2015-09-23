@@ -28,7 +28,7 @@ package org.hisp.dhis.trackedentity.action.caseaggregation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.caseaggregation.CaseAggregationCondition;
 import org.hisp.dhis.caseaggregation.CaseAggregationConditionService;
 import org.hisp.dhis.dataelement.DataElement;
