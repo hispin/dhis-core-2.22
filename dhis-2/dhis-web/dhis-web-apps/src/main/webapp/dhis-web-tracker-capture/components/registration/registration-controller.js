@@ -408,7 +408,9 @@ trackerCapture.controller('RegistrationController',
         });
 
         modalInstance.result.then(function (res) {
-            console.log('the result:  ', res);
+            if(res && res.id){
+                $scope.selectedTei[selectedAttribute.id] = res.id;
+            }
         });
     };    
 });
