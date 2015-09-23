@@ -31,17 +31,13 @@ package org.hisp.dhis.organisationunit;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hisp.dhis.common.CodeGenerator;
-
 import com.google.common.base.MoreObjects;
 
 /**
  * @author Lars Helge Overland
  */
 public class OrganisationUnitQueryParams
-{
-    public static final int CODE_SEP_LENGTH = CodeGenerator.CODESIZE + 1;
-    
+{    
     /**
      * Query string to match like name and exactly on UID and code.
      */
@@ -104,17 +100,7 @@ public class OrganisationUnitQueryParams
     {
         return levels != null && !levels.isEmpty();
     }
-    
-    public int getMaxLevelsPathLength()
-    {
-        return maxLevels != null ? ( CODE_SEP_LENGTH * maxLevels ) : -1;
-    }
-    
-    public int getLevelPathLength( int level )
-    {
-        return CODE_SEP_LENGTH * level;
-    }
-    
+        
     public void setLevel( Integer level )
     {
         if ( level != null )
