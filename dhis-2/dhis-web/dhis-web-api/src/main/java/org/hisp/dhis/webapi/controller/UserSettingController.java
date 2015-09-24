@@ -160,7 +160,7 @@ public class UserSettingController
         }
         else
         {
-            return (String) value;
+            return String.valueOf( value );
         }
     }
 }
