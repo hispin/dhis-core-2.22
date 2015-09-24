@@ -232,10 +232,30 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     $scope.selectedCategories = categories;                    
                     TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
                         $scope.allProgramRules = rules;
-                        $scope.loadEvents();
+                        if($scope.selectedCategories.length === 0){
+                            $scope.loadEvents();
+                        }                        
                     });
                 });
             });
+        }
+    };
+    
+    $scope.getCategoryOptions = function(){
+        $scope.eventFetched = false;
+        var optionsReady = false;
+        $scope.selectedOptions = [];        
+        for(var i=0; i<$scope.selectedCategories.length; i++){
+            if($scope.selectedCategories[i].selectedOption && $scope.selectedCategories[i].selectedOption.id){
+                optionsReady = true;
+                $scope.selectedOptions.push($scope.selectedCategories[i].selectedOption);
+            }
+            else{
+                optionsReady = false;
+            }
+        }        
+        if(optionsReady){
+            $scope.loadEvents();
         }
     };
         
