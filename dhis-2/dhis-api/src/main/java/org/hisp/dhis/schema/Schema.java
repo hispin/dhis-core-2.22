@@ -447,7 +447,7 @@ public class Schema implements Ordered, Klass
     @JsonProperty
     @JacksonXmlElementWrapper( localName = "references", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "reference", namespace = DxfNamespaces.DXF_2_0 )
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings( "rawtypes" )
     public Set<Class> getReferences()
     {
         return getProperties().stream()
@@ -461,13 +461,8 @@ public class Schema implements Ordered, Klass
         {
             persistedProperties = new HashMap<>();
 
-            for ( Map.Entry<String, Property> entry : getPropertyMap().entrySet() )
-            {
-                if ( entry.getValue().isPersisted() )
-                {
-                    persistedProperties.put( entry.getKey(), entry.getValue() );
-                }
-            }
+            getPropertyMap().entrySet().stream().filter( entry -> entry.getValue().isPersisted() )
+                .forEach( entry -> persistedProperties.put( entry.getKey(), entry.getValue() ) );
         }
 
         return persistedProperties;
@@ -479,13 +474,8 @@ public class Schema implements Ordered, Klass
         {
             nonPersistedProperties = new HashMap<>();
 
-            for ( Map.Entry<String, Property> entry : getPropertyMap().entrySet() )
-            {
-                if ( !entry.getValue().isPersisted() )
-                {
-                    nonPersistedProperties.put( entry.getKey(), entry.getValue() );
-                }
-            }
+            getPropertyMap().entrySet().stream().filter( entry -> !entry.getValue().isPersisted() )
+                .forEach( entry -> nonPersistedProperties.put( entry.getKey(), entry.getValue() ) );
         }
 
         return nonPersistedProperties;
@@ -533,13 +523,8 @@ public class Schema implements Ordered, Klass
         {
             List<String> authorityList = Lists.newArrayList();
 
-            for ( Authority authority : authorities )
-            {
-                if ( type.equals( authority.getType() ) )
-                {
-                    authorityList.addAll( authority.getAuthorities() );
-                }
-            }
+            authorities.stream().filter( authority -> type.equals( authority.getType() ) )
+                .forEach( authority -> authorityList.addAll( authority.getAuthorities() ) );
 
             authorityMap.put( type, authorityList );
         }
