@@ -28,7 +28,11 @@ package org.hisp.dhis.dxf2.events.enrollment;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.program.ProgramStatus;
+
 /**
+ * FIXME we should probably remove this, and replace it with program status
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public enum EnrollmentStatus
@@ -37,7 +41,7 @@ public enum EnrollmentStatus
 
     private final int value;
 
-    private EnrollmentStatus( int value )
+    EnrollmentStatus( int value )
     {
         this.value = value;
     }
@@ -47,16 +51,18 @@ public enum EnrollmentStatus
         return value;
     }
 
-    public static EnrollmentStatus fromInt( int status )
+    public static EnrollmentStatus fromProgramStatus( ProgramStatus programStatus )
     {
-        for ( EnrollmentStatus enrollmentStatus : EnrollmentStatus.values() )
+        switch ( programStatus )
         {
-            if ( enrollmentStatus.getValue() == status )
-            {
-                return enrollmentStatus;
-            }
+            case ACTIVE:
+                return ACTIVE;
+            case CANCELLED:
+                return CANCELLED;
+            case COMPLETED:
+                return COMPLETED;
         }
 
-        throw new IllegalArgumentException( "Enum value not found: " + status );
+        throw new IllegalArgumentException( "Enum value not found: " + programStatus );
     }
 }

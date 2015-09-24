@@ -97,7 +97,7 @@ public interface ProgramInstanceStore
      *                         STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit, int status );
+    List<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit, ProgramStatus status );
 
     /**
      * Retrieve program instances on a program by status
@@ -107,7 +107,7 @@ public interface ProgramInstanceStore
      *                STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> get( Program program, Integer status );
+    List<ProgramInstance> get( Program program, ProgramStatus status );
 
     /**
      * Retrieve program instances on a program list by status
@@ -117,7 +117,7 @@ public interface ProgramInstanceStore
      *                 STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> get( Collection<Program> programs, Integer status );
+    List<ProgramInstance> get( Collection<Program> programs, ProgramStatus status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a status
@@ -127,7 +127,7 @@ public interface ProgramInstanceStore
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> get( TrackedEntityInstance entityInstance, Integer status );
+    List<ProgramInstance> get( TrackedEntityInstance entityInstance, ProgramStatus status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a program
@@ -147,7 +147,7 @@ public interface ProgramInstanceStore
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program, Integer status );
+    List<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program, ProgramStatus status );
 
     /**
      * Retrieve program instances with active status on an orgunit by a program
@@ -209,7 +209,7 @@ public interface ProgramInstanceStore
      * @param endDate    The end date for retrieving on enrollment-date
      * @return A number
      */
-    int countByStatus( Integer status, Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate );
+    int countByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate );
 
     /**
      * Retrieve program instances with a certain status on a program and an
@@ -223,7 +223,7 @@ public interface ProgramInstanceStore
      * @param endDate    The end date for retrieving on enrollment-date
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
+    List<ProgramInstance> getByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate );
 
     /**
@@ -238,7 +238,7 @@ public interface ProgramInstanceStore
      * @param endDate    The end date for retrieving on enrollment-date
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
+    List<ProgramInstance> getByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate, Integer min, Integer max );
 
     /**

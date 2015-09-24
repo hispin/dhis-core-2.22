@@ -61,7 +61,7 @@ public interface ProgramStageInstanceStore
      * Retrieve an event list on program instance list with a certain status
      *
      * @param programInstances ProgramInstance list
-     * @param status EventStatus
+     * @param status           EventStatus
      * @return ProgramStageInstance list
      */
     List<ProgramStageInstance> get( Collection<ProgramInstance> programInstances, EventStatus status );
@@ -70,7 +70,7 @@ public interface ProgramStageInstanceStore
      * Get all events by TrackedEntityInstance, optionally filtering by completed.
      *
      * @param entityInstance TrackedEntityInstance
-     * @param status EventStatus
+     * @param status         EventStatus
      * @return ProgramStageInstance list
      */
     List<ProgramStageInstance> get( TrackedEntityInstance entityInstance, EventStatus status );
@@ -80,7 +80,7 @@ public interface ProgramStageInstanceStore
      *
      * @return A SchedulingProgramObject list
      */
-    Collection<SchedulingProgramObject> getSendMesssageEvents();
+    Collection<SchedulingProgramObject> getSendMessageEvents();
 
     /**
      * Get the number of events by completed status
@@ -93,8 +93,7 @@ public interface ProgramStageInstanceStore
      *                     or uncompleted (<code>false</code>) instances.
      * @return A number
      */
-    int count( ProgramStage programStage, Collection<Integer> orgunitIds, Date startDate, Date endDate,
-        Boolean completed );
+    int count( ProgramStage programStage, Collection<Integer> orgunitIds, Date startDate, Date endDate, Boolean completed );
 
     /**
      * Get the number of over due events of a program stage in a certain period
@@ -119,7 +118,7 @@ public interface ProgramStageInstanceStore
      *                   LATE_VISIT_STATUS
      * @return A number
      */
-    int averageNumberCompleted( Program program, Collection<Integer> orgunitIds, Date after, Date before, int status );
+    int averageNumberCompleted( Program program, Collection<Integer> orgunitIds, Date after, Date before, ProgramStatus status );
 
     /**
      * Get/Export a report about the number of events of a program completed on
@@ -135,6 +134,7 @@ public interface ProgramStageInstanceStore
 
     /**
      * Get the number of ProgramStageInstances updates since the given Date.
+     *
      * @param time the time.
      * @return the number of ProgramStageInstances.
      */

@@ -28,18 +28,6 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ACCESSIBLE;
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ALL;
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.CHILDREN;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.CodeGenerator;
@@ -68,6 +56,16 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.*;
 
 /**
  * @author Abyot Asalefew
@@ -362,25 +360,25 @@ public class DefaultProgramInstanceService
 
     @Override
     public List<ProgramInstance> getProgramInstances( Collection<Program> programs,
-        OrganisationUnit organisationUnit, int status )
+        OrganisationUnit organisationUnit, ProgramStatus status )
     {
         return programInstanceStore.get( programs, organisationUnit, status );
     }
 
     @Override
-    public List<ProgramInstance> getProgramInstances( Collection<Program> programs, Integer status )
+    public List<ProgramInstance> getProgramInstances( Collection<Program> programs, ProgramStatus status )
     {
         return programInstanceStore.get( programs, status );
     }
 
     @Override
-    public List<ProgramInstance> getProgramInstances( Program program, Integer status )
+    public List<ProgramInstance> getProgramInstances( Program program, ProgramStatus status )
     {
         return programInstanceStore.get( program, status );
     }
 
     @Override
-    public List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Integer status )
+    public List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, ProgramStatus status )
     {
         return programInstanceStore.get( entityInstance, status );
     }
@@ -392,15 +390,13 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program,
-        Integer status )
+    public List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program, ProgramStatus status )
     {
         return programInstanceStore.get( entityInstance, program, status );
     }
 
     @Override
-    public List<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit,
-        Integer min, Integer max )
+    public List<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit, Integer min, Integer max )
     {
         return programInstanceStore.get( program, organisationUnit, min, max );
     }
@@ -419,14 +415,14 @@ public class DefaultProgramInstanceService
     }
 
     @Override
-    public int countProgramInstancesByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
+    public int countProgramInstancesByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate )
     {
         return programInstanceStore.countByStatus( status, program, orgunitIds, startDate, endDate );
     }
 
     @Override
-    public List<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
+    public List<ProgramInstance> getProgramInstancesByStatus( ProgramStatus status, Program program,
         Collection<Integer> orgunitIds, Date startDate, Date endDate )
     {
         return programInstanceStore.getByStatus( status, program, orgunitIds, startDate, endDate );
@@ -483,7 +479,7 @@ public class DefaultProgramInstanceService
             programInstance.setIncidentDate( new Date() );
         }
 
-        programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
+        programInstance.setStatus( ProgramStatus.ACTIVE );
         addProgramInstance( programInstance );
 
         // -----------------------------------------------------------------
@@ -571,7 +567,7 @@ public class DefaultProgramInstanceService
         // Update program-instance
         // -----------------------------------------------------------------
 
-        programInstance.setStatus( ProgramInstance.STATUS_COMPLETED );
+        programInstance.setStatus( ProgramStatus.COMPLETED );
         programInstance.setEndDate( new Date() );
 
         updateProgramInstance( programInstance );
@@ -589,7 +585,7 @@ public class DefaultProgramInstanceService
         Date currentDate = today.getTime();
 
         programInstance.setEndDate( currentDate );
-        programInstance.setStatus( ProgramInstance.STATUS_CANCELLED );
+        programInstance.setStatus( ProgramStatus.CANCELLED );
         updateProgramInstance( programInstance );
 
         // ---------------------------------------------------------------------

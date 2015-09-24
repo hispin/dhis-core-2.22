@@ -28,15 +28,15 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Abyot Asalefew
@@ -181,8 +181,7 @@ public interface ProgramInstanceService
      *                         STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getProgramInstances( Collection<Program> programs, OrganisationUnit organisationUnit,
-        int status );
+    List<ProgramInstance> getProgramInstances( Collection<Program> programs, OrganisationUnit organisationUnit, ProgramStatus status );
 
     /**
      * Retrieve program instances on a program by status
@@ -192,7 +191,7 @@ public interface ProgramInstanceService
      *                STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getProgramInstances( Program program, Integer status );
+    List<ProgramInstance> getProgramInstances( Program program, ProgramStatus status );
 
     /**
      * Retrieve program instances on a program list by status
@@ -202,7 +201,7 @@ public interface ProgramInstanceService
      *                 STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getProgramInstances( Collection<Program> programs, Integer status );
+    List<ProgramInstance> getProgramInstances( Collection<Program> programs, ProgramStatus status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a status
@@ -212,7 +211,7 @@ public interface ProgramInstanceService
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Integer status );
+    List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, ProgramStatus status );
 
     /**
      * Retrieve program instances on a TrackedEntityInstance by a program
@@ -232,7 +231,7 @@ public interface ProgramInstanceService
      *                       STATUS_COMPLETED and STATUS_CANCELLED
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program, Integer status );
+    List<ProgramInstance> getProgramInstances( TrackedEntityInstance entityInstance, Program program, ProgramStatus status );
 
     /**
      * Retrieve program instances with active status on an orgunit by a program
@@ -244,11 +243,10 @@ public interface ProgramInstanceService
      * @param max              Maximum results
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit, Integer min,
-        Integer max );
+    List<ProgramInstance> getProgramInstances( Program program, OrganisationUnit organisationUnit, Integer min, Integer max );
 
     /**
-     * Retrieve program instances with active status on an organisation unit by 
+     * Retrieve program instances with active status on an organisation unit by
      * a program for a certain period with result limited
      *
      * @param program    Program
@@ -286,7 +284,7 @@ public interface ProgramInstanceService
      * @param endDate    The end date for retrieving on enrollment-date
      * @return ProgramInstance list
      */
-    List<ProgramInstance> getProgramInstancesByStatus( Integer status, Program program,
+    List<ProgramInstance> getProgramInstancesByStatus( ProgramStatus status, Program program,
         Collection<Integer> orgunitIds, Date startDate, Date endDate );
 
     /**
@@ -301,7 +299,7 @@ public interface ProgramInstanceService
      * @param endDate    The end date for retrieving on enrollment-date
      * @return A number
      */
-    int countProgramInstancesByStatus( Integer status, Program program, Collection<Integer> orgunitIds, Date startDate,
+    int countProgramInstancesByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds, Date startDate,
         Date endDate );
 
     /**
@@ -317,12 +315,12 @@ public interface ProgramInstanceService
      * @param trackedEntityInstance TrackedEntityInstance
      * @param program               Program
      * @param enrollmentDate        The date of enrollment
-     * @param incidentDate        The date of incident
+     * @param incidentDate          The date of incident
      * @param orgunit               Organisation Unit
      * @param uid                   UID to use for new instance
      * @return ProgramInstance
      */
-    ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, Program program, 
+    ProgramInstance enrollTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, Program program,
         Date enrollmentDate, Date incidentDate, OrganisationUnit orgunit, String uid );
 
     /**
@@ -331,7 +329,7 @@ public interface ProgramInstanceService
      * @param trackedEntityInstance TrackedEntityInstance
      * @param program               Program
      * @param enrollmentDate        The date of enrollment
-     * @param incidentDate        The date of incident
+     * @param incidentDate          The date of incident
      * @param orgunit               Organisation Unit
      * @return ProgramInstance
      */

@@ -37,7 +37,7 @@ public enum ProgramStatus
 
     private int value;
 
-    private ProgramStatus( int value )
+    ProgramStatus( int value )
     {
         this.value = value;
     }

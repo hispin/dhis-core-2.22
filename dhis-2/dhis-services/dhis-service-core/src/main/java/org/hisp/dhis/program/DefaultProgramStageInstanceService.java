@@ -28,14 +28,6 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.message.MessageConversation;
@@ -51,6 +43,14 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Abyot Asalefew
@@ -164,7 +164,7 @@ public class DefaultProgramStageInstanceService
     public long getProgramStageInstanceCount( int days )
     {
         Calendar cal = PeriodType.createCalendarInstance();
-        cal.add( Calendar.DAY_OF_YEAR, ( days * -1 ) );
+        cal.add( Calendar.DAY_OF_YEAR, (days * -1) );
 
         return programStageInstanceStore.getProgramStageInstanceCountLastUpdatedAfter( cal.getTime() );
     }
@@ -172,7 +172,7 @@ public class DefaultProgramStageInstanceService
     @Override
     public Collection<SchedulingProgramObject> getSendMesssageEvents()
     {
-        return programStageInstanceStore.getSendMesssageEvents();
+        return programStageInstanceStore.getSendMessageEvents();
     }
 
     @Override
@@ -247,13 +247,13 @@ public class DefaultProgramStageInstanceService
         {
             programStage = program.getProgramStages().iterator().next();
         }
-        
+
         ProgramInstance programInstance = null;
-        
-        if ( program.isWithoutRegistration()  )
+
+        if ( program.isWithoutRegistration() )
         {
             Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstances( program );
-            
+
             if ( programInstances == null || programInstances.size() == 0 )
             {
                 // Add a new program instance if it doesn't exist
@@ -261,7 +261,7 @@ public class DefaultProgramStageInstanceService
                 programInstance.setEnrollmentDate( executionDate );
                 programInstance.setIncidentDate( executionDate );
                 programInstance.setProgram( program );
-                programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
+                programInstance.setStatus( ProgramStatus.ACTIVE );
                 programInstanceService.addProgramInstance( programInstance );
             }
             else
@@ -337,7 +337,7 @@ public class DefaultProgramStageInstanceService
         if ( phoneNumbers.size() > 0 )
         {
             String msg = reminderService.getMessageFromTemplate( reminder, programStageInstance, format );
-            
+
             try
             {
                 outboundSms = new OutboundSms();
@@ -392,7 +392,7 @@ public class DefaultProgramStageInstanceService
                 && rm.getWhenToSend() != null
                 && rm.getWhenToSend() == status
                 && (rm.getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_DHIS_MESSAGE || rm
-                    .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
+                .getMessageType() == TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH) )
             {
                 int id = messageService.sendMessage( programStageInstance.getProgramStage().getDisplayName(),
                     reminderService.getMessageFromTemplate( rm, programStageInstance, format ), null,

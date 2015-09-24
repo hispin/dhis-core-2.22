@@ -64,13 +64,7 @@ public class ProgramInstance
      */
     private static final long serialVersionUID = -1235315582356509653L;
 
-    public static int STATUS_ACTIVE = 0;
-
-    private Integer status = STATUS_ACTIVE;
-
-    public static int STATUS_COMPLETED = 1;
-
-    public static int STATUS_CANCELLED = 2;
+    private ProgramStatus status = ProgramStatus.ACTIVE;
 
     private OrganisationUnit organisationUnit;
 
@@ -318,12 +312,12 @@ public class ProgramInstance
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public int getStatus()
+    public ProgramStatus getStatus()
     {
         return status;
     }
 
-    public void setStatus( Integer status )
+    public void setStatus( ProgramStatus status )
     {
         this.status = status;
     }

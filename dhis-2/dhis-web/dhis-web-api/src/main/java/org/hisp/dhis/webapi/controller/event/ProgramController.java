@@ -34,6 +34,7 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.query.Order;
 import org.hisp.dhis.query.Query;
 import org.hisp.dhis.schema.descriptors.ProgramSchemaDescriptor;
@@ -70,7 +71,7 @@ public class ProgramController
             programInstance.setEnrollmentDate( new Date() );
             programInstance.setIncidentDate( new Date() );
             programInstance.setProgram( program );
-            programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
+            programInstance.setStatus( ProgramStatus.ACTIVE );
 
             programInstanceService.addProgramInstance( programInstance );
         }
