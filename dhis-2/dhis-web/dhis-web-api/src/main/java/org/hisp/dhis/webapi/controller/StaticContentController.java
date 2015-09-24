@@ -36,11 +36,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.external.location.LocationManager;
+import org.hisp.dhis.external.location.LocationManagerException;
+import org.hisp.dhis.setting.StyleManager;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,6 +71,9 @@ public class StaticContentController
     @Autowired
     private SystemSettingManager systemSettingManager;
 
+    @Autowired
+    private StyleManager styleManager;
+
     private static final String LOGO_BANNER = "logo_banner";
     private static final String LOGO_FRONT = "logo_front";
 
@@ -89,12 +97,12 @@ public class StaticContentController
     {
         if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {
-            throw new WebMessageException( WebMessageUtils.badRequest( "This key is not yet supported" ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "This key does not exist" ) );
         }
 
         String useCustomFile = (String) systemSettingManager.getSystemSetting( KEY_WHITELIST_MAP.get( key ) );
 
-        if ( useCustomFile != null ) // Serve the default logos
+        if ( useCustomFile == null || !useCustomFile.equalsIgnoreCase( "true" ) ) // Serve the default logos
         {
             try
             {
@@ -115,10 +123,15 @@ public class StaticContentController
                 response.setContentType( "image/png" );
                 IOUtils.copy( in, response.getOutputStream() );
             }
-            catch ( Exception e )
+            catch ( LocationManagerException e )
             {
                 throw new WebMessageException(
-                    WebMessageUtils.notFound( "The requested file could not be found" ) );
+                    WebMessageUtils.notFound( "The requested file could not be found." ));
+            }
+            catch ( IOException e )
+            {
+                throw new WebMessageException(
+                    WebMessageUtils.error( "Error occured trying to serve file." ) );
             }
             finally
             {
@@ -151,7 +164,7 @@ public class StaticContentController
         if ( !file.getContentType().equalsIgnoreCase( "image/png" ) )
         {
             throw new WebMessageException(
-                WebMessageUtils.badRequest( "This media format is not yet supported" ) );
+                new WebMessage(WebMessageStatus.WARNING, HttpStatus.UNSUPPORTED_MEDIA_TYPE ) );
         }
 
         // Only keys in the white list is accepted at the current time
@@ -187,7 +200,7 @@ public class StaticContentController
         
         if ( key.equals( LOGO_BANNER ) )
         {
-            relativeUrlToImage = "/dhis-web-commons/css/light_blue/logo_banner.png";
+            relativeUrlToImage = "/dhis-web-commons/css/" + styleManager.getCurrentStyleDirectory() + "/logo_banner.png";
         }
 
         if ( key.equals( LOGO_FRONT ) )
