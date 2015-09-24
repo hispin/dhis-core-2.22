@@ -1,5 +1,5 @@
 <div ng-if="selectedProgramStage && !eventRegistration && !editingEventInFull" class="small-vertical-spacing">
-    <i ng-if="!eventFetched" class="fa fa-spinner fa-spin fa-2x"></i>
+    <i ng-if="!eventFetched && selectedOptions.length === selectedCategories.length" class="fa fa-spinner fa-spin fa-2x"></i>    
     <div ng-if="eventFetched" ng-switch="dhis2Events.length">                        
         <div ng-switch-when="undefined">
             <h4>
