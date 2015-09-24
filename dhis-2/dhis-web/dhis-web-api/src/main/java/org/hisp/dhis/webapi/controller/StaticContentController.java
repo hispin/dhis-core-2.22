@@ -100,9 +100,9 @@ public class StaticContentController
             throw new WebMessageException( WebMessageUtils.notFound( "This key does not exist" ) );
         }
 
-        String useCustomFile = (String) systemSettingManager.getSystemSetting( KEY_WHITELIST_MAP.get( key ) );
+        Boolean useCustomFile = Boolean.valueOf( (String) systemSettingManager.getSystemSetting( KEY_WHITELIST_MAP.get( key ) ) );
 
-        if ( useCustomFile == null || !useCustomFile.equalsIgnoreCase( "true" ) ) // Serve the default logos
+        if ( useCustomFile == null || !useCustomFile ) // Serve the default logos
         {
             try
             {
