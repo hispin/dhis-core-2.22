@@ -61,6 +61,8 @@ public class ExpressionUtilsTest
         assertEquals( 1d, ExpressionUtils.evaluateToDouble( "d2:oizp(0)", null ), DELTA );
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:oizp(-4) + d2:oizp(0) + d2:oizp(3.0)", null ), DELTA );
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( "d2:daysBetween('2015-03-01','2015-03-04')", null ), DELTA );
+        assertEquals( 1d, ExpressionUtils.evaluateToDouble( "d2:oizp(d2:zing(3))", null ), DELTA );
+        assertEquals( 1d, ExpressionUtils.evaluateToDouble( "d2:zing(d2:oizp(3))", null ), DELTA );
     }
 
     @Test
@@ -168,6 +170,8 @@ public class ExpressionUtilsTest
         assertTrue( ExpressionUtils.isValid( "2 + 8", null ) );
         assertTrue( ExpressionUtils.isValid( "3 - v1", vars ) );
         assertTrue( ExpressionUtils.isValid( "d2:zing(1)", null ) );
+        assertTrue( ExpressionUtils.isValid( "d2:oizp(1)", null ) );
+        assertTrue( ExpressionUtils.isValid( "d2:oizp(d2:zing(1))", null ) );
         assertTrue( ExpressionUtils.isValid( "d2:daysBetween('2015-02-01','2015-04-02')", null ) );
         assertTrue( ExpressionUtils.isValid( "(d2:zing(1)+d2:zing(1))*50/1", null ) );
         assertTrue( ExpressionUtils.isValid( "d2:condition('1 > 100',5,100)", null ) );
