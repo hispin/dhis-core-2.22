@@ -1351,6 +1351,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.ouLevels = null;
     this.sortedTeiIds = [];
     this.selectedTeiEvents = null;
+    this.relationshipOwner = {};
     
     this.set = function(currentSelection){  
         this.currentSelection = currentSelection;        
@@ -1399,6 +1400,13 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };
     this.getSelectedTeiEvents = function(){
         return this.selectedTeiEvents;
+    };
+    
+    this.setRelationshipOwner = function(relationshipOwner){
+        this.relationshipOwner = relationshipOwner;
+    };
+    this.getRelationshipOwner = function(){
+        return this.relationshipOwner;
     };
 })
 
