@@ -39,8 +39,17 @@ public class ConditionalSqlFunction
     public static final String KEY = "condition";
 
     @Override
-    public String evaluate( String condition, String trueValue, String falseValue )
+    public String evaluate( String... args )
     {
+        if ( args == null || args.length != 3 )
+        {
+            throw new IllegalArgumentException( "Illegal arguments, expected 3 arguments: condition, true-value, false-value" );
+        }
+        
+        String condition = args[0];
+        String trueValue = args[1];
+        String falseValue = args[2];
+        
         String conditional = condition.replaceAll( "^\"|^'|\"$|'$", "" );
         
         return "case when (" + conditional + ") then " + trueValue + " else " + falseValue + " end";
