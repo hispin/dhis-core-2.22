@@ -96,13 +96,6 @@ trackerCapture.controller('RegistrationController',
             $scope.selectedEnrollment = args.enrollment;
         }
         
-        if($scope.registrationMode === 'RELATIONSHIP'){
-            $scope.mainTei = args.mainTei;
-            $scope.selectedTei = {};
-            $scope.tei = {};
-            $scope.selectedProgram = args.relativeProgram;
-        }
-        
         $scope.getAttributes($scope.registrationMode);
     });
         
@@ -120,14 +113,6 @@ trackerCapture.controller('RegistrationController',
                 $scope.trackedEntityForm.displayIncidentDate = $scope.selectedProgram.displayIncidentDate;
                 $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
             }
-            
-            if(mode === 'RELATIONSHIP'){
-                angular.forEach($scope.attributes, function(att){
-                    if(att.inherit && $scope.mainTei[att.id]){
-                        $scope.selectedTei[att.id] = $scope.mainTei[att.id];
-                    }
-                });
-            }
         });
     }; 
     
@@ -140,23 +125,7 @@ trackerCapture.controller('RegistrationController',
         if(destination === 'DASHBOARD') {
             $location.path('/dashboard').search({tei: teiId,                                            
                                     program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
-        }            
-        else if(destination === 'RELATIONSHIP' ){
-            if($scope.tei){
-                angular.forEach($scope.tei.attributes, function(att){
-                    $scope.tei[att.attribute] = att.value;
-                });
-
-                $scope.tei.orgUnitName = $scope.selectedOrgUnit.name;
-                $scope.tei.created = DateUtils.formatFromApiToUser(new Date());
-
-                CurrentSelection.setRelationshipInfo({tei: $scope.tei});
-
-                $timeout(function() { 
-                    $rootScope.$broadcast('relationship', {result: 'SUCCESS'});
-                }, 200);
-            }
-        }
+        }        
     };
     
     var reloadProfileWidget = function(){
@@ -262,13 +231,7 @@ trackerCapture.controller('RegistrationController',
             return false;
         }        
         performRegistration(destination);
-    };
-    
-    $scope.cancelRelativeRegistration = function(){
-        $timeout(function() { 
-            $rootScope.$broadcast('relationship', {result: 'CANCEL'});
-        }, 200);
-    };   
+    }; 
    
     
     var processRuleEffect = function(){        
