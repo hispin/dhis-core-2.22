@@ -28,16 +28,8 @@ package org.hisp.dhis.webapi.controller.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
@@ -77,8 +69,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -382,17 +380,17 @@ public class UserController
             throw new WebMessageException( WebMessageUtils.conflict( "You must have permissions to create user, or ability to manage at least one user group for the user." ) );
         }
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
+        importOptions.setStrategy( ImportStrategy.UPDATE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, importOptions );
 
-        if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getUpdated() == 1 )
+        if ( importTypeSummary.isStatus( ImportStatus.SUCCESS ) && importTypeSummary.getImportCount().getUpdated() == 1 )
         {
             User user = userService.getUser( pvUid );
 
             userGroupService.updateUserGroups( user, IdentifiableObjectUtils.getUids( parsed.getGroups() ) );
         }
 
-        renderService.toXml( response.getOutputStream(), summary );
+        renderService.toXml( response.getOutputStream(), importTypeSummary );
     }
 
     @Override
@@ -419,17 +417,17 @@ public class UserController
             throw new WebMessageException( WebMessageUtils.conflict( "You must have permissions to create user, or ability to manage at least one user group for the user." ) );
         }
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
+        importOptions.setStrategy( ImportStrategy.UPDATE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, importOptions );
 
-        if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getUpdated() == 1 )
+        if ( importTypeSummary.isStatus( ImportStatus.SUCCESS ) && importTypeSummary.getImportCount().getUpdated() == 1 )
         {
             User user = userService.getUser( pvUid );
 
             userGroupService.updateUserGroups( user, IdentifiableObjectUtils.getUids( parsed.getGroups() ) );
         }
 
-        renderService.toJson( response.getOutputStream(), summary );
+        renderService.toJson( response.getOutputStream(), importTypeSummary );
     }
 
     // -------------------------------------------------------------------------
@@ -481,15 +479,17 @@ public class UserController
         user.getUserCredentials().getCatDimensionConstraints().addAll(
             currentUserService.getCurrentUser().getUserCredentials().getCatDimensionConstraints() );
 
-        ImportTypeSummary summary = importService.importObject( currentUserService.getCurrentUser().getUid(), user,
-            ImportStrategy.CREATE, MergeStrategy.MERGE_IF_NOT_NULL );
+        ImportOptions importOptions = new ImportOptions();
+        importOptions.setStrategy( ImportStrategy.CREATE );
+        importOptions.setMergeStrategy( MergeStrategy.MERGE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), user, importOptions );
 
-        if ( summary.isStatus( ImportStatus.SUCCESS ) && summary.getImportCount().getImported() == 1 )
+        if ( importTypeSummary.isStatus( ImportStatus.SUCCESS ) && importTypeSummary.getImportCount().getImported() == 1 )
         {
             userGroupService.addUserToGroups( user, IdentifiableObjectUtils.getUids( user.getGroups() ) );
         }
 
-        return summary;
+        return importTypeSummary;
     }
 
     /**

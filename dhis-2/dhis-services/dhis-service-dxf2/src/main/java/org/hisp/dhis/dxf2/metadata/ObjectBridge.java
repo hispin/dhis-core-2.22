@@ -32,7 +32,7 @@ import java.util.Set;
 
 /**
  * Acts as a bridge between the importer and the persistence/cache layer.
- * <p/>
+ * <p>
  * The flag {@code writeEnabled} is used to indicate if writing to the persistence layer
  * is enabled or not.
  *
@@ -40,8 +40,9 @@ import java.util.Set;
  */
 public interface ObjectBridge
 {
-    void init(); // FIXME rename or remove.. @PostConstruct worked badly here, some kind of workaround would be nice
-    void destroy(); // FIXME
+    void init( Set<Class> preheatClasses );
+
+    void destroy();
 
     /**
      * Save object. Will save to persistence layer if {@code writeEnabled} is {@code true}.

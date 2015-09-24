@@ -28,7 +28,6 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
@@ -37,6 +36,8 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
+import org.hisp.dhis.commons.timer.SystemTimer;
+import org.hisp.dhis.commons.timer.Timer;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodStore;
@@ -44,8 +45,6 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.deletion.DeletionManager;
-import org.hisp.dhis.commons.timer.SystemTimer;
-import org.hisp.dhis.commons.timer.Timer;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
@@ -58,7 +57,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -103,7 +101,7 @@ public class DefaultObjectBridge
     // Internal and Semi-Public maps
     //-------------------------------------------------------------------------------------------------------
 
-    private List<Class<?>> registeredTypes = Lists.newArrayList();
+    private Set<Class<?>> supportedTypes = new HashSet<>();
 
     private HashMap<Class<?>, Set<?>> masterMap;
 
@@ -130,15 +128,21 @@ public class DefaultObjectBridge
     @PostConstruct
     public void postConstruct()
     {
-        registeredTypes.add( PeriodType.class );
-        registeredTypes.add( UserCredentials.class );
-        registeredTypes.addAll( schemaService.getMetadataSchemas().stream().map( Schema::getKlass ).collect( Collectors.toList() ) );
+        supportedTypes.add( PeriodType.class );
+        supportedTypes.add( UserCredentials.class );
+        supportedTypes.addAll( schemaService.getMetadataSchemas().stream().map( Schema::getKlass ).collect( Collectors.toList() ) );
     }
 
     @Override
-    public void init()
+    @SuppressWarnings( "unchecked" )
+    public void init( Set<Class> preheatClasses )
     {
-        log.info( "Building object-bridge maps (preheatCache: " + preheatCache + ")." );
+        if ( preheatClasses.isEmpty() )
+        {
+            preheatClasses.addAll( supportedTypes );
+        }
+
+        log.info( "Building object-bridge maps (preheatCache: " + preheatCache + ", " + preheatClasses.size() + " classes)." );
         Timer timer = new SystemTimer().start();
 
         masterMap = new HashMap<>();
@@ -152,13 +156,22 @@ public class DefaultObjectBridge
         populatePeriodTypeMap( PeriodType.class );
         populateUsernameMap( UserCredentials.class );
 
-        for ( Class<?> type : registeredTypes )
+        for ( Class<?> type : supportedTypes )
         {
-            populateIdentifiableObjectMap( type );
-            populateIdentifiableObjectMap( type, IdentifiableProperty.UID );
-            populateIdentifiableObjectMap( type, IdentifiableProperty.UUID );
-            populateIdentifiableObjectMap( type, IdentifiableProperty.CODE );
-            populateIdentifiableObjectMap( type, IdentifiableProperty.NAME );
+            masterMap.put( type, new HashSet<IdentifiableObject>() );
+            uidMap.put( (Class<? extends IdentifiableObject>) type, new HashMap<>() );
+            uuidMap.put( (Class<? extends IdentifiableObject>) type, new HashMap<>() );
+            codeMap.put( (Class<? extends IdentifiableObject>) type, new HashMap<>() );
+            nameMap.put( (Class<? extends IdentifiableObject>) type, new HashMap<>() );
+
+            if ( preheatClasses.contains( type ) )
+            {
+                populateIdentifiableObjectMap( type );
+                populateIdentifiableObjectMap( type, IdentifiableProperty.UID );
+                populateIdentifiableObjectMap( type, IdentifiableProperty.UUID );
+                populateIdentifiableObjectMap( type, IdentifiableProperty.CODE );
+                populateIdentifiableObjectMap( type, IdentifiableProperty.NAME );
+            }
         }
 
         timer.stop();
@@ -185,14 +198,11 @@ public class DefaultObjectBridge
     @SuppressWarnings( "unchecked" )
     private void populateIdentifiableObjectMap( Class<?> clazz )
     {
-        Set<IdentifiableObject> map = new HashSet<>();
-
         if ( preheatCache && IdentifiableObject.class.isAssignableFrom( clazz ) )
         {
-            map = new HashSet<>( manager.getAllNoAcl( (Class<IdentifiableObject>) clazz ) );
+            Set<IdentifiableObject> map = (Set<IdentifiableObject>) masterMap.get( clazz );
+            map.addAll( manager.getAllNoAcl( (Class<IdentifiableObject>) clazz ) );
         }
-
-        masterMap.put( clazz, map );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -282,10 +292,8 @@ public class DefaultObjectBridge
         if ( UserCredentials.class.isAssignableFrom( clazz ) )
         {
             Collection<UserCredentials> allUserCredentials = userService.getAllUserCredentials();
-
-            allUserCredentials.stream().filter( userCredentials -> userCredentials.getUsername() != null ).forEach( userCredentials -> {
-                usernameMap.put( userCredentials.getUsername(), userCredentials );
-            } );
+            allUserCredentials.stream().filter( userCredentials -> userCredentials.getUsername() != null )
+                .forEach( userCredentials -> usernameMap.put( userCredentials.getUsername(), userCredentials ) );
         }
     }
 
@@ -649,7 +657,7 @@ public class DefaultObjectBridge
             map = uuidMap.get( klass );
         }
 
-        if ( !preheatCache && entity == null )
+        if ( entity == null )
         {
             entity = organisationUnitService.getOrganisationUnitByUuid( organisationUnit.getUuid() );
 
@@ -677,7 +685,7 @@ public class DefaultObjectBridge
             map = uidMap.get( identifiableObject.getClass() );
         }
 
-        if ( !preheatCache && entity == null )
+        if ( entity == null )
         {
             entity = manager.get( identifiableObject.getClass(), identifiableObject.getUid() );
 
@@ -710,7 +718,7 @@ public class DefaultObjectBridge
             return null;
         }
 
-        if ( !preheatCache && entity == null && identifiableObject.haveUniqueCode() )
+        if ( entity == null && identifiableObject.haveUniqueCode() )
         {
             entity = manager.getByCode( identifiableObject.getClass(), identifiableObject.getCode() );
 
@@ -743,7 +751,7 @@ public class DefaultObjectBridge
             return null;
         }
 
-        if ( !preheatCache && entity == null && identifiableObject.haveUniqueNames() )
+        if ( entity == null && identifiableObject.haveUniqueNames() )
         {
             entity = manager.getByName( identifiableObject.getClass(), identifiableObject.getName() );
 
@@ -758,7 +766,7 @@ public class DefaultObjectBridge
 
     private boolean _typeSupported( Class<?> clazz )
     {
-        for ( Class<?> c : registeredTypes )
+        for ( Class<?> c : supportedTypes )
         {
             if ( c.isAssignableFrom( clazz ) )
             {
