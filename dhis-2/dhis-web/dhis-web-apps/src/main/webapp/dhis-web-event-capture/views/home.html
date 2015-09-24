@@ -47,7 +47,8 @@
                     <div class="col-sm-8">
                         <select class="form-control"
                                 name="option"                             
-                                ng-model="selectedOptions.id">
+                                ng-model="category.selectiedOption"
+                                ng-select="getAttributeCategoryOptions()">
                             <option value="">{{pleaseSelectLabel}}</option>
                             <option ng-repeat="option in category.categoryOptions" value={{section.id}}>{{option.name}}</option>
                         </select>

@@ -174,7 +174,7 @@
                                                                          placeholder="{{'select_or_search' | translate}}">
                                                             {{$select.selected.name || $select.selected}}
                                                         </ui-select-match>
-                                                        <ui-select-choices  repeat="option.name as option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter: $select.search | limitTo:infiniteScroll.currentOptions">
+                                                        <ui-select-choices  repeat="option.name as option in optionSets[prStDes[eventGridColumn.id].dataElement.optionSet.id].options | filter: $select.search | limitTo:maxOptionSize">
                                                             <span ng-bind-html="option.name | highlight: $select.search"></span>
                                                         </ui-select-choices>
                                                     </ui-select>

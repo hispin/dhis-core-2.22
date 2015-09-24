@@ -21,6 +21,8 @@ trackerCapture.controller('RegistrationController',
                 TrackerRulesFactory,
                 TrackerRulesExecutionService) {
     
+    $scope.maxOptionSize = 30;
+    
     $scope.today = DateUtils.getToday();
     $scope.trackedEntityForm = null;
     $scope.customForm = null;    

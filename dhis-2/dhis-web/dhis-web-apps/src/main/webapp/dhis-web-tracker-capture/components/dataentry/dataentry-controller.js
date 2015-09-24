@@ -24,6 +24,8 @@ trackerCapture.controller('DataEntryController',
                 PeriodService,
                 TrackerRulesFactory) {
 
+    $scope.maxOptionSize = 30;
+    
     //Data entry form
     $scope.outerForm = {};
     $scope.displayCustomForm = false;

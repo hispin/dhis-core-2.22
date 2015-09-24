@@ -32,6 +32,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 AuthorityService,
                 TrackerRulesExecutionService,
                 TrackerRulesFactory) {
+    
+    $scope.maxOptionSize = 30;
     //selected org unit
     $scope.selectedOrgUnit = '';
     $scope.treeLoaded = false;    

@@ -26,6 +26,8 @@ trackerCapture.controller('TEIAddController',
             addingRelationship,
             selectedTei){
     
+    $scope.maxOptionSize = 30;
+    
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
         $scope.attributesById = [];
@@ -504,6 +506,7 @@ trackerCapture.controller('TEIAddController',
     $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
     $scope.enrollment = {enrollmentDate: '', incidentDate: ''};    
     $scope.attributesById = CurrentSelection.getAttributesById();
+    $scope.maxOptionSize = 30;
     
     var selections = CurrentSelection.get();
     $scope.programs = selections.prs;
