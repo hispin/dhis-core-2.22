@@ -66,7 +66,6 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -476,7 +475,7 @@ public class DefaultProgramIndicatorService
             return null;
         }
 
-        expression = CharMatcher.BREAKING_WHITESPACE.removeFrom( expression );
+        expression = TextUtils.removeNewlines( expression );
         
         expression = getSubstitutedVariablesForAnalyticsSql( expression );
         
