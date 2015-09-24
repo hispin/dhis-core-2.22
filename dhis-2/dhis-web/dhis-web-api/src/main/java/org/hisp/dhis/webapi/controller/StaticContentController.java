@@ -28,6 +28,13 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.external.location.LocationManager;
@@ -41,11 +48,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Serves and uploads custom images(PNG) for the logo on the frontpage (logo_front)
@@ -56,24 +59,18 @@ import java.util.HashMap;
 @RequestMapping( "/staticContent" )
 public class StaticContentController
 {
-
     @Autowired
     private LocationManager locationManager;
 
     @Autowired
     private SystemSettingManager systemSettingManager;
 
-    private HashMap<String, String> keyWhitelist = new HashMap<>();
-
-    public StaticContentController()
-    {
-        // Add the allowed keys into the whitelist
-        this.keyWhitelist.put( "logo_banner", SystemSettingManager.KEY_USE_CUSTOM_LOGO_BANNER );
-        this.keyWhitelist.put( "logo_front", SystemSettingManager.KEY_USE_CUSTOM_LOGO_FRONT );
-    }
+    private static final Map<String, String> KEY_WHITELIST_MAP = ImmutableMap.<String, String>builder().
+        put( "logo_banner", SystemSettingManager.KEY_USE_CUSTOM_LOGO_BANNER ).
+        put( "logo_front", SystemSettingManager.KEY_USE_CUSTOM_LOGO_FRONT ).build();
 
     /**
-     * Serves a png  associated with the key. if custom logo is not used, the request will redirect to the default
+     * Serves a png associated with the key. if custom logo is not used, the request will redirect to the default
      * logos.
      *
      * @param key      key associated with the file\image
@@ -86,13 +83,12 @@ public class StaticContentController
         HttpServletResponse response )
         throws WebMessageException
     {
-        // Only keys in the whitelist is accepted at the current time.
-        if ( !keyWhitelist.containsKey( key ) )
+        if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {
             throw new WebMessageException( WebMessageUtils.badRequest( "This key is not yet supported" ) );
         }
 
-        String useCustomFile = (String) systemSettingManager.getSystemSetting( keyWhitelist.get( key ) );
+        String useCustomFile = (String) systemSettingManager.getSystemSetting( KEY_WHITELIST_MAP.get( key ) );
 
         if ( useCustomFile != null ) // Serve the default logos
         {
@@ -138,23 +134,25 @@ public class StaticContentController
     @RequestMapping( value = "/{key}", method = RequestMethod.POST )
     public void updateStaticContent(
         @PathVariable( "key" ) String key,
-        @RequestParam( value = "file", required = false ) MultipartFile file
-    )
+        @RequestParam( value = "file", required = false ) MultipartFile file )
         throws WebMessageException, IOException
     {
-        if(file == null || file.isEmpty()) {
+        if ( file == null || file.isEmpty() )
+        {
             throw new WebMessageException( WebMessageUtils.badRequest( "Missing parameter \"file\"" ) );
         }
 
-        // Only PNG is accepted at the current time.
+        // Only PNG is accepted at the current time
+        
         if ( !file.getContentType().equalsIgnoreCase( "image/png" ) )
         {
             throw new WebMessageException(
                 WebMessageUtils.badRequest( "This media format is not yet supported" ) );
         }
 
-        // Only keys in the whitelist is accepted at the current time.
-        if ( !keyWhitelist.containsKey( key ) )
+        // Only keys in the whitelist is accepted at the current time
+        
+        if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {
             throw new WebMessageException(
                 WebMessageUtils.badRequest( "This key is not yet supported" ) );
@@ -169,7 +167,7 @@ public class StaticContentController
         catch ( IOException e )
         {
             throw new WebMessageException( (WebMessageUtils
-                .error( "Error saving file. Make sure dhis_home envoirement variable is set." )) );
+                .error( "Error saving file, make sure dhis_home envoirement variable is set" )) );
         }
 
     }
@@ -183,6 +181,7 @@ public class StaticContentController
     private String getDefaultLogoUrl( String key )
     {
         String relativeUrlToImage = null;
+        
         if ( key.equals( "logo_banner" ) )
         {
             relativeUrlToImage = "/dhis-web-commons/css/light_blue/logo_banner.png";
