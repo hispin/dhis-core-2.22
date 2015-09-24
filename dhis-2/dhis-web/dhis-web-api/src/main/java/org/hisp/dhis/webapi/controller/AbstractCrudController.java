@@ -28,19 +28,13 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.google.common.base.Enums;
+import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -96,13 +90,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.google.common.base.Enums;
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -110,7 +109,7 @@ import com.google.common.collect.Lists;
 public abstract class AbstractCrudController<T extends IdentifiableObject>
 {
     protected static final WebOptions NO_WEB_OPTIONS = new WebOptions( new HashMap<>() );
-    
+
     //--------------------------------------------------------------------------
     // Dependencies
     //--------------------------------------------------------------------------
@@ -318,8 +317,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             property.getSetterMethod().invoke( persistedObject, value );
         }
 
-        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
-            ImportStrategy.UPDATE, MergeStrategy.MERGE );
+        ImportOptions importOptions = new ImportOptions();
+        importOptions.setStrategy( ImportStrategy.UPDATE );
+        importOptions.setMergeStrategy( MergeStrategy.MERGE );
+
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject, importOptions );
 
         webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
@@ -343,16 +345,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     private List<String> getPersistedProperties( List<String> properties )
     {
         List<String> persistedProperties = new ArrayList<>();
-
-        Schema schema = getSchema();
-
-        for ( String property : properties )
-        {
-            if ( schema.havePersistedProperty( property ) )
-            {
-                persistedProperties.add( property );
-            }
-        }
+        persistedProperties.addAll( properties.stream().filter( getSchema()::havePersistedProperty ).collect( Collectors.toList() ) );
 
         return persistedProperties;
     }
@@ -399,8 +392,10 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         property.getSetterMethod().invoke( persistedObject, value );
 
-        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject,
-            ImportStrategy.UPDATE, MergeStrategy.MERGE );
+        ImportOptions importOptions = new ImportOptions();
+        importOptions.setStrategy( ImportStrategy.UPDATE );
+        importOptions.setMergeStrategy( MergeStrategy.MERGE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), persistedObject, importOptions );
 
         webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
     }
@@ -500,8 +495,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preCreateEntity( parsed );
 
-        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.CREATE, importOptions.getMergeStrategy() );
+        importOptions.setStrategy( ImportStrategy.CREATE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, importOptions );
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
@@ -530,8 +525,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preCreateEntity( parsed );
 
-        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.CREATE, importOptions.getMergeStrategy() );
+        importOptions.setStrategy( ImportStrategy.CREATE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, importOptions );
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
@@ -571,8 +566,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preUpdateEntity( parsed );
 
-        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
+        importOptions.setStrategy( ImportStrategy.UPDATE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, importOptions );
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
@@ -602,8 +597,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         preUpdateEntity( parsed );
 
-        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed,
-            ImportStrategy.UPDATE, importOptions.getMergeStrategy() );
+        importOptions.setStrategy( ImportStrategy.UPDATE );
+        ImportTypeSummary importTypeSummary = importService.importObject( currentUserService.getCurrentUser().getUid(), parsed, importOptions );
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {

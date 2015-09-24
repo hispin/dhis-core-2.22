@@ -42,6 +42,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryDimension;
@@ -607,7 +608,8 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                 && !DataElementCategoryOption.class.isAssignableFrom( object.getClass() )
                 && !CategoryOptionGroupSet.class.isAssignableFrom( object.getClass() )
                 && !DashboardItem.class.isAssignableFrom( object.getClass() )
-                && !ProgramStageDataElement.class.isAssignableFrom( object.getClass() ) )
+                && !ProgramStageDataElement.class.isAssignableFrom( object.getClass() )
+                && !Constant.class.isAssignableFrom( object.getClass() ) )
             {
                 conflict = new ImportConflict( ImportUtils.getDisplayName( object ), "Empty shortName for object " + object );
             }

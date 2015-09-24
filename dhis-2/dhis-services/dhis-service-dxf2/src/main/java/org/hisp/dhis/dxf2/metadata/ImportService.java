@@ -29,9 +29,7 @@ package org.hisp.dhis.dxf2.metadata;
  */
 
 import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.scheduling.TaskId;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +39,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ImportService
 {
-    <T extends IdentifiableObject> ImportTypeSummary importObject( String userUid, T object, ImportStrategy importStrategy, MergeStrategy mergeStrategy );
+    <T extends IdentifiableObject> ImportTypeSummary importObject( String userUid, T object, ImportOptions importOptions );
 
     ImportSummary importMetaData( String userUid, MetaData metaData );
 

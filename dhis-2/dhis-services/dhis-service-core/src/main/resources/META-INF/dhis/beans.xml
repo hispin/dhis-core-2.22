@@ -11,6 +11,10 @@
 
   <context:component-scan base-package="org.hisp.dhis.node" />
 
+  <bean id="org.hisp.dhis.preheat.PreheatService" class="org.hisp.dhis.preheat.DefaultPreheatService" scope="prototype">
+    <aop:scoped-proxy proxy-target-class="false" />
+  </bean>
+
   <bean id="org.hisp.dhis.calendar.CalendarService" class="org.hisp.dhis.calendar.DefaultCalendarService" />
 
   <bean id="org.hisp.dhis.schema.SchemaService" class="org.hisp.dhis.schema.DefaultSchemaService" />
