@@ -40,8 +40,15 @@ public class OneIfZeroOrPositiveSqlFunction
     public static final String KEY = "oizp";
     
     @Override
-    public String evaluate( String value, String arg2, String arg3 )
+    public String evaluate( String... args )
     {
+        if ( args == null || args.length != 1 )
+        {
+            throw new IllegalArgumentException( "Illegal arguments, expected 1 argument: value" );
+        }
+        
+        String value = args[0];
+        
         return "coalesce(case when " + value + " >= 0 then 1 else 0 end, 0)";
     }
 }
