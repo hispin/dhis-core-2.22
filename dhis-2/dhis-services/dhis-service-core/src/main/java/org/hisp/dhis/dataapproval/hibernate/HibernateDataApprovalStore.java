@@ -74,7 +74,6 @@ import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.google.common.collect.Lists;
@@ -94,14 +93,6 @@ public class HibernateDataApprovalStore
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private JdbcTemplate jdbcTemplate;
-
-    @Override
-    public void setJdbcTemplate( JdbcTemplate jdbcTemplate )
-    {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private PeriodService periodService;
 
     public void setPeriodService( PeriodService periodService )
@@ -111,7 +102,6 @@ public class HibernateDataApprovalStore
 
     private CurrentUserService currentUserService;
 
-    @Override
     public void setCurrentUserService( CurrentUserService currentUserService )
     {
         this.currentUserService = currentUserService;
