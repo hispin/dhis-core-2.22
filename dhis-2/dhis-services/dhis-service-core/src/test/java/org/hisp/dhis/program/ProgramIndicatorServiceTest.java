@@ -543,6 +543,20 @@ public class ProgramIndicatorServiceTest
 
         assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
     }
+    
+    @Test
+    public void testGetAnalyticsSqlWithFunctionsZpvc()
+    {
+        String expected = 
+            "nullif((" +
+            "case when \"EZq9VbPWgML\" >= 0 then 1 else 0 end + " +
+            "case when \"GCyeKSqlpdk\" >= 0 then 1 else 0 end" +
+            "),0)";
+        
+        String expression = "d2:zpvc(#{OXXcwl6aPCQ.EZq9VbPWgML},#{OXXcwl6aPCQ.GCyeKSqlpdk})";
+        
+        assertEquals( expected, programIndicatorService.getAnalyticsSQl( expression ) );
+    }
 
     @Test
     public void testGetAnalyticsSqlWithFunctionsDaysBetween()

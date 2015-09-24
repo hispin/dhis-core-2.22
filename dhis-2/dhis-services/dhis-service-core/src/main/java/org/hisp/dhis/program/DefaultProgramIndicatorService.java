@@ -44,6 +44,7 @@ import org.hisp.dhis.commons.sqlfunc.DaysBetweenSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.OneIfZeroOrPositiveSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.SqlFunction;
 import org.hisp.dhis.commons.sqlfunc.ZeroIfNegativeSqlFunction;
+import org.hisp.dhis.commons.sqlfunc.ZeroPositiveValueCountFunction;
 import org.hisp.dhis.commons.util.ExpressionUtils;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.constant.Constant;
@@ -65,6 +66,7 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -76,6 +78,7 @@ public class DefaultProgramIndicatorService
     private static final Map<String, SqlFunction> SQL_FUNC_MAP = ImmutableMap.<String, SqlFunction>builder().
         put( ZeroIfNegativeSqlFunction.KEY, new ZeroIfNegativeSqlFunction() ).
         put( OneIfZeroOrPositiveSqlFunction.KEY, new OneIfZeroOrPositiveSqlFunction() ).
+        put( ZeroPositiveValueCountFunction.KEY, new ZeroPositiveValueCountFunction() ).
         put( DaysBetweenSqlFunction.KEY, new DaysBetweenSqlFunction() ).
         put( ConditionalSqlFunction.KEY, new ConditionalSqlFunction() ).build();
 
@@ -473,6 +476,8 @@ public class DefaultProgramIndicatorService
             return null;
         }
 
+        expression = CharMatcher.BREAKING_WHITESPACE.removeFrom( expression );
+        
         expression = getSubstitutedVariablesForAnalyticsSql( expression );
         
         expression = getSubstitutedFunctionsAnalyticsSql( expression, false );
@@ -509,11 +514,11 @@ public class DefaultProgramIndicatorService
                 }
                 
                 SqlFunction function = SQL_FUNC_MAP.get( func );
-    
+                
                 if ( function == null )
                 {
                     throw new IllegalStateException( "Function not recognized: " + func );
-                }            
+                }
                 
                 String result = function.evaluate( args );
     
