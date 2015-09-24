@@ -412,33 +412,24 @@ Ext.onReady( function() {
                         fields: [idProperty, nameProperty]
                     }),
                     listeners: {
-                        added: function(cb) {
+                        added: function(cb) {                            
                             cb.store.add({
                                 id: defaultRangeSetId,
                                 name: 'No range set'
                             });
 
-                            if (container.dataElement.isAttribute) {
-                                cb.setPendingValue();
-                            }
-                            else {                                
-                                Ext.Ajax.request({
-                                    url: ns.core.init.contextPath + '/api/dataElements/' + container.dataElement.id + '.json?fields=legendSet[id,name]',
-                                    success: function(r) {
-                                        r = Ext.decode(r.responseText);
+                            if (container.dataElement.legendSet) {
+                                var legendSet = ns.core.init.idLegendSetMap[container.dataElement.legendSet.id];
+                                
+                                if (Ext.isObject(legendSet)) {
+                                    cb.store.add(legendSet);
 
-                                        if (Ext.isObject(r) && Ext.isObject(r.legendSet)) {
-                                            cb.store.add(r.legendSet);
-
-                                            cb.setValue(r.legendSet.id);
-                                            container.onRangeSetSelect(r.legendSet.id);
-                                        }
-                                    },
-                                    callback: function() {
-                                        cb.setPendingValue();
-                                    }
-                                });
+                                    cb.setValue(legendSet.id);
+                                    container.onRangeSetSelect(legendSet.id);
+                                }
                             }
+
+                            cb.setPendingValue();
                         },
                         select: function(cb, r) {
                             var id = Ext.Array.from(r)[0].data.id;
@@ -4359,7 +4350,7 @@ Ext.onReady( function() {
             }
             else {
                 Ext.Ajax.request({
-                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programStages[id,name],programTrackedEntityAttributes[trackedEntityAttribute[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name]]]&paging=false',
+                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programStages[id,name],programTrackedEntityAttributes[trackedEntityAttribute[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet[id,name]]]&paging=false',
                     success: function(r) {
                         var program = Ext.decode(r.responseText).programs[0],
                             stages,
@@ -4472,7 +4463,7 @@ Ext.onReady( function() {
             }
             else {
                 Ext.Ajax.request({
-                    url: ns.core.init.contextPath + '/api/programStages.json?filter=id:eq:' + stageId + '&fields=programStageDataElements[dataElement[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name]]]',
+                    url: ns.core.init.contextPath + '/api/programStages.json?filter=id:eq:' + stageId + '&fields=programStageDataElements[dataElement[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet[id,name]]]',
                     success: function(r) {
                         var objects = Ext.decode(r.responseText).programStages,
                             dataElements;
