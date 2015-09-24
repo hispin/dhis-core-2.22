@@ -74,6 +74,7 @@ public class InitTableAlteror
         updateAggregationTypes();
         updateFeatureTypes();
         updateValidationRuleEnums();
+        updateProgramStatus();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
@@ -83,6 +84,15 @@ public class InitTableAlteror
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
+
+    private void updateProgramStatus()
+    {
+        executeSql( "alter table programinstance alter column status type varchar(50)" );
+
+        executeSql( "update programinstance set status='ACTIVE' where status='0'" );
+        executeSql( "update programinstance set status='COMPLETED' where status='1'" );
+        executeSql( "update programinstance set status='CANCELLED' where status='2'" );
+    }
 
     private void updateValidationRuleEnums()
     {

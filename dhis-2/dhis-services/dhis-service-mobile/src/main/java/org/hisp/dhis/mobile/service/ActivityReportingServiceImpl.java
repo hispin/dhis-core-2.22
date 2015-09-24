@@ -37,12 +37,12 @@ import org.hisp.dhis.api.mobile.model.Beneficiary;
 import org.hisp.dhis.api.mobile.model.DataValue;
 import org.hisp.dhis.api.mobile.model.Interpretation;
 import org.hisp.dhis.api.mobile.model.InterpretationComment;
-import org.hisp.dhis.api.mobile.model.OptionSet;
-import org.hisp.dhis.api.mobile.model.PatientAttribute;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.LostEvent;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Notification;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.Patient;
 import org.hisp.dhis.api.mobile.model.LWUITmodel.PatientList;
+import org.hisp.dhis.api.mobile.model.OptionSet;
+import org.hisp.dhis.api.mobile.model.PatientAttribute;
 import org.hisp.dhis.api.mobile.model.Task;
 import org.hisp.dhis.api.mobile.model.comparator.ActivityComparator;
 import org.hisp.dhis.api.mobile.model.comparator.TrackedEntityAttributeValueSortOrderComparator;
@@ -77,6 +77,7 @@ import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramStageSectionService;
 import org.hisp.dhis.program.ProgramStageService;
+import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.program.comparator.ProgramStageInstanceVisitDateComparator;
 import org.hisp.dhis.relationship.Relationship;
@@ -472,7 +473,7 @@ public class ActivityReportingServiceImpl
             programInstance.setEnrollmentDate( new Date() );
             programInstance.setIncidentDate( new Date() );
             programInstance.setProgram( programStage.getProgram() );
-            programInstance.setStatus( ProgramInstance.STATUS_COMPLETED );
+            programInstance.setStatus( ProgramStatus.COMPLETED );
             programInstance.setEntityInstance( patient );
 
             programInstanceService.addProgramInstance( programInstance );
@@ -600,7 +601,7 @@ public class ActivityReportingServiceImpl
                 {
 
                     ProgramInstance programInstance = programStageInstance.getProgramInstance();
-                    programInstance.setStatus( ProgramInstance.STATUS_COMPLETED );
+                    programInstance.setStatus( ProgramStatus.COMPLETED );
                     programInstanceService.updateProgramInstance( programInstance );
                 }
 
@@ -660,7 +661,7 @@ public class ActivityReportingServiceImpl
         programInstance.setIncidentDate( incidentDate );
         programInstance.setProgram( program );
         programInstance.setEntityInstance( patient );
-        programInstance.setStatus( ProgramInstance.STATUS_ACTIVE );
+        programInstance.setStatus( ProgramStatus.ACTIVE );
         programInstanceService.addProgramInstance( programInstance );
 
         Iterator<ProgramStage> programStagesIterator = program.getProgramStages().iterator();
@@ -812,7 +813,7 @@ public class ActivityReportingServiceImpl
             {
                 org.hisp.dhis.api.mobile.model.PatientAttribute patientAttribute = new org.hisp.dhis.api.mobile.model.PatientAttribute(
                     value.getAttribute().getName(), value.getValue(), null, false, value.getAttribute()
-                        .getDisplayInListNoProgram(), new OptionSet() );
+                    .getDisplayInListNoProgram(), new OptionSet() );
                 patientAttribute.setType( value.getAttribute().getValueType() );
 
                 patientAtts.add( patientAttribute );
@@ -824,7 +825,7 @@ public class ActivityReportingServiceImpl
 
         // Set current programs
         List<ProgramInstance> listOfProgramInstance = new ArrayList<>( programInstanceService.getProgramInstances(
-            patient, ProgramInstance.STATUS_ACTIVE ) );
+            patient, ProgramStatus.ACTIVE ) );
 
         if ( listOfProgramInstance.size() > 0 )
         {
@@ -837,7 +838,7 @@ public class ActivityReportingServiceImpl
 
         // Set completed programs
         List<ProgramInstance> listOfCompletedProgramInstance = new ArrayList<>(
-            programInstanceService.getProgramInstances( patient, ProgramInstance.STATUS_COMPLETED ) );
+            programInstanceService.getProgramInstances( patient, ProgramStatus.COMPLETED ) );
 
         if ( listOfCompletedProgramInstance.size() > 0 )
         {
@@ -912,7 +913,7 @@ public class ActivityReportingServiceImpl
 
         mobileProgramInstance.setId( programInstance.getId() );
         mobileProgramInstance.setName( programInstance.getProgram().getName() );
-        mobileProgramInstance.setStatus( programInstance.getStatus() );
+        mobileProgramInstance.setStatus( programInstance.getStatus().getValue() );
         mobileProgramInstance.setDateOfEnrollment( PeriodUtil.dateToString( programInstance.getEnrollmentDate() ) );
         mobileProgramInstance.setDateOfIncident( PeriodUtil.dateToString( programInstance.getIncidentDate() ) );
         mobileProgramInstance.setPatientId( programInstance.getEntityInstance().getId() );
@@ -1300,7 +1301,7 @@ public class ActivityReportingServiceImpl
                 org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement mobileDataElement = new org.hisp.dhis.api.mobile.model.LWUITmodel.ProgramStageDataElement();
                 mobileDataElement.setId( programStageDataElement.getDataElement().getId() );
                 mobileDataElement.setName( programStageDataElement.getDataElement().getName() );
-                 mobileDataElement.setType( programStageDataElement.getDataElement().getValueType() );
+                mobileDataElement.setType( programStageDataElement.getDataElement().getValueType() );
 
                 // problem
                 mobileDataElement.setCompulsory( programStageDataElement.isCompulsory() );
@@ -1523,7 +1524,7 @@ public class ActivityReportingServiceImpl
                 {
                     errorMsg = "Duplicate value of "
                         + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) )
-                            .getDisplayName();
+                        .getDisplayName();
                 }
                 else
                 {
@@ -2034,7 +2035,7 @@ public class ActivityReportingServiceImpl
 
         programInstance.setProgram( program );
 
-        programInstance.setStatus( ProgramInstance.STATUS_COMPLETED );
+        programInstance.setStatus( ProgramStatus.COMPLETED );
 
         programInstanceService.addProgramInstance( programInstance );
 
@@ -2405,7 +2406,7 @@ public class ActivityReportingServiceImpl
         throws NotAllowedException
     {
         ProgramInstance programInstance = programInstanceService.getProgramInstance( programId );
-        programInstance.setStatus( ProgramInstance.STATUS_COMPLETED );
+        programInstance.setStatus( ProgramStatus.COMPLETED );
         programInstanceService.updateProgramInstance( programInstance );
 
         return PROGRAM_COMPLETED;
@@ -2573,7 +2574,7 @@ public class ActivityReportingServiceImpl
                 {
                     errorMsg = "Duplicate value of "
                         + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) )
-                            .getDisplayName();
+                        .getDisplayName();
                 }
                 else
                 {

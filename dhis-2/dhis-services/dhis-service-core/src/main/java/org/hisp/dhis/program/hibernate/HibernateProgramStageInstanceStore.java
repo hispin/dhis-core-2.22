@@ -28,12 +28,6 @@ package org.hisp.dhis.program.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -41,6 +35,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.period.PeriodType;
@@ -50,15 +45,21 @@ import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.program.ProgramStageInstanceStore;
+import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.program.SchedulingProgramObject;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.system.grid.ListGrid;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author Abyot Asalefew
@@ -80,7 +81,7 @@ public class HibernateProgramStageInstanceStore
 
     @Autowired
     private TrackedEntityInstanceReminderService reminderService;
-    
+
     // -------------------------------------------------------------------------
     // Implemented methods
     // -------------------------------------------------------------------------
@@ -90,7 +91,7 @@ public class HibernateProgramStageInstanceStore
     public ProgramStageInstance get( ProgramInstance programInstance, ProgramStage programStage )
     {
         List<ProgramStageInstance> list = getCriteria(
-            Restrictions.eq( "programInstance", programInstance ), 
+            Restrictions.eq( "programInstance", programInstance ),
             Restrictions.eq( "programStage", programStage ) ).
             addOrder( Order.asc( "id" ) ).list();
 
@@ -101,8 +102,8 @@ public class HibernateProgramStageInstanceStore
     @SuppressWarnings( "unchecked" )
     public List<ProgramStageInstance> get( Collection<ProgramInstance> programInstances, EventStatus status )
     {
-        return getCriteria( 
-            Restrictions.in( "programInstance", programInstances ), 
+        return getCriteria(
+            Restrictions.in( "programInstance", programInstances ),
             Restrictions.eq( "status", status ) ).list();
     }
 
@@ -112,13 +113,13 @@ public class HibernateProgramStageInstanceStore
     {
         Criteria criteria = getCriteria();
         criteria.createAlias( "programInstance", "programInstance" );
-        criteria.add( Restrictions.eq( "programInstance.entityInstance", entityInstance));
-        criteria.add(  Restrictions.eq( "status", status ));      
+        criteria.add( Restrictions.eq( "programInstance.entityInstance", entityInstance ) );
+        criteria.add( Restrictions.eq( "status", status ) );
         return criteria.list();
     }
 
     @Override
-    public Collection<SchedulingProgramObject> getSendMesssageEvents()
+    public Collection<SchedulingProgramObject> getSendMessageEvents()
     {
         String sql = " ( " + sendMessageToTrackedEntityInstanceSql() + " ) ";
 
@@ -137,7 +138,7 @@ public class HibernateProgramStageInstanceStore
         while ( rs.next() )
         {
             String message = rs.getString( "templatemessage" );
-            
+
             List<String> attributeUids = reminderService.getAttributeUids( message );
             int programstageinstanceid = rs.getInt( "programstageinstanceid" );
             SqlRowSet attributeValueRow = jdbcTemplate
@@ -154,8 +155,8 @@ public class HibernateProgramStageInstanceStore
                 String value = attributeValueRow.getString( "value" );
                 String key = "\\{(" + TrackedEntityInstanceReminder.ATTRIBUTE + ")=(" + uid + ")\\}";
                 message = message.replaceAll( key, value );
-            }  
-            
+            }
+
             String organisationunitName = rs.getString( "orgunitName" );
             String programName = rs.getString( "programName" );
             String programStageName = rs.getString( "programStageName" );
@@ -167,7 +168,7 @@ public class HibernateProgramStageInstanceStore
             message = message.replace( TrackedEntityInstanceReminder.TEMPLATE_MESSSAGE_DUE_DATE, dueDate );
             message = message.replace( TrackedEntityInstanceReminder.TEMPLATE_MESSSAGE_ORGUNIT_NAME, organisationunitName );
             message = message.replace( TrackedEntityInstanceReminder.TEMPLATE_MESSSAGE_DAYS_SINCE_DUE_DATE, daysSinceDueDate );
-            
+
             SchedulingProgramObject schedulingProgramObject = new SchedulingProgramObject();
             schedulingProgramObject.setProgramStageInstanceId( programstageinstanceid );
             schedulingProgramObject.setPhoneNumber( rs.getString( "phonenumber" ) );
@@ -231,7 +232,7 @@ public class HibernateProgramStageInstanceStore
             + "and pg.programid = " + program.getId() + " "
             + "group by ou.name, ps.name, psi.completeduser, psi.completeddate, psi.status "
             + "having psi.completeddate >= '" + startDate + "' AND psi.completeddate <= '" + endDate + "' "
-            + "and psi.status='" + EventStatus.COMPLETED.name()  + "' "
+            + "and psi.status='" + EventStatus.COMPLETED.name() + "' "
             + "order by ou.name, ps.name, psi.completeduser";
 
         SqlRowSet rs = jdbcTemplate.queryForRowSet( sql );
@@ -265,12 +266,10 @@ public class HibernateProgramStageInstanceStore
     }
 
     @Override
-    public int averageNumberCompleted( Program program, Collection<Integer> orgunitIds, Date after, Date before,
-        int status )
+    public int averageNumberCompleted( Program program, Collection<Integer> orgunitIds, Date after, Date before, ProgramStatus status )
     {
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstancesByStatus(
-            ProgramInstance.STATUS_COMPLETED, program, orgunitIds, after, before );
-        
+        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstancesByStatus( status, program, orgunitIds, after, before );
+
         Criteria criteria = getCriteria();
         criteria.createAlias( "programInstance", "programInstance" );
         criteria.createAlias( "programStage", "programStage" );
@@ -280,14 +279,14 @@ public class HibernateProgramStageInstanceStore
         criteria.add( Restrictions.in( "organisationUnit.id", orgunitIds ) );
         criteria.add( Restrictions.between( "programInstance.endDate", after, before ) );
         criteria.add( Restrictions.eq( "status", EventStatus.COMPLETED ) );
-        
+
         if ( programInstances != null && programInstances.size() > 0 )
         {
             criteria.add( Restrictions.not( Restrictions.in( "programInstance", programInstances ) ) );
         }
-        
+
         Number rs = (Number) criteria.setProjection( Projections.rowCount() ).uniqueResult();
-        
+
         return rs != null ? rs.intValue() : 0;
     }
 
@@ -307,11 +306,11 @@ public class HibernateProgramStageInstanceStore
             criteria.createAlias( "programInstance.entityInstance", "entityInstance" );
             criteria.createAlias( "entityInstance.organisationUnit", "regOrgunit" );
             criteria.add( Restrictions.or( Restrictions.and( Restrictions.eq( "status", EventStatus.COMPLETED ),
-                Restrictions.between( "executionDate", startDate, endDate ),
-                Restrictions.in( "organisationUnit.id", orgunitIds ) ), Restrictions.and(
-                Restrictions.eq( "status", EventStatus.ACTIVE ), Restrictions.isNotNull( "executionDate" ),
-                Restrictions.between( "executionDate", startDate, endDate ),
-                Restrictions.in( "organisationUnit.id", orgunitIds ) ),
+                    Restrictions.between( "executionDate", startDate, endDate ),
+                    Restrictions.in( "organisationUnit.id", orgunitIds ) ), Restrictions.and(
+                    Restrictions.eq( "status", EventStatus.ACTIVE ), Restrictions.isNotNull( "executionDate" ),
+                    Restrictions.between( "executionDate", startDate, endDate ),
+                    Restrictions.in( "organisationUnit.id", orgunitIds ) ),
                 Restrictions.and( Restrictions.eq( "status", EventStatus.ACTIVE ), Restrictions.isNull( "executionDate" ),
                     Restrictions.between( "dueDate", startDate, endDate ),
                     Restrictions.in( "regOrgunit.id", orgunitIds ) ), Restrictions.and(
@@ -342,7 +341,7 @@ public class HibernateProgramStageInstanceStore
     }
 
     //TODO this must be re-written
-    
+
     private String sendMessageToTrackedEntityInstanceSql()
     {
         return "select psi.programstageinstanceid, pav.value as phonenumber, prm.templatemessage, org.name as orgunitName "
@@ -364,7 +363,7 @@ public class HibernateProgramStageInstanceStore
             + " INNER JOIN trackedentityattribute pa "
             + "     ON pa.trackedentityattributeid=pav.trackedentityattributeid "
             + "WHERE pi.status="
-            + ProgramInstance.STATUS_ACTIVE
+            + ProgramStatus.ACTIVE
             + "     and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "     and pg.type=1 and prm.daysallowedsendmessage is not null  "
             + "     and psi.executiondate is null and pa.valuetype='phoneNumber' "
@@ -395,8 +394,7 @@ public class HibernateProgramStageInstanceStore
             + "               ON pa.trackedentityattributeid=pav.trackedentityattributeid "
             + "           INNER JOIN userinfo uif "
             + "               ON pav.value=concat(uif.userinfoid ,'') "
-            + " WHERE pi.status="
-            + ProgramInstance.STATUS_ACTIVE
+            + " WHERE pi.status='" + ProgramStatus.ACTIVE + "'"
             + " and pa.valueType='users' and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "               and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "               and pg.type=1 and prm.daysallowedsendmessage is not null "
@@ -424,8 +422,7 @@ public class HibernateProgramStageInstanceStore
             + "               ON prm.programstageid = ps.programstageid "
             + "           INNER JOIN organisationunit ou "
             + "               ON ou.organisationunitid=p.organisationunitid "
-            + "WHERE pi.status= "
-            + ProgramInstance.STATUS_ACTIVE
+            + "WHERE pi.status= '" + ProgramStatus.ACTIVE + "'"
             + "               and ou.phonenumber is not NULL and ou.phonenumber != '' "
             + "               and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "               and pg.type=1 and prm.daysallowedsendmessage is not null "
@@ -456,8 +453,7 @@ public class HibernateProgramStageInstanceStore
             + "       ON ums.organisationunitid = p.organisationunitid "
             + "   INNER JOIN userinfo uif "
             + "       ON uif.userinfoid = ums.userinfoid "
-            + "  WHERE pi.status= "
-            + ProgramInstance.STATUS_ACTIVE
+            + "  WHERE pi.status= '" + ProgramStatus.ACTIVE + "'"
             + "       and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "       and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "       and pg.type=1 and prm.daysallowedsendmessage is not null "
@@ -488,8 +484,7 @@ public class HibernateProgramStageInstanceStore
             + "       ON ugm.usergroupid = prm.usergroupid "
             + "   INNER JOIN userinfo uif "
             + "       ON uif.userinfoid = ugm.userid "
-            + "  WHERE pi.status= "
-            + ProgramInstance.STATUS_ACTIVE
+            + "  WHERE pi.status= '"+ ProgramStatus.ACTIVE + "'"
             + "       and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "       and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "       and pg.type=1 and prm.daysallowedsendmessage is not null "

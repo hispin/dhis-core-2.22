@@ -24,7 +24,13 @@
 
     <property name="followup" column="followup" />
 
-    <property name="status" />
+    <property name="status" length="50">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.program.ProgramStatus</param>
+        <param name="useNamed">true</param>
+        <param name="type">12</param>
+      </type>
+    </property>
 
     <many-to-one name="entityInstance"
       class="org.hisp.dhis.trackedentity.TrackedEntityInstance" column="trackedentityinstanceid"

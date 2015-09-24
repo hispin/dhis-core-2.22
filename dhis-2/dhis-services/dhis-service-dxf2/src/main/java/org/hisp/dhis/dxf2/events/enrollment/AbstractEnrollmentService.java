@@ -170,7 +170,7 @@ public abstract class AbstractEnrollmentService
         enrollment.setCreated( programInstance.getCreated() );
         enrollment.setLastUpdated( programInstance.getLastUpdated() );
         enrollment.setProgram( programInstance.getProgram().getUid() );
-        enrollment.setStatus( EnrollmentStatus.fromInt( programInstance.getStatus() ) );
+        enrollment.setStatus( EnrollmentStatus.fromProgramStatus( programInstance.getStatus() ) );
         enrollment.setEnrollmentDate( programInstance.getEnrollmentDate() );
         enrollment.setIncidentDate( programInstance.getIncidentDate() );
         enrollment.setFollowup( programInstance.getFollowup() );
@@ -376,7 +376,7 @@ public abstract class AbstractEnrollmentService
         programInstance.setEnrollmentDate( enrollment.getEnrollmentDate() );
         programInstance.setFollowup( enrollment.getFollowup() );
 
-        if ( programInstance.getStatus() != enrollment.getStatus().getValue() )
+        if ( EnrollmentStatus.fromProgramStatus( programInstance.getStatus() ) != enrollment.getStatus() )
         {
             if ( EnrollmentStatus.CANCELLED == enrollment.getStatus() )
             {
@@ -388,8 +388,7 @@ public abstract class AbstractEnrollmentService
             }
             else
             {
-                importSummary = new ImportSummary( ImportStatus.ERROR,
-                    "Re-enrollment is not allowed, please create a new enrollment." );
+                importSummary = new ImportSummary( ImportStatus.ERROR, "Re-enrollment is not allowed, please create a new enrollment." );
                 importSummary.getImportCount().incrementIgnored();
 
                 return importSummary;

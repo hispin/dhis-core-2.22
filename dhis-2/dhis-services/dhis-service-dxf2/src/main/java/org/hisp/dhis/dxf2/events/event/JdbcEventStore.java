@@ -35,10 +35,12 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.util.SqlHelper;
 import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
 import org.hisp.dhis.dxf2.events.report.EventRow;
 import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.util.ObjectUtils;
@@ -111,7 +113,7 @@ public class JdbcEventStore
                 if ( programTye != ProgramType.WITHOUT_REGISTRATION )
                 {
                     event.setEnrollment( rowSet.getString( "pi_uid" ) );
-                    event.setEnrollmentStatus( EventStatus.fromInt( rowSet.getInt( "pi_status" ) ) );
+                    event.setEnrollmentStatus( EnrollmentStatus.fromProgramStatus( ProgramStatus.valueOf( rowSet.getString( "pi_status" ) ) ) );
                     event.setFollowup( rowSet.getBoolean( "pi_followup" ) );
                 }
 
@@ -242,7 +244,7 @@ public class JdbcEventStore
             if ( rowSet.getString( "pav_value" ) != null && rowSet.getString( "ta_uid" ) != null )
             {
                 String valueType = rowSet.getString( "ta_valuetype" );
-                
+
                 Attribute attribute = new Attribute();
                 attribute.setValue( rowSet.getString( "pav_value" ) );
                 attribute.setDisplayName( rowSet.getString( "ta_name" ) );
@@ -371,7 +373,7 @@ public class JdbcEventStore
 
         if ( params.getProgramStatus() != null )
         {
-            sql += hlp.whereAnd() + " pi.status = " + params.getProgramStatus().getValue() + " ";
+            sql += hlp.whereAnd() + " pi.status = '" + params.getProgramStatus() + "' ";
         }
 
         if ( params.getFollowUp() != null )

@@ -52,10 +52,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.commons.util.TextUtils.getQuotedCommaDelimitedString;
@@ -70,15 +68,6 @@ public class HibernateProgramInstanceStore
 {
     @Autowired
     private TrackedEntityInstanceReminderService reminderService;
-
-    private static final Map<ProgramStatus, Integer> PROGRAM_STATUS_MAP = new HashMap<ProgramStatus, Integer>()
-    {
-        {
-            put( ProgramStatus.ACTIVE, ProgramInstance.STATUS_ACTIVE );
-            put( ProgramStatus.COMPLETED, ProgramInstance.STATUS_COMPLETED );
-            put( ProgramStatus.CANCELLED, ProgramInstance.STATUS_CANCELLED );
-        }
-    };
 
     // -------------------------------------------------------------------------
     // Implemented methods
@@ -158,7 +147,7 @@ public class HibernateProgramInstanceStore
 
         if ( params.hasProgramStatus() )
         {
-            hql += hlp.whereAnd() + "pi.status = " + PROGRAM_STATUS_MAP.get( params.getProgramStatus() );
+            hql += hlp.whereAnd() + "pi.status = '" + params.getProgramStatus() + "'";
         }
 
         if ( params.hasFollowUp() )
@@ -215,7 +204,7 @@ public class HibernateProgramInstanceStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit, int status )
+    public List<ProgramInstance> get( Collection<Program> programs, OrganisationUnit organisationUnit, ProgramStatus status )
     {
         if ( programs == null || programs.isEmpty() )
         {
@@ -231,14 +220,14 @@ public class HibernateProgramInstanceStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<ProgramInstance> get( Program program, Integer status )
+    public List<ProgramInstance> get( Program program, ProgramStatus status )
     {
         return getCriteria( Restrictions.eq( "program", program ), Restrictions.eq( "status", status ) ).list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<ProgramInstance> get( Collection<Program> programs, Integer status )
+    public List<ProgramInstance> get( Collection<Program> programs, ProgramStatus status )
     {
         if ( programs == null || programs.isEmpty() )
         {
@@ -250,7 +239,7 @@ public class HibernateProgramInstanceStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<ProgramInstance> get( TrackedEntityInstance entityInstance, Integer status )
+    public List<ProgramInstance> get( TrackedEntityInstance entityInstance, ProgramStatus status )
     {
         return getCriteria( Restrictions.eq( "entityInstance", entityInstance ), Restrictions.eq( "status", status ) ).list();
     }
@@ -264,7 +253,7 @@ public class HibernateProgramInstanceStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program, Integer status )
+    public List<ProgramInstance> get( TrackedEntityInstance entityInstance, Program program, ProgramStatus status )
     {
         return getCriteria( Restrictions.eq( "entityInstance", entityInstance ), Restrictions.eq( "program", program ),
             Restrictions.eq( "status", status ) ).list();
@@ -344,7 +333,7 @@ public class HibernateProgramInstanceStore
     }
 
     @Override
-    public int countByStatus( Integer status, Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate )
+    public int countByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds, Date startDate, Date endDate )
     {
         Number rs = (Number) getCriteria(
             Restrictions.eq( "program", program ),
@@ -360,7 +349,7 @@ public class HibernateProgramInstanceStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
+    public List<ProgramInstance> getByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate )
     {
         return getCriteria(
@@ -374,7 +363,7 @@ public class HibernateProgramInstanceStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<ProgramInstance> getByStatus( Integer status, Program program, Collection<Integer> orgunitIds,
+    public List<ProgramInstance> getByStatus( ProgramStatus status, Program program, Collection<Integer> orgunitIds,
         Date startDate, Date endDate, Integer min, Integer max )
     {
         Criteria criteria = getCriteria(
@@ -478,8 +467,8 @@ public class HibernateProgramInstanceStore
             + "              ON org.organisationunitid = p.organisationunitid INNER JOIN trackedentityinstancereminder prm "
             + "              ON prm.programid = pi.programid INNER JOIN trackedentityattributevalue pav "
             + "              ON pav.trackedentityinstanceid=p.trackedentityinstanceid INNER JOIN trackedentityattribute pa "
-            + "              ON pa.trackedentityattributeid=pav.trackedentityattributeid " + "       WHERE pi.status= "
-            + ProgramInstance.STATUS_ACTIVE
+            + "              ON pa.trackedentityattributeid=pav.trackedentityattributeid "
+            + "       WHERE pi.status= '" + ProgramStatus.ACTIVE + "'"
             + "         and prm.templatemessage is not NULL and prm.templatemessage != ''   "
             + "         and pg.type=1 and prm.daysallowedsendmessage is not null and pa.valuetype='phoneNumber' "
             + "         and ( DATE(now()) - DATE(pi." + dateToCompare + ") ) = prm.daysallowedsendmessage "
@@ -496,7 +485,7 @@ public class HibernateProgramInstanceStore
             + "           ON p.trackedentityinstanceid=pi.trackedentityinstanceid INNER JOIN program pg "
             + "           ON pg.programid=pi.programid INNER JOIN organisationunit org "
             + "           ON org.organisationunitid = p.organisationunitid INNER JOIN trackedentityinstancereminder prm "
-            + "           ON prm.programid = pi.programid " + "    WHERE pi.status = " + ProgramInstance.STATUS_ACTIVE
+            + "           ON prm.programid = pi.programid " + "    WHERE pi.status = '" + ProgramStatus.ACTIVE + "'"
             + "      and org.phonenumber is not NULL and org.phonenumber != '' "
             + "      and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "      and pg.type=1 and prm.daysallowedsendmessage is not null " + "      and ( DATE(now()) - DATE( pi."
@@ -516,8 +505,7 @@ public class HibernateProgramInstanceStore
             + "    ON prm.programid = pi.programid INNER JOIN usermembership ums "
             + "    ON ums.organisationunitid = p.organisationunitid INNER JOIN userinfo uif "
             + "    ON uif.userinfoid = ums.userinfoid "
-            + "WHERE pi.status= "
-            + ProgramInstance.STATUS_ACTIVE
+            + "WHERE pi.status= '" + ProgramStatus.ACTIVE + "'"
             + "         and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "         and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "         and pg.type=1 and prm.daysallowedsendmessage is not null "
@@ -540,8 +528,9 @@ public class HibernateProgramInstanceStore
             + "   INNER JOIN organisationunit org " + "       ON org.organisationunitid = p.organisationunitid "
             + "   INNER JOIN trackedentityinstancereminder prm " + "       ON prm.programid = pg.programid "
             + "   INNER JOIN usergroupmembers ugm " + "       ON ugm.usergroupid = prm.usergroupid "
-            + "   INNER JOIN userinfo uif " + "       ON uif.userinfoid = ugm.userid " + "  WHERE pi.status= "
-            + ProgramInstance.STATUS_ACTIVE + "       and uif.phonenumber is not NULL and uif.phonenumber != '' "
+            + "   INNER JOIN userinfo uif " + "       ON uif.userinfoid = ugm.userid "
+            + "  WHERE pi.status= '" + ProgramStatus.ACTIVE + "'"
+            + "       and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "       and prm.templatemessage is not NULL and prm.templatemessage != '' "
             + "       and pg.type=1 and prm.daysallowedsendmessage is not null " + "       and (  DATE(now()) - DATE("
             + dateToCompare + ") ) = prm.daysallowedsendmessage " + "       and prm.whentosend is null "

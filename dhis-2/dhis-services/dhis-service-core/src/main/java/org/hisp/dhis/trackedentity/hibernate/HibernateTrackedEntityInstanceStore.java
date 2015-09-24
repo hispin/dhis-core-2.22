@@ -46,8 +46,6 @@ import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramInstance;
-import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
@@ -80,15 +78,6 @@ public class HibernateTrackedEntityInstanceStore
     implements TrackedEntityInstanceStore
 {
     private static final Log log = LogFactory.getLog( HibernateTrackedEntityInstanceStore.class );
-
-    private static final Map<ProgramStatus, Integer> PROGRAM_STATUS_MAP = new HashMap<ProgramStatus, Integer>()
-    {
-        {
-            put( ProgramStatus.ACTIVE, ProgramInstance.STATUS_ACTIVE );
-            put( ProgramStatus.COMPLETED, ProgramInstance.STATUS_COMPLETED );
-            put( ProgramStatus.CANCELLED, ProgramInstance.STATUS_CANCELLED );
-        }
-    };
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -193,7 +182,7 @@ public class HibernateTrackedEntityInstanceStore
 
             if ( params.hasProgramStatus() )
             {
-                hql += hlp.whereAnd() + "pi.status = " + PROGRAM_STATUS_MAP.get( params.getProgramStatus() );
+                hql += hlp.whereAnd() + "pi.status = " + params.getProgramStatus();
             }
 
             if ( params.hasFollowUp() )
@@ -412,7 +401,7 @@ public class HibernateTrackedEntityInstanceStore
 
             if ( params.hasProgramStatus() )
             {
-                sql += "and pi.status = " + PROGRAM_STATUS_MAP.get( params.getProgramStatus() ) + " ";
+                sql += "and pi.status = " + params.getProgramStatus() + " ";
             }
 
             if ( params.hasFollowUp() )

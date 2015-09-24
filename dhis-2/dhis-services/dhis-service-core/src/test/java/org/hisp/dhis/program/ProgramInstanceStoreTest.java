@@ -28,16 +28,6 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -47,6 +37,16 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Chau Thu Tran
@@ -69,7 +69,7 @@ public class ProgramInstanceStoreTest
     @Autowired
     private ProgramStageService programStageService;
 
-    private Date incidenDate;
+    private Date incidentDate;
 
     private Date enrollmentDate;
 
@@ -155,24 +155,24 @@ public class ProgramInstanceStoreTest
         DateTime testDate1 = DateTime.now();
         testDate1.withTimeAtStartOfDay();
         testDate1 = testDate1.minusDays( 70 );
-        incidenDate = testDate1.toDate();
-        
+        incidentDate = testDate1.toDate();
+
         DateTime testDate2 = DateTime.now();
         testDate2.withTimeAtStartOfDay();
         enrollmentDate = testDate2.toDate();
 
-        programInstanceA = new ProgramInstance( enrollmentDate, incidenDate, entityInstanceA, programA );
+        programInstanceA = new ProgramInstance( enrollmentDate, incidentDate, entityInstanceA, programA );
         programInstanceA.setUid( "UID-A" );
 
-        programInstanceB = new ProgramInstance( enrollmentDate, incidenDate, entityInstanceA, programB );
+        programInstanceB = new ProgramInstance( enrollmentDate, incidentDate, entityInstanceA, programB );
         programInstanceB.setUid( "UID-B" );
-        programInstanceB.setStatus( ProgramInstance.STATUS_CANCELLED );
+        programInstanceB.setStatus( ProgramStatus.CANCELLED );
 
-        programInstanceC = new ProgramInstance( enrollmentDate, incidenDate, entityInstanceA, programC );
+        programInstanceC = new ProgramInstance( enrollmentDate, incidentDate, entityInstanceA, programC );
         programInstanceC.setUid( "UID-C" );
-        programInstanceC.setStatus( ProgramInstance.STATUS_COMPLETED );
+        programInstanceC.setStatus( ProgramStatus.COMPLETED );
 
-        programInstanceD = new ProgramInstance( enrollmentDate, incidenDate, entityInstanceB, programA );
+        programInstanceD = new ProgramInstance( enrollmentDate, incidentDate, entityInstanceB, programA );
         programInstanceD.setUid( "UID-D" );
     }
 
@@ -220,12 +220,11 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceC );
         programInstanceStore.save( programInstanceD );
 
-        List<ProgramInstance> programInstances = programInstanceStore.get( entityInstanceA, programC,
-            ProgramInstance.STATUS_COMPLETED );
+        List<ProgramInstance> programInstances = programInstanceStore.get( entityInstanceA, programC, ProgramStatus.COMPLETED );
         assertEquals( 1, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceC ) );
 
-        programInstances = programInstanceStore.get( entityInstanceA, programA, ProgramInstance.STATUS_ACTIVE );
+        programInstances = programInstanceStore.get( entityInstanceA, programA, ProgramStatus.ACTIVE );
         assertEquals( 1, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
     }
@@ -249,7 +248,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceB );
         programInstanceStore.save( programInstanceD );
 
-        List<ProgramInstance> programInstances = programInstanceStore.get( programA, orgunitIds, incidenDate,
+        List<ProgramInstance> programInstances = programInstanceStore.get( programA, orgunitIds, incidentDate,
             enrollmentDate, null, null );
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
@@ -263,7 +262,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceB );
         programInstanceStore.save( programInstanceD );
 
-        int count = programInstanceStore.count( programA, orgunitIds, incidenDate, enrollmentDate );
+        int count = programInstanceStore.count( programA, orgunitIds, incidentDate, enrollmentDate );
         assertEquals( 2, count );
     }
 
@@ -274,8 +273,9 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceB );
         programInstanceStore.save( programInstanceD );
 
-        List<ProgramInstance> programInstances = programInstanceStore.getByStatus( ProgramInstance.STATUS_ACTIVE,
-            programA, orgunitIds, incidenDate, enrollmentDate );
+        List<ProgramInstance> programInstances = programInstanceStore.getByStatus( ProgramStatus.ACTIVE, programA,
+            orgunitIds, incidentDate, enrollmentDate );
+
         assertEquals( 2, programInstances.size() );
         assertTrue( programInstances.contains( programInstanceA ) );
         assertTrue( programInstances.contains( programInstanceD ) );
@@ -288,9 +288,7 @@ public class ProgramInstanceStoreTest
         programInstanceStore.save( programInstanceB );
         programInstanceStore.save( programInstanceD );
 
-        int count = programInstanceStore.countByStatus( ProgramInstance.STATUS_ACTIVE, programA, orgunitIds,
-            incidenDate, enrollmentDate );
+        int count = programInstanceStore.countByStatus( ProgramStatus.ACTIVE, programA, orgunitIds, incidentDate, enrollmentDate );
         assertEquals( 2, count );
     }
-
 }
