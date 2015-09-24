@@ -26,7 +26,9 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 CurrentSelection,
                 TEIGridService,
                 TEIService) {  
-                    
+    
+    $scope.maxOptionSize = 30;
+    
     //Selection
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
     $scope.selectedOuMode = $scope.ouModes[0];    
