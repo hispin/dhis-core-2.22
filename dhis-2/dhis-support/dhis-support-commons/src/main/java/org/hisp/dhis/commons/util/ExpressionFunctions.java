@@ -72,6 +72,13 @@ public class ExpressionFunctions
         return ( value.doubleValue() >= 0d ) ? 1d : 0d;
     }
     
+    /**
+     * Function which will return the count of zero or positive values among the
+     * given argument values.
+     * 
+     * @param values the arguments.
+     * @return an Integer.
+     */
     public static Integer zpvc( Number... values )
     {
         if ( values == null || values.length == 0 )
