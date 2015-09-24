@@ -6,13 +6,9 @@ dhis2.util.namespace('dhis2.tc');
 dhis2.tc.emptyOrganisationUnits = false;
 
 var i18n_no_orgunits = 'No organisation unit attached to current user, no data entry possible';
-var i18n_offline_notification = 'You are offline, data will be stored locally';
+var i18n_offline_notification = 'You are offline';
 var i18n_online_notification = 'You are online';
-var i18n_need_to_sync_notification = 'There is data stored locally, please upload to server';
-var i18n_sync_now = 'Upload';
-var i18n_sync_success = 'Upload to server was successful';
-var i18n_sync_failed = 'Upload to server failed, please try again later';
-var i18n_uploading_data_notification = 'Uploading locally stored data to the server';
+var i18n_ajax_login_failed = 'Login failed, check your username and password and try again';
 
 var optionSetsInPromise = [];
 var attributesInPromise = [];
@@ -157,6 +153,7 @@ function downloadMetaData()
         //Enable ou selection after meta-data has downloaded
         $( "#orgUnitTree" ).removeClass( "disable-clicks" );
         dhis2.tc.metaDataCached = true;
+        dhis2.availability.startAvailabilityCheck();
         console.log( 'Finished loading meta-data' );        
         selection.responseReceived(); 
     });
