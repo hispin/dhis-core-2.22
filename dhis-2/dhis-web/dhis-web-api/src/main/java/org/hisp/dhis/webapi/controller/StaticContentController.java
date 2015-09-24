@@ -52,8 +52,9 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Serves and uploads custom images(PNG) for the logo on the frontpage (logo_front)
- * and for the logo on the top banner (logo_banner)
- * Created by Stian Sandvold on 10.09.2015.
+ * and for the logo on the top banner (logo_banner).
+ * 
+ * @author Stian Sandvold
  */
 @Controller
 @RequestMapping( "/staticContent" )
@@ -70,11 +71,11 @@ public class StaticContentController
         put( "logo_front", SystemSettingManager.KEY_USE_CUSTOM_LOGO_FRONT ).build();
 
     /**
-     * Serves a png associated with the key. if custom logo is not used, the request will redirect to the default
-     * logos.
+     * Serves a PNG associated with the key. if custom logo is not used, the 
+     * request will redirect to the default logos.
      *
-     * @param key      key associated with the file\image
-     * @param response the response associated with the request
+     * @param key key associated with the file\image.
+     * @param response the response associated with the request.
      * @throws WebMessageException
      */
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
@@ -124,10 +125,10 @@ public class StaticContentController
     }
 
     /**
-     * Uploads pngs based on a key. only accepts png and whitelisted keys
+     * Uploads PNG images based on a key. Only accepts PNG and white listed keys.
      *
-     * @param key  to associate with the image
-     * @param file associated with the key
+     * @param key  to associate with the image.
+     * @param file associated with the key.
      * @throws WebMessageException
      * @throws IOException
      */
@@ -150,7 +151,7 @@ public class StaticContentController
                 WebMessageUtils.badRequest( "This media format is not yet supported" ) );
         }
 
-        // Only keys in the whitelist is accepted at the current time
+        // Only keys in the white list is accepted at the current time
         
         if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {
@@ -173,10 +174,10 @@ public class StaticContentController
     }
 
     /**
-     * returns the relative url of the default logo for a given key.
+     * Returns the relative url of the default logo for a given key.
      *
-     * @param key the key associated with the logo
-     * @return the relative url of the logo
+     * @param key the key associated with the logo. 
+     * @return the relative url of the logo.
      */
     private String getDefaultLogoUrl( String key )
     {
