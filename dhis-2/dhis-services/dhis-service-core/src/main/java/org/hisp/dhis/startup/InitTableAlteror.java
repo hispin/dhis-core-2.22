@@ -49,7 +49,7 @@ public class InitTableAlteror
 
     @Autowired
     private StatementBuilder statementBuilder;
-
+    
     // -------------------------------------------------------------------------
     // Execute
     // -------------------------------------------------------------------------

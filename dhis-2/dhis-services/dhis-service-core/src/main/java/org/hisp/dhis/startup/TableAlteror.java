@@ -219,8 +219,6 @@ public class TableAlteror
 
         executeSql( "ALTER TABLE organisationunit DROP COLUMN hasPatients" );
 
-        // executeSql( "update dataelement set texttype='text' where valuetype='string' and texttype is null" );
-
         // categories_categoryoptions
         // set to 0 temporarily
         int c1 = executeSql( "UPDATE categories_categoryoptions SET sort_order=0 WHERE sort_order is NULL OR sort_order=0" );
@@ -291,9 +289,6 @@ public class TableAlteror
 
         executeSql( "ALTER TABLE section DROP CONSTRAINT section_name_key" );
         executeSql( "UPDATE patientattribute set inheritable=false where inheritable is null" );
-        // executeSql( "UPDATE dataelement SET numbertype='number' where numbertype is null and valuetype='int'" );
-        // executeSql( "UPDATE dataelement SET valuetype='posInt' where valuetype='positiveNumber'" );
-        // executeSql( "UPDATE dataelement SET valuetype='negInt' where valuetype='negativeNumber'" );
         executeSql( "UPDATE dataelement SET aggregationtype='avg_sum_org_unit' where aggregationtype='average'" );
 
         // revert prepare aggregate*Value tables for offline diffs
