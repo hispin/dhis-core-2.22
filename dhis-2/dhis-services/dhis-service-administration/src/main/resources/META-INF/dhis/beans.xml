@@ -67,19 +67,6 @@
     <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
     <property name="dataBrowserGridStore" ref="org.hisp.dhis.databrowser.DataBrowserGridStore" />
   </bean>
-
-  <!-- Data merge -->
-
-  <bean id="org.hisp.dhis.datamerge.DataMergeStore" class="org.hisp.dhis.datamerge.jdbc.JdbcDataMergeStore">
-    <property name="jdbcTemplate" ref="jdbcTemplate" />
-    <property name="statementBuilder" ref="statementBuilder" />
-  </bean>
-
-  <bean id="org.hisp.dhis.datamerge.DataMergeService" class="org.hisp.dhis.datamerge.DefaultDataMergeService">
-    <property name="dataMergeStore" ref="org.hisp.dhis.datamerge.DataMergeStore" />
-    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
-    <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
-  </bean>
   
   <!-- Sql View -->
 
