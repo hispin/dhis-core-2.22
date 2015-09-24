@@ -186,38 +186,6 @@
       <param name="requiredAuthorities">F_VIEW_DATABROWSER</param>
     </action>
 
-    <!-- Organisation unit merge -->
-
-    <action name="displayOrganisationUnitMergeForm" class="org.hisp.dhis.dataadmin.action.NoAction">
-      <result name="success" type="velocity">/main.vm</result>
-      <param name="page">
-        /dhis-web-maintenance-dataadmin/organisationUnitMergeForm.vm
-      </param>
-      <param name="menu">/dhis-web-maintenance-dataadmin/menu.vm</param>
-      <param name="javascripts">../dhis-web-commons/oust/oust.js,javascript/organisationUnitMerge.js</param>
-      <param name="requiredAuthorities">F_MERGE_ORGANISATION_UNITS</param>
-    </action>
-
-    <action name="mergeOrganisationUnits" class="org.hisp.dhis.dataadmin.action.organisationunitmerge.MergeOrganisationUnitsAction">
-      <result name="success" type="redirect">displayOrganisationUnitMergeForm.action</result>
-      <param name="requiredAuthorities">F_MERGE_ORGANISATION_UNITS</param>
-    </action>
-
-    <!-- Duplicate data elimination -->
-
-    <action name="displayDuplicateDataEliminationForm" class="org.hisp.dhis.dataadmin.action.NoAction">
-      <result name="success" type="velocity">/main.vm</result>
-      <param name="page">/dhis-web-maintenance-dataadmin/duplicateDataEliminationForm.vm</param>
-      <param name="menu">/dhis-web-maintenance-dataadmin/menu.vm</param>
-      <param name="javascripts">javascript/duplicateDataElimination.js</param>
-      <param name="requiredAuthorities">F_ELIMINATE_DUPLICATE_DATA_ELEMENTS</param>
-    </action>
-
-    <action name="eliminateDuplicateData" class="org.hisp.dhis.dataadmin.action.duplicatedataelimination.EliminateDuplicateDataAction">
-      <result name="success" type="redirect">displayDuplicateDataEliminationForm.action</result>
-      <param name="requiredAuthorities">F_ELIMINATE_DUPLICATE_DATA_ELEMENTS</param>
-    </action>
-
     <!-- Min/Max validation -->
 
     <action name="generateMinMaxValue" class="org.hisp.dhis.dataadmin.action.minmaxvalidation.GenerateMinMaxValuesAction">
