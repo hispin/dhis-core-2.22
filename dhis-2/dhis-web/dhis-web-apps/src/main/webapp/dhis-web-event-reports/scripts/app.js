@@ -418,24 +418,27 @@ Ext.onReady( function() {
                                 name: 'No range set'
                             });
 
-                            //cb.setValue(defaultRangeSetId);
+                            if (container.dataElement.isAttribute) {
+                                cb.setPendingValue();
+                            }
+                            else {                                
+                                Ext.Ajax.request({
+                                    url: ns.core.init.contextPath + '/api/dataElements/' + container.dataElement.id + '.json?fields=legendSet[id,name]',
+                                    success: function(r) {
+                                        r = Ext.decode(r.responseText);
 
-                            Ext.Ajax.request({
-                                url: ns.core.init.contextPath + '/api/dataElements/' + container.dataElement.id + '.json?fields=legendSet[id,name]',
-                                success: function(r) {
-                                    r = Ext.decode(r.responseText);
+                                        if (Ext.isObject(r) && Ext.isObject(r.legendSet)) {
+                                            cb.store.add(r.legendSet);
 
-                                    if (Ext.isObject(r) && Ext.isObject(r.legendSet)) {
-                                        cb.store.add(r.legendSet);
-
-                                        cb.setValue(r.legendSet.id);
-                                        container.onRangeSetSelect(r.legendSet.id);
+                                            cb.setValue(r.legendSet.id);
+                                            container.onRangeSetSelect(r.legendSet.id);
+                                        }
+                                    },
+                                    callback: function() {
+                                        cb.setPendingValue();
                                     }
-                                },
-                                callback: function() {
-                                    cb.setPendingValue();
-                                }
-                            });
+                                });
+                            }
                         },
                         select: function(cb, r) {
                             var id = Ext.Array.from(r)[0].data.id;
@@ -4709,7 +4712,7 @@ Ext.onReady( function() {
 					return 'Ext.ux.panel.DataElementBooleanContainer';
 				}
 
-				return 'Ext.ux.panel.DataElementIntegerContainer';
+				return 'Ext.ux.panel.DataElementStringContainer';
 			};
 
 			// add
