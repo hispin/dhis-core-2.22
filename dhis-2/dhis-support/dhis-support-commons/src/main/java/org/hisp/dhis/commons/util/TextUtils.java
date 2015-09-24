@@ -249,6 +249,17 @@ public class TextUtils
     }
     
     /**
+     * Removes line breaks form the given string.
+     * 
+     * @param string the string.
+     * @return the chopped string.
+     */
+    public static String removeNewlines( String string )
+    {
+        return string.replaceAll( "\r", EMPTY ).replaceAll( "\n", EMPTY );
+    }
+    
+    /**
      * Trims the given string from the end.
      * 
      * @param value the value to trim.
