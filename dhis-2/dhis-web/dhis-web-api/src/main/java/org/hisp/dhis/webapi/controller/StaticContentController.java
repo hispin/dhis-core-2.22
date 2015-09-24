@@ -66,9 +66,12 @@ public class StaticContentController
     @Autowired
     private SystemSettingManager systemSettingManager;
 
+    private static final String LOGO_BANNER = "logo_banner";
+    private static final String LOGO_FRONT = "logo_front";
+
     private static final Map<String, String> KEY_WHITELIST_MAP = ImmutableMap.<String, String>builder().
-        put( "logo_banner", SystemSettingManager.KEY_USE_CUSTOM_LOGO_BANNER ).
-        put( "logo_front", SystemSettingManager.KEY_USE_CUSTOM_LOGO_FRONT ).build();
+        put( LOGO_BANNER, SystemSettingManager.KEY_USE_CUSTOM_LOGO_BANNER ).
+        put( LOGO_FRONT, SystemSettingManager.KEY_USE_CUSTOM_LOGO_FRONT ).build();
 
     /**
      * Serves a PNG associated with the key. if custom logo is not used, the 
@@ -182,12 +185,12 @@ public class StaticContentController
     {
         String relativeUrlToImage = null;
         
-        if ( key.equals( "logo_banner" ) )
+        if ( key.equals( LOGO_BANNER ) )
         {
             relativeUrlToImage = "/dhis-web-commons/css/light_blue/logo_banner.png";
         }
 
-        if ( key.equals( "logo_front" ) )
+        if ( key.equals( LOGO_FRONT ) )
         {
             relativeUrlToImage = "/dhis-web-commons/flags/" + systemSettingManager.getFlagImage();
         }
