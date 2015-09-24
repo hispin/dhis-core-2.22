@@ -111,6 +111,8 @@ trackerCapture.controller('TEIAddController',
             $scope.programs = response.programs;
             $scope.selectedProgram = response.selectedProgram;
         });
+        
+        $scope.selectedTei = {};
     }
     
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
@@ -279,6 +281,7 @@ trackerCapture.controller('TEIAddController',
             $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
             $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
         });
+        
         
         $scope.search( $scope.selectedSearchMode );        
     }; 
@@ -503,7 +506,7 @@ trackerCapture.controller('TEIAddController',
     $scope.attributesById = CurrentSelection.getAttributesById();
     
     var selections = CurrentSelection.get();
-    $scope.programs = selections.prs;    
+    $scope.programs = selections.prs;
     
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
@@ -526,17 +529,44 @@ trackerCapture.controller('TEIAddController',
             });
 
             CurrentSelection.setOptionSets($scope.optionSets);
-            
-            console.log('the option sets:  ', $scope.optionSets);
         });
     }
+    
+    var assignInheritance = function(){
+        if($scope.addingRelationship){
+            var mainTei = CurrentSelection.getRelationshipOwner();
+            angular.forEach($scope.attributes, function(att){
+                if(att.inherit && mainTei[att.id]){
+                    $scope.selectedTei[att.id] = mainTei[att.id];
+                }
+            });
+        }
+        else{
+            $scope.selectedTei = {};
+        }
+    };
+    
+    var getRules = function(){
+        $scope.allProgramRules = {constants: [], programIndicators: {}, programValidations: [], programVariables: [], programRules: []};
+        if( angular.isObject($scope.selectedProgramForRelative) && $scope.selectedProgramForRelative.id ){
+            TrackerRulesFactory.getRules($scope.selectedProgramForRelative.id).then(function(rules){                    
+                $scope.allProgramRules = rules;
+            });
+        }
+    };
   
+    
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
         $scope.selectedProgramForRelative = $scope.programs[0];
         AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
             $scope.attributes = atts;
+            
+            assignInheritance();
+            
+            console.log('the tei:  ', $scope.selectedTei);
+            getRules();
         });
-    }  
+    }
     
     //watch for selection of program
     $scope.$watch('selectedProgramForRelative', function() {        
@@ -557,21 +587,8 @@ trackerCapture.controller('TEIAddController',
                     $scope.customForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, 'RELATIONSHIP');
                 }
 
-                if($scope.addingRelationship){
-                    var mainTei = CurrentSelection.getRelationshipOwner();
-                    angular.forEach($scope.attributes, function(att){
-                        if(att.inherit && mainTei[att.id]){
-                            $scope.selectedTei[att.id] = mainTei[att.id];
-                        }
-                    });
-                }
-
-                $scope.allProgramRules = {constants: [], programIndicators: {}, programValidations: [], programVariables: [], programRules: []};
-                if( angular.isObject($scope.selectedProgramForRelative) && $scope.selectedProgramForRelative.id ){
-                    TrackerRulesFactory.getRules($scope.selectedProgramForRelative.id).then(function(rules){                    
-                        $scope.allProgramRules = rules;
-                    });
-                }
+                assignInheritance();
+                getRules();                
             });
         }
     }); 
