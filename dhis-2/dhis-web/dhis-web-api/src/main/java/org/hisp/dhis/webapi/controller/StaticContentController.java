@@ -159,7 +159,7 @@ public class StaticContentController
             throw new WebMessageException( WebMessageUtils.badRequest( "Missing parameter \"file\"" ) );
         }
 
-        // Only PNG is accepted at the current time
+        // Only PNG accepted currently
         
         if ( !file.getContentType().equalsIgnoreCase( "image/png" ) )
         {
@@ -167,7 +167,7 @@ public class StaticContentController
                 new WebMessage(WebMessageStatus.WARNING, HttpStatus.UNSUPPORTED_MEDIA_TYPE ) );
         }
 
-        // Only keys in the white list is accepted at the current time
+        // Only keys in the white list accepted currently
         
         if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {

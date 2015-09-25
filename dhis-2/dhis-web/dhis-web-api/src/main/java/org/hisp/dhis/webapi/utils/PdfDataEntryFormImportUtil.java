@@ -118,7 +118,7 @@ public class PdfDataEntryFormImportUtil
         for ( String fldName : fldNames )
         {
             // If the value in the text field is not empty, proceed to add it.
-            if ( !form.getField( fldName ).trim().equals( "" ) )
+            if ( !form.getField( fldName ).trim().isEmpty() )
             {
                 if ( fldName.startsWith( PdfDataEntryFormUtil.LABELCODE_DATADATETEXTFIELD ) )
                 {
@@ -159,16 +159,14 @@ public class PdfDataEntryFormImportUtil
 
             programStageInstance = programStageInstanceService.getProgramStageInstance( programStageInstanceId );
 
-            for ( Map.Entry<Integer, String> dataElementsEntry : programStageInstanceStorage.getDataElementsValue()
-                .entrySet() )
+            for ( Map.Entry<Integer, String> dataElementsEntry : programStageInstanceStorage.getDataElementsValue().entrySet() )
             {
                 Integer dataElementId = dataElementsEntry.getKey();
                 String value = dataElementsEntry.getValue();
 
                 // Step 3. Insert Data
-                insertValue_ProgramStageDataElement( programStageInstance, dataElementId, value );
+                insertValueProgramStageDataElement( programStageInstance, dataElementId, value );
             }
-
         }
 
         reader.close();
@@ -199,8 +197,7 @@ public class PdfDataEntryFormImportUtil
         return programStageInstanceService.addProgramStageInstance( programStageInstance );
     }
 
-    private void insertValue_ProgramStageDataElement( ProgramStageInstance programStageInstance, int dataElementId,
-        String value )
+    private void insertValueProgramStageDataElement( ProgramStageInstance programStageInstance, int dataElementId, String value )
         throws Exception
     {
 
@@ -303,7 +300,6 @@ public class PdfDataEntryFormImportUtil
 
                 programStageInstanceData.put( rowNumber, programStageInstanceStorage );
             }
-
         }
     }
 

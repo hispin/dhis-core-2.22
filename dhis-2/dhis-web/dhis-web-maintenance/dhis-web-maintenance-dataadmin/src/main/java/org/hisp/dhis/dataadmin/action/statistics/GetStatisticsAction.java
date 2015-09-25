@@ -134,7 +134,7 @@ public class GetStatisticsAction
         Date lastHour = new DateTime().minusHours( 1 ).toDate();
         
         objects = new EnumMapWrapper<>( Objects.class, counts );
-                
+        
         activeUsers.put( 0, userService.getActiveUsersCount( lastHour ) );
         activeUsers.put( 1, userService.getActiveUsersCount( 0 ) );
         activeUsers.put( 2, userService.getActiveUsersCount( 1 ) );

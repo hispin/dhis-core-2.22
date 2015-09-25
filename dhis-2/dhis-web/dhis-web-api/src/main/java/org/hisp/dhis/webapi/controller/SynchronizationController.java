@@ -86,7 +86,7 @@ public class SynchronizationController
     }
 
     @RequestMapping( value = "/availability", method = RequestMethod.GET, produces = "application/json" )
-    public @ResponseBody AvailabilityStatus isRemoteServerAvailable()
+    public @ResponseBody AvailabilityStatus remoteServerAvailable()
     {
         return synchronizationManager.isRemoteServerAvailable();
     }
