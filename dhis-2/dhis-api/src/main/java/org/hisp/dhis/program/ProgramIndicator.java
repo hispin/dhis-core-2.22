@@ -102,6 +102,12 @@ public class ProgramIndicator
      */
     private Integer decimals;
 
+    /**
+     * Value to use in expression when data element and attribute values are not
+     * present.
+     */
+    private Integer missingValueReplacement;
+    
     private Boolean displayInForm;
 
     // -------------------------------------------------------------------------
@@ -218,6 +224,19 @@ public class ProgramIndicator
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Integer getMissingValueReplacement()
+    {
+        return missingValueReplacement;
+    }
+
+    public void setMissingValueReplacement( Integer missingValueReplacement )
+    {
+        this.missingValueReplacement = missingValueReplacement;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Boolean getDisplayInForm()
     {
         return displayInForm;
@@ -243,6 +262,7 @@ public class ProgramIndicator
                 expression = programIndicator.getExpression();
                 filter = programIndicator.getFilter();
                 decimals = programIndicator.getDecimals();
+                missingValueReplacement = programIndicator.getMissingValueReplacement();
                 displayInForm = programIndicator.getDisplayInForm();
             }
             else if ( strategy.isMerge() )
@@ -251,6 +271,7 @@ public class ProgramIndicator
                 expression = programIndicator.getExpression() == null ? expression : programIndicator.getExpression();
                 filter = programIndicator.getFilter() == null ? filter : programIndicator.getFilter();
                 decimals = programIndicator.getDecimals() == null ? decimals : programIndicator.getDecimals();
+                missingValueReplacement = programIndicator.getMissingValueReplacement() == null ? missingValueReplacement : programIndicator.getMissingValueReplacement();
                 displayInForm = programIndicator.getDisplayInForm() == null ? displayInForm : programIndicator.getDisplayInForm();
             }
         }

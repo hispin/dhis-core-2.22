@@ -77,6 +77,16 @@ jQuery( document ).ready( function()
           </select>
 		</td>
     </tr>
+    <tr>
+        <td><label for="missingValueReplacement">$i18n.getString( "missing_value_replacement" )</label></td>
+        <td>
+            <select id="missingValueReplacement" name="missingValueReplacement">
+                <option value="0"#if( $programIndicator.missingValueReplacement == 0 ) selected="selected"#end>0</option>
+                <option value="1"#if( $programIndicator.missingValueReplacement == 1 ) selected="selected"#end>1</option>
+                <option value="-1"#if( $programIndicator.missingValueReplacement == -1 ) selected="selected"#end>-1</option>
+            </select>
+        </td>
+    </tr>
 	<tr>
 		<td><label for="displayInForm">$i18n.getString( "display_in_form" )</label></td>
 		<td><input type="checkbox" id="displayInForm" name="displayInForm" value="true"#if( $programIndicator.displayInForm ) checked="checked"#end></td>

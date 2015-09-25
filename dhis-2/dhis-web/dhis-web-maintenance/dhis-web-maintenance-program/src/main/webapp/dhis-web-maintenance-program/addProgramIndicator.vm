@@ -78,6 +78,16 @@ jQuery( document ).ready( function()
 	        </td>
 			<td></td>
 	    </tr>
+	    <tr>
+	        <td><label for="missingValueReplacement">$i18n.getString( "missing_value_replacement" )</label></td>
+	        <td>
+	            <select id="missingValueReplacement" name="missingValueReplacement">
+	                <option value="0">0</option>
+	                <option value="1">1</option>
+	                <option value="-1">-1</option>
+	            </select>
+	        </td>
+	    </tr>
 		<tr>
 			<td><label for="displayInForm">$i18n.getString( "display_in_form" )</label></td>
 			<td><input type="checkbox" id="displayInForm" name="displayInForm" value="true"></td>
