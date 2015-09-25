@@ -125,11 +125,11 @@ public class PaginatedList<T>
      */
     public int pageCount()
     {
-        int c = size();        
-        int r = c / pageSize;
-        int m = c % pageSize;
+        int count = size();        
+        int pages = count / pageSize;
+        int mod = count % pageSize;
         
-        return m == 0 ? r : ( r + 1 );
+        return mod == 0 ? pages : ( pages + 1 );
     }
     
     /**

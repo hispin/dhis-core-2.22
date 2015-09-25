@@ -49,7 +49,7 @@ public class DebugUtils
     
     public static final String SEPARATOR = "-";
     
-    private static ThreadLocal<Map<String, List<String>>> duplicateMapPeg = new ThreadLocal<>();
+    private static ThreadLocal<Map<String, List<String>>> DUPLICATE_MAP_PEG = new ThreadLocal<>();
     
     public static String logDuplicates( String key, Integer... values )
     {
@@ -85,7 +85,7 @@ public class DebugUtils
     
     private static String log( String key, String value )
     {   
-        Map<String, List<String>> duplicateMap = duplicateMapPeg.get();
+        Map<String, List<String>> duplicateMap = DUPLICATE_MAP_PEG.get();
         
         if ( duplicateMap == null )
         {
@@ -112,20 +112,20 @@ public class DebugUtils
         
         duplicateMap.put( key, list );
         
-        duplicateMapPeg.set( duplicateMap );
+        DUPLICATE_MAP_PEG.set( duplicateMap );
 
         return duplicate;
     }
     
     public static boolean resetDuplicates( String key )
     {
-        Map<String, List<String>> duplicateMap = duplicateMapPeg.get();
+        Map<String, List<String>> duplicateMap = DUPLICATE_MAP_PEG.get();
         
         if ( duplicateMap != null )
         {
             duplicateMap.remove( key );
         
-            duplicateMapPeg.set( duplicateMap );
+            DUPLICATE_MAP_PEG.set( duplicateMap );
             
             log.info( "Reset duplicate for key: '" + key + "'" );
             

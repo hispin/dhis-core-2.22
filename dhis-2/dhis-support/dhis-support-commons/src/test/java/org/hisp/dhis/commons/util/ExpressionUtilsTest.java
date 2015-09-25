@@ -96,9 +96,7 @@ public class ExpressionUtilsTest
             "((d2:zing(4) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.25) + " +
             "((d2:zing(8) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.75)";
 
-        assertEquals( 3.5, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );
-        
-        
+        assertEquals( 3.5, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );        
     }
 
     @Test
