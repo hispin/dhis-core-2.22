@@ -38,28 +38,28 @@ import java.util.concurrent.TimeUnit;
 public class SystemTimer 
     implements Timer
 {
-    private long _start = 0;
+    private long internalStart = 0;
 
-    private long _end = 0;
+    private long internalEnd = 0;
 
     @Override
     public Timer start()
     {
-        _start = System.nanoTime();
+        internalStart = System.nanoTime();
         return this;
     }
 
     @Override
     public Timer stop()
     {
-        _end = System.nanoTime();
+        internalEnd = System.nanoTime();
         return this;
     }
 
     @Override
     public Long duration()
     {
-        return _end - _start;
+        return internalEnd - internalStart;
     }
 
     @Override

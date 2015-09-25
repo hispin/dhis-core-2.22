@@ -49,8 +49,8 @@ import java.util.Set;
  */
 public class CollectionUtils
 {
-    public static String[] STRING_ARR = new String[0];
-    public static String[][] STRING_2D_ARR = new String[0][];
+    public static final String[] STRING_ARR = new String[0];
+    public static final String[][] STRING_2D_ARR = new String[0][];
 
     /**
      * Applies the given Function1 on each member of the Collection.
