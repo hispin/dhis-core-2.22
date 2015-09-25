@@ -29,8 +29,9 @@ package org.hisp.dhis.web.ohie.fred;
  */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hisp.dhis.web.ohie.fred.webapi.v1.utils.ObjectMapperFactoryBean;
+
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.web.ohie.fred.webapi.v1.utils.ObjectMapperFactoryBean;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
