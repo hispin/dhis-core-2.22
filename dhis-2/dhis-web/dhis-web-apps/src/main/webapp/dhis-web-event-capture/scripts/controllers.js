@@ -874,8 +874,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         var isChanged = false;
         for(var i=0; i<$scope.selectedProgramStage.programStageDataElements.length && !isChanged; i++){
             var deId = $scope.selectedProgramStage.programStageDataElements[i].dataElement.id;
-            if($scope.currentEventOriginialValue[deId] !== $scope.currentEvent[deId]){
-                isChanged = true;
+            if($scope.currentEventOriginialValue[deId] !== $scope.currentEvent[deId] && 
+                    !$scope.currentEvent[deId] && 
+                    $scope.currentEventOriginialValue[deId] !== ""){                                       
+                isChanged = true;                
             }
         }        
         if(!isChanged){
