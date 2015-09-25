@@ -28,8 +28,7 @@
                            placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
                            d2-date
                            max-date='0'
-                           ng-model="currentEvent.eventDate"
-                           ng-disabled="editingEventInFull"    
+                           ng-model="currentEvent.eventDate"  
                            ng-required="true"                            
                            d2-date-validator
                            name="eventDate" 
@@ -69,7 +68,7 @@
                     </div>
                 </td>                                                            
             </tr>            
-            <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'event_date' && !hiddenFields[eventGridColumn.id]">
+            <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'eventDate' && !hiddenFields[eventGridColumn.id]">
                 <td >
                     {{eventGridColumn.name}}<span ng-if="eventGridColumn.compulsory" class="required">*</span>
                 </td>
@@ -269,8 +268,7 @@
                            placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
                            d2-date
                            max-date='0'
-                           ng-model="currentEvent.eventDate"
-                           ng-disabled="editingEventInFull"    
+                           ng-model="currentEvent.eventDate" 
                            ng-required="true"                            
                            d2-date-validator
                            name="eventDate" 

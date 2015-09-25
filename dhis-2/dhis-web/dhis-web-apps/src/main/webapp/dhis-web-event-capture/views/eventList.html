@@ -295,9 +295,8 @@
                                                            max-date="prStDes[eventGridColumn.id].allowFutureDate ? '' : 0" 
                                                            d2-date-validator
                                                            ng-model="currentEvent[eventGridColumn.id]"
-                                                           blur-or-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                           blur-or-change="eventGridColumn.id === 'eventDate' ? updateEventDate(dhis2Event, eventGridColumn) : updateEventDataValue(dhis2Event, eventGridColumn.id)" 
                                                            ng-required={{eventGridColumn.compulsory}}
-                                                           ng-disabled="eventGridColumn.id == 'event_date'"
                                                            input-field-id={{eventGridColumn.id}}                                                            
                                                            ng-class="getInputNotifcationClass(eventGridColumn.id,false)"
                                                            name="foo"/>
@@ -311,7 +310,6 @@
                                                            ng-model="currentEvent[eventGridColumn.id]"
                                                            blur-or-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
                                                            ng-required={{eventGridColumn.compulsory}}
-                                                           ng-disabled="eventGridColumn.id == 'event_date'"
                                                            input-field-id={{eventGridColumn.id}}                                                            
                                                            ng-class="getInputNotifcationClass(eventGridColumn.id,false)"
                                                            name="foo"/>
