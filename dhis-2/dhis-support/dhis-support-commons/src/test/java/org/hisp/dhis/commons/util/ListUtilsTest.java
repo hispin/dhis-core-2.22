@@ -1,4 +1,4 @@
-package org.hisp.dhis.system.util;
+package org.hisp.dhis.commons.util;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -33,14 +33,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -50,7 +48,7 @@ public class ListUtilsTest
     @Test
     public void testRemoveAll()
     {
-        List<String> list = Lists.newArrayList( "a", "b", "c", "d", "e", "f", "g", "h" );
+        List<String> list = new ArrayList<>( Arrays.asList( "a", "b", "c", "d", "e", "f", "g", "h" ) );
         
         Integer[] indexes = { 0, 2, 5, 7, -1, 78 };
 
@@ -68,8 +66,8 @@ public class ListUtilsTest
     @Test
     public void testGetDuplicates()
     {
-        List<String> list = Lists.newArrayList( "a", "b", "c", "c", "d", "e", "e", "e", "f" );
-        Set<String> expected = Sets.newHashSet( "c", "e" );
+        List<String> list = new ArrayList<>( Arrays.asList( "a", "b", "c", "c", "d", "e", "e", "e", "f" ) );
+        Set<String> expected = new HashSet<>( Arrays.asList( "c", "e" ) );
         assertEquals( expected, ListUtils.getDuplicates( list ) );
         
         list = new ArrayList<>( Arrays.asList( "a", "b", "c", "d", "e", "f", "g", "h" ) );

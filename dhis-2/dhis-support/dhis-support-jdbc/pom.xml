@@ -48,7 +48,15 @@
       <groupId>org.hisp.dhis</groupId>
       <artifactId>dhis-support-hibernate</artifactId>
     </dependency>
-        
+    
+    <!-- Test -->
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
   <properties>
     <rootDir>../../</rootDir>
