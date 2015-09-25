@@ -1,4 +1,4 @@
-package org.hisp.dhis.system.util;
+package org.hisp.dhis.commons.util;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -79,6 +79,12 @@ public class ExpressionUtilsTest
         assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:zing(v1)", vars ), DELTA );
         assertEquals( 0d, ExpressionUtils.evaluateToDouble( "d2:zing(v2)", vars ), DELTA );
         assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:zing(v1) + d2:zing(v2)", vars ), DELTA );
+    }
+    
+    //@Test
+    public void testEvaluateToDoubleZeroPositiveValueCount()
+    {
+        String expression = "d2:zing(3";
     }
 
     @Test

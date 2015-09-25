@@ -1,4 +1,4 @@
-package org.hisp.dhis.system.util;
+package org.hisp.dhis.commons.util;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo

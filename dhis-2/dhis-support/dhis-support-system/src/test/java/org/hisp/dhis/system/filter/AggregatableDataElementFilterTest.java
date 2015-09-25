@@ -29,10 +29,12 @@ package org.hisp.dhis.system.filter;
  */
 
 import com.google.common.collect.Sets;
+
 import org.hisp.dhis.DhisConvenienceTest;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
 import org.junit.Test;
 
 import java.util.Set;
