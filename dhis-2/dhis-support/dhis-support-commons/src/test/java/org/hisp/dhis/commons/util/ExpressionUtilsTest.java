@@ -88,11 +88,11 @@ public class ExpressionUtilsTest
         
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );
         
-        expression  = "(d2:zing(4) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1)";
+        expression = "(d2:zing(4) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1)";
 
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );
 
-        expression  = 
+        expression = 
             "((d2:zing(4) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.25) + " +
             "((d2:zing(8) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.75)";
 
