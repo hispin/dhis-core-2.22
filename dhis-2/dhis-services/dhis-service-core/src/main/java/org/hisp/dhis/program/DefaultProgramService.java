@@ -240,7 +240,7 @@ public class DefaultProgramService
     @Override
     public Integer getProgramCountByName( String name )
     {
-        return i18n( i18nService, programStore.getCountLikeName( name ) );
+        return programStore.getCountLikeName( name );
     }
 
     @Override
