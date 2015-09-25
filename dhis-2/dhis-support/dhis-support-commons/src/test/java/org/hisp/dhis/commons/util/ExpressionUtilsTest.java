@@ -81,10 +81,24 @@ public class ExpressionUtilsTest
         assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:zing(v1) + d2:zing(v2)", vars ), DELTA );
     }
     
-    //@Test
+    @Test
     public void testEvaluateToDoubleZeroPositiveValueCount()
     {
-        String expression = "d2:zing(3";
+        String expression = "d2:zpvc(2,3,-1,0)";
+        
+        assertEquals( 3d, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );
+        
+        expression  = "(d2:zing(4) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1)";
+
+        assertEquals( 2d, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );
+
+        expression  = 
+            "((d2:zing(4) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.25) + " +
+            "((d2:zing(8) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.75)";
+
+        assertEquals( 3.5, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );
+        
+        
     }
 
     @Test
