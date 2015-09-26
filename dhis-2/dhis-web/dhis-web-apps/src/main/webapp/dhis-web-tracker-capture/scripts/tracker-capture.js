@@ -270,11 +270,7 @@ function getPrograms( programs )
     return mainPromise;
 }
 
-function processMetaDataAttribute( obj )
-{
-    if(!obj){
-        return;
-    }
+function objectToProperty( obj ){
     
     if(obj.attributeValues){
         for(var i=0; i<obj.attributeValues.length; i++){
@@ -284,7 +280,24 @@ function processMetaDataAttribute( obj )
         }
     }
     
-    //delete obj.attributeValues;
+    return obj;
+    
+}
+function processMetaDataAttribute( obj )
+{
+    if(!obj){
+        return;
+    }
+    
+    obj = objectToProperty( obj );
+    
+    if( obj.programStageDataElements ){
+        for(var i=0; i<obj.programStageDataElements.length; i++){
+            if( obj.programStageDataElements[i].dataElement ){
+                obj.programStageDataElements[i].dataElement = objectToProperty( obj.programStageDataElements[i].dataElement );
+            }
+        }
+    }
    
     return obj;    
 }
@@ -759,7 +772,8 @@ function getD2Object( id, store, url, filter, storage )
         }).done( function( response ){
             if(storage === 'idb'){
                 if( response && response.id) {
-                    dhis2.tc.store.set( store, response );
+                    //dhis2.tc.store.set( store, response );
+                    dhis2.tc.store.set( store, processMetaDataAttribute(response) );
                 }
             }
             if(storage === 'localStorage'){
