@@ -243,7 +243,7 @@ function getMetaPrograms()
     $.ajax({
         url: '../api/programs.json',
         type: 'GET',
-        data:'filter=programType:eq:WITHOUT_REGISTRATION&paging=false&fields=id,name,version,programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]]'
+        data:'paging=false&fields=id,name,programType,version,programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]],attributeValues'
     }).done( function(response) {        
         def.resolve( response.programs ? response.programs: [] );
     }).fail(function(){
@@ -251,6 +251,38 @@ function getMetaPrograms()
     });
     
     return def.promise(); 
+}
+
+function objectToProperty( obj ){
+    
+    if(obj.attributeValues){
+        for(var i=0; i<obj.attributeValues.length; i++){
+            if(obj.attributeValues[i].value && obj.attributeValues[i].attribute && obj.attributeValues[i].attribute.code){
+                obj[obj.attributeValues[i].attribute.code] = obj.attributeValues[i].value === 'true' ? true : obj.attributeValues[i].value;
+            }
+        }
+    }
+    
+    return obj;    
+}
+
+function processMetaDataAttribute( obj )
+{
+    if(!obj){
+        return;
+    }
+    
+    obj = objectToProperty( obj );
+    
+    if( obj.programStageDataElements ){
+        for(var i=0; i<obj.programStageDataElements.length; i++){
+            if( obj.programStageDataElements[i].dataElement ){
+                obj.programStageDataElements[i].dataElement = objectToProperty( obj.programStageDataElements[i].dataElement );
+            }
+        }
+    }
+   
+    return obj;    
 }
 
 function getPrograms( programs )
@@ -270,7 +302,9 @@ function getPrograms( programs )
 
     _.each( _.values( programs ), function ( program ) {
         
-        if(program.programStages && program.programStages[0].programStageDataElements){
+        program = processMetaDataAttribute(program);
+        
+        if(program.allowRegistration || program.programType && program.programType === "WITHOUT_REGISTRATION" && program.programStages && program.programStages[0].programStageDataElements){
             build = build.then(function() {
                 var d = $.Deferred();
                 var p = d.promise();
@@ -308,7 +342,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
+            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name],attributeValues'
         }).done( function( program ){            
             var ou = {};
             _.each(_.values( program.organisationUnits), function(o){
@@ -322,7 +356,8 @@ function getProgram( id )
             });
             program.userRoles = ur;
 
-            dhis2.ec.store.set( 'programs', program );        
+            //dhis2.ec.store.set( 'programs', program );
+            dhis2.ec.store.set( 'programs', processMetaDataAttribute( program ) );
         });
     };
 }
