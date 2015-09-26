@@ -70,10 +70,12 @@ trackerCapture.controller('RegistrationController',
         $scope.trackedEntityForm = null;
         $scope.customForm = null;
         
-        $scope.allProgramRules = [];
-        TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-            $scope.allProgramRules = rules;
-        });
+        $scope.allProgramRules = {constants: [], programIndicators: {}, programValidations: [], programVariables: [], programRules: []};
+        if( angular.isObject($scope.selectedProgram) && $scope.selectedProgram.id ){
+            TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                $scope.allProgramRules = rules;
+            });
+        }
         
         if($scope.registrationMode === 'REGISTRATION'){
             $scope.getAttributes($scope.registrationMode);

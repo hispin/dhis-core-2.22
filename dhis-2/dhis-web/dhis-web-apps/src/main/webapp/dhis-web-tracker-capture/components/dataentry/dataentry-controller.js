@@ -22,7 +22,8 @@ trackerCapture.controller('DataEntryController',
                 CustomFormService,
                 PeriodService,
                 TrackerRulesFactory,
-                  ProgramStageSequencingService) {
+                ProgramStageSequencingService,
+                TEIService) {
 
     //Data entry form
     $scope.outerForm = {};
@@ -40,7 +41,7 @@ trackerCapture.controller('DataEntryController',
     $scope.errorMessages = {};
     $scope.warningMessages = {};
     
-
+    var attributesById = [];
     var userProfile = SessionStorageService.get('USER_PROFILE');
     var storedBy = userProfile && userProfile.username ? userProfile.username : '';
 
@@ -72,7 +73,7 @@ trackerCapture.controller('DataEntryController',
         //Establish which event was affected:
         var affectedEvent = $scope.currentEvent;
         //In most cases the updated effects apply to the current event. In case the affected event is not the current event, fetch the correct event to affect:
-        if (event !== affectedEvent.event) {
+        if (affectedEvent && affectedEvent.event && event !== affectedEvent.event) {
             angular.forEach($scope.currentStageEvents, function (searchedEvent) {
                 if (searchedEvent.event === event) {
                     affectedEvent = searchedEvent;
@@ -161,6 +162,7 @@ trackerCapture.controller('DataEntryController',
         processRuleEffect($scope.currentEvent);
     };
 
+    
 
     //listen for the selected items
     $scope.$on('dashboardWidgets', function () {
@@ -186,7 +188,9 @@ trackerCapture.controller('DataEntryController',
         $scope.selectedProgram = selections.pr;
         $scope.selectedEnrollment = selections.selectedEnrollment;
         $scope.optionSets = selections.optionSets;
-
+        attributesById = CurrentSelection.getAttributesById();
+        $scope.statusAttribute = null;
+        
         $scope.stagesById = [];
         if ($scope.selectedOrgUnit && $scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedEntity && $scope.selectedEnrollment && $scope.selectedEnrollment.enrollment) {
             ProgramStageFactory.getByProgram($scope.selectedProgram).then(function (stages) {
@@ -217,7 +221,18 @@ trackerCapture.controller('DataEntryController',
                 TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
                     $scope.allProgramRules = rules;
                     $scope.getEvents();
-                });           
+                });
+
+                for(var i=0; i<$scope.selectedProgram.programTrackedEntityAttributes.length; i++){                    
+                    if($scope.selectedProgram.programTrackedEntityAttributes[i].trackedEntityAttribute && 
+                            $scope.selectedProgram.programTrackedEntityAttributes[i].trackedEntityAttribute.id && 
+                            attributesById && 
+                            attributesById[$scope.selectedProgram.programTrackedEntityAttributes[i].trackedEntityAttribute.id] &&
+                            attributesById[$scope.selectedProgram.programTrackedEntityAttributes[i].trackedEntityAttribute.id].statusAttribute){                        
+                        $scope.statusAttribute = attributesById[$scope.selectedProgram.programTrackedEntityAttributes[i].trackedEntityAttribute.id];                        
+                        break;
+                    }
+                }                
             });
         }
     });
@@ -267,6 +282,48 @@ trackerCapture.controller('DataEntryController',
         }
     };
 
+    var updateProfile = function(value){
+        var tei = angular.copy($scope.selectedEntity);
+        
+        var attributeFound = false, newValue = true, needToUpdate = value;
+        var index = -1;
+        for(var i=0; i<tei.attributes.length && !attributeFound; i++){
+            if(tei.attributes[i].attribute === $scope.statusAttribute.id){                
+                newValue = value !== tei.attributes[i].value;
+                if(newValue){
+                    tei.attributes[i].value = value;
+                    needToUpdate = true;
+                } 
+                attributeFound = true;
+                index = i;
+            }
+        }
+        
+        if(!attributeFound && value){
+            tei.attributes.push({attribute: $scope.statusAttribute.id, value: value, displayName: $scope.statusAttribute.name, type: $scope.statusAttribute.valueType});
+            needToUpdate = true;
+        }
+        
+        if(attributeFound && !value && index !==-1){
+            if(index !== -1){
+                tei.attributes.splice(index,1);
+            }            
+            needToUpdate = true;
+        }
+        
+        if(needToUpdate){
+            TEIService.update(tei, $scope.optionSets, attributesById).then(function (data) {
+                var selections = CurrentSelection.get();
+                selections.tei = tei;
+                CurrentSelection.set(selections);
+                $timeout(function() { 
+                    $rootScope.$broadcast('profileWidget', {});            
+                },100);
+            });
+        }
+             
+    };
+    
     var setEventEditing = function (dhis2Event, stage) {
         return dhis2Event.editingNotAllowed = dhis2Event.orgUnit !== $scope.selectedOrgUnit.id || (stage.blockEntryForm && dhis2Event.status === 'COMPLETED') || $scope.selectedEntity.inactive;
     };
@@ -521,8 +578,11 @@ trackerCapture.controller('DataEntryController',
                 //Run rules on updated data:
                 $scope.executeRules();
                 ProgramStageSequencingService.updateCurrentEventAfterDataValueChange($scope.currentEvent,ev.dataValues[0]);
+                
+                if(prStDe.dataElement.statusDataElement && $scope.statusAttribute && $scope.statusAttribute.id){
+                    updateProfile(value === "Application approved");
+                }                
             });
-
         }
     };
 
