@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.events.event;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,6 +48,8 @@ import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.report.EventRow;
 import org.hisp.dhis.dxf2.events.report.EventRows;
+import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
+import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
@@ -70,8 +73,8 @@ import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
-import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
+import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityCommentService;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
@@ -514,7 +517,7 @@ public abstract class AbstractEventService
             throw new IllegalQueryException( "Org unit is specified but does not exist: " + orgUnit );
         }
 
-        TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
+        org.hisp.dhis.trackedentity.TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
 
         if ( StringUtils.isNotEmpty( trackedEntityInstance ) && tei == null )
         {
@@ -688,6 +691,8 @@ public abstract class AbstractEventService
                     value.getProvidedElsewhere(), existingDataValue, null );
             }
         }
+        
+        saveEventMembers( programStageInstance, event, storedBy );
 
         if ( !singleValue )
         {
@@ -863,6 +868,34 @@ public abstract class AbstractEventService
             }
 
             event.getNotes().add( note );
+        }
+        
+        for(org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance : programStageInstance.getProgramStageInstanceMembers())
+        {
+        	TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance();
+            trackedEntityInstance.setTrackedEntityInstance( entityInstance.getUid() );
+            trackedEntityInstance.setOrgUnit( entityInstance.getOrganisationUnit().getUid() );
+            trackedEntityInstance.setTrackedEntity( entityInstance.getTrackedEntity().getUid() );
+            trackedEntityInstance.setActive( entityInstance.isActive() );
+            trackedEntityInstance.setCreated( entityInstance.getCreated().toString() );
+            trackedEntityInstance.setLastUpdated( entityInstance.getLastUpdated().toString() );
+            trackedEntityInstance.setInactive( entityInstance.isInactive());
+            
+            for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+            {
+                Attribute attribute = new Attribute();
+
+                attribute.setDisplayName( attributeValue.getAttribute().getDisplayName() );
+                attribute.setAttribute( attributeValue.getAttribute().getUid() );
+                attribute.setType( attributeValue.getAttribute().getValueType() );
+                attribute.setCode( attributeValue.getAttribute().getCode() );
+                attribute.setValue( attributeValue.getValue() );
+
+                trackedEntityInstance.getAttributes().add( attribute );
+            }
+            
+            event.getEventMembers().add( trackedEntityInstance );
+        	
         }
 
         return event;
@@ -1098,7 +1131,9 @@ public abstract class AbstractEventService
                 importSummary.getImportCount().incrementIgnored();
             }
         }
-
+        
+        saveEventMembers( programStageInstance, event, storedBy );
+        
         return importSummary;
     }
 
@@ -1131,6 +1166,21 @@ public abstract class AbstractEventService
         }
     }
 
+    private void saveEventMembers( ProgramStageInstance programStageInstance, Event event, String storedBy )
+    {
+    	for( TrackedEntityInstance tei : event.getEventMembers() )
+        {
+        	org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = entityInstanceService.getTrackedEntityInstance( tei.getTrackedEntityInstance() );
+        	
+        	if( entityInstance != null)
+        	{
+        		programStageInstance.getProgramStageInstanceMembers().add( entityInstance);
+        	}
+        }
+
+        programStageInstanceService.updateProgramStageInstance( programStageInstance );
+    }
+    
     private OrganisationUnit getOrganisationUnit( IdentifiableProperty scheme, String value )
     {
         OrganisationUnit organisationUnit = null;
