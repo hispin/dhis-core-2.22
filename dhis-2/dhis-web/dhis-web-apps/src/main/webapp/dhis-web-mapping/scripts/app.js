@@ -416,7 +416,7 @@ Ext.onReady( function() {
 			util.gui.window = util.gui.window || {};
 
 			util.gui.window.setPositionTopRight = function(window) {
-				window.setPosition(gis.viewport.centerRegion.getWidth() - (window.getWidth() + 3), gis.viewport.centerRegion.y + 58);
+				window.setPosition(gis.viewport.centerRegion.getWidth() - (window.getWidth() + 3), gis.viewport.centerRegion.y + 64);
 			};
 
 			util.gui.window.setPositionTopLeft = function(window) {
@@ -7048,6 +7048,9 @@ Ext.onReady( function() {
 		var indicatorsByGroupStore,
 			dataElementsByGroupStore,
             dataSetStore,
+            programStore,
+            eventDataItemAvailableStore,
+            programIndicatorAvailableStore,
 			periodsByTypeStore,
 			infrastructuralDataElementValuesStore,
 			legendsByLegendSetStore,
@@ -7063,6 +7066,12 @@ Ext.onReady( function() {
 			dataElementDetailLevel,
 			dataElementPanel,
 			dataSet,
+            onEventDataItemProgramSelect,
+            eventDataItemProgram,
+            eventDataItem,
+            onProgramIndicatorProgramSelect,
+            programIndicatorProgram,
+            programIndicator,
             onPeriodTypeSelect,
 			periodType,
 			period,
@@ -7260,7 +7269,96 @@ Ext.onReady( function() {
                 }
             }
         });
+        
+        programStore = Ext.create('Ext.data.Store', {
+			fields: ['id', 'name'],
+			proxy: {
+				type: 'ajax',
+				url: gis.init.contextPath + '/api/programs.json?fields=id,name&paging=false',
+				reader: {
+					type: 'json',
+					root: 'programs'
+				},
+				pageParam: false,
+				startParam: false,
+				limitParam: false
+			}
+		});
 
+        eventDataItemAvailableStore = Ext.create('Ext.data.Store', {
+			fields: ['id', 'name'],
+			data: [],
+			sortStore: function() {
+				this.sort('name', 'ASC');
+			},
+            loadDataAndUpdate: function(data, append) {
+                this.clearFilter(); // work around
+                this.loadData(data, append);
+                this.updateFilter();
+            },
+            getRecordsByIds: function(ids) {
+                var records = [];
+
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        records.push(this.getAt(index));
+                    }
+                }
+
+                return records;
+            },
+            updateFilter: function() {
+                var selectedStoreIds = dataSelectedStore.getIds();
+
+                this.clearFilter();
+
+                this.filterBy(function(record) {
+                    return !Ext.Array.contains(selectedStoreIds, record.data.id);
+                });
+            }
+		});
+
+        programIndicatorAvailableStore = Ext.create('Ext.data.Store', {
+			fields: ['id', 'name'],
+			data: [],
+			sortStore: function() {
+				this.sort('name', 'ASC');
+			},
+            loadDataAndUpdate: function(data, append) {
+                this.clearFilter(); // work around
+                this.loadData(data, append);
+                this.updateFilter();
+            },
+            getRecordsByIds: function(ids) {
+                var records = [];
+
+                ids = Ext.Array.from(ids);
+
+                for (var i = 0, index; i < ids.length; i++) {
+                    index = this.findExact('id', ids[i]);
+
+                    if (index !== -1) {
+                        records.push(this.getAt(index));
+                    }
+                }
+
+                return records;
+            },
+            updateFilter: function() {
+                var selectedStoreIds = dataSelectedStore.getIds();
+
+                this.clearFilter();
+
+                this.filterBy(function(record) {
+                    return !Ext.Array.contains(selectedStoreIds, record.data.id);
+                });
+            }
+		});
+        
 		periodsByTypeStore = Ext.create('Ext.data.Store', {
 			fields: ['id', 'name', 'index'],
 			data: [],
@@ -7320,6 +7418,10 @@ Ext.onReady( function() {
 				dataElementGroup.hide();
 				dataElementPanel.hide();
 				dataSet.hide();
+                eventDataItemProgram.hide();
+                eventDataItem.hide();
+                programIndicatorProgram.hide();
+                programIndicator.hide();
 			}
 			else if (valueType === dimConf.dataElement.objectName || valueType === dimConf.operand.objectName) {
 				indicatorGroup.hide();
@@ -7327,6 +7429,10 @@ Ext.onReady( function() {
 				dataElementGroup.show();
 				dataElementPanel.show();
 				dataSet.hide();
+                eventDataItemProgram.hide();
+                eventDataItem.hide();
+                programIndicatorProgram.hide();
+                programIndicator.hide();
 			}
 			else if (valueType === dimConf.dataSet.objectName) {
 				indicatorGroup.hide();
@@ -7334,6 +7440,32 @@ Ext.onReady( function() {
 				dataElementGroup.hide();
 				dataElementPanel.hide();
 				dataSet.show();
+                eventDataItemProgram.hide();
+                eventDataItem.hide();
+                programIndicatorProgram.hide();
+                programIndicator.hide();
+			}
+			else if (valueType === dimConf.eventDataItem.objectName) {
+				indicatorGroup.hide();
+				indicator.hide();
+				dataElementGroup.hide();
+				dataElementPanel.hide();
+				dataSet.hide();
+                eventDataItemProgram.show();
+                eventDataItem.show();
+                programIndicatorProgram.hide();
+                programIndicator.hide();
+			}
+			else if (valueType === dimConf.programIndicator.objectName) {
+				indicatorGroup.hide();
+				indicator.hide();
+				dataElementGroup.hide();
+				dataElementPanel.hide();
+				dataSet.hide();
+                eventDataItemProgram.hide();
+                eventDataItem.hide();
+                programIndicatorProgram.show();
+                programIndicator.show();
 			}
 		};
 
@@ -7370,7 +7502,9 @@ Ext.onReady( function() {
 				data: [
 					[dimConf.indicator.objectName, GIS.i18n.indicator],
 					[dimConf.dataElement.objectName, GIS.i18n.dataelement],
-					[dimConf.dataSet.objectName, GIS.i18n.reporting_rates]
+					[dimConf.dataSet.objectName, GIS.i18n.reporting_rates],
+					[dimConf.eventDataItem.objectName, GIS.i18n.event_data_items],
+					[dimConf.programIndicator.objectName, GIS.i18n.program_indicators]
 				]
 			}),
 			listeners: {
@@ -7613,6 +7747,140 @@ Ext.onReady( function() {
 			}
 		});
 
+        onEventDataItemProgramSelect = function(programId) {
+            eventDataItem.clearValue();
+
+            Ext.Ajax.request({
+                url: gis.init.contextPath + '/api/programs.json?paging=false&fields=programTrackedEntityAttributes[trackedEntityAttribute[id,name,valueType]],programStages[programStageDataElements[dataElement[id,name,valueType]]]&filter=id:eq:' + programId,
+                success: function(r) {
+                    r = Ext.decode(r.responseText);
+
+                    var isA = Ext.isArray,
+                        isO = Ext.isObject,
+                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
+                        stages = isO(program) && isA(program.programStages) && program.programStages.length ? program.programStages : [],
+                        teas = isO(program) && isA(program.programTrackedEntityAttributes) ? Ext.Array.pluck(program.programTrackedEntityAttributes, 'trackedEntityAttribute') : [],
+                        dataElements = [],
+                        attributes = [],
+                        types = gis.conf.valueType.aggregateTypes,
+                        data;
+
+                    // data elements
+                    for (var i = 0, stage, elements; i < stages.length; i++) {
+                        stage = stages[i];
+
+                        if (isA(stage.programStageDataElements) && stage.programStageDataElements.length) {
+                            elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
+
+                            for (var j = 0; j < elements.length; j++) {
+                                if (Ext.Array.contains(types, elements[j].valueType)) {
+                                    dataElements.push(elements[j]);
+                                }
+                            }
+                        }
+                    }
+
+                    // attributes
+                    for (i = 0; i < teas.length; i++) {
+                        if (Ext.Array.contains(types, teas[i].valueType)) {
+                            attributes.push(teas[i]);
+                        }
+                    }
+
+                    data = gis.util.array.sort(Ext.Array.clean([].concat(dataElements, attributes))) || [];
+
+                    eventDataItemAvailableStore.loadData(data);
+                }
+            });
+
+        };
+
+		eventDataItemProgram = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'gis-combo',
+			fieldLabel: GIS.i18n.program,
+			editable: false,
+			valueField: 'id',
+			displayField: 'name',
+			forceSelection: true,
+			hidden: true,
+			width: gis.conf.layout.widget.item_width,
+			labelWidth: gis.conf.layout.widget.itemlabel_width,
+			store: programStore,
+			listeners: {
+				select: function(cb) {
+					onEventDataItemProgramSelect(cb.getValue());
+				}
+			}
+		});
+
+		eventDataItem = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'gis-combo',
+			fieldLabel: GIS.i18n.event_data_item,
+			editable: false,
+			valueField: 'id',
+			displayField: 'name',
+			queryMode: 'local',
+			forceSelection: true,
+			hidden: true,
+			width: gis.conf.layout.widget.item_width,
+			labelWidth: gis.conf.layout.widget.itemlabel_width,
+			listConfig: {loadMask: false},
+			store: eventDataItemAvailableStore
+		});
+
+        onProgramIndicatorProgramSelect = function(programId) {
+            programIndicator.clearValue();
+
+            Ext.Ajax.request({
+                url: gis.init.contextPath + '/api/programs.json?paging=false&fields=programIndicators[id,name]&filter=id:eq:' + programId,
+                success: function(r) {
+                    r = Ext.decode(r.responseText);
+
+                    var isA = Ext.isArray,
+                        isO = Ext.isObject,
+                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
+                        programIndicators = isO(program) && isA(program.programIndicators) && program.programIndicators.length ? program.programIndicators : [],
+                        data = gis.util.array.sort(Ext.Array.clean(programIndicators)) || [];
+
+                    programIndicatorAvailableStore.loadData(data);
+                }
+            });
+
+        };
+
+        programIndicatorProgram = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'gis-combo',
+			fieldLabel: GIS.i18n.program,
+			editable: false,
+			valueField: 'id',
+			displayField: 'name',
+			forceSelection: true,
+			hidden: true,
+			width: gis.conf.layout.widget.item_width,
+			labelWidth: gis.conf.layout.widget.itemlabel_width,
+			store: programStore,
+			listeners: {
+				select: function(cb) {
+					onProgramIndicatorProgramSelect(cb.getValue());
+				}
+			}
+		});
+
+		programIndicator = Ext.create('Ext.form.field.ComboBox', {
+			cls: 'gis-combo',
+			fieldLabel: GIS.i18n.event_data_item,
+			editable: false,
+			valueField: 'id',
+			displayField: 'name',
+			queryMode: 'local',
+			forceSelection: true,
+			hidden: true,
+			width: gis.conf.layout.widget.item_width,
+			labelWidth: gis.conf.layout.widget.itemlabel_width,
+			listConfig: {loadMask: false},
+			store: programIndicatorAvailableStore
+		});
+
         onPeriodTypeSelect = function() {
             var type = periodType.getValue(),
                 periodOffset = periodType.periodOffset,
@@ -7731,6 +7999,10 @@ Ext.onReady( function() {
                 dataElementGroup,
                 dataElementPanel,
                 dataSet,
+                eventDataItemProgram,
+                eventDataItem,
+                programIndicatorProgram,
+                programIndicator,
                 periodTypePanel,
                 period,
             ],
@@ -8469,6 +8741,8 @@ Ext.onReady( function() {
 			objectNameCmpMap[dimConf.dataElement.objectName] = dataElement;
 			objectNameCmpMap[dimConf.operand.objectName] = dataElement;
 			objectNameCmpMap[dimConf.dataSet.objectName] = dataSet;
+			objectNameCmpMap[dimConf.eventDataItem.objectName] = eventDataItem;
+			objectNameCmpMap[dimConf.programIndicator.objectName] = programIndicator;
 
 			setWidgetGui = function() {
 
@@ -8484,9 +8758,9 @@ Ext.onReady( function() {
 				valueType.setValue(dxDim.objectName);
 				valueTypeToggler(dxDim.objectName);
 
-            if (dxDim.objectName === dimConf.dataElement.objectName) {
-                dataElementDetailLevel.setValue(dxDim.dimension);
-            }
+                if (dxDim.objectName === dimConf.dataElement.objectName) {
+                    dataElementDetailLevel.setValue(dxDim.dimension);
+                }
 
 				// Data
 				objectNameCmpMap[dxDim.objectName].store.add(dxDim.items[0]);
@@ -8571,31 +8845,51 @@ Ext.onReady( function() {
 		};
 
 		getView = function(config) {
-			var vType = valueType.getValue() === dimConf.dataElement.objectName ? dataElementDetailLevel.getValue() : valueType.getValue(),
+			var in_ = dimConf.indicator.objectName,
+                de = dimConf.dataElement.objectName,
+                dc = dimConf.operand.objectName,
+                ds = dimConf.dataSet.objectName,
+                di = dimConf.eventDataItem.objectName;
+                pi = dimConf.programIndicator.objectName,
+                vtype = valueType.getValue() === de ? dataElementDetailLevel.getValue() : valueType.getValue(),
 				objectNameCmpMap = {},
 				view = {};
 
+			objectNameCmpMap[in_] = indicator;
+			objectNameCmpMap[de] = dataElement;
+			objectNameCmpMap[dc] = dataElement;
+			objectNameCmpMap[ds] = dataSet;
+			objectNameCmpMap[di] = eventDataItem;
+			objectNameCmpMap[pi] = programIndicator;
+
+            // id
             view.layer = layer.id;
 
-			objectNameCmpMap[dimConf.indicator.objectName] = indicator;
-			objectNameCmpMap[dimConf.dataElement.objectName] = dataElement;
-			objectNameCmpMap[dimConf.operand.objectName] = dataElement;
-			objectNameCmpMap[dimConf.dataSet.objectName] = dataSet;
-
-            if (objectNameCmpMap[vType].getValue()) {
+            // dx
+            if (objectNameCmpMap[vtype].getValue()) {
                 view.columns = [{
                     dimension: 'dx',
-                    objectName: vType,
+                    objectName: vtype,
                     items: [{
-                        id: objectNameCmpMap[vType].getValue()
+                        id: objectNameCmpMap[vtype].getValue()
                     }]
                 }];
             }
 
+            // program
+            if (vtype === di && eventDataItemProgram.getValue()) {
+                view.program = {id: eventDataItemProgram.getValue()};
+            }
+            else if (vtype === pi && programIndicatorProgram.getValue()) {
+                view.program = {id: programIndicatorProgram.getValue()};
+            }
+
+            // ou
             if (treePanel.getDimension()) {
                 view.rows = [treePanel.getDimension()];
             }
 
+            // pe
             if (period.getValue()) {
                 view.filters = [{
                     dimension: dimConf.period.objectName,
@@ -8605,6 +8899,7 @@ Ext.onReady( function() {
                 }];
             }
 
+            // options
 			view.classes = parseInt(classes.getValue());
 			view.method = parseInt(method.getValue());
 			view.colorLow = colorLow.getValue();
@@ -8621,9 +8916,7 @@ Ext.onReady( function() {
 				};
 			}
 
-            var v = gis.api.layout.Layout(view);
-
-			return v;
+            return gis.api.layout.Layout(view);
 		};
 
         accordionBody = Ext.create('Ext.panel.Panel', {
@@ -9503,7 +9796,7 @@ Ext.onReady( function() {
 		});
 
 		onRender = function(vp) {
-			gis.olmap.mask = Ext.create('Ext.LoadMask', vp.getEl(), {
+			gis.olmap.mask = Ext.create('Ext.LoadMask', centerRegion, {
 				msg: 'Loading'
 			});
 		};
