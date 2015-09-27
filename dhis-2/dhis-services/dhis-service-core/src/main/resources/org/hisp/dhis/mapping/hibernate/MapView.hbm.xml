@@ -62,6 +62,9 @@
         foreign-key="fk_mapview_itemorgunitgroups_orgunitgroupid" />
     </list>
     
+    <many-to-one name="program" class="org.hisp.dhis.program.Program" column="programid"
+      foreign-key="fk_reporttable_programid" />
+    
     <property name="userOrganisationUnit" />
 
     <property name="userOrganisationUnitChildren" />
