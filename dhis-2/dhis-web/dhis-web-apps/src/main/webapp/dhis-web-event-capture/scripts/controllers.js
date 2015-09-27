@@ -13,6 +13,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $timeout,
                 $translate,
                 $anchorScroll,
+                $filter,
                 orderByFilter,
                 SessionStorageService,
                 Paginator,
@@ -32,7 +33,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 DialogService,
                 AuthorityService,
                 TrackerRulesExecutionService,
-                TrackerRulesFactory) {
+                TrackerRulesFactory,
+                TEIGridService,
+                TEIService) {
     //selected org unit
     $scope.selectedOrgUnit = '';
     $scope.treeLoaded = false;    
@@ -131,11 +134,40 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         if (angular.isObject($scope.selectedOrgUnit)) {    
             
             ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
-                $scope.programs = response.programs;
+                
+                $scope.programs = $filter('filter')(response.programs, {programType: "WITHOUT_REGISTRATION"});
+                $scope.tcPrograms = $filter('filter')(response.programs, {programType: "WITH_REGISTRATION"});
+                
+                $scope.beneficiaryProgram = null;
+                angular.forEach($scope.tcPrograms, function(pr){
+                    if(pr.allowRegistration){
+                        $scope.beneficiaryProgram = pr;
+                    }
+                });
+                //$scope.programs = response.programs;
                 $scope.selectedProgram = response.selectedProgram;
                 $scope.getProgramDetails();
             });
         }    
+    };
+    
+    var generateAttendees = function(){        
+        var teis = [];
+        angular.forEach($scope.trackedEntityList.rows, function(_tei){ 
+            if($scope.attendees[_tei.id]){                
+                var tei = {};//angular.copy(_tei);
+                tei.trackedEntityInstance = _tei.id;
+                tei.orgUnit = _tei.orgUnit;
+                tei.attributes = [];                
+                angular.forEach($scope.attributes, function(att){
+                    if(_tei[att.id]){
+                        tei.attributes.push({attribute: att.id, value: _tei[att.id], displayName: att.name, type: att.valueType});
+                    }
+                });                
+                teis.push(tei);
+            }            
+        });        
+        return teis;
     };
     
     $scope.getProgramDetails = function(){        
@@ -152,7 +184,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.selectedProgram && 
                 $scope.selectedProgram.programStages && 
                 $scope.selectedProgram.programStages[0] && 
-                $scope.selectedProgram.programStages[0].id){ 
+                $scope.selectedProgram.programStages[0].id){
                 
             //because this is single event, take the first program stage
             MetaDataFactory.get('programStages', $scope.selectedProgram.programStages[0].id).then(function (programStage){
@@ -167,6 +199,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.eventGridColumns = [];
                 $scope.filterTypes = {};                               
                 $scope.newDhis2Event = {};
+                $scope.teiFetched = false;
+                $scope.trackedEntityList = null; 
+                $scope.teiCount = null;
 
                 $scope.eventGridColumns.push({name: 'form_id', id: 'uid', type: 'string', compulsory: false, showFilter: false, show: false});
                 $scope.filterTypes['uid'] = 'string';                
@@ -205,7 +240,38 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 
                 TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
                     $scope.allProgramRules = rules;
+                    
                     $scope.loadEvents();
+                    
+                    if($scope.beneficiaryProgram && 
+                            $scope.beneficiaryProgram.id && 
+                            $scope.selectedProgram && 
+                            $scope.selectedProgram.groupMeeting){
+                        
+                        $scope.processAttributes();
+                        
+                        TEIService.get($scope.selectedOrgUnit.id, $scope.beneficiaryProgram.id).then(function(data){
+                            
+                            if(data.rows){
+                                $scope.teiCount = data.rows.length;
+                            }
+                            
+                            if( data.metaData && data.metaData.pager ){
+                                $scope.pager = data.metaData.pager;
+                                $scope.pager.toolBarDisplay = 5;
+
+                                Paginator.setPage($scope.pager.page);
+                                Paginator.setPageCount($scope.pager.pageCount);
+                                Paginator.setPageSize($scope.pager.pageSize);
+                                Paginator.setItemCount($scope.pager.total);                    
+                            }
+                            
+                            $scope.teiFetched = true;
+                            
+                            //process tei grid
+                            $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets, null);
+                        });
+                    }
                 });
             });
         }
@@ -284,9 +350,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                             val = DateUtils.formatFromApiToUser(val);                                               
                                         }
                                         
-                                        if($scope.prStDes[dataValue.dataElement].dataElement.type === 'bool'){
-                                            val = val === 'true' ? $scope.yesLabel : $scope.noLabel;                                
-                                        }
+                                        /*if($scope.prStDes[dataValue.dataElement].dataElement.type === 'bool'){
+                                            val = val === "true" ? $scope.yesLabel : $scope.noLabel;                                
+                                        }*/
                                         
                                         if( $scope.prStDes[dataValue.dataElement].dataElement.type === 'trueOnly'){
                                             if(val === 'true'){
@@ -446,7 +512,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
     };
     
-    $scope.showEventRegistration = function(){        
+    $scope.showEventRegistration = function(){
+        $scope.attendees = {};
         $scope.displayCustomForm = $scope.customForm ? true:false;        
         $scope.currentEvent = {};
         $scope.eventRegistration = !$scope.eventRegistration;          
@@ -473,7 +540,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.outerForm.$valid = true;
     };
     
-    $scope.showEditEventInFull = function(){       
+    $scope.showEditEventInFull = function(){   
+        $scope.attendees = {};
         $scope.note = {};
         $scope.displayCustomForm = $scope.customForm ? true:false;
 
@@ -500,8 +568,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.displayCustomForm = !$scope.displayCustomForm;
     };
     
-    $scope.addEvent = function(addingAnotherEvent){                
-        
+    $scope.addEvent = function(addingAnotherEvent){
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
@@ -564,7 +631,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             dhis2Event.event = newEvent['uid'];
         }
         
-        if(!angular.isUndefined($scope.note.value) && $scope.note.value != ''){
+        if(!angular.isUndefined($scope.note.value) && $scope.note.value !== ''){
             dhis2Event.notes = [{value: $scope.note.value}];
             
             newEvent.notes = [{value: $scope.note.value, storedDate: $scope.today, storedBy: storedBy}];
@@ -577,6 +644,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                      longitude: $scope.currentEvent.coordinate.longitude ? $scope.currentEvent.coordinate.longitude : ''};             
         }
         
+        dhis2Event.eventMembers = generateAttendees();
+        //console.log('the teis:  ', generateAttendees());
         //send the new event to server
         DHIS2EventFactory.create(dhis2Event).then(function(data) {
             if (data.response.importSummaries[0].status === 'ERROR') {
@@ -629,8 +698,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         });
     }; 
     
-    $scope.updateEvent = function(){
-        
+    $scope.updateEvent = function(){        
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
@@ -685,6 +753,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
             $scope.noteExists = true;
         }
+        
+        //console.log('the teis:  ', generateAttendees());
+        updatedEvent.eventMembers = generateAttendees();
 
         DHIS2EventFactory.update(updatedEvent).then(function(data){            
             
@@ -1005,4 +1076,24 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.getInputNotifcationClass = function(id, custom){        
         return '; ';
     };
+    
+    $scope.generateAttributeFilters = function(attributes){
+
+        angular.forEach(attributes, function(attribute){
+            if(attribute.type === 'number' || attribute.type === 'date'){
+                attribute.operator = $scope.defaultOperators[0];
+            }
+        });                    
+        return attributes;
+    };
+    
+    $scope.processAttributes = function(){
+        $scope.sortColumn = {};
+        MetaDataFactory.getForProgram('attributes', $scope.beneficiaryProgram, 'programTrackedEntityAttributes', 'trackedEntityAttribute').then(function(atts){
+            $scope.attributes = $scope.generateAttributeFilters(atts);
+            var grid = TEIGridService.generateGridColumns($scope.attributes, 'SELECTED');
+            $scope.gridColumns = grid.columns;
+        });
+    };
+    
 });

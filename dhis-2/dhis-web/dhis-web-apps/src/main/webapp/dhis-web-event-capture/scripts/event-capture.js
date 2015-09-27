@@ -19,6 +19,7 @@ var PROGRAMS_METADATA = 'EVENT_PROGRAMS';
 
 var EVENT_VALUES = 'EVENT_VALUES';
 var optionSetsInPromise = [];
+var attributesInPromise = [];
 
 dhis2.ec.store = null;
 dhis2.ec.memoryOnly = $('html').hasClass('ie7') || $('html').hasClass('ie8');
@@ -32,7 +33,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants']
+    objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants', 'attributes']
 });
 
 (function($) {
@@ -151,6 +152,8 @@ function downloadMetaData(){
     promise = promise.then( getMetaPrograms );     
     promise = promise.then( getPrograms );     
     promise = promise.then( getProgramStages );
+    promise = promise.then( getTrackedEntityAttributes );
+    promise = promise.then( getOptionSetsForAttributes );
     promise = promise.then( getMetaProgramValidations );
     promise = promise.then( getProgramValidations );
     promise = promise.then( getMetaProgramIndicators );
@@ -243,7 +246,7 @@ function getMetaPrograms()
     $.ajax({
         url: '../api/programs.json',
         type: 'GET',
-        data:'paging=false&fields=id,name,programType,version,programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]],attributeValues'
+        data:'paging=false&fields=id,name,programType,version,programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]],programTrackedEntityAttributes[trackedEntityAttribute[id,optionSet[id]]],attributeValues'
     }).done( function(response) {        
         def.resolve( response.programs ? response.programs: [] );
     }).fail(function(){
@@ -342,7 +345,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name],attributeValues'
+            data: 'fields=id,name,programType,version,dataEntryMethod,dateOfEnrollmentDescription,dateOfIncidentDescription,displayIncidentDate,ignoreOverdueEvents,organisationUnits[id,name],programStages[id,name,version],userRoles[id,name],programTrackedEntityAttributes[trackedEntityAttribute[id]],trackedEntity[id,name],attributeValues'
         }).done( function( program ){            
             var ou = {};
             _.each(_.values( program.organisationUnits), function(o){
@@ -379,7 +382,7 @@ function getProgramStages( programs )
 
     _.each( _.values( programs ), function ( program ) {
         
-        if(program.programStages){
+        if(program.programStages && program.programType === "WITHOUT_REGISTRATION"){
             build = build.then(function() {
                 var d = $.Deferred();
                 var p = d.promise();
@@ -428,7 +431,7 @@ function getOptionSets( programs )
 
     _.each( _.values( programs ), function ( program ) {
         
-        if(program.programStages && program.programStages[0].programStageDataElements){
+        if(program.programType === "WITHOUT_REGISTRATION" && program.programStages && program.programStages[0].programStageDataElements){
             _.each(_.values( program.programStages[0].programStageDataElements), function(prStDe){
                 if( prStDe.dataElement && prStDe.dataElement.optionSet && prStDe.dataElement.optionSet.id ){
                     build = build.then(function() {
@@ -447,6 +450,110 @@ function getOptionSets( programs )
                 }            
             }); 
         }                             
+    });
+
+    build.done(function() {
+        def.resolve();
+
+        promise = promise.done( function () {
+            mainDef.resolve( programs );
+        } );
+    }).fail(function(){
+        mainDef.resolve( null );
+    });
+
+    builder.resolve();
+
+    return mainPromise;    
+}
+
+function getTrackedEntityAttributes( programs )
+{
+    if( !programs ){
+        return;
+    }
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();        
+
+    _.each(_.values(programs), function(pr){
+        if(pr.allowRegistration){
+            _.each(_.values(pr.programTrackedEntityAttributes), function(teAttribute){
+                teAttribute = teAttribute.trackedEntityAttribute;                
+                build = build.then(function() {
+                    var d = $.Deferred();
+                    var p = d.promise();
+                    dhis2.ec.store.get('attributes', teAttribute.id).done(function(obj) {
+                        if((!obj || obj.version !== teAttribute.version) && attributesInPromise.indexOf(teAttribute.id) === -1) {
+                            attributesInPromise.push( teAttribute.id );
+                            promise = promise.then( getD2Object( teAttribute.id, 'attributes', '../api/trackedEntityAttributes', 'fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version],attributeValues', 'idb' ) );
+                        }
+                        d.resolve();
+                    });
+                    return p;
+                });            
+            });
+        }        
+    });
+    
+
+    build.done(function() {
+        def.resolve();
+
+        promise = promise.done( function () {
+            mainDef.resolve( programs );
+        } );
+    }).fail(function(){
+        mainDef.resolve( null );
+    });
+
+    builder.resolve();
+
+    return mainPromise;    
+}
+
+function getOptionSetsForAttributes( programs )
+{
+    if( !programs ){
+        return;
+    }
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();
+
+    _.each(_.values(programs), function(pr){
+        if(pr.allowRegistration){
+            _.each(_.values(pr.programTrackedEntityAttributes), function(teAttribute){
+                teAttribute = teAttribute.trackedEntityAttribute;                
+                if( teAttribute.optionSet && teAttribute.optionSet.id ){
+                    build = build.then(function() {
+                        var d = $.Deferred();
+                        var p = d.promise();
+                        dhis2.ec.store.get('optionSets', teAttribute.optionSet.id).done(function(obj) {                            
+                            if( !obj ) {                                
+                                optionSetsInPromise.push(teAttribute.optionSet.id);
+                                promise = promise.then( getD2Object( teAttribute.optionSet.id, 'optionSets', '../api/optionSets', 'fields=id,name,version,options[id,name,code]', 'idb' ) );
+                            }
+                            d.resolve();
+                        });
+
+                        return p;
+                    });
+                }           
+            });
+        }        
     });
 
     build.done(function() {
@@ -514,7 +621,7 @@ function getD2MetaObject( programs, objNames, url, filter )
     
     var programIds = [];
     _.each( _.values( programs ), function ( program ) { 
-        if( program.id ) {
+        if( program.id && program.programType === "WITHOUT_REGISTRATION") {
             programIds.push( program.id );
         }
     });

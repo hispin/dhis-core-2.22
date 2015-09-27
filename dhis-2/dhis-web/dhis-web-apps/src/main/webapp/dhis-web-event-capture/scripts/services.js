@@ -10,7 +10,7 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     var store = new dhis2.storage.Store({
         name: 'dhis2ec',
         adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-        objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants']
+        objectStores: ['programs', 'programStages', 'geoJsons', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants', 'attributes']
     });
     return{
         currentStore: store
@@ -213,6 +213,30 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             });            
             return def.promise;
         },
+        getForProgram: function(store, program, properties, property){
+            var def = $q.defer();
+            var objs = [];
+            
+            var prts = [];
+            angular.forEach(program[properties], function(o){
+                if(o[property] && o[property].id){
+                    prts.push( o[property].id );
+                }                
+            });
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll(store, program).done(function(data){   
+                    angular.forEach(data, function(o){
+                        if(prts.indexOf(o.id) !== -1){                            
+                            objs.push(o);                               
+                        }                        
+                    });
+                    $rootScope.$apply(function(){
+                        def.resolve(objs);
+                    });
+                });                
+            });            
+            return def.promise;
+        },
         getAll: function(store){
             var def = $q.defer();            
             ECStorageService.currentStore.open().done(function(){
@@ -320,6 +344,217 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             });
             return promise;
         }
+    };    
+})
+
+/* Service for getting tracked entity instances */
+.factory('TEIService', function($http) {
+    
+    return {
+        get: function(ouId, program, pager) {
+            
+            var paging = true;
+            var url =  '../api/trackedEntityInstances/query.json?ouMode=SELECTED&ou=' + ouId + '&program='+ program;
+            if(paging){
+                var pgSize = pager ? pager.pageSize : 50;
+                var pg = pager ? pager.page : 1;
+                pgSize = pgSize > 1 ? pgSize  : 1;
+                pg = pg > 1 ? pg : 1;
+                url = url + '&pageSize=' + pgSize + '&page=' + pg + '&totalPages=true';
+            }
+            else{
+                url = url + '&paging=false';
+            }
+            
+            var promise = $http.get( url ).then(function(response){                                
+                return response.data;
+            });            
+            return promise;
+        }
+    };
+})
+
+.service('TEIGridService', function(OrgUnitService, OptionSetService, DateUtils, $translate, MetaDataFactory){
+    
+    return {
+        format: function(grid, map, optionSets){
+            if(!grid || !grid.rows){
+                return;
+            }
+            
+            //grid.headers[0-5] = Instance, Created, Last updated, Org unit, Tracked entity, Inactive
+            //grid.headers[6..] = Attribute, Attribute,.... 
+            var attributes = [];
+            for(var i=6; i<grid.headers.length; i++){
+                attributes.push({id: grid.headers[i].name, name: grid.headers[i].column, type: grid.headers[i].type});
+            }
+
+            var entityList = [];
+            
+            MetaDataFactory.getAll('attributes').then(function(atts){
+                
+                var attributes = [];
+                angular.forEach(atts, function(att){
+                    attributes[att.id] = att;
+                });
+            
+                OrgUnitService.open().then(function(){
+
+                    angular.forEach(grid.rows, function(row){
+                        var entity = {};
+                        var isEmpty = true;
+
+                        entity.id = row[0];
+                        entity.created = DateUtils.formatFromApiToUser( row[1] );
+                        entity.orgUnit = row[3];                              
+                        entity.type = row[4];
+                        entity.inactive = row[5] !== "" ? row[5] : false;
+
+                        OrgUnitService.get(row[3]).then(function(ou){
+                            if(ou){
+                                entity.orgUnitName = ou.n;
+                            }                                                       
+                        });
+
+                        for(var i=6; i<row.length; i++){
+                            if(row[i] && row[i] !== ''){
+                                isEmpty = false;
+                                var val = row[i];
+                                
+                                if(attributes[grid.headers[i].name] && 
+                                        attributes[grid.headers[i].name].optionSetValue && 
+                                        optionSets &&    
+                                        attributes[grid.headers[i].name].optionSet &&
+                                        optionSets[attributes[grid.headers[i].name].optionSet.id] ){
+                                    val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
+                                }
+                                if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
+                                    val = DateUtils.formatFromApiToUser( val );
+                                }
+                                
+                                entity[grid.headers[i].name] = val;
+                            }
+                        }
+
+                        if(!isEmpty){
+                            if(map){
+                                entityList[entity.id] = entity;
+                            }
+                            else{
+                                entityList.push(entity);
+                            }
+                        }
+                    });                
+                });
+            }); 
+            return {headers: attributes, rows: entityList, pager: grid.metaData.pager};                                    
+        },
+        generateGridColumns: function(attributes, ouMode){
+            
+            var filterTypes = {}, filterText = {};
+            var columns = attributes ? angular.copy(attributes) : [];
+       
+            //also add extra columns which are not part of attributes (orgunit for example)
+            columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'string', displayInListNoProgram: false});
+            columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'date', displayInListNoProgram: false});
+            columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'boolean', displayInListNoProgram: false});
+
+            //generate grid column for the selected program/attributes
+            angular.forEach(columns, function(column){
+                column.show = false;                
+                if( (column.id === 'orgUnitName' && ouMode !== 'SELECTED') ||
+                    column.displayInListNoProgram || 
+                    column.displayInList){
+                    column.show = true;    
+                }                
+                column.showFilter = false;                
+                filterTypes[column.id] = column.valueType;
+                if(column.valueType === 'date' || column.valueType === 'number' ){
+                    filterText[column.id]= {};
+                }
+            });
+            return {columns: columns, filterTypes: filterTypes, filterText: filterText};
+        },
+        getData: function(rows, columns){
+            var data = [];
+            angular.forEach(rows, function(row){
+                var d = {};
+                angular.forEach(columns, function(col){
+                    if(col.show){
+                        d[col.name] = row[col.id];
+                    }                
+                });
+                data.push(d);            
+            });
+            return data;
+        },
+        getHeader: function(columns){
+            var header = []; 
+            angular.forEach(columns, function(col){
+                if(col.show){
+                    header.push($translate(col.name));
+                }
+            });        
+            return header;
+        }
+    };
+})
+
+/*Orgunit service for local db */
+.service('OrgUnitService', function($window, $q){
+    
+    var indexedDB = $window.indexedDB;
+    var db = null;
+    
+    var open = function(){
+        var deferred = $q.defer();
+        
+        var request = indexedDB.open("dhis2ou");
+        
+        request.onsuccess = function(e) {
+          db = e.target.result;
+          deferred.resolve();
+        };
+
+        request.onerror = function(){
+          deferred.reject();
+        };
+
+        return deferred.promise;
+    };
+    
+    var get = function(uid){
+        
+        var deferred = $q.defer();
+        
+        if( db === null){
+            deferred.reject("DB not opened");
+        }
+        else{
+            var tx = db.transaction(["ou"]);
+            var store = tx.objectStore("ou");
+            var query = store.get(uid);
+                
+            query.onsuccess = function(e){
+                if(e.target.result){
+                    deferred.resolve(e.target.result);
+                }
+                else{
+                    var t = db.transaction(["ouPartial"]);
+                    var s = t.objectStore("ouPartial");
+                    var q = s.get(uid);
+                    q.onsuccess = function(e){
+                        deferred.resolve(e.target.result);
+                    };
+                }            
+            };
+        }
+        return deferred.promise;
+    };
+    
+    return {
+        open: open,
+        get: get
     };    
 })
 
