@@ -28,7 +28,11 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Collection;
+
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
@@ -36,6 +40,9 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 public class ProgramStageSectionDeletionHandler
     extends DeletionHandler
 {
+    @Autowired
+    private IdentifiableObjectManager idObjectManager;
+    
     // -------------------------------------------------------------------------
     // DeletionHandler implementation
     // -------------------------------------------------------------------------
@@ -44,5 +51,19 @@ public class ProgramStageSectionDeletionHandler
     public String getClassName()
     {
         return ProgramStageSection.class.getSimpleName();
+    }
+
+    @Override
+    public void deleteProgramIndicator( ProgramIndicator programIndicator )
+    {
+        Collection<ProgramStageSection> sections = idObjectManager.getAllNoAcl( ProgramStageSection.class );
+        
+        for ( ProgramStageSection section : sections )
+        {
+            if ( section.getProgramIndicators().remove( programIndicator ) )
+            {
+                idObjectManager.update( section );
+            }
+        }
     }
 }
