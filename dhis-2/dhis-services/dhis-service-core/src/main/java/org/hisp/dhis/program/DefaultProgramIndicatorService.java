@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.sqlfunc.ConditionalSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.DaysBetweenSqlFunction;
 import org.hisp.dhis.commons.sqlfunc.OneIfZeroOrPositiveSqlFunction;
@@ -63,6 +62,7 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
+import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -248,18 +248,17 @@ public class DefaultProgramIndicatorService
 
                     TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue( psi, dataElement );
 
+                    String value = null;
+                    
                     if ( dataValue == null )
                     {
-                        return null;
+                        value = String.valueOf( ObjectUtils.firstNonNull( indicator.getMissingValueReplacement(), 0 ) );
                     }
-
-                    String value = dataValue.getValue();
-
-                    if ( ValueType.DATE == dataElement.getValueType() )
+                    else
                     {
-                        value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
+                        value = dataValue.getValue();
                     }
-
+                    
                     matcher.appendReplacement( buffer, value );
 
                     valueCount++;
@@ -279,24 +278,21 @@ public class DefaultProgramIndicatorService
                     TrackedEntityAttributeValue attributeValue = attributeValueService.getTrackedEntityAttributeValue(
                         programInstance.getEntityInstance(), attribute );
 
-                    if ( attributeValue != null )
+                    String value = null;
+                    
+                    if ( attributeValue == null )
                     {
-                        String value = attributeValue.getValue();
-
-                        if ( ValueType.DATE == attribute.getValueType() )
-                        {
-                            value = DateUtils.daysBetween( new Date(), DateUtils.getDefaultDate( value ) ) + " ";
-                        }
-
-                        matcher.appendReplacement( buffer, value );
-
-                        valueCount++;
-                        zeroPosValueCount = isZeroOrPositive( value ) ? (zeroPosValueCount + 1) : zeroPosValueCount;
+                        value = String.valueOf( ObjectUtils.firstNonNull( indicator.getMissingValueReplacement(), 0 ) );
                     }
                     else
                     {
-                        return null;
+                        value = attributeValue.getValue();
                     }
+                    
+                    matcher.appendReplacement( buffer, value );
+
+                    valueCount++;
+                    zeroPosValueCount = isZeroOrPositive( value ) ? (zeroPosValueCount + 1) : zeroPosValueCount;
                 }
                 else
                 {
@@ -367,7 +363,7 @@ public class DefaultProgramIndicatorService
         }
 
         expression = TextUtils.appendTail( matcher, buffer );
-
+        
         return MathUtils.calculateExpression( expression );
     }
 
