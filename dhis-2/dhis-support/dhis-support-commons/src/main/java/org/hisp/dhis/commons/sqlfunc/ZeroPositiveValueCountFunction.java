@@ -49,13 +49,13 @@ public class ZeroPositiveValueCountFunction
             throw new IllegalArgumentException( "Illegal arguments, expected at least one argument" );
         }
         
-        String sql = "nullif((";
+        String sql = "nullif(cast((";
         
         for ( String value : args )
         {
             sql += "case when " + value + " >= 0 then 1 else 0 end + ";
         }
         
-        return TextUtils.removeLast( sql, "+" ).trim() + "),0)";
+        return TextUtils.removeLast( sql, "+" ).trim() + ") as double precision),0)";
     }
 }
