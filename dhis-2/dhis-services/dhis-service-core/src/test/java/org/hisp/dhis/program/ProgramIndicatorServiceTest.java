@@ -527,10 +527,10 @@ public class ProgramIndicatorServiceTest
     public void testGetAnalyticsSqlWithFunctionsZpvc()
     {
         String expected = 
-            "nullif((" +
+            "nullif(cast((" +
             "case when \"EZq9VbPWgML\" >= 0 then 1 else 0 end + " +
             "case when \"GCyeKSqlpdk\" >= 0 then 1 else 0 end" +
-            "),0)";
+            ") as double precision),0)";
         
         String expression = "d2:zpvc(#{OXXcwl6aPCQ.EZq9VbPWgML},#{OXXcwl6aPCQ.GCyeKSqlpdk})";
         
