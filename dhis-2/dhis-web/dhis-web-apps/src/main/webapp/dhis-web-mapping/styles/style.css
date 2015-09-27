@@ -176,6 +176,7 @@ table.padding1 td {
     text-shadow: 0 0 1px #ddd;
 }
 
+/*
 .olControlPanel.zoomIn {
 	right: 72px;
 }
@@ -190,6 +191,36 @@ table.padding1 td {
 .olControlPanel.zoomVisible {
 	right: 24px;
 }
+*/
+
+.olControlPanel.zoomIn {
+	right: 75px;
+    top: 4px;
+}
+.olControlPanel.zoomIn .olControlButtonItemActive {
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
+
+.olControlPanel.zoomOut {
+	right: 51px;
+    top: 4px;
+}
+
+.olControlPanel.zoomVisible {
+	right: 27px;
+    top: 4px;
+}
+
+.olControlPanel.measure {
+	right: 3px;
+    top: 4px;
+}
+.olControlPanel.measure .olControlButtonItemActive {
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+
 
 .olControlPermalink { /* Perma link */
 	display: none !important;
@@ -861,8 +892,7 @@ gis-combo .x-form-item-label {
 	filter: alpha(opacity=92);
 	-ms-filter: "alpha(opacity=92)";
 	padding: 6px 8px 6px 8px;
-	border-bottom-left-radius: 2px;
-	border-bottom-right-radius: 2px;
+	border-radius: 3px;
 	color: #fff;
 	font-weight: bold;
 	letter-spacing: 1px;

@@ -269,7 +269,7 @@ Ext.onReady( function() {
             var cr = gis.viewport.centerRegion,
                 crp = cr.getPosition(),
                 x = crp[0] + (cr.getWidth() / 2) - (defaultHoverWindow.getWidth() / 2),
-                y = crp[1] + (GIS.app ? 32 : 0);
+                y = crp[1] + (GIS.app ? 36 : 0);
 
 			defaultHoverWindow.setPosition(x, y);
 
@@ -1037,7 +1037,7 @@ Ext.onReady( function() {
 			listeners: {
 				show: function() {
 					var x = gis.viewport.eastRegion.getPosition()[0] - this.getWidth() - 3,
-						y = gis.viewport.centerRegion.getPosition()[1] + 26;
+						y = gis.viewport.centerRegion.getPosition()[1] + 64;
 					this.setPosition(x, y);
 				},
 				destroy: function() {
@@ -2331,6 +2331,11 @@ console.log(gis.util.connection);
 				paramString += i < dxItems.length - 1 ? ';' : '';
 			}
 
+            // program
+            if (view.program) {
+                paramString += '&program=' + view.program.id;
+            }
+
 			paramString += isOperand ? '&dimension=co' : '';
 
 			// pe
@@ -2558,6 +2563,7 @@ console.log(gis.util.connection);
 
                 if (!elementUrl) {
                     fn();
+                    return;
                 }
 
                 Ext.Ajax.request({
@@ -2767,6 +2773,16 @@ console.log(gis.util.connection);
 						dimensionName: 'dx',
 						objectName: 'ds'
 					},
+					eventDataItem: {
+						value: 'eventDataItem',
+						dimensionName: 'dx',
+						objectName: 'di'
+					},
+					programIndicator: {
+						value: 'programIndicator',
+						dimensionName: 'dx',
+						objectName: 'pi'
+					},
 					period: {
 						id: 'period',
 						value: 'period',
@@ -2900,6 +2916,14 @@ console.log(gis.util.connection);
                     name: obj.name
                 };
             }
+
+            conf.valueType = {
+            	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+            	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
+            	dateTypes: ['DATE','DATETIME'],
+            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            };            
 
             conf.url = {};
 
@@ -3489,6 +3513,8 @@ console.log(gis.util.connection);
 
                 // filters: [Dimension]
 
+                // program: object
+
                 // classes: integer (5) - 1-7
 
                 // method: integer (2) - 2, 3 // 2=equal intervals, 3=equal counts
@@ -3638,6 +3664,11 @@ console.log(gis.util.connection);
                     layout.columns = config.columns;
                     layout.rows = config.rows;
                     layout.filters = config.filters;
+
+                    // program
+                    if (Ext.isObject(config.program) && config.program.id) {
+                        layout.program = config.program;
+                    }
 
                     // Properties
                     layout.layer = Ext.isString(config.layer) && !Ext.isEmpty(config.layer) ? config.layer : 'thematic1';
