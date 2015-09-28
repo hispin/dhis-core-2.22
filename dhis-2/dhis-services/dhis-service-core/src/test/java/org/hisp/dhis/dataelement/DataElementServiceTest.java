@@ -334,6 +334,7 @@ public class DataElementServiceTest
         DataElement dataElementD = createDataElement( 'D', ValueType.NUMBER );
         DataElement dataElementE = createDataElement( 'E', ValueType.TEXT );
         DataElement dataElementF = createDataElement( 'F', ValueType.LONG_TEXT );
+        DataElement dataElementG = createDataElement( 'G', ValueType.COORDINATE );
 
         dataElementService.addDataElement( dataElementA );
         dataElementService.addDataElement( dataElementB );
@@ -341,10 +342,11 @@ public class DataElementServiceTest
         dataElementService.addDataElement( dataElementD );
         dataElementService.addDataElement( dataElementE );
         dataElementService.addDataElement( dataElementF );
+        dataElementService.addDataElement( dataElementG );
 
         assertEquals( 3, dataElementService.getDataElementsByValueTypes( ValueType.INTEGER_TYPES ).size() );
         assertEquals( 4, dataElementService.getDataElementsByValueTypes( ValueType.NUMERIC_TYPES ).size() );
-        assertEquals( 2, dataElementService.getDataElementsByValueTypes( ValueType.TEXT_TYPES ).size() );
+        assertEquals( 3, dataElementService.getDataElementsByValueTypes( ValueType.TEXT_TYPES ).size() );
     }
 
     // -------------------------------------------------------------------------

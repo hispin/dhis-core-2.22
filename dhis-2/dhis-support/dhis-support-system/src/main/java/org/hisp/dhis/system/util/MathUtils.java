@@ -426,6 +426,24 @@ public class MathUtils
     }
 
     /**
+     * Returns true if the provided string argument is to be considered a coordinate.
+     * 
+     * @param value the value.
+     * @return true if the provided string argument is to be considered a coordinate.
+     */
+    public static boolean isCoordinate( String value )
+    {
+    	try {
+    		String[] lnglat = value.trim().split(",");
+    		float lng = Float.parseFloat(lnglat[0]);
+    		float lat = Float.parseFloat(lnglat[1]);    		
+    		return (lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90);
+    	} catch (Exception x) {
+    		return false;
+    	}
+    }
+
+    /**
      * Returns true if the provided string argument is to be considered a negative
      * integer.
      * 

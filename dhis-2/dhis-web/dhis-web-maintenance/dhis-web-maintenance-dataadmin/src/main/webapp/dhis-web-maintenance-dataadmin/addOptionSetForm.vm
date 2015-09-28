@@ -42,6 +42,7 @@
            <option value="INTEGER_POSITIVE">$i18n.getString( "positive_integer" )</option>
            <option value="INTEGER_NEGATIVE">$i18n.getString( "negative_integer" )</option>
            <option value="INTEGER_ZERO_OR_POSITIVE">$i18n.getString( "zero_positive_int" )</option>
+           <option value="COORDINATE">$i18n.getString( "coordinate" )</option>
            <option value="NUMBER">$i18n.getString( "number" )</option>
            <option value="UNIT_INTERVAL">$i18n.getString( "unit_interval" )</option>
            <option value="PERCENTAGE">$i18n.getString( "percentage" )</option>

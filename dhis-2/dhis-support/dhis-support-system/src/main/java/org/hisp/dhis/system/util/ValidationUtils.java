@@ -380,6 +380,11 @@ public class ValidationUtils
         {
             return "value_not_valid_file_resource_uid";
         }
+        
+        if ( ValueType.COORDINATE == valueType && !MathUtils.isCoordinate( value )) 
+        {
+            return "value_not_coordinate";        	
+        }
 
         return null;
     }
