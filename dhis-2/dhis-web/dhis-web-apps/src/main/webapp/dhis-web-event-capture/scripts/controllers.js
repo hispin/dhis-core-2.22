@@ -556,12 +556,46 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }); 
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
         
-        if($scope.editingEventInFull){
+        if($scope.editingEventInFull && $scope.selectedProgram.groupMeeting){
             //Blank out rule effects, as there is no rules in effect before the first
             //time the rules is run on a new page.
             $rootScope.ruleeffects[$scope.currentEvent.event] = {};        
             $scope.executeRules();
+            $scope.getAttendesForEvent($scope.currentEvent.event,false);            
         }
+    };
+
+    
+    $scope.getAttendesForEvent = function(eventId,dialog){
+        DHIS2EventFactory.get(eventId).then(function(response){
+            $scope.currentEventFull = response;
+            $scope.attendees = {};
+            angular.forEach($scope.currentEventFull.eventMembers, function(mem){
+                $scope.attendees[mem.trackedEntityInstance] = true;
+                mem.gridAttributes = {};
+                angular.forEach(mem.attributes, function(att){
+                    mem.gridAttributes[att.attribute] = att.value;
+                });
+            });
+            
+            if(dialog){
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/attendee-list.html',
+                    controller: 'AttendeeListControler',
+                     resolve: {
+                        currentEventFull: function () {
+                            return $scope.currentEventFull;
+                        },
+                        gridColumns: function(){
+                            return $scope.gridColumns;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (){
+                });
+            }            
+        });
     };
     
     $scope.switchDataEntryForm = function(){
@@ -644,8 +678,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                      longitude: $scope.currentEvent.coordinate.longitude ? $scope.currentEvent.coordinate.longitude : ''};             
         }
         
-        dhis2Event.eventMembers = generateAttendees();
-        //console.log('the teis:  ', generateAttendees());
+        if($scope.selectedProgram.groupMeeting){
+            dhis2Event.eventMembers = generateAttendees();
+        }        
+        
         //send the new event to server
         DHIS2EventFactory.create(dhis2Event).then(function(data) {
             if (data.response.importSummaries[0].status === 'ERROR') {
@@ -753,9 +789,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
             $scope.noteExists = true;
         }
-        
-        //console.log('the teis:  ', generateAttendees());
-        updatedEvent.eventMembers = generateAttendees();
+
+        if($scope.selectedProgram.groupMeeting){
+            updatedEvent.eventMembers = generateAttendees();
+        }
 
         DHIS2EventFactory.update(updatedEvent).then(function(data){            
             
@@ -1096,4 +1133,18 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         });
     };
     
-});
+})
+
+.controller('AttendeeListControler', 
+    function($scope, 
+            $modalInstance, 
+            currentEventFull,
+            gridColumns){
+    
+    $scope.currentEventFull = currentEventFull;
+    $scope.gridColumns = gridColumns;
+
+    $scope.close = function () {
+        $modalInstance.close();
+    };      
+});;

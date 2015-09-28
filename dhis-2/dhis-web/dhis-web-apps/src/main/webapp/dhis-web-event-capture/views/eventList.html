@@ -102,7 +102,8 @@
                                     <span ng-if="eventGridColumn.id === 'comment'">
                                         {{'comment' | translate}}
                                     </span>
-                                </th> 
+                                </th>
+                                <th ng-if="selectedProgram.groupMeeting"></th>
                             </tr>                        
                         </thead>
                         <tbody id="list">
@@ -272,6 +273,9 @@
                                         <a href ng-click="showNotes(dhis2Event)" title="{{'show_comments'| translate}}" ng-if="dhis2Event.notes"><i class="fa fa-info-circle"></i></a>
                                     </span>    
                                     <!-- visible when comment exisits -->                                
+                                </td>
+                                <td ng-if="selectedProgram.groupMeeting">
+                                    <a href ng-click="getAttendesForEvent(dhis2Event.event,true)" title="{{'show_attendees'| translate}}"><i class="fa fa-users fa-2x"></i></a>
                                 </td>
                             </tr>
                         </tbody>        

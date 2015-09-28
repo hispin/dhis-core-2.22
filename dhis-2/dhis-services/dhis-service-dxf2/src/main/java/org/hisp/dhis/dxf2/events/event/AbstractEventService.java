@@ -660,6 +660,8 @@ public abstract class AbstractEventService
                 programStageInstance.setLatitude( null );
                 programStageInstance.setLongitude( null );
             }
+            
+            saveEventMembers( programStageInstance, event, storedBy );
         }
 
         programStageInstanceService.updateProgramStageInstance( programStageInstance );
@@ -691,8 +693,6 @@ public abstract class AbstractEventService
                     value.getProvidedElsewhere(), existingDataValue, null );
             }
         }
-        
-        saveEventMembers( programStageInstance, event, storedBy );
 
         if ( !singleValue )
         {
@@ -1168,16 +1168,19 @@ public abstract class AbstractEventService
 
     private void saveEventMembers( ProgramStageInstance programStageInstance, Event event, String storedBy )
     {
+    	Set<org.hisp.dhis.trackedentity.TrackedEntityInstance> members = new HashSet<>();
     	for( TrackedEntityInstance tei : event.getEventMembers() )
         {
         	org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = entityInstanceService.getTrackedEntityInstance( tei.getTrackedEntityInstance() );
         	
         	if( entityInstance != null)
         	{
-        		programStageInstance.getProgramStageInstanceMembers().add( entityInstance);
+        		//programStageInstance.getProgramStageInstanceMembers().add( entityInstance);
+        		members.add( entityInstance );
         	}
         }
 
+    	programStageInstance.setProgramStageInstanceMembers( members );
         programStageInstanceService.updateProgramStageInstance( programStageInstance );
     }
     

@@ -1,0 +1,42 @@
+<div class="modal-header page">
+    <h3>{{'attendee_list'| translate}}</h3>
+</div>
+
+<div class="modal-body page">
+    <div class="alert alert-warning vertical-spacing" ng-if="!currentEventFull.eventMembers || currentEventFull.eventMembers && currentEventFull.eventMembers.length < 1">
+        {{'no_attendees'| translate}}                        
+    </div>
+    <table class="table table-striped dhis2-table-hover table-bordered" ng-if="currentEventFull.eventMembers.length > 0">               
+        <thead>                        
+            <tr>                
+                <th ng-repeat="gridColumn in gridColumns| filter:{show: true}" class='mouse-pointer' ng-click="sortGrid(gridColumn)">                            
+                    <!-- sort icon begins -->                                
+                    <span ng-hide="gridColumn.showFilter" class="bold pointer" title="{{'sort'| translate}}">
+                        <span ng-class="{true: 'red'} [sortColumn.id === gridColumn.id]"><i class="fa fa-sort"></i></span>
+                        {{gridColumn.name | translate}}
+                    </span>
+                    <!-- sort icon ends -->                            
+                </th>                                                            
+            </tr>                        
+        </thead>
+        <tbody id="list">
+            <tr ng-repeat="trackedEntity in currentEventFull.eventMembers | orderBy:d2Sort:reverse">
+                <td ng-repeat="gridColumn in gridColumns| filter:{show: true}">
+                    <span ng-switch="gridColumn.valueType">
+                        <span ng-switch-when="bool">
+                            <span ng-if="trackedEntity.gridAttributes[gridColumn.id] === 'true'">{{'yes'| translate}}</span>
+                            <span ng-if="trackedEntity.gridAttributes[gridColumn.id] === 'false'">{{ 'no' | translate}}</span>
+                        </span>
+                        <span ng-switch-when="trueOnly">
+                            <span ng-if="trackedEntity.gridAttributes[gridColumn.id] === 'true'"><i class="fa fa-check"></i></span>
+                        </span>
+                        <span ng-switch-default>{{trackedEntity.gridAttributes[gridColumn.id]}}</span>
+                    </span>
+                </td>
+            </tr>
+        </tbody>        
+    </table>        
+</div>
+<div class="modal-footer page">        
+    <button class="btn btn-primary" type="button" data-ng-click="close()">{{'close'| translate}}</button>
+</div>
