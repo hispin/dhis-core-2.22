@@ -48,7 +48,7 @@
           data-can-manage="$security.canManage( $program )"
           data-can-update="$security.canUpdate( $program )"
           data-can-defined-program-entry-form="#if($program.type!=3)true#{else}false#end"
-          data-can-manage-template-message="#if($program.programType.value=="without_registration")true#{else}false#end"
+          data-can-manage-template-message="#if($program.programType.value=="with_registration")true#{else}false#end"
 		  data-can-manage-program-rule="#if( $auth.hasAccess( "dhis-web-maintenance-program", "programRule" ) ) true #{else}false#end"
           data-can-delete="$security.canDelete( $program )"
           data-can-manage-form="#if( $auth.hasAccess( "dhis-web-maintenance-program", "programIndicator" ) && $program.programType.value=="with_registration")true#{else}false#end">
@@ -77,8 +77,8 @@
 				<p><label class="bold">$i18n.getString( "skip_to_generate_overdue_events" ):</label><br><span id="ignoreOverdueEventsField"></span></p>
 				<p><label class="bold">$i18n.getString( "only_enroll_once" ):</label><br><span id="onlyEnrollOnceField"></span></p>
 				<p><label class="bold">$i18n.getString( "show_incident_date" ):</label><br><span id="displayIncidentDate"></span></p>                              
-				<p><label class="bold">$i18n.getString( "date_of_incident_description" ):</label><br><span id="dateOfIncidentDescriptionField"></span></p>                              
-				<p><label class="bold">$i18n.getString( "date_of_enrollment_description" ):</label><br><span id="dateOfEnrollmentDescriptionField"></span></p>                          
+				<p><label class="bold">$i18n.getString( "date_of_incident_description" ):</label><br><span id="incidentDateLabelField"></span></p>                              
+				<p><label class="bold">$i18n.getString( "date_of_enrollment_description" ):</label><br><span id="enrollmentDateLabelField"></span></p>                          
 				<p><label class="bold">$i18n.getString( "number_of_attributes" ):</label><br><span id="noAttributesField"></span></p>
 				<p><label class="bold">$i18n.getString( "id" ):</label><br><span id="idField"></span></p>
 			</div>

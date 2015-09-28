@@ -428,7 +428,7 @@ public class HibernateProgramInstanceStore
 
             String organisationunitName = rs.getString( "orgunitName" );
             String programName = rs.getString( "programName" );
-            String incidentDate = rs.getString( "dateofincident" ).split( " " )[0];
+            String incidentDate = rs.getString( "incidentdate" ).split( " " )[0];
             String daysSinceIncidentDate = rs.getString( "days_since_incident_date" );
             String erollmentDate = rs.getString( "enrollmentdate" ).split( " " )[0];
             String daysSinceEnrollementDate = rs.getString( "days_since_erollment_date" );
@@ -458,9 +458,9 @@ public class HibernateProgramInstanceStore
     private String sendMessageToTrackedEntityInstanceSql( String dateToCompare )
     {
         return "SELECT pi.programinstanceid, pav.value as phonenumber, prm.templatemessage, "
-            + "         org.name as orgunitName, " + "         pg.name as programName, pi.dateofincident , "
+            + "         org.name as orgunitName, " + "         pg.name as programName, pi.incidentDate, "
             + "         pi.enrollmentdate,(DATE(now()) - DATE(pi.enrollmentdate) ) as days_since_erollment_date, "
-            + "         (DATE(now()) - DATE(pi.dateofincident) ) as days_since_incident_date "
+            + "         (DATE(now()) - DATE(pi.incidentDate) ) as days_since_incident_date "
             + "       FROM trackedentityinstance p INNER JOIN programinstance pi "
             + "              ON p.trackedentityinstanceid=pi.trackedentityinstanceid INNER JOIN program pg "
             + "              ON pg.programid=pi.programid INNER JOIN organisationunit org "
@@ -479,8 +479,8 @@ public class HibernateProgramInstanceStore
     private String sendMessageToOrgunitRegisteredSql( String dateToCompare )
     {
         return "SELECT pi.programinstanceid, org.phonenumber, prm.templatemessage, org.name as orgunitName, "
-            + "   pg.name as programName, pi.dateofincident, pi.enrollmentdate,(DATE(now()) - DATE(pi.enrollmentdate) ) as days_since_erollment_date, "
-            + "       (DATE(now()) - DATE(pi.dateofincident) ) as days_since_incident_date "
+            + "   pg.name as programName, pi.incidentDate, pi.enrollmentdate,(DATE(now()) - DATE(pi.enrollmentdate) ) as days_since_erollment_date, "
+            + "       (DATE(now()) - DATE(pi.incidentDate) ) as days_since_incident_date "
             + "    FROM trackedentityinstance p INNER JOIN programinstance pi "
             + "           ON p.trackedentityinstanceid=pi.trackedentityinstanceid INNER JOIN program pg "
             + "           ON pg.programid=pi.programid INNER JOIN organisationunit org "
@@ -495,9 +495,9 @@ public class HibernateProgramInstanceStore
 
     private String sendMessageToUsersSql( String dateToCompare )
     {
-        return "SELECT pi.programinstanceid, uif.phonenumber, prm.templatemessage, org.name as orgunitName, pg.name as programName, pi.dateofincident ,"
+        return "SELECT pi.programinstanceid, uif.phonenumber, prm.templatemessage, org.name as orgunitName, pg.name as programName, pi.incidentDate ,"
             + "pi.enrollmentdate,(DATE(now()) - DATE(pi.enrollmentdate) ) as days_since_erollment_date, "
-            + "(DATE(now()) - DATE(pi.dateofincident) ) as days_since_incident_date "
+            + "(DATE(now()) - DATE(pi.incidentDate) ) as days_since_incident_date "
             + "FROM trackedentityinstance p INNER JOIN programinstance pi "
             + "    ON p.trackedentityinstanceid=pi.trackedentityinstanceid INNER JOIN program pg "
             + "    ON pg.programid=pi.programid INNER JOIN organisationunit org "
@@ -521,8 +521,8 @@ public class HibernateProgramInstanceStore
     private String sendMessageToUserGroupsSql( String dateToCompare )
     {
         return "select pi.programinstanceid, uif.phonenumber,prm.templatemessage, org.name as orgunitName ,"
-            + " pg.name as programName, pi.dateofincident, pi.enrollmentdate, (DATE(now()) - DATE(pi.enrollmentdate) ) as days_since_erollment_date, "
-            + "(DATE(now()) - DATE(pi.dateofincident) ) as days_since_incident_date "
+            + " pg.name as programName, pi.incidentDate, pi.enrollmentdate, (DATE(now()) - DATE(pi.enrollmentdate) ) as days_since_erollment_date, "
+            + "(DATE(now()) - DATE(pi.incidentDate) ) as days_since_incident_date "
             + "  from trackedentityinstance p INNER JOIN programinstance pi " + "       ON p.trackedentityinstanceid=pi.trackedentityinstanceid "
             + "   INNER JOIN program pg " + "       ON pg.programid=pi.programid "
             + "   INNER JOIN organisationunit org " + "       ON org.organisationunitid = p.organisationunitid "

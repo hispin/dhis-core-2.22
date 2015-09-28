@@ -73,8 +73,8 @@ function showProgramDetails( context ) {
     var dataEntryMethod = ( json.program.dataEntryMethod == 'true') ? i18n_yes : i18n_no;
     setInnerHTML('dataEntryMethodField', dataEntryMethod);
 
-    setInnerHTML('dateOfEnrollmentDescriptionField', json.program.dateOfEnrollmentDescription);
-    setInnerHTML('dateOfIncidentDescriptionField', json.program.dateOfIncidentDescription);
+    setInnerHTML('enrollmentDateLabelField', json.program.enrollmentDateLabel);
+    setInnerHTML('incidentDateLabelField', json.program.incidentDateLabel);
     setInnerHTML('programStageCountField', json.program.programStageCount);
     setInnerHTML('noAttributesField', json.program.noAttributes);
 
