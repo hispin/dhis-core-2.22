@@ -82,7 +82,7 @@ public class CaseAggregationCondition
     
     public static String FORMULA_VISIT = "visit";
     
-    public static String OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE = "dateOfIncident";
+    public static String OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE = "incidentDate";
 
     public static String OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE = "enrollmentDate";
 
@@ -117,14 +117,14 @@ public class CaseAggregationCondition
         + OBJECT_TRACKED_ENTITY_ATTRIBUTE + "|" + OBJECT_PROGRAM_PROPERTY + ")" + SEPARATOR_OBJECT
         + "([a-zA-Z0-9@#\\- ]+[" + SEPARATOR_ID + "[a-zA-Z0-9]*]*)" + "\\]";
 
-    // Date dataElement - currentDate/dateOfIncident/executionDate/enrollmentDate
+    // Date dataElement - currentDate/incidentDate/executionDate/enrollmentDate
     public static final String minusDataelementRegExp1 = MINUS_OPERATOR + "{1}\\s*\\(\\s*\\["
         + OBJECT_PROGRAM_STAGE_DATAELEMENT + SEPARATOR_OBJECT + "([0-9]+)+" + SEPARATOR_ID + "([0-9]+)+" + SEPARATOR_ID
         + "([0-9]+)+\\]\\s*(,)\\s*" + "(" + CURRENT_DATE + "|" + OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE + "|"
         + OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE + "|" + OBJECT_PROGRAM_PROPERTY_REPORT_DATE
         + ")\\s*\\)\\s*(>=|<=|!=|>|<|=){1}\\s*([0-9]+){1}";
 
-    // currentDate/dateOfIncident/executionDate/enrollmentDate - Date dataElement
+    // currentDate/incidentDate/executionDate/enrollmentDate - Date dataElement
     public static final String minusDataelementRegExp2 = MINUS_OPERATOR + "{1}\\s*\\(\\s*(" + CURRENT_DATE + "|"
         + OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE + "|" + OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE + "|"
         + OBJECT_PROGRAM_PROPERTY_REPORT_DATE + ")\\s*(,)\\s*\\[" + OBJECT_PROGRAM_STAGE_DATAELEMENT + SEPARATOR_OBJECT
@@ -137,13 +137,13 @@ public class CaseAggregationCondition
         + "[0-9]+)+\\])\\s*(,)\\s*(\\[" + OBJECT_PROGRAM_STAGE_DATAELEMENT + SEPARATOR_OBJECT + "([0-9]+"
         + SEPARATOR_ID + "[0-9]+" + SEPARATOR_ID + "[0-9]+)+\\])\\s*\\)\\s*(>=|<=|!=|>|<|=){1}\\s*([0-9]+)";
 
-    // currentDate/ dateOfIncident/executionDate/enrollmentDate - Date attribute
+    // currentDate/ incidentDate/executionDate/enrollmentDate - Date attribute
     public static final String minusAttributeRegExp1 = MINUS_OPERATOR + "{1}\\s*\\(\\s*(" + CURRENT_DATE + "|"
         + OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE + "|" + OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE + "|"
         + OBJECT_PROGRAM_PROPERTY_REPORT_DATE + ")\\s*(,)\\s*\\[" + OBJECT_TRACKED_ENTITY_ATTRIBUTE + SEPARATOR_OBJECT
         + "([0-9]+)+\\]\\s*\\)\\s(>=|<=|!=|>|<|=){1}\\s*([0-9]+){1}";
 
-    // Date attribute - currentDate/ dateOfIncident/executionDate/enrollmentDate
+    // Date attribute - currentDate/ incidentDate/executionDate/enrollmentDate
     public static final String minusAttributeRegExp2 = MINUS_OPERATOR + "{1}\\s*\\(\\s*\\["
         + OBJECT_TRACKED_ENTITY_ATTRIBUTE + SEPARATOR_OBJECT + "([0-9]+)+\\]\\s*(,)\\s*(" + CURRENT_DATE + "|"
         + OBJECT_PROGRAM_PROPERTY_INCIDENT_DATE + "|" + OBJECT_PROGRAM_PROPERTY_ENROLLEMENT_DATE + "|"

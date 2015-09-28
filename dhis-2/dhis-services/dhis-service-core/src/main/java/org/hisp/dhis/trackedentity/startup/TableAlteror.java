@@ -327,6 +327,8 @@ public class TableAlteror
 
         updateProgramExpressionUid();
         
+        updatePropertiesChangeInCaseAggregate();
+        
         // TODO fix
         // executeSql( "DROP TABLE programstage_programindicators" );
     }
@@ -394,6 +396,42 @@ public class TableAlteror
             holder.close();
         }
     }
+    
+    private void updatePropertiesChangeInCaseAggregate()
+    {
+        StatementHolder holder = statementManager.getHolder();
+        try
+        {
+            Statement statement = holder.getStatement();
+            ResultSet resultSet = statement
+                .executeQuery( "SELECT caseaggregationconditionid, aggregationExpression FROM caseaggregationcondition where LOWER(aggregationExpression) like '%dateofincident%'" );
+
+            while ( resultSet.next() )
+            {
+                String id = resultSet.getString( "caseaggregationconditionid" );
+                String expression = resultSet.getString( "aggregationExpression" );
+
+                expression = expression.replaceAll( "dateOfIncident", "incidentDate" );
+                expression = expression.replaceAll( "dateofincident", "incidentDate" );
+                expression = expression.replaceAll( "'", "''" );
+                
+                executeSql( "UPDATE caseaggregationcondition SET aggregationExpression='" + expression
+                    + "'  WHERE caseaggregationconditionid=" + id );
+                
+                System.out.println("\n\n ---  " + "UPDATE caseaggregationcondition SET aggregationExpression='" + expression
+                    + "'  WHERE caseaggregationconditionid=" + id + "\n\n ");
+            }
+        }
+        catch ( Exception ex )
+        {
+            log.debug( ex );
+        }
+        finally
+        {
+            holder.close();
+        }
+    }
+  
     
     private void updateProgramInstanceStatus()
     {

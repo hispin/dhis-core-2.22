@@ -159,10 +159,10 @@ public interface ProgramStageInstanceService
      * @param programInstance the program instance.
      * @param programStage the program stage.
      * @param enrollmentDate the enrollment date.
-     * @param dateOfIncident the date of incident.
+     * @param incidentDate the date of incident.
      * @param organisationUnit the organisation unit where the event took place.
      * @return ProgramStageInstance a ProgramStageInstance object.
      */
     ProgramStageInstance createProgramStageInstance( ProgramInstance programInstance, ProgramStage programStage,
-        Date enrollmentDate, Date dateOfIncident, OrganisationUnit organisationUnit );
+        Date enrollmentDate, Date incidentDate, OrganisationUnit organisationUnit );
 }

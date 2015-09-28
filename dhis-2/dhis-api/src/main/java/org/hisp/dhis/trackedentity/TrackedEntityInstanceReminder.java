@@ -60,7 +60,7 @@ public class TrackedEntityInstanceReminder
 
     public static final String ENROLLEMENT_DATE_TO_COMPARE = "enrollmentdate";
 
-    public static final String INCIDENT_DATE_TO_COMPARE = "dateofincident";
+    public static final String INCIDENT_DATE_TO_COMPARE = "incidentdate";
 
     public static final String TEMPLATE_MESSSAGE_PROGRAM_NAME = "{program-name}";
 
