@@ -160,6 +160,46 @@ public class DataDimensionItem
         
         return null;
     }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public DataDimensionItemType getDataDimensionItemType()
+    {
+        if ( indicator != null )
+        {
+            return DataDimensionItemType.INDICATOR;
+        }
+        else if ( dataElement != null )
+        {
+            if ( DataElementDomain.TRACKER.equals( dataElement.getDomainType() ) )
+            {
+                return DataDimensionItemType.PROGRAM_DATA_ELEMENT;
+            }
+            else
+            {
+                return DataDimensionItemType.AGGREGATE_DATA_ELEMENT;
+            }
+        }
+        else if ( dataElementOperand != null )
+        {
+            return DataDimensionItemType.DATA_ELEMENT_OPERAND;
+        }
+        else if ( dataSet != null )
+        {
+            return DataDimensionItemType.DATA_SET;
+        }
+        else if ( programIndicator != null )
+        {
+            return DataDimensionItemType.PROGRAM_INDICATOR;
+        }
+        else if ( trackedEntityAttribute != null )
+        {
+            return DataDimensionItemType.PROGRAM_ATTRIBUTE;
+        }
+        
+        return null;
+    }
     
     // -------------------------------------------------------------------------
     // Get and set methods
