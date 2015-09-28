@@ -98,11 +98,11 @@ public abstract class AbstractTrackedEntityInstanceService
     @Autowired
     protected DbmsManager dbmsManager;
 
-    private CachingMap<String, OrganisationUnit> organisationUnitCache = new CachingMap<>();
+    private final CachingMap<String, OrganisationUnit> organisationUnitCache = new CachingMap<>();
 
-    private CachingMap<String, TrackedEntity> trackedEntityCache = new CachingMap<>();
+    private final CachingMap<String, TrackedEntity> trackedEntityCache = new CachingMap<>();
 
-    private CachingMap<String, TrackedEntityAttribute> trackedEntityAttributeCache = new CachingMap<>();
+    private final CachingMap<String, TrackedEntityAttribute> trackedEntityAttributeCache = new CachingMap<>();
 
     // -------------------------------------------------------------------------
     // READ
@@ -525,22 +525,13 @@ public abstract class AbstractTrackedEntityInstanceService
 
     private void removeRelationships( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance )
     {
-        Collection<Relationship> relationships = relationshipService
-            .getRelationshipsForTrackedEntityInstance( entityInstance );
-
-        for ( Relationship relationship : relationships )
-        {
-            relationshipService.deleteRelationship( relationship );
-        }
+        Collection<Relationship> relationships = relationshipService.getRelationshipsForTrackedEntityInstance( entityInstance );
+        relationships.forEach( relationshipService::deleteRelationship );
     }
 
     private void removeAttributeValues( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance )
     {
-        for ( TrackedEntityAttributeValue trackedEntityAttributeValue : entityInstance.getAttributeValues() )
-        {
-            attributeValueService.deleteTrackedEntityAttributeValue( trackedEntityAttributeValue );
-        }
-
+        entityInstance.getAttributeValues().forEach( attributeValueService::deleteTrackedEntityAttributeValue );
         teiService.updateTrackedEntityInstance( entityInstance );
     }
 
