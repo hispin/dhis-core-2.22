@@ -1105,7 +1105,7 @@ Ext.onReady( function() {
 
                 gis.alert(r);
             };
-console.log(gis.util.connection);
+            
             if (isPlugin) {
                 Ext.data.JsonP.request({
                     url: url,
@@ -2752,36 +2752,53 @@ console.log(gis.util.connection);
 						value: 'indicators',
 						param: 'in',
 						dimensionName: 'dx',
-						objectName: 'in'
+						objectName: 'in',
+                        itemType: 'INDICATOR'
 					},
 					dataElement: {
 						id: 'dataElement',
 						value: 'dataElement',
 						param: 'de',
 						dimensionName: 'dx',
-						objectName: 'de'
+						objectName: 'de',
+                        itemType: 'AGGREGATE_DATA_ELEMENT'
 					},
 					operand: {
 						id: 'operand',
 						value: 'operand',
 						param: 'dc',
 						dimensionName: 'dx',
-						objectName: 'dc'
+						objectName: 'dc',
+                        itemType: 'DATA_ELEMENT_OPERAND'
 					},
 					dataSet: {
 						value: 'dataSets',
 						dimensionName: 'dx',
-						objectName: 'ds'
+						objectName: 'ds',
+                        itemType: 'DATA_SET'
 					},
 					eventDataItem: {
 						value: 'eventDataItem',
 						dimensionName: 'dx',
 						objectName: 'di'
 					},
+                    programDataElement: {
+						value: 'programDataElement',
+						dimensionName: 'dx',
+						objectName: 'di',
+                        itemType: 'PROGRAM_DATA_ELEMENT'
+					},
+                    programAttribute: {
+						value: 'programAttribute',
+						dimensionName: 'dx',
+						objectName: 'di',
+                        itemType: 'PROGRAM_ATTRIBUTE'
+					},
 					programIndicator: {
 						value: 'programIndicator',
 						dimensionName: 'dx',
-						objectName: 'pi'
+						objectName: 'pi',
+                        itemType: 'PROGRAM_INDICATOR'
 					},
 					period: {
 						id: 'period',
@@ -2827,6 +2844,34 @@ console.log(gis.util.connection);
 					id: 'root'
 				}
 			};
+
+            // dimension objectNameMap
+            (function() {
+                dimConf = conf.finals.dimension;
+
+                dimConf.objectNameMap = {};
+                dimConf.objectNameMap[dimConf.indicator.objectName] = dimConf.indicator;
+                dimConf.objectNameMap[dimConf.dataElement.objectName] = dimConf.dataElement;
+                dimConf.objectNameMap[dimConf.operand.objectName] = dimConf.operand;
+                dimConf.objectNameMap[dimConf.dataSet.objectName] = dimConf.dataSet;
+                dimConf.objectNameMap[dimConf.programDataElement.objectName] = dimConf.programDataElement;
+                dimConf.objectNameMap[dimConf.programAttribute.objectName] = dimConf.programAttribute;
+                dimConf.objectNameMap[dimConf.programIndicator.objectName] = dimConf.programIndicator;
+            })();
+
+            // dimension itemTypeMap
+            (function() {
+                dimConf = conf.finals.dimension;
+
+                dimConf.itemTypeMap = {};
+                dimConf.itemTypeMap[dimConf.indicator.itemType] = dimConf.indicator;
+                dimConf.itemTypeMap[dimConf.dataElement.itemType] = dimConf.dataElement;
+                dimConf.itemTypeMap[dimConf.operand.itemType] = dimConf.operand;
+                dimConf.itemTypeMap[dimConf.dataSet.itemType] = dimConf.dataSet;
+                dimConf.itemTypeMap[dimConf.programDataElement.itemType] = dimConf.programDataElement;
+                dimConf.itemTypeMap[dimConf.programAttribute.itemType] = dimConf.programAttribute;
+                dimConf.itemTypeMap[dimConf.programIndicator.itemType] = dimConf.programIndicator;
+            })();
 
 			conf.layout = {
 				widget: {
@@ -3400,6 +3445,22 @@ console.log(gis.util.connection);
                 window.show();
             };
 
+            util.dhis = {};
+
+            util.dhis.getDataDimensionItemTypes = function(dataDimensionItems) {
+                var types = [];
+
+                if (Ext.isArray(dataDimensionItems) && dataDimensionItems.length) {
+                    for (var i = 0, obj; i < dataDimensionItems.length; i++) {
+                        if (Ext.isObject(dataDimensionItems[i])) {
+                            types.push(dataDimensionItems[i].dataDimensionItemType);
+                        }
+                    }
+                }
+
+                return types;
+            };
+        
             util.connection = {};
 
             util.connection.ajax = function(requestConfig, authConfig) {
@@ -3534,6 +3595,8 @@ console.log(gis.util.connection);
                 // areaRadius: integer
 
                 // hidden: boolean (false)
+
+                // dataDimensionItems: array
 
                 getValidatedDimensionArray = function(dimensionArray) {
                     var dimensions = [];
@@ -3707,6 +3770,8 @@ console.log(gis.util.connection);
                     layout.legendSet = config.legendSet;
 
                     layout.organisationUnitGroupSet = config.organisationUnitGroupSet;
+                    
+                    layout.dataDimensionItems = config.dataDimensionItems;                    
 
                     if (Ext.Array.from(config.userOrgUnit).length) {
                         layout.userOrgUnit = Ext.Array.from(config.userOrgUnit);

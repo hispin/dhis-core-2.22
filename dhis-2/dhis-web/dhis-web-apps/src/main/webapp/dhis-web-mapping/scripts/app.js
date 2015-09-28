@@ -8727,7 +8727,8 @@ Ext.onReady( function() {
 				ouDim = view.rows[0],
 				vType = dxDim.dimension === dimConf.operand.objectName ? dimConf.dataElement.objectName : dxDim.dimension,
 				lType = Ext.isObject(view.legendSet) && Ext.isString(view.legendSet.id) ? gis.conf.finals.widget.legendtype_predefined : gis.conf.finals.widget.legendtype_automatic,
-				objectNameCmpMap = {},
+				itemTypeCmpMap = {},
+                objectNameProgramCmpMap = {},
 				isOu = false,
 				isOuc = false,
 				isOugc = false,
@@ -8735,14 +8736,19 @@ Ext.onReady( function() {
 				groups = [],
 				setLayerGui,
 				setWidgetGui,
-                dataDim;
+                dxItemType,
+                dxObjectName;
 
-			objectNameCmpMap[dimConf.indicator.objectName] = indicator;
-			objectNameCmpMap[dimConf.dataElement.objectName] = dataElement;
-			objectNameCmpMap[dimConf.operand.objectName] = dataElement;
-			objectNameCmpMap[dimConf.dataSet.objectName] = dataSet;
-			objectNameCmpMap[dimConf.eventDataItem.objectName] = eventDataItem;
-			objectNameCmpMap[dimConf.programIndicator.objectName] = programIndicator;
+			itemTypeCmpMap[dimConf.indicator.itemType] = indicator;
+			itemTypeCmpMap[dimConf.dataElement.itemType] = dataElement;
+			itemTypeCmpMap[dimConf.operand.itemType] = dataElement;
+			itemTypeCmpMap[dimConf.dataSet.itemType] = dataSet;
+			itemTypeCmpMap[dimConf.programDataElement.itemType] = eventDataItem;
+			itemTypeCmpMap[dimConf.programAttribute.itemType] = eventDataItem;
+			itemTypeCmpMap[dimConf.programIndicator.itemType] = programIndicator;
+
+            objectNameProgramCmpMap[dimConf.eventDataItem.objectName] = eventDataItemProgram;
+            objectNameProgramCmpMap[dimConf.programIndicator.objectName] = programIndicatorProgram;
 
 			setWidgetGui = function() {
 
@@ -8754,17 +8760,31 @@ Ext.onReady( function() {
 				// Reset
 				reset(true);
 
-				// Value type
-				valueType.setValue(dxDim.objectName);
-				valueTypeToggler(dxDim.objectName);
+                // dx type
+                dxItemType = gis.util.dhis.getDataDimensionItemTypes(view.dataDimensionItems)[0];
+                dxObjectName = dimConf.itemTypeMap[dxItemType].objectName;
 
-                if (dxDim.objectName === dimConf.dataElement.objectName) {
-                    dataElementDetailLevel.setValue(dxDim.dimension);
+				// Value type
+				valueType.setValue(dxObjectName);
+				valueTypeToggler(dxObjectName);
+
+                if (dxObjectName === dimConf.dataElement.objectName) {
+                    dataElementDetailLevel.setValue(dxObjectName);
                 }
 
 				// Data
-				objectNameCmpMap[dxDim.objectName].store.add(dxDim.items[0]);
-				objectNameCmpMap[dxDim.objectName].setValue(dxDim.items[0].id);
+				itemTypeCmpMap[dxItemType].store.add(dxDim.items[0]);
+				itemTypeCmpMap[dxItemType].setValue(dxDim.items[0].id);
+
+                // program
+                if (dxObjectName === dimConf.eventDataItem.objectName && view.program) {
+                    objectNameProgramCmpMap[dimConf.eventDataItem.objectName].store.add(view.program);
+                    objectNameProgramCmpMap[dimConf.eventDataItem.objectName].setValue(view.program.id);
+                }
+                else if (dxObjectName === dimConf.programIndicator.objectName && view.program) {
+                    objectNameProgramCmpMap[dimConf.programIndicator.objectName].store.add(view.program);
+                    objectNameProgramCmpMap[dimConf.programIndicator.objectName].setValue(view.program.id);
+                }
 
 				// Period
 				period.store.add(gis.conf.period.relativePeriodRecordsMap[peDim.items[0].id] ? gis.conf.period.relativePeriodRecordsMap[peDim.items[0].id] : peDim.items[0]);
@@ -8851,7 +8871,7 @@ Ext.onReady( function() {
                 ds = dimConf.dataSet.objectName,
                 di = dimConf.eventDataItem.objectName;
                 pi = dimConf.programIndicator.objectName,
-                vtype = valueType.getValue() === de ? dataElementDetailLevel.getValue() : valueType.getValue(),
+                vType = valueType.getValue() === de ? dataElementDetailLevel.getValue() : valueType.getValue(),
 				objectNameCmpMap = {},
 				view = {};
 
@@ -8866,21 +8886,21 @@ Ext.onReady( function() {
             view.layer = layer.id;
 
             // dx
-            if (objectNameCmpMap[vtype].getValue()) {
+            if (objectNameCmpMap[vType].getValue()) {
                 view.columns = [{
                     dimension: 'dx',
-                    objectName: vtype,
+                    objectName: vType,
                     items: [{
-                        id: objectNameCmpMap[vtype].getValue()
+                        id: objectNameCmpMap[vType].getValue()
                     }]
                 }];
             }
 
             // program
-            if (vtype === di && eventDataItemProgram.getValue()) {
+            if (vType === di && eventDataItemProgram.getValue()) {
                 view.program = {id: eventDataItemProgram.getValue()};
             }
-            else if (vtype === pi && programIndicatorProgram.getValue()) {
+            else if (vType === pi && programIndicatorProgram.getValue()) {
                 view.program = {id: programIndicatorProgram.getValue()};
             }
 
