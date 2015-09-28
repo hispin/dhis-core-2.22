@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.common.DataDimensionItem.DataDimensionItemType;
+import org.hisp.dhis.common.DataDimensionItemType;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.NameableObject;
