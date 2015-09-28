@@ -363,9 +363,9 @@ public class HibernateProgramStageInstanceStore
             + " INNER JOIN trackedentityattribute pa "
             + "     ON pa.trackedentityattributeid=pav.trackedentityattributeid "
             + "WHERE pi.status="
-            + ProgramStatus.ACTIVE
+            + EventStatus.ACTIVE.name()
             + "     and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "     and pg.type=1 and prm.daysallowedsendmessage is not null  "
+            + "     and pg.type='WITH_REGISTRATION' and prm.daysallowedsendmessage is not null  "
             + "     and psi.executiondate is null and pa.valuetype='phoneNumber' "
             + "     and (  DATE(now()) - DATE(psi.duedate) ) = prm.daysallowedsendmessage "
             + "     and prm.whentosend is null and prm.sendto = " + TrackedEntityInstanceReminder.SEND_TO_TRACKED_ENTITY_INSTANCE;
@@ -394,10 +394,11 @@ public class HibernateProgramStageInstanceStore
             + "               ON pa.trackedentityattributeid=pav.trackedentityattributeid "
             + "           INNER JOIN userinfo uif "
             + "               ON pav.value=concat(uif.userinfoid ,'') "
-            + " WHERE pi.status='" + ProgramStatus.ACTIVE + "'"
+            + " WHERE pi.status="
+            + EventStatus.ACTIVE.name()
             + " and pa.valueType='users' and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "               and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "               and pg.type=1 and prm.daysallowedsendmessage is not null "
+            + "               and pg.type='WITH_REGISTRATION' and prm.daysallowedsendmessage is not null "
             + "               and psi.executiondate is null "
             + "               and (  DATE(now()) - DATE(psi.duedate) ) = prm.daysallowedsendmessage "
             + "               and prm.whentosend is null and prm.sendto = " + TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS;
@@ -422,10 +423,11 @@ public class HibernateProgramStageInstanceStore
             + "               ON prm.programstageid = ps.programstageid "
             + "           INNER JOIN organisationunit ou "
             + "               ON ou.organisationunitid=p.organisationunitid "
-            + "WHERE pi.status= '" + ProgramStatus.ACTIVE + "'"
+            + "WHERE pi.status= "
+            + EventStatus.ACTIVE.name()
             + "               and ou.phonenumber is not NULL and ou.phonenumber != '' "
             + "               and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "               and pg.type=1 and prm.daysallowedsendmessage is not null "
+            + "               and pg.type='WITH_REGISTRATION' and prm.daysallowedsendmessage is not null "
             + "               and psi.executiondate is null "
             + "               and (  DATE(now()) - DATE(psi.duedate) ) = prm.daysallowedsendmessage "
             + "               and prm.whentosend is null and prm.sendto = "
@@ -453,10 +455,11 @@ public class HibernateProgramStageInstanceStore
             + "       ON ums.organisationunitid = p.organisationunitid "
             + "   INNER JOIN userinfo uif "
             + "       ON uif.userinfoid = ums.userinfoid "
-            + "  WHERE pi.status= '" + ProgramStatus.ACTIVE + "'"
+            + "  WHERE pi.status= "
+            + EventStatus.ACTIVE.name()
             + "       and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "       and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "       and pg.type=1 and prm.daysallowedsendmessage is not null "
+            + "       and pg.type='WITH_REGISTRATION' and prm.daysallowedsendmessage is not null "
             + "       and psi.executiondate is null "
             + "       and (  DATE(now()) - DATE(psi.duedate) ) = prm.daysallowedsendmessage "
             + "       and prm.whentosend is null and prm.sendto = "
@@ -484,10 +487,11 @@ public class HibernateProgramStageInstanceStore
             + "       ON ugm.usergroupid = prm.usergroupid "
             + "   INNER JOIN userinfo uif "
             + "       ON uif.userinfoid = ugm.userid "
-            + "  WHERE pi.status= '"+ ProgramStatus.ACTIVE + "'"
+            + "  WHERE pi.status= "
+            + EventStatus.ACTIVE.name()
             + "       and uif.phonenumber is not NULL and uif.phonenumber != '' "
             + "       and prm.templatemessage is not NULL and prm.templatemessage != '' "
-            + "       and pg.type=1 and prm.daysallowedsendmessage is not null "
+            + "       and pg.type='WITH_REGISTRATION' and prm.daysallowedsendmessage is not null "
             + "       and psi.executiondate is not null "
             + "       and (  DATE(now()) - DATE(psi.duedate) ) = prm.daysallowedsendmessage "
             + "       and prm.whentosend is null " + "       and prm.sendto = " + TrackedEntityInstanceReminder.SEND_TO_USER_GROUP;
