@@ -2716,6 +2716,9 @@ Ext.onReady( function() {
 						// add
 						view.layer = layer.id;
 
+                        // remove
+                        delete view.dataDimensionItems;
+
 						views.push(view);
 					}
 
