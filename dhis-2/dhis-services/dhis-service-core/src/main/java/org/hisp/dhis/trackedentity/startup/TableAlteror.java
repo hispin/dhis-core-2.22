@@ -417,9 +417,6 @@ public class TableAlteror
                 
                 executeSql( "UPDATE caseaggregationcondition SET aggregationExpression='" + expression
                     + "'  WHERE caseaggregationconditionid=" + id );
-                
-                System.out.println("\n\n ---  " + "UPDATE caseaggregationcondition SET aggregationExpression='" + expression
-                    + "'  WHERE caseaggregationconditionid=" + id + "\n\n ");
             }
         }
         catch ( Exception ex )
