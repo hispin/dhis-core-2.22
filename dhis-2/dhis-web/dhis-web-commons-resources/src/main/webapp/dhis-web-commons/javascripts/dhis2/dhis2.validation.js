@@ -77,7 +77,8 @@ dhis2.validation.isCoordinate = function(value) {
    	var lng = parseFloat(m[1]);
     var lat = parseFloat(m[2]);
     return lng >= -180 && lng <= 180 && lat >= -180 && lat <= 90;
-  } catch (_) {
+  } 
+  catch (_) {
     return false;
   }
 };
