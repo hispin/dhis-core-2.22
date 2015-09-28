@@ -436,6 +436,10 @@ jQuery.validator.addMethod("zero_positive_int", function(value, element, param) 
     return this.optional(element) || dhis2.validation.isZeroOrPositiveInt(value);
 });
 
+jQuery.validator.addMethod("coordinate", function(value, element, param) {
+    return this.optional(element) || dhis2.validation.isCoordinate(value);
+});
+
 // Support method for date
 //Parse a string and convert it to a Date object.
 //If string cannot be parsed, return null.

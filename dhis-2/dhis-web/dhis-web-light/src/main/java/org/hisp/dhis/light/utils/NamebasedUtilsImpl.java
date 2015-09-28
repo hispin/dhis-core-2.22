@@ -139,6 +139,13 @@ public class NamebasedUtilsImpl
                 return "is_invalid_zero_or_positive_integer";
             }
         }
+        else if ( ValueType.COORDINATE == valueType )
+        {
+            if ( !MathUtils.isCoordinate( value ) )
+            {
+                return "is_invalid_coordinate";
+            }
+        }
         return null;
     }
 

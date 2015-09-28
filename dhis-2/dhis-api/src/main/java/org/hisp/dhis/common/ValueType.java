@@ -59,7 +59,8 @@ public enum ValueType
     TRACKER_ASSOCIATE( TrackedEntityInstance.class ),
     OPTION_SET( String.class ),
     USERNAME( String.class ),
-    FILE_RESOURCE( String.class );
+    FILE_RESOURCE( String.class ),
+    COORDINATE( String.class);
 
     public static final List<ValueType> INTEGER_TYPES = Lists.newArrayList(
         INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE );
@@ -68,7 +69,7 @@ public enum ValueType
         INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE, NUMBER, UNIT_INTERVAL, PERCENTAGE );
 
     public static final List<ValueType> TEXT_TYPES = Lists.newArrayList( 
-        TEXT, LONG_TEXT, LETTER );
+        TEXT, LONG_TEXT, LETTER, COORDINATE );
     
     private final Class<?> javaClass;
 
@@ -99,7 +100,7 @@ public enum ValueType
 
     public boolean isText()
     {
-        return this == TEXT || this == LONG_TEXT;
+        return this == TEXT || this == LONG_TEXT || this == COORDINATE;
     }
 
     public boolean isDate()
@@ -110,5 +111,10 @@ public enum ValueType
     public boolean isFile()
     {
         return this == FILE_RESOURCE;
+    }
+    
+    public boolean isCoordinate()
+    {
+    	return this == COORDINATE;
     }
 }

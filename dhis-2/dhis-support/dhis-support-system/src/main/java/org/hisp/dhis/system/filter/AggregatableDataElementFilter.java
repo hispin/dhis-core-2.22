@@ -47,7 +47,7 @@ public class AggregatableDataElementFilter
     private static final Set<ValueType> VALUE_TYPES = Sets.newHashSet(
         ValueType.BOOLEAN, ValueType.TRUE_ONLY, ValueType.TEXT, ValueType.LONG_TEXT, ValueType.LETTER,
         ValueType.INTEGER, ValueType.INTEGER_POSITIVE, ValueType.INTEGER_NEGATIVE, ValueType.INTEGER_ZERO_OR_POSITIVE,
-        ValueType.NUMBER, ValueType.UNIT_INTERVAL, ValueType.PERCENTAGE
+        ValueType.NUMBER, ValueType.UNIT_INTERVAL, ValueType.PERCENTAGE, ValueType.COORDINATE
     );
 
     @Override
