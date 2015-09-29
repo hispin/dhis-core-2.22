@@ -500,6 +500,146 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     };
 })
 
+/* Factory for getting tracked entity attributes */
+.factory('AttributesFactory', function($q, $rootScope, ECStorageService, orderByFilter, DateUtils, OptionSetService) {      
+
+    return {
+        getAll: function(){
+            
+            var def = $q.defer();
+            
+            ECStorageService.currentStore.open().done(function(){
+                ECStorageService.currentStore.getAll('attributes').done(function(attributes){                    
+                    $rootScope.$apply(function(){
+                        def.resolve(attributes);
+                    });
+                });
+            });            
+            return def.promise;            
+        }, 
+        getByProgram: function(program){
+            var def = $q.defer();
+            this.getAll().then(function(atts){                
+                
+                if(program && program.id){
+                    var attributes = [];
+                    var programAttributes = [];
+                    angular.forEach(atts, function(attribute){
+                        attributes[attribute.id] = attribute;
+                    });
+                    
+                    angular.forEach(program.programTrackedEntityAttributes, function(pAttribute){
+                        var att = attributes[pAttribute.trackedEntityAttribute.id];
+                        att.mandatory = pAttribute.mandatory;
+                        if(pAttribute.displayInList){
+                            att.displayInListNoProgram = true;
+                        }
+                        programAttributes.push(att);                
+                    });
+                    
+                    def.resolve(programAttributes);
+                }                
+                else{
+                    var attributes = [];
+                    angular.forEach(atts, function(attribute){
+                        if (attribute.displayInListNoProgram) {
+                            attributes.push(attribute);
+                        }
+                    });     
+                    
+                    attributes = orderByFilter(attributes, '-sortOrderInListNoProgram').reverse();
+                    def.resolve(attributes);
+                }                
+            });
+            return def.promise;    
+        },
+        showRequiredAttributes: function(requiredAttributes, teiAttributes, fromEnrollment){        
+            
+            //first reset teiAttributes
+            for(var j=0; j<teiAttributes.length; j++){
+                teiAttributes[j].show = false;
+            }
+
+            //identify which ones to show
+            for(var i=0; i<requiredAttributes.length; i++){
+                var processed = false;
+                for(var j=0; j<teiAttributes.length && !processed; j++){
+                    if(requiredAttributes[i].id === teiAttributes[j].attribute){                    
+                        processed = true;
+                        teiAttributes[j].show = true;
+                        teiAttributes[j].order = i;
+                        teiAttributes[j].mandatory = requiredAttributes[i].mandatory ? requiredAttributes[i].mandatory : false;
+                        teiAttributes[j].allowFutureDate = requiredAttributes[i].allowFutureDate ? requiredAttributes[i].allowFutureDate : false;
+                        teiAttributes[j].displayName = requiredAttributes[i].name;
+                    }
+                }
+
+                if(!processed && fromEnrollment){//attribute was empty, so a chance to put some value
+                    teiAttributes.push({show: true, order: i, allowFutureDate: requiredAttributes[i].allowFutureDate ? requiredAttributes[i].allowFutureDate : false, mandatory: requiredAttributes[i].mandatory ? requiredAttributes[i].mandatory : false, attribute: requiredAttributes[i].id, displayName: requiredAttributes[i].name, type: requiredAttributes[i].valueType, value: ''});
+                }                   
+            }
+
+            teiAttributes = orderByFilter(teiAttributes, '-order');
+            teiAttributes.reverse();
+            return teiAttributes;
+        },
+        formatAttributeValue: function(att, attsById, optionSets, destination){
+            var val = att.value;
+            var type = '';
+            if(att.type){
+                type = att.type;
+            }            
+            if(att.valueType){
+                type = att.valueType;
+            }
+            if(type === 'trueOnly'){
+                if(destination === 'USER'){
+                    val = val === 'true' ? true : '';
+                }
+                else{
+                    val = val === true ? 'true' : '';
+                }                
+            }
+            else{
+                if(val){                    
+                    if( type === 'number' ){
+                        if(dhis2.validation.isNumber(val)){                            
+                            //val = new Number(val);
+                            val = parseInt(val);                            
+                        }
+                        else{
+                            //val = new Number('0');
+                            val = parseInt('0');      
+                        }
+                    }
+                    if(type === 'date'){
+                        if(destination === 'USER'){
+                            val = DateUtils.formatFromApiToUser(val);
+                        }
+                        else{
+                            val = DateUtils.formatFromUserToApi(val);
+                        }                        
+                    }
+                    if(attsById[att.attribute] && 
+                            attsById[att.attribute].optionSetValue && 
+                            attsById[att.attribute].optionSet && 
+                            attsById[att.attribute].optionSet.id && 
+                            optionSets[attsById[att.attribute].optionSet.id]){
+                        if(destination === 'USER'){
+                            val = OptionSetService.getName(optionSets[attsById[att.attribute].optionSet.id].options, val);                                
+                        }
+                        else{
+                            val = OptionSetService.getCode(optionSets[attsById[att.attribute].optionSet.id].options, val);                                
+                        }                        
+                    }                    
+                }
+            }
+            return val;
+        }
+    };
+})
+
+
 /*Orgunit service for local db */
 .service('OrgUnitService', function($window, $q){
     

@@ -35,6 +35,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 TrackerRulesExecutionService,
                 TrackerRulesFactory,
                 TEIGridService,
+                AttributesFactory,
                 TEIService) {
     //selected org unit
     $scope.selectedOrgUnit = '';
@@ -582,6 +583,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 var modalInstance = $modal.open({
                     templateUrl: 'views/attendee-list.html',
                     controller: 'AttendeeListControler',
+                    windowClass: 'modal-full-window',
                      resolve: {
                         currentEventFull: function () {
                             return $scope.currentEventFull;
@@ -1126,7 +1128,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.processAttributes = function(){
         $scope.sortColumn = {};
-        MetaDataFactory.getForProgram('attributes', $scope.beneficiaryProgram, 'programTrackedEntityAttributes', 'trackedEntityAttribute').then(function(atts){
+        AttributesFactory.getByProgram($scope.beneficiaryProgram).then(function(atts){
             $scope.attributes = $scope.generateAttributeFilters(atts);
             var grid = TEIGridService.generateGridColumns($scope.attributes, 'SELECTED');
             $scope.gridColumns = grid.columns;
