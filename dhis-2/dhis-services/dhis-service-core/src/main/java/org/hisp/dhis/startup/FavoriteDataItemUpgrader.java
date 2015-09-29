@@ -105,7 +105,7 @@ public class FavoriteDataItemUpgrader
             BaseAnalyticalObject favorite = idObjectManager.get( favoriteClass, rtId );
             NameableObject object = (NameableObject) idObjectManager.get( objectClass, obId );
             DataDimensionItem item = DataDimensionItem.create( object );
-            
+                        
             favorite.getDataDimensionItems().add( item );
             idObjectManager.update( favorite );
             
