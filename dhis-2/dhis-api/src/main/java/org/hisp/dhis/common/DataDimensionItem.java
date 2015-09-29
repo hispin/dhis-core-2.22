@@ -99,29 +99,33 @@ public class DataDimensionItem
     {
         DataDimensionItem dimension = new DataDimensionItem();
         
-        if ( object.getClass().isAssignableFrom( Indicator.class ) )
+        if ( Indicator.class.isAssignableFrom( object.getClass() ) )
         {
             dimension.setIndicator( (Indicator) object );
         }
-        else if ( object.getClass().isAssignableFrom( DataElement.class ) )
+        else if ( DataElement.class.isAssignableFrom( object.getClass() ) )
         {
             dimension.setDataElement( (DataElement) object );
         }
-        else if ( object.getClass().isAssignableFrom( DataElementOperand.class ) )
+        else if ( DataElementOperand.class.isAssignableFrom( object.getClass() ) )
         {
             dimension.setDataElementOperand( (DataElementOperand) object );
         }
-        else if ( object.getClass().isAssignableFrom( DataSet.class ) )
+        else if ( DataSet.class.isAssignableFrom( object.getClass() ) )
         {
             dimension.setDataSet( (DataSet) object );
         }
-        else if ( object.getClass().isAssignableFrom( ProgramIndicator.class ) )
+        else if ( ProgramIndicator.class.isAssignableFrom( object.getClass() ) )
         {
             dimension.setProgramIndicator( (ProgramIndicator) object );
         }
-        else if ( object.getClass().isAssignableFrom( TrackedEntityAttribute.class ) )
+        else if ( TrackedEntityAttribute.class.isAssignableFrom( object.getClass() ) )
         {
             dimension.setTrackedEntityAttribute( (TrackedEntityAttribute) object );
+        }
+        else
+        {
+            throw new IllegalArgumentException( "Not a valid data dimension: " + object.getClass().getSimpleName() + ", " + object );
         }
         
         return dimension;
