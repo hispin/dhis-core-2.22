@@ -126,6 +126,7 @@ public class InitTableAlteror
         executeSql( "update dataelement set aggregationtype='SUM' where aggregationtype='sum'" );
         executeSql( "update dataelement set aggregationtype='AVERAGE' where aggregationtype='avg'" );
         executeSql( "update dataelement set aggregationtype='AVERAGE_SUM_ORG_UNIT' where aggregationtype='avg_sum_org_unit'" );
+        executeSql( "update dataelement set aggregationtype='AVERAGE_SUM_ORG_UNIT' where aggregationtype='average'" );
         executeSql( "update dataelement set aggregationtype='COUNT' where aggregationtype='count'" );
         executeSql( "update dataelement set aggregationtype='STDDEV' where aggregationtype='stddev'" );
         executeSql( "update dataelement set aggregationtype='VARIANCE' where aggregationtype='variance'" );
