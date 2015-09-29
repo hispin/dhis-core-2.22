@@ -1,0 +1,50 @@
+
+<div id="leftBar">
+    <div class="left-bar-menu" ng-controller="LeftBarMenuController">
+        <ul class="nav nav-pills nav-stacked">
+        <h3><label>Social Protection Management Menu</label></h3>
+        </ul>
+
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="goTo('tracker-capture')">{{'tracker-capture'| translate}}</a></li>
+            <li><a href ng-click="goTo('aggregate-data-entry')">{{'aggregate-data-entry'| translate}}</a></li>
+            <li><a href ng-click="goTo('report')">{{'report'| translate}}</a></li>
+            <li><a href ng-click="goTo('dashboard')">{{'dashboard'| translate}}</a></li>
+
+        </ul>
+    </div>
+</div>
+<div class="page" id="mainPage">
+
+    <h2>Social Protection Management</h2>
+<br><br>
+
+    <div class="col-sm-6" ng-click="goTo('tracker-capture')">
+        <h2>
+            <img src="../icons/dhis-web-tracker-capture.png">
+            <a href=""> Beneficiary Registration and Data Entry</a></h2>
+    </div>
+
+    <div class="col-sm-6" ng-click="goTo('aggregate-data-entry')">
+        <h2>
+            <img src="../icons/dhis-web-dataentry.png">
+        <a href="">Aggregate Data Entry</a>
+            </h2>
+    </div>
+
+<br><br>
+
+    <div class="col-sm-6" ng-click="goTo('report')">
+        <h2>
+            <img src="../icons/dhis-web-reporting.png">
+        <a href="">Reports</a>
+            </h2>
+    </div>
+
+    <div class="col-sm-6" ng-click="goTo('dashboard')">
+        <h2>
+            <img src="../icons/dhis-web-dashboard-integration.png">
+        <a href="">Dashboard</a>
+            </h2>
+    </div>
+</div>
