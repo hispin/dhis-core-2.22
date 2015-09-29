@@ -367,125 +367,6 @@ public abstract class AbstractTrackedEntityInstanceService
     // HELPERS
     // -------------------------------------------------------------------------
 
-    private List<ImportConflict> checkTrackedEntity( TrackedEntityInstance trackedEntityInstance )
-    {
-        List<ImportConflict> importConflicts = new ArrayList<>();
-
-        if ( trackedEntityInstance.getTrackedEntity() == null )
-        {
-            importConflicts.add( new ImportConflict( "TrackedEntityInstance.trackedEntity", "Missing required property trackedEntity" ) );
-            return importConflicts;
-        }
-
-        TrackedEntity trackedEntity = getTrackedEntity( trackedEntityInstance.getTrackedEntity() );
-
-        if ( trackedEntity == null )
-        {
-            importConflicts.add( new ImportConflict( "TrackedEntityInstance.trackedEntity", "Invalid trackedEntity" +
-                trackedEntityInstance.getTrackedEntity() ) );
-        }
-
-        return importConflicts;
-    }
-
-    private List<ImportConflict> checkAttributes( TrackedEntityInstance trackedEntityInstance )
-    {
-        List<ImportConflict> importConflicts = new ArrayList<>();
-
-        for ( Attribute attribute : trackedEntityInstance.getAttributes() )
-        {
-            TrackedEntityAttribute entityAttribute = manager.get( TrackedEntityAttribute.class, attribute.getAttribute() );
-
-            if ( entityAttribute == null )
-            {
-                importConflicts.add( new ImportConflict( "Attribute.attribute", "Invalid attribute " + attribute.getAttribute() ) );
-                continue;
-            }
-
-            if ( entityAttribute.isUnique() )
-            {
-                OrganisationUnit organisationUnit = manager.get( OrganisationUnit.class, trackedEntityInstance.getOrgUnit() );
-                org.hisp.dhis.trackedentity.TrackedEntityInstance tei = teiService.getTrackedEntityInstance( trackedEntityInstance.getTrackedEntityInstance() );
-
-                importConflicts.addAll(
-                    checkScope( tei, entityAttribute, attribute.getValue(), organisationUnit )
-                );
-            }
-
-            importConflicts.addAll( validateAttributeType( attribute ) );
-        }
-
-        return importConflicts;
-    }
-
-    private List<ImportConflict> checkScope( org.hisp.dhis.trackedentity.TrackedEntityInstance tei, TrackedEntityAttribute attribute, String value, OrganisationUnit organisationUnit )
-    {
-        List<ImportConflict> importConflicts = new ArrayList<>();
-
-        if ( attribute == null || value == null )
-        {
-            return importConflicts;
-        }
-
-        TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
-
-        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.getValueType(), attribute.getAggregationType(), attribute.getOptionSet() );
-        params.addAttribute( queryItem );
-
-        if ( attribute.getOrgunitScope() )
-        {
-            params.getOrganisationUnits().add( organisationUnit );
-        }
-        else
-        {
-            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
-        }
-
-        Grid instances = teiService.getTrackedEntityInstancesGrid( params );
-
-        if ( instances.getHeight() == 0 || (tei != null && instances.getHeight() == 1 && instances.getRow( 0 ).contains( tei.getUid() )) )
-        {
-            return importConflicts;
-        }
-
-        importConflicts.add( new ImportConflict( "Attribute.value", "Non-unique attribute value '" + value + "' for attribute " + attribute.getUid() ) );
-
-        return importConflicts;
-    }
-
-    private List<ImportConflict> checkRelationships( TrackedEntityInstance trackedEntityInstance )
-    {
-        List<ImportConflict> importConflicts = new ArrayList<>();
-
-        for ( org.hisp.dhis.dxf2.events.trackedentity.Relationship relationship : trackedEntityInstance.getRelationships() )
-        {
-            RelationshipType relationshipType = manager.get( RelationshipType.class, relationship.getRelationship() );
-
-            if ( relationshipType == null )
-            {
-                importConflicts.add( new ImportConflict( "Relationship.type", "Invalid type " + relationship.getRelationship() ) );
-            }
-
-            org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstanceA = manager.get( org.hisp.dhis.trackedentity.TrackedEntityInstance.class, relationship.getTrackedEntityInstanceA() );
-
-            if ( entityInstanceA == null )
-            {
-                importConflicts.add( new ImportConflict( "Relationship.trackedEntityInstance", "Invalid trackedEntityInstance "
-                    + relationship.getTrackedEntityInstanceA() ) );
-            }
-
-            org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstanceB = manager.get( org.hisp.dhis.trackedentity.TrackedEntityInstance.class, relationship.getTrackedEntityInstanceB() );
-
-            if ( entityInstanceB == null )
-            {
-                importConflicts.add( new ImportConflict( "Relationship.trackedEntityInstance", "Invalid trackedEntityInstance "
-                    + relationship.getTrackedEntityInstanceB() ) );
-            }
-        }
-
-        return importConflicts;
-    }
-
     private void updateAttributeValues( TrackedEntityInstance trackedEntityInstance, org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance )
     {
         for ( Attribute attribute : trackedEntityInstance.getAttributes() )
@@ -535,6 +416,24 @@ public abstract class AbstractTrackedEntityInstanceService
         teiService.updateTrackedEntityInstance( entityInstance );
     }
 
+    private OrganisationUnit getOrganisationUnit( String id )
+    {
+        return organisationUnitCache.get( id, new IdentifiableObjectSearchCallable<>( manager, OrganisationUnit.class, id ) );
+    }
+
+    private TrackedEntity getTrackedEntity( String id )
+    {
+        return trackedEntityCache.get( id, new IdentifiableObjectSearchCallable<>( manager, TrackedEntity.class, id ) );
+    }
+
+    private TrackedEntityAttribute getTrackedEntityAttribute( String id )
+    {
+        return trackedEntityAttributeCache.get( id, new IdentifiableObjectSearchCallable<>( manager, TrackedEntityAttribute.class, id ) );
+    }
+
+    //--------------------------------------------------------------------------
+    // VALIDATION
+    //--------------------------------------------------------------------------
 
     private List<ImportConflict> validateAttributeType( Attribute attribute )
     {
@@ -589,18 +488,119 @@ public abstract class AbstractTrackedEntityInstanceService
         return importConflicts;
     }
 
-    private OrganisationUnit getOrganisationUnit( String id )
+    private List<ImportConflict> checkRelationships( TrackedEntityInstance trackedEntityInstance )
     {
-        return organisationUnitCache.get( id, new IdentifiableObjectSearchCallable<>( manager, OrganisationUnit.class, id ) );
+        List<ImportConflict> importConflicts = new ArrayList<>();
+
+        for ( org.hisp.dhis.dxf2.events.trackedentity.Relationship relationship : trackedEntityInstance.getRelationships() )
+        {
+            RelationshipType relationshipType = manager.get( RelationshipType.class, relationship.getRelationship() );
+
+            if ( relationshipType == null )
+            {
+                importConflicts.add( new ImportConflict( "Relationship.type", "Invalid type " + relationship.getRelationship() ) );
+            }
+
+            org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstanceA = manager.get( org.hisp.dhis.trackedentity.TrackedEntityInstance.class, relationship.getTrackedEntityInstanceA() );
+
+            if ( entityInstanceA == null )
+            {
+                importConflicts.add( new ImportConflict( "Relationship.trackedEntityInstance", "Invalid trackedEntityInstance "
+                    + relationship.getTrackedEntityInstanceA() ) );
+            }
+
+            org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstanceB = manager.get( org.hisp.dhis.trackedentity.TrackedEntityInstance.class, relationship.getTrackedEntityInstanceB() );
+
+            if ( entityInstanceB == null )
+            {
+                importConflicts.add( new ImportConflict( "Relationship.trackedEntityInstance", "Invalid trackedEntityInstance "
+                    + relationship.getTrackedEntityInstanceB() ) );
+            }
+        }
+
+        return importConflicts;
     }
 
-    private TrackedEntity getTrackedEntity( String id )
+    private List<ImportConflict> checkScope( org.hisp.dhis.trackedentity.TrackedEntityInstance tei, TrackedEntityAttribute attribute, String value, OrganisationUnit organisationUnit )
     {
-        return trackedEntityCache.get( id, new IdentifiableObjectSearchCallable<>( manager, TrackedEntity.class, id ) );
+        List<ImportConflict> importConflicts = new ArrayList<>();
+
+        if ( attribute == null || value == null )
+        {
+            return importConflicts;
+        }
+
+        TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
+
+        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.getValueType(), attribute.getAggregationType(), attribute.getOptionSet() );
+        params.addAttribute( queryItem );
+
+        if ( attribute.getOrgunitScope() )
+        {
+            params.getOrganisationUnits().add( organisationUnit );
+        }
+        else
+        {
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
+        }
+
+        Grid instances = teiService.getTrackedEntityInstancesGrid( params );
+
+        if ( instances.getHeight() == 0 || (tei != null && instances.getHeight() == 1 && instances.getRow( 0 ).contains( tei.getUid() )) )
+        {
+            return importConflicts;
+        }
+
+        importConflicts.add( new ImportConflict( "Attribute.value", "Non-unique attribute value '" + value + "' for attribute " + attribute.getUid() ) );
+
+        return importConflicts;
     }
 
-    private TrackedEntityAttribute getTrackedEntityAttribute( String id )
+    private List<ImportConflict> checkAttributes( TrackedEntityInstance trackedEntityInstance )
     {
-        return trackedEntityAttributeCache.get( id, new IdentifiableObjectSearchCallable<>( manager, TrackedEntityAttribute.class, id ) );
+        List<ImportConflict> importConflicts = new ArrayList<>();
+
+        for ( Attribute attribute : trackedEntityInstance.getAttributes() )
+        {
+            TrackedEntityAttribute entityAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
+
+            if ( entityAttribute == null )
+            {
+                importConflicts.add( new ImportConflict( "Attribute.attribute", "Invalid attribute " + attribute.getAttribute() ) );
+                continue;
+            }
+
+            if ( entityAttribute.isUnique() )
+            {
+                OrganisationUnit organisationUnit = getOrganisationUnit( trackedEntityInstance.getOrgUnit() );
+                org.hisp.dhis.trackedentity.TrackedEntityInstance tei = teiService.getTrackedEntityInstance( trackedEntityInstance.getTrackedEntityInstance() );
+                importConflicts.addAll( checkScope( tei, entityAttribute, attribute.getValue(), organisationUnit ) );
+            }
+
+            importConflicts.addAll( validateAttributeType( attribute ) );
+        }
+
+        return importConflicts;
+    }
+
+    private List<ImportConflict> checkTrackedEntity( TrackedEntityInstance trackedEntityInstance )
+    {
+        List<ImportConflict> importConflicts = new ArrayList<>();
+
+        if ( trackedEntityInstance.getTrackedEntity() == null )
+        {
+            importConflicts.add( new ImportConflict( "TrackedEntityInstance.trackedEntity", "Missing required property trackedEntity" ) );
+            return importConflicts;
+        }
+
+        TrackedEntity trackedEntity = getTrackedEntity( trackedEntityInstance.getTrackedEntity() );
+
+        if ( trackedEntity == null )
+        {
+            importConflicts.add( new ImportConflict( "TrackedEntityInstance.trackedEntity", "Invalid trackedEntity" +
+                trackedEntityInstance.getTrackedEntity() ) );
+        }
+
+        return importConflicts;
     }
 }
