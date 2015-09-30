@@ -1,5 +1,0 @@
-
-<form action="testSMSData.action" >
-	<input type="text" id="smsdata" name="smsdata" />
-	<input type="submit" value="send" />
-</form>
