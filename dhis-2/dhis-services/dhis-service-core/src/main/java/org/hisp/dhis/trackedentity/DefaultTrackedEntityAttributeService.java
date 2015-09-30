@@ -254,7 +254,7 @@ public class DefaultTrackedEntityAttributeService
         {
             return "Value is not boolean for attribute " + trackedEntityAttribute.getUid();
         }
-        else if ( ValueType.DATE == valueType && !DateUtils.dateIsValid( value ) )
+        else if ( ValueType.DATE == valueType && DateUtils.parseDate( value ) == null )
         {
             return "Value is not date for attribute " + trackedEntityAttribute.getUid();
         }
