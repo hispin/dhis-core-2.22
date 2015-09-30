@@ -492,7 +492,8 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        String errorMessage = trackedEntityAttributeService.validateScope( trackedEntityInstance, trackedEntityAttribute, organisationUnit, value );
+        String errorMessage = trackedEntityAttributeService.validateScope( trackedEntityInstance, trackedEntityAttribute,
+            value, organisationUnit, null );
 
         if ( errorMessage != null )
         {

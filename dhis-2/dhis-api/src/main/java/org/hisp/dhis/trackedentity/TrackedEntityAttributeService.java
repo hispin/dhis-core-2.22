@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentity;
  */
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.program.Program;
 
 import java.util.List;
 
@@ -190,12 +191,13 @@ public interface TrackedEntityAttributeService
      *
      * @param trackedEntityInstance  TrackedEntityInstance
      * @param trackedEntityAttribute TrackedEntityAttribute
-     * @param organisationUnit       OrganisationUnit - only required if org unit scoped
      * @param value                  Value
+     * @param organisationUnit       OrganisationUnit - only required if org unit scoped
+     * @param program                Program - only required if program scoped
      * @return null if valid, a message if not
      */
     String validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
-        OrganisationUnit organisationUnit, String value );
+        String value, OrganisationUnit organisationUnit, Program program );
 
     /**
      * Validate value against tracked entity attribute value type.

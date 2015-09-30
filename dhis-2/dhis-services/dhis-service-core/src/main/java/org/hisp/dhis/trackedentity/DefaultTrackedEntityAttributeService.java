@@ -201,7 +201,7 @@ public class DefaultTrackedEntityAttributeService
 
     @Override
     public String validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
-        OrganisationUnit organisationUnit, String value )
+        String value, OrganisationUnit organisationUnit, Program program )
     {
         Assert.notNull( trackedEntityInstance, "trackedEntityInstance is required." );
         Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
@@ -215,10 +215,25 @@ public class DefaultTrackedEntityAttributeService
         params.addAttribute( new QueryItem( trackedEntityAttribute, QueryOperator.EQ, value, trackedEntityAttribute.getValueType(),
             trackedEntityAttribute.getAggregationType(), trackedEntityAttribute.getOptionSet() ) );
 
-        if ( trackedEntityAttribute.getOrgunitScope() )
+        if ( trackedEntityAttribute.getOrgunitScope() && trackedEntityAttribute.getProgramScope() )
         {
-            params.getOrganisationUnits().add( organisationUnit );
+            Assert.notNull( program, "program is required for program scope" );
+            Assert.notNull( organisationUnit, "organisationUnit is required for org unit scope" );
+            params.setProgram( program );
+            params.addOrganisationUnit( organisationUnit );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
+        }
+        else if ( trackedEntityAttribute.getOrgunitScope() )
+        {
+            Assert.notNull( organisationUnit, "organisationUnit is required for org unit scope" );
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
+            params.addOrganisationUnit( organisationUnit );
+        }
+        else if ( trackedEntityAttribute.getProgramScope() )
+        {
+            Assert.notNull( program, "program is required for program scope" );
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
+            params.setProgram( program );
         }
         else
         {
