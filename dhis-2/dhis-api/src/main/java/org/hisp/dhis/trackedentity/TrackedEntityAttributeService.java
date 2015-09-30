@@ -101,9 +101,8 @@ public interface TrackedEntityAttributeService
     /**
      * Returns a {@link TrackedEntityAttribute} with a given code.
      *
-     * @param name the code of the TrackedEntityAttribute to return.
-     * @return the TrackedEntityAttribute with the given code, or null if no
-     * match.
+     * @param code The code of the TrackedEntityAttribute to return.
+     * @return the TrackedEntityAttribute with the given code, or null if no match.
      */
     TrackedEntityAttribute getTrackedEntityAttributeByCode( String code );
 
@@ -141,7 +140,6 @@ public interface TrackedEntityAttributeService
     /**
      * Get attributes which are displayed in visit schedule
      *
-     * @param displayInListNoProgram True/False value
      * @return List of attributes
      */
     List<TrackedEntityAttribute> getTrackedEntityAttributesWithoutProgram();
@@ -149,7 +147,6 @@ public interface TrackedEntityAttributeService
     /**
      * Get attributes which are displayed in visit schedule
      *
-     * @param displayInListNoProgram True/False value
      * @return List of attributes
      */
     List<TrackedEntityAttribute> getTrackedEntityAttributesDisplayInList();
@@ -157,13 +154,13 @@ public interface TrackedEntityAttributeService
     /**
      * Returns {@link TrackedEntityAttribute} list with paging
      *
-     * @param name Keyword for searching by name
-     * @param min
-     * @param max
+     * @param name   Keyword for searching by name
+     * @param offset Offset to start results collection from
+     * @param max    Maximum number of results
      * @return a collection of all TrackedEntityAttribute, or an empty
      * collection if there are no TrackedEntityAttributes.
      */
-    List<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int min, int max );
+    List<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int offset, int max );
 
     /**
      * Returns The number of all TrackedEntityAttribute available
@@ -173,12 +170,12 @@ public interface TrackedEntityAttributeService
     /**
      * Returns {@link TrackedEntityAttribute} list with paging
      *
-     * @param min
-     * @param max
+     * @param offset Offset to start results collection from
+     * @param max    Maximum number of results
      * @return a collection of all TrackedEntityAttribute, or an empty
      * collection if there are no TrackedEntityAttributes.
      */
-    List<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int min, int max );
+    List<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int offset, int max );
 
     /**
      * Returns The number of TrackedEntityAttributes with the key searched
