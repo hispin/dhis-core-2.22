@@ -200,7 +200,7 @@ public class DefaultTrackedEntityAttributeService
     }
 
     @Override
-    public boolean validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
+    public String validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
         OrganisationUnit organisationUnit, String value )
     {
         Assert.notNull( trackedEntityInstance, "trackedEntityInstance is required." );
@@ -208,7 +208,7 @@ public class DefaultTrackedEntityAttributeService
 
         if ( !trackedEntityAttribute.isUnique() )
         {
-            return true;
+            return null;
         }
 
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
@@ -227,7 +227,12 @@ public class DefaultTrackedEntityAttributeService
 
         Grid instances = trackedEntityInstanceService.getTrackedEntityInstancesGrid( params );
 
-        return instances.getHeight() == 0 || instances.getHeight() == 1 && instances.getRow( 0 ).contains( trackedEntityInstance.getUid() );
+        if ( !(instances.getHeight() == 0 || instances.getHeight() == 1 && instances.getRow( 0 ).contains( trackedEntityInstance.getUid() )) )
+        {
+            return "Non-unique attribute value '" + value + "' for attribute " + trackedEntityAttribute.getUid();
+        }
+
+        return null;
     }
 
     @Override
