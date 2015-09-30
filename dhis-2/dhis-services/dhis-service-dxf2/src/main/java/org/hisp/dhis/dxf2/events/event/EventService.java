@@ -89,11 +89,11 @@ public interface EventService
     // UPDATE
     // -------------------------------------------------------------------------
 
-    void updateEvent( Event event, boolean singleValue );
+    ImportSummary updateEvent( Event event, boolean singleValue );
 
-    void updateEvents( List<Event> events, boolean singleValue );
+    ImportSummary updateEvent( Event event, boolean singleValue, ImportOptions importOptions );
 
-    void updateEvent( Event event, boolean singleValue, ImportOptions importOptions );
+    ImportSummaries updateEvents( List<Event> events, boolean singleValue );
 
     void updateEventForNote( Event event );
 
