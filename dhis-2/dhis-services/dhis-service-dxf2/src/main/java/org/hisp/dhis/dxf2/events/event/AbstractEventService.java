@@ -562,28 +562,34 @@ public abstract class AbstractEventService
     // -------------------------------------------------------------------------
 
     @Override
-    public void updateEvents( List<Event> events, boolean singleValue )
+    public ImportSummaries updateEvents( List<Event> events, boolean singleValue )
     {
+        ImportSummaries importSummaries = new ImportSummaries();
+
         for ( Event event : events )
         {
-            updateEvent( event, singleValue );
+            importSummaries.addImportSummary( updateEvent( event, singleValue ) );
         }
+
+        return importSummaries;
     }
 
     @Override
-    public void updateEvent( Event event, boolean singleValue )
+    public ImportSummary updateEvent( Event event, boolean singleValue )
     {
-        updateEvent( event, singleValue, null );
+        return updateEvent( event, singleValue, null );
     }
 
     @Override
-    public void updateEvent( Event event, boolean singleValue, ImportOptions importOptions )
+    public ImportSummary updateEvent( Event event, boolean singleValue, ImportOptions importOptions )
     {
+        ImportSummary importSummary = new ImportSummary();
         ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( event.getEvent() );
 
         if ( programStageInstance == null )
         {
-            return;
+            importSummary.getConflicts().add( new ImportConflict( "Invalid Event ID.", event.getEvent() ) );
+            return importSummary;
         }
 
         if ( importOptions == null )
@@ -670,8 +676,12 @@ public abstract class AbstractEventService
         for ( DataValue value : event.getDataValues() )
         {
             DataElement dataElement = getDataElement( value.getDataElement() );
-
             TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue( programStageInstance, dataElement );
+
+            if ( !validateDataValue( dataElement, value.getValue(), importSummary ) )
+            {
+                continue;
+            }
 
             if ( dataValue != null )
             {
@@ -697,13 +707,14 @@ public abstract class AbstractEventService
                 dataValueService.deleteTrackedEntityDataValue( value );
             }
         }
+
+        return importSummary;
     }
 
     @Override
     public void updateEventForNote( Event event )
     {
-        ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance(
-            event.getEvent() );
+        ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( event.getEvent() );
 
         if ( programStageInstance == null )
         {

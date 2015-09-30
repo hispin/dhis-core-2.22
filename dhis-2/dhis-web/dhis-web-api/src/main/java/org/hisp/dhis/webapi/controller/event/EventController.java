@@ -430,8 +430,8 @@ public class EventController
         Event updatedEvent = JacksonUtils.fromXml( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
-        eventService.updateEvent( updatedEvent, false, importOptions );
-        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
+        ImportSummary importSummary = eventService.updateEvent( updatedEvent, false, importOptions );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.PUT, consumes = "application/json" )
@@ -448,8 +448,8 @@ public class EventController
         Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
-        eventService.updateEvent( updatedEvent, false, importOptions );
-        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
+        ImportSummary importSummary = eventService.updateEvent( updatedEvent, false, importOptions );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     @RequestMapping( value = "/{uid}/{dataElementUid}", method = RequestMethod.PUT, consumes = "application/json" )
@@ -473,8 +473,8 @@ public class EventController
         Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
-        eventService.updateEvent( updatedEvent, true );
-        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
+        ImportSummary importSummary = eventService.updateEvent( updatedEvent, true );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     @RequestMapping( value = "/{uid}/addNote", method = RequestMethod.PUT, consumes = "application/json" )
