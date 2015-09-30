@@ -59,10 +59,7 @@ public class ImportSummaries extends AbstractWebMessageResponse
 
     public void addImportSummaries( ImportSummaries importSummaries )
     {
-        for ( ImportSummary importSummary : importSummaries.getImportSummaries() )
-        {
-            addImportSummary( importSummary );
-        }
+        importSummaries.getImportSummaries().forEach( this::addImportSummary );
     }
 
     public ImportSummaries addImportSummary( ImportSummary importSummary )
