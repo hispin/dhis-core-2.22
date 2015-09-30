@@ -49,6 +49,6 @@ public class TrackedEntityInstanceQueryTest
     {
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
         params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
-        instanceService.validate( params );
+        instanceService.validateQueryParams( params );
     }
 }
