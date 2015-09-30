@@ -1,9 +1,0 @@
-
-<a href="index.action"><h2>Payment Adjustment &nbsp;</h2></a>
-<ul>
-    <!--<li></li>-->
-    <!--<li></li>-->
-</ul>
-<br>
-
-#parse( "/dhis-web-commons/ouwt/orgunittreesearch.vm" )
