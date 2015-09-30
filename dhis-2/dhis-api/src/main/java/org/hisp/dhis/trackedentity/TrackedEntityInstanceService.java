@@ -32,7 +32,6 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
@@ -65,7 +64,7 @@ import java.util.Set;
  * <p>Attributes specified in the query follows on the next column indexes.
  * Example usage for retrieving TEIs with two attributes using one attribute as
  * filter:</p>
- * <p/>
+ * <p>
  * <pre>
  * <code>
  * TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
@@ -242,12 +241,11 @@ public interface TrackedEntityInstanceService
      * @param program        Program which person needs to enroll. If this parameter is
      *                       null, the system check unique attribute values of the
      *                       entityInstance
-     * @param format         I18nFormat
      * @return Error code 0 : Validation is OK 1_<duplicate-value> : The
      * attribute value is duplicated 2_<validation-criteria-id> :
      * Violate validation criteria of the program
      */
-    String validateTrackedEntityInstance( TrackedEntityInstance entityInstance, Program program, I18nFormat format );
+    String validateTrackedEntityInstance( TrackedEntityInstance entityInstance, Program program );
 
     /**
      * Validate tracked entity instance enrollment
@@ -255,8 +253,7 @@ public interface TrackedEntityInstanceService
      * @param entityInstance TrackedEntityInstance object
      * @param program        Program which person needs to enroll. If this parameter is
      *                       null, the system check identifiers of the tracked entity instance
-     * @param format         I18nFormat
      * @return ValidationCriteria object which is violated
      */
-    ValidationCriteria validateEnrollment( TrackedEntityInstance entityInstance, Program program, I18nFormat format );
+    ValidationCriteria validateEnrollment( TrackedEntityInstance entityInstance, Program program );
 }

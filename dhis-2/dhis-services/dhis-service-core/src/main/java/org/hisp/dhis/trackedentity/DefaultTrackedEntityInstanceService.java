@@ -28,26 +28,6 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ACCESSIBLE;
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ALL;
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.CHILDREN;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.CREATED_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.INACTIVE_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.LAST_UPDATED_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.META_DATA_NAMES_KEY;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.ORG_UNIT_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.PAGER_META_KEY;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.TRACKED_ENTITY_ID;
-import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.TRACKED_ENTITY_INSTANCE_ID;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DimensionalObject;
@@ -61,7 +41,6 @@ import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
@@ -72,6 +51,7 @@ import org.hisp.dhis.relationship.RelationshipService;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
 import org.hisp.dhis.system.grid.ListGrid;
+import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -79,6 +59,17 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.*;
+import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.*;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -651,11 +642,11 @@ public class DefaultTrackedEntityInstanceService
     }
 
     @Override
-    public String validateTrackedEntityInstance( TrackedEntityInstance instance, Program program, I18nFormat format )
+    public String validateTrackedEntityInstance( TrackedEntityInstance instance, Program program )
     {
         if ( program != null )
         {
-            ValidationCriteria validationCriteria = validateEnrollment( instance, program, format );
+            ValidationCriteria validationCriteria = validateEnrollment( instance, program );
 
             if ( validationCriteria != null )
             {
@@ -681,7 +672,7 @@ public class DefaultTrackedEntityInstanceService
     }
 
     @Override
-    public ValidationCriteria validateEnrollment( TrackedEntityInstance instance, Program program, I18nFormat format )
+    public ValidationCriteria validateEnrollment( TrackedEntityInstance instance, Program program )
     {
         for ( ValidationCriteria criteria : program.getValidationCriteria() )
         {
@@ -706,8 +697,9 @@ public class DefaultTrackedEntityInstanceService
                     }
                     else if ( valueType.isDate() )
                     {
-                        Date value1 = format.parseDate( value );
-                        Date value2 = format.parseDate( criteria.getValue() );
+                        Date value1 = DateUtils.parseDate( value );
+                        Date value2 = DateUtils.parseDate( criteria.getValue() );
+
                         int i = value1.compareTo( value2 );
 
                         if ( i != criteria.getOperator() )
