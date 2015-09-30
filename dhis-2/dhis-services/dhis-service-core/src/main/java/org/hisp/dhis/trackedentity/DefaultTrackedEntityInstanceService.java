@@ -128,7 +128,7 @@ public class DefaultTrackedEntityInstanceService
     public List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
     {
         decideAccess( params );
-        validate( params );
+        validateQueryParams( params );
 
         // ---------------------------------------------------------------------
         // Verify params
@@ -167,7 +167,7 @@ public class DefaultTrackedEntityInstanceService
     public Grid getTrackedEntityInstancesGrid( TrackedEntityInstanceQueryParams params )
     {
         decideAccess( params );
-        validate( params );
+        validateQueryParams( params );
 
         // ---------------------------------------------------------------------
         // Verify params
@@ -303,7 +303,7 @@ public class DefaultTrackedEntityInstanceService
     }
 
     @Override
-    public void validate( TrackedEntityInstanceQueryParams params )
+    public void validateQueryParams( TrackedEntityInstanceQueryParams params )
         throws IllegalQueryException
     {
         String violation = null;

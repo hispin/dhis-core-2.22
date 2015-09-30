@@ -166,7 +166,7 @@ public interface TrackedEntityInstanceService
      * @param params the TrackedEntityInstanceQueryParams.
      * @throws IllegalQueryException if the given params is invalid.
      */
-    void validate( TrackedEntityInstanceQueryParams params )
+    void validateQueryParams( TrackedEntityInstanceQueryParams params )
         throws IllegalQueryException;
 
     /**
