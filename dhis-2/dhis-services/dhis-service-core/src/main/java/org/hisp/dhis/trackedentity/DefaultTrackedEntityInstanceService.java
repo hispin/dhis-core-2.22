@@ -611,20 +611,9 @@ public class DefaultTrackedEntityInstanceService
     {
         trackedEntityInstanceStore.update( instance );
 
-        for ( TrackedEntityAttributeValue av : valuesForSave )
-        {
-            attributeValueService.addTrackedEntityAttributeValue( av );
-        }
-
-        for ( TrackedEntityAttributeValue av : valuesForUpdate )
-        {
-            attributeValueService.updateTrackedEntityAttributeValue( av );
-        }
-
-        for ( TrackedEntityAttributeValue av : valuesForDelete )
-        {
-            attributeValueService.deleteTrackedEntityAttributeValue( av );
-        }
+        valuesForSave.forEach( attributeValueService::addTrackedEntityAttributeValue );
+        valuesForUpdate.forEach( attributeValueService::updateTrackedEntityAttributeValue );
+        valuesForDelete.forEach( attributeValueService::deleteTrackedEntityAttributeValue );
 
         if ( shouldSaveRepresentativeInformation( instance, representativeId ) )
         {
