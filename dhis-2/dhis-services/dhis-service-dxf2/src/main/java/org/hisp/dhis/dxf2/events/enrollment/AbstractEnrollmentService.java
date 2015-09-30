@@ -35,7 +35,6 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
-import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.events.event.Note;
@@ -56,9 +55,8 @@ import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.system.callable.IdentifiableObjectSearchCallable;
-import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
@@ -93,6 +91,9 @@ public abstract class AbstractEnrollmentService
 
     @Autowired
     protected org.hisp.dhis.trackedentity.TrackedEntityInstanceService teiService;
+
+    @Autowired
+    protected TrackedEntityAttributeService trackedEntityAttributeService;
 
     @Autowired
     protected TrackedEntityAttributeValueService trackedEntityAttributeValueService;
@@ -606,46 +607,19 @@ public abstract class AbstractEnrollmentService
     private List<ImportConflict> validateAttributeType( Attribute attribute )
     {
         List<ImportConflict> importConflicts = Lists.newArrayList();
-        TrackedEntityAttribute teAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
+        TrackedEntityAttribute trackedEntityAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
 
-        if ( teAttribute == null )
+        if ( trackedEntityAttribute == null )
         {
             importConflicts.add( new ImportConflict( "Attribute.attribute", "Does not point to a valid attribute." ) );
             return importConflicts;
         }
 
-        if ( attribute.getValue().length() > 255 )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value length is greater than 256 chars." ) );
-        }
+        String errorMessage = trackedEntityAttributeService.validateValueType( trackedEntityAttribute, attribute.getValue() );
 
-        if ( ValueType.NUMBER == teAttribute.getValueType() && !MathUtils.isNumeric( attribute.getValue() ) )
+        if ( errorMessage != null )
         {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not numeric." ) );
-        }
-        else if ( ValueType.BOOLEAN == teAttribute.getValueType() && !MathUtils.isBool( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not boolean." ) );
-        }
-        else if ( ValueType.DATE == teAttribute.getValueType() && !DateUtils.dateIsValid( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not date." ) );
-        }
-        else if ( ValueType.TRUE_ONLY == teAttribute.getValueType() && "true".equals( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not true (true-only value type)." ) );
-        }
-        else if ( ValueType.USERNAME == teAttribute.getValueType() )
-        {
-            if ( userService.getUserCredentialsByUsername( attribute.getValue() ) == null )
-            {
-                importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid username." ) );
-            }
-        }
-        else if ( ValueType.OPTION_SET == teAttribute.getValueType()
-            && !teAttribute.getOptionSet().getOptionCodes().contains( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid option code." ) );
+            importConflicts.add( new ImportConflict( "Attribute.value", errorMessage ) );
         }
 
         return importConflicts;
