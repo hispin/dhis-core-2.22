@@ -100,6 +100,25 @@
         <td><input name="entrytrueonly" class="entrytrueonly" id="${dataEntryId}" type="checkbox" tabindex="${tabIndex}"#if( $greyedField || !$hasAccess ) disabled="disabled"#end><img class="commentlink" id="${commentId}"></td>
     #elseif( "LONG_TEXT" == $dataElement.valueType )
         <td><textarea name="entryfield" class="entryfield entryarea" id="${dataEntryId}" tabindex="${tabIndex}" #if( $greyedField || !$hasAccess ) disabled="disabled"#end></textarea></td>
+    #elseif( "FILE_RESOURCE" == $dataElement.valueType )
+        <td>
+            <div class="entryfileresource-container">
+                <div id="${dataEntryId}" class="entryfileresource">
+                    <div class="upload-fileinfo">
+                        <div class="upload-fileinfo-size"></div>
+                        <div class="upload-fileinfo-name"></div>
+                    </div>
+                    <div class="upload-progress">
+                        <div class="upload-progress-bar"></div>
+                        <div class="upload-progress-info"></div>
+                    </div>
+                </div>
+                <div class="upload-button-group">
+                    <button class="upload-button"></button>
+                </div>
+                <input type="file" style="display: none;">
+            </div>
+        </td>
     #else
         #if( $dataElement.optionSet )
           <td><input name="entryoptionset" class="entryoptionset" id="${dataEntryId}" type="text" tabindex="${tabIndex}"#if( $greyedField || !$hasAccess ) disabled="disabled"#end><img class="commentlink" id="${commentId}"></td>

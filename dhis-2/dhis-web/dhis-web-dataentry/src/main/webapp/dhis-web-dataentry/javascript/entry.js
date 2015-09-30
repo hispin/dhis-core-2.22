@@ -292,6 +292,16 @@ function saveTrueOnly( dataElementId, optionComboId, fieldId )
     valueSaver.save();
 }
 
+function saveFileResource( dataElementId, optionComboId, fieldId, fileResource )
+{
+    fieldId = '#' + fieldId;
+
+    var periodId = $( '#selectedPeriodId' ).val();
+
+    var valueSaver = new FileResourceValueSaver( dataElementId, periodId, optionComboId, fileResource, fieldId, dhis2.de.cst.colorGreen );
+    valueSaver.save();
+}
+
 /**
  * Supportive method.
  */
@@ -356,12 +366,19 @@ function ValueSaver( de, pe, co, value, fieldId, resultColor )
             error: handleError
         } );
     };
-    
+
+    var afterHandleSuccess = function() {};
+
+    this.setAfterHandleSuccess = function( callback ) {
+        afterHandleSuccess = callback;
+    };
+
     function handleSuccess()
     {
-    	dhis2.de.storageManager.clearDataValueJSON( dataValue );
+        dhis2.de.storageManager.clearDataValueJSON( dataValue );
         markValue( fieldId, resultColor );
         $( document ).trigger( dhis2.de.event.dataValueSaved, [ dhis2.de.currentDataSetId, dataValue ] );
+        afterHandleSuccess();
     }
 
     function handleError( xhr, textStatus, errorThrown )
@@ -383,4 +400,20 @@ function ValueSaver( de, pe, co, value, fieldId, resultColor )
     {
         $( fieldId ).css( 'background-color', color );
     }
+}
+
+function FileResourceValueSaver( de, pe, co, fileResource, fieldId, resultColor )
+{
+    var valueSaver = new ValueSaver( de, pe, co, fileResource.id, fieldId, resultColor );
+
+    valueSaver.setAfterHandleSuccess( function() {
+        var name = fileResource.name, size = '(' + filesize( fileResource.contentLength ) + ')';
+        var $field = $( fieldId );
+
+        $field.find( '.upload-fileinfo-name' ).text( name );
+        $field.find( '.upload-fileinfo-size' ).text( size );
+        $field.find( '.upload-progress-bar' ).toggleClass( 'upload-progress-bar-complete' );
+    } );
+
+    return valueSaver;
 }
