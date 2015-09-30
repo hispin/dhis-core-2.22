@@ -31,9 +31,16 @@ package org.hisp.dhis.trackedentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.common.QueryItem;
+import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 /**
  * @author Abyot Asalefew
@@ -59,6 +66,9 @@ public class DefaultTrackedEntityAttributeService
     {
         this.programService = programService;
     }
+
+    @Autowired
+    private TrackedEntityInstanceService trackedEntityInstanceService;
 
     // -------------------------------------------------------------------------
     // Implementation methods
@@ -181,4 +191,35 @@ public class DefaultTrackedEntityAttributeService
     {
         return attributeStore.getCountLikeName( name );
     }  
+
+    @Override
+    public boolean validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
+        OrganisationUnit organisationUnit, String value )
+    {
+        Assert.notNull( trackedEntityInstance, "trackedEntityInstance is required." );
+        Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
+
+        if ( !trackedEntityAttribute.isUnique() )
+        {
+            return true;
+        }
+
+        TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
+        params.addAttribute( new QueryItem( trackedEntityAttribute, QueryOperator.EQ, value, trackedEntityAttribute.getValueType(),
+            trackedEntityAttribute.getAggregationType(), trackedEntityAttribute.getOptionSet() ) );
+
+        if ( trackedEntityAttribute.getOrgunitScope() )
+        {
+            params.getOrganisationUnits().add( organisationUnit );
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
+        }
+        else
+        {
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
+        }
+
+        Grid instances = trackedEntityInstanceService.getTrackedEntityInstancesGrid( params );
+
+        return instances.getHeight() == 0 || instances.getHeight() == 1 && instances.getRow( 0 ).contains( trackedEntityInstance.getUid() );
+    }
 }

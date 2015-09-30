@@ -30,11 +30,7 @@ package org.hisp.dhis.dxf2.events.trackedentity;
 
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.CodeGenerator;
-import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.common.QueryItem;
-import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
@@ -51,7 +47,7 @@ import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
+import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.user.UserService;
@@ -63,6 +59,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -78,7 +75,7 @@ public abstract class AbstractTrackedEntityInstanceService
     protected org.hisp.dhis.trackedentity.TrackedEntityInstanceService teiService;
 
     @Autowired
-    protected TrackedEntityAttributeValueService attributeValueService;
+    protected TrackedEntityAttributeService trackedEntityAttributeService;
 
     @Autowired
     protected RelationshipService relationshipService;
@@ -111,14 +108,7 @@ public abstract class AbstractTrackedEntityInstanceService
     @Override
     public List<TrackedEntityInstance> getTrackedEntityInstances( List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances )
     {
-        List<TrackedEntityInstance> teiItems = new ArrayList<>();
-
-        for ( org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
-        {
-            teiItems.add( getTrackedEntityInstance( trackedEntityInstance ) );
-        }
-
-        return teiItems;
+        return trackedEntityInstances.stream().map( this::getTrackedEntityInstance ).collect( Collectors.toList() );
     }
 
     @Override
@@ -381,7 +371,7 @@ public abstract class AbstractTrackedEntityInstanceService
                 attributeValue.setValue( attribute.getValue() );
                 attributeValue.setAttribute( entityAttribute );
 
-                attributeValueService.addTrackedEntityAttributeValue( attributeValue );
+                trackedEntityAttributeValueService.addTrackedEntityAttributeValue( attributeValue );
             }
         }
     }
@@ -412,7 +402,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
     private void removeAttributeValues( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance )
     {
-        entityInstance.getAttributeValues().forEach( attributeValueService::deleteTrackedEntityAttributeValue );
+        entityInstance.getAttributeValues().forEach( trackedEntityAttributeValueService::deleteTrackedEntityAttributeValue );
         teiService.updateTrackedEntityInstance( entityInstance );
     }
 
@@ -530,30 +520,12 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
-
-        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.getValueType(), attribute.getAggregationType(), attribute.getOptionSet() );
-        params.addAttribute( queryItem );
-
-        if ( attribute.getOrgunitScope() )
-        {
-            params.getOrganisationUnits().add( organisationUnit );
-            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
-        }
-        else
-        {
-            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
-        }
-
-        Grid instances = teiService.getTrackedEntityInstancesGrid( params );
-
-        if ( instances.getHeight() == 0 || (tei != null && instances.getHeight() == 1 && instances.getRow( 0 ).contains( tei.getUid() )) )
+        if ( trackedEntityAttributeService.validateScope( tei, attribute, organisationUnit, value ) )
         {
             return importConflicts;
         }
 
         importConflicts.add( new ImportConflict( "Attribute.value", "Non-unique attribute value '" + value + "' for attribute " + attribute.getUid() ) );
-
         return importConflicts;
     }
 

@@ -59,6 +59,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.Date;
@@ -724,4 +725,5 @@ public class DefaultTrackedEntityInstanceService
 
         return null;
     }
+
 }
