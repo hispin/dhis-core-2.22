@@ -176,9 +176,9 @@ public class DefaultTrackedEntityAttributeService
     }
 
     @Override
-    public List<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int min, int max )
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesBetweenByName( String name, int offset, int max )
     {
-        return attributeStore.getAllLikeName( name, min, max );
+        return attributeStore.getAllLikeName( name, offset, max );
     }
 
     @Override
@@ -188,9 +188,9 @@ public class DefaultTrackedEntityAttributeService
     }
 
     @Override
-    public List<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int min, int max )
+    public List<TrackedEntityAttribute> getTrackedEntityAttributesBetween( int offset, int max )
     {
-        return attributeStore.getAllOrderedName( min, max );
+        return attributeStore.getAllOrderedName( offset, max );
     }
 
     @Override
