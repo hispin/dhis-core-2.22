@@ -44,12 +44,12 @@ public class OrganisationUnitQueryParams
     private String query;
     
     /**
-     * The parent organisation units for which to include all children.
+     * The parent organisation units for which to include all children, inclusive.
      */
     private Set<OrganisationUnit> parents = new HashSet<>();
     
     /**
-     * The groups for which members to include.
+     * The groups for which members to include, inclusive.
      */
     private Set<OrganisationUnitGroup> groups = new HashSet<>();
     
