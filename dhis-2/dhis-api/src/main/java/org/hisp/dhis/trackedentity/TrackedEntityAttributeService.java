@@ -28,6 +28,8 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+
 import java.util.List;
 
 /**
@@ -197,4 +199,15 @@ public interface TrackedEntityAttributeService
      */
     int getTrackedEntityAttributeCountByName( String name );
 
+    /**
+     * Validate scope of tracked entity attribute. Will return true if attribute is non-unique.
+     *
+     * @param trackedEntityInstance  TrackedEntityInstance
+     * @param trackedEntityAttribute TrackedEntityAttribute
+     * @param organisationUnit       OrganisationUnit - only required if org unit scoped
+     * @param value                  Value
+     * @return true is unique, false otherwise
+     */
+    boolean validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
+        OrganisationUnit organisationUnit, String value );
 }
