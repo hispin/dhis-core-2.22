@@ -30,11 +30,8 @@ package org.hisp.dhis.dxf2.events.enrollment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.common.QueryItem;
-import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.events.event.Note;
@@ -57,7 +54,6 @@ import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.system.callable.IdentifiableObjectSearchCallable;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
-import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.trackedentitycomment.TrackedEntityComment;
@@ -508,45 +504,23 @@ public abstract class AbstractEnrollmentService
         return importConflicts;
     }
 
-    private List<ImportConflict> checkScope( org.hisp.dhis.trackedentity.TrackedEntityInstance tei,
-        TrackedEntityAttribute attribute, String value, OrganisationUnit organisationUnit, Program program )
+    private List<ImportConflict> checkScope( org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance,
+        TrackedEntityAttribute trackedEntityAttribute, String value, OrganisationUnit organisationUnit, Program program )
     {
         List<ImportConflict> importConflicts = new ArrayList<>();
 
-        TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
-
-        QueryItem queryItem = new QueryItem( attribute, QueryOperator.EQ, value, attribute.getValueType(), attribute.getAggregationType(), null );
-        params.addAttribute( queryItem );
-
-        if ( attribute.getOrgunitScope() && attribute.getProgramScope() )
-        {
-            params.setProgram( program );
-            params.addOrganisationUnit( organisationUnit );
-        }
-        else if ( attribute.getOrgunitScope() )
-        {
-            params.addOrganisationUnit( organisationUnit );
-        }
-        else if ( attribute.getProgramScope() )
-        {
-            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
-            params.setProgram( program );
-        }
-        else
-        {
-            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
-        }
-
-        Grid instances = teiService.getTrackedEntityInstancesGrid( params );
-
-        if ( instances.getHeight() == 0
-            || (instances.getHeight() == 1 && instances.getRow( 0 ).contains( tei.getUid() )) )
+        if ( trackedEntityAttribute == null || value == null )
         {
             return importConflicts;
         }
 
-        importConflicts.add( new ImportConflict( "Attribute.value", "Non-unique attribute value '" + value
-            + "' for attribute " + attribute.getUid() ) );
+        String errorMessage = trackedEntityAttributeService.validateScope( trackedEntityInstance, trackedEntityAttribute,
+            value, organisationUnit, program );
+
+        if ( errorMessage != null )
+        {
+            importConflicts.add( new ImportConflict( "Attribute.value", errorMessage ) );
+        }
 
         return importConflicts;
     }
@@ -607,15 +581,15 @@ public abstract class AbstractEnrollmentService
     private List<ImportConflict> validateAttributeType( Attribute attribute )
     {
         List<ImportConflict> importConflicts = Lists.newArrayList();
-        TrackedEntityAttribute trackedEntityAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
+        TrackedEntityAttribute teAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
 
-        if ( trackedEntityAttribute == null )
+        if ( teAttribute == null )
         {
             importConflicts.add( new ImportConflict( "Attribute.attribute", "Does not point to a valid attribute." ) );
             return importConflicts;
         }
 
-        String errorMessage = trackedEntityAttributeService.validateValueType( trackedEntityAttribute, attribute.getValue() );
+        String errorMessage = trackedEntityAttributeService.validateValueType( teAttribute, attribute.getValue() );
 
         if ( errorMessage != null )
         {
