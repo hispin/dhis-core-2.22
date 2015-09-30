@@ -28,19 +28,23 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.system.util.DateUtils;
+import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Abyot Asalefew
@@ -69,6 +73,9 @@ public class DefaultTrackedEntityAttributeService
 
     @Autowired
     private TrackedEntityInstanceService trackedEntityInstanceService;
+
+    @Autowired
+    private UserService userService;
 
     // -------------------------------------------------------------------------
     // Implementation methods
@@ -190,7 +197,7 @@ public class DefaultTrackedEntityAttributeService
     public int getTrackedEntityAttributeCountByName( String name )
     {
         return attributeStore.getCountLikeName( name );
-    }  
+    }
 
     @Override
     public boolean validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
@@ -221,5 +228,47 @@ public class DefaultTrackedEntityAttributeService
         Grid instances = trackedEntityInstanceService.getTrackedEntityInstancesGrid( params );
 
         return instances.getHeight() == 0 || instances.getHeight() == 1 && instances.getRow( 0 ).contains( trackedEntityInstance.getUid() );
+    }
+
+    @Override
+    public String validateValueType( TrackedEntityAttribute trackedEntityAttribute, String value )
+    {
+        Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
+        ValueType valueType = trackedEntityAttribute.getValueType();
+
+        if ( value.length() > 255 )
+        {
+            return "Value length is greater than 256 chars for attribute " + trackedEntityAttribute.getUid();
+        }
+
+        if ( ValueType.NUMBER == valueType && !MathUtils.isNumeric( value ) )
+        {
+            return "Value is not numeric for attribute " + trackedEntityAttribute.getUid();
+        }
+        else if ( ValueType.BOOLEAN == valueType && !MathUtils.isBool( value ) )
+        {
+            return "Value is not boolean for attribute " + trackedEntityAttribute.getUid();
+        }
+        else if ( ValueType.DATE == valueType && !DateUtils.dateIsValid( value ) )
+        {
+            return "Value is not date for attribute " + trackedEntityAttribute.getUid();
+        }
+        else if ( ValueType.TRUE_ONLY == valueType && !"true".equals( value ) )
+        {
+            return "Value is not true (true-only value type) for attribute " + trackedEntityAttribute.getUid();
+        }
+        else if ( ValueType.USERNAME == valueType )
+        {
+            if ( userService.getUserCredentialsByUsername( value ) == null )
+            {
+                return "Value is not pointing to a valid username for attribute " + trackedEntityAttribute.getUid();
+            }
+        }
+        else if ( ValueType.OPTION_SET == valueType && !trackedEntityAttribute.isValidOptionValue( value ) )
+        {
+            return "Value is not pointing to a valid option for attribute " + trackedEntityAttribute.getUid();
+        }
+
+        return null;
     }
 }
