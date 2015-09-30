@@ -111,7 +111,7 @@ d2Directives.directive('d2NumberValidator', function() {
     };
 })
 
-.directive("d2OptionValidator", function($translate) {
+.directive("d2OptionValidator", function($translate, DialogService) {
     return {
         restrict: "A",         
         require: "ngModel",         
@@ -124,7 +124,11 @@ d2Directives.directive('d2NumberValidator', function() {
                 var res = !value ? !isRequired : true;
                 
                 if(!res){
-                    alert($translate.instant('option_required'));
+                	var dialogOptions = {
+		                headerText: 'validation_error',
+		                bodyText: 'option_required'
+		            };		
+		            DialogService.showDialog({}, dialogOptions);
                 }
                 
                 return res;
