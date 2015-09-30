@@ -59,7 +59,6 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.Date;
@@ -120,7 +119,7 @@ public class DefaultTrackedEntityInstanceService
     public List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
     {
         decideAccess( params );
-        validateQueryParams( params );
+        validate( params );
 
         // ---------------------------------------------------------------------
         // Verify params
@@ -159,7 +158,7 @@ public class DefaultTrackedEntityInstanceService
     public Grid getTrackedEntityInstancesGrid( TrackedEntityInstanceQueryParams params )
     {
         decideAccess( params );
-        validateQueryParams( params );
+        validate( params );
 
         // ---------------------------------------------------------------------
         // Verify params
@@ -295,7 +294,7 @@ public class DefaultTrackedEntityInstanceService
     }
 
     @Override
-    public void validateQueryParams( TrackedEntityInstanceQueryParams params )
+    public void validate( TrackedEntityInstanceQueryParams params )
         throws IllegalQueryException
     {
         String violation = null;
@@ -725,5 +724,4 @@ public class DefaultTrackedEntityInstanceService
 
         return null;
     }
-
 }
