@@ -128,6 +128,16 @@ public class OrganisationUnitStoreTest
         assertEquals( 2, ous.size() );
         assertTrue( ous.containsAll( Sets.newHashSet( ouD, ouF ) ) );
 
+        // Groups
+        
+        params = new OrganisationUnitQueryParams();
+        params.setGroups( Sets.newHashSet( ogA, ogB ) );
+
+        ous = orgUnitStore.getOrganisationUnits( params );
+
+        assertEquals( 4, ous.size() );
+        assertTrue( ous.containsAll( Sets.newHashSet( ouD, ouF, ouE, ouG ) ) );
+
         // Levels
         
         params = new OrganisationUnitQueryParams();

@@ -274,21 +274,11 @@ public class DefaultOrganisationUnitService
     @Override
     public List<OrganisationUnit> getOrganisationUnits( Collection<OrganisationUnitGroup> groups, Collection<OrganisationUnit> parents )
     {
-        List<OrganisationUnit> members = new ArrayList<>();
+        OrganisationUnitQueryParams params = new OrganisationUnitQueryParams();
+        params.setParents( Sets.newHashSet( parents ) );
+        params.setGroups( Sets.newHashSet( groups ) );
 
-        for ( OrganisationUnitGroup group : groups )
-        {
-            members.addAll( group.getMembers() );
-        }
-
-        if ( parents != null && !parents.isEmpty() )
-        {
-            List<OrganisationUnit> children = getOrganisationUnitsWithChildren( IdentifiableObjectUtils.getUids( parents ) );
-
-            members.retainAll( children );
-        }
-
-        return members;
+        return organisationUnitStore.getOrganisationUnits( params );
     }
 
     @Override

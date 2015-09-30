@@ -177,10 +177,14 @@ public class HibernateOrganisationUnitStore
         
         if ( params.hasGroups() )
         {
+            hql += hlp.whereAnd() + " (";
+            
             for ( OrganisationUnitGroup group : params.getGroups() )
             {
-                hql += hlp.whereAnd() + " :" + group.getUid() + " in elements(o.groups) ";
+                hql += " :" + group.getUid() + " in elements(o.groups) or ";
             }
+            
+            hql = TextUtils.removeLastOr( hql ) + ") ";
         }
         
         if ( params.hasLevels() )
