@@ -31,7 +31,6 @@ package org.hisp.dhis.dxf2.events.trackedentity;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
@@ -43,8 +42,6 @@ import org.hisp.dhis.relationship.Relationship;
 import org.hisp.dhis.relationship.RelationshipService;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.system.callable.IdentifiableObjectSearchCallable;
-import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -442,37 +439,11 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        if ( attribute.getValue().length() > 255 )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value length is greater than 256 chars for attribute: " + attribute ) );
-        }
+        String message = trackedEntityAttributeService.validateValueType( teAttribute, attribute.getValue() );
 
-        if ( ValueType.NUMBER == teAttribute.getValueType() && !MathUtils.isNumeric( attribute.getValue() ) )
+        if ( message != null )
         {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not numeric for attribute: " + attribute ) );
-        }
-        else if ( ValueType.BOOLEAN == teAttribute.getValueType() && !MathUtils.isBool( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not boolean for attribute: " + attribute ) );
-        }
-        else if ( ValueType.DATE == teAttribute.getValueType() && !DateUtils.dateIsValid( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not date for attribute: " + attribute ) );
-        }
-        else if ( ValueType.TRUE_ONLY == teAttribute.getValueType() && !"true".equals( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not true (true-only value type) for attribute: " + attribute ) );
-        }
-        else if ( ValueType.USERNAME == teAttribute.getValueType() )
-        {
-            if ( userService.getUserCredentialsByUsername( attribute.getValue() ) == null )
-            {
-                importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid username for attribute: " + attribute ) );
-            }
-        }
-        else if ( ValueType.OPTION_SET == teAttribute.getValueType() && !teAttribute.isValidOptionValue( attribute.getValue() ) )
-        {
-            importConflicts.add( new ImportConflict( "Attribute.value", "Value is not pointing to a valid option for attribute: " + attribute ) );
+            importConflicts.add( new ImportConflict( "Attribute.value", message ) );
         }
 
         return importConflicts;
