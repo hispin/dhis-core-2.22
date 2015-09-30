@@ -43,6 +43,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -224,12 +225,13 @@ public class AddAttributeAction
         {
             boolean orgunitScope = false;
             boolean programScope = false;
-            if ( scope != null && (scope == SCOPE_ORGUNIT || scope == SCOPE_PROGRAM_IN_ORGUNIT) )
+
+            if ( Objects.equals( scope, SCOPE_ORGUNIT ) || Objects.equals( scope, SCOPE_PROGRAM_IN_ORGUNIT ) )
             {
                 orgunitScope = true;
             }
 
-            if ( scope != null && (scope == SCOPE_PROGRAM || scope == SCOPE_PROGRAM_IN_ORGUNIT) )
+            if ( Objects.equals( scope, SCOPE_PROGRAM ) || Objects.equals( scope, SCOPE_PROGRAM_IN_ORGUNIT ) )
             {
                 programScope = true;
             }
@@ -237,11 +239,11 @@ public class AddAttributeAction
             trackedEntityAttribute.setOrgunitScope( orgunitScope );
             trackedEntityAttribute.setProgramScope( programScope );
         }
-        else if ( valueType.equals( TrackedEntityAttribute.TYPE_OPTION_SET ) )
+        else if ( ValueType.OPTION_SET == valueType )
         {
             trackedEntityAttribute.setOptionSet( optionService.getOptionSet( optionSetId ) );
         }
-        else if ( valueType.equals( TrackedEntityAttribute.TYPE_TRACKER_ASSOCIATE ) )
+        else if ( ValueType.TRACKER_ASSOCIATE == valueType )
         {
             trackedEntityAttribute.setTrackedEntity( trackedEntityService.getTrackedEntity( trackedEntityId ) );
         }
@@ -253,8 +255,7 @@ public class AddAttributeAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         trackedEntityAttributeService.addTrackedEntityAttribute( trackedEntityAttribute );
