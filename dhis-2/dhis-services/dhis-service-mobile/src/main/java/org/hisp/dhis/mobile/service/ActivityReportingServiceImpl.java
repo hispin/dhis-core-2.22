@@ -1513,8 +1513,7 @@ public class ActivityReportingServiceImpl
             }
 
             Program program = programService.getProgram( Integer.parseInt( programIdText ) );
-            String[] errorCode = entityInstanceService.validateTrackedEntityInstance( newTrackedEntityInstance,
-                program, format ).split( "_" );
+            String[] errorCode = entityInstanceService.validateTrackedEntityInstance( newTrackedEntityInstance, program ).split( "_" );
             int code = Integer.parseInt( errorCode[0] );
 
             if ( code >= 1 )
@@ -1604,8 +1603,7 @@ public class ActivityReportingServiceImpl
         }
 
         // validate
-        String[] errorCode = entityInstanceService.validateTrackedEntityInstance( tempTEI, program, format )
-            .split( "_" );
+        String[] errorCode = entityInstanceService.validateTrackedEntityInstance( tempTEI, program ).split( "_" );
         int code = Integer.parseInt( errorCode[0] );
 
         if ( code >= 1 )
@@ -2539,16 +2537,15 @@ public class ActivityReportingServiceImpl
             {
                 throw new NotAllowedException( "relative does not exist" );
             }
+
             patientId = entityInstanceService.createTrackedEntityInstance( patientWeb, relative.getUid(),
                 patient.getRelTypeIdToAdd(), patientAttributeValues );
         }
         else
         {
-            patientId = entityInstanceService.createTrackedEntityInstance( patientWeb, null, null,
-                patientAttributeValues );
+            patientId = entityInstanceService.createTrackedEntityInstance( patientWeb, null, null, patientAttributeValues );
         }
-        TrackedEntityInstance newTrackedEntityInstance = entityInstanceService
-            .getTrackedEntityInstance( this.patientId );
+        TrackedEntityInstance newTrackedEntityInstance = entityInstanceService.getTrackedEntityInstance( this.patientId );
 
         String errorMsg = null;
 
@@ -2563,8 +2560,7 @@ public class ActivityReportingServiceImpl
             }
 
             Program program = programService.getProgram( Integer.parseInt( programId ) );
-            String[] errorCode = entityInstanceService.validateTrackedEntityInstance( newTrackedEntityInstance,
-                program, format ).split( "_" );
+            String[] errorCode = entityInstanceService.validateTrackedEntityInstance( newTrackedEntityInstance, program ).split( "_" );
             int code = Integer.parseInt( errorCode[0] );
 
             if ( code >= 1 )
