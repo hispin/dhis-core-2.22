@@ -492,7 +492,7 @@ dhis2.de.addEventListeners = function()
         var id = $( this ).attr( 'id' );
 
         // If entry field is a date picker, remove old target field, and change id
-        if ( /-dp$/.test( id ) )
+        if( /-dp$/.test( id ) )
         {
             var dpTargetId = id.substring( 0, id.length - 3 );
             $( '#' + dpTargetId ).remove();
@@ -546,17 +546,17 @@ dhis2.de.addEventListeners = function()
                     saveVal( dataElementId, optionComboId, id, fakeEvent.target.id );
                 },
                 onClose: function() {
-                    valueBlur(fakeEvent);
+                    valueBlur( fakeEvent );
                 },
                 onShow: function() {
-                    valueFocus(fakeEvent);
+                    valueFocus( fakeEvent );
                 },
                 minDate: null,
                 maxDate: null
             } );
-        }		
+        }
     } );
-    
+
     $( '.entryselect' ).each( function( i )
     {
         var id = $( this ).attr( 'id' );
@@ -611,7 +611,7 @@ dhis2.de.addEventListeners = function()
 
         $( this ).focus( valueFocus );
         $( this ).blur( valueBlur );
-        
+
         $( this ).change( function()
         {
             saveVal( dataElementId, optionComboId, id );
@@ -627,15 +627,170 @@ dhis2.de.addEventListeners = function()
         var optionComboId = split.optionComboId;
 
         $( this ).unbind( 'click' );
-        
+
         $( this ).attr( "src", "../images/comment.png" );
         $( this ).attr( "title", i18n_view_comment );
-        
+
         $( this ).css( "cursor", "pointer" );
-        
-        $( this ).click ( function() 
+
+        $( this ).click( function()
         {
-        	viewHist( dataElementId, optionComboId );
+            viewHist( dataElementId, optionComboId );
+        } );
+    } );
+
+    $( '.entryfileresource-container' ).each( function()
+    {
+        // TODO Use i18n
+        // TODO Disable when offline
+
+        // Object refs
+        var $container = $( this );
+        var $field = $container.find( '.entryfileresource' );
+        var $button = $container.find( '.upload-button' );
+
+        var $fileInput = $container.find( 'input[type=file]' );
+
+        var $fileinfo = $container.find( '.upload-fileinfo' );
+        var $fileinfoName = $fileinfo.find( '.upload-fileinfo-name' );
+        var $fileinfoSize = $fileinfo.find( '.upload-fileinfo-size' );
+
+        var $progress = $container.find( '.upload-progress' );
+        var $progressBar = $progress.find( '.upload-progress-bar' );
+        var $progressInfo = $progress.find( '.upload-progress-info' );
+
+        // IDs
+        var id = $field.attr( 'id' );
+
+        var split = dhis2.de.splitFieldId( id );
+
+        var dataElementId = split.dataElementId;
+        var optionComboId = split.optionComboId;
+        var orgUnitid = dhis2.de.currentOrganisationUnitId;
+        var periodId = $( '#selectedPeriodId' ).val();
+
+        var formData = {
+            'de': dataElementId,
+            'co': optionComboId,
+            'ou': orgUnitid,
+            'pe': periodId
+        };
+
+        // Functions
+        var deleteFileDataValue = function()
+        {
+            var postData = formData;
+            postData.value = '';
+
+            $.ajax( {
+                url: '../api/dataValues',
+                type: 'POST',
+                dataType: 'json',
+                data: postData,
+                success: function()
+                {
+                    $fileinfoName.text( '' );
+                    $fileinfoSize.text( '' );
+                    $fileinfo.hide();
+                    $field.css( 'background-color', '' );
+                    setButtonUpload();
+                },
+                error: function( data )
+                {
+                    console.log( data.errorThrown );
+                }
+            } );
+        };
+
+        var setButtonDelete = function()
+        {
+            $button.button( {
+                text: false,
+                icons: {
+                    primary: 'fa fa-trash-o'
+                }
+            } );
+            $button.unbind( 'click' );
+            $button.on( 'click', function() {
+                // TODO Use jQuery UI dialog
+                var confirmed = window.confirm( 'Delete the file?' );
+                if ( confirmed ) {
+                    deleteFileDataValue();
+                }
+            } );
+            $button.button( 'enable' );
+        };
+
+        var setButtonUpload = function()
+        {
+            $button.button( {
+                text: false,
+                icons: {
+                    primary: 'fa fa-upload'
+                }
+            } );
+            $button.unbind( 'click' );
+            $button.on( 'click', function()
+            {
+                $fileInput.click();
+            } );
+            $button.button( 'enable' );
+        };
+
+        var resetAndHideProgress = function() {
+            $progressBar.toggleClass( 'upload-progress-bar-complete', true );
+            $progressBar.css( 'width', 0 );
+            $progress.hide();
+        };
+
+        // Initialize button
+        $button.button( {
+            text: false,
+            icons: {
+                primary: 'fa fa-ban'
+            }
+        } );
+        $button.button( 'disable' );
+
+        $( document ).on( dhis2.de.event.dataValuesLoaded, function() {
+            ( typeof( $field.data( 'value' ) ) == 'undefined' ) ? setButtonUpload() : setButtonDelete();
+        } );
+
+        // Initialize file uploader
+        $fileInput.fileupload( {
+            url: '../api/dataValues/files',
+            paramName: 'file',
+            multipart: true,
+            replaceFileInput: false,
+            progressInterval: 250, /* ms */
+            formData: formData,
+            start: function( e )
+            {
+                $button.button( 'disable' );
+                $progressBar.toggleClass( 'upload-progress-bar-complete', false );
+                $fileinfo.hide();
+                $progress.show();
+            },
+            progress: function( e, data )
+            {
+                var percent = parseInt( data.loaded / data.total * 100, 10 );
+                $progressBar.css( 'width', percent + '%' );
+                $progressInfo.text( percent + '%' );
+            },
+            fail: function( e, data )
+            {
+                setHeaderDelayMessage( "File upload failed!" );
+                console.log( data.errorThrown );
+                setButtonUpload();
+            },
+            done: function( e, data )
+            {
+                saveFileResource( dataElementId, optionComboId, id, data.result.response.fileResource );
+                $fileinfo.show();
+                resetAndHideProgress();
+                setButtonDelete();
+                $button.button( 'enable' );
+            }
         } );
     } );
 }
@@ -1549,6 +1704,8 @@ function getAndInsertDataValues()
     $( '.entrytrueonly' ).css( 'background-color', dhis2.de.cst.colorWhite );
     $( '.entryoptionset' ).css( 'background-color', dhis2.de.cst.colorWhite );
 
+    $( '.entryfileresource' ).css( 'background-color', dhis2.de.cst.colorWhite );
+
     $( '[name="min"]' ).html( '' );
     $( '[name="max"]' ).html( '' );
 
@@ -1657,6 +1814,24 @@ function insertDataValues( json )
             else if ( $( fieldId ).attr( 'name' ) == 'entryoptionset' )
             {
             	dhis2.de.setOptionNameInField( fieldId, value );            	
+            }
+            else if ( $( fieldId ).attr( 'class' ) == 'entryfileresource' )
+            {
+                $( fieldId ).data( 'value', value.val );
+                // TODO Consider pre-fetching with dataset
+                $.ajax( {
+                    url: '../api/fileResources/' + value.val,
+                    success: function( data ) {
+                        var name = data.name, size = '(' + filesize( data.contentLength ) + ')';
+
+                        $( fieldId ).find( '.upload-fileinfo-name' ).text( name );
+                        $( fieldId ).find( '.upload-fileinfo-size' ).text( size );
+                    },
+                    error: function( data ) {
+                        $( fieldId ).find( '.upload-fileinfo-name' ).text( 'Failed loading file meta-data' );
+                        $( fieldId ).find( '.upload-fileinfo-size' ).text( + '' );
+                    }
+                } );
             }
             else 
             {

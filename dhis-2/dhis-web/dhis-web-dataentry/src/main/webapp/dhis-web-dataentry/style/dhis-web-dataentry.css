@@ -254,3 +254,107 @@
 {
     position: absolute;
 }
+
+/* FileResource - uploads */
+
+.entryfileresource
+{
+    height: 28px;
+    width: 200px;
+    border: 1px solid #aaa;
+    display: table-cell;
+    overflow: hidden;
+    position: relative;
+}
+/* Upload progress display */
+
+.upload-progress
+{
+    z-index: 2;
+}
+
+.upload-progress-bar
+{
+    height: 100%;
+    width: 0;
+    background-color: yellow;
+    position: absolute;
+    -webkit-transition: width 0.5s;
+    -moz-transition: width 0.5s;
+    -o-transition: width 0.5s;
+    -ms-transition: width 0.5s;
+    transition: width 0.5s;
+    z-index: 3;
+}
+
+.upload-progress-bar-complete
+{
+    width: 0;
+    transition: width 0s;
+}
+
+.upload-progress-info
+{
+    font-weight: bold;
+    left: 45%;
+    top: 15%;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 4;
+}
+
+/* File metadata display */
+
+.upload-fileinfo
+{
+    padding: 5px;
+    position: absolute;
+    max-width: 100%;
+    z-index: 2;
+}
+
+.upload-fileinfo-size
+{
+    /*width: 80px;*/
+    float: right;
+    text-align: right;
+    padding-left: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upload-fileinfo-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: none;
+    width: auto;
+}
+
+/* File field and button */
+.upload-button-group
+{
+    display: table-cell;
+}
+
+.upload-button
+{
+    margin: 2px 2px 2px 4px;
+    height: 100%;
+}
+
+/* FA icons for jQuery UI icon hack */
+.ui-icon[class*=" fa-"] {
+    background: none repeat scroll 0 0 transparent;
+    text-indent: 0;
+    margin-top: -0.5em;
+}
+
+.ui-button-icon-only .ui-icon[class*=" fa-"] {
+    margin-left: -7px;
+}
+
+.ui-icon.icon-large {
+    margin-top: -0.75em;
+}
