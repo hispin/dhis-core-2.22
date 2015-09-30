@@ -1,3 +1,0 @@
-#parse( "/dhis-web-linelisting-mp/menu.vm" )
-
-#parse( "/dhis-web-commons/ouwt/orgunittree.vm" )
