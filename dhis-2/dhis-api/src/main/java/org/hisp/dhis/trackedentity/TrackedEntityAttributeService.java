@@ -195,9 +195,9 @@ public interface TrackedEntityAttributeService
      * @param trackedEntityAttribute TrackedEntityAttribute
      * @param organisationUnit       OrganisationUnit - only required if org unit scoped
      * @param value                  Value
-     * @return true is unique, false otherwise
+     * @return null if valid, a message if not
      */
-    boolean validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
+    String validateScope( TrackedEntityInstance trackedEntityInstance, TrackedEntityAttribute trackedEntityAttribute,
         OrganisationUnit organisationUnit, String value );
 
     /**

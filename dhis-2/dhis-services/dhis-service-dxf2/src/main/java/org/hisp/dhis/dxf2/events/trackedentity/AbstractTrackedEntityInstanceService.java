@@ -431,19 +431,19 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        TrackedEntityAttribute teAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
+        TrackedEntityAttribute trackedEntityAttribute = getTrackedEntityAttribute( attribute.getAttribute() );
 
-        if ( teAttribute == null )
+        if ( trackedEntityAttribute == null )
         {
             importConflicts.add( new ImportConflict( "Attribute.attribute", "Does not point to a valid attribute." ) );
             return importConflicts;
         }
 
-        String message = trackedEntityAttributeService.validateValueType( teAttribute, attribute.getValue() );
+        String errorMessage = trackedEntityAttributeService.validateValueType( trackedEntityAttribute, attribute.getValue() );
 
-        if ( message != null )
+        if ( errorMessage != null )
         {
-            importConflicts.add( new ImportConflict( "Attribute.value", message ) );
+            importConflicts.add( new ImportConflict( "Attribute.value", errorMessage ) );
         }
 
         return importConflicts;
@@ -482,21 +482,23 @@ public abstract class AbstractTrackedEntityInstanceService
         return importConflicts;
     }
 
-    private List<ImportConflict> checkScope( org.hisp.dhis.trackedentity.TrackedEntityInstance tei, TrackedEntityAttribute attribute, String value, OrganisationUnit organisationUnit )
+    private List<ImportConflict> checkScope( org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance,
+        TrackedEntityAttribute trackedEntityAttribute, String value, OrganisationUnit organisationUnit )
     {
         List<ImportConflict> importConflicts = new ArrayList<>();
 
-        if ( attribute == null || value == null )
+        if ( trackedEntityAttribute == null || value == null )
         {
             return importConflicts;
         }
 
-        if ( trackedEntityAttributeService.validateScope( tei, attribute, organisationUnit, value ) )
+        String errorMessage = trackedEntityAttributeService.validateScope( trackedEntityInstance, trackedEntityAttribute, organisationUnit, value );
+
+        if ( errorMessage != null )
         {
-            return importConflicts;
+            importConflicts.add( new ImportConflict( "Attribute.value", errorMessage ) );
         }
 
-        importConflicts.add( new ImportConflict( "Attribute.value", "Non-unique attribute value '" + value + "' for attribute " + attribute.getUid() ) );
         return importConflicts;
     }
 
