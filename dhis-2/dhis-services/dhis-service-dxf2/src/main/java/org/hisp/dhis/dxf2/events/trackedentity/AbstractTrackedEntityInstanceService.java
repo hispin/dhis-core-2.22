@@ -538,6 +538,7 @@ public abstract class AbstractTrackedEntityInstanceService
         if ( attribute.getOrgunitScope() )
         {
             params.getOrganisationUnits().add( organisationUnit );
+            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
         }
         else
         {
