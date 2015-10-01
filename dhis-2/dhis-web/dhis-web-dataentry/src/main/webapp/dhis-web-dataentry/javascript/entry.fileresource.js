@@ -1,9 +1,8 @@
 ( function ( $ ) {
-    $.fn.fileResourceEntryField = function() {
+    $.fn.fileEntryField = function() {
 
         // TODO Use i18n
         // TODO Disable field when offline
-        // TODO Re-init on period change
 
         var $container = $( this );
 
@@ -52,6 +51,7 @@
                     $fileinfoSize.text( '' );
                     $fileinfo.hide();
                     $field.css( 'background-color', '' );
+                    $field.data( 'value', '');
                     setButtonUpload();
                 },
                 error: function( data )
@@ -104,6 +104,16 @@
             $button.button( 'enable' );
         };
 
+        var setButtonBlocked = function() {
+            $button.button( {
+                text: false,
+                icons: {
+                    primary: 'fa fa-ban'
+                }
+            } );
+            $button.button( 'disable' );
+        };
+
         var resetAndHideProgress = function() {
             $progressBar.toggleClass( 'upload-progress-bar-complete', true );
             $progressBar.css( 'width', 0 );
@@ -122,17 +132,10 @@
             $button.button( 'enable' );
         };
 
-        // Button setup
-        $button.button( {
-            text: false,
-            icons: {
-                primary: 'fa fa-ban'
-            }
-        } );
-        $button.button( 'disable' );
+        setButtonBlocked();
 
         $( document ).on( dhis2.de.event.dataValuesLoaded, function() {
-            ( typeof( $field.data( 'value' ) ) == 'undefined' ) ? setButtonUpload() : setButtonDelete();
+            ( !$field.data( 'value' ) ) ? setButtonUpload() : setButtonDelete();
         } );
 
         // Initialize file uploader
