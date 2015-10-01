@@ -205,4 +205,46 @@ public class ExpressionUtilsTest
         assertFalse( ExpressionUtils.isValid( "'goat' == goat", null ) );
         assertFalse( ExpressionUtils.isValid( "aver(2+1)", null ) );
     }
+
+    @Test
+    public void testIsNumeric()
+    {
+        assertTrue( ExpressionUtils.isNumeric( "123" ) );
+        assertTrue( ExpressionUtils.isNumeric( "0" ) );
+        assertTrue( ExpressionUtils.isNumeric( "1.2" ) );
+        assertTrue( ExpressionUtils.isNumeric( "12.34" ) );
+        assertTrue( ExpressionUtils.isNumeric( "0.0" ) );
+        assertTrue( ExpressionUtils.isNumeric( "1.234" ) );
+        assertTrue( ExpressionUtils.isNumeric( "-1234" ) );
+        assertTrue( ExpressionUtils.isNumeric( "-12.34" ) );
+        assertTrue( ExpressionUtils.isNumeric( "-0.34" ) );
+        assertTrue( ExpressionUtils.isNumeric( "6.34" ) );
+        assertTrue( ExpressionUtils.isNumeric( "3.34" ) );
+        assertTrue( ExpressionUtils.isNumeric( "2.43" ) );
+
+        assertFalse( ExpressionUtils.isNumeric( "Hey" ) );
+        assertFalse( ExpressionUtils.isNumeric( "45 Perinatal Condition" ) );
+        assertFalse( ExpressionUtils.isNumeric( "Long street 2" ) );
+        assertFalse( ExpressionUtils.isNumeric( "1.2f" ) );
+        assertFalse( ExpressionUtils.isNumeric( "1 234" ) );
+        assertFalse( ExpressionUtils.isNumeric( "." ) );
+        assertFalse( ExpressionUtils.isNumeric( "1." ) );
+        assertFalse( ExpressionUtils.isNumeric( ".1" ) );
+        assertFalse( ExpressionUtils.isNumeric( "" ) );
+        assertFalse( ExpressionUtils.isNumeric( " " ) );
+        assertFalse( ExpressionUtils.isNumeric( "+1234  " ) );
+        assertFalse( ExpressionUtils.isNumeric( "1234  " ) );
+        assertFalse( ExpressionUtils.isNumeric( "  1234" ) );
+        assertFalse( ExpressionUtils.isNumeric( "1,234" ) );
+        assertFalse( ExpressionUtils.isNumeric( "0,1" ) );
+        assertFalse( ExpressionUtils.isNumeric( "0," ) );
+        assertFalse( ExpressionUtils.isNumeric( "0." ) );
+        assertFalse( ExpressionUtils.isNumeric( "01" ) );
+        assertFalse( ExpressionUtils.isNumeric( "001" ) );
+        assertFalse( ExpressionUtils.isNumeric( "00.23" ) );
+        assertFalse( ExpressionUtils.isNumeric( "01.23" ) );
+        assertFalse( ExpressionUtils.isNumeric( "4.23E" ) );
+        assertFalse( ExpressionUtils.isNumeric( "4.23Ef" ) );
+        assertFalse( ExpressionUtils.isNumeric( "E5" ) );
+    }
 }
