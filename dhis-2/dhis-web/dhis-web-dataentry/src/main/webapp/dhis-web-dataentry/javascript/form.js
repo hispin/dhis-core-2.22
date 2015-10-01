@@ -743,6 +743,18 @@ dhis2.de.addEventListeners = function()
             $progress.hide();
         };
 
+        var onFileDataValueSavedSuccess = function( fileResource ) {
+            var name = fileResource.name, size = '(' + filesize( fileResource.contentLength ) + ')';
+
+            $fileinfoName.text( name );
+            $fileinfoSize.text( size );
+            $progressBar.toggleClass( 'upload-progress-bar-complete' );
+            $fileinfo.show();
+            resetAndHideProgress();
+            setButtonDelete();
+            $button.button( 'enable' );
+        };
+
         // Initialize button
         $button.button( {
             text: false,
@@ -785,11 +797,11 @@ dhis2.de.addEventListeners = function()
             },
             done: function( e, data )
             {
-                saveFileResource( dataElementId, optionComboId, id, data.result.response.fileResource );
-                $fileinfo.show();
-                resetAndHideProgress();
-                setButtonDelete();
-                $button.button( 'enable' );
+                var fileResource = data.result.response.fileResource;
+
+                saveFileResource( dataElementId, optionComboId, id, fileResource, function() {
+                    onFileDataValueSavedSuccess( fileResource );
+                } );
             }
         } );
     } );

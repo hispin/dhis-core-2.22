@@ -292,13 +292,13 @@ function saveTrueOnly( dataElementId, optionComboId, fieldId )
     valueSaver.save();
 }
 
-function saveFileResource( dataElementId, optionComboId, fieldId, fileResource )
+function saveFileResource( dataElementId, optionComboId, fieldId, fileResource, onSuccessCallback )
 {
     fieldId = '#' + fieldId;
 
     var periodId = $( '#selectedPeriodId' ).val();
 
-    var valueSaver = new FileResourceValueSaver( dataElementId, periodId, optionComboId, fileResource, fieldId, dhis2.de.cst.colorGreen );
+    var valueSaver = new FileResourceValueSaver( dataElementId, periodId, optionComboId, fileResource, fieldId, dhis2.de.cst.colorGreen, onSuccessCallback );
     valueSaver.save();
 }
 
@@ -402,18 +402,11 @@ function ValueSaver( de, pe, co, value, fieldId, resultColor )
     }
 }
 
-function FileResourceValueSaver( de, pe, co, fileResource, fieldId, resultColor )
+function FileResourceValueSaver( de, pe, co, fileResource, fieldId, resultColor, onSuccessCallback )
 {
     var valueSaver = new ValueSaver( de, pe, co, fileResource.id, fieldId, resultColor );
 
-    valueSaver.setAfterHandleSuccess( function() {
-        var name = fileResource.name, size = '(' + filesize( fileResource.contentLength ) + ')';
-        var $field = $( fieldId );
-
-        $field.find( '.upload-fileinfo-name' ).text( name );
-        $field.find( '.upload-fileinfo-size' ).text( size );
-        $field.find( '.upload-progress-bar' ).toggleClass( 'upload-progress-bar-complete' );
-    } );
+    valueSaver.setAfterHandleSuccess( onSuccessCallback );
 
     return valueSaver;
 }
