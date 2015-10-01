@@ -155,7 +155,7 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
 
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( null, attributeCc, attributeCos );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( attributeCc, attributeCos );
         
         if ( attributeOptionCombo == null )
         {
@@ -217,7 +217,7 @@ public class EventController
         IdSchemes idSchemes, Model model, HttpServletResponse response, HttpServletRequest request ) throws IOException, WebMessageException
     {
         
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( null, attributeCc, attributeCos );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( attributeCc, attributeCos );
         
         if ( attributeOptionCombo == null )
         {
@@ -267,7 +267,7 @@ public class EventController
     {
         WebOptions options = new WebOptions( parameters );
         
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( null, attributeCc, attributeCos );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( attributeCc, attributeCos );
         
         if ( attributeOptionCombo == null )
         {

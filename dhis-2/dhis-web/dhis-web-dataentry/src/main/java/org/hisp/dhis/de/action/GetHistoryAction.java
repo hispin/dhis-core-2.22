@@ -47,7 +47,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.webapi.utils.InputUtils;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;

@@ -44,7 +44,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.webapi.utils.InputUtils;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

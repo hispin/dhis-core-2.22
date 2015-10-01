@@ -35,7 +35,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
-import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
@@ -62,7 +61,7 @@ public class InputUtils
      * @return the attribute option combo identified from the given input, or null
      * if the input was invalid.
      */
-    public DataElementCategoryOptionCombo getAttributeOptionCombo( DataElementCategoryCombo ccombo, String cc, String cp )
+    public DataElementCategoryOptionCombo getAttributeOptionCombo( String cc, String cp )
     {
         Set<String> opts = TextUtils.splitToArray( cp, TextUtils.SEMICOLON );
 
@@ -75,14 +74,11 @@ public class InputUtils
             throw new IllegalQueryException( "Both or none of category combination and category options must be present" ) ;
         }
 
-        DataElementCategoryCombo categoryCombo = ccombo;
+        DataElementCategoryCombo categoryCombo = null;
 
-        if ( categoryCombo == null )
-        {            
-            if ( cc != null && (categoryCombo = idObjectManager.get( DataElementCategoryCombo.class, cc )) == null )
-            {
-                throw new IllegalQueryException( "Illegal category combo identifier: " + cc );
-            }
+        if ( cc != null && (categoryCombo = idObjectManager.get( DataElementCategoryCombo.class, cc )) == null )
+        {
+            throw new IllegalQueryException( "Illegal category combo identifier: " + cc );
         }
 
         // ---------------------------------------------------------------------
@@ -127,4 +123,66 @@ public class InputUtils
 
         return attributeOptionCombo;
     }
+    /**
+     * Validates and retrieves the attribute option combo. 409 conflict as status
+     * code along with a textual message will be set on the response in case of
+     * invalid input.
+     *
+     * @param cc       the category combo.
+     * @param cp       the category option query string.
+     * @return the attribute option combo identified from the given input, or null
+     * if the input was invalid.
+     */
+    public DataElementCategoryOptionCombo getAttributeOptionCombo( DataElementCategoryCombo categoryCombo, String cp )
+    {
+        Set<String> opts = TextUtils.splitToArray( cp, TextUtils.SEMICOLON );
+
+        if ( categoryCombo == null )
+        {            
+            throw new IllegalQueryException( "Illegal category combo");
+        }
+
+        // ---------------------------------------------------------------------
+        // Attribute category options validation
+        // ---------------------------------------------------------------------
+
+        DataElementCategoryOptionCombo attributeOptionCombo = null;
+
+        if ( opts != null )
+        {
+            Set<DataElementCategoryOption> categoryOptions = new HashSet<>();
+
+            for ( String uid : opts )
+            {
+                DataElementCategoryOption categoryOption = idObjectManager.get( DataElementCategoryOption.class, uid );
+
+                if ( categoryOption == null )
+                {
+                    throw new IllegalQueryException( "Illegal category option identifier: " + uid ) ;
+                }
+
+                categoryOptions.add( categoryOption );
+            }
+
+            attributeOptionCombo = categoryService.getDataElementCategoryOptionCombo( categoryCombo, categoryOptions );
+
+            if ( attributeOptionCombo == null )
+            {
+                throw new IllegalQueryException( "Attribute option combo does not exist for given category combo and category options" );
+            }
+        }
+
+        if ( attributeOptionCombo == null )
+        {
+            attributeOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
+        }
+
+        if ( attributeOptionCombo == null )
+        {
+            throw new IllegalQueryException( "Default attribute option combo does not exist" );
+        }
+
+        return attributeOptionCombo;
+    }
+    
 }
