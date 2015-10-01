@@ -39,6 +39,11 @@ public class PathUtils
 
     private static final char FILE_SEPARATOR = '/';
 
+    /**
+     * Converts the fully qualified class name to a UNIX path.
+     * @param clazz the class, separated by '.'.
+     * @return the UNIX path, separated by '/'.
+     */
     public static String getClassPath( Class<?> clazz )
     {
         return clazz.getName().replace( PACKAGE_SEPARATOR, FILE_SEPARATOR );
@@ -46,7 +51,7 @@ public class PathUtils
 
     /**
      * Converts the fully qualified class name to a UNIX path.
-     * @param clazzName the classname, separated by '.'.
+     * @param clazzName the class name, separated by '.'.
      * @return the UNIX path, separated by '/'.
      */
     public static String getClassPath( String clazzName )
