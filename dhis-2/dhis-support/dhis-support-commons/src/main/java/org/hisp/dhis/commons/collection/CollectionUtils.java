@@ -44,7 +44,7 @@ import java.util.Set;
 /**
  * Utility methods for operations on various collections.
  * 
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * @author Morten Olav Hansen
  */
 public class CollectionUtils
 {
@@ -91,9 +91,11 @@ public class CollectionUtils
     /**
      * Constructs a Map Entry (key, value). Used to construct a Map with asMap.
      *
-     * @param key map entry key
-     * @param value map entry value
-     * @return entry with the key and value
+     * @param key map entry key.
+     * @param value map entry value.
+     * @param <K> key type.
+     * @param <V> value type.
+     * @return entry with the key and value.
      */
     public static <K, V> AbstractMap.SimpleEntry<K, V> asEntry( K key, V value )
     {
@@ -103,7 +105,9 @@ public class CollectionUtils
     /**
      * Constructs a Map from Entries, each containing a (key, value) pair.
      *
-     * @param entries any number of (key, value) pairs
+     * @param entries any number of (key, value) pairs.
+     * @param <K> key type.
+     * @param <V> value type.
      * @return Map of the entries
      */
     @SafeVarargs
@@ -125,6 +129,8 @@ public class CollectionUtils
      *
      * @param collection the Collection.
      * @param keyMethod the name of the method to obtain the key.
+     * @param <K> key type.
+     * @param <T> value type.
      * @return Map of the elements.
      */
     @SuppressWarnings( "unchecked" )
@@ -174,6 +180,8 @@ public class CollectionUtils
      *
      * @param list the List.
      * @param valueMethod the name of the method to obtain the value.
+     * @param <K> key type.
+     * @param <T> value type.
      * @return an ordered List of the obtained values.
      */
     @SuppressWarnings( "unchecked" )

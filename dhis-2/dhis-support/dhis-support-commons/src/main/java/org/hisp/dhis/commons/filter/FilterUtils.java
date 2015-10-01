@@ -41,6 +41,7 @@ public class FilterUtils
     /**
      * Filters the given collection using the given {@link Filter}.
      *
+     * @param <T> type.
      * @param collection the {@link Collection}.
      * @param filter the filter.
      * @param <V> the type of the collection members.
@@ -70,6 +71,7 @@ public class FilterUtils
      * Filters the given collection using the given {@link Filter} retaining only
      * items which does NOT pass the filter evaluation.
      *
+     * @param <T> type.
      * @param collection the {@link Collection}.
      * @param filter the filter.
      * @param <V> the type of the collection members.

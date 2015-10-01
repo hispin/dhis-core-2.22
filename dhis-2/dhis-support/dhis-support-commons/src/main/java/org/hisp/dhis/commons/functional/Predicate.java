@@ -31,7 +31,7 @@ package org.hisp.dhis.commons.functional;
 /**
  * Predicate on T.
  *
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * @author Morten Olav Hansen
  */
 public interface Predicate<T>
 {
