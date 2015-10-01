@@ -48,7 +48,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.webapi.utils.InputUtils;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -192,7 +192,7 @@ public class CompleteDataSetRegistrationController
             throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( null, cc, cp );
 
         if ( attributeOptionCombo == null )
         {
@@ -285,7 +285,7 @@ public class CompleteDataSetRegistrationController
 
             String cc = completeDataSetRegistrationRequest.getCc();
             String cp = completeDataSetRegistrationRequest.getCp();
-            DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
+            DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( null, cc, cp );
 
             if ( attributeOptionCombo == null )
             {
@@ -372,7 +372,7 @@ public class CompleteDataSetRegistrationController
             throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( null, cc, cp );
 
         if ( attributeOptionCombo == null )
         {

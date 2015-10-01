@@ -233,25 +233,6 @@ public class ContextUtils
     }
 
     /**
-     * Splits the given query param value into independent values using ; as
-     * separator.
-     *
-     * @param value the query param value.
-     * @return the list of independent values.
-     */
-    public static Set<String> getQueryParamValues( String value )
-    {
-        if ( value == null || value.isEmpty() )
-        {
-            return null;
-        }
-
-        String[] values = value.split( QUERY_PARAM_SEP );
-
-        return new HashSet<>( Arrays.asList( values ) );
-    }
-
-    /**
      * Returns a mapping of dimension identifiers and dimension option identifiers
      * based on the given set of dimension strings. Splits the strings using : as
      * separator. Returns null of dimensions are null or empty.

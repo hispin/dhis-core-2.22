@@ -34,7 +34,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +52,7 @@ public class TextUtils
     public static final String SPACE = " ";
     public static final String SEP = "-";
     public static final String LN = System.getProperty( "line.separator" );
+    public static final String SEMICOLON = ";";
     
     private static final Pattern LINK_PATTERN = Pattern.compile( "((http://|https://|www\\.).+?)($|\\n|\\r|\\r\\n| )" );
     private static final String DELIMITER = ", ";
@@ -559,5 +562,25 @@ public class TextUtils
         }
         
         return false;
+    }
+    
+    /**
+     * Splits the given string value into independent values using a given
+     * separator.
+     *
+     * @param value the string to be splitted.
+     * @param separator for splitting value 
+     * @return the list of independent values.
+     */
+    public static Set<String> splitToArray( String value, String separator )
+    {
+        if ( value == null || value.isEmpty() )
+        {
+            return null;
+        }
+
+        String[] values = value.split( separator );
+
+        return new HashSet<>( Arrays.asList( values ) );
     }
 }

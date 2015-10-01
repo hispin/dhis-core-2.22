@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.events.event;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,6 +44,9 @@ import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.common.IdSchemes;
@@ -81,6 +85,7 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -105,6 +110,8 @@ public abstract class AbstractEventService
     implements EventService
 {
     private static final Log log = LogFactory.getLog( AbstractEventService.class );
+    
+    public static final String OPTIONS_SEP = ";";
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -157,6 +164,12 @@ public abstract class AbstractEventService
 
     @Autowired
     protected IdentifiableObjectManager manager;
+    
+    @Autowired
+    protected DataElementCategoryService categoryService;
+    
+    @Autowired
+    protected InputUtils inputUtils;
 
     protected static final int FLUSH_FREQUENCY = 20;
 
@@ -490,7 +503,7 @@ public abstract class AbstractEventService
     @Override
     public EventSearchParams getFromUrl( String program, String programStage, ProgramStatus programStatus, Boolean followUp, String orgUnit,
         OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate,
-        EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean includeAttributes )
+        EventStatus status, Date lastUpdated, DataElementCategoryOptionCombo attributeCoc, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean includeAttributes )
     {
         EventSearchParams params = new EventSearchParams();
 
@@ -521,7 +534,27 @@ public abstract class AbstractEventService
         {
             throw new IllegalQueryException( "Tracked entity instance is specified but does not exist: " + trackedEntityInstance );
         }
-
+        
+        if ( attributeCoc.isDefault() )
+        {            
+            DataElementCategoryCombo cc = null;
+            
+            if ( pr != null )
+            {
+                cc = pr.getCategoryCombo();                
+            }
+            
+            if( cc == null && ps != null)
+            {                
+                cc = ps.getProgram().getCategoryCombo();
+            }
+            
+            if( cc != null && !cc.isDefault())
+            {                
+                throw new IllegalQueryException( "Default attribute option combo is specified while program has non-default attribute category combo:  " + cc.getUid() );
+            }
+        }
+        
         params.setProgram( pr );
         params.setProgramStage( ps );
         params.setOrgUnit( ou );
@@ -533,6 +566,7 @@ public abstract class AbstractEventService
         params.setEndDate( endDate );
         params.setEventStatus( status );
         params.setLastUpdated( lastUpdated );
+        params.setCategoryOptionCombo( attributeCoc );
         params.setIdSchemes( idSchemes );
         params.setPage( page );
         params.setPageSize( pageSize );
@@ -989,26 +1023,27 @@ public abstract class AbstractEventService
 
     private ProgramStageInstance createProgramStageInstance( ProgramStage programStage, ProgramInstance programInstance,
         OrganisationUnit organisationUnit, Date dueDate, Date executionDate, int status,
-        Coordinate coordinate, String storedBy, String programStageInstanceUid )
+        Coordinate coordinate, String storedBy, String programStageInstanceUid, DataElementCategoryOptionCombo coc )
     {
         ProgramStageInstance programStageInstance = new ProgramStageInstance();
         programStageInstance.setUid( CodeGenerator.isValidCode( programStageInstanceUid ) ? programStageInstanceUid : CodeGenerator.generateCode() );
 
         updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, executionDate, status,
-            coordinate, storedBy, programStageInstance );
+            coordinate, storedBy, programStageInstance, coc );
 
         return programStageInstance;
     }
 
     private void updateProgramStageInstance( ProgramStage programStage, ProgramInstance programInstance,
         OrganisationUnit organisationUnit, Date dueDate, Date executionDate, int status, Coordinate coordinate,
-        String storedBy, ProgramStageInstance programStageInstance )
+        String storedBy, ProgramStageInstance programStageInstance,  DataElementCategoryOptionCombo coc )
     {
         programStageInstance.setProgramInstance( programInstance );
         programStageInstance.setProgramStage( programStage );
         programStageInstance.setDueDate( dueDate );
         programStageInstance.setExecutionDate( executionDate );
         programStageInstance.setOrganisationUnit( organisationUnit );
+        programStageInstance.setAttributeOptionCombo( coc );
 
         if ( programStage.getCaptureCoordinates() )
         {
@@ -1053,18 +1088,30 @@ public abstract class AbstractEventService
         Date dueDate = DateUtils.parseDate( event.getDueDate() );
 
         String storedBy = getStoredBy( event, importSummary, user );
+        
+        DataElementCategoryOptionCombo coc = categoryService.getDefaultDataElementCategoryOptionCombo();
+        
+        if ( event.getAttributeCategoryOptions() != null && program.getCategoryCombo() != null )
+        {
+            coc = inputUtils.getAttributeOptionCombo( program.getCategoryCombo(), program.getCategoryCombo().getUid(), event.getAttributeCategoryOptions() ); //getAttributeOptionCombo( program.getCategoryCombo(), event.getAttributeCategoryOptions() );
+            
+            if ( coc == null)
+            {
+                importSummary.getConflicts().add( new ImportConflict( "Invalid attribute option combo for option names.", event.getAttributeCategoryOptions() ) );
+            }
+        }
 
         if ( !dryRun )
         {
             if ( programStageInstance == null )
             {
                 programStageInstance = createProgramStageInstance( programStage, programInstance, organisationUnit,
-                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), storedBy, event.getEvent() );
+                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), storedBy, event.getEvent(), coc );
             }
             else
             {
                 updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, eventDate, event
-                    .getStatus().getValue(), event.getCoordinate(), storedBy, programStageInstance );
+                    .getStatus().getValue(), event.getCoordinate(), storedBy, programStageInstance, coc );
             }
 
             saveTrackedEntityComment( programStageInstance, event, storedBy );
