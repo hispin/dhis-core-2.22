@@ -65,7 +65,7 @@ public class DefaultKeyJsonValueService
     @Override
     public void deleteNamespace( String namespace )
     {
-        keyJsonValueStore.deleteKeysInNamespace( namespace );
+        keyJsonValueStore.getKeyJsonValueByNamespace( namespace ).forEach( keyJsonValueStore::delete );
     }
 
     @Override

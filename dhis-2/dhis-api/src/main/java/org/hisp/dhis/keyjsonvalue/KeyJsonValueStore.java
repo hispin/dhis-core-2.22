@@ -42,7 +42,7 @@ public interface KeyJsonValueStore
 
     List<String> getKeysInNamespace( String namespace );
 
-    void deleteKeysInNamespace( String namespace );
+    List<KeyJsonValue> getKeyJsonValueByNamespace( String namespace );
 
     KeyJsonValue getKeyJsonValue( String namespace, String key );
 }
