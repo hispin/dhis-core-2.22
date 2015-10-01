@@ -28,13 +28,6 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javassist.util.proxy.ProxyFactory;
-
-import org.hibernate.collection.spi.PersistentCollection;
-import org.hisp.dhis.commons.functional.Function1;
-import org.hisp.dhis.commons.functional.Predicate;
-import org.springframework.util.StringUtils;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -50,6 +43,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javassist.util.proxy.ProxyFactory;
+
+import org.hibernate.collection.spi.PersistentCollection;
+import org.hisp.dhis.commons.functional.Predicate;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Lars Helge Overland
@@ -474,33 +473,6 @@ public class ReflectionUtils
     public static <T> T getFieldObject( Field field, T target )
     {
         return (T) invokeGetterMethod( field.getName(), target );
-    }
-
-    public static void executeOnFields( Class<?> clazz, Function1<Field> function )
-    {
-        executeOnFields( clazz, function, null );
-    }
-
-    public static void executeOnFields( Class<?> clazz, Function1<Field> function, Predicate<Field> predicate )
-    {
-        Class<?> currentType = clazz;
-
-        while ( !Object.class.equals( currentType ) && currentType != null )
-        {
-            Field[] fields = currentType.getDeclaredFields();
-
-            for ( Field field : fields )
-            {
-                if ( Modifier.isStatic( field.getModifiers() ) || (predicate != null && !predicate.evaluate( field )) )
-                {
-                    continue;
-                }
-
-                function.apply( field );
-            }
-
-            currentType = currentType.getSuperclass();
-        }
     }
 
     public static Collection<Field> collectFields( Class<?> clazz, Predicate<Field> predicate )

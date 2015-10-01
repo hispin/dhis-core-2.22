@@ -28,7 +28,6 @@ package org.hisp.dhis.commons.collection;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.commons.functional.Function1;
 import org.hisp.dhis.commons.functional.Predicate;
 
 import java.lang.reflect.Method;
@@ -51,26 +50,6 @@ public class CollectionUtils
 {
     public static final String[] STRING_ARR = new String[0];
     public static final String[][] STRING_2D_ARR = new String[0][];
-
-    /**
-     * Applies the given Function1 on each member of the Collection.
-     *
-     * @param collection the Collection.
-     * @param function the Function1.
-     * @param <T> the type.
-     */
-    public static <T> void forEach( Collection<T> collection, Function1<T> function )
-    {
-        for ( T object : collection )
-        {
-            if ( object == null )
-            {
-                continue;
-            }
-
-            function.apply( object );
-        }
-    }
 
     /**
      * Filters the given Collection on the given Predicate.
