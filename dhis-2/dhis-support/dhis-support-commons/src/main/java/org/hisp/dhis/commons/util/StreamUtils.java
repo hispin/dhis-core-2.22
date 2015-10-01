@@ -63,7 +63,7 @@ public class StreamUtils
      * @param file       the file to read from.
      * @param replaceMap a map containing keys to be matched and values with replacements.
      * @return a StringBuffer with the content of the file replaced according to the Map.
-     * @throws IOException
+     * @throws IOException if operation failed.
      */
     public static StringBuffer readContent( File file, Map<String[], String> replaceMap )
         throws IOException
@@ -128,6 +128,7 @@ public class StreamUtils
      *
      * @param in the InputStream.
      * @return the wrapped InputStream.
+     * @throws IOException if operation failed.
      */
     public static InputStream wrapAndCheckCompressionFormat( InputStream in )
         throws IOException
@@ -151,16 +152,13 @@ public class StreamUtils
 
     /**
      * Test for ZIP stream signature.
-     * <p/>
-     * Signature of ZIP stream from
-     * http://www.pkware.com/documents/casestudies/APPNOTE.TXT Local file
-     * header: local file header signature 4 bytes (0x04034b50)
      *
-     * @param instream the BufferedInputStream to test.
+     * @param in the BufferedInputStream to test.
+     * @return true if input stream is zip.
      */
-    public static boolean isZip( BufferedInputStream instream )
+    public static boolean isZip( BufferedInputStream in )
     {
-        instream.mark( 4 );
+        in.mark( 4 );
         byte[] b = new byte[4];
         byte[] zipSig = new byte[4];
         zipSig[0] = 0x50;
@@ -170,7 +168,7 @@ public class StreamUtils
 
         try
         {
-            instream.read( b, 0, 4 );
+            in.read( b, 0, 4 );
         }
         catch ( Exception ex )
         {
@@ -178,7 +176,7 @@ public class StreamUtils
         }
         try
         {
-            instream.reset();
+            in.reset();
         }
         catch ( Exception ex )
         {
@@ -190,12 +188,9 @@ public class StreamUtils
 
     /**
      * Test for GZIP stream signature.
-     * <p/>
-     * Signature of GZIP stream from RFC 1952: ID1 (IDentification 1) ID2
-     * (IDentification 2) These have the fixed values ID1 = 31 (0x1f, \037),
-     * ID2 = 139 (0x8b, \213), to identify the file as being in GZIP format.
      *
      * @param instream the BufferedInputStream to test.
+     * @return true if input stream is gzip.
      */
     public static boolean isGZip( BufferedInputStream instream )
     {
@@ -210,6 +205,7 @@ public class StreamUtils
         {
             throw new RuntimeException( "Couldn't read header from stream ", ex );
         }
+        
         try
         {
             instream.reset();

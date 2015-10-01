@@ -82,6 +82,8 @@ public class PageRange
     /**
      * Moves the range to the next page. Returns true if the range has another page,
      * false if not.
+     * 
+     * @return true if range has another page, false if not.
      */
     public boolean nextPage()
     {
@@ -102,6 +104,8 @@ public class PageRange
 
     /**
      * Returns the number of pages in the list.
+     * 
+     * @return number of pages.
      */
     public int pageCount()
     {       
@@ -122,6 +126,8 @@ public class PageRange
     
     /**
      * Returns the current from index, which is closed / inclusive.
+     * 
+     * @return the current from index.
      */
     public int getFromIndex()
     {
@@ -130,6 +136,8 @@ public class PageRange
 
     /**
      * Returns the current to index, which is open / exclusive.
+     * 
+     * @return the current to index.
      */
     public int getToIndex()
     {
@@ -143,6 +151,8 @@ public class PageRange
     
     /**
      * Returns the page size.
+     * 
+     * @return the page size.
      */
     public int getPageSize()
     {
@@ -152,6 +162,8 @@ public class PageRange
     /**
      * Returns a list of all pages. Each item is an array where index 0 holds the
      * from index and index 1 holds the to index. Resets the page.
+     * 
+     * @return a list of all pages.
      */
     public List<int[]> getPages()
     {

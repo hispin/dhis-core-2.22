@@ -119,6 +119,7 @@ public class ExpressionFunctions
      * @param start the start date. 
      * @param end the end date.
      * @return number of days between dates.
+     * @throws ParseException if start or end could not be parsed.
      */
     public static Integer daysBetween( String start, String end )
         throws ParseException

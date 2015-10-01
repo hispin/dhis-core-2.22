@@ -92,6 +92,12 @@ public class Encoder
     }
 
     /**
+     * JavaScript-escaped the given String.
+     * 
+     * @param object the object.
+     * @param quoteChar the quote char.
+     * @return the escaped representation.
+     * 
      * See {@link #jsEncode(String)}.
      * @deprecated quoteChar is ignored.
      */

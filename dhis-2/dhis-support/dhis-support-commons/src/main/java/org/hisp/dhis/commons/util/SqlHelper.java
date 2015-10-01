@@ -50,6 +50,8 @@ public class SqlHelper
 
     /**
      * Returns "where" the first time it is invoked, then "and" for subsequent invocations.
+     * 
+     * @return "where" or "and".
      */
     public String whereAnd()
     {
@@ -62,6 +64,8 @@ public class SqlHelper
 
     /**
      * Returns "where" the first time it is invoked, then "or" for subsequent invocations.
+     * 
+     * @return "where" or "or".
      */
     public String whereOr()
     {
@@ -74,6 +78,8 @@ public class SqlHelper
 
     /**
      * Returns "" the first time it is invoked, then "and" for subsequent invocations.
+     * 
+     * @return empty or "and".
      */
     public String and()
     {
@@ -86,6 +92,8 @@ public class SqlHelper
 
     /**
      * Returns "" the first time it is invoked, then "or" for subsequent invocations.
+     * 
+     * @return empty or "or".
      */
     public String or()
     {

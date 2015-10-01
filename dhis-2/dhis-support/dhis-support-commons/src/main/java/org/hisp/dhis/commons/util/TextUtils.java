@@ -242,6 +242,7 @@ public class TextUtils
      * trailing spaces.
      * 
      * @param string the string.
+     * @param remove the text to remove.
      * @return the chopped string.
      */
     public static String removeLast( String string, String remove )
@@ -297,6 +298,7 @@ public class TextUtils
      * Joins the elements of the provided array into a single String containing 
      * the provided list of elements.
      * 
+     * @param <T> type.
      * @param list the list of objects to join.
      * @param separator the separator string.
      * @param nullReplacement the value to replace nulls in list with.

@@ -350,7 +350,7 @@ public class DefaultLocationManager
                     return false;
                 }
             } 
-            catch( SecurityException ex ) 
+            catch ( SecurityException ex ) 
             {
                 log.info( "Directory " + directory.getAbsolutePath() + " cannot be accessed" );
                 
