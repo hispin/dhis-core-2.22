@@ -219,7 +219,7 @@ public class DefaultProgramService
 
             prStg.setReportDate( "" );
 
-            prStg.setReportDateDescription( programStage.getReportDateDescription() );
+            prStg.setReportDateDescription( programStage.getExcecutionDateLabel() );
 
             prStg.setDueDate( "" );
 

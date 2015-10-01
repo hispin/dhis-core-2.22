@@ -73,7 +73,7 @@ function showProgramStageDetails( context )
 		
 		setInnerHTML( 'standardIntervalField', json.programStage.standardInterval );  
 		setInnerHTML( 'dataElementCountField', json.programStage.dataElementCount );   
-		setInnerHTML( 'reportDateDescriptionField', json.programStage.reportDateDescription );
+		setInnerHTML( 'excecutionDateLabelField', json.programStage.excecutionDateLabel );
 		
 		var displayProvidedOtherFacility = ( json.programStage.displayProvidedOtherFacility == 'true') ? i18n_yes : i18n_no;
 		setInnerHTML( 'displayProvidedOtherFacilityField', displayProvidedOtherFacility );   	

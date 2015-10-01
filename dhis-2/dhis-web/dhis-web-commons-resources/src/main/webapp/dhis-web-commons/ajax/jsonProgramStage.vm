@@ -7,7 +7,7 @@
 	"minDaysFromStart": "${programStage.minDaysFromStart}",
 	"dataElementCount": "${programStageDataElements.size()}",
 	"standardInterval": "$!programStage.standardInterval",
-	"reportDateDescription": "$!encoder.jsonEncode( ${programStage.reportDateDescription} )",
+	"excecutionDateLabel": "$!encoder.jsonEncode( ${programStage.excecutionDateLabel} )",
 	"blockEntryForm": "$!programStage.blockEntryForm",
 	"remindCompleted": "$!programStage.remindCompleted",
 	"allowGenerateNextVisit": "$!programStage.allowGenerateNextVisit",

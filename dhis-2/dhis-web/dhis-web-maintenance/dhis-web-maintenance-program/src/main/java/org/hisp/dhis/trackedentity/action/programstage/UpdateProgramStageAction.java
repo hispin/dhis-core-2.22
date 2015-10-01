@@ -172,11 +172,11 @@ public class UpdateProgramStageAction
         this.standardInterval = standardInterval;
     }
 
-    private String reportDateDescription;
+    private String excecutionDateLabel;
 
-    public void setReportDateDescription( String reportDateDescription )
+    public void setExcecutionDateLabel( String excecutionDateLabel )
     {
-        this.reportDateDescription = reportDateDescription;
+        this.excecutionDateLabel = excecutionDateLabel;
     }
 
     private List<Integer> daysAllowedSendMessages = new ArrayList<>();
@@ -360,7 +360,7 @@ public class UpdateProgramStageAction
         programStage.setName( StringUtils.trimToNull( name ) );
         programStage.setDescription( StringUtils.trimToNull( description ) );
         programStage.setStandardInterval( standardInterval );
-        programStage.setReportDateDescription( StringUtils.trimToNull( reportDateDescription ) );
+        programStage.setExcecutionDateLabel( StringUtils.trimToNull( excecutionDateLabel ) );
         programStage.setMinDaysFromStart( minDaysFromStart );
         programStage.setIrregular( irregular );
         programStage.setMinDaysFromStart( minDaysFromStart );

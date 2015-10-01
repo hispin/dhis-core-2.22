@@ -268,8 +268,8 @@
 			</tr>
 			
 			<tr>
-				<td><label for="reportDateDescription">$i18n.getString( "report_date_description" )<em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
-				<td><input type="text" id="reportDateDescription" name="reportDateDescription" value='$!programStage.reportDateDescription' class="{validate:{required:true}}" /></td>
+				<td><label for="excecutionDateLabel">$i18n.getString( "report_date_description" )<em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+				<td><input type="text" id="excecutionDateLabel" name="excecutionDateLabel" value='$!programStage.excecutionDateLabel' class="{validate:{required:true}}" /></td>
 			</tr>
 			
 		</tbody>
