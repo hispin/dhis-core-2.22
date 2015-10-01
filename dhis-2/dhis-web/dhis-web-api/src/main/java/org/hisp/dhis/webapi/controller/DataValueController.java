@@ -236,7 +236,7 @@ public class DataValueController
 
                     if ( fileResource.isAssigned() )
                     {
-                        throw new WebMessageException( WebMessageUtils.conflict( "File resource is already assigned or is linked to another data value" ) );
+                        throw new WebMessageException( WebMessageUtils.conflict( "File resource already assigned or linked to another data value" ) );
                     }
 
                     fileResource.setAssigned( true );

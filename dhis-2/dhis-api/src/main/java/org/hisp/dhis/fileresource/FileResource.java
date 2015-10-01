@@ -45,40 +45,40 @@ public class FileResource
     extends BaseIdentifiableObject
 {
     /**
-     * MIME type
+     * MIME type.
      */
     private String contentType;
 
     /**
-     * Byte size of content, non negative
+     * Byte size of content, non negative.
      */
     private long contentLength;
 
     /**
-     * MD5 digest of content
+     * MD5 digest of content.
      */
     private String contentMd5;
 
     /**
-     * Key used for content storage at external location
+     * Key used for content storage at external location.
      */
     private String storageKey;
 
     /**
-     * Flag indicating wether the resource is assigned (e.g. to a DataValue) or not.
-     * Unassigned FileResources are generally safe to delete when reaching a certain age
-     * (unassigned objects might be in staging).
+     * Flag indicating whether the resource is assigned (e.g. to a DataValue) or 
+     * not. Unassigned FileResources are generally safe to delete when reaching 
+     * a certain age (unassigned objects might be in staging).
      */
     private boolean assigned = false;
 
     /**
-     * The domain which this FileResource belongs to
+     * The domain which this FileResource belongs to.
      */
     private FileResourceDomain domain;
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Constructors
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     public FileResource()
     {
@@ -94,9 +94,9 @@ public class FileResource
         this.storageKey = generateStorageKey();
     }
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Overrides
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     @Override
     public boolean haveUniqueNames()
@@ -104,9 +104,9 @@ public class FileResource
         return false;
     }
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Getters and setters
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
@@ -190,9 +190,9 @@ public class FileResource
         this.domain = domain;
     }
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Supportive methods
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     private String generateStorageKey()
     {

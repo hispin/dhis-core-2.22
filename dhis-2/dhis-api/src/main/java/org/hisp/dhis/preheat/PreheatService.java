@@ -42,12 +42,12 @@ public interface PreheatService
      *
      * @param classes Classes to preheat
      */
-    void preheat( Set<Class> classes );
+    void preheat( Set<Class<?>> classes );
 
     /**
      * Preheat a specified set of UIDs for a set of classes.
      *
      * @param classes Class => UID Collection map
      */
-    void preheat( Map<Class, Collection<String>> classes );
+    void preheat( Map<Class<?>, Collection<String>> classes );
 }
