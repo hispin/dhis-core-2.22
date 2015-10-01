@@ -249,9 +249,13 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
 .factory('DHIS2EventFactory', function($http, $q, ECStorageService, $rootScope) {   
     
     return {
-        getByStage: function(orgUnit, programStage, pager, paging){
+        getByStage: function(orgUnit, programStage, attributeCategoryUrl, pager, paging){
             
             var url = '../api/events.json?' + 'orgUnit=' + orgUnit + '&programStage=' + programStage;
+            
+            if(attributeCategoryUrl && !attributeCategoryUrl.default){
+                url = url + '&attributeCc=' + attributeCategoryUrl.cc + '&attributeCos=' + attributeCategoryUrl.cp;
+            }
             
             if(paging){
                 var pgSize = pager ? pager.pageSize : 50;

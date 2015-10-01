@@ -97,6 +97,7 @@ div.paging a.active
     border: 1px solid #c2c2c2;
     border-radius: 5px;
     padding: 12px;
+    margin-left: -15px;
     margin-bottom: 20px;
 }
 
