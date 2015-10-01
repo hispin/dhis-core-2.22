@@ -34,11 +34,9 @@ import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
