@@ -572,7 +572,7 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="org.hisp.dhis.fileresource.FileResourceContentStore" class="org.hisp.dhis.fileresource.DefaultFileResourceContentStore"
+  <bean id="org.hisp.dhis.fileresource.FileResourceContentStore" class="org.hisp.dhis.fileresource.JCloudsFileResourceContentStore"
     init-method="init" destroy-method="cleanUp">
     <property name="configurationProvider" ref="hibernateConfigurationProvider" />
     <property name="locationManager" ref="locationManager" />
@@ -1248,6 +1248,7 @@
   <bean id="org.hisp.dhis.keyjsonvalue.KeyJsonValueService" class="org.hisp.dhis.keyjsonvalue.DefaultKeyJsonValueService">
       <property name="keyJsonValueStore" ref="org.hisp.dhis.keyjsonvalue.KeyJsonValueStore" />
   </bean>
+
   <!-- SMS services -->
 
   <bean id="org.hisp.dhis.sms.command.SMSCommandService" class="org.hisp.dhis.sms.command.DefaultSMSCommandService">
