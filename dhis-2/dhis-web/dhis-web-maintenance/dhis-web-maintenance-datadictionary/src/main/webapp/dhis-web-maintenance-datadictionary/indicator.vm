@@ -52,10 +52,10 @@
 				<tbody id="list">
 				#foreach( $indicator in $indicators )
 				<tr id="tr${indicator.id}" data-id="$!indicator.id" data-uid="$!indicator.uid" data-type="Indicator" data-name="$encoder.htmlEncode( $!indicator.displayName )"
-            data-can-manage="$security.canManage( $indicator )"
-            data-can-update="$security.canUpdate( $indicator )"
-            data-can-delete="$security.canDelete( $indicator )">
-          <td>$encoder.htmlEncode( $!indicator.displayName )</td>
+                    data-can-manage="$security.canManage( $indicator )"
+                    data-can-update="$security.canUpdate( $indicator )"
+                    data-can-delete="$security.canDelete( $indicator )">
+                    <td>$encoder.htmlEncode( $!indicator.displayName )</td>
 				</tr>
 				#end
 				</tbody>
