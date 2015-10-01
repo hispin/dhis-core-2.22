@@ -32,6 +32,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValue;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueStore;
+import org.hisp.dhis.query.Query;
 
 import java.util.List;
 
@@ -43,33 +44,33 @@ public class HibernateKeyJsonValueStore
     implements KeyJsonValueStore
 {
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<String> getNamespaces()
     {
-        return getQuery( "SELECT distinct namespace FROM org.hisp.dhis.keyjsonvalue.KeyJsonValue" ).list();
+        String hql = "SELECT distinct namespace FROM KeyJsonValue";
+        return getQuery( hql ).list();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<String> getKeysInNamespace( String namespace )
     {
-        return getQuery(
-            "SELECT distinct key FROM org.hisp.dhis.keyjsonvalue.KeyJsonValue WHERE namespace LIKE '" + 
-            namespace + "'" ).list();
+        String hql = "SELECT key FROM KeyJsonValue WHERE namespace = :namespace";
+        return getQuery( hql ).setString( "namespace", namespace ).list();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void deleteKeysInNamespace( String namespace )
+    @SuppressWarnings( "unchecked" )
+    public List<KeyJsonValue> getKeyJsonValueByNamespace( String namespace )
     {
-        getCriteria( Restrictions.eq( "namespace", namespace ) ).list().forEach( o -> delete( (KeyJsonValue) o ) );
+        return getCriteria( Restrictions.eq( "namespace", namespace ) ).list();
     }
 
     @Override
     public KeyJsonValue getKeyJsonValue( String namespace, String key )
     {
-        return (KeyJsonValue) getCriteria( 
-            Restrictions.eq( "namespace", namespace ), 
+        return (KeyJsonValue) getCriteria(
+            Restrictions.eq( "namespace", namespace ),
             Restrictions.eq( "key", key ) ).uniqueResult();
     }
 }

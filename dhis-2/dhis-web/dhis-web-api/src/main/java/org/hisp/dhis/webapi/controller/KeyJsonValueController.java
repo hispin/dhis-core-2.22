@@ -29,21 +29,20 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValue;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Stian Sandvold
@@ -59,14 +58,18 @@ public class KeyJsonValueController
     private RenderService renderService;
 
     @RequestMapping( value = "", method = RequestMethod.GET, produces = "application/json" )
-    public void getNamespaces( HttpServletResponse response )
+    public
+    @ResponseBody
+    List<String> getNamespaces( HttpServletResponse response )
         throws IOException
     {
-        renderService.toJson( response.getOutputStream(), keyJsonValueService.getNamespaces() );
+        return keyJsonValueService.getNamespaces();
     }
 
     @RequestMapping( value = "/{namespace}", method = RequestMethod.GET, produces = "application/json" )
-    public void getKeysInNamespace(
+    public
+    @ResponseBody
+    List<String> getKeysInNamespace(
         @PathVariable String namespace,
         HttpServletResponse response )
         throws IOException, WebMessageException
@@ -77,13 +80,16 @@ public class KeyJsonValueController
                 WebMessageUtils.notFound( "The namespace '" + namespace + "' was not found." ) );
         }
 
-        renderService.toJson( response.getOutputStream(), keyJsonValueService.getKeysInNamespace( namespace ) );
+        return keyJsonValueService.getKeysInNamespace( namespace );
     }
 
     @RequestMapping( value = "/{namespace}", method = RequestMethod.DELETE )
-    public void deleteNamespace(
+    public
+    @ResponseBody
+    WebMessage deleteNamespace(
         @PathVariable String namespace,
-        HttpServletResponse response ) throws WebMessageException
+        HttpServletResponse response )
+        throws WebMessageException
     {
 
         if ( !keyJsonValueService.getNamespaces().contains( namespace ) )
@@ -94,11 +100,13 @@ public class KeyJsonValueController
 
         keyJsonValueService.deleteNamespace( namespace );
 
-        throw new WebMessageException( WebMessageUtils.ok( "Namespace '" + namespace + "' deleted." ) );
+        return WebMessageUtils.ok( "Namespace '" + namespace + "' deleted." );
     }
 
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.GET, produces = "application/json" )
-    public void getKeyJsonValue(
+    public
+    @ResponseBody
+    KeyJsonValue getKeyJsonValue(
         @PathVariable String namespace,
         @PathVariable String key,
         HttpServletResponse response )
@@ -112,11 +120,13 @@ public class KeyJsonValueController
                 .notFound( "The key '" + key + "' was not found in the namespace '" + namespace + "'." ) );
         }
 
-        renderService.toJson( response.getOutputStream(), keyJsonValue );
+        return keyJsonValue;
     }
 
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.POST, produces = "application/json", consumes = "application/json" )
-    public void addKey(
+    public
+    @ResponseBody
+    KeyJsonValue addKey(
         @PathVariable String namespace,
         @PathVariable String key,
         @RequestBody String body,
@@ -142,12 +152,14 @@ public class KeyJsonValueController
 
         keyJsonValueService.addKeyJsonValue( keyJsonValue );
 
-        response.setStatus( 201 );
-        renderService.toJson( response.getOutputStream(), keyJsonValue );
+        response.setStatus( HttpServletResponse.SC_CREATED );
+        return keyJsonValue;
     }
 
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json" )
-    public void updateKeyJsonValue(
+    public
+    @ResponseBody
+    KeyJsonValue updateKeyJsonValue(
         @PathVariable String namespace,
         @PathVariable String key,
         @RequestBody String body,
@@ -172,11 +184,13 @@ public class KeyJsonValueController
 
         keyJsonValueService.updateKeyJsonValue( keyJsonValue );
 
-        renderService.toJson( response.getOutputStream(), keyJsonValue );
+        return keyJsonValue;
     }
 
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.DELETE, produces = "application/json" )
-    public void deleteKeyJsonValue(
+    public
+    @ResponseBody
+    WebMessage deleteKeyJsonValue(
         @PathVariable String namespace,
         @PathVariable String key,
         HttpServletResponse response )
@@ -192,7 +206,6 @@ public class KeyJsonValueController
 
         keyJsonValueService.deleteKeyJsonValue( keyJsonValue );
 
-        throw new WebMessageException(
-            WebMessageUtils.ok( "Key '" + key + "' deleted from namespace '" + namespace + "'." ) );
+        return WebMessageUtils.ok( "Key '" + key + "' deleted from namespace '" + namespace + "'." );
     }
 }
