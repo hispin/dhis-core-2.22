@@ -1,4 +1,4 @@
-package org.hisp.dhis.commons.util;
+package org.hisp.dhis.importexport;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,42 +28,50 @@ package org.hisp.dhis.commons.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Class which can count occurrences of a given composite key.
+ * Class which can count occurrences of a given key.
  * 
  * @author Lars Helge Overland
  */
-public class CompositeCounter
-    extends Counter<String>
+public class Counter<T>
 {
-    private static final char SEPARATOR = '-';
+    private Map<T, Integer> map;
     
-    public CompositeCounter()
+    public Counter()
     {
-        super();
+        map = new HashMap<>();
     }
     
-    public int count( Object... objects )
+    public int count( T key )
     {
-        String key = getKey( objects );
-        
-        return super.count( key );
-    }
-    
-    public Integer getCount( Object... objects )
-    {
-        return super.getCount( getKey( objects ) );
-    }
-    
-    private String getKey( Object... objects )
-    {
-        StringBuilder builder = new StringBuilder();
-        
-        for ( Object o : objects )
+        if ( !map.containsKey( key ) )
         {
-            builder.append( o.hashCode() ).append( SEPARATOR );
+            map.put( key, 0 );
         }
         
-        return builder.toString();
+        int count = map.get( key );
+        
+        map.put( key, ++count );
+        
+        return count;
+    }
+    
+    public Map<T, Integer> getCount()
+    {
+        return map;
+    }
+    
+    public Integer getCount( T key )
+    {
+        return map != null && map.containsKey( key ) ? map.get( key ) : 0;
+    }
+ 
+    @Override
+    public String toString()
+    {
+        return "[" + map.toString() + "]";
     }
 }
