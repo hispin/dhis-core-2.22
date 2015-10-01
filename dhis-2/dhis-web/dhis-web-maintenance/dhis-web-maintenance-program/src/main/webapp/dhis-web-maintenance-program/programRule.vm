@@ -49,8 +49,8 @@
                 data-can-manage="$security.canManage( $programRule )"
                 data-can-update="$security.canUpdate( $programRule )"
                 data-can-delete="$security.canDelete( $programRule )">
-                <td>$encoder.htmlEncode( $!programRule.displayName )</td>
-                <td>$encoder.htmlEncode( $!programRule.description )</td>
+                <td>$!encoder.htmlEncode( $!programRule.displayName )</td>
+                <td>$!encoder.htmlEncode( $!programRule.description )</td>
             </tr>
           #end
 		 
