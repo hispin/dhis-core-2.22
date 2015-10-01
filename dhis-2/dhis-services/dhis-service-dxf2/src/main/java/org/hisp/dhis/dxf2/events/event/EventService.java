@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.report.EventRows;
@@ -59,7 +60,7 @@ public interface EventService
 
     EventSearchParams getFromUrl( String program, String programStage, ProgramStatus programStatus, Boolean followUp, String orgUnit,
         OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate, 
-        EventStatus status, Date lastUpdated, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean includeAttributes );
+        EventStatus status, Date lastUpdated, DataElementCategoryOptionCombo attributeCoc, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean includeAttributes );
     
     Event getEvent( String uid );
 

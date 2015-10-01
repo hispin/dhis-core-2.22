@@ -31,6 +31,7 @@ package org.hisp.dhis.dxf2.events.event;
 import java.util.Date;
 
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -69,6 +70,8 @@ public class EventSearchParams
     private EventStatus eventStatus;
 
     private Date lastUpdated;
+    
+    private DataElementCategoryOptionCombo categoryOptionCombo;
 
     private IdSchemes idSchemes;
 
@@ -296,6 +299,16 @@ public class EventSearchParams
     public void setIncludeAttributes( boolean includeAttributes )
     {
         this.includeAttributes = includeAttributes;
+    }
+
+    public DataElementCategoryOptionCombo getCategoryOptionCombo()
+    {
+        return categoryOptionCombo;
+    }
+
+    public void setCategoryOptionCombo( DataElementCategoryOptionCombo categoryOptionCombo )
+    {
+        this.categoryOptionCombo = categoryOptionCombo;
     }
 
 }

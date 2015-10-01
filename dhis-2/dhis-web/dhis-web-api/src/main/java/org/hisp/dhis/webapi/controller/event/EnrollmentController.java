@@ -29,7 +29,9 @@ package org.hisp.dhis.webapi.controller.event;
  */
 
 import com.google.common.collect.Lists;
+
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.enrollment.Enrollment;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentService;
@@ -65,6 +67,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -124,7 +127,8 @@ public class EnrollmentController
             fields.add( "enrollment,created,lastUpdated,trackedEntity,trackedEntityInstance,program,status,orgUnit,enrollmentDate,incidentDate,followup" );
         }
 
-        Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
+        Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
+        
         ProgramInstanceQueryParams params = programInstanceService.getFromUrl( orgUnits, ouMode, lastUpdated, program, programStatus, programStartDate,
             programEndDate, trackedEntity, trackedEntityInstance, followUp, page, pageSize, totalPages, skipPaging );
 

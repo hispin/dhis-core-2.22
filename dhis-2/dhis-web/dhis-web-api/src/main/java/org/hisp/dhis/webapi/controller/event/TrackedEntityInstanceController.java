@@ -29,10 +29,12 @@ package org.hisp.dhis.webapi.controller.event;
  */
 
 import com.google.common.collect.Lists;
+
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.cache.CacheStrategy;
+import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
@@ -69,6 +71,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -134,7 +137,7 @@ public class TrackedEntityInstanceController
             fields.add( ":all" );
         }
 
-        Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
+        Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
@@ -171,7 +174,7 @@ public class TrackedEntityInstanceController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
+        Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
@@ -209,7 +212,7 @@ public class TrackedEntityInstanceController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
+        Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
@@ -243,7 +246,7 @@ public class TrackedEntityInstanceController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
+        Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );
@@ -277,7 +280,7 @@ public class TrackedEntityInstanceController
         Model model,
         HttpServletResponse response ) throws Exception
     {
-        Set<String> orgUnits = ContextUtils.getQueryParamValues( ou );
+        Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
         TrackedEntityInstanceQueryParams params = instanceService.getFromUrl( query, attribute, filter, orgUnits, ouMode,
             program, programStatus, followUp, programStartDate, programEndDate, trackedEntity,
             eventStatus, eventStartDate, eventEndDate, skipMeta, page, pageSize, totalPages, skipPaging );

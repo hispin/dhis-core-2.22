@@ -56,7 +56,7 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.webapi.utils.InputUtils;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -673,7 +673,7 @@ public class DataValueController
     private DataElementCategoryOptionCombo getAndValidateAttributeOptionCombo( String cc, String cp )
         throws WebMessageException
     {
-        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
+        DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( null, cc, cp );
 
         if ( attributeOptionCombo == null )
         {
