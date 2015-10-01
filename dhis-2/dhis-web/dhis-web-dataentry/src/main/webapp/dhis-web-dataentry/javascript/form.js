@@ -677,8 +677,7 @@ dhis2.de.addEventListeners = function()
         };
 
         // Functions
-        var deleteFileDataValue = function()
-        {
+        var deleteFileDataValue = function() {
             var postData = formData;
             postData.value = '';
 
@@ -702,8 +701,7 @@ dhis2.de.addEventListeners = function()
             } );
         };
 
-        var setButtonDelete = function()
-        {
+        var setButtonDelete = function() {
             $button.button( {
                 text: false,
                 icons: {
@@ -712,17 +710,26 @@ dhis2.de.addEventListeners = function()
             } );
             $button.unbind( 'click' );
             $button.on( 'click', function() {
-                // TODO Use jQuery UI dialog
-                var confirmed = window.confirm( 'Delete the file?' );
-                if ( confirmed ) {
-                    deleteFileDataValue();
-                }
+                $( '#fileDeleteConfirmationDialog' ).dialog( {
+                    title: 'Confirm deletion',
+                    resizable: false,
+                    height: 140,
+                    modal: true,
+                    buttons: {
+                        'Delete': function() {
+                            deleteFileDataValue();
+                            $( this ).dialog( 'close' );
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( 'close' );
+                        }
+                    }
+                } );
             } );
             $button.button( 'enable' );
         };
 
-        var setButtonUpload = function()
-        {
+        var setButtonUpload = function() {
             $button.button( {
                 text: false,
                 icons: {

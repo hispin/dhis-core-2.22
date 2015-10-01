@@ -358,3 +358,22 @@
 .ui-icon.icon-large {
     margin-top: -0.75em;
 }
+
+#fileDeleteConfirmationDialog
+{
+    display: none;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.confirm-dialog-content
+{
+    display: inline-block;
+    position: absolute;
+    top: 16px;
+}
+
+#fileDeleteConfirmationDialog .fa
+{
+    margin-right: 5px;
+}
