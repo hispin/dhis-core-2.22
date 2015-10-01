@@ -69,14 +69,14 @@ public class InputUtils
         // Attribute category combo validation
         // ---------------------------------------------------------------------
 
-        if ( (cc == null && opts != null || (cc != null && opts == null)) )
+        if ( ( cc == null && opts != null || ( cc != null && opts == null ) ) )
         {            
             throw new IllegalQueryException( "Both or none of category combination and category options must be present" ) ;
         }
 
         DataElementCategoryCombo categoryCombo = null;
 
-        if ( cc != null && (categoryCombo = idObjectManager.get( DataElementCategoryCombo.class, cc )) == null )
+        if ( cc != null && ( categoryCombo = idObjectManager.get( DataElementCategoryCombo.class, cc ) ) == null )
         {
             throw new IllegalQueryException( "Illegal category combo identifier: " + cc );
         }
