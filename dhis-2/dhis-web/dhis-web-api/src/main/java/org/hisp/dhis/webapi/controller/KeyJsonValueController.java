@@ -28,6 +28,11 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValue;
@@ -40,12 +45,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 /**
- * Created by Stian Sandvold on 27.09.2015.
+ * @author Stian Sandvold
  */
 @Controller
 @RequestMapping( "/dataStore" )
@@ -58,9 +59,7 @@ public class KeyJsonValueController
     private RenderService renderService;
 
     @RequestMapping( value = "", method = RequestMethod.GET, produces = "application/json" )
-    public void getNamespaces(
-        HttpServletResponse response
-    )
+    public void getNamespaces( HttpServletResponse response )
         throws IOException
     {
         renderService.toJson( response.getOutputStream(), keyJsonValueService.getNamespaces() );
@@ -69,11 +68,9 @@ public class KeyJsonValueController
     @RequestMapping( value = "/{namespace}", method = RequestMethod.GET, produces = "application/json" )
     public void getKeysInNamespace(
         @PathVariable String namespace,
-        HttpServletResponse response
-    )
+        HttpServletResponse response )
         throws IOException, WebMessageException
     {
-
         if ( !keyJsonValueService.getNamespaces().contains( namespace ) )
         {
             throw new WebMessageException(
@@ -86,9 +83,7 @@ public class KeyJsonValueController
     @RequestMapping( value = "/{namespace}", method = RequestMethod.DELETE )
     public void deleteNamespace(
         @PathVariable String namespace,
-        HttpServletResponse response
-    )
-        throws WebMessageException
+        HttpServletResponse response ) throws WebMessageException
     {
 
         if ( !keyJsonValueService.getNamespaces().contains( namespace ) )
@@ -128,14 +123,12 @@ public class KeyJsonValueController
         HttpServletResponse response )
         throws IOException, WebMessageException
     {
-        // Check uniqueness of the key
         if ( keyJsonValueService.getKeyJsonValue( namespace, key ) != null )
         {
             throw new WebMessageException( WebMessageUtils
                 .conflict( "The key '" + key + "' already exists on the namespace '" + namespace + "'." ) );
         }
 
-        // Check json validity
         if ( !renderService.isValidJson( body ) )
         {
             throw new WebMessageException( WebMessageUtils.badRequest( "The data is not valid JSON." ) );
@@ -159,8 +152,7 @@ public class KeyJsonValueController
         @PathVariable String key,
         @RequestBody String body,
         HttpServletRequest request,
-        HttpServletResponse response
-    )
+        HttpServletResponse response )
         throws WebMessageException, IOException
     {
         KeyJsonValue keyJsonValue = keyJsonValueService.getKeyJsonValue( namespace, key );
@@ -171,7 +163,6 @@ public class KeyJsonValueController
                 .notFound( "The key '" + key + "' was not found in the namespace '" + namespace + "'." ) );
         }
 
-        // Check json validity
         if ( !renderService.isValidJson( body ) )
         {
             throw new WebMessageException( WebMessageUtils.badRequest( "The data is not valid JSON." ) );
@@ -188,8 +179,7 @@ public class KeyJsonValueController
     public void deleteKeyJsonValue(
         @PathVariable String namespace,
         @PathVariable String key,
-        HttpServletResponse response
-    )
+        HttpServletResponse response )
         throws WebMessageException
     {
         KeyJsonValue keyJsonValue = keyJsonValueService.getKeyJsonValue( namespace, key );

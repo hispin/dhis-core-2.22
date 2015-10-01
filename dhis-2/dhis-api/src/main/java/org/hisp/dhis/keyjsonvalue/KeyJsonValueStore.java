@@ -33,12 +33,11 @@ import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import java.util.List;
 
 /**
- * Created by Stian Sandvold on 27.09.2015.
+ * @author Stian Sandvold
  */
 public interface KeyJsonValueStore
     extends GenericIdentifiableObjectStore<KeyJsonValue>
 {
-
     List<String> getNamespaces();
 
     List<String> getKeysInNamespace( String namespace );
@@ -46,5 +45,4 @@ public interface KeyJsonValueStore
     void deleteKeysInNamespace( String namespace );
 
     KeyJsonValue getKeyJsonValue( String namespace, String key );
-
 }

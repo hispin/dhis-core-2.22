@@ -30,10 +30,12 @@ package org.hisp.dhis.dxf2.render;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -141,6 +143,22 @@ public class DefaultRenderService
         return xmlMapper.readValue( input, klass );
     }
 
+    @Override
+    public boolean isValidJson( String json )
+        throws IOException
+    {
+        try
+        {
+            jsonMapper.readValue( json, Object.class );
+        }
+        catch ( JsonParseException | JsonMappingException e )
+        {
+            return false;
+        }
+
+        return true;
+    }
+    
     //--------------------------------------------------------------------------
     // Helpers
     //--------------------------------------------------------------------------
@@ -182,24 +200,4 @@ public class DefaultRenderService
         jsonMapper.getFactory().enable( JsonGenerator.Feature.QUOTE_FIELD_NAMES );
         xmlMapper.configure( ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true );
     }
-
-    public boolean isValidJson( String json )
-        throws IOException
-    {
-        try
-        {
-            jsonMapper.readValue( json, Object.class );
-        }
-        catch ( com.fasterxml.jackson.core.JsonParseException e )
-        {
-            return false;
-        }
-        catch ( JsonMappingException e )
-        {
-            return false;
-        }
-
-        return true;
-    }
-
 }
