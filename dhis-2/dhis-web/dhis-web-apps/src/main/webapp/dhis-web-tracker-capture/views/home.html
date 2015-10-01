@@ -75,7 +75,7 @@
         <!--- selected org unit ends  -->
 
         <!--- search and registration menu begins -->
-        <div class="row vertical-spacing not-for-screen">
+        <div class="row small-vertical-spacing not-for-screen">
             <div class="col-sm-6 col-md-4">
                 <h4>{{orgUnitLabel}}</h4>
             </div>
@@ -84,7 +84,6 @@
             </div>
         </div>
         <div class="row">
-
             <!-- program selection begins -->
             <div id="selectDropDownParent" class="input-group col-md-4">            
                 <button type="button" class="select-dropdown-button form-control" ng-show="programs.length > 0">{{selectedProgram ? selectedProgram.name : 'please_select_a_program'| translate}}</button>
@@ -101,7 +100,6 @@
                     </ul>
                 </div>
             </div>
-
             <!-- program selection ends -->
 
             <!-- simple/advanced search begins -->
@@ -158,7 +156,9 @@
 
         <!-- entity grid begins -->
         <i ng-if="!teiFetched" class="fa fa-spinner fa-spin fa-2x"></i>
-        <div class="row col-sm-12" ng-if="!showRegistrationDiv" ng-include="'views/tei.html'"></div>
+        <div class="row">
+             <div class="col-sm-12" ng-if="!showRegistrationDiv" ng-include="'views/tei.html'"></div>
+        </div>
         <!-- entity grid ends -->
     </div>
 
