@@ -38,6 +38,8 @@ import org.hisp.dhis.dataelement.CategoryOptionComboStore;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.dbms.DbmsManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Lars Helge Overland
@@ -46,6 +48,9 @@ public class HibernateCategoryOptionComboStore
     extends HibernateIdentifiableObjectStore<DataElementCategoryOptionCombo>
     implements CategoryOptionComboStore
 {
+    @Autowired
+    private DbmsManager dbmsManager;
+
     @Override
     public DataElementCategoryOptionCombo getCategoryOptionCombo( DataElementCategoryCombo categoryCombo, Set<DataElementCategoryOption> categoryOptions )
     {
@@ -83,7 +88,7 @@ public class HibernateCategoryOptionComboStore
             
             if ( ( counter % 400 ) == 0 )
             {
-                session.flush();
+                dbmsManager.clearSession();
             }
         }
     }
