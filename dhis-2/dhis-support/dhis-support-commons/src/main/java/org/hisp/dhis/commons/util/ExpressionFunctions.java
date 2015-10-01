@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * Class for functions to be used in JEXL expression evaluation.
+ * 
  * @author Lars Helge Overland
  */
 public class ExpressionFunctions

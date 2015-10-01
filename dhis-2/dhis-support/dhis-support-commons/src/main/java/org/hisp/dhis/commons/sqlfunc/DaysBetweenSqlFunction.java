@@ -29,6 +29,8 @@ package org.hisp.dhis.commons.sqlfunc;
  */
 
 /**
+ * Function which evaluates to the number of days between two given dates.
+ * 
  * @author Lars Helge Overland
  */
 public class DaysBetweenSqlFunction

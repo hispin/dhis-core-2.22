@@ -29,6 +29,8 @@ package org.hisp.dhis.commons.sqlfunc;
  */
 
 /**
+ * Functional interface for SQL operations.
+ * 
  * @author Lars Helge Overland
  */
 public interface SqlFunction

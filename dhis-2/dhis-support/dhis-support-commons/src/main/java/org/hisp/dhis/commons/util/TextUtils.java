@@ -107,7 +107,7 @@ public class TextUtils
 
     /**
      * Replaces common newline characters like \n, \r, \r\n to the HTML line
-     * break tag <br>.
+     * break tag br.
      * 
      * @param text the text to substitute.
      * @return the substituted text.
