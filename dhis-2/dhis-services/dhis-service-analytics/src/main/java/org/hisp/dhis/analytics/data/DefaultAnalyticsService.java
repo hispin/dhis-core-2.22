@@ -914,7 +914,6 @@ public class DefaultAnalyticsService
     {
         DataQueryParams params = new DataQueryParams();
         
-        params.setAggregationType( aggregationType );
         params.setIgnoreLimit( ignoreLimit );
 
         if ( dimensionParams != null && !dimensionParams.isEmpty() )
@@ -961,10 +960,12 @@ public class DefaultAnalyticsService
     {
         DataQueryParams params = new DataQueryParams();
         
-        List<OrganisationUnit> userOrgUnits = getUserOrgUnits( null );
-        
         if ( object != null )
         {
+            params.setProgram( object.getProgram() );
+            
+            List<OrganisationUnit> userOrgUnits = getUserOrgUnits( null );
+            
             Date date = object.getRelativePeriodDate();
 
             object.populateAnalyticalProperties();

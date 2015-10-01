@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.program.Program;
 
 /**
 * @author Lars Helge Overland
@@ -52,4 +53,6 @@ public interface AnalyticalObject
     Date getRelativePeriodDate();
     
     OrganisationUnit getRelativeOrganisationUnit();
+    
+    Program getProgram();
 }
