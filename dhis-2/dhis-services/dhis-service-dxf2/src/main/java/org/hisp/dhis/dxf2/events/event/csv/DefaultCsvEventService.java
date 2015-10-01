@@ -111,7 +111,7 @@ public class DefaultCsvEventService implements CsvEventService
     {
         Events events = new Events();
 
-        ObjectReader reader = CSV_MAPPER.reader( CsvEventDataValue.class )
+        ObjectReader reader = CSV_MAPPER.readerFor( CsvEventDataValue.class )
             .with( CSV_SCHEMA.withSkipFirstDataRow( skipFirst ) );
 
         MappingIterator<CsvEventDataValue> iterator = reader.readValues( inputStream );

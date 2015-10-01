@@ -104,6 +104,7 @@ public class DefaultExportService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public MetaData getMetaData( Options options, TaskId taskId )
     {
         MetaData metaData = new MetaData();
