@@ -265,7 +265,7 @@ public class ListUtils
     }
 
     /**
-     * Converts a List<Double> into a double[].
+     * Converts a List into a double[].
      *
      * @param list the List.
      * @return a double array.

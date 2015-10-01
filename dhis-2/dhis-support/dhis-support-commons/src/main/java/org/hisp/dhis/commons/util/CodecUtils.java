@@ -52,6 +52,7 @@ public class CodecUtils
      * truncates the string if it is longer than 255 characters.
      * 
      * @param string the string to encode.
+     * @return encoded string.
      */
     public static String databaseEncode( String string )
     {
