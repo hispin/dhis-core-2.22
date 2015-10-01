@@ -58,10 +58,10 @@ import java.util.stream.Collectors;
 /**
  * @author Halvdan Hoem Grelland
  */
-public class DefaultFileResourceContentStore
+public class JCloudsFileResourceContentStore
     implements FileResourceContentStore
 {
-    private static final Log log = LogFactory.getLog( DefaultFileResourceContentStore.class );
+    private static final Log log = LogFactory.getLog( JCloudsFileResourceContentStore.class );
 
     private static final Pattern CONTAINER_NAME_PATTERN = Pattern.compile( "^((?!-)[a-zA-Z0-9-]{1,63}(?<!-))+$" );
 
