@@ -28,13 +28,12 @@ package org.hisp.dhis.keyjsonvalue.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValue;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueStore;
-import org.hisp.dhis.query.Query;
-
-import java.util.List;
 
 /**
  * @author Stian Sandvold
@@ -47,7 +46,8 @@ public class HibernateKeyJsonValueStore
     @SuppressWarnings( "unchecked" )
     public List<String> getNamespaces()
     {
-        String hql = "SELECT distinct namespace FROM KeyJsonValue";
+        String hql = "select distinct namespace from KeyJsonValue";
+        
         return getQuery( hql ).list();
     }
 
@@ -55,7 +55,8 @@ public class HibernateKeyJsonValueStore
     @SuppressWarnings( "unchecked" )
     public List<String> getKeysInNamespace( String namespace )
     {
-        String hql = "SELECT key FROM KeyJsonValue WHERE namespace = :namespace";
+        String hql = "select key from KeyJsonValue where namespace = :namespace";
+        
         return getQuery( hql ).setString( "namespace", namespace ).list();
     }
 
