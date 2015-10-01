@@ -243,18 +243,19 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.getCategoryOptions = function(){
         $scope.eventFetched = false;
-        var optionsReady = false;
+        $scope.optionsReady = false;
         $scope.selectedOptions = [];        
         for(var i=0; i<$scope.selectedCategories.length; i++){
             if($scope.selectedCategories[i].selectedOption && $scope.selectedCategories[i].selectedOption.id){
-                optionsReady = true;
-                $scope.selectedOptions.push($scope.selectedCategories[i].selectedOption);
+                $scope.optionsReady = true;
+                $scope.selectedOptions.push($scope.selectedCategories[i].selectedOption.id);
             }
             else{
-                optionsReady = false;
+                $scope.optionsReady = false;
+                break;
             }
         }        
-        if(optionsReady){
+        if($scope.optionsReady){
             $scope.loadEvents();
         }
     };
@@ -265,16 +266,26 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.noteExists = false;            
         $scope.dhis2Events = [];
         $scope.eventLength = 0;
-
         $scope.eventFetched = false;
+        
+        var attributeCategoryUrl = {cc: $scope.selectedProgram.categoryCombo.id, default: $scope.selectedProgram.categoryCombo.isDefault, cp: ""};
+        if(!$scope.selectedProgram.categoryCombo.isDefault){            
+            if($scope.selectedOptions.length !== $scope.selectedCategories.length){
+                var dialogOptions = {
+                    headerText: 'error',
+                    bodyText: 'fill_all_category_options'
+                };
+
+                DialogService.showDialog({}, dialogOptions);
+                return false;
+            }            
+            attributeCategoryUrl.cp = $scope.selectedOptions.join(';');
+        }
                
-        if( $scope.selectedProgram && 
-                $scope.selectedProgram.programStages && 
-                $scope.selectedProgram.programStages[0] && 
-                $scope.selectedProgram.programStages[0].id){
+        if( $scope.selectedProgram && $scope.selectedProgramStage && $scope.selectedProgramStage.id){
             
             //Load events for the selected program stage and orgunit
-            DHIS2EventFactory.getByStage($scope.selectedOrgUnit.id, $scope.selectedProgramStage.id, $scope.pager, true ).then(function(data){
+            DHIS2EventFactory.getByStage($scope.selectedOrgUnit.id, $scope.selectedProgramStage.id, attributeCategoryUrl, $scope.pager, true ).then(function(data){
 
                 if(data.events){
                     $scope.eventLength = data.events.length;
@@ -591,7 +602,22 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                      longitude: $scope.currentEvent.coordinate.longitude ? $scope.currentEvent.coordinate.longitude : ''};             
         }
         
-        //send the new event to server
+        if(!$scope.selectedProgram.categoryCombo.isDefault){            
+            if($scope.selectedOptions.length !== $scope.selectedCategories.length){
+                var dialogOptions = {
+                    headerText: 'error',
+                    bodyText: 'fill_all_category_options'
+                };
+
+                DialogService.showDialog({}, dialogOptions);
+                return false;
+            }
+            
+            //dhis2Event.attributeCc = $scope.selectedProgram.categoryCombo.id;
+            dhis2Event.attributeCategoryOptions = $scope.selectedOptions.join(';');
+        }
+        
+        //send the new event to server        
         DHIS2EventFactory.create(dhis2Event).then(function(data) {
             if (data.response.importSummaries[0].status === 'ERROR') {
                 var dialogOptions = {
