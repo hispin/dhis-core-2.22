@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Timer implementation which uses system time.
  * 
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * @author Morten Olav Hansen
  */
 public class SystemTimer 
     implements Timer

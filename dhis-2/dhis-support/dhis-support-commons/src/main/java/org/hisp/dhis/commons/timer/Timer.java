@@ -31,7 +31,7 @@ package org.hisp.dhis.commons.timer;
 /**
  * Simple interface that captures time durations and pretty prints it back to you.
  *
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * @author Morten Olav Hansen
  */
 public interface Timer
 {
