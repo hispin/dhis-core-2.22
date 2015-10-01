@@ -78,6 +78,7 @@ fonts/LiberationSans-Bold-webfont.svg
 ../images/extend_menu.png
 ../dhis-web-dataentry/javascript/form.js?_rev=$!{buildRevision}
 ../dhis-web-dataentry/javascript/entry.js?_rev=$!{buildRevision}
+../dhis-web-dataentry/javascript/entry.fileresource.js?_rev=$!{buildRevision}
 
 # jquery-ui 1.9.1
 ../dhis-web-commons/javascripts/jQuery/ui/jquery-ui.min.js?_rev=$!{buildRevision}
