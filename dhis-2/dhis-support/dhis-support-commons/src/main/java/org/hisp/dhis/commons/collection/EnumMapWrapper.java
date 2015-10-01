@@ -50,6 +50,12 @@ public class EnumMapWrapper<E extends Enum<E>, T>
         this.map = map;
     }
     
+    /**
+     * Gets the value with the given key.
+     * 
+     * @param key the key.
+     * @return the value.
+     */
     public T getValue( String key )
     {
         return map.get( Enum.valueOf( enumType, key ) );

@@ -67,12 +67,24 @@ public class PageRange
         this.values = values;
     }
     
+    /**
+     * Sets page size.
+     * 
+     * @param pageSize the page size.
+     * @return this object.
+     */
     public PageRange setPageSize( int pageSize )
     {
         this.pageSize = pageSize;
         return this;
     }
     
+    /**
+     * Sets number of pages.
+     * 
+     * @param pages the number of pages.
+     * @return this object.
+     */
     public PageRange setPages( int pages )
     {
         this.pageSize = (int) Math.ceil( (double) values / pages );
