@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.render;
+package org.hisp.dhis.keyjsonvalue;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,34 +28,24 @@ package org.hisp.dhis.dxf2.render;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.List;
 
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * Created by Stian Sandvold on 27.09.2015.
  */
-public interface RenderService
+public interface KeyJsonValueService
 {
-    void toJson( OutputStream output, Object value ) throws IOException;
+    List<String> getNamespaces();
 
-    void toJson( OutputStream output, Object value, Class<?> klass ) throws IOException;
+    List<String> getKeysInNamespace( String namespace );
 
-    void toJsonP( OutputStream output, Object value, String callback ) throws IOException;
+    void deleteNamespace( String namespace );
 
-    void toJsonP( OutputStream output, Object value, Class<?> klass, String callback ) throws IOException;
+    KeyJsonValue getKeyJsonValue( String namespace, String key );
 
-    <T> T fromJson( InputStream input, Class<T> klass ) throws IOException;
+    int addKeyJsonValue( KeyJsonValue keyJsonValue );
 
-    <T> T fromJson( String input, Class<T> klass ) throws IOException;
+    void updateKeyJsonValue( KeyJsonValue keyJsonValue );
 
-    <T> void toXml( OutputStream output, T value ) throws IOException;
-
-    <T> void toXml( OutputStream output, T value, Class<?> klass ) throws IOException;
-
-    <T> T fromXml( InputStream input, Class<T> klass ) throws IOException;
-
-    <T> T fromXml( String input, Class<T> klass ) throws IOException;
-
-    boolean isValidJson(String json) throws IOException;
+    void deleteKeyJsonValue( KeyJsonValue keyJsonValue );
 }

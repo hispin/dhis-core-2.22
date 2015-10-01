@@ -30,10 +30,7 @@ package org.hisp.dhis.dxf2.render;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
@@ -48,7 +45,8 @@ import java.io.OutputStream;
  *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class DefaultRenderService implements RenderService
+public class DefaultRenderService
+    implements RenderService
 {
     private final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -64,19 +62,22 @@ public class DefaultRenderService implements RenderService
     //--------------------------------------------------------------------------
 
     @Override
-    public void toJson( OutputStream output, Object value ) throws IOException
+    public void toJson( OutputStream output, Object value )
+        throws IOException
     {
         jsonMapper.writeValue( output, value );
     }
 
     @Override
-    public void toJson( OutputStream output, Object value, Class<?> klass ) throws IOException
+    public void toJson( OutputStream output, Object value, Class<?> klass )
+        throws IOException
     {
         jsonMapper.writerWithView( klass ).writeValue( output, value );
     }
 
     @Override
-    public void toJsonP( OutputStream output, Object value, String callback ) throws IOException
+    public void toJsonP( OutputStream output, Object value, String callback )
+        throws IOException
     {
         if ( StringUtils.isEmpty( callback ) )
         {
@@ -87,7 +88,8 @@ public class DefaultRenderService implements RenderService
     }
 
     @Override
-    public void toJsonP( OutputStream output, Object value, Class<?> klass, String callback ) throws IOException
+    public void toJsonP( OutputStream output, Object value, Class<?> klass, String callback )
+        throws IOException
     {
         if ( StringUtils.isEmpty( callback ) )
         {
@@ -98,37 +100,43 @@ public class DefaultRenderService implements RenderService
     }
 
     @Override
-    public <T> T fromJson( InputStream input, Class<T> klass ) throws IOException
+    public <T> T fromJson( InputStream input, Class<T> klass )
+        throws IOException
     {
         return jsonMapper.readValue( input, klass );
     }
 
     @Override
-    public <T> T fromJson( String input, Class<T> klass ) throws IOException
+    public <T> T fromJson( String input, Class<T> klass )
+        throws IOException
     {
         return jsonMapper.readValue( input, klass );
     }
 
     @Override
-    public <T> void toXml( OutputStream output, T value ) throws IOException
+    public <T> void toXml( OutputStream output, T value )
+        throws IOException
     {
         xmlMapper.writeValue( output, value );
     }
 
     @Override
-    public <T> void toXml( OutputStream output, T value, Class<?> klass ) throws IOException
+    public <T> void toXml( OutputStream output, T value, Class<?> klass )
+        throws IOException
     {
         xmlMapper.writerWithView( klass ).writeValue( output, value );
     }
 
     @Override
-    public <T> T fromXml( InputStream input, Class<T> klass ) throws IOException
+    public <T> T fromXml( InputStream input, Class<T> klass )
+        throws IOException
     {
         return xmlMapper.readValue( input, klass );
     }
 
     @Override
-    public <T> T fromXml( String input, Class<T> klass ) throws IOException
+    public <T> T fromXml( String input, Class<T> klass )
+        throws IOException
     {
         return xmlMapper.readValue( input, klass );
     }
@@ -149,7 +157,7 @@ public class DefaultRenderService implements RenderService
 
     private void configureObjectMappers()
     {
-        ObjectMapper[] objectMappers = new ObjectMapper[]{ jsonMapper, xmlMapper };
+        ObjectMapper[] objectMappers = new ObjectMapper[] { jsonMapper, xmlMapper };
 
         for ( ObjectMapper objectMapper : objectMappers )
         {
@@ -174,4 +182,24 @@ public class DefaultRenderService implements RenderService
         jsonMapper.getFactory().enable( JsonGenerator.Feature.QUOTE_FIELD_NAMES );
         xmlMapper.configure( ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true );
     }
+
+    public boolean isValidJson( String json )
+        throws IOException
+    {
+        try
+        {
+            jsonMapper.readValue( json, Object.class );
+        }
+        catch ( com.fasterxml.jackson.core.JsonParseException e )
+        {
+            return false;
+        }
+        catch ( JsonMappingException e )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
 }

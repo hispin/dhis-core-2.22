@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.render;
+package org.hisp.dhis.keyjsonvalue;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,34 +28,51 @@ package org.hisp.dhis.dxf2.render;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hisp.dhis.common.BaseIdentifiableObject;
 
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * Created by Stian Sandvold on 27.09.2015.
  */
-public interface RenderService
+public class KeyJsonValue
+    extends BaseIdentifiableObject
 {
-    void toJson( OutputStream output, Object value ) throws IOException;
+    private String namespace;
 
-    void toJson( OutputStream output, Object value, Class<?> klass ) throws IOException;
+    private String key;
 
-    void toJsonP( OutputStream output, Object value, String callback ) throws IOException;
+    private String value;
 
-    void toJsonP( OutputStream output, Object value, Class<?> klass, String callback ) throws IOException;
+    @JsonProperty
+    public String getKey()
+    {
+        return key;
+    }
 
-    <T> T fromJson( InputStream input, Class<T> klass ) throws IOException;
+    public void setKey( String key )
+    {
+        this.key = key;
+    }
 
-    <T> T fromJson( String input, Class<T> klass ) throws IOException;
+    @JsonProperty
+    public String getNamespace()
+    {
+        return namespace;
+    }
 
-    <T> void toXml( OutputStream output, T value ) throws IOException;
+    public void setNamespace( String namespace )
+    {
+        this.namespace = namespace;
+    }
 
-    <T> void toXml( OutputStream output, T value, Class<?> klass ) throws IOException;
+    @JsonProperty
+    public String getValue()
+    {
+        return value;
+    }
 
-    <T> T fromXml( InputStream input, Class<T> klass ) throws IOException;
-
-    <T> T fromXml( String input, Class<T> klass ) throws IOException;
-
-    boolean isValidJson(String json) throws IOException;
+    public void setValue( String value )
+    {
+        this.value = value;
+    }
 }
