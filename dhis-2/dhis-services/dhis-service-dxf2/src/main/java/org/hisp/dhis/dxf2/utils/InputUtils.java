@@ -56,8 +56,8 @@ public class InputUtils
      * code along with a textual message will be set on the response in case of
      * invalid input.
      *
-     * @param cc       the category combo identifier.
-     * @param cp       the category and option query string.
+     * @param cc the category combo identifier.
+     * @param cp the category and option query string.
      * @return the attribute option combo identified from the given input, or null
      * if the input was invalid.
      */
@@ -81,55 +81,16 @@ public class InputUtils
             throw new IllegalQueryException( "Illegal category combo identifier: " + cc );
         }
 
-        // ---------------------------------------------------------------------
-        // Attribute category options validation
-        // ---------------------------------------------------------------------
-
-        DataElementCategoryOptionCombo attributeOptionCombo = null;
-
-        if ( opts != null )
-        {
-            Set<DataElementCategoryOption> categoryOptions = new HashSet<>();
-
-            for ( String uid : opts )
-            {
-                DataElementCategoryOption categoryOption = idObjectManager.get( DataElementCategoryOption.class, uid );
-
-                if ( categoryOption == null )
-                {
-                    throw new IllegalQueryException( "Illegal category option identifier: " + uid ) ;
-                }
-
-                categoryOptions.add( categoryOption );
-            }
-
-            attributeOptionCombo = categoryService.getDataElementCategoryOptionCombo( categoryCombo, categoryOptions );
-
-            if ( attributeOptionCombo == null )
-            {
-                throw new IllegalQueryException( "Attribute option combo does not exist for given category combo and category options" );
-            }
-        }
-
-        if ( attributeOptionCombo == null )
-        {
-            attributeOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
-        }
-
-        if ( attributeOptionCombo == null )
-        {
-            throw new IllegalQueryException( "Default attribute option combo does not exist" );
-        }
-
-        return attributeOptionCombo;
+        return getAttributeOptionCombo( categoryCombo, cp );
     }
+    
     /**
      * Validates and retrieves the attribute option combo. 409 conflict as status
      * code along with a textual message will be set on the response in case of
      * invalid input.
      *
-     * @param cc       the category combo.
-     * @param cp       the category option query string.
+     * @param categoryCombo the category combo.
+     * @param cp the category option query string.
      * @return the attribute option combo identified from the given input, or null
      * if the input was invalid.
      */
@@ -183,6 +144,5 @@ public class InputUtils
         }
 
         return attributeOptionCombo;
-    }
-    
+    }    
 }
