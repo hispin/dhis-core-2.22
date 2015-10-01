@@ -641,7 +641,7 @@ dhis2.de.addEventListeners = function()
 
     $( '.entryfileresource-container' ).each( function()
     {
-        $( this ).fileResourceEntryField();
+        $( this ).fileEntryField();
     } );
 }
 
@@ -1536,6 +1536,15 @@ function loadDataValues()
     displayEntryFormCompleted();
 }
 
+function clearFileEntryFields() {
+    var $container = $( '.entryfileresource-container' );
+    $container.find( '.upload-fileinfo-name' ).text( '' );
+    $container.find( '.upload-fileinfo-size' ).text( '' );
+
+    $container.find( '.entryfileresource' ).css( 'background-color', dhis2.de.cst.colorWhite );
+    $container.find( '.entryfileresource' ).data( 'value', '' );
+}
+
 function getAndInsertDataValues()
 {
     var periodId = $( '#selectedPeriodId').val();
@@ -1554,7 +1563,8 @@ function getAndInsertDataValues()
     $( '.entrytrueonly' ).css( 'background-color', dhis2.de.cst.colorWhite );
     $( '.entryoptionset' ).css( 'background-color', dhis2.de.cst.colorWhite );
 
-    $( '.entryfileresource' ).css( 'background-color', dhis2.de.cst.colorWhite );
+    clearFileEntryFields();
+
 
     $( '[name="min"]' ).html( '' );
     $( '[name="max"]' ).html( '' );
@@ -1667,8 +1677,9 @@ function insertDataValues( json )
             }
             else if ( $( fieldId ).attr( 'class' ) == 'entryfileresource' )
             {
-                $( fieldId ).data( 'value', value.val );
                 // TODO Consider pre-fetching with dataset
+                $( fieldId ).data( 'value', value.val );
+
                 $.ajax( {
                     url: '../api/fileResources/' + value.val,
                     success: function( data ) {
