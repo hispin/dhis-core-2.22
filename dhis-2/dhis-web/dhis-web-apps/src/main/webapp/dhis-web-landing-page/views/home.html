@@ -1,50 +1,45 @@
 
-<div id="leftBar">
-    <div class="left-bar-menu" ng-controller="LeftBarMenuController">
-        <ul class="nav nav-pills nav-stacked">
-        <h3><label>Social Protection Management Menu</label></h3>
+    <div id="leftBar">
+
+        <div id="leftBarContents" ng-controller="LeftBarMenuController">
+          <h2>Social Protection Management Menu</h2>
+
+            <ul >
+                <li><a href ng-click="goTo('tracker-capture')">{{'tracker-capture'| translate}}</a></li>
+                <li><a href ng-click="goTo('aggregate-data-entry')">{{'aggregate-data-entry'| translate}}</a></li>
+                <li><a href ng-click="goTo('report')">{{'report'| translate}}</a></li>
+                <li><a href ng-click="goTo('dashboard')">{{'dashboard'| translate}}</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <br>
+    <div class="page" id="mainPage">
+        <h3>Social Protection Management Menu</h3>
+
+        <ul class="introList">
+            <li class="introItem" ng-click="goTo('tracker-capture')">
+                <img src="../icons/dhis-web-tracker-capture.png" class="introIcon">
+                <div class="introItemText"><div class="introItemHeader">Beneficiary Registration and Data Entry</div>
+                    <div>Register beneficiary and enter scheme data</div></div>
+            </li>
+            <li class="introItem" ng-click="goTo('aggregate-data-entry')">
+                <img src="../icons/dhis-web-dataentry.png" class="introIcon">
+                <div class="introItemText"><div class="introItemHeader">Aggregate Data Entry</div>
+                <div>Enter data for forms, validate data and view data trends</div></div>
+            </li>
+
+            <li class="introItem" ng-click="goTo('report')">
+                <img src="../icons/dhis-web-reporting.png" class="introIcon">
+                <div class="introItemText"><div class="introItemHeader">Reports</div>
+                    <div>View and add custom reports</div></div>
+            </li>
+
+            <li class="introItem" ng-click="goTo('dashboard')">
+                <img src="../icons/dhis-web-dashboard-integration.png" class="introIcon">
+                <div class="introItemText"><div class="introItemHeader">Dashboard</div>
+                    <div>Get an overview of favorite charts, reports and maps and view or write messages.</div></div>
+            </li>
         </ul>
 
-        <ul class="nav nav-pills nav-stacked">
-            <li><a href ng-click="goTo('tracker-capture')">{{'tracker-capture'| translate}}</a></li>
-            <li><a href ng-click="goTo('aggregate-data-entry')">{{'aggregate-data-entry'| translate}}</a></li>
-            <li><a href ng-click="goTo('report')">{{'report'| translate}}</a></li>
-            <li><a href ng-click="goTo('dashboard')">{{'dashboard'| translate}}</a></li>
-
-        </ul>
     </div>
-</div>
-<div class="page" id="mainPage">
-
-    <h2>Social Protection Management</h2>
-<br><br>
-
-    <div class="col-sm-6" ng-click="goTo('tracker-capture')">
-        <h2>
-            <img src="../icons/dhis-web-tracker-capture.png">
-            <a href=""> Beneficiary Registration and Data Entry</a></h2>
-    </div>
-
-    <div class="col-sm-6" ng-click="goTo('aggregate-data-entry')">
-        <h2>
-            <img src="../icons/dhis-web-dataentry.png">
-        <a href="">Aggregate Data Entry</a>
-            </h2>
-    </div>
-
-<br><br>
-
-    <div class="col-sm-6" ng-click="goTo('report')">
-        <h2>
-            <img src="../icons/dhis-web-reporting.png">
-        <a href="">Reports</a>
-            </h2>
-    </div>
-
-    <div class="col-sm-6" ng-click="goTo('dashboard')">
-        <h2>
-            <img src="../icons/dhis-web-dashboard-integration.png">
-        <a href="">Dashboard</a>
-            </h2>
-    </div>
-</div>

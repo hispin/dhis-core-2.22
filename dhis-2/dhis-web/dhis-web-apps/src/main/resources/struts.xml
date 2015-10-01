@@ -72,7 +72,7 @@
     
     <!-- dhis-web-landing-page -->
 	
-	<package name="dhis-web-landing-page" extends="dhis-web-commons" namespace="/dhis-web-landing-page">
+	<package name="SPIS" extends="dhis-web-commons" namespace="/dhis-web-landing-page">
 		<action name="index" class="org.hisp.dhis.commons.action.NoAction">
 			<result name="success" type="redirect">index.html</result>
 		</action>
