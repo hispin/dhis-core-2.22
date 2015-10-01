@@ -211,6 +211,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         $scope.emptySearchAttribute = false;
         $scope.showRegistrationDiv = false;  
         $scope.showTrackedEntityDiv = false;        
+        $scope.teiFetched = false;
+        $scope.trackedEntityList = null;
         
         $scope.queryUrl = null;
         $scope.programUrl = null;
@@ -263,6 +265,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         
         $scope.teiFetched = false;
         $scope.trackedEntityList = null;
+        $scope.showTrackedEntityDiv = true;
         
         //get events for the specified parameters        
         TEIService.search($scope.searchingOrgUnit.id, 
@@ -284,8 +287,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             
             //process tei grid
             $scope.trackedEntityList = TEIGridService.format(data,false, $scope.optionSets, null);
-
-            $scope.showTrackedEntityDiv = true;
+            
             $scope.showSearchDiv = false;
             $scope.teiFetched = true;  
             $scope.doSearch = true;

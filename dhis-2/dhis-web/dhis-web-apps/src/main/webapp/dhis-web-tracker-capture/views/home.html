@@ -143,19 +143,19 @@
         <!--- search and registration menu ends -->
 
         <!--- Error display for search begins -->
-        <div class="row col-sm-12 vertical-spacing" ng-if="emptySearchAttribute || !searchText && emptySearchText">
+        <div class="vertical-spacing" ng-if="emptySearchAttribute || !searchText && emptySearchText">
             <div class="alert alert-warning">{{'search_input_required'| translate}}</div>
         </div>
         <!--- Error display for search ends -->
 
         <!--registration form begins -->
-        <div class="row col-sm-12" ng-if="showRegistrationDiv">
-            <div ng-include="'components/registration/registration.html'"></div>
+        <div class="row" ng-if="showRegistrationDiv">
+            <div class="col-sm-12" ng-include="'components/registration/registration.html'"></div>
         </div>
         <!-- registration form ends -->        
 
         <!-- entity grid begins -->
-        <i ng-if="!teiFetched" class="fa fa-spinner fa-spin fa-2x"></i>
+        <i ng-if="!teiFetched && showTrackedEntityDiv" class="fa fa-spinner fa-spin fa-2x"></i>
         <div class="row">
              <div class="col-sm-12" ng-if="!showRegistrationDiv" ng-include="'views/tei.html'"></div>
         </div>
