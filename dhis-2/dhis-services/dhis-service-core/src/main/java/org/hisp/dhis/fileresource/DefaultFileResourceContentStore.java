@@ -126,9 +126,9 @@ public class DefaultFileResourceContentStore
 
     public void init()
     {
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         // Parse properties
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
 
         Map<String, String> fileStoreConfiguration = getFileStorePropertiesMap();
 
@@ -155,9 +155,9 @@ public class DefaultFileResourceContentStore
 
         Credentials credentials = new Credentials( "Unused", "Unused" );
 
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         // Provider specific configuration
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
 
         if ( provider.equals( JCLOUDS_PROVIDER_KEY_FILESYSTEM ) && locationManager.externalDirectorySet() )
         {
@@ -166,7 +166,7 @@ public class DefaultFileResourceContentStore
         else if ( provider.equals( JCLOUDS_PROVIDER_KEY_AWS_S3 ) )
         {
             credentials = new Credentials( fileStoreConfiguration.getOrDefault(
-                KEY_FILE_STORE_IDENTITY, "" ), fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_SECRET, "" ) );
+                KEY_FILE_STORE_IDENTITY, StringUtils.EMPTY ), fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_SECRET, StringUtils.EMPTY ) );
 
             if ( credentials.identity.isEmpty() || credentials.credential.isEmpty() )
             {
@@ -174,9 +174,9 @@ public class DefaultFileResourceContentStore
             }
         }
 
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         // Set up JClouds context
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
 
         blobStoreContext = ContextBuilder.newBuilder( provider )
             .credentials( credentials.identity, credentials.credential )
@@ -190,7 +190,7 @@ public class DefaultFileResourceContentStore
         blobStore.createContainerInLocation( configuredLocation.isPresent() ? configuredLocation.get() : null, container );
 
         log.info( "File store configured with provider '" + provider + "' and container '" + container + "'. " +
-            ( configuredLocation.isPresent() ? "Provider location: " + configuredLocation.get().getId() : "" ) );
+            ( configuredLocation.isPresent() ? "Provider location: " + configuredLocation.get().getId() : StringUtils.EMPTY ) );
     }
 
     public void cleanUp()
@@ -211,7 +211,7 @@ public class DefaultFileResourceContentStore
             return null;
         }
 
-        ByteSource byteSource = new ByteSource()
+        final ByteSource byteSource = new ByteSource()
         {
             @Override
             public InputStream openStream()
@@ -316,7 +316,8 @@ public class DefaultFileResourceContentStore
         return provider;
     }
 
-    private boolean isValidContainerName( String containerName ) {
+    private boolean isValidContainerName( String containerName ) 
+    {
         return containerName != null && CONTAINER_NAME_PATTERN.matcher( containerName ).matches();
     }
 }

@@ -28,15 +28,13 @@ package org.hisp.dhis.preheat;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+
+import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -44,19 +42,17 @@ import java.util.Set;
 @Transactional
 public class DefaultPreheatService implements PreheatService
 {
-    private static final Log log = LogFactory.getLog( DefaultPreheatService.class );
-
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
 
     @Override
-    public void preheat( Set<Class> classes )
+    public void preheat( Set<Class<?>> classes )
     {
         reset();
     }
 
     @Override
-    public void preheat( Map<Class, Collection<String>> classes )
+    public void preheat( Map<Class<?>, Collection<String>> classes )
     {
         reset();
     }
