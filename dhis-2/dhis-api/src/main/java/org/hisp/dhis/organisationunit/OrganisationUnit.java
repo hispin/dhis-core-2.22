@@ -1208,7 +1208,7 @@ public class OrganisationUnit
                 address = organisationUnit.getAddress() == null ? address : organisationUnit.getAddress();
                 email = organisationUnit.getEmail() == null ? email : organisationUnit.getEmail();
                 phoneNumber = organisationUnit.getPhoneNumber() == null ? phoneNumber : organisationUnit.getPhoneNumber();
-                parent = organisationUnit.getParent();
+                parent = organisationUnit.getParent() == null ? parent : organisationUnit.getParent();
             }
 
             groups.clear();
