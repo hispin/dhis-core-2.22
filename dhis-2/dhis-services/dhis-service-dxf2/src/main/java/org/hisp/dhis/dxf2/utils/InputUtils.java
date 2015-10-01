@@ -80,6 +80,11 @@ public class InputUtils
         {
             throw new IllegalQueryException( "Illegal category combo identifier: " + cc );
         }
+        
+        if ( categoryCombo == null && opts == null )
+        {
+            categoryCombo = categoryService.getDefaultDataElementCategoryCombo();
+        }
 
         return getAttributeOptionCombo( categoryCombo, cp );
     }
