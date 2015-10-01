@@ -33,19 +33,22 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by Stian Sandvold on 27.09.2015.
+ * @author Stian Sandvold
  */
 @Transactional
 public class DefaultKeyJsonValueService
     implements KeyJsonValueService
 {
-
     private KeyJsonValueStore keyJsonValueStore;
 
     public void setKeyJsonValueStore( KeyJsonValueStore keyJsonValueStore )
     {
         this.keyJsonValueStore = keyJsonValueStore;
     }
+
+    // -------------------------------------------------------------------------
+    // KeyJsonValueService implementation
+    // -------------------------------------------------------------------------
 
     @Override
     public List<String> getNamespaces()

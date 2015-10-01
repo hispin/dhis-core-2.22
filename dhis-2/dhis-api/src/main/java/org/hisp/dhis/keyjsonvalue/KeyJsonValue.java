@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 
 /**
- * Created by Stian Sandvold on 27.09.2015.
+ * @author Stian Sandvold
  */
 public class KeyJsonValue
     extends BaseIdentifiableObject

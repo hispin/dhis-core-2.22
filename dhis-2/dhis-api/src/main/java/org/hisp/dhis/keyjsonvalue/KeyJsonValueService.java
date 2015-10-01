@@ -31,7 +31,7 @@ package org.hisp.dhis.keyjsonvalue;
 import java.util.List;
 
 /**
- * Created by Stian Sandvold on 27.09.2015.
+ * @author Stian Sandvold
  */
 public interface KeyJsonValueService
 {
