@@ -851,13 +851,17 @@ public class TableAlteror
         executeSql( "update eventreport set completedonly = false where completedonly is null" );
         executeSql( "update eventchart set completedonly = false where completedonly is null" );
 
-        executeSql( "update program set enrollmentdatelabel = dateofenrollmentdescription where enrollmentdatelabel is null" );
-        executeSql( "update program set incidentdatelabel = dateofincidentdescription where incidentdatelabel is null" );
-        executeSql( "update programinstance set incidentdate = dateofincident where incidentdate is null" );
+        executeSql( "update program set enrollmentdatelabel = dateofenrollmentdescription where enrollmentdatelabel is not null" );
+        executeSql( "update program set incidentdatelabel = dateofincidentdescription where incidentdatelabel is not null" );
+        executeSql( "update programinstance set incidentdate = dateofincident where incidentdate is not null" );
         executeSql( "alter table programinstance alter column incidentdate set not null" );
         executeSql( "alter table program drop column dateofenrollmentdescription" );
         executeSql( "alter table program drop column dateofincidentdescription" );
         executeSql( "alter table programinstance drop column dateofincident" );
+        
+        executeSql( "update programstage set excecutiondatelabel = reportdatedescription where excecutiondatelabel is not null" );
+        executeSql( "alter table programstage drop column reportdatedescription" );
+        executeSql( "update programstage set reportdatetouse = 'indicentDate' where reportdatetouse='dateOfIncident'" );
         
         // Remove data mart
         executeSql( "drop table aggregateddatasetcompleteness" );

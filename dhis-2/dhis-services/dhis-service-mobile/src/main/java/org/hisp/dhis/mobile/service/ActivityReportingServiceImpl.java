@@ -955,13 +955,13 @@ public class ActivityReportingServiceImpl
                     mobileProgramStage.setReportDate( "" );
                 }
 
-                if ( programStage.getReportDateDescription() == null )
+                if ( programStage.getExcecutionDateLabel() == null )
                 {
                     mobileProgramStage.setReportDateDescription( "Report Date" );
                 }
                 else
                 {
-                    mobileProgramStage.setReportDateDescription( programStage.getReportDateDescription() );
+                    mobileProgramStage.setReportDateDescription( programStage.getExcecutionDateLabel() );
                 }
 
                 // get due date
@@ -1287,13 +1287,13 @@ public class ActivityReportingServiceImpl
             // get report date
             mobileProgramStage.setReportDate( PeriodUtil.dateToString( new Date() ) );
 
-            if ( programStage.getReportDateDescription() == null )
+            if ( programStage.getExcecutionDateLabel() == null )
             {
                 mobileProgramStage.setReportDateDescription( "Report Date" );
             }
             else
             {
-                mobileProgramStage.setReportDateDescription( programStage.getReportDateDescription() );
+                mobileProgramStage.setReportDateDescription( programStage.getExcecutionDateLabel() );
             }
 
             for ( ProgramStageDataElement programStageDataElement : programStageDataElements )

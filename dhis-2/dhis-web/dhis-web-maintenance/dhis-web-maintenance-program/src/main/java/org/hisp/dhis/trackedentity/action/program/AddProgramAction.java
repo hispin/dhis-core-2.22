@@ -354,7 +354,7 @@ public class AddProgramAction
             programStage.setProgram( program );
             programStage.setMinDaysFromStart( 0 );
             programStage.setAutoGenerateEvent( true );
-            programStage.setReportDateDescription( REPORT_DATE_DESCRIPTION );
+            programStage.setExcecutionDateLabel( REPORT_DATE_DESCRIPTION );
 
             programStageService.saveProgramStage( programStage );
         }

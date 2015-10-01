@@ -239,8 +239,8 @@
 	</tr>
 	
 	<tr>
-		<td><label for="reportDateDescription">$i18n.getString( "report_date_description" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
-		<td><input type="text" id="reportDateDescription" name="reportDateDescription" value="$i18n.getString( 'report_date' )" /></td>
+		<td><label for="excecutionDateLabel">$i18n.getString( "report_date_description" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+		<td><input type="text" id="excecutionDateLabel" name="excecutionDateLabel" value="$i18n.getString( 'report_date' )" /></td>
 	</tr>
 	
 	<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
