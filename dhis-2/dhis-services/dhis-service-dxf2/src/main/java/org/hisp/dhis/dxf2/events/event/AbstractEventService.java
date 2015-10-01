@@ -1093,7 +1093,7 @@ public abstract class AbstractEventService
         
         if ( event.getAttributeCategoryOptions() != null && program.getCategoryCombo() != null )
         {
-            coc = inputUtils.getAttributeOptionCombo( program.getCategoryCombo(), program.getCategoryCombo().getUid(), event.getAttributeCategoryOptions() ); //getAttributeOptionCombo( program.getCategoryCombo(), event.getAttributeCategoryOptions() );
+            coc = inputUtils.getAttributeOptionCombo( program.getCategoryCombo(), event.getAttributeCategoryOptions() ); //getAttributeOptionCombo( program.getCategoryCombo(), event.getAttributeCategoryOptions() );
             
             if ( coc == null)
             {
