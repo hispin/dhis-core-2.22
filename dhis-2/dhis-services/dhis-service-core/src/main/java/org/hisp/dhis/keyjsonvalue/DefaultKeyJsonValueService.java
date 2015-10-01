@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.render;
+package org.hisp.dhis.keyjsonvalue;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,34 +28,64 @@ package org.hisp.dhis.dxf2.render;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * Created by Stian Sandvold on 27.09.2015.
  */
-public interface RenderService
+@Transactional
+public class DefaultKeyJsonValueService
+    implements KeyJsonValueService
 {
-    void toJson( OutputStream output, Object value ) throws IOException;
 
-    void toJson( OutputStream output, Object value, Class<?> klass ) throws IOException;
+    private KeyJsonValueStore keyJsonValueStore;
 
-    void toJsonP( OutputStream output, Object value, String callback ) throws IOException;
+    public void setKeyJsonValueStore( KeyJsonValueStore keyJsonValueStore )
+    {
+        this.keyJsonValueStore = keyJsonValueStore;
+    }
 
-    void toJsonP( OutputStream output, Object value, Class<?> klass, String callback ) throws IOException;
+    @Override
+    public List<String> getNamespaces()
+    {
+        return keyJsonValueStore.getNamespaces();
+    }
 
-    <T> T fromJson( InputStream input, Class<T> klass ) throws IOException;
+    @Override
+    public List<String> getKeysInNamespace( String namespace )
+    {
+        return keyJsonValueStore.getKeysInNamespace( namespace );
+    }
 
-    <T> T fromJson( String input, Class<T> klass ) throws IOException;
+    @Override
+    public void deleteNamespace( String namespace )
+    {
+        keyJsonValueStore.deleteKeysInNamespace( namespace );
+    }
 
-    <T> void toXml( OutputStream output, T value ) throws IOException;
+    @Override
+    public KeyJsonValue getKeyJsonValue( String namespace, String key )
+    {
+        return keyJsonValueStore.getKeyJsonValue( namespace, key );
+    }
 
-    <T> void toXml( OutputStream output, T value, Class<?> klass ) throws IOException;
+    @Override
+    public int addKeyJsonValue( KeyJsonValue keyJsonValue )
+    {
+        return keyJsonValueStore.save( keyJsonValue );
+    }
 
-    <T> T fromXml( InputStream input, Class<T> klass ) throws IOException;
+    @Override
+    public void updateKeyJsonValue( KeyJsonValue keyJsonValue )
+    {
+        keyJsonValueStore.save( keyJsonValue );
+    }
 
-    <T> T fromXml( String input, Class<T> klass ) throws IOException;
-
-    boolean isValidJson(String json) throws IOException;
+    @Override
+    public void deleteKeyJsonValue( KeyJsonValue keyJsonValue )
+    {
+        keyJsonValueStore.delete( keyJsonValue );
+    }
 }
