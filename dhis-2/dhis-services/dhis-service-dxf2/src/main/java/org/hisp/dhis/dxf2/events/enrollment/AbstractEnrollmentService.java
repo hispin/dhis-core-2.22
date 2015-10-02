@@ -444,8 +444,8 @@ public abstract class AbstractEnrollmentService
         List<ImportConflict> importConflicts = new ArrayList<>();
 
         Program program = getProgram( enrollment.getProgram() );
-        org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance = teiService
-            .getTrackedEntityInstance( enrollment.getTrackedEntityInstance() );
+        org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance = teiService.getTrackedEntityInstance(
+            enrollment.getTrackedEntityInstance() );
 
         Map<TrackedEntityAttribute, Boolean> mandatoryMap = Maps.newHashMap();
         Map<String, String> attributeValueMap = Maps.newHashMap();
@@ -455,14 +455,10 @@ public abstract class AbstractEnrollmentService
             mandatoryMap.put( programTrackedEntityAttribute.getAttribute(), programTrackedEntityAttribute.isMandatory() );
         }
 
-        for ( TrackedEntityAttributeValue value : trackedEntityInstance.getAttributeValues() )
-        {
-            // ignore attributes which do not belong to this program
-            if ( mandatoryMap.containsKey( value.getAttribute() ) )
-            {
-                attributeValueMap.put( value.getAttribute().getUid(), value.getValue() );
-            }
-        }
+        // ignore attributes which do not belong to this program
+        trackedEntityInstance.getAttributeValues().stream()
+            .filter( value -> mandatoryMap.containsKey( value.getAttribute() ) )
+            .forEach( value -> attributeValueMap.put( value.getAttribute().getUid(), value.getValue() ) );
 
         for ( Attribute attribute : enrollment.getAttributes() )
         {
@@ -470,8 +466,7 @@ public abstract class AbstractEnrollmentService
             importConflicts.addAll( validateAttributeType( attribute ) );
         }
 
-        TrackedEntityInstance instance = trackedEntityInstanceService.getTrackedEntityInstance( enrollment
-            .getTrackedEntityInstance() );
+        TrackedEntityInstance instance = trackedEntityInstanceService.getTrackedEntityInstance( enrollment.getTrackedEntityInstance() );
 
         for ( TrackedEntityAttribute trackedEntityAttribute : mandatoryMap.keySet() )
         {
@@ -536,18 +531,16 @@ public abstract class AbstractEnrollmentService
             attributeValueMap.put( attribute.getAttribute(), attribute.getValue() );
         }
 
-        for ( TrackedEntityAttributeValue value : trackedEntityInstance.getAttributeValues() )
-        {
-            if ( attributeValueMap.containsKey( value.getAttribute().getUid() ) )
-            {
+        trackedEntityInstance.getAttributeValues().stream()
+            .filter( value -> attributeValueMap.containsKey( value.getAttribute().getUid() ) )
+            .forEach( value -> {
                 String newValue = attributeValueMap.get( value.getAttribute().getUid() );
                 value.setValue( newValue );
 
                 trackedEntityAttributeValueService.updateTrackedEntityAttributeValue( value );
 
                 attributeValueMap.remove( value.getAttribute().getUid() );
-            }
-        }
+            } );
 
         for ( String key : attributeValueMap.keySet() )
         {
