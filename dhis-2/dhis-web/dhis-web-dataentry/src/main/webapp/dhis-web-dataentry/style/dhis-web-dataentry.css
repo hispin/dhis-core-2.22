@@ -261,11 +261,17 @@
 {
     height: 28px;
     width: 200px;
-    border: 1px solid #aaa;
+    border: 1px solid #dadada;
     display: table-cell;
     overflow: hidden;
     position: relative;
 }
+
+.entryfileresource-disabled
+{
+    background-color: #f3f3f3 !important;
+}
+
 /* Upload progress display */
 
 .upload-progress
