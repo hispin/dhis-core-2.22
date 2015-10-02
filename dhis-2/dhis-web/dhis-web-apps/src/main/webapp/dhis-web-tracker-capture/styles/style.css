@@ -191,8 +191,15 @@ div.paging a.active
     border-color: #aaa29a;
 }
 
-.red {
-    color: red;
+.stick {
+    font-weight: bolder;
+    color: #000000;
+    background-color: #6E6E6E; 
+}
+
+.unstick {
+    color: #000000;
+    background-color: #FFFFFF;
 }
 
 .right {
