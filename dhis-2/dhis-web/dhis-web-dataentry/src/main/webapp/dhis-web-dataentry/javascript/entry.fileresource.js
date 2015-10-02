@@ -2,7 +2,6 @@
     $.fn.fileEntryField = function() {
 
         // TODO Use i18n
-        // TODO Disable field when offline
 
         var $container = $( this );
 
@@ -35,7 +34,6 @@
             'pe': periodId
         };
 
-        // Logic
         var deleteFileDataValue = function() {
             var postData = formData;
             postData.value = '';
@@ -132,13 +130,26 @@
             $button.button( 'enable' );
         };
 
-        setButtonBlocked();
+        var disableField = function() {
+            $button.button( 'disable' );
+            $field.toggleClass( 'entryfileresource-disabled', true );
+        };
+
+        var enableField = function() {
+            $button.button( 'enable' );
+            $field.toggleClass( 'entryfileresource-disabled', false );
+        };
 
         $( document ).on( dhis2.de.event.dataValuesLoaded, function() {
             ( !$field.data( 'value' ) ) ? setButtonUpload() : setButtonDelete();
         } );
 
-        // Initialize file uploader
+        $( document ).on( "dhis2.offline", disableField );
+        $( document ).on( "dhis2.online",  enableField );
+
+        // Init
+        setButtonBlocked();
+
         $fileInput.fileupload( {
             url: '../api/dataValues/files',
             paramName: 'file',
