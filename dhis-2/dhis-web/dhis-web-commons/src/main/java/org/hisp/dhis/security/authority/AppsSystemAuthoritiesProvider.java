@@ -29,13 +29,11 @@ package org.hisp.dhis.security.authority;
  */
 
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -48,16 +46,9 @@ public class AppsSystemAuthoritiesProvider implements SystemAuthoritiesProvider
     @Override
     public Collection<String> getSystemAuthorities()
     {
-        List<String> authorities = new ArrayList<>();
-
-        for ( App app : appManager.getApps() )
-        {
-            if ( !StringUtils.isEmpty( app.getName() ) )
-            {
-                authorities.add( "See " + app.getName().trim() );
-            }
-        }
-
-        return authorities;
+        return appManager.getApps().stream()
+            .filter( app -> !StringUtils.isEmpty( app.getName() ) )
+            .map( app -> "See " + app.getName().trim() )
+            .collect( Collectors.toList() );
     }
 }
