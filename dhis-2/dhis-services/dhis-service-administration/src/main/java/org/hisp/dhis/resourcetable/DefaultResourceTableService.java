@@ -28,23 +28,15 @@ package org.hisp.dhis.resourcetable;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.resourcetable.ResourceTableStore.TABLE_NAME_DATE_PERIOD_STRUCTURE;
-import static org.hisp.dhis.resourcetable.ResourceTableStore.TABLE_NAME_PERIOD_STRUCTURE;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
@@ -57,19 +49,17 @@ import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.period.Cal;
-import org.hisp.dhis.period.DailyPeriodType;
-import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.resourcetable.table.CategoryOptionComboNameResourceTable;
 import org.hisp.dhis.resourcetable.table.CategoryOptionGroupSetResourceTable;
 import org.hisp.dhis.resourcetable.table.CategoryResourceTable;
 import org.hisp.dhis.resourcetable.table.DataElementGroupSetResourceTable;
 import org.hisp.dhis.resourcetable.table.DataElementResourceTable;
+import org.hisp.dhis.resourcetable.table.DatePeriodResourceTable;
 import org.hisp.dhis.resourcetable.table.IndicatorGroupSetResourceTable;
 import org.hisp.dhis.resourcetable.table.OrganisationUnitGroupSetResourceTable;
 import org.hisp.dhis.resourcetable.table.OrganisationUnitStructureResourceTable;
+import org.hisp.dhis.resourcetable.table.PeriodResourceTable;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewService;
 import org.springframework.transaction.annotation.Transactional;
@@ -218,105 +208,19 @@ public class DefaultResourceTableService
             statementBuilder.getColumnQuote() ) );
     }
 
-    // -------------------------------------------------------------------------
-    // PeriodTable
-    // -------------------------------------------------------------------------
-
     @Override
     public void generateDatePeriodTable()
     {
-        // ---------------------------------------------------------------------
-        // Create table
-        // ---------------------------------------------------------------------
-
-        resourceTableStore.createDatePeriodStructure();
-
-        // ---------------------------------------------------------------------
-        // Populate table, uniqueness check as some calendars produce duplicates
-        // ---------------------------------------------------------------------
-
-        List<PeriodType> periodTypes = PeriodType.getAvailablePeriodTypes();
-
-        List<Object[]> batchArgs = new ArrayList<>();
-
-        Date startDate = new Cal( 1975, 1, 1, true ).time(); //TODO
-        Date endDate = new Cal( 2025, 1, 1, true ).time();
-
-        List<Period> days = new UniqueArrayList<>( new DailyPeriodType().generatePeriods( startDate, endDate ) );
-
-        Calendar calendar = PeriodType.getCalendar();
-
-        for ( Period day : days )
-        {
-            List<Object> values = new ArrayList<>();
-
-            values.add( day.getStartDate() );
-
-            for ( PeriodType periodType : periodTypes )
-            {
-                values.add( periodType.createPeriod( day.getStartDate(), calendar ).getIsoDate() );
-            }
-
-            batchArgs.add( values.toArray() );
-        }
-
-        resourceTableStore.batchUpdate( PeriodType.PERIOD_TYPES.size() + 1, TABLE_NAME_DATE_PERIOD_STRUCTURE, batchArgs );
-
-        log.info( "Period table generated" );
+        resourceTableStore.generateResourceTable( new DatePeriodResourceTable( 
+            null, statementBuilder.getColumnQuote() ) );
     }
 
     @Override
     @Transactional
     public void generatePeriodTable()
     {
-        // ---------------------------------------------------------------------
-        // Create table
-        // ---------------------------------------------------------------------
-
-        Collection<Period> periods = periodService.getAllPeriods();
-
-        resourceTableStore.createPeriodStructure();
-
-        // ---------------------------------------------------------------------
-        // Populate table
-        // ---------------------------------------------------------------------
-
-        Calendar calendar = PeriodType.getCalendar();
-
-        List<Object[]> batchArgs = new ArrayList<>();
-
-        for ( Period period : periods )
-        {
-            if ( period != null && period.isValid() )
-            {
-                final Date startDate = period.getStartDate();
-                final PeriodType rowType = period.getPeriodType();
-
-                List<Object> values = new ArrayList<>();
-
-                values.add( period.getId() );
-                values.add( period.getIsoDate() );
-                values.add( period.getDaysInPeriod() );
-
-                for ( PeriodType periodType : PeriodType.PERIOD_TYPES )
-                {
-                    if ( rowType.getFrequencyOrder() <= periodType.getFrequencyOrder() )
-                    {
-                        values.add( IdentifiableObjectUtils.getLocalPeriodIdentifier( startDate, periodType, calendar ) );
-                    }
-                    else
-                    {
-                        values.add( null );
-                    }
-                }
-
-                batchArgs.add( values.toArray() );
-            }
-        }
-
-        resourceTableStore.batchUpdate( PeriodType.PERIOD_TYPES.size() + 3, TABLE_NAME_PERIOD_STRUCTURE, batchArgs );
-
-        log.info( "Date period table generated" );
+        resourceTableStore.generateResourceTable( new PeriodResourceTable( 
+            periodService.getAllPeriods(), statementBuilder.getColumnQuote() ) );
     }
 
     // -------------------------------------------------------------------------

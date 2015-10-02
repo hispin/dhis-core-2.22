@@ -36,9 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dbms.DbmsManager;
-import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
-import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.resourcetable.ResourceTable;
 import org.hisp.dhis.resourcetable.ResourceTableStore;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -63,13 +61,6 @@ public class JdbcResourceTableStore
         this.jdbcTemplate = jdbcTemplate;
     }
     
-    private StatementBuilder statementBuilder;
-
-    public void setStatementBuilder( StatementBuilder statementBuilder )
-    {
-        this.statementBuilder = statementBuilder;
-    }
-
     private DbmsManager dbmsManager;
 
     public void setDbmsManager( DbmsManager dbmsManager )
@@ -165,70 +156,6 @@ public class JdbcResourceTableStore
         jdbcTemplate.batchUpdate( builder.toString(), batchArgs );
     }
     
-    // -------------------------------------------------------------------------
-    // PeriodTable
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void createDatePeriodStructure()
-    {
-        try
-        {
-            jdbcTemplate.execute( "DROP TABLE IF EXISTS " + TABLE_NAME_DATE_PERIOD_STRUCTURE );            
-        }
-        catch ( BadSqlGrammarException ex )
-        {
-            // Do nothing, table does not exist
-        }
-        
-        String quote = statementBuilder.getColumnQuote();
-        
-        String sql = "CREATE TABLE " + TABLE_NAME_DATE_PERIOD_STRUCTURE + " (dateperiod DATE NOT NULL PRIMARY KEY";
-        
-        for ( PeriodType periodType : PeriodType.PERIOD_TYPES )
-        {
-            sql += ", " + quote + periodType.getName().toLowerCase() + quote + " VARCHAR(15)";
-        }
-        
-        sql += ")";
-        
-        log.info( "Create date period structure SQL: " + sql );
-        
-        jdbcTemplate.execute( sql );
-    }
-
-    @Override
-    public void createPeriodStructure()
-    {
-        try
-        {
-            jdbcTemplate.execute( "DROP TABLE IF EXISTS " + TABLE_NAME_PERIOD_STRUCTURE );            
-        }
-        catch ( BadSqlGrammarException ex )
-        {
-            // Do nothing, table does not exist
-        }
-
-        String quote = statementBuilder.getColumnQuote();
-        
-        String sql = "CREATE TABLE " + TABLE_NAME_PERIOD_STRUCTURE + " (periodid INTEGER NOT NULL PRIMARY KEY, iso VARCHAR(15) NOT NULL, daysno INTEGER NOT NULL";
-        
-        for ( PeriodType periodType : PeriodType.PERIOD_TYPES )
-        {
-            sql += ", " + quote + periodType.getName().toLowerCase() + quote + " VARCHAR(15)";
-        }
-        
-        sql += ")";
-        
-        log.info( "Create period structure SQL: " + sql );
-        
-        jdbcTemplate.execute( sql );
-
-        final String isoInSql = "create unique index in_periodstructure_iso on _periodstructure(iso)";
-        
-        jdbcTemplate.execute( isoInSql );
-    }
-
     // -------------------------------------------------------------------------
     // DataElementCategoryOptionComboTable
     // -------------------------------------------------------------------------

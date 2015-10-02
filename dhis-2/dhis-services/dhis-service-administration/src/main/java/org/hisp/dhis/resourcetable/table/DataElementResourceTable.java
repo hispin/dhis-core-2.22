@@ -116,10 +116,10 @@ public class DataElementResourceTable
     public Optional<String> getCreateIndexStatement()
     {
         String sql =
-            "create unique index in_dataelementstructure_dataelementuid_" + getRandomSuffix() + " on _dataelementstructure(dataelementuid);" +
-            "create index in_dataelementstructure_datasetid_" + getRandomSuffix() + " on _dataelementstructure(datasetid);" +
-            "create index in_dataelementstructure_datasetuid_" + getRandomSuffix() + " on _dataelementstructure(datasetuid);" +
-            "create index in_dataelementstructure_periodtypeid_" + getRandomSuffix() + " on _dataelementstructure(periodtypeid);";
+            "create unique index in_dataelementstructure_dataelementuid_" + getRandomSuffix() + " on " + getTempTableName() + "(dataelementuid);" +
+            "create index in_dataelementstructure_datasetid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetid);" +
+            "create index in_dataelementstructure_datasetuid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetuid);" +
+            "create index in_dataelementstructure_periodtypeid_" + getRandomSuffix() + " on " + getTempTableName() + "(periodtypeid);";
         
         return Optional.of( sql );
     }
