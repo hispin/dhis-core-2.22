@@ -509,8 +509,8 @@ public abstract class AbstractEnrollmentService
             return importConflicts;
         }
 
-        String errorMessage = trackedEntityAttributeService.validateScope( trackedEntityInstance, trackedEntityAttribute,
-            value, organisationUnit, program );
+        String errorMessage = trackedEntityAttributeService.validateScope( trackedEntityAttribute, value, trackedEntityInstance,
+            organisationUnit, program );
 
         if ( errorMessage != null )
         {
@@ -522,8 +522,8 @@ public abstract class AbstractEnrollmentService
 
     private void updateAttributeValues( Enrollment enrollment )
     {
-        org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance = teiService
-            .getTrackedEntityInstance( enrollment.getTrackedEntityInstance() );
+        org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance = teiService.getTrackedEntityInstance(
+            enrollment.getTrackedEntityInstance() );
         Map<String, String> attributeValueMap = Maps.newHashMap();
 
         for ( Attribute attribute : enrollment.getAttributes() )
