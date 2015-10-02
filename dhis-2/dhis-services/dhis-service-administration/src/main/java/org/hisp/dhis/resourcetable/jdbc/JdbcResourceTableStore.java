@@ -38,6 +38,7 @@ import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
+import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
@@ -77,6 +78,13 @@ public class JdbcResourceTableStore
     public void setStatementBuilder( StatementBuilder statementBuilder )
     {
         this.statementBuilder = statementBuilder;
+    }
+
+    private DbmsManager dbmsManager;
+
+    public void setDbmsManager( DbmsManager dbmsManager )
+    {
+        this.dbmsManager = dbmsManager;
     }
 
     // -------------------------------------------------------------------------
@@ -137,7 +145,12 @@ public class JdbcResourceTableStore
         // Swap tables
         // ---------------------------------------------------------------------
 
-        jdbcTemplate.execute( resourceTable.getSwapTablesStatement() );
+        if ( dbmsManager.tableExists( resourceTable.getTableName() ) )
+        {
+            jdbcTemplate.execute( resourceTable.getDropTableStatement() );
+        }
+        
+        jdbcTemplate.execute( resourceTable.getRenameTempTableStatement() );
         
         log.info( "Swapped resource table, done: " + resourceTable.getTableName() );
     }

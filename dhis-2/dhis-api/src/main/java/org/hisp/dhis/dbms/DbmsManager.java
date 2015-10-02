@@ -30,7 +30,6 @@ package org.hisp.dhis.dbms;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public interface DbmsManager
 {
@@ -41,4 +40,6 @@ public interface DbmsManager
     void clearSession();
     
     void emptyTable( String table );
+    
+    boolean tableExists( String tableName );
 }
