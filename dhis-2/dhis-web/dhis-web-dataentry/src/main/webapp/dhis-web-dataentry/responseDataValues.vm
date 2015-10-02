@@ -8,6 +8,13 @@
     #else
     "id":"${value.dataElement.uid}-${value.optionCombo.uid}",
     #end
+    #if( $dataValueFileResourceMap.containsKey( $!{value.value} ) )
+      #set( $fr = $dataValueFileResourceMap.get( $!{value.value} ) )
+    "fileMeta":{
+      "name":"$!encoder.jsonEncode( $!{fr.name} )",
+      "size":${fr.contentLength}
+    },
+    #end
     "val":"$!encoder.jsonEncode( ${value.value} )",
     "com":"${value.hasComment()}"
   }#if( $velocityCount < $size1 ),#end

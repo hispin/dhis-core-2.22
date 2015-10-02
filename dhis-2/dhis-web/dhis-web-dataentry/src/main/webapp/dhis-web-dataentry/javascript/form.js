@@ -1673,26 +1673,17 @@ function insertDataValues( json )
             }
             else if ( $( fieldId ).attr( 'name' ) == 'entryoptionset' )
             {
-            	dhis2.de.setOptionNameInField( fieldId, value );            	
+                dhis2.de.setOptionNameInField( fieldId, value );
             }
             else if ( $( fieldId ).attr( 'class' ) == 'entryfileresource' )
             {
-                // TODO Consider pre-fetching with dataset
                 $( fieldId ).data( 'value', value.val );
 
-                $.ajax( {
-                    url: '../api/fileResources/' + value.val,
-                    success: function( data ) {
-                        var name = data.name, size = '(' + filesize( data.contentLength ) + ')';
-
-                        $( fieldId ).find( '.upload-fileinfo-name' ).text( name );
-                        $( fieldId ).find( '.upload-fileinfo-size' ).text( size );
-                    },
-                    error: function( data ) {
-                        $( fieldId ).find( '.upload-fileinfo-name' ).text( 'Failed loading file meta-data' );
-                        $( fieldId ).find( '.upload-fileinfo-size' ).text( + '' );
-                    }
-                } );
+                if ( value.fileMeta )
+                {
+                    $( fieldId ).find( '.upload-fileinfo-name' ).text( value.fileMeta.name );
+                    $( fieldId ).find( '.upload-fileinfo-size' ).text( '(' + filesize( value.fileMeta.size ) + ')' );
+                }
             }
             else 
             {

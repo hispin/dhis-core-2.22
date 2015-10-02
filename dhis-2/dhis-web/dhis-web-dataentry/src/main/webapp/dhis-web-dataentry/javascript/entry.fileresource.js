@@ -127,6 +127,12 @@
             $button.button( 'enable' );
         };
 
+        var updateProgress = function( loaded, total ) {
+            var percent = parseInt( loaded / total * 100, 10 );
+            $progressBar.css( 'width', percent + '%' );
+            $progressInfo.text( percent + '%' );
+        };
+
         var disableField = function() {
             $button.button( 'disable' );
             $field.toggleClass( 'entryfileresource-disabled', true );
@@ -163,14 +169,12 @@
             },
             progress: function( e, data )
             {
-                var percent = parseInt( data.loaded / data.total * 100, 10 );
-                $progressBar.css( 'width', percent + '%' );
-                $progressInfo.text( percent + '%' );
+                updateProgress( data.loaded, data.total );
             },
             fail: function( e, data )
             {
                 setHeaderDelayMessage( i18n_file_upload_failed );
-                console.log( data.errorThrown );
+                console.error( data.errorThrown );
                 setButtonUpload();
             },
             done: function( e, data )

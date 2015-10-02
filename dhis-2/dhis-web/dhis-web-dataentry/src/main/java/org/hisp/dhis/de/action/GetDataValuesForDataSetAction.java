@@ -31,6 +31,7 @@ package org.hisp.dhis.de.action;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.CompleteDataSetRegistration;
 import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
@@ -38,6 +39,8 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
+import org.hisp.dhis.fileresource.FileResource;
+import org.hisp.dhis.fileresource.FileResourceService;
 import org.hisp.dhis.minmax.MinMaxDataElement;
 import org.hisp.dhis.minmax.MinMaxDataElementService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -50,7 +53,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Lars Helge Overland
@@ -97,6 +104,13 @@ public class GetDataValuesForDataSetAction
     public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
     {
         this.organisationUnitService = organisationUnitService;
+    }
+
+    private FileResourceService fileResourceService;
+
+    public void setFileResourceService( FileResourceService fileResourceService )
+    {
+        this.fileResourceService = fileResourceService;
     }
 
     @Autowired
@@ -199,6 +213,13 @@ public class GetDataValuesForDataSetAction
         return storedBy;
     }
 
+    private Map<String, FileResource> dataValueFileResourceMap = new HashMap<>();
+
+    public Map<String, FileResource> getDataValueFileResourceMap()
+    {
+        return dataValueFileResourceMap;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -253,6 +274,18 @@ public class GetDataValuesForDataSetAction
                 }
             }
         }
+
+        // ---------------------------------------------------------------------
+        // File resource meta-data
+        // ---------------------------------------------------------------------
+
+        List<String> fileResourceUids = dataValues.stream()
+            .filter( dv -> dv.getDataElement().isFileType() )
+            .map( DataValue::getValue )
+            .collect( Collectors.toList() );
+
+        dataValueFileResourceMap.putAll( fileResourceService.getFileResources( fileResourceUids ).stream()
+            .collect( Collectors.toMap( BaseIdentifiableObject::getUid, f -> f ) ) );
 
         // ---------------------------------------------------------------------
         // Data set completeness info

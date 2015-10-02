@@ -30,12 +30,16 @@ package org.hisp.dhis.fileresource;
 
 import com.google.common.io.ByteSource;
 
+import java.util.List;
+
 /**
  * @author Halvdan Hoem Grelland
  */
 public interface FileResourceService
 {
     FileResource getFileResource( String uid );
+
+    List<FileResource> getFileResources( List<String> uids );
     
     String saveFileResource( FileResource fileResource, ByteSource content );
     
