@@ -618,15 +618,15 @@ Ext.onReady( function() {
                     series: 'series',
                     category: 'category',
                     filter: 'filter',
-                    column: 'column',
-                    stackedcolumn: 'stackedcolumn',
-                    bar: 'bar',
-                    stackedbar: 'stackedbar',
-                    line: 'line',
-                    area: 'area',
-                    pie: 'pie',
-                    radar: 'radar',
-                    gauge: 'gauge'
+                    column: 'COLUMN',
+                    stackedcolumn: 'STACKED_COLUMN',
+                    bar: 'BAR',
+                    stackedbar: 'STACKED_BAR',
+                    line: 'LINE',
+                    area: 'AREA',
+                    pie: 'PIE',
+                    radar: 'RADAR',
+                    gauge: 'GAUGE'
                 },
                 data: {
                     domain: 'domain_',
@@ -865,7 +865,7 @@ Ext.onReady( function() {
 					getValidatedDimensionArray,
 					validateSpecialCases;
 
-                // type: string ('column') - 'column', 'stackedcolumn', 'bar', 'stackedbar', 'line', 'area', 'pie'
+                // type: string ('COLUMN') - 'COLUMN', 'STACKED_COLUMN', 'BAR', 'STACKED_BAR', 'LINE', 'AREA', 'PIE'
 
                 // columns: [Dimension]
 
@@ -1128,7 +1128,7 @@ Ext.onReady( function() {
 					//config = analytical2layout(config);
 
                     // layout
-                    layout.type = Ext.isString(config.type) ? config.type.toLowerCase() : conf.finals.chart.column;
+                    layout.type = Ext.isString(config.type) ? config.type : conf.finals.chart.column;
 
                     layout.columns = config.columns;
                     layout.rows = config.rows;
@@ -3356,7 +3356,7 @@ Ext.onReady( function() {
                         store = config.store || {},
                         width = app.getCenterRegionWidth(),
                         height = app.getCenterRegionHeight(),
-                        isLineBased = Ext.Array.contains(['line', 'area'], xLayout.type),
+                        isLineBased = Ext.Array.contains(['LINE', 'AREA'], xLayout.type),
                         defaultConfig = {
                             //animate: true,
                             animate: false,
@@ -3413,7 +3413,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator.column = function(isStacked) {
+                generator['COLUMN'] = function(isStacked) {
                     var store = getDefaultStore(isStacked),
                         numericAxis = getDefaultNumericAxis(store),
                         categoryAxis = getDefaultCategoryAxis(store),
@@ -3443,7 +3443,7 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator.stackedcolumn = function() {
+                generator['STACKED_COLUMN'] = function() {
                     var chart = this.column(true);
 
                     for (var i = 0, item; i < chart.series.items.length; i++) {
@@ -3457,7 +3457,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator.bar = function(isStacked) {
+                generator['BAR'] = function(isStacked) {
                     var store = getDefaultStore(isStacked),
                         numericAxis = getDefaultNumericAxis(store),
                         categoryAxis = getDefaultCategoryAxis(store),
@@ -3529,7 +3529,7 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator.stackedbar = function() {
+                generator['STACKED_BAR'] = function() {
                     var chart = this.bar(true);
 
                     for (var i = 0, item; i < chart.series.items.length; i++) {
@@ -3543,7 +3543,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator.line = function() {
+                generator['LINE'] = function() {
                     var store = getDefaultStore(),
                         numericAxis = getDefaultNumericAxis(store),
                         categoryAxis = getDefaultCategoryAxis(store),
@@ -3617,7 +3617,7 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator.area = function() {
+                generator['AREA'] = function() {
 
                     // NB, always true for area charts as extjs area charts cannot handle nulls
                     xLayout.hideEmptyRows = true;
@@ -3658,7 +3658,7 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator.pie = function() {
+                generator['PIE'] = function() {
                     var store = getDefaultStore(),
                         series,
                         colors,
@@ -3757,7 +3757,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator.radar = function() {
+                generator['RADAR'] = function() {
                     var store = getDefaultStore(),
                         axes = [],
                         series = [],
@@ -3837,7 +3837,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator.gauge = function() {
+                generator['GAUGE'] = function() {
                     var valueColor = '#aaa',
                         store,
                         axis,
