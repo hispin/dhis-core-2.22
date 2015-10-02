@@ -44,7 +44,7 @@ public class MinMaxDataElementBatchHandler
  
     public MinMaxDataElementBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, true );
+        super( config, true );
     }
 
     @Override

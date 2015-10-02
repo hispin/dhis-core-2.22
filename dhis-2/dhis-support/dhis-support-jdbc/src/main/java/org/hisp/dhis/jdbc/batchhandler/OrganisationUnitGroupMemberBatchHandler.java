@@ -45,7 +45,7 @@ public class OrganisationUnitGroupMemberBatchHandler
  
     public OrganisationUnitGroupMemberBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

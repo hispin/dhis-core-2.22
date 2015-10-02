@@ -45,7 +45,7 @@ public class DataElementCategoryComboBatchHandler
 
     public DataElementCategoryComboBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, false );
+        super( config, false );
     }
     
     // -------------------------------------------------------------------------

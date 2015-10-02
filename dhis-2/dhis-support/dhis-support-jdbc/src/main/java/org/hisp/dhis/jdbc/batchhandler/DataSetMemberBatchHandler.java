@@ -45,7 +45,7 @@ public class DataSetMemberBatchHandler
  
     public DataSetMemberBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     } 
 
     // -------------------------------------------------------------------------

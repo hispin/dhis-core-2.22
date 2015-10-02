@@ -44,7 +44,7 @@ public class MapBatchHandler
 
     public MapBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, false );
+        super( config, false );
     }
 
     // -------------------------------------------------------------------------

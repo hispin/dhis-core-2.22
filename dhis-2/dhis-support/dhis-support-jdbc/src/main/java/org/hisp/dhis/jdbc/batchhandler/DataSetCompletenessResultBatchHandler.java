@@ -45,7 +45,7 @@ public class DataSetCompletenessResultBatchHandler
  
     public DataSetCompletenessResultBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

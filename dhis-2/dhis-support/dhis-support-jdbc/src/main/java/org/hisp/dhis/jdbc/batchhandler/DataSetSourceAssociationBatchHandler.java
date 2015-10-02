@@ -45,7 +45,7 @@ public class DataSetSourceAssociationBatchHandler
     
     public DataSetSourceAssociationBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

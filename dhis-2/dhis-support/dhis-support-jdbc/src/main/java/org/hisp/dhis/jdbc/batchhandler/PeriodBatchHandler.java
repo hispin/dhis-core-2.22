@@ -45,7 +45,7 @@ public class PeriodBatchHandler
 
     public PeriodBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------
