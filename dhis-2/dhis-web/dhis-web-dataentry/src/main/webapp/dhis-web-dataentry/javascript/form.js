@@ -1537,12 +1537,12 @@ function loadDataValues()
 }
 
 function clearFileEntryFields() {
-    var $container = $( '.entryfileresource-container' );
-    $container.find( '.upload-fileinfo-name' ).text( '' );
-    $container.find( '.upload-fileinfo-size' ).text( '' );
+    var $containers = $( '.entryfileresource-container' );
+    $containers.find( '.upload-fileinfo-name' ).text( '' );
+    $containers.find( '.upload-fileinfo-size' ).text( '' );
 
-    $container.find( '.entryfileresource' ).css( 'background-color', dhis2.de.cst.colorWhite );
-    $container.find( '.entryfileresource' ).data( 'value', '' );
+    $containers.find( '.upload-field' ).css( 'background-color', dhis2.de.cst.colorWhite );
+    $containers.find( '.entryfileresource' ).val( '' );
 }
 
 function getAndInsertDataValues()
@@ -1677,12 +1677,13 @@ function insertDataValues( json )
             }
             else if ( $( fieldId ).attr( 'class' ) == 'entryfileresource' )
             {
-                $( fieldId ).data( 'value', value.val );
+                $( fieldId ).val( value.val );
 
                 if ( value.fileMeta )
                 {
-                    $( fieldId ).find( '.upload-fileinfo-name' ).text( value.fileMeta.name );
-                    $( fieldId ).find( '.upload-fileinfo-size' ).text( '(' + filesize( value.fileMeta.size ) + ')' );
+                    var $container = $( '.entryfileresource-container[name=' + value.id + '-val]' );
+                    $container.find( '.upload-fileinfo-name' ).text( value.fileMeta.name );
+                    $container.find( '.upload-fileinfo-size' ).text( '(' + filesize( value.fileMeta.size ) + ')' );
                 }
             }
             else 
@@ -1700,7 +1701,7 @@ function insertDataValues( json )
             else if ( $( fieldId ).length > 0 )
             {
                 $( fieldId ).css( 'border-color', dhis2.de.cst.colorBorderActive )
-            }	            		
+            }
         }
         
         dataValueMap[value.id] = value.val;

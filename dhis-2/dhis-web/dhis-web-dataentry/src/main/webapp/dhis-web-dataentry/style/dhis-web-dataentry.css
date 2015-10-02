@@ -259,6 +259,11 @@
 
 .entryfileresource
 {
+    display: none; /* Hidden field */
+}
+
+.upload-field
+{
     height: 28px;
     width: 200px;
     border: 1px solid #dadada;
@@ -267,7 +272,7 @@
     position: relative;
 }
 
-.entryfileresource-disabled
+.upload-field-disabled
 {
     background-color: #f3f3f3 !important;
 }
