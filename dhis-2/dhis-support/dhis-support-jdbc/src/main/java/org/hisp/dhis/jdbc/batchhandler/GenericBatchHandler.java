@@ -46,7 +46,7 @@ public class GenericBatchHandler
  
     public GenericBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
     
     // -------------------------------------------------------------------------

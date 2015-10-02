@@ -41,7 +41,7 @@ public class RelativePeriodsBatchHandler
  
     public RelativePeriodsBatchHandler( JdbcConfiguration configuration )
     {
-        super( configuration, false, false );
+        super( configuration, false );
     }
     // -------------------------------------------------------------------------
     // AbstractBatchHandler implementation

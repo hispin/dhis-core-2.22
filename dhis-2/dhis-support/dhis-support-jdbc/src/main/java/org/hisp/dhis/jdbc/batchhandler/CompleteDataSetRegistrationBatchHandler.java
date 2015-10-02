@@ -45,7 +45,7 @@ public class CompleteDataSetRegistrationBatchHandler
  
     public CompleteDataSetRegistrationBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

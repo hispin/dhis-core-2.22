@@ -45,7 +45,7 @@ public class ImportDataValueBatchHandler
  
     public ImportDataValueBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

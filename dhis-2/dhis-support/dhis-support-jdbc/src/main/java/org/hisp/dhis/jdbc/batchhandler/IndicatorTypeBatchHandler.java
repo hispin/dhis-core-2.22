@@ -45,7 +45,7 @@ public class IndicatorTypeBatchHandler
  
     public IndicatorTypeBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, false );
+        super( config, false );
     }
 
     // -------------------------------------------------------------------------

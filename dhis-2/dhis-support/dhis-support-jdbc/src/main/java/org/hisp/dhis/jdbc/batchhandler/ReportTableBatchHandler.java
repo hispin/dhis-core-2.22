@@ -45,7 +45,7 @@ public class ReportTableBatchHandler
  
     public ReportTableBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, false );
+        super( config, false );
     }
 
     // -------------------------------------------------------------------------

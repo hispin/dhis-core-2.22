@@ -45,7 +45,7 @@ public class DataSetBatchHandler
 
     public DataSetBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, false );
+        super( config, false );
     }
 
     // -------------------------------------------------------------------------

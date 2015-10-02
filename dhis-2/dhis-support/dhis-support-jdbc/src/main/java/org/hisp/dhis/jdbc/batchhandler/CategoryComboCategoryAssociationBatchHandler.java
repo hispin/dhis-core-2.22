@@ -45,7 +45,7 @@ public class CategoryComboCategoryAssociationBatchHandler
  
     public CategoryComboCategoryAssociationBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

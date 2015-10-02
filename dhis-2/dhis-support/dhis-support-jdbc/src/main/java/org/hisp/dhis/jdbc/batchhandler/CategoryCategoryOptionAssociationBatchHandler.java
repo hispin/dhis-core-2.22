@@ -45,7 +45,7 @@ public class CategoryCategoryOptionAssociationBatchHandler
  
     public CategoryCategoryOptionAssociationBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

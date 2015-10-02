@@ -45,7 +45,7 @@ public class IndicatorGroupSetBatchHandler
  
     public IndicatorGroupSetBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, false );
+        super( config, false );
     }
 
     // -------------------------------------------------------------------------

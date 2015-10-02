@@ -45,7 +45,7 @@ public class DataElementGroupSetMemberBatchHandler
 
     public DataElementGroupSetMemberBatchHandler( JdbcConfiguration config )
     {
-        super( config, true, true );
+        super( config, true );
     }
 
     // -------------------------------------------------------------------------

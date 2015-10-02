@@ -45,7 +45,7 @@ public class GroupSetBatchHandler
  
     public GroupSetBatchHandler( JdbcConfiguration config )
     {
-        super( config, false, false );
+        super( config, false );
     }
 
     // -------------------------------------------------------------------------
