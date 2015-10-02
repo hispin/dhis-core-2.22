@@ -164,48 +164,6 @@ public class JdbcResourceTableStore
         
         jdbcTemplate.batchUpdate( builder.toString(), batchArgs );
     }
-        
-    // -------------------------------------------------------------------------
-    // DataElementStructure
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void createDataElementStructure()
-    {
-        try
-        {
-            jdbcTemplate.execute( "DROP TABLE IF EXISTS " + TABLE_NAME_DATA_ELEMENT_STRUCTURE );            
-        }
-        catch ( BadSqlGrammarException ex )
-        {
-            // Do nothing, table does not exist
-        }
-        
-        final String sql = "CREATE TABLE " + TABLE_NAME_DATA_ELEMENT_STRUCTURE + " ( " + 
-            "dataelementid INTEGER NOT NULL PRIMARY KEY, " +
-            "dataelementuid CHARACTER(11), " +
-            "dataelementname VARCHAR(250), " +
-            "datasetid INTEGER, " +
-            "datasetuid CHARACTER(11), " +
-            "datasetname VARCHAR(250), " +
-            "datasetapprovallevel INTEGER, " +
-            "periodtypeid INTEGER, " + 
-            "periodtypename VARCHAR(250) )";
-        
-        log.info( "Create data element structure SQL: " + sql );
-        
-        jdbcTemplate.execute( sql );        
-
-        final String deUdInSql = "create unique index in_dataelementstructure_dataelementuid on _dataelementstructure(dataelementuid)";
-        final String dsIdInSql = "create index in_dataelementstructure_datasetid on _dataelementstructure(datasetid)";
-        final String dsUdInSql = "create index in_dataelementstructure_datasetuid on _dataelementstructure(datasetuid)";
-        final String ptIdInSql = "create index in_dataelementstructure_periodtypeid on _dataelementstructure(periodtypeid)";
-        
-        jdbcTemplate.execute( deUdInSql );
-        jdbcTemplate.execute( dsIdInSql );
-        jdbcTemplate.execute( dsUdInSql );
-        jdbcTemplate.execute( ptIdInSql );
-    }
     
     // -------------------------------------------------------------------------
     // PeriodTable

@@ -41,7 +41,6 @@ public interface ResourceTableStore
     String ID = ResourceTableStore.class.getName();
 
     String TABLE_NAME_CATEGORY_OPTION_COMBO_NAME = "_categoryoptioncomboname";
-    String TABLE_NAME_ORGANISATION_UNIT_STRUCTURE = "_orgunitstructure";
     String TABLE_NAME_DATA_ELEMENT_STRUCTURE = "_dataelementstructure";
     String TABLE_NAME_PERIOD_STRUCTURE = "_periodstructure";
     String TABLE_NAME_DATE_PERIOD_STRUCTURE = "_dateperiodstructure";
@@ -64,11 +63,6 @@ public interface ResourceTableStore
      */
     void batchUpdate( int columns, String tableName, List<Object[]> batchArgs );
     
-    /**
-     * Creates table.
-     */
-    void createDataElementStructure();
-
     /**
      * Creates table.
      */
