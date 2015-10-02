@@ -22,6 +22,7 @@ var trackerCapture = angular.module('trackerCapture',
          'infinite-scroll',
          'd2HeaderBar',
          'ngCsv',
+         'sticky',
          'nvd3ChartDirectives',
          'pascalprecht.translate'])
               
