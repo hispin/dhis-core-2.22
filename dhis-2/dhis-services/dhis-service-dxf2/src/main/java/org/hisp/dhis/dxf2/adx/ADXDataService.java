@@ -31,23 +31,48 @@ package org.hisp.dhis.dxf2.adx;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 
 /**
- *
  * @author bobj
  */
 public interface ADXDataService
 {
+    //--------------------------------------------------------------------------
+    // ADX standard constants
+    //--------------------------------------------------------------------------
+
+    String NAMESPACE = "urn:ihe:qrph:adx:2015";    
+    String ROOT = "adx";
+    String GROUP = "group";
+    String DATASET = "dataSet";
+    String PERIOD = "period";
+    String ORGUNIT = "orgUnit";    
+    String DATAELEMENT = "dataElement";
+    String DATAVALUE = "dataValue";
+    String VALUE = "value";
+    String ANNOTATION = "annotation";
+    
+    //--------------------------------------------------------------------------
+    // DHIS 2 specific constants
+    //--------------------------------------------------------------------------
+
+    String CATOPTCOMBO = "categoryOptionCombo";    
+    String ATTOPTCOMBO = "attributeOptionCombo";
+
+    //--------------------------------------------------------------------------
+    // Methods
+    //--------------------------------------------------------------------------
 
     /**
-     * postData
+     * Post data.
      * 
      * Takes ADX Data from input stream and saves a series of DXF2 DataValueSets
      * 
-     * @param in  The InputStream - typically from servlet http response
+     * @param in  The InputStream - typically from servlet HTTP response
      * @param importOptions  The importOptions - typically from the servlet request
      * @return an ImportSummaries collection of ImportSummary for each DataValueSet
      * @throws IOException
