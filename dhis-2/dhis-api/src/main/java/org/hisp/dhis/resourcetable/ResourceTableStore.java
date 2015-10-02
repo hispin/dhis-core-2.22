@@ -54,6 +54,13 @@ public interface ResourceTableStore
     String TABLE_NAME_DATA_APPROVAL_MIN_LEVEL = "_dataapprovalminlevel";
     
     /**
+     * Generates the given resource table.
+     * 
+     * @param resourceTable the resource table.
+     */
+    void generateResourceTable( ResourceTable<?> resourceTable );
+    
+    /**
      * Performs a batch update.
      * 
      * @param columns the number of columns in the table to update.

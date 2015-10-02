@@ -29,19 +29,15 @@ package org.hisp.dhis.resourcetable;
  */
 
 import static org.hisp.dhis.dataapproval.DataApprovalLevelService.APPROVAL_LEVEL_HIGHEST;
-import static org.hisp.dhis.resourcetable.ResourceTableStore.TABLE_NAME_CATEGORY_OPTION_COMBO_NAME;
 import static org.hisp.dhis.resourcetable.ResourceTableStore.TABLE_NAME_DATA_ELEMENT_STRUCTURE;
 import static org.hisp.dhis.resourcetable.ResourceTableStore.TABLE_NAME_DATE_PERIOD_STRUCTURE;
-import static org.hisp.dhis.resourcetable.ResourceTableStore.TABLE_NAME_ORGANISATION_UNIT_STRUCTURE;
 import static org.hisp.dhis.resourcetable.ResourceTableStore.TABLE_NAME_PERIOD_STRUCTURE;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -62,7 +58,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -72,6 +68,8 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.resourcetable.statement.CreateCategoryOptionGroupSetTableStatement;
+import org.hisp.dhis.resourcetable.table.CategoryOptionComboNameResourceTable;
+import org.hisp.dhis.resourcetable.table.OrganisationUnitStructureResourceTable;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewService;
 import org.springframework.transaction.annotation.Transactional;
@@ -136,100 +134,33 @@ public class DefaultResourceTableService
     {
         this.dataApprovalLevelService = dataApprovalLevelService;
     }
-
+    
+    private StatementBuilder statementBuilder;
+    
+    public void setStatementBuilder( StatementBuilder statementBuilder )
+    {
+        this.statementBuilder = statementBuilder;
+    }
+    
     // -------------------------------------------------------------------------
-    // OrganisationUnitStructure
+    // ResourceTableService implementation
     // -------------------------------------------------------------------------
 
     @Override
     @Transactional
     public void generateOrganisationUnitStructures()
     {
-        int maxLevel = organisationUnitService.getMaxOfOrganisationUnitLevels();
-
-        log.info( "Using " + maxLevel + " organisation unit levels for org unit structure table" );
-        
-        resourceTableStore.createOrganisationUnitStructure( maxLevel );
-
-        List<Object[]> batchArgs = new ArrayList<>();
-
-        for ( int i = 0; i < maxLevel; i++ )
-        {
-            int level = i + 1;
-
-            Collection<OrganisationUnit> units = organisationUnitService.getOrganisationUnitsAtLevel( level );
-
-            for ( OrganisationUnit unit : units )
-            {
-                List<Object> values = new ArrayList<>();
-
-                values.add( unit.getId() );
-                values.add( unit.getUid() );
-                values.add( level );
-
-                Map<Integer, Integer> identifiers = new HashMap<>();
-                Map<Integer, String> uids = new HashMap<>();
-
-                for ( int j = level; j > 0; j-- )
-                {
-                    identifiers.put( j, unit.getId() );
-                    uids.put( j, unit.getUid() );
-
-                    unit = unit.getParent();
-                }
-
-                for ( int k = 1; k <= maxLevel; k++ )
-                {
-                    values.add( identifiers.get( k ) != null ? identifiers.get( k ) : null );
-                    values.add( uids.get( k ) );
-                }
-
-                batchArgs.add( values.toArray() );
-            }
-        }
-
-        resourceTableStore.batchUpdate( (maxLevel * 2) + 3, TABLE_NAME_ORGANISATION_UNIT_STRUCTURE, batchArgs );
-
-        log.info( "Organisation unit structure table generated" );
+        resourceTableStore.generateResourceTable( new OrganisationUnitStructureResourceTable( 
+            "_orgunitstructure", null, statementBuilder.getColumnQuote(), 
+            organisationUnitService, organisationUnitService.getMaxOfOrganisationUnitLevels() ) );
     }
-
-    // -------------------------------------------------------------------------
-    // DataElementCategoryOptionComboName
-    // -------------------------------------------------------------------------
-
+    
     @Override
     @Transactional
     public void generateCategoryOptionComboNames()
     {
-        resourceTableStore.createDataElementCategoryOptionComboName();
-
-        Collection<DataElementCategoryCombo> combos = categoryService.getAllDataElementCategoryCombos();
-
-        List<Object[]> batchArgs = new ArrayList<>();
-
-        for ( DataElementCategoryCombo combo : combos )
-        {
-            if ( !combo.isValid() )
-            {
-                log.warn( "Ignoring category combo, not valid: " + combo );
-                continue;
-            }
-            
-            for ( DataElementCategoryOptionCombo coc : combo.getSortedOptionCombos() )
-            {
-                List<Object> values = new ArrayList<>();
-                
-                values.add( coc.getId() );
-                values.add( coc.getName() );
-                values.add( coc.isIgnoreApproval() ? APPROVAL_LEVEL_HIGHEST : null );
-
-                batchArgs.add( values.toArray() );
-            }
-        }
-
-        resourceTableStore.batchUpdate( 3, TABLE_NAME_CATEGORY_OPTION_COMBO_NAME, batchArgs );
-
-        log.info( "Category option combo name table generated" );
+        resourceTableStore.generateResourceTable( new CategoryOptionComboNameResourceTable( 
+            "_categoryoptioncomboname", idObjectManager.getAll( DataElementCategoryCombo.class ), statementBuilder.getColumnQuote() ) );
     }
 
     @Override
