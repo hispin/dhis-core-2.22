@@ -52,14 +52,9 @@ import java.util.List;
  */
 public class DefaultCsvEventService implements CsvEventService
 {
-    private static CsvMapper CSV_MAPPER = new CsvMapper();
+    private static CsvMapper CSV_MAPPER = new CsvMapper().enable( CsvParser.Feature.WRAP_AS_ARRAY );
 
     private static CsvSchema CSV_SCHEMA = CSV_MAPPER.schemaFor( CsvEventDataValue.class ).withLineSeparator( "\n" );
-
-    static
-    {
-        CSV_MAPPER.enable( CsvParser.Feature.WRAP_AS_ARRAY );
-    }
 
     @Override
     public void writeEvents( OutputStream outputStream, Events events, boolean withHeader ) throws IOException
