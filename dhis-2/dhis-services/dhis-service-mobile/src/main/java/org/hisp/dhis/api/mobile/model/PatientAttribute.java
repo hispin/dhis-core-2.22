@@ -34,7 +34,6 @@ import java.io.IOException;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-import org.h2.value.Value;
 import org.hisp.dhis.common.ValueType;
 
 public class PatientAttribute

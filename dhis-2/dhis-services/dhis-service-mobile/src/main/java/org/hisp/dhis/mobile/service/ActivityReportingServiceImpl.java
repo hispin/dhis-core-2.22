@@ -1457,13 +1457,6 @@ public class ActivityReportingServiceImpl
         this.programStageService = programStageService;
     }
 
-    private I18nFormat format;
-
-    public void setFormat( I18nFormat format )
-    {
-        this.format = format;
-    }
-
     @Override
     public Patient savePatient( org.hisp.dhis.api.mobile.model.LWUITmodel.Patient patient, int orgUnitId,
         String programIdText )
@@ -2598,7 +2591,5 @@ public class ActivityReportingServiceImpl
         }
 
         return getPatientModel( newTrackedEntityInstance );
-
     }
-
 }
