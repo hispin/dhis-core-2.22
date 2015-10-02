@@ -28,6 +28,8 @@ package org.hisp.dhis.dbms;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
@@ -259,6 +261,19 @@ public class HibernateDbmsManager
         {
             log.debug( "Table " + table + " does not exist" );
         }
+    }
+
+    @Override
+    public boolean tableExists( String tableName )
+    {
+        final String sql = 
+            "select table_name from information_schema.tables " +
+            "where table_name = '" + tableName + "' " +
+            "and table_type = 'BASE TABLE'";
+        
+        List<Object> tables = jdbcTemplate.queryForList( sql, Object.class );
+        
+        return tables != null && tables.size() > 0;
     }
 
     // -------------------------------------------------------------------------

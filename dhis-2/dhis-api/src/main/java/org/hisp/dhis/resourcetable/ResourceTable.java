@@ -58,7 +58,7 @@ public abstract class ResourceTable<T>
     {
     }
     
-    public ResourceTable( String tableName, List<T> objects, String columnQuote )
+    protected ResourceTable( String tableName, List<T> objects, String columnQuote )
     {
         this.tableName = tableName;
         this.objects = objects;
@@ -79,13 +79,14 @@ public abstract class ResourceTable<T>
         return tableName + TEMP_TABLE_SUFFIX;
     }
     
-    public final String getSwapTablesStatement()
+    public final String getDropTableStatement()
     {
-        final String sql = 
-            "drop table " + getTableName() + ";" +
-            "alter table " + getTempTableName() + " rename to " + getTableName() + ";";
-        
-        return sql;
+        return "drop table " + getTableName() + ";";
+    }
+    
+    public final String getRenameTempTableStatement()
+    {
+        return "alter table " + getTempTableName() + " rename to " + getTableName() + ";";
     }
 
     // -------------------------------------------------------------------------
@@ -108,10 +109,10 @@ public abstract class ResourceTable<T>
     public abstract Optional<List<Object[]>> getPopulateTempTableContent();
     
     /**
-     * Get a SQL index create statement. Note that the index name must have a 
-     * random component to avoid uniqueness conflicts.
+     * Creates a SQL index create statement. Note that the index name must have 
+     * a random component to avoid uniqueness conflicts.
      * 
-     * @return an optional SQL statement.
+     * @return a SQL statement.
      */
     public abstract Optional<String> getCreateIndexStatement();
 }
