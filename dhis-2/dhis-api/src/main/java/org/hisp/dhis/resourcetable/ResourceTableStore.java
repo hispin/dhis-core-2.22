@@ -64,16 +64,6 @@ public interface ResourceTableStore
     void batchUpdate( int columns, String tableName, List<Object[]> batchArgs );
     
     /**
-     * Creates table.
-     */
-    void createDatePeriodStructure();
-    
-    /**
-     * Creates table.
-     */
-    void createPeriodStructure();
-
-    /**
      * Creates and generates table.
      */
     void createAndPopulateDataElementCategoryOptionCombo();
