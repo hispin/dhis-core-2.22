@@ -20,6 +20,9 @@
         
         <!-- dashboard setting begins -->
         <div class="pull-right">
+            <button type="button" title="{{stickyDisabled ? stickLabel : unstickLabel}}" class="btn btn-default" ng-click="stickyDisabled = !stickyDisabled">                    
+                <i class="fa fa-thumb-tack" ng-class="{true: 'red'} [!stickyDisabled]"></i>
+            </button>
             <div class="btn-group trim" dropdown is-open="status.isopen">
                 <button type="button" title="{{settingsLabel}}" class="btn btn-default dropdown-toggle" dropdown-toggle>                    
                     <i class="fa fa-cog"></i>
@@ -54,7 +57,7 @@
             <!-- dashboard bigger widgets end -->
 
             <!-- dashboard smaller widgets begin -->
-            <div ng-class="widgetSize.smaller">
+            <div ng-class="widgetSize.smaller" sticky disabled-sticky="stickyDisabled">
                 <div id="smallerWidget" 
                     d2-sortable 
                     bigger-widgets={{ dashboardWidgets  | filter: {parent: 'biggerWidget'} }} 
