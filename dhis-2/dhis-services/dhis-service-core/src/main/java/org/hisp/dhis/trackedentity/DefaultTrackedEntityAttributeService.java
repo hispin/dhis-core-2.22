@@ -219,6 +219,12 @@ public class DefaultTrackedEntityAttributeService
         {
             Assert.notNull( program, "program is required for program scope" );
             Assert.notNull( organisationUnit, "organisationUnit is required for org unit scope" );
+
+            if ( !program.getOrganisationUnits().contains( organisationUnit ) )
+            {
+                return "Given orgUnit is not assigned to program " + program.getUid();
+            }
+
             params.setProgram( program );
             params.addOrganisationUnit( organisationUnit );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
