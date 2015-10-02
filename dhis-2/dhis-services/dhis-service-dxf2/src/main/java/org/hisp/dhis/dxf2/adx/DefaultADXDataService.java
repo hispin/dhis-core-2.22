@@ -212,13 +212,13 @@ public class DefaultADXDataService
             throw new ADXException( ADXDataService.ORGUNIT + " attribute is required on 'group'" );
         }
 
-        // translate adx period to dxf2
+        // translate ADX period to dxf2
         String periodStr = groupAttributes.get( ADXDataService.PERIOD );
         groupAttributes.remove( ADXDataService.PERIOD );
         Period period = ADXPeriod.parse( periodStr );
         groupAttributes.put( ADXDataService.PERIOD, period.getIsoDate());
 
-        // process adx group attributes
+        // process ADX group attributes
         if ( !groupAttributes.containsKey( ADXDataService.ATTOPTCOMBO )
             && groupAttributes.containsKey( ADXDataService.DATASET ) )
         {
@@ -288,7 +288,7 @@ public class DefaultADXDataService
             throw new ADXException(dvAttributes.get( ADXDataService.DATAELEMENT), "No matching dataelement");
         }
         
-        // process ADX datavalue attributes
+        // process ADX data value attributes
         if ( !dvAttributes.containsKey( ADXDataService.CATOPTCOMBO ) )
         {
             log.debug( "No categoryOptionCombo present." );
