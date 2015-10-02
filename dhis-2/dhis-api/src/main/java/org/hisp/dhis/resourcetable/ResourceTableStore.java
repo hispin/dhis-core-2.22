@@ -29,9 +29,6 @@ package org.hisp.dhis.resourcetable;
  */
 
 import java.util.List;
-import java.util.Set;
-
-import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 
 /**
  * @author Lars Helge Overland
@@ -62,16 +59,4 @@ public interface ResourceTableStore
      * @param batchArgs the arguments to use for the update statement.
      */
     void batchUpdate( int columns, String tableName, List<Object[]> batchArgs );
-    
-    /**
-     * Creates and generates table.
-     */
-    void createAndPopulateDataElementCategoryOptionCombo();
-    
-    /**
-     * Creates and populates data approval minimum level table.
-     * 
-     * @param levels the organisation unit levels part of approval levels.
-     */
-    void createAndPopulateDataApprovalMinLevel( Set<OrganisationUnitLevel> levels );
 }

@@ -31,10 +31,7 @@ package org.hisp.dhis.resourcetable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
@@ -42,7 +39,7 @@ import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
-import org.hisp.dhis.dataelement.DataElementCategoryService;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.jdbc.StatementBuilder;
@@ -51,8 +48,10 @@ import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.resourcetable.table.CategoryOptionComboNameResourceTable;
+import org.hisp.dhis.resourcetable.table.CategoryOptionComboResourceTable;
 import org.hisp.dhis.resourcetable.table.CategoryOptionGroupSetResourceTable;
 import org.hisp.dhis.resourcetable.table.CategoryResourceTable;
+import org.hisp.dhis.resourcetable.table.DataApprovalMinLevelResourceTable;
 import org.hisp.dhis.resourcetable.table.DataElementGroupSetResourceTable;
 import org.hisp.dhis.resourcetable.table.DataElementResourceTable;
 import org.hisp.dhis.resourcetable.table.DatePeriodResourceTable;
@@ -64,14 +63,14 @@ import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewService;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
 public class DefaultResourceTableService
     implements ResourceTableService
 {
-    private static final Log log = LogFactory.getLog( DefaultResourceTableService.class );
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -95,13 +94,6 @@ public class DefaultResourceTableService
     public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
     {
         this.organisationUnitService = organisationUnitService;
-    }
-
-    private DataElementCategoryService categoryService;
-
-    public void setCategoryService( DataElementCategoryService categoryService )
-    {
-        this.categoryService = categoryService;
     }
 
     private PeriodService periodService;
@@ -160,7 +152,7 @@ public class DefaultResourceTableService
     {
         resourceTableStore.generateResourceTable( new CategoryOptionGroupSetResourceTable(
             idObjectManager.getAllNoAcl( CategoryOptionGroupSet.class ),
-            statementBuilder.getColumnQuote(), categoryService.getAllDataElementCategoryOptionCombos() ) );
+            statementBuilder.getColumnQuote(), idObjectManager.getAllNoAcl( DataElementCategoryOptionCombo.class ) ) );
     }
 
     @Override
@@ -223,34 +215,25 @@ public class DefaultResourceTableService
             periodService.getAllPeriods(), statementBuilder.getColumnQuote() ) );
     }
 
-    // -------------------------------------------------------------------------
-    // DataElementCategoryOptionComboTable
-    // -------------------------------------------------------------------------
-
     @Override
     @Transactional
     public void generateDataElementCategoryOptionComboTable()
     {
-        resourceTableStore.createAndPopulateDataElementCategoryOptionCombo();
-
-        log.info( "Data element category option combo table generated" );
+        resourceTableStore.generateResourceTable( new CategoryOptionComboResourceTable(
+            null, statementBuilder.getColumnQuote() ) );            
     }
-
-    // -------------------------------------------------------------------------
-    // DataApprovalMinLevelTable
-    // -------------------------------------------------------------------------
 
     @Override
     @Transactional
     public void generateDataApprovalMinLevelTable()
     {
-        Set<OrganisationUnitLevel> levels = dataApprovalLevelService.getOrganisationUnitApprovalLevels();
+        List<OrganisationUnitLevel> orgUnitLevels = Lists.newArrayList( 
+            dataApprovalLevelService.getOrganisationUnitApprovalLevels() );
         
-        if ( !levels.isEmpty() )
+        if ( orgUnitLevels.size() > 0 )
         {
-            resourceTableStore.createAndPopulateDataApprovalMinLevel( levels );
-        
-            log.info( "Data approval min level table generated" );
+            resourceTableStore.generateResourceTable( new DataApprovalMinLevelResourceTable( 
+                orgUnitLevels, statementBuilder.getColumnQuote() ) );
         }
     }
     
