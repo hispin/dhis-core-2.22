@@ -61,8 +61,9 @@ body,
 
 #init {
     display: table;
-    margin: 200px auto;
-    font-size: 15px;
+    margin: 300px auto;
+    font-size: 13px;
+    color: #444;
 }
 
 	/* Scrollbar Webkit */
@@ -166,11 +167,53 @@ body,
 	color: #303038;
 }
 
+.text-medium {
+    font-weight: 600;
+}
+
 .align-left {
 	text-align: left !important;
 }
 .align-right {
 	text-align: right !important;
+}
+
+
+/*----------------------------------------------------------------------------
+ * Spinner
+ *--------------------------------------------------------------------------*/
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    margin: 50px auto;
+    background-color: #aaa;
+
+    border-radius: 100%;
+    -webkit-animation: sk-scaleout 0.8s infinite ease-in-out;
+    animation: sk-scaleout 0.8s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+    0% {
+        -webkit-transform: scale(0)
+    }
+    100% {
+        -webkit-transform: scale(1.0);
+        opacity: 0;
+    }
+}
+
+@keyframes sk-scaleout {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+    100% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+        opacity: 0;
+    }
 }
 
 /*----------------------------------------------------------------------------
@@ -190,17 +233,17 @@ table.pivot {
 	user-select: all;
 }
 
-table.pivot.displaydensity-comfortable td {
+table.pivot.displaydensity-COMFORTABLE td {
 	padding: 7px;
 }
-table.pivot.displaydensity-compact td {
+table.pivot.displaydensity-COMPACT td {
 	padding: 3px;
 }
 
-table.pivot.fontsize-large td {
+table.pivot.fontsize-LARGE td {
 	font-size: 13px;
 }
-table.pivot.fontsize-small td {
+table.pivot.fontsize-SMALL td {
 	font-size: 10px;
 }
 
@@ -317,11 +360,11 @@ table.pivot.fontsize-small td {
 
 .ns-viewport-text * {
     padding: 3px 10px;
-    font-size: 11px;
-    color: #515a62;
+    font-size: 13px;
+    color: #777;
 }
 .ns-viewport-text h3 {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: #333;
     padding: 0 0 8px 0;
