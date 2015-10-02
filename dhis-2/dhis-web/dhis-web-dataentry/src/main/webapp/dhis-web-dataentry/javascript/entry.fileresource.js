@@ -1,8 +1,5 @@
 ( function ( $ ) {
     $.fn.fileEntryField = function() {
-
-        // TODO Use i18n
-
         var $container = $( this );
 
         var $field = $container.find( '.entryfileresource' );
