@@ -69,6 +69,10 @@ public class ConfigurationController
     @Autowired
     private PeriodService periodService;
 
+    // -------------------------------------------------------------------------
+    // Resources
+    // -------------------------------------------------------------------------
+
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/systemId", method = RequestMethod.GET )
@@ -263,6 +267,58 @@ public class ConfigurationController
 
         configurationService.setConfiguration( config );
     }
+
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
+    @RequestMapping( value = "/smtpPassword/{password}", method = RequestMethod.POST )
+    public void setSmtpPassword( @PathVariable String password  )
+    {
+        Configuration config = configurationService.getConfiguration();
+        
+        config.setSmtpPassword( password );
+        
+        configurationService.setConfiguration( config );
+    }    
+
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
+    @RequestMapping( value = "/remoteServerUrl/{url}", method = RequestMethod.POST )
+    public void setRemoteServerUrl( @PathVariable String url )
+    {
+        Configuration config = configurationService.getConfiguration();
+        
+        config.setRemoteServerUrl( url );
+        
+        configurationService.setConfiguration( config );
+    }
+
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
+    @RequestMapping( value = "/remoteServerUsername/{username}", method = RequestMethod.POST )
+    public void setRemoteServerUsername( @PathVariable String username )
+    {
+        Configuration config = configurationService.getConfiguration();
+        
+        config.setRemoteServerUsername( username );
+        
+        configurationService.setConfiguration( config );
+    }
+    
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
+    @RequestMapping( value = "/remoteServerPassword/{password}", method = RequestMethod.POST )
+    public void setRemoteServerPassword( @PathVariable String password )
+    {
+        Configuration config = configurationService.getConfiguration();
+        
+        config.setRemoteServerPassword( password );
+        
+        configurationService.setConfiguration( config );
+    }
+
+    // -------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------
 
     private String setModel( Model model, Object entity )
     {
