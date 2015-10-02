@@ -36,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.io.ByteSource;
 
+import java.util.List;
+
 /**
  * @author Halvdan Hoem Grelland
  */
@@ -70,6 +72,12 @@ public class DefaultFileResourceService
     public FileResource getFileResource( String uid )
     {
         return fileResourceStore.getByUid( uid );
+    }
+
+    @Override
+    public List<FileResource> getFileResources( List<String> uids )
+    {
+        return fileResourceStore.getByUid( uids );
     }
 
     @Transactional
