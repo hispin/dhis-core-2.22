@@ -205,11 +205,13 @@ public abstract class AbstractJdbcTableManager
         final String tempTable = table.getTempTableName();
         final String realTable = table.getTableName();
         
-        final String sql = 
-            "drop table " + realTable + ";" +
-            "alter table " + tempTable + " rename to " + realTable + ";";
+        final String sqlDrop = "drop table " + realTable;
         
-        executeSilently( sql );
+        executeSilently( sqlDrop );
+        
+        final String sqlAlter = "alter table " + tempTable + " rename to " + realTable;
+        
+        executeSilently( sqlAlter );
     }
 
     @Override
