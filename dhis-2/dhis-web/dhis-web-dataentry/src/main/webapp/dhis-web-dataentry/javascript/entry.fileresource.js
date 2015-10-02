@@ -69,7 +69,7 @@
             $button.unbind( 'click' );
             $button.on( 'click', function() {
                 $( '#fileDeleteConfirmationDialog' ).dialog( {
-                    title: 'Confirm deletion',
+                    title: i18n_confirm_deletion,
                     resizable: false,
                     height: 140,
                     modal: true,
@@ -172,7 +172,7 @@
             },
             fail: function( e, data )
             {
-                setHeaderDelayMessage( "File upload failed!" );
+                setHeaderDelayMessage( i18n_file_upload_failed );
                 console.log( data.errorThrown );
                 setButtonUpload();
             },
