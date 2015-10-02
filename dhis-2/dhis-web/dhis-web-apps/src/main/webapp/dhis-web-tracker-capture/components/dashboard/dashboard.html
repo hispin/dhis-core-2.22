@@ -20,8 +20,12 @@
         
         <!-- dashboard setting begins -->
         <div class="pull-right">
-            <button type="button" title="{{stickyDisabled ? stickLabel : unstickLabel}}" class="btn btn-default" ng-click="stickyDisabled = !stickyDisabled">                    
-                <i class="fa fa-thumb-tack" ng-class="{true: 'red'} [!stickyDisabled]"></i>
+            <button type="button" 
+                    title="{{stickyDisabled ? stickLabel : unstickLabel}}" 
+                    class="btn btn-default" 
+                    ng-class="{true: 'stick', false: 'unstick'} [!stickyDisabled]" 
+                    ng-click="stickUnstick()">                    
+                <i class="fa fa-thumb-tack"></i>
             </button>
             <div class="btn-group trim" dropdown is-open="status.isopen">
                 <button type="button" title="{{settingsLabel}}" class="btn btn-default dropdown-toggle" dropdown-toggle>                    
