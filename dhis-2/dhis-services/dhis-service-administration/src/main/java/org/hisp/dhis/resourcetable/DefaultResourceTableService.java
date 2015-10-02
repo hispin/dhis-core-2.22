@@ -48,12 +48,10 @@ import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
-import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataset.DataSet;
@@ -67,8 +65,12 @@ import org.hisp.dhis.period.DailyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.resourcetable.statement.CreateCategoryOptionGroupSetTableStatement;
 import org.hisp.dhis.resourcetable.table.CategoryOptionComboNameResourceTable;
+import org.hisp.dhis.resourcetable.table.CategoryOptionGroupSetResourceTable;
+import org.hisp.dhis.resourcetable.table.CategoryResourceTable;
+import org.hisp.dhis.resourcetable.table.DataElementGroupSetResourceTable;
+import org.hisp.dhis.resourcetable.table.IndicatorGroupSetResourceTable;
+import org.hisp.dhis.resourcetable.table.OrganisationUnitGroupSetResourceTable;
 import org.hisp.dhis.resourcetable.table.OrganisationUnitStructureResourceTable;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewService;
@@ -160,110 +162,44 @@ public class DefaultResourceTableService
     public void generateCategoryOptionComboNames()
     {
         resourceTableStore.generateResourceTable( new CategoryOptionComboNameResourceTable( 
-            "_categoryoptioncomboname", idObjectManager.getAll( DataElementCategoryCombo.class ), statementBuilder.getColumnQuote() ) );
+            "_categoryoptioncomboname", idObjectManager.getAllNoAcl( DataElementCategoryCombo.class ), 
+            statementBuilder.getColumnQuote() ) );
     }
 
     @Override
     @Transactional
     public void generateCategoryOptionGroupSetTable()
     {
-        // ---------------------------------------------------------------------
-        // Create table
-        // ---------------------------------------------------------------------
-
-        List<DataElementCategoryOptionCombo> categoryOptionCombos =
-            new ArrayList<>( categoryService.getAllDataElementCategoryOptionCombos() );
-
-        List<CategoryOptionGroupSet> groupSets = new ArrayList<>( idObjectManager.getAllNoAcl( CategoryOptionGroupSet.class ) );
-
-        Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );
-
-        resourceTableStore.createCategoryOptionGroupSetStructure( groupSets );
-
-        // ---------------------------------------------------------------------
-        // Populate table
-        // ---------------------------------------------------------------------
-
-        List<Object[]> batchArgs = new ArrayList<>();
-
-        for ( DataElementCategoryOptionCombo categoryOptionCombo : categoryOptionCombos )
-        {
-            List<Object> values = new ArrayList<>();
-
-            values.add( categoryOptionCombo.getId() );
-
-            for ( CategoryOptionGroupSet groupSet : groupSets )
-            {
-                CategoryOptionGroup group = groupSet.getGroup( categoryOptionCombo );
-
-                values.add( group != null ? group.getName() : null );
-                values.add( group != null ? group.getUid() : null );
-            }
-
-            batchArgs.add( values.toArray() );
-        }
-
-        resourceTableStore.batchUpdate( (groupSets.size() * 2) + 1, CreateCategoryOptionGroupSetTableStatement.TABLE_NAME, batchArgs );
-
-        log.info( "Category option group set table generated" );
+        resourceTableStore.generateResourceTable( new CategoryOptionGroupSetResourceTable(
+            "_categoryoptiongroupsetstructure", idObjectManager.getAllNoAcl( CategoryOptionGroupSet.class ),
+            statementBuilder.getColumnQuote(), categoryService.getAllDataElementCategoryOptionCombos() ) );
     }
-
-    // -------------------------------------------------------------------------
-    // DataElementGroupSetTable
-    // -------------------------------------------------------------------------
 
     @Override
     @Transactional
     public void generateDataElementGroupSetTable()
     {
-        List<DataElementGroupSet> groupSets = new ArrayList<>( idObjectManager.getDataDimensionsNoAcl( DataElementGroupSet.class ) );
-
-        Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );
-
-        resourceTableStore.createDataElementGroupSetStructure( groupSets );
-
-        resourceTableStore.populateDataElementGroupSetStructure( groupSets );
-
-        log.info( "Data element group set table generated" );
+        resourceTableStore.generateResourceTable( new DataElementGroupSetResourceTable(
+            "_dataelementgroupsetstructure", idObjectManager.getDataDimensionsNoAcl( DataElementGroupSet.class ),
+            statementBuilder.getColumnQuote() ) );
     }
-
-    // -------------------------------------------------------------------------
-    // IndicatorGroupSetTable
-    // -------------------------------------------------------------------------
 
     @Override
     @Transactional
     public void generateIndicatorGroupSetTable()
     {
-        List<IndicatorGroupSet> groupSets = new ArrayList<>( idObjectManager.getAllNoAcl( IndicatorGroupSet.class ) );
-
-        Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );
-
-        resourceTableStore.createIndicatorGroupSetStructure( groupSets );
-
-        resourceTableStore.populateIndicatorGroupSetStructure( groupSets );
-
-        log.info( "Indicator group set table generated" );
+        resourceTableStore.generateResourceTable( new IndicatorGroupSetResourceTable(
+            "_indicatorgroupsetstructure", idObjectManager.getAllNoAcl( IndicatorGroupSet.class ),
+            statementBuilder.getColumnQuote() ) );
     }
-
-    // -------------------------------------------------------------------------
-    // OrganisationUnitGroupSetTable
-    // -------------------------------------------------------------------------
 
     @Override
     @Transactional
     public void generateOrganisationUnitGroupSetTable()
     {
-        List<OrganisationUnitGroupSet> groupSets = new ArrayList<>(
-            idObjectManager.getDataDimensionsNoAcl( OrganisationUnitGroupSet.class ) );
-
-        Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );
-
-        resourceTableStore.createOrganisationUnitGroupSetStructure( groupSets );
-
-        resourceTableStore.populateOrganisationUnitGroupSetStructure( groupSets );
-
-        log.info( "Organisation unit group set table generated" );
+        resourceTableStore.generateResourceTable( new OrganisationUnitGroupSetResourceTable(
+            "_organisationunitgroupsetstructure", idObjectManager.getDataDimensionsNoAcl( OrganisationUnitGroupSet.class ),
+            statementBuilder.getColumnQuote() ) );
     }
 
     // -------------------------------------------------------------------------
@@ -274,20 +210,9 @@ public class DefaultResourceTableService
     @Transactional
     public void generateCategoryTable()
     {
-        // ---------------------------------------------------------------------
-        // Create table - only using data dimension categories
-        // ---------------------------------------------------------------------
-
-        List<DataElementCategory> categories = new ArrayList<>( 
-            idObjectManager.getDataDimensionsNoAcl( DataElementCategory.class ) );
-
-        Collections.sort( categories, IdentifiableObjectNameComparator.INSTANCE );
-
-        resourceTableStore.createCategoryStructure( categories );
-
-        resourceTableStore.populateCategoryStructure( categories );
-
-        log.info( "Category table generated" );
+        resourceTableStore.generateResourceTable( new CategoryResourceTable( 
+            "_categorystructure", idObjectManager.getDataDimensionsNoAcl( DataElementCategory.class ),
+            statementBuilder.getColumnQuote() ) );
     }
 
     // -------------------------------------------------------------------------

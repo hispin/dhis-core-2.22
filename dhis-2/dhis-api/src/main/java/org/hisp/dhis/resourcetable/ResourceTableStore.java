@@ -31,11 +31,6 @@ package org.hisp.dhis.resourcetable;
 import java.util.List;
 import java.util.Set;
 
-import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
-import org.hisp.dhis.dataelement.DataElementCategory;
-import org.hisp.dhis.dataelement.DataElementGroupSet;
-import org.hisp.dhis.indicator.IndicatorGroupSet;
-import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 
 /**
@@ -68,59 +63,6 @@ public interface ResourceTableStore
      * @param batchArgs the arguments to use for the update statement.
      */
     void batchUpdate( int columns, String tableName, List<Object[]> batchArgs );
-    
-    /**
-     * Creates a table.
-     */
-    void createOrganisationUnitStructure( int maxLevel );
-    
-    /**
-     * Creates a table.
-     */
-    void createDataElementCategoryOptionComboName();
-    
-    /**
-     * Creates a table.
-     * 
-     * @param groupSets the group sets.
-     */
-    void createCategoryOptionGroupSetStructure( List<CategoryOptionGroupSet> groupSets );
-    
-    /**
-     * Creates table.
-     * 
-     * @param groupSets the group sets.
-     */
-    void createDataElementGroupSetStructure( List<DataElementGroupSet> groupSets );
-    
-    void populateDataElementGroupSetStructure( List<DataElementGroupSet> groupSets );
-
-    /**
-     * Creates table.
-     * 
-     * @param groupSets the group sets.
-     */
-    void createIndicatorGroupSetStructure( List<IndicatorGroupSet> groupSets );
-    
-    void populateIndicatorGroupSetStructure( List<IndicatorGroupSet> groupSets );
-    
-    /**
-     * Creates table.
-     * 
-     * @param groupSets the group sets.
-     */
-    void createOrganisationUnitGroupSetStructure( List<OrganisationUnitGroupSet> groupSets );
-    
-    void populateOrganisationUnitGroupSetStructure( List<OrganisationUnitGroupSet> groupSets );
-    
-    /**
-     * Creates table.
-     * 
-     * @param categories the categories.
-     */
-    void createCategoryStructure( List<DataElementCategory> categories );
-    
-    void populateCategoryStructure( List<DataElementCategory> categories );
     
     /**
      * Creates table.
