@@ -102,8 +102,9 @@
         <td><textarea name="entryfield" class="entryfield entryarea" id="${dataEntryId}" tabindex="${tabIndex}" #if( $greyedField || !$hasAccess ) disabled="disabled"#end></textarea></td>
     #elseif( "FILE_RESOURCE" == $dataElement.valueType )
         <td>
-            <div class="entryfileresource-container">
-                <div id="${dataEntryId}" class="entryfileresource">
+            <div class="entryfileresource-container" name="${dataEntryId}">
+                <input class="entryfileresource" id="${dataEntryId}" tabindex="${tabIndex}" #if( $greyedField || !$hasAccess ) disabled="disabled"#end>
+                <div class="upload-field">
                     <div class="upload-fileinfo">
                         <div class="upload-fileinfo-size"></div>
                         <div class="upload-fileinfo-name"></div>

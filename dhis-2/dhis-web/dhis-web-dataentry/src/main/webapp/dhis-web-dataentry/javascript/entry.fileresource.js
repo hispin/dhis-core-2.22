@@ -3,6 +3,8 @@
         var $container = $( this );
 
         var $field = $container.find( '.entryfileresource' );
+        var $displayField = $container.find( '.upload-field' );
+
         var $button = $container.find( '.upload-button' );
 
         var $fileInput = $container.find( 'input[type=file]' );
@@ -45,8 +47,8 @@
                     $fileinfoName.text( '' );
                     $fileinfoSize.text( '' );
                     $fileinfo.hide();
-                    $field.css( 'background-color', '' );
-                    $field.data( 'value', '');
+                    $displayField.css( 'background-color', '' );
+                    $field.val( '' );
                     setButtonUpload();
                 },
                 error: function( data )
@@ -120,8 +122,10 @@
 
             $fileinfoName.text( name );
             $fileinfoSize.text( size );
-            $progressBar.toggleClass( 'upload-progress-bar-complete' );
             $fileinfo.show();
+            $progressBar.toggleClass( 'upload-progress-bar-complete' );
+            $displayField.css( 'background-color', dhis2.de.cst.colorGreen );
+
             resetAndHideProgress();
             setButtonDelete();
             $button.button( 'enable' );
@@ -135,16 +139,16 @@
 
         var disableField = function() {
             $button.button( 'disable' );
-            $field.toggleClass( 'entryfileresource-disabled', true );
+            $displayField.toggleClass( 'upload-field-disabled', true );
         };
 
         var enableField = function() {
             $button.button( 'enable' );
-            $field.toggleClass( 'entryfileresource-disabled', false );
+            $displayField.toggleClass( 'upload-field-disabled', false );
         };
 
         $( document ).on( dhis2.de.event.dataValuesLoaded, function() {
-            ( !$field.data( 'value' ) ) ? setButtonUpload() : setButtonDelete();
+            ( !$field.val() ) ? setButtonUpload() : setButtonDelete();
         } );
 
         $( document ).on( "dhis2.offline", disableField );
@@ -180,6 +184,7 @@
             done: function( e, data )
             {
                 var fileResource = data.result.response.fileResource;
+                $field.val( fileResource.id );
 
                 saveFileResource( dataElementId, optionComboId, id, fileResource, function() {
                     onFileDataValueSavedSuccess( fileResource );
