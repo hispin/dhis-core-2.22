@@ -41,11 +41,17 @@ import org.hisp.dhis.resourcetable.ResourceTable;
 public class OrganisationUnitGroupSetResourceTable
     extends ResourceTable<OrganisationUnitGroupSet>
 {
-    public OrganisationUnitGroupSetResourceTable( String tableName, List<OrganisationUnitGroupSet> objects, String columnQuote )
+    public OrganisationUnitGroupSetResourceTable( List<OrganisationUnitGroupSet> objects, String columnQuote )
     {
-        super( tableName, objects, columnQuote );
+        super( objects, columnQuote );
     }
 
+    @Override
+    public String getTableName()
+    {
+        return "_organisationunitgroupsetstructure";
+    }
+    
     @Override
     public String getCreateTempTableStatement()
     {

@@ -45,9 +45,15 @@ import org.hisp.dhis.resourcetable.ResourceTable;
 public class DataElementResourceTable
     extends ResourceTable<DataElement>
 {
-    public DataElementResourceTable( String tableName, List<DataElement> objects, String columnQuote )
+    public DataElementResourceTable( List<DataElement> objects, String columnQuote )
     {
-        super( tableName, objects, columnQuote );
+        super( objects, columnQuote );
+    }
+
+    @Override
+    public String getTableName()
+    {
+        return "_dataelementstructure";
     }
     
     @Override

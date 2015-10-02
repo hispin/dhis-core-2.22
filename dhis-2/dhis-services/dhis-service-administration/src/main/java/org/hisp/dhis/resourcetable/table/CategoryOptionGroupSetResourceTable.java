@@ -45,13 +45,19 @@ public class CategoryOptionGroupSetResourceTable
 {
     private List<DataElementCategoryOptionCombo> categoryOptionCombos;
     
-    public CategoryOptionGroupSetResourceTable( String tableName, 
-        List<CategoryOptionGroupSet> objects, String columnQuote, List<DataElementCategoryOptionCombo> categoryOptionCombos )
+    public CategoryOptionGroupSetResourceTable( List<CategoryOptionGroupSet> objects, 
+        String columnQuote, List<DataElementCategoryOptionCombo> categoryOptionCombos )
     {
-        super( tableName, objects, columnQuote );
+        super( objects, columnQuote );
         this.categoryOptionCombos = categoryOptionCombos;
     }
 
+    @Override
+    public String getTableName()
+    {
+        return "_categoryoptiongroupsetstructure";
+    }
+    
     @Override
     public String getCreateTempTableStatement()
     {

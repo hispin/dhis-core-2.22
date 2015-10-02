@@ -43,9 +43,7 @@ public abstract class ResourceTable<T>
     protected static final Log log = LogFactory.getLog( ResourceTable.class );
     
     protected static final String TEMP_TABLE_SUFFIX = "_temp";
-    
-    protected String tableName;
-    
+        
     protected List<T> objects;
     
     protected String columnQuote;
@@ -58,9 +56,8 @@ public abstract class ResourceTable<T>
     {
     }
     
-    protected ResourceTable( String tableName, List<T> objects, String columnQuote )
+    protected ResourceTable( List<T> objects, String columnQuote )
     {
-        this.tableName = tableName;
         this.objects = objects;
         this.columnQuote = columnQuote;
     }
@@ -68,15 +65,10 @@ public abstract class ResourceTable<T>
     // -------------------------------------------------------------------------
     // Public methods
     // -------------------------------------------------------------------------
-
-    public final String getTableName()
-    {
-        return tableName;
-    }
     
     public final String getTempTableName()
     {
-        return tableName + TEMP_TABLE_SUFFIX;
+        return getTableName() + TEMP_TABLE_SUFFIX;
     }
     
     public final String getDropTableStatement()
@@ -102,6 +94,8 @@ public abstract class ResourceTable<T>
     // Abstract methods
     // -------------------------------------------------------------------------
 
+    public abstract String getTableName();
+    
     public abstract String getCreateTempTableStatement();
     
     public abstract Optional<String> getPopulateTempTableStatement();

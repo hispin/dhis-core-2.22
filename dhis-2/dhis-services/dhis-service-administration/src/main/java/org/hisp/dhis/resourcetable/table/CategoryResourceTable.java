@@ -41,11 +41,17 @@ import org.hisp.dhis.resourcetable.ResourceTable;
 public class CategoryResourceTable
     extends ResourceTable<DataElementCategory>
 {
-    public CategoryResourceTable( String tableName, List<DataElementCategory> objects, String columnQuote )
+    public CategoryResourceTable( List<DataElementCategory> objects, String columnQuote )
     {
-        super( tableName, objects, columnQuote );        
+        super( objects, columnQuote );
     }
 
+    @Override
+    public String getTableName()
+    {
+        return "_categorystructure";
+    }
+    
     @Override
     public String getCreateTempTableStatement()
     {
