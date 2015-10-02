@@ -91,8 +91,7 @@ public class DefaultADXDataService
     // Constants
     // -------------------------------------------------------------------------
 
-    public static final int PIPE_BUFFER_SIZE = 4096;
-    public static final int TOTAL_MINUTES_TO_WAIT = 5;
+    private static final int TOTAL_MINUTES_TO_WAIT = 5;
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -130,13 +129,14 @@ public class DefaultADXDataService
 
         ImportSummaries importSummaries = new ImportSummaries();
 
-        adxReader.moveToStartElement( ADXConstants.ROOT, ADXConstants.NAMESPACE );
+        adxReader.moveToStartElement( ADXDataService.ROOT, ADXDataService.NAMESPACE );
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         int count = 0;
+        
         // submit each ADX group to DXF importer as a datavalueSet
-        while ( adxReader.moveToStartElement( ADXConstants.GROUP, ADXConstants.NAMESPACE ) )
+        while ( adxReader.moveToStartElement( ADXDataService.GROUP, ADXDataService.NAMESPACE ) )
         {
             try ( PipedOutputStream pipeOut = new PipedOutputStream() )
             {
@@ -145,14 +145,14 @@ public class DefaultADXDataService
                 XMLOutputFactory factory = XMLOutputFactory.newInstance();
                 XMLStreamWriter dxfWriter = factory.createXMLStreamWriter( pipeOut );
                 
-                // note theis returns conflicts which are detected at adx level
+                // note this returns conflicts which are detected at ADX level
                 List<ImportConflict> adxConflicts = parseADXGroupToDxf( adxReader, dxfWriter, importOptions );
                 
                 pipeOut.flush();
                 
                 ImportSummary summary = futureImportSummary.get( TOTAL_MINUTES_TO_WAIT, TimeUnit.MINUTES );
                 
-                // add adx conflicts to the import summary
+                // add ADX conflicts to the import summary
                 for ( ImportConflict conflict : adxConflicts)
                 {
                     summary.getConflicts().add( conflict );
@@ -202,48 +202,48 @@ public class DefaultADXDataService
 
         Map<String, String> groupAttributes = readAttributes( adxReader );
 
-        if ( !groupAttributes.containsKey( ADXConstants.PERIOD ) )
+        if ( !groupAttributes.containsKey( ADXDataService.PERIOD ) )
         {
-            throw new ADXException( ADXConstants.PERIOD + " attribute is required on 'group'" );
+            throw new ADXException( ADXDataService.PERIOD + " attribute is required on 'group'" );
         }
 
-        if ( !groupAttributes.containsKey( ADXConstants.ORGUNIT ) )
+        if ( !groupAttributes.containsKey( ADXDataService.ORGUNIT ) )
         {
-            throw new ADXException( ADXConstants.ORGUNIT + " attribute is required on 'group'" );
+            throw new ADXException( ADXDataService.ORGUNIT + " attribute is required on 'group'" );
         }
 
         // translate adx period to dxf2
-        String periodStr = groupAttributes.get( ADXConstants.PERIOD );
-        groupAttributes.remove( ADXConstants.PERIOD );
+        String periodStr = groupAttributes.get( ADXDataService.PERIOD );
+        groupAttributes.remove( ADXDataService.PERIOD );
         Period period = ADXPeriod.parse( periodStr );
-        groupAttributes.put( ADXConstants.PERIOD, period.getIsoDate());
+        groupAttributes.put( ADXDataService.PERIOD, period.getIsoDate());
 
         // process adx group attributes
-        if ( !groupAttributes.containsKey( ADXConstants.ATTOPTCOMBO )
-            && groupAttributes.containsKey( ADXConstants.DATASET ) )
+        if ( !groupAttributes.containsKey( ADXDataService.ATTOPTCOMBO )
+            && groupAttributes.containsKey( ADXDataService.DATASET ) )
         {
             log.debug( "No attributeOptionCombo present.  Check dataSet for attribute categorycombo" );
 
             DataSet dataSet = identifiableObjectManager.getObject( DataSet.class, dataElementIdScheme,
-                groupAttributes.get( ADXConstants.DATASET ) );
+                groupAttributes.get( ADXDataService.DATASET ) );
             
             if (dataSet == null)
             {
-                throw new ADXException("No dataSet matching identifier: " + groupAttributes.get( ADXConstants.DATASET ));
+                throw new ADXException("No dataSet matching identifier: " + groupAttributes.get( ADXDataService.DATASET ));
             }
-            groupAttributes.put( ADXConstants.DATASET, dataSet.getUid() );
+            groupAttributes.put( ADXDataService.DATASET, dataSet.getUid() );
             DataElementCategoryCombo attributeCombo = dataSet.getCategoryCombo();
-            attributesToDXF( ADXConstants.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme );
+            attributesToDXF( ADXDataService.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme );
         }
 
-        // write the remaining attributes through to dxf stream
+        // write the remaining attributes through to DXF stream
         for ( String attribute : groupAttributes.keySet() )
         {
             dxfWriter.writeAttribute( attribute, groupAttributes.get( attribute ) );
         }
 
         // process the dataValues
-        while ( adxReader.moveToStartElement( ADXConstants.DATAVALUE, ADXConstants.GROUP ) )
+        while ( adxReader.moveToStartElement( ADXDataService.DATAVALUE, ADXDataService.GROUP ) )
         {
             try 
             {
@@ -269,51 +269,54 @@ public class DefaultADXDataService
         
         log.debug("Processing datavalue: " + dvAttributes );
         
-        if ( !dvAttributes.containsKey( ADXConstants.DATAELEMENT ) )
+        if ( !dvAttributes.containsKey( ADXDataService.DATAELEMENT ) )
         {
-            throw new ADXException( ADXConstants.DATAELEMENT + " attribute is required on 'dataValue'" );
+            throw new ADXException( ADXDataService.DATAELEMENT + " attribute is required on 'dataValue'" );
         }
 
-        if ( !dvAttributes.containsKey( ADXConstants.VALUE ) )
+        if ( !dvAttributes.containsKey( ADXDataService.VALUE ) )
         {
-            throw new ADXException( ADXConstants.VALUE + " attribute is required on 'dataValue'" );
+            throw new ADXException( ADXDataService.VALUE + " attribute is required on 'dataValue'" );
         }
 
         IdentifiableProperty dataElementIdScheme = importOptions.getDataElementIdScheme();
 
-        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( ADXConstants.DATAELEMENT));
+        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( ADXDataService.DATAELEMENT));
         
         if ( dataElement == null )
         {
-            throw new ADXException(dvAttributes.get( ADXConstants.DATAELEMENT), "No matching dataelement");
+            throw new ADXException(dvAttributes.get( ADXDataService.DATAELEMENT), "No matching dataelement");
         }
-        // process adx datavalue attributes
-        if ( !dvAttributes.containsKey( ADXConstants.CATOPTCOMBO ) )
+        
+        // process ADX datavalue attributes
+        if ( !dvAttributes.containsKey( ADXDataService.CATOPTCOMBO ) )
         {
             log.debug( "No categoryOptionCombo present." );
             DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
 
-            attributesToDXF( ADXConstants.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
+            attributesToDXF( ADXDataService.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
         }
-        // if dataelement type is string we need to pick out the 'annotation' element
+        
+        // if data element type is string we need to pick out the 'annotation' element
         if ( dataElement.getValueType().isText() )
         {
-            adxReader.moveToStartElement( ADXConstants.ANNOTATION, ADXConstants.DATAVALUE );
-            if ( adxReader.isStartElement( ADXConstants.ANNOTATION ) )
+            adxReader.moveToStartElement( ADXDataService.ANNOTATION, ADXDataService.DATAVALUE );
+            if ( adxReader.isStartElement( ADXDataService.ANNOTATION ) )
             {
                 String textValue = adxReader.getElementValue();
-                dvAttributes.put( ADXConstants.VALUE, textValue );
+                dvAttributes.put( ADXDataService.VALUE, textValue );
             }
             else
             {
-                throw new ADXException( dvAttributes.get( ADXConstants.DATAELEMENT),"Dataelement expects text annotation" );
+                throw new ADXException( dvAttributes.get( ADXDataService.DATAELEMENT),"Dataelement expects text annotation" );
             }
         }
         
         log.debug("Processing datavalue as DXF2: " + dvAttributes );
         
         dxfWriter.writeStartElement( "dataValue" );
-        // pass through the remaining attributes to dxf
+        
+        // pass through the remaining attributes to DXF
         for ( String attribute : dvAttributes.keySet() )
         {
             dxfWriter.writeAttribute( attribute, dvAttributes.get( attribute ) );
@@ -401,7 +404,6 @@ public class DefaultADXDataService
 
         if ( catCombo.isDefault() )
         {
-            // nothing to do
             return;
         }
         
