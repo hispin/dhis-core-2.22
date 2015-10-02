@@ -198,34 +198,6 @@ public class DataValueBatchHandlerTest
     }
 
     @Test
-    public void testInsertObject()
-    {
-        batchHandler.insertObject( dataValueA, false );
-        batchHandler.insertObject( dataValueB, false );
-        batchHandler.insertObject( dataValueC, false );
-        batchHandler.insertObject( dataValueD, false );
-        
-        assertNotNull( dataValueService.getDataValue( dataElementA, periodA, unitA, categoryOptionComboA ) );
-        assertNotNull( dataValueService.getDataValue( dataElementA, periodA, unitB, categoryOptionComboA ) );
-        assertNotNull( dataValueService.getDataValue( dataElementA, periodB, unitA, categoryOptionComboA ) );
-        assertNotNull( dataValueService.getDataValue( dataElementA, periodB, unitB, categoryOptionComboA ) );
-    }
-
-    @Test
-    public void testUpdateObject()
-    {
-        batchHandler.insertObject( dataValueA, false );
-        
-        dataValueA.setValue( "20" );
-        
-        batchHandler.updateObject( dataValueA );
-        
-        dataValueA = dataValueService.getDataValue( dataElementA, periodA, unitA, categoryOptionComboA );
-        
-        assertEquals( "20", dataValueA.getValue() );
-    }
-
-    @Test
     public void testObjectExists()
     {
         dataValueService.addDataValue( dataValueA );

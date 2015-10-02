@@ -118,43 +118,6 @@ public class DataElementBatchHandlerTest
     }
 
     @Test
-    public void testInsertObject()
-    {
-        int idA = batchHandler.insertObject( dataElementA, true );
-        int idB = batchHandler.insertObject( dataElementB, true );
-        int idC = batchHandler.insertObject( dataElementC, true );
-
-        assertNotNull( dataElementService.getDataElement( idA ) );
-        assertNotNull( dataElementService.getDataElement( idB ) );
-        assertNotNull( dataElementService.getDataElement( idC ) );
-    }
-
-    @Test
-    public void testInsertWithSpecialCharacters()
-    {
-        dataElementA.setDescription( "'quote'" );
-        dataElementB.setDescription( "\\backslash\\" );
-        dataElementC.setDescription( ";semicolon;" );
-
-        batchHandler.insertObject( dataElementA, false );
-        batchHandler.insertObject( dataElementB, false );
-        batchHandler.insertObject( dataElementC, false );
-    }
-
-    @Test
-    public void testUpdateObject()
-    {
-        int id = batchHandler.insertObject( dataElementA, true );
-
-        dataElementA.setId( id );
-        dataElementA.setName( "UpdatedName" );
-
-        batchHandler.updateObject( dataElementA );
-
-        assertEquals( "UpdatedName", dataElementService.getDataElement( id ).getName() );
-    }
-
-    @Test
     public void testGetObjectIdentifier()
     {
         int referenceId = dataElementService.addDataElement( dataElementA );

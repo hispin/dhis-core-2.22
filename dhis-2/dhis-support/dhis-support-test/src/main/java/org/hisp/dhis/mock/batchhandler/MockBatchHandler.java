@@ -70,7 +70,6 @@ public class MockBatchHandler<T>
         return inserts.add( object );
     }
 
-    @Override
     public int insertObject( T object, boolean returnGeneratedIdentifier )
     {
         inserts.add( object );
