@@ -44,9 +44,15 @@ import org.hisp.dhis.resourcetable.ResourceTable;
 public class CategoryOptionComboNameResourceTable
     extends ResourceTable<DataElementCategoryCombo>
 {
-    public CategoryOptionComboNameResourceTable( String tableName, List<DataElementCategoryCombo> objects, String columnQuote )
+    public CategoryOptionComboNameResourceTable( List<DataElementCategoryCombo> objects, String columnQuote )
     {
-        super( tableName, objects, columnQuote );
+        super( objects, columnQuote );
+    }
+    
+    @Override
+    public String getTableName()
+    {
+        return "_categoryoptioncomboname";
     }
     
     @Override

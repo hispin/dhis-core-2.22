@@ -49,12 +49,18 @@ public class OrganisationUnitStructureResourceTable
     
     private int organisationUnitLevels;
     
-    public OrganisationUnitStructureResourceTable( String tableName, List<OrganisationUnit> objects, 
+    public OrganisationUnitStructureResourceTable( List<OrganisationUnit> objects, 
         String columnQuote, OrganisationUnitService organisationUnitService, int organisationUnitLevels )
     {
-        super( tableName, objects, columnQuote );
+        super( objects, columnQuote );
         this.organisationUnitService = organisationUnitService;
         this.organisationUnitLevels = organisationUnitLevels;
+    }
+
+    @Override
+    public String getTableName()
+    {
+        return "_orgunitstructure";
     }
     
     @Override

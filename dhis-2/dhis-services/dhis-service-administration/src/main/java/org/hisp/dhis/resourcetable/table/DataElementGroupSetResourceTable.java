@@ -41,9 +41,15 @@ import org.hisp.dhis.resourcetable.ResourceTable;
 public class DataElementGroupSetResourceTable
     extends ResourceTable<DataElementGroupSet>
 {
-    public DataElementGroupSetResourceTable( String tableName, List<DataElementGroupSet> objects, String columnQuote )
+    public DataElementGroupSetResourceTable( List<DataElementGroupSet> objects, String columnQuote )
     {
-        super( tableName, objects, columnQuote );
+        super( objects, columnQuote );
+    }
+
+    @Override
+    public String getTableName()
+    {
+        return "_dataelementgroupsetstructure";
     }
     
     @Override

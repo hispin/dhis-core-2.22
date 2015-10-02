@@ -41,9 +41,15 @@ import org.hisp.dhis.resourcetable.ResourceTable;
 public class IndicatorGroupSetResourceTable
     extends ResourceTable<IndicatorGroupSet>
 {
-    public IndicatorGroupSetResourceTable( String tableName, List<IndicatorGroupSet> objects, String columnQuote )
+    public IndicatorGroupSetResourceTable( List<IndicatorGroupSet> objects, String columnQuote )
     {
-        super( tableName, objects, columnQuote );
+        super( objects, columnQuote );
+    }
+
+    @Override
+    public String getTableName()
+    {
+        return "_indicatorgroupsetstructure";
     }
     
     @Override

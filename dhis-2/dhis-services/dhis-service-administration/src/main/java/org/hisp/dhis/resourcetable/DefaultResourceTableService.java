@@ -151,7 +151,7 @@ public class DefaultResourceTableService
     public void generateOrganisationUnitStructures()
     {
         resourceTableStore.generateResourceTable( new OrganisationUnitStructureResourceTable( 
-            "_orgunitstructure", null, statementBuilder.getColumnQuote(), 
+            null, statementBuilder.getColumnQuote(), 
             organisationUnitService, organisationUnitService.getMaxOfOrganisationUnitLevels() ) );
     }
     
@@ -160,7 +160,7 @@ public class DefaultResourceTableService
     public void generateCategoryOptionComboNames()
     {
         resourceTableStore.generateResourceTable( new CategoryOptionComboNameResourceTable( 
-            "_categoryoptioncomboname", idObjectManager.getAllNoAcl( DataElementCategoryCombo.class ), 
+            idObjectManager.getAllNoAcl( DataElementCategoryCombo.class ), 
             statementBuilder.getColumnQuote() ) );
     }
 
@@ -169,7 +169,7 @@ public class DefaultResourceTableService
     public void generateCategoryOptionGroupSetTable()
     {
         resourceTableStore.generateResourceTable( new CategoryOptionGroupSetResourceTable(
-            "_categoryoptiongroupsetstructure", idObjectManager.getAllNoAcl( CategoryOptionGroupSet.class ),
+            idObjectManager.getAllNoAcl( CategoryOptionGroupSet.class ),
             statementBuilder.getColumnQuote(), categoryService.getAllDataElementCategoryOptionCombos() ) );
     }
 
@@ -178,7 +178,7 @@ public class DefaultResourceTableService
     public void generateDataElementGroupSetTable()
     {
         resourceTableStore.generateResourceTable( new DataElementGroupSetResourceTable(
-            "_dataelementgroupsetstructure", idObjectManager.getDataDimensionsNoAcl( DataElementGroupSet.class ),
+            idObjectManager.getDataDimensionsNoAcl( DataElementGroupSet.class ),
             statementBuilder.getColumnQuote() ) );
     }
 
@@ -187,7 +187,7 @@ public class DefaultResourceTableService
     public void generateIndicatorGroupSetTable()
     {
         resourceTableStore.generateResourceTable( new IndicatorGroupSetResourceTable(
-            "_indicatorgroupsetstructure", idObjectManager.getAllNoAcl( IndicatorGroupSet.class ),
+            idObjectManager.getAllNoAcl( IndicatorGroupSet.class ),
             statementBuilder.getColumnQuote() ) );
     }
 
@@ -196,7 +196,7 @@ public class DefaultResourceTableService
     public void generateOrganisationUnitGroupSetTable()
     {
         resourceTableStore.generateResourceTable( new OrganisationUnitGroupSetResourceTable(
-            "_organisationunitgroupsetstructure", idObjectManager.getDataDimensionsNoAcl( OrganisationUnitGroupSet.class ),
+            idObjectManager.getDataDimensionsNoAcl( OrganisationUnitGroupSet.class ),
             statementBuilder.getColumnQuote() ) );
     }
 
@@ -205,7 +205,7 @@ public class DefaultResourceTableService
     public void generateCategoryTable()
     {
         resourceTableStore.generateResourceTable( new CategoryResourceTable( 
-            "_categorystructure", idObjectManager.getDataDimensionsNoAcl( DataElementCategory.class ),
+            idObjectManager.getDataDimensionsNoAcl( DataElementCategory.class ),
             statementBuilder.getColumnQuote() ) );
     }
 
@@ -214,7 +214,7 @@ public class DefaultResourceTableService
     public void generateDataElementTable()
     {
         resourceTableStore.generateResourceTable( new DataElementResourceTable( 
-            "_dataelementstructure", idObjectManager.getAllNoAcl( DataElement.class ),
+            idObjectManager.getAllNoAcl( DataElement.class ),
             statementBuilder.getColumnQuote() ) );
     }
 
