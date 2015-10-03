@@ -1,7 +1,6 @@
 function performMaintenance() {
   var clearAnalytics = $("#clearAnalytics").is(":checked");
   var zeroValues = $("#zeroValues").is(":checked");
-  var dataSetCompleteness = $("#dataSetCompleteness").is(":checked");
   var prunePeriods = $("#prunePeriods").is(":checked");
   var removeExpiredInvitations = $("#removeExpiredInvitations").is(":checked");
   var dropSqlViews = $("#dropSqlViews").is(":checked");
@@ -9,14 +8,13 @@ function performMaintenance() {
   var updateCategoryOptionCombos = $("#updateCategoryOptionCombos").is(":checked");
   var updateOrganisationUnitPaths = $("#updateOrganisationUnitPaths").is(":checked");
 
-  if( clearAnalytics || zeroValues || dataSetCompleteness ||
+  if( clearAnalytics || zeroValues || 
     prunePeriods || removeExpiredInvitations || dropSqlViews || createSqlViews || updateCategoryOptionCombos || updateOrganisationUnitPaths ) {
 
     setHeaderWaitMessage(i18n_performing_maintenance);
 
     var params = "clearAnalytics=" + clearAnalytics +
       "&zeroValues=" + zeroValues +
-      "&dataSetCompleteness=" + dataSetCompleteness +
       "&prunePeriods=" + prunePeriods +
       "&removeExpiredInvitations=" + removeExpiredInvitations +
       "&dropSqlViews=" + dropSqlViews +

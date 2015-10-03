@@ -33,7 +33,6 @@ import javax.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsTableService;
-import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.maintenance.MaintenanceService;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -77,13 +76,6 @@ public class PerformMaintenanceAction
         this.maintenanceService = maintenanceService;
     }
 
-    private DataSetCompletenessService completenessService;
-
-    public void setCompletenessService( DataSetCompletenessService completenessService )
-    {
-        this.completenessService = completenessService;
-    }
-
     private CurrentUserService currentUserService;
 
     public void setCurrentUserService( CurrentUserService currentUserService )
@@ -124,13 +116,6 @@ public class PerformMaintenanceAction
     public void setZeroValues( boolean zeroValues )
     {
         this.zeroValues = zeroValues;
-    }
-
-    private boolean dataSetCompleteness;
-
-    public void setDataSetCompleteness( boolean dataSetCompleteness )
-    {
-        this.dataSetCompleteness = dataSetCompleteness;
     }
 
     private boolean prunePeriods;
@@ -202,13 +187,6 @@ public class PerformMaintenanceAction
             maintenanceService.deleteZeroDataValues();
 
             log.info( "Cleared zero values" );
-        }
-
-        if ( dataSetCompleteness )
-        {
-            completenessService.deleteDataSetCompleteness();
-
-            log.info( "'" + username + "': Cleared data completeness" );
         }
 
         if ( prunePeriods )
