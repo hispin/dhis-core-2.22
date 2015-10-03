@@ -615,18 +615,30 @@ Ext.onReady( function() {
 					}
                 },
                 chart: {
-                    series: 'series',
-                    category: 'category',
-                    filter: 'filter',
-                    column: 'COLUMN',
-                    stackedcolumn: 'STACKED_COLUMN',
-                    bar: 'BAR',
-                    stackedbar: 'STACKED_BAR',
-                    line: 'LINE',
-                    area: 'AREA',
-                    pie: 'PIE',
-                    radar: 'RADAR',
-                    gauge: 'GAUGE'
+                    client: {
+                        series: 'series',
+                        category: 'category',
+                        filter: 'filter',
+                        column: 'column',
+                        stackedcolumn: 'stackedcolumn',
+                        bar: 'bar',
+                        stackedbar: 'stackedbar',
+                        line: 'line',
+                        area: 'area',
+                        pie: 'pie',
+                        radar: 'radar'
+                    },
+                    server: {
+                        column: 'COLUMN',
+                        stackedcolumn: 'STACKED_COLUMN',
+                        bar: 'BAR',
+                        stackedbar: 'STACKED_BAR',
+                        line: 'LINE',
+                        area: 'AREA',
+                        pie: 'PIE',
+                        radar: 'RADAR',
+                        gauge: 'GAUGE'
+                    }
                 },
                 data: {
                     domain: 'domain_',
@@ -647,6 +659,36 @@ Ext.onReady( function() {
                     id: 'root'
                 }
             };
+
+            conf.finals.chart.c2s = {};
+            conf.finals.chart.s2c = {};
+
+            (function() {
+                var client = conf.finals.chart.client,
+                    server = conf.finals.chart.server,
+                    c2s = conf.finals.chart.c2s,
+                    s2c = conf.finals.chart.s2c;
+
+                c2s[client.column] = server.column;
+                c2s[client.stackedcolumn] = server.stackedcolumn;
+                c2s[client.bar] = server.bar;
+                c2s[client.stackedbar] = server.stackedbar;
+                c2s[client.line] = server.line;
+                c2s[client.area] = server.area;
+                c2s[client.pie] = server.pie;
+                c2s[client.radar] = server.radar;
+                c2s[client.gauge] = server.gauge;
+
+                s2c[server.column] = client.column;
+                s2c[server.stackedcolumn] = client.stackedcolumn;
+                s2c[server.bar] = client.bar;
+                s2c[server.stackedbar] = client.stackedbar;
+                s2c[server.line] = client.line;
+                s2c[server.area] = client.area;
+                s2c[server.pie] = client.pie;
+                s2c[server.radar] = client.radar;
+                s2c[server.gauge] = client.gauge;
+            })();
 
             dimConf = conf.finals.dimension;
 
@@ -1128,7 +1170,7 @@ Ext.onReady( function() {
 					//config = analytical2layout(config);
 
                     // layout
-                    layout.type = Ext.isString(config.type) ? config.type : conf.finals.chart.column;
+                    layout.type = conf.finals.chart.s2c[config.type] || conf.finals.chart.client[config.type] || 'column';
 
                     layout.columns = config.columns;
                     layout.rows = config.rows;
@@ -3413,7 +3455,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator['COLUMN'] = function(isStacked) {
+                generator.column = function(isStacked) {
                     var store = getDefaultStore(isStacked),
                         numericAxis = getDefaultNumericAxis(store),
                         categoryAxis = getDefaultCategoryAxis(store),
@@ -3443,13 +3485,13 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator['STACKED_COLUMN'] = function() {
+                generator.stackedcolumn = function() {
                     var chart = this.column(true);
 
                     for (var i = 0, item; i < chart.series.items.length; i++) {
                         item = chart.series.items[i];
 
-                        if (item.type === conf.finals.chart.column) {
+                        if (item.type === conf.finals.chart.client.column) {
                             item.stacked = true;
                         }
                     }
@@ -3457,7 +3499,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator['BAR'] = function(isStacked) {
+                generator.bar = function(isStacked) {
                     var store = getDefaultStore(isStacked),
                         numericAxis = getDefaultNumericAxis(store),
                         categoryAxis = getDefaultCategoryAxis(store),
@@ -3529,13 +3571,13 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator['STACKED_BAR'] = function() {
+                generator.stackedbar = function() {
                     var chart = this.bar(true);
 
                     for (var i = 0, item; i < chart.series.items.length; i++) {
                         item = chart.series.items[i];
 
-                        if (item.type === conf.finals.chart.bar) {
+                        if (item.type === conf.finals.chart.client.bar) {
                             item.stacked = true;
                         }
                     }
@@ -3543,7 +3585,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator['LINE'] = function() {
+                generator.line = function() {
                     var store = getDefaultStore(),
                         numericAxis = getDefaultNumericAxis(store),
                         categoryAxis = getDefaultCategoryAxis(store),
@@ -3617,7 +3659,7 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator['AREA'] = function() {
+                generator.area = function() {
 
                     // NB, always true for area charts as extjs area charts cannot handle nulls
                     xLayout.hideEmptyRows = true;
@@ -3658,7 +3700,7 @@ Ext.onReady( function() {
                     });
                 };
 
-                generator['PIE'] = function() {
+                generator.pie = function() {
                     var store = getDefaultStore(),
                         series,
                         colors,
@@ -3757,7 +3799,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator['RADAR'] = function() {
+                generator.radar = function() {
                     var store = getDefaultStore(),
                         axes = [],
                         series = [],
@@ -3837,7 +3879,7 @@ Ext.onReady( function() {
                     return chart;
                 };
 
-                generator['GAUGE'] = function() {
+                generator.gauge = function() {
                     var valueColor = '#aaa',
                         store,
                         axis,
