@@ -41,7 +41,7 @@ import javax.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsTableService;
-import org.hisp.dhis.commons.util.Clock;
+import org.hisp.dhis.system.util.Clock;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.message.MessageService;
