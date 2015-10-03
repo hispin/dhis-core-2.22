@@ -33,7 +33,6 @@ import java.util.Map;
 
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.commons.collection.LoggingHashMap;
 
 /**
  * @author Lars Helge Overland
@@ -486,7 +485,7 @@ public class NameMappingUtil
     
     public static Map<Object, String> getDataElementAggregationOperatorMap()
     {
-        return dataElementAggregationOperatorMap.get() != null ? new LoggingHashMap<>( dataElementAggregationOperatorMap.get() ) : new HashMap<>();
+        return dataElementAggregationOperatorMap.get() != null ? new HashMap<>( dataElementAggregationOperatorMap.get() ) : new HashMap<>();
     }
 
     // -------------------------------------------------------------------------

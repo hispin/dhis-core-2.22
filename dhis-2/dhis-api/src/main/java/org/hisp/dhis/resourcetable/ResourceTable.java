@@ -103,8 +103,8 @@ public abstract class ResourceTable<T>
     public abstract Optional<List<Object[]>> getPopulateTempTableContent();
     
     /**
-     * Creates a SQL index create statement. Note that the index name must have 
-     * a random component to avoid uniqueness conflicts.
+     * Creates a SQL index create statement for the temp table. Note that the 
+     * index name must have a random component to avoid uniqueness conflicts.
      * 
      * @return a SQL statement.
      */

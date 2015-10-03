@@ -29,6 +29,7 @@ package org.hisp.dhis.importexport.mapping;
  */
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.amplecode.quick.BatchHandler;
@@ -71,7 +72,6 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodStore;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.reporttable.ReportTable;
-import org.hisp.dhis.commons.collection.LoggingHashMap;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -338,7 +338,7 @@ public class DefaultObjectMappingGenerator
 
         batchHandler.init();
 
-        Map<Object, Integer> periodMap = new LoggingHashMap<>();
+        Map<Object, Integer> periodMap = new HashMap<>();
 
         Map<Object, Period> mapping = NameMappingUtil.getPeriodMap();
 
@@ -372,7 +372,7 @@ public class DefaultObjectMappingGenerator
 
         batchHandler.init();
 
-        Map<Period, Integer> periodMap = new LoggingHashMap<>();
+        Map<Period, Integer> periodMap = new HashMap<>();
 
         Collection<Period> periods = NameMappingUtil.getPeriodMap().values();
 
@@ -406,7 +406,7 @@ public class DefaultObjectMappingGenerator
     @Transactional
     public Map<String, Integer> getPeriodTypeMapping()
     {
-        Map<String, Integer> periodTypeMap = new LoggingHashMap<>();
+        Map<String, Integer> periodTypeMap = new HashMap<>();
 
         Collection<PeriodType> periodTypes = periodStore.getAllPeriodTypes();
 
@@ -427,7 +427,7 @@ public class DefaultObjectMappingGenerator
     {
         batchHandler.init();
 
-        Map<Object, Integer> identifierMap = new LoggingHashMap<>();
+        Map<Object, Integer> identifierMap = new HashMap<>();
 
         if ( nameMap != null )
         {
@@ -452,7 +452,7 @@ public class DefaultObjectMappingGenerator
     private Map<Object, Integer> getMapping( Map<Object, DataElementCategoryOptionCombo> categoryOptionComboMap,
         boolean skipMapping )
     {
-        Map<Object, Integer> identifierMap = new LoggingHashMap<>();
+        Map<Object, Integer> identifierMap = new HashMap<>();
 
         if ( categoryOptionComboMap != null )
         {
