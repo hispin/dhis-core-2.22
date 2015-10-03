@@ -38,7 +38,7 @@ import java.util.concurrent.Future;
 
 import org.hisp.dhis.commons.collection.PaginatedList;
 import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.commons.util.Clock;
+import org.hisp.dhis.system.util.Clock;
 import org.hisp.dhis.commons.util.ConcurrentUtils;
 import org.hisp.dhis.completeness.DataSetCompletenessEngine;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
