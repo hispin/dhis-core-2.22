@@ -167,38 +167,4 @@ public class JDBCDataSetCompletenessStore
         
         return selection;
     }
-
-    // -------------------------------------------------------------------------
-    // Aggregated data set completeness methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Double getPercentage( int dataSetId, int periodId, int organisationUnitId )
-    {
-        final String sql =
-            "SELECT value " +
-            "FROM aggregateddatasetcompleteness " +
-            "WHERE datasetid = " + dataSetId + " " +
-            "AND periodid = " + periodId + " " +
-            "AND organisationunitid = " + organisationUnitId;
-        
-        return statementManager.getHolder().queryForDouble( sql );
-    }
-    
-    @Override
-    public void deleteDataSetCompleteness( Collection<Integer> dataSetIds, Collection<Integer> periodIds, Collection<Integer> organisationUnitIds )
-    {
-        if ( dataSetIds == null || dataSetIds.isEmpty() || periodIds == null || periodIds.isEmpty() || organisationUnitIds == null || organisationUnitIds.isEmpty() )
-        {
-            return;
-        }
-        
-        final String sql = 
-            "DELETE FROM aggregateddatasetcompleteness " +
-            "WHERE datasetid IN ( " + getCommaDelimitedString( dataSetIds ) + " ) " +
-            "AND periodid IN ( " + getCommaDelimitedString( periodIds ) + " ) " +
-            "AND organisationunitid IN ( " + getCommaDelimitedString( organisationUnitIds ) + " )";
-        
-        statementManager.getHolder().executeUpdate( sql );
-    }
 }

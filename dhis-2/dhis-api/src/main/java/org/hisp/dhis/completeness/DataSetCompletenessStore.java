@@ -49,23 +49,4 @@ public interface DataSetCompletenessStore
     Integer getCompulsoryDataElementRegistrations( DataSet dataSet, Collection<Integer> children, Collection<Integer> periods, int completenessOffset );
 
     List<DataSet> getDataSetsWithRegistrations( Collection<DataSet> dataSets );
-
-    /**
-     * Gets the percentage value for the datasetcompleteness with the given parameters.
-     *
-     * @param dataSetId the DataSet identifier.
-     * @param periodId  the Period identifier.
-     * @param sourceId  the Source identifier.
-     * @return the percentage value for the datasetcompleteness result with the given parameters.
-     */
-    Double getPercentage( int dataSetId, int periodId, int sourceId );
-
-    /**
-     * Deletes the datasetcompleteness entries with the given parameters.
-     *
-     * @param dataSetIds the DataSet identifiers.
-     * @param periodIds  the Period identifiers.
-     * @param sourceIds  the Source identifiers.
-     */
-    void deleteDataSetCompleteness( Collection<Integer> dataSetIds, Collection<Integer> periodIds, Collection<Integer> sourceIds );
 }
