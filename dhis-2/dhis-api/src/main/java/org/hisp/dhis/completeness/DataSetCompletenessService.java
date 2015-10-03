@@ -31,22 +31,13 @@ package org.hisp.dhis.completeness;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
-
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.period.Period;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public interface DataSetCompletenessService
 {
     String ID = DataSetCompletenessService.class.getName();
-
-    Future<?> exportDataSetCompleteness( Collection<DataSet> dataSets, Collection<Period> periods,
-        Collection<OrganisationUnit> units );
 
     /**
      * Returns a Collection of DataSetCompletenessResults. The
@@ -80,19 +71,4 @@ public interface DataSetCompletenessService
      */
     List<DataSetCompletenessResult> getDataSetCompleteness( int periodId,
         Collection<Integer> organisationUnitIds, int dataSetId, Set<Integer> groupIds );
-
-    /**
-     * Delete all data set completeness registrations.
-     */
-    void deleteDataSetCompleteness();
-    
-    /**
-     * Creates an index on the aggregateddatasetcompleteness table.
-     */
-    void createIndex();
-
-    /**
-     * Drops the index on the aggregateddatasetcompleteness table.
-     */
-    void dropIndex();
 }
