@@ -28,15 +28,8 @@ package org.hisp.dhis.commons.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Utility class for retrieving debugging information.
@@ -45,96 +38,6 @@ import java.util.Map;
  */
 public class DebugUtils
 {
-    private static final Log log = LogFactory.getLog( DebugUtils.class );
-    
-    public static final String SEPARATOR = "-";
-    
-    private static ThreadLocal<Map<String, List<String>>> DUPLICATE_MAP_PEG = new ThreadLocal<>();
-    
-    public static String logDuplicates( String key, Integer... values )
-    {
-        StringBuffer buffer = new StringBuffer();
-        
-        for ( Integer value : values )
-        {
-            buffer.append( value + SEPARATOR );
-        }
-        
-        String value = buffer.toString();
-        
-        value = value.substring( 0, value.length() - 1 );
-        
-        return log( key, value );
-    }
-    
-    public static String logDuplicates( String key, String... values )
-    {
-        StringBuffer buffer = new StringBuffer();
-        
-        for ( String value : values )
-        {
-            buffer.append( value + SEPARATOR );
-        }
-
-        String value = buffer.toString();
-        
-        value = value.substring( 0, value.length() - 1 );
-        
-        return log( key, value );
-    }
-    
-    private static String log( String key, String value )
-    {   
-        Map<String, List<String>> duplicateMap = DUPLICATE_MAP_PEG.get();
-        
-        if ( duplicateMap == null )
-        {
-            duplicateMap = new HashMap<>();
-        }
-        
-        List<String> list = duplicateMap.get( key );
-
-        if ( list == null )
-        {
-            list = new ArrayList<>();
-        }
-                
-        String duplicate = null;
-        
-        if ( list.contains( value ) )
-        {
-            log.warn( "Duplicate found: '" + value + "' for key: '" + key + "'" );
-            
-            duplicate = value;
-        }
-        
-        list.add( value );
-        
-        duplicateMap.put( key, list );
-        
-        DUPLICATE_MAP_PEG.set( duplicateMap );
-
-        return duplicate;
-    }
-    
-    public static boolean resetDuplicates( String key )
-    {
-        Map<String, List<String>> duplicateMap = DUPLICATE_MAP_PEG.get();
-        
-        if ( duplicateMap != null )
-        {
-            duplicateMap.remove( key );
-        
-            DUPLICATE_MAP_PEG.set( duplicateMap );
-            
-            log.info( "Reset duplicate for key: '" + key + "'" );
-            
-            return true;
-        }
-        
-        return false;
-    }
-
     public static String getStackTrace( Throwable t )
     {
         StringWriter sw = new StringWriter();
