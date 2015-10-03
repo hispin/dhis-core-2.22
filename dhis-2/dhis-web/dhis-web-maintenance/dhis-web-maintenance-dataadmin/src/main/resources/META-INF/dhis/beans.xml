@@ -9,7 +9,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     class="org.hisp.dhis.dataadmin.action.maintenance.PerformMaintenanceAction"
     scope="prototype">
     <property name="maintenanceService" ref="org.hisp.dhis.maintenance.MaintenanceService" />
-    <property name="completenessService" ref="compulsoryDataCompletenessService" />
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
     <property name="resourceTableService" ref="org.hisp.dhis.resourcetable.ResourceTableService" />
