@@ -35,7 +35,6 @@ import java.util.List;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public interface DataSetCompletenessStore
 {
@@ -69,13 +68,4 @@ public interface DataSetCompletenessStore
      * @param sourceIds  the Source identifiers.
      */
     void deleteDataSetCompleteness( Collection<Integer> dataSetIds, Collection<Integer> periodIds, Collection<Integer> sourceIds );
-
-    /**
-     * Deletes all datasetcompleteness entries.
-     */
-    void deleteDataSetCompleteness();
-
-    void createIndex();
-
-    void dropIndex();
 }

@@ -35,8 +35,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.amplecode.quick.StatementManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.completeness.DataSetCompletenessStore;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.jdbc.StatementBuilder;
@@ -48,8 +46,6 @@ import org.hisp.dhis.jdbc.StatementBuilder;
 public class JDBCDataSetCompletenessStore
     implements DataSetCompletenessStore
 {
-    private static final Log log = LogFactory.getLog( JDBCDataSetCompletenessStore.class );
-    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -67,10 +63,6 @@ public class JDBCDataSetCompletenessStore
     {
         this.statementBuilder = statementBuilder;
     }
-
-    // -------------------------------------------------------------------------
-    // DataSetCompletenessStore
-    // -------------------------------------------------------------------------
 
     // -------------------------------------------------------------------------
     // Based on complete data set registrations
@@ -208,41 +200,5 @@ public class JDBCDataSetCompletenessStore
             "AND organisationunitid IN ( " + getCommaDelimitedString( organisationUnitIds ) + " )";
         
         statementManager.getHolder().executeUpdate( sql );
-    }
-    
-    @Override
-    public void deleteDataSetCompleteness()
-    {
-        final String sql = "DELETE FROM aggregateddatasetcompleteness";
-        
-        statementManager.getHolder().executeUpdate( sql );
-    }
-
-    @Override
-    public void createIndex()
-    {
-        try
-        {
-            final String sql = "CREATE INDEX aggregateddatasetcompleteness_index ON aggregateddatasetcompleteness (datasetid, periodid, organisationunitid, value)";        
-            statementManager.getHolder().executeUpdate( sql, true );
-        }
-        catch ( Exception ex )
-        {
-            log.debug( "Index already exists", ex );
-        }
-    }
-    
-    @Override
-    public void dropIndex()
-    {
-        try
-        {
-            final String sql = "DROP INDEX aggregateddatasetcompleteness_index";        
-            statementManager.getHolder().executeUpdate( sql, true );
-        }
-        catch ( Exception ex )
-        {
-            log.debug( "Index does not exist", ex );
-        }
     }
 }
