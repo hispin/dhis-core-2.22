@@ -51,6 +51,7 @@ public class ExpressionUtilsTest
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( "3", null ), DELTA );
         assertEquals( 3.45, ExpressionUtils.evaluateToDouble( "3.45", null ), DELTA );
         assertEquals( 5d, ExpressionUtils.evaluateToDouble( "2 + 3", null ), DELTA );
+        assertEquals( 2d, ExpressionUtils.evaluateToDouble( "5 + -3", null ), DELTA );
         assertEquals( 15.6, ExpressionUtils.evaluateToDouble( "12.4 + 3.2", null ), DELTA );
         assertEquals( 2.0, ExpressionUtils.evaluateToDouble( "2 > 1 ? 2.0 : 1.0", null ), DELTA );
         assertEquals( 1.0, ExpressionUtils.evaluateToDouble( "2 > 4 ? 2.0 : 1.0", null ), DELTA );
@@ -65,6 +66,15 @@ public class ExpressionUtilsTest
         assertEquals( 1d, ExpressionUtils.evaluateToDouble( "d2:zing(d2:oizp(3))", null ), DELTA );
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:zpvc(1,3)", null ), DELTA );
         assertEquals( 3d, ExpressionUtils.evaluateToDouble( "d2:zpvc(1,-1,2,-3,0)", null ), DELTA );
+        assertEquals( 4d, ExpressionUtils.evaluateToDouble( "d2:condition('3 > 2',4,3)", null ), DELTA );
+        assertEquals( 3d, ExpressionUtils.evaluateToDouble( "2 + null + 1", null ), DELTA );
+        assertEquals( 4d, ExpressionUtils.evaluateToDouble( "null + 4", null ), DELTA );
+        assertEquals( 5d, ExpressionUtils.evaluateToDouble( "(3 + 2) - null", null ), DELTA );
+        assertEquals( 9d, ExpressionUtils.evaluateToDouble( "(3 + 2) - null + 4 + null", null ), DELTA );
+        assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:zing(null) + 2", null ), DELTA );
+        assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:oizp(null) + 2", null ), DELTA );
+        assertEquals( 3d, ExpressionUtils.evaluateToDouble( "d2:zpvc(1,null,2,-3,0)", null ), DELTA );
+        assertEquals( 2d, ExpressionUtils.evaluateToDouble( "d2:zpvc(null,null,2,-3,0)", null ), DELTA );
     }
     
     @Test
@@ -96,7 +106,7 @@ public class ExpressionUtilsTest
             "((d2:zing(4) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.25) + " +
             "((d2:zing(8) + d2:zing(0) + d2:zing(-1)) / d2:zpvc(2,0,-1) * 0.75)";
 
-        assertEquals( 3.5, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );        
+        assertEquals( 3.5, ExpressionUtils.evaluateToDouble( expression, null ), DELTA );
     }
 
     @Test
@@ -200,9 +210,9 @@ public class ExpressionUtilsTest
         assertTrue( ExpressionUtils.isValid( "average(2+1)", null ) );
         
         assertFalse( ExpressionUtils.isValid( "2 a 3", null ) );
-        assertFalse( ExpressionUtils.isValid( "v2 + 3", vars ) );
-        assertFalse( ExpressionUtils.isValid( "4 + abc", vars ) );
-        assertFalse( ExpressionUtils.isValid( "'goat' == goat", null ) );
+        assertFalse( ExpressionUtils.isValid( "4 b", vars ) );
+        assertFalse( ExpressionUtils.isValid( "4 + A", vars ) );
+        assertFalse( ExpressionUtils.isValid( "4 + someunkownvar", vars ) );
         assertFalse( ExpressionUtils.isValid( "aver(2+1)", null ) );
     }
 

@@ -62,7 +62,6 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
-import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,6 +80,8 @@ public class DefaultProgramIndicatorService
         put( DaysBetweenSqlFunction.KEY, new DaysBetweenSqlFunction() ).
         put( ConditionalSqlFunction.KEY, new ConditionalSqlFunction() ).build();
 
+    private static final String NULL_REPLACEMENT = "null";
+    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -252,7 +253,7 @@ public class DefaultProgramIndicatorService
                     
                     if ( dataValue == null )
                     {
-                        value = String.valueOf( ObjectUtils.firstNonNull( indicator.getMissingValueReplacement(), 0 ) );
+                        value = NULL_REPLACEMENT;
                     }
                     else
                     {
@@ -282,7 +283,7 @@ public class DefaultProgramIndicatorService
                     
                     if ( attributeValue == null )
                     {
-                        value = String.valueOf( ObjectUtils.firstNonNull( indicator.getMissingValueReplacement(), 0 ) );
+                        value = NULL_REPLACEMENT;
                     }
                     else
                     {

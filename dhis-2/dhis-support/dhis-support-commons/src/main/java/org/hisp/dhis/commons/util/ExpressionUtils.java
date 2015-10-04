@@ -47,6 +47,7 @@ import java.util.regex.Pattern;
 public class ExpressionUtils
 {
     private static final JexlEngine JEXL = new JexlEngine();
+    private static final JexlEngine JEXL_STRICT = new JexlEngine();
     
     private static final Map<String, String> EL_SQL_MAP = new HashMap<>();
     private static final String IGNORED_KEYWORDS_REGEX = 
@@ -62,7 +63,12 @@ public class ExpressionUtils
         JEXL.setFunctions( functions );
         JEXL.setCache( 512 );
         JEXL.setSilent( false );
-        JEXL.setStrict( true );
+        JEXL.setLenient( true ); // Lenient
+        
+        JEXL_STRICT.setFunctions( functions );
+        JEXL_STRICT.setCache( 512 );
+        JEXL_STRICT.setSilent( false );
+        JEXL_STRICT.setStrict( true ); // Strict
         
         EL_SQL_MAP.put( "&&", "and" );
         EL_SQL_MAP.put( "\\|\\|", "or" );
@@ -81,9 +87,22 @@ public class ExpressionUtils
      */
     public static Object evaluate( String expression, Map<String, Object> vars )
     {
+        return evaluate( expression, vars, false );
+    }
+
+    /**
+     * @param expression the expression.
+     * @param vars the variables, can be null.
+     * @param strict indicates whether to use strict or lenient engine mode.
+     * @return the result of the evaluation.
+     */
+    private static Object evaluate( String expression, Map<String, Object> vars, boolean strict )
+    {
         expression = expression.replaceAll( IGNORED_KEYWORDS_REGEX, StringUtils.EMPTY );
         
-        Expression exp = JEXL.createExpression( expression );
+        JexlEngine engine = strict ? JEXL_STRICT : JEXL;
+        
+        Expression exp = engine.createExpression( expression );
         
         JexlContext context = vars != null ? new MapContext( vars ) : new MapContext();
         
@@ -166,7 +185,7 @@ public class ExpressionUtils
     {
         try
         {
-            Object result = evaluate( expression, vars );
+            Object result = evaluate( expression, vars, true );
             
             return result != null;
         }
