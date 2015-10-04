@@ -856,6 +856,8 @@ public class TableAlteror
         executeSql( "alter table programstage drop column reportdatedescription" );
         executeSql( "update programstage set reportdatetouse = 'indicentDate' where reportdatetouse='dateOfIncident'" );
         
+        executeSql( "alter table programindicator drop column missingvaluereplacement" );
+        
         // Remove data mart
         executeSql( "drop table aggregateddatasetcompleteness" );
         executeSql( "drop table aggregateddatasetcompleteness_temp" );

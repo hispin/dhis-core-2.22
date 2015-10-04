@@ -141,13 +141,6 @@ public class AddProgramIndicatorAction
         this.displayInForm = displayInForm;
     }
     
-    private Integer missingValueReplacement;
-
-    public void setMissingValueReplacement( Integer missingValueReplacement )
-    {
-        this.missingValueReplacement = missingValueReplacement;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -169,7 +162,6 @@ public class AddProgramIndicatorAction
         indicator.setAggregationType( AggregationType.valueOf( aggregationType ) );
         indicator.setDecimals( decimals );
         indicator.setDisplayInForm( displayInForm );
-        indicator.setMissingValueReplacement( missingValueReplacement );
 
         programIndicatorService.addProgramIndicator( indicator );
 
