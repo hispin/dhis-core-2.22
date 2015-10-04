@@ -30,7 +30,7 @@ package org.hisp.dhis.webapi.controller.event;
 
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.DimensionService;
-import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
