@@ -62,7 +62,7 @@ import java.util.Date;
 import java.util.Set;
 
 import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensions;
-import static org.hisp.dhis.commons.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>

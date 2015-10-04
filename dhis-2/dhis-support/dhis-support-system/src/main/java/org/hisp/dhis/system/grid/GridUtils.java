@@ -75,7 +75,7 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.commons.collection.ListUtils;
-import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.commons.util.Encoder;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.system.util.DateUtils;

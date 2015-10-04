@@ -1,4 +1,4 @@
-package org.hisp.dhis.commons.util;
+package org.hisp.dhis.system.util;
 
 import java.util.Base64;
 

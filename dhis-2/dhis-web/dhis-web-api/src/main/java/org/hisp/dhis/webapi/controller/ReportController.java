@@ -31,7 +31,7 @@ package org.hisp.dhis.webapi.controller;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.j2ee.servlets.BaseHttpServlet;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
-import org.hisp.dhis.commons.util.CodecUtils;
+import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
-import static org.hisp.dhis.commons.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
