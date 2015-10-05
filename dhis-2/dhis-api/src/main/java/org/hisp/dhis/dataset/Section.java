@@ -56,11 +56,6 @@ import java.util.Set;
 public class Section
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -4657657995917502852L;
-
     private String description;
 
     private DataSet dataSet;

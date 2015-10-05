@@ -64,11 +64,6 @@ import java.util.List;
 public class DataElementGroupSet
     extends BaseDimensionalObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -2118690320625221749L;
-
     private Boolean compulsory = false;
 
     @Scanned

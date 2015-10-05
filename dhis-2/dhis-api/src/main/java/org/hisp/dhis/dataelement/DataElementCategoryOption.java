@@ -57,11 +57,6 @@ import java.util.Set;
 public class DataElementCategoryOption
     extends BaseNameableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -4479376547579688312L;
-
     public static final String DEFAULT_NAME = "default";
 
     private Date startDate;

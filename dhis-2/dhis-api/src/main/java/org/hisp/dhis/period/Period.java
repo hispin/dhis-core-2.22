@@ -54,11 +54,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class Period
     extends BaseNameableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -4445992494203466044L;
-
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
     /**

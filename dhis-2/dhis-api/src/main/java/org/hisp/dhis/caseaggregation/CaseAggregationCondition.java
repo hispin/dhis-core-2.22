@@ -40,8 +40,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 public class CaseAggregationCondition
     extends BaseNameableObject
 {
-    private static final long serialVersionUID = -5746649805915250424L;
-
     public static final String SEPARATOR_ID = "\\.";
 
     public static final String SEPARATOR_OBJECT = ":";

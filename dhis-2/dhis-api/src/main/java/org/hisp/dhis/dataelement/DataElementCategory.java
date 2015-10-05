@@ -63,11 +63,6 @@ import java.util.List;
 public class DataElementCategory
     extends BaseDimensionalObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 6797241235048185629L;
-
     public static final String DEFAULT_NAME = "default";
 
     private DataDimensionType dataDimensionType;

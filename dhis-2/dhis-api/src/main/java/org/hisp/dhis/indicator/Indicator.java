@@ -59,11 +59,6 @@ import java.util.Set;
 public class Indicator
     extends BaseNameableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -6551567526188061690L;
-
     private boolean annualized;
 
     /**

@@ -44,11 +44,6 @@ import org.hisp.dhis.common.view.ExportView;
 public class MetaDataFilter
     extends BaseNameableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 8736213901318412954L;
-
     private String jsonFilter;
 
     private Integer sortOrder;

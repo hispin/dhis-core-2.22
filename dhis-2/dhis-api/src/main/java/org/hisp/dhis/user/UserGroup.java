@@ -61,11 +61,6 @@ public class UserGroup
     public static final String AUTH_ADD_MEMBERS_TO_READ_ONLY_USER_GROUPS = "F_USER_GROUPS_READ_ONLY_ADD_MEMBERS";
 
     /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 347909584755616508L;
-
-    /**
      * Set of related users
      */
     @Scanned

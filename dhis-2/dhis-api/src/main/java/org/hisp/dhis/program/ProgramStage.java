@@ -64,11 +64,6 @@ import java.util.Set;
 public class ProgramStage
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 6876401001559656214L;
-
     private String description;
 
     private int minDaysFromStart;

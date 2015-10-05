@@ -47,11 +47,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class Constant
     extends BaseNameableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -8420671741149847205L;
-
     // -------------------------------------------------------------------------
     // Variables
     // -------------------------------------------------------------------------

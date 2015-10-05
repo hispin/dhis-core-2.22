@@ -64,11 +64,6 @@ import java.util.Set;
 public class OrganisationUnitGroupSet
     extends BaseDimensionalObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -221220579471558683L;
-
     private boolean compulsory;
 
     @Scanned

@@ -57,8 +57,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class Chart
     extends BaseChart
 {
-    private static final long serialVersionUID = 2570074075484545534L;
-
     private String series;
 
     private String category;

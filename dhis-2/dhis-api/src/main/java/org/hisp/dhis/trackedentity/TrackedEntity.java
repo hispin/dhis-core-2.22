@@ -51,8 +51,6 @@ import java.util.Set;
 public class TrackedEntity
     extends BaseNameableObject
 {
-    private static final long serialVersionUID = 3520485123419518620L;
-
     /**
      * Set of the dynamic attributes values that belong to this data element.
      */

@@ -51,11 +51,6 @@ import java.util.Set;
 public class Attribute
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 9085246849415991424L;
-
     private String valueType;
 
     private boolean dataElementAttribute;

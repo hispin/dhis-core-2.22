@@ -62,7 +62,7 @@ public class PipedImporter
         PipedOutputStream pipeOut ) throws IOException
     {
         this.dataValueSetService = dataValueSetService;
-        pipeIn = new PipedInputStream( pipeOut, PIPE_BUFFER_SIZE );
+        this.pipeIn = new PipedInputStream( pipeOut, PIPE_BUFFER_SIZE );
         this.importOptions = importOptions;
         this.authentication = SecurityContextHolder.getContext().getAuthentication();
     }
@@ -87,8 +87,7 @@ public class PipedImporter
         {
             IOUtils.closeQuietly( pipeIn );
         }
-        
-        
+                
         return result;
     }
 }

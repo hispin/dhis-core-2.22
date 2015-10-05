@@ -60,11 +60,6 @@ import java.util.List;
 public class IndicatorGroupSet
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 3051446168246358150L;
-
     private String description;
 
     private Boolean compulsory = false;

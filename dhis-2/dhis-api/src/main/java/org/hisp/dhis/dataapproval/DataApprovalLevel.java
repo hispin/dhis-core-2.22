@@ -52,8 +52,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class DataApprovalLevel
     extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = -8424400562969386167L;
-
     /**
      * The data approval level, 1=highest level, max=lowest level.
      */

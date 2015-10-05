@@ -46,11 +46,6 @@ public class BaseNameableObject
     implements NameableObject
 {
     /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 714136796552146362L;
-
-    /**
      * An short name representing this Object. Optional but unique.
      */
     protected String shortName;

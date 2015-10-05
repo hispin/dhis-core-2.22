@@ -50,8 +50,6 @@ import java.util.regex.Pattern;
 public class TrackedEntityInstanceReminder
     extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = 3101502417481903219L;
-
     public static final String ATTRIBUTE = "attributeid";
 
     public static final Pattern ATTRIBUTE_PATTERN = Pattern.compile( "\\{(" + ATTRIBUTE + ")=(\\w+)\\}" );
