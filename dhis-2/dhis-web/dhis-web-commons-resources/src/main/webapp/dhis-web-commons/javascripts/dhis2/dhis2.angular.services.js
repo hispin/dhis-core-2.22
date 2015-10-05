@@ -489,6 +489,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         var attMaxDate = trackedEntityFormAttributes[attId].allowFutureDate ? '' : 0;
 
                         var att = trackedEntityFormAttributes[attId];
+                        var isTrackerAssociate = att.valueType === 'TRACKER_ASSOCIATE';
 
                         if (att) {
 
@@ -496,8 +497,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     ' element-id="' + i + '"' +
                                     this.getAttributesAsString(attributes) +
                                     ' d2-focus-next-on-enter' +
-                                    ' ng-model="selectedTei.' + attId + '" ' +
-                                    ' ng-disabled="editingDisabled || isHidden(attributesById.' + attId + '.id)"' +
+                                    ' ng-model="selectedTei.' + attId + '" ' +                                    
+                                    ' ng-disabled="editingDisabled || isHidden(attributesById.' + attId + '.id) || ' + isTrackerAssociate + '"' +                                    
                                     ' d2-validation ' +
                                     ' ng-required=" ' + (att.mandatory || att.unique) + '" ';
 
@@ -514,13 +515,14 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             }
                             else {
                                 //check attribute type and generate corresponding angular input field
-                                if (att.valueType === "number") {
-                                    newInputField = '<input type="number" ' +
+                                if (att.valueType === "NUMBER" ) {
+                                    newInputField = '<input type="number" ' + 
                                             ' d2-number-validator ' +
+                                            ' number-type="' + att.valueType + '" ' +
                                             ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
-                                else if (att.valueType === "bool") {
+                                else if (att.valueType === "BOOLEAN") {
                                     newInputField = '<select ' +
                                             ' ng-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' > ' +
@@ -529,7 +531,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             ' <option value="true">{{\'yes\'| translate}}</option>' +
                                             '</select> ';
                                 }
-                                else if (att.valueType === "date") {
+                                else if (att.valueType === "DATE") {
                                     newInputField = '<input  type="text" ' +
                                             ' placeholder="{{dhis2CalendarFormat.keyDateFormat}}" ' +
                                             ' max-date="' + attMaxDate + '"' + '\'' +
@@ -537,15 +539,31 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                             ' blur-or-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
-                                else if (att.valueType === "trueOnly") {
+                                else if (att.valueType === "TRUE_ONLY") {
                                     newInputField = '<input type="checkbox" ' +
                                             ' ng-change="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
                                 }
-                                else if (att.valueType === "email") {
+                                else if (att.valueType === "EMAIL") {
                                     newInputField = '<input type="email" ' +
                                             ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >';
+                                }
+                                else if (att.valueType === "TRACKER_ASSOCIATE") {
+                                    newInputField = '<input type="text" ' +
+                                            ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
+                                            commonInputFieldProperty + ' >' + 
+                                            '<a href ng-class="{true: \'disable-clicks\', false: \'\'} [editingDisabled]" ng-click="getTrackerAssociate(attributesById.' + attId + ')" title="{{\'add\' | translate}} {{attributesById.' + attId + '.name}}" ' + 
+                                            '<i class="fa fa-external-link vertical-center"></i> ' + 
+                                            '</a> ' +
+                                            '<a href ng-class="{true: \'disable-clicks\', false: \'\'} [editingDisabled]" ng-click="selectedTei.' + attId + ' = null" title="{{\'remove\' | translate}} {{attributesById.' + attId + '.name}}" ' + 
+                                            '<i class="fa fa-trash-o vertical-center"></i> ' + 
+                                            '</a>';
+                                }
+                                else if (att.valueType === "LONG_TEXT") {
+                                    newInputField = '<textarea row ="3" ' +
+                                        ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
+                                        commonInputFieldProperty + ' >';
                                 }
                                 else {
                                     newInputField = '<input type="text" ' +
