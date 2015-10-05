@@ -383,14 +383,6 @@ public class Program
         this.incidentDateLabel = incidentDateLabel;
     }
 
-    //TODO remove
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getKind()
-    {
-        return programType.name();
-    }
-    
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
