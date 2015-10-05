@@ -359,7 +359,7 @@ public class AccountController
                 throw new WebMessageException( WebMessageUtils.badRequest( "Unable to create invited user account" ) );
             }
 
-            User user = credentials.getUser();
+            User user = credentials.getUserInfo();
             user.setFirstName( firstName );
             user.setSurname( surname );
             user.setEmail( email );
@@ -399,7 +399,7 @@ public class AccountController
             credentials.setUsername( username );
             userService.encodeAndSetPassword( credentials, password );
             credentials.setSelfRegistered( true );
-            credentials.setUser( user );
+            credentials.setUserInfo( user );
             credentials.getUserAuthorityGroups().add( userRole );
 
             user.setUserCredentials( credentials );

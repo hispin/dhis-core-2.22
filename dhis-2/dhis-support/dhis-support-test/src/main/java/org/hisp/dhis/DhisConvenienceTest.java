@@ -1129,7 +1129,7 @@ public abstract class DhisConvenienceTest
         credentials.setName( "UserCredentials" + uniqueCharacter );
         credentials.setUsername( "Username" + uniqueCharacter );
         credentials.setPassword( "Password" + uniqueCharacter );
-        credentials.setUser( user );
+        credentials.setUserInfo( user );
         user.setUserCredentials( credentials );
 
         return credentials;
@@ -1636,7 +1636,7 @@ public abstract class DhisConvenienceTest
 
         user.getUserCredentials().getUserAuthorityGroups().add( userAuthorityGroup );
         userService.addUser( user );
-        user.getUserCredentials().setUser( user );
+        user.getUserCredentials().setUserInfo( user );
         userService.addUserCredentials( user.getUserCredentials() );
 
         List<GrantedAuthority> authorities = new ArrayList<>();

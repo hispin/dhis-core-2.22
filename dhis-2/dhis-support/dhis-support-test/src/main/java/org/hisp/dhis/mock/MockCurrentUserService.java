@@ -76,7 +76,7 @@ public class MockCurrentUserService
         user.setOrganisationUnits( organisationUnits );
         user.setDataViewOrganisationUnits( dataViewOrganisationUnits );
         user.setUserCredentials( credentials );
-        credentials.setUser( user );
+        credentials.setUserInfo( user );
         
         this.currentUser = user;
     }

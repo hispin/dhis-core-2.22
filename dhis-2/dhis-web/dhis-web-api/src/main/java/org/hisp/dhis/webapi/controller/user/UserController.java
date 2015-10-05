@@ -342,7 +342,7 @@ public class UserController
         userService.encodeAndSetPassword( credentialsReplica, password );
 
         userReplica.setUserCredentials( credentialsReplica );
-        credentialsReplica.setUser( userReplica );
+        credentialsReplica.setUserInfo( userReplica );
 
         userService.addUser( userReplica );
         userService.addUserCredentials( credentialsReplica );
@@ -512,7 +512,7 @@ public class UserController
             throw new WebMessageException( WebMessageUtils.conflict( "User credentials is not present" ) );
         }
 
-        credentials.setUser( user );
+        credentials.setUserInfo( user );
 
         List<UserAuthorityGroup> userRoles = userService.getUserRolesByUid( getUids( credentials.getUserAuthorityGroups() ) );
 

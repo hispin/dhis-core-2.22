@@ -66,7 +66,7 @@ public class SecurityServiceTest
         User userA = createUser( 'A' );
         userA.setEmail( "validA@email.com" );
         userA.setUserCredentials( credentials );
-        credentials.setUser( userA );
+        credentials.setUserInfo( userA );
         userService.addUserCredentials( credentials );
 
         otherCredentials = new UserCredentials();
@@ -76,7 +76,7 @@ public class SecurityServiceTest
         User userB = createUser( 'B' );
         userB.setEmail( "validB@email.com" );
         userB.setUserCredentials( otherCredentials );
-        otherCredentials.setUser( userB );
+        otherCredentials.setUserInfo( userB );
         userService.addUserCredentials( otherCredentials );
     }
 

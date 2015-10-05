@@ -127,7 +127,7 @@ public class IsInviteTokenValidAction
             return ERROR;
         }
 
-        email = userCredentials.getUser().getEmail();
+        email = userCredentials.getUserInfo().getEmail();
 
         RestoreOptions restoreOptions = securityService.getRestoreOptions( token );
 

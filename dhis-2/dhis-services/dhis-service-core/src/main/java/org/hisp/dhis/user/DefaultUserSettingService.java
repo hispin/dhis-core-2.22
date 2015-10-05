@@ -171,7 +171,7 @@ public class DefaultUserSettingService
         
         if ( credentials != null )
         {        
-            save( name, value, credentials.getUser() );
+            save( name, value, credentials.getUserInfo() );
         }
     }
 
@@ -215,7 +215,7 @@ public class DefaultUserSettingService
     {
         UserCredentials credentials = userService.getUserCredentialsByUsername( username );
         
-        return getUserSetting( name, credentials == null ? null : credentials.getUser() );
+        return getUserSetting( name, credentials == null ? null : credentials.getUserInfo() );
     }
 
     private Serializable getUserSetting( String name, User currentUser ) 

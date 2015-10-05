@@ -186,9 +186,9 @@ public class UserAuthorityGroup
 
         for ( UserCredentials userCredentials : members )
         {
-            if ( userCredentials.getUser() != null )
+            if ( userCredentials.getUserInfo() != null )
             {
-                users.add( userCredentials.getUser() );
+                users.add( userCredentials.getUserInfo() );
             }
         }
 
