@@ -28,23 +28,22 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.common.ImportableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.regex.Pattern;
 
 /**
  * @author Kristian Nordal
  * @version $Id: DataValue.java 4638 2008-02-25 10:06:47Z larshelg $
  */
 public class DataValue
-    implements Serializable, ImportableObject
+    implements Serializable
 {
     /**
      * Determines if a de-serialized file is compatible with this class.
@@ -142,16 +141,6 @@ public class DataValue
         this.created = new Date();
         this.lastUpdated = lastUpdated;
         this.comment = comment;
-    }
-
-    // -------------------------------------------------------------------------
-    // Dimension
-    // -------------------------------------------------------------------------
-
-    @Override
-    public String getName()
-    {
-        throw new UnsupportedOperationException();
     }
 
     // -------------------------------------------------------------------------

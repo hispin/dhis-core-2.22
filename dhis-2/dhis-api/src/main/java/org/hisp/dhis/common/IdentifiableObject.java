@@ -39,7 +39,7 @@ import java.util.Set;
  * @author Lars Helge Overland
  */
 public interface IdentifiableObject
-    extends ImportableObject, LinkableObject, Comparable<IdentifiableObject>, Mergeable<IdentifiableObject>
+    extends LinkableObject, Comparable<IdentifiableObject>, Mergeable<IdentifiableObject>
 {
     String[] I18N_PROPERTIES = { "name" };
 
@@ -47,7 +47,6 @@ public interface IdentifiableObject
 
     String getUid();
 
-    @Override
     String getName();
 
     String getDisplayName();
