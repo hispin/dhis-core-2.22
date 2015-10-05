@@ -13,9 +13,6 @@
     #if( $auth.hasAccess( "dhis-web-importexport", "displayEventImportForm" ) )
     #introListImgItem( "displayEventImportForm.action" "event_import" "import" )
     #end
-    #if( $auth.hasAccess( "dhis-web-importexport", "displayExternalImportMenu" ) )
-    #introListImgItem( "displayExternalImportMenu.action" "dhis14_import" "import" )
-    #end
     #if( $auth.hasAccess( "dhis-web-importexport", "dxf2MetaDataExport" ) )
     #introListImgItem( "dxf2MetaDataExport.action" "metadata_export" "export" )
     #end
@@ -27,8 +24,5 @@
     #end
     #if( $auth.hasAccess( "dhis-web-importexport", "displayEventExportForm" ) )
     #introListImgItem( "displayEventExportForm.action" "event_export" "export" )
-    #end
-    #if( $auth.hasAccess( "dhis-web-importexport", "displayExternalExportMenu" ) )
-    #introListImgItem( "displayExternalExportMenu.action" "export_to_other_systems" "export" )
     #end
 </ul>

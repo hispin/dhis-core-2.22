@@ -118,16 +118,6 @@ public class DataElementBatchHandlerTest
     }
 
     @Test
-    public void testGetObjectIdentifier()
-    {
-        int referenceId = dataElementService.addDataElement( dataElementA );
-
-        int retrievedId = batchHandler.getObjectIdentifier( "DataElementA" );
-
-        assertEquals( referenceId, retrievedId );
-    }
-
-    @Test
     public void testObjectExists()
     {
         dataElementService.addDataElement( dataElementA );
