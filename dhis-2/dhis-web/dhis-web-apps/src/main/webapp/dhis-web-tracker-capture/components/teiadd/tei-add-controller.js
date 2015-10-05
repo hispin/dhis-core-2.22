@@ -562,11 +562,8 @@ trackerCapture.controller('TEIAddController',
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
         $scope.selectedProgramForRelative = $scope.programs[0];
         AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
-            $scope.attributes = atts;
-            
+            $scope.attributes = atts;            
             assignInheritance();
-            
-            console.log('the tei:  ', $scope.selectedTei);
             getRules();
         });
     }

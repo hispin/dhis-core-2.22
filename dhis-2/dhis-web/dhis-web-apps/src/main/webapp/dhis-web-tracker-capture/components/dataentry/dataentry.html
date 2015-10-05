@@ -67,6 +67,9 @@
                                 </span>
                                 <event-paginator ng-if="stage.id === currentEvent.programStage"></event-paginator>                             
                             </span>
+                            <div ng-if="!eventsByStage[stage.id] || eventsByStage[stage.id].length < 1">
+                                <div class="alert alert-warning">{{'empty_event_list'| translate}}</div> 
+                            </div>
                         </td>                        
                     </tr>
                 </tbody>                

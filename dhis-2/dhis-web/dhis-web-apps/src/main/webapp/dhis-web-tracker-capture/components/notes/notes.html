@@ -34,8 +34,7 @@
                             ng-click="clearNote()">
                         {{'clear'| translate}}
                     </button>
-                </div>
-                <div ng-show="!selectedEnrollment.notes" class="alert alert-warning">{{'empty_notes'| translate}}</div> 
+                </div>                
                 <table class="table table-striped dhis2-table-hover">
                     <tr ng-repeat="note in selectedEnrollment.notes| filter:noteSearchText">
                         <td>
@@ -52,6 +51,7 @@
                     </tr>
                 </table>
             </div>
+            <div ng-show="selectedEnrollment && !selectedEnrollment.notes" class="alert alert-warning">{{'empty_notes'| translate}}</div> 
         </div>
         <div ng-show="showMessagingDiv">
             <div class="alert alert-warning">{{'under_construction'| translate}}</div> 

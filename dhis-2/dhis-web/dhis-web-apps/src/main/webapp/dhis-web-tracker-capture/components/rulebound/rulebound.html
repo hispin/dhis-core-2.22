@@ -8,8 +8,8 @@
             </a>
             <a class="small-horizonal-spacing" href ng-click="removeWidget(this.widget)" title="{{removeLabel}}"><i class="fa fa-times-circle"></i></a>            
         </span>        
-    </div>    
-    <div ng-show="this.widget.expand" class="dashboard-element-container">
+    </div>        
+    <div ng-show="this.widget.expand" class="panel-body dashboard-widget-container">        
         <div class="panel-body" ng-if="showKeyDataSection">
             <div ng-repeat="(key,item) in displayKeyDataEffects" ng-show="item.ineffect"  class="info-container">
                 <div class="info-container-heading">{{item.content | trimquotes }}</div>
@@ -25,5 +25,6 @@
                 </td>
             </tr>
         </table>
+        <div ng-show="!showKeyDataSection && !showTextSection" class="alert alert-warning">{{widgetTitleLabel === "Indicators" ? emptyIndicatorListLabel : emptyFeedbackListLabel}}</div> 
     </div>
 </div>
