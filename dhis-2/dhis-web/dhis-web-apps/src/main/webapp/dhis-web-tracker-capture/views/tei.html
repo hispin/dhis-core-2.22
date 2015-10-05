@@ -30,9 +30,9 @@
                     <tbody id="list">
                         <tr ng-if="!addingTeiAssociate"
                             ng-repeat="trackedEntity in trackedEntityList.rows | orderBy:d2Sort:reverse" 
-                            ng-click="selectedTei.trackedEntityInstance ? assignRelationship(trackedEntity) : showDashboard(trackedEntity)"
+                            ng-click="mainTei.trackedEntityInstance ? assignRelationship(trackedEntity) : showDashboard(trackedEntity)"
                             ng-class="{true: 'inactive-tei'} [trackedEntity.inactive]"
-                            title="{{selectedTei.trackedEntityInstance ? 'select' : 'go_to_dashboard'| translate}}">
+                            title="{{mainTei.trackedEntityInstance ? 'select' : 'go_to_dashboard'| translate}}">
                             <td ng-repeat="gridColumn in gridColumns| filter:{show: true}">
                                 <span ng-switch="gridColumn.valueType">
                                     <span ng-switch-when="bool">

@@ -67,19 +67,22 @@ trackerCapture.controller('RegistrationController',
     });
 
     //watch for selection of program
-    $scope.$watch('selectedProgram', function() {        
-        $scope.trackedEntityForm = null;
-        $scope.customForm = null;        
-        $scope.allProgramRules = {constants: [], programIndicators: {}, programValidations: [], programVariables: [], programRules: []};
-        if( angular.isObject($scope.selectedProgram) && $scope.selectedProgram.id ){
-            TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-                $scope.allProgramRules = rules;
-            });
-        }
-        
-        if($scope.registrationMode === 'REGISTRATION'){
-            $scope.getAttributes($scope.registrationMode);
-        }        
+    $scope.$watch('selectedProgram', function(newValue, oldValue) {
+        if( newValue !== oldValue )
+        {
+            $scope.trackedEntityForm = null;
+            $scope.customForm = null;        
+            $scope.allProgramRules = {constants: [], programIndicators: {}, programValidations: [], programVariables: [], programRules: []};
+            if( angular.isObject($scope.selectedProgram) && $scope.selectedProgram.id ){
+                TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                    $scope.allProgramRules = rules;
+                });
+            }
+
+            if($scope.registrationMode === 'REGISTRATION'){
+                $scope.getAttributes($scope.registrationMode);
+            }
+        }                
     }); 
     
     //listen to modes of registration
@@ -97,7 +100,7 @@ trackerCapture.controller('RegistrationController',
         if($scope.registrationMode === 'PROFILE'){
             $scope.selectedEnrollment = args.enrollment;
         }
-        
+
         $scope.getAttributes($scope.registrationMode);
     });
         
