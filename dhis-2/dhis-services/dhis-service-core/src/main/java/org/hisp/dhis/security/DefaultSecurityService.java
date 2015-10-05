@@ -163,13 +163,13 @@ public class DefaultSecurityService
             return "email_not_configured_for_system";
         }
 
-        if ( credentials == null || credentials.getUser() == null )
+        if ( credentials == null || credentials.getUserInfo() == null )
         {
             log.warn( "Could not send restore/invite message as user is null: " + credentials );
             return "no_user_credentials";
         }
 
-        if ( credentials.getUser().getEmail() == null || !ValidationUtils.emailIsValid( credentials.getUser().getEmail() ) )
+        if ( credentials.getUserInfo().getEmail() == null || !ValidationUtils.emailIsValid( credentials.getUserInfo().getEmail() ) )
         {
             log.warn( "Could not send restore/invite message as user has no email or email is invalid" );
             return "user_does_not_have_valid_email";
@@ -227,7 +227,7 @@ public class DefaultSecurityService
         String[] result = initRestore( credentials, restoreOptions );
 
         Set<User> users = new HashSet<>();
-        users.add( credentials.getUser() );
+        users.add( credentials.getUserInfo() );
 
         Map<String, Object> vars = new HashMap<>();
         vars.put( "applicationTitle", applicationTitle );
@@ -236,7 +236,7 @@ public class DefaultSecurityService
         vars.put( "code", result[1] );
         vars.put( "username", credentials.getUsername() );
 
-        User user = credentials.getUser();
+        User user = credentials.getUserInfo();
         Locale locale = (Locale) userSettingService.getUserSettingValue( user, UserSettingService.KEY_UI_LOCALE, LocaleManager.DHIS_STANDARD_LOCALE );
 
         I18n i18n = i18nManager.getI18n( locale );

@@ -401,7 +401,7 @@ public class DataApprovalController
 
             User user = dataApprovalStateRequest.getAb() == null ?
                 currentUserService.getCurrentUser() :
-                userService.getUserCredentialsByUsername( dataApprovalStateRequest.getAb() ).getUser();
+                userService.getUserCredentialsByUsername( dataApprovalStateRequest.getAb() ).getUserInfo();
 
             Date approvalDate = dataApprovalStateRequest.getAd() == null ? new Date() : dataApprovalStateRequest.getAd();
 
@@ -522,7 +522,7 @@ public class DataApprovalController
             }
 
             User user = dataApprovalStateRequest.getAb() == null ?
-                currentUserService.getCurrentUser() : userService.getUserCredentialsByUsername( dataApprovalStateRequest.getAb() ).getUser();
+                currentUserService.getCurrentUser() : userService.getUserCredentialsByUsername( dataApprovalStateRequest.getAb() ).getUserInfo();
 
             Date approvalDate = (dataApprovalStateRequest.getAd() == null) ? new Date() : dataApprovalStateRequest.getAd();
 

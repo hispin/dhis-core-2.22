@@ -96,7 +96,7 @@ public class DefaultCurrentUserService
             return null;
         }
 
-        return userCredentials.getUser();
+        return userCredentials.getUserInfo();
     }
 
     @Override

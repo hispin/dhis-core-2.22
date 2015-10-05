@@ -141,7 +141,7 @@ public class UnregisteredSMSListener
                     UserCredentials usercredential = new UserCredentials();
                     usercredential.setUsername( USER_NAME );
                     usercredential.setPassword( USER_NAME );
-                    usercredential.setUser( user );
+                    usercredential.setUserInfo( user );
                     user.setSurname( USER_NAME );
                     user.setFirstName( USER_NAME );
                     user.setUserCredentials( usercredential );
@@ -152,7 +152,7 @@ public class UnregisteredSMSListener
                 }
 
                 // forward to user group by SMS, E-mail, DHIS conversation
-                messageService.sendMessage( smsCommand.getName(), message, null, receivers, anonymousUser.getUser(),
+                messageService.sendMessage( smsCommand.getName(), message, null, receivers, anonymousUser.getUserInfo(),
                     false, false );
 
                 // confirm SMS was received and forwarded completely

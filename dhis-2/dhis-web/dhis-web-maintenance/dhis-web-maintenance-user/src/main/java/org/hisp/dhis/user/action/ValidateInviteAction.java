@@ -95,7 +95,7 @@ public class ValidateInviteAction
         UserCredentials credentials = new UserCredentials();
         User user = new User();
 
-        credentials.setUser( user );
+        credentials.setUserInfo( user );
         user.setUserCredentials( credentials );
 
         user.setEmail( email );

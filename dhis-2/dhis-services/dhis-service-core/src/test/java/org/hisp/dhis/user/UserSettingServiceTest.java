@@ -59,7 +59,7 @@ public class UserSettingServiceTest
         testUser = createUser( 'D' );
         userService.addUser( testUser );
         UserCredentials userCredentials = testUser.getUserCredentials();
-        userCredentials.setUser( testUser );
+        userCredentials.setUserInfo( testUser );
         userService.addUserCredentials( userCredentials );
     }
 
@@ -67,7 +67,7 @@ public class UserSettingServiceTest
     public void testShouldGetUserSettings()
     {
         UserCredentials userCredentials = testUser.getUserCredentials();
-        userCredentials.setUser( testUser );
+        userCredentials.setUserInfo( testUser );
         userService.addUserCredentials( userCredentials );
         userSettingService.saveUserSetting( "mykey", "value", "username" );
         Serializable preference = userSettingService.getUserSetting( "mykey", "username" );

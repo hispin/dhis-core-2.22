@@ -339,7 +339,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
         if ( object instanceof User && !options.isDryRun() )
         {
-            userCredentials.setUser( (User) object );
+            userCredentials.setUserInfo( (User) object );
             userCredentials.setId( object.getId() );
 
             if ( userCredentials.getPassword() != null )

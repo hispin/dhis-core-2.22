@@ -91,7 +91,7 @@ public class GetUserAction
         {
             UserCredentials credentials = userService.getUserCredentialsByUsername( username );
             
-            user = credentials != null ? credentials.getUser() : null;
+            user = credentials != null ? credentials.getUserInfo() : null;
         }
         return SUCCESS;
     }

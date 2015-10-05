@@ -71,7 +71,7 @@ public class DatabaseAutomaticAccessProvider
 
         UserCredentials userCredentials = new UserCredentials();
         userCredentials.setUsername( username );
-        userCredentials.setUser( user );
+        userCredentials.setUserInfo( user );
         userCredentials.getUserAuthorityGroups().add( userAuthorityGroup );
 
         userService.encodeAndSetPassword( userCredentials, password );

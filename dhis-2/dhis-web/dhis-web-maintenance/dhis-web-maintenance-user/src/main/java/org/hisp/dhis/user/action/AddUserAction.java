@@ -289,7 +289,7 @@ public class AddUserAction
         UserCredentials userCredentials = new UserCredentials();
         User user = new User();
 
-        userCredentials.setUser( user );
+        userCredentials.setUserInfo( user );
         user.setUserCredentials( userCredentials );
 
         userCredentials.setUsername( StringUtils.trimToNull( username ) );
