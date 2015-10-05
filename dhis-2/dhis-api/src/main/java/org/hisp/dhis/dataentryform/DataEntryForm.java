@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 
 import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.ImportableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
@@ -47,7 +46,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  */
 @JacksonXmlRootElement(localName = "dataEntryForm", namespace = DxfNamespaces.DXF_2_0)
 public class DataEntryForm
-    implements Serializable, ImportableObject
+    implements Serializable
 {
     public static final int CURRENT_FORMAT = 2;
 
@@ -176,7 +175,6 @@ public class DataEntryForm
         this.id = id;
     }
 
-    @Override
     @JsonProperty
     @JsonView({ DetailedView.class, ExportView.class })
     @JacksonXmlProperty(namespace = DxfNamespaces.DXF_2_0)

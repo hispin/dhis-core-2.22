@@ -30,8 +30,6 @@
     <!-- Level 4 -->
     <module>dhis-service-eventreporting</module>
     <module>dhis-service-reporting</module>
-    <!-- Level 5 -->
-    <module>dhis-service-importexport</module>
   </modules>
   
   <dependencies>

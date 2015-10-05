@@ -33,7 +33,6 @@ import java.util.Date;
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.common.ImportableObject;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
@@ -49,7 +48,7 @@ import com.google.common.base.MoreObjects;
  */
 @JacksonXmlRootElement( localName = "completeDataSetRegistration", namespace = DxfNamespaces.DXF_2_0 )
 public class CompleteDataSetRegistration
-    implements ImportableObject, Serializable
+    implements Serializable
 {
     /**
      * Determines if a de-serialized file is compatible with this class.
@@ -177,12 +176,6 @@ public class CompleteDataSetRegistration
         }
 
         return true;
-    }
-
-    @Override
-    public String getName()
-    {
-        throw new UnsupportedOperationException();
     }
 
     // -------------------------------------------------------------------------

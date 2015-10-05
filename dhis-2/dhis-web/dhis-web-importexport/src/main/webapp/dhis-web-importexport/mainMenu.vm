@@ -14,9 +14,6 @@
   #if( $auth.hasAccess( "dhis-web-importexport", "displayEventImportForm" ) )
   <li><a href="displayEventImportForm.action">$i18n.getString( "event_import" )&nbsp;</a></li>
   #end
-  #if( $auth.hasAccess( "dhis-web-importexport", "displayExternalImportMenu" ) )
-  <li><a href="displayExternalImportMenu.action">$i18n.getString( "import_from_other_systems" )&nbsp;</a></li>
-  #end
 </ul>
 
 <h2>$i18n.getString( "export" )&nbsp;</h2>
@@ -33,8 +30,5 @@
   #end
   #if( $auth.hasAccess( "dhis-web-importexport", "displayEventExportForm" ) )
   <li><a href="displayEventExportForm.action">$i18n.getString( "event_export" )&nbsp;</a></li>
-  #end
-  #if( $auth.hasAccess( "dhis-web-importexport", "displayExternalExportMenu" ) )
-  <li><a href="displayExternalExportMenu.action">$i18n.getString( "export_to_other_systems" )&nbsp;</a></li>
   #end
 </ul>

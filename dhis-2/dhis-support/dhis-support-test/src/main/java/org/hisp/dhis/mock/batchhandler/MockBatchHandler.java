@@ -86,7 +86,6 @@ public class MockBatchHandler<T>
         return false;
     }
 
-    @Override
     public int getObjectIdentifier( Object object )
     {
         return 0;
