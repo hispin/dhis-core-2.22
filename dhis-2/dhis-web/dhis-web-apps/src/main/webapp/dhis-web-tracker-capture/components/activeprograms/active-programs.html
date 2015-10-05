@@ -9,9 +9,9 @@
             <a class="small-horizonal-spacing" href ng-click="removeWidget(activeProgramsWidget)" title="{{removeLabel}}"><i class="fa fa-times-circle"></i></a>            
         </span>        
     </div>    
-    <div ng-show="activeProgramsWidget.expand && activeEnrollments.length > 0" class="panel-body dashboard-element-container">
-        
-        <div class="row">
+    <div ng-show="activeProgramsWidget.expand" class="panel-body dashboard-widget-container">        
+        <div ng-show="activeEnrollments.length === 0" class="alert alert-warning">{{emptyActiveProgramLabel}}</div> 
+        <div class="row" ng-if="activeEnrollments.length > 0">
             <table class="table table-striped dhis2-table-hover">
                 <tr ng-repeat="activeEnrollment in activeEnrollments" ng-click="changeProgram(activeEnrollment.program)">
                     <td>
