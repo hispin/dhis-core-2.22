@@ -52,6 +52,7 @@ public class ExpressionUtilsTest
         assertEquals( 3.45, ExpressionUtils.evaluateToDouble( "3.45", null ), DELTA );
         assertEquals( 5d, ExpressionUtils.evaluateToDouble( "2 + 3", null ), DELTA );
         assertEquals( 2d, ExpressionUtils.evaluateToDouble( "5 + -3", null ), DELTA );
+        assertEquals( 1d, ExpressionUtils.evaluateToDouble( "2 + 3 + -4", null ), DELTA );
         assertEquals( 15.6, ExpressionUtils.evaluateToDouble( "12.4 + 3.2", null ), DELTA );
         assertEquals( 2.0, ExpressionUtils.evaluateToDouble( "2 > 1 ? 2.0 : 1.0", null ), DELTA );
         assertEquals( 1.0, ExpressionUtils.evaluateToDouble( "2 > 4 ? 2.0 : 1.0", null ), DELTA );

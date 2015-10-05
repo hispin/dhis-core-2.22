@@ -56,7 +56,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnitHierarchy;
 import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
 import org.hisp.dhis.organisationunit.OrganisationUnitStore;
 import org.hisp.dhis.system.objectmapper.OrganisationUnitRelationshipRowMapper;
-import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.security.access.AccessDeniedException;
@@ -69,9 +68,6 @@ public class HibernateOrganisationUnitStore
     implements OrganisationUnitStore
 {
     private static final Log log = LogFactory.getLog( HibernateOrganisationUnitStore.class );
-
-    @Autowired
-    private CurrentUserService currentUserService;
 
     @Autowired
     private DbmsManager dbmsManager;
