@@ -53,8 +53,6 @@ import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.expression.Expression;
 import org.hisp.dhis.expression.Operator;
 import org.hisp.dhis.external.location.LocationManager;
-import org.hisp.dhis.importexport.ImportDataValue;
-import org.hisp.dhis.importexport.ImportObjectStatus;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
@@ -1028,32 +1026,6 @@ public abstract class DhisConvenienceTest
         expression.setDataElementsInExpression( dataElementsInExpression );
 
         return expression;
-    }
-
-    /**
-     * @param dataElementId         The data element identifier.
-     * @param categoryOptionComboId The data element category option combo
-     *                              identifier.
-     * @param periodId              The period identifier.
-     * @param sourceId              The source identifier.
-     * @param status                The status.
-     */
-    public static ImportDataValue createImportDataValue( int dataElementId, int categoryOptionComboId, int periodId,
-        int sourceId, ImportObjectStatus status )
-    {
-        ImportDataValue importDataValue = new ImportDataValue();
-
-        importDataValue.setDataElementId( dataElementId );
-        importDataValue.setCategoryOptionComboId( categoryOptionComboId );
-        importDataValue.setPeriodId( periodId );
-        importDataValue.setSourceId( sourceId );
-        importDataValue.setValue( String.valueOf( 10 ) );
-        importDataValue.setStoredBy( "StoredBy" );
-        importDataValue.setTimestamp( new Date() );
-        importDataValue.setComment( "Comment" );
-        importDataValue.setStatus( status.name() );
-
-        return importDataValue;
     }
 
     public static Legend createLegend( char uniqueCharacter, Double startValue, Double endValue )
