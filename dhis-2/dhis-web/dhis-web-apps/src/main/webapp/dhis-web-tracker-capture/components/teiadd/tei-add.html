@@ -15,7 +15,7 @@
 
     <div class="row" ng-if="relationship.selected || !addingRelationship">
         <hr>
-        <div class="col-md-4" ng-if="addingRelationship">
+        <div class="col-md-3" ng-if="addingRelationship">
             <select name="foo" 
                     ng-model="selectedRelationship.aIsToB" 
                     class="form-control" 
@@ -38,7 +38,7 @@
             </div>
         </div>
         
-        <div ng-class="{true: 'col-md-8 pull-right', false: 'col-sm-12'} [addingRelationship]">
+        <div ng-class="{true: 'col-md-9 pull-right', false: 'col-sm-12'} [addingRelationship]">
             
             <div ng-if="addingRelationship">
                 <select name="foo" 
