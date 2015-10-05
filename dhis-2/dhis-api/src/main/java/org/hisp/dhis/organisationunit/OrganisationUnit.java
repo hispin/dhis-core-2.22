@@ -80,8 +80,6 @@ import com.google.common.collect.Sets;
 public class OrganisationUnit
     extends BaseNameableObject
 {
-    private static final long serialVersionUID = 1228298379303894619L;
-
     private static final String PATH_SEP = "/";
     private static final Joiner PATH_JOINER = Joiner.on( PATH_SEP );
 

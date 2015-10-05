@@ -47,11 +47,6 @@ import org.hisp.dhis.schema.annotation.PropertyRange;
 public class RelationshipType
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -8788979454816878770L;
-
     private String aIsToB;
 
     private String bIsToA;

@@ -37,8 +37,6 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 
 public class OutboundSms extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = 1L;
-
     public static final String DHIS_SYSTEM_SENDER = "DHIS-System";
 
     private String sender;

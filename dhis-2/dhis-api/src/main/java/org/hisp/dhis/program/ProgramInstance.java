@@ -59,11 +59,6 @@ import java.util.Set;
 public class ProgramInstance
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -1235315582356509653L;
-
     private ProgramStatus status = ProgramStatus.ACTIVE;
 
     private OrganisationUnit organisationUnit;

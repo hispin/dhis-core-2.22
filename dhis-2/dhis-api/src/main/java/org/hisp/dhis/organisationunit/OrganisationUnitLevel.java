@@ -48,11 +48,6 @@ import org.hisp.dhis.schema.annotation.PropertyRange;
 public class OrganisationUnitLevel
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 1599124366660090489L;
-
     private int level;
     
     private Integer offlineLevels;

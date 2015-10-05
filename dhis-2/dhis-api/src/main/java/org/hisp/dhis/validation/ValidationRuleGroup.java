@@ -54,11 +54,6 @@ import java.util.Set;
 public class ValidationRuleGroup
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 436511421834390504L;
-
     private String description;
 
     @Scanned

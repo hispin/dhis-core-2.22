@@ -52,8 +52,6 @@ import java.util.List;
 public class ProgramStageSection
     extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = 3141607927546197116L;
-
     private ProgramStage programStage;
 
     @Scanned

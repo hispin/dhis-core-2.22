@@ -53,11 +53,6 @@ import java.util.List;
 public class TrackedEntityAttributeGroup
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -7084277284999239111L;
-
     private String description;
 
     private Integer sortOrder;

@@ -47,11 +47,6 @@ import java.util.List;
 public class ProgramStageInstance
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 6239130884678145713L;
-
     private ProgramInstance programInstance;
 
     private ProgramStage programStage;

@@ -54,11 +54,6 @@ import java.util.Set;
 public class OrganisationUnitGroup
     extends BaseNameableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -1131637847640209166L;
-
     private String symbol;
 
     @Scanned

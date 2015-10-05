@@ -40,8 +40,16 @@ import java.util.Set;
  */
 public interface ObjectBridge
 {
+    /**
+     * Initialize bridge.
+     * 
+     * @param preheatClasses the classes to preheat.
+     */
     void init( Set<Class> preheatClasses );
 
+    /**
+     * Destroy bridge.
+     */
     void destroy();
 
     /**

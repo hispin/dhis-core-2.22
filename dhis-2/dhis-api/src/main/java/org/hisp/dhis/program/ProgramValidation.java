@@ -49,10 +49,6 @@ public class ProgramValidation
     extends BaseIdentifiableObject
 {
     public static final String SEPARATOR_OBJECT = ":";
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 4785165717118297802L;
 
     public static String OBJECT_PROGRAM_STAGE_DATAELEMENT = "DE";
 

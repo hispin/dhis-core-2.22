@@ -70,8 +70,6 @@ public class Program
     extends BaseIdentifiableObject
     implements VersionedObject
 {
-    private static final long serialVersionUID = -2807997671779497354L;
-   
     private String description;
 
     private int version;

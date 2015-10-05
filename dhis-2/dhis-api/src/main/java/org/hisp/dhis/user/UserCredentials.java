@@ -65,11 +65,6 @@ public class UserCredentials
     extends BaseIdentifiableObject
 {
     /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -8919501679702302098L;
-
-    /**
      * Required and unique.
      */
     private User userInfo;

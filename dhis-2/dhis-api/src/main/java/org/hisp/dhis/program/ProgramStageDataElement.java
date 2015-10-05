@@ -48,11 +48,6 @@ import org.hisp.dhis.dataelement.DataElement;
 public class ProgramStageDataElement
     extends BaseIdentifiableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = -5670110591005778814L;
-
     private ProgramStage programStage;
 
     private DataElement dataElement;

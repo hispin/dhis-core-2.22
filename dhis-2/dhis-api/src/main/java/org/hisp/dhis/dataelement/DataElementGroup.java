@@ -57,11 +57,6 @@ import java.util.Set;
 public class DataElementGroup
     extends BaseNameableObject
 {
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 6101685842665568056L;
-
     @Scanned
     private Set<DataElement> members = new HashSet<>();
 
