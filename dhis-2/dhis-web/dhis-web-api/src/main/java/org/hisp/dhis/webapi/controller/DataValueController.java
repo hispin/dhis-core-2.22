@@ -72,6 +72,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -538,7 +539,7 @@ public class DataValueController
         @RequestParam( required = false ) String cc,
         @RequestParam( required = false ) String cp,
         @RequestParam String pe,
-        @RequestParam String ou, HttpServletResponse response )
+        @RequestParam String ou, HttpServletResponse response, HttpServletRequest request )
         throws WebMessageException
     {
         // ---------------------------------------------------------------------
@@ -609,6 +610,8 @@ public class DataValueController
         response.setContentType( fileResource.getContentType() );
         response.setContentLength( Math.round( fileResource.getContentLength() ) );
         response.setHeader( HttpHeaders.CONTENT_DISPOSITION, "filename=" + fileResource.getName() );
+
+        request.setAttribute( "skip-etag-filter", true );
 
         InputStream inputStream = null;
 
