@@ -218,6 +218,7 @@ public class ProgramStage
 
     @JsonProperty( "trackedEntityInstanceReminders" )
     @JsonView( { DetailedView.class } )
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JacksonXmlElementWrapper( localName = "trackedEntityInstanceReminders", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "trackedEntityInstanceReminder", namespace = DxfNamespaces.DXF_2_0 )
     public Set<TrackedEntityInstanceReminder> getReminders()
