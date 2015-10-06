@@ -55,14 +55,7 @@ public interface SystemSettingManager
     String KEY_FLAG = "keyFlag";
     String KEY_FLAG_IMAGE = "keyFlagImage";
     String KEY_START_MODULE = "startModule";
-    String KEY_FORUM_INTEGRATION = "forumIntegration";
-    String KEY_OMIT_INDICATORS_ZERO_NUMERATOR_DATAMART = "omitIndicatorsZeroNumeratorDataMart";
-    String KEY_REPORT_TEMPLATE_DIRECTORY = "reportTemplateDirectory";
-    String KEY_GOOGLE_MAPS_API_KEY = "googleMapsAPIKey";
     String KEY_FACTOR_OF_DEVIATION = "factorDeviation";
-    String KEY_TRACKED_ENTITY_EXCEL_TEMPLATE_FILE_NAME = "trackedEntityExcelTemplateFileName";
-    String KEY_DATAMART_TASK = "keyDataMartTask";
-    String KEY_DATASETCOMPLETENESS_TASK = "keyDataSetCompletenessTask";
     String KEY_EMAIL_HOST_NAME = "keyEmailHostName";
     String KEY_EMAIL_PORT = "keyEmailPort";
     String KEY_EMAIL_USERNAME = "keyEmailUsername";
@@ -70,10 +63,8 @@ public interface SystemSettingManager
     String KEY_EMAIL_TLS = "keyEmailTls";
     String KEY_EMAIL_SENDER = "keyEmailSender";
     String KEY_INSTANCE_BASE_URL = "keyInstanceBaseUrl";
-    String KEY_SCHEDULED_PERIOD_TYPES = "keyScheduledPeriodTypes";
     String KEY_SCHEDULED_TASKS = "keySchedTasks";
-    String KEY_ORGUNITGROUPSET_AGG_LEVEL = "orgUnitGroupSetAggregationLevel";
-    String KEY_SMS_CONFIG = "SMS_CONFIG";
+    String KEY_SMS_CONFIG = "keySmsConfig";
     String KEY_CACHE_STRATEGY = "keyCacheStrategy";
     String KEY_TIME_FOR_SENDING_MESSAGE = "timeSendingMessage";
     String KEY_SEND_MESSAGE_SCHEDULED_TASKS = "sendMessageScheduled";
@@ -123,7 +114,6 @@ public interface SystemSettingManager
     int DEFAULT_MAX_NUMBER_OF_ATTEMPTS = 20;
     int DEFAULT_TIMEFRAME_MINUTES = 1;
     double DEFAULT_FACTOR_OF_DEVIATION = 2.0;
-    int DEFAULT_ORGUNITGROUPSET_AGG_LEVEL = 3;
     String DEFAULT_GOOGLE_MAPS_API_KEY = "ABQIAAAAut6AhySExnYIXm5s2OFIkxRKNzJ-_9njnryRTbvC6CtrS4sRvRREWnxwlZUa630pLuPf3nD9i4fq9w";
     String DEFAULT_START_MODULE = "dhis-web-dashboard-integration";
     String DEFAULT_APPLICATION_TITLE = "District Health Information Software 2";
@@ -145,7 +135,6 @@ public interface SystemSettingManager
             put( CalendarService.KEY_CALENDAR, CalendarService.DEFAULT_CALENDAR );
             put( CalendarService.KEY_DATE_FORMAT, CalendarService.DEFAULT_DATE_FORMAT );
             put( KEY_FACTOR_OF_DEVIATION, DEFAULT_FACTOR_OF_DEVIATION );
-            put( KEY_ORGUNITGROUPSET_AGG_LEVEL, DEFAULT_ORGUNITGROUPSET_AGG_LEVEL );
             put( KEY_START_MODULE, DEFAULT_START_MODULE );
             put( KEY_APPLICATION_TITLE, DEFAULT_APPLICATION_TITLE );
             put( KEY_EMAIL_PORT, DEFAULT_EMAIL_PORT );
