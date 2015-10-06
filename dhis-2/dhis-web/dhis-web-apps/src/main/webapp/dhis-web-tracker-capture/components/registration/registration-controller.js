@@ -343,9 +343,8 @@ trackerCapture.controller('RegistrationController',
         return status;        
     };
     
-    $scope.getTrackerAssociate = function(selectedAttribute){
-        
-        
+    $scope.getTrackerAssociate = function(selectedAttribute, existingAssociateUid){        
+
         var modalInstance = $modal.open({
             templateUrl: 'components/teiadd/tei-add.html',
             controller: 'TEIAddController',
@@ -365,6 +364,9 @@ trackerCapture.controller('RegistrationController',
                 },
                 selectedAttribute: function(){
                     return selectedAttribute;
+                },
+                existingAssociateUid: function(){
+                    return existingAssociateUid;
                 },
                 selectedProgram: function(){
                     return $scope.selectedProgram;

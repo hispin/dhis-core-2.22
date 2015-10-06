@@ -23,11 +23,11 @@ trackerCapture.controller('TEIAddController',
             relatedProgramRelationship,
             selections,
             selectedAttribute,
+            existingAssociateUid,
             addingRelationship,
             selectedTei){
     
     $scope.maxOptionSize = 30;
-    
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
         $scope.attributesById = [];
@@ -114,6 +114,15 @@ trackerCapture.controller('TEIAddController',
             $scope.programs = response.programs;
             $scope.selectedProgram = response.selectedProgram;
         });
+        
+        if(existingAssociateUid){
+            TEIService.get(existingAssociateUid, $scope.optionSets, $scope.attributesById).then(function(data){
+                $scope.selectedTeiForDisplay = data;
+            });
+        }
+        else{
+            $scope.selectedTeiForDisplay = null;
+        }
         
         CurrentSelection.setRelationshipOwner({});
         //$scope.selectedTei = {};

@@ -62,6 +62,9 @@ trackerCapture.controller('RelationshipController',
                     selectedAttribute: function(){
                         return null;
                     },
+                    existingAssociateUid: function(){
+                        return null;
+                    },
                     addingRelationship: function(){
                         return true;
                     },

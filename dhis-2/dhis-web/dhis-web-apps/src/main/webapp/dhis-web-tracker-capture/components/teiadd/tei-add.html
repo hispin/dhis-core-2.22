@@ -13,12 +13,18 @@
         </div>
     </div>
 
-    <div class="row" ng-if="relationship.selected || !addingRelationship">
-        <hr>
-        <div class="col-md-3" ng-if="addingRelationship">
+    <div class="row">
+        <hr ng-if="addingRelationship">
+        <h3 ng-if="!addingRelationship && selectedTeiForDisplay">
+            <span class='col-sm-12'>
+                {{'existing_associate' | translate}}
+            </span>            
+        </h3>
+        <div class="col-md-3" ng-if="addingRelationship || selectedTeiForDisplay">            
             <select name="foo" 
                     ng-model="selectedRelationship.aIsToB" 
                     class="form-control" 
+                    ng-if="addingRelationship"
                     ng-change="setRelationshipSides('A')"
                     ng-disabled="selectedProgramForRelative && selectedProgram.relatedProgram && relatedProgramRelationship">
                 <option>{{relationship.selected.aIsToB}}</option>
@@ -38,8 +44,7 @@
             </div>
         </div>
         
-        <div ng-class="{true: 'col-md-9 pull-right', false: 'col-sm-12'} [addingRelationship]">
-            
+        <div ng-class="{true: 'col-md-9 pull-right', false: 'col-sm-12'} [addingRelationship || selectedTeiForDisplay]">            
             <div ng-if="addingRelationship">
                 <select name="foo" 
                         ng-model="selectedRelationship.bIsToA" 
@@ -96,12 +101,14 @@
 
                 <!-- entity grid begins -->
                 <i ng-if="!teiFetched" class="fa fa-spinner fa-spin fa-2x"></i>
-                <div class="row col-sm-12" ng-if="!showRegistrationDiv" ng-include="'views/tei.html'"></div>
+                <div class="row" ng-if="!showRegistrationDiv">
+                    <div class="col-sm-12" ng-include="'views/tei.html'"></div>               
+                </div>
                 <!-- entity grid ends -->
 
                 <!--- Error display for search begins -->
                 <div class="row" ng-if="emptySearchAttribute || !searchText.value && emptySearchText">
-                    <div class="col-md-12 vertical-spacing">
+                    <div class="col-sm-12 vertical-spacing">
                         <div class="alert alert-danger">{{'search_input_required'| translate}}</div>         
                     </div>
                 </div>

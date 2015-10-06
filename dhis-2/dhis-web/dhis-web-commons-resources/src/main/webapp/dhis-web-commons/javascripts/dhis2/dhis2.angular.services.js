@@ -553,11 +553,11 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     newInputField = '<input type="text" ' +
                                             ' ng-blur="teiValueUpdated(selectedTei,\'' + attId + '\')" ' +
                                             commonInputFieldProperty + ' >' + 
-                                            '<a href ng-class="{true: \'disable-clicks\', false: \'\'} [editingDisabled]" ng-click="getTrackerAssociate(attributesById.' + attId + ')" title="{{\'add\' | translate}} {{attributesById.' + attId + '.name}}" ' + 
-                                            '<i class="fa fa-external-link vertical-center"></i> ' + 
+                                            '<a href ng-class="{true: \'disable-clicks\', false: \'\'} [editingDisabled]" ng-click="getTrackerAssociate(attributesById.' + attId + ', selectedTei.' + attId + ')" title="{{\'add\' | translate}} {{attributesById.' + attId + '.name}}" ' + 
+                                            '<i class="fa fa-external-link fa-2x vertical-center"></i> ' + 
                                             '</a> ' +
-                                            '<a href ng-class="{true: \'disable-clicks\', false: \'\'} [editingDisabled]" ng-click="selectedTei.' + attId + ' = null" title="{{\'remove\' | translate}} {{attributesById.' + attId + '.name}}" ' + 
-                                            '<i class="fa fa-trash-o vertical-center"></i> ' + 
+                                            '<a href ng-if="selectedTei.' + attId + '" ng-class="{true: \'disable-clicks\', false: \'\'} [editingDisabled]" ng-click="selectedTei.' + attId + ' = null" title="{{\'remove\' | translate}} {{attributesById.' + attId + '.name}}" ' + 
+                                            '<i class="fa fa-trash-o fa-2x vertical-center"></i> ' + 
                                             '</a>';
                                 }
                                 else if (att.valueType === "LONG_TEXT") {
