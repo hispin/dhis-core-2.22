@@ -53,6 +53,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.YearlyPeriodType;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.OrganisationUnitWithDataSetsFilter;
 import org.hisp.dhis.system.filter.PastAndCurrentPeriodFilter;
@@ -153,8 +154,7 @@ public class FormUtilsImpl
     {
         Map<String, DeflatedDataValue> validationErrorMap = new HashMap<>();
 
-        Double factor = (Double) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_FACTOR_OF_DEVIATION,
-            2.0 );
+        Double factor = (Double) systemSettingManager.getSystemSetting( Setting.FACTOR_OF_DEVIATION );
 
         Date from = new DateTime( period.getStartDate() ).minusYears( 2 ).toDate();
         

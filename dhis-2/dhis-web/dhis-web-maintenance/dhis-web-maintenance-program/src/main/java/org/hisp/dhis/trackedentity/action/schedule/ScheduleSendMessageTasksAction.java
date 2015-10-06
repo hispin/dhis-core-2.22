@@ -28,10 +28,6 @@ package org.hisp.dhis.trackedentity.action.schedule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SCHEDULE_MESSAGE_TASKS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SEND_MESSAGE_SCHEDULED_TASKS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_TIME_FOR_SENDING_MESSAGE;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -141,7 +137,7 @@ public class ScheduleSendMessageTasksAction
         notifier.clear( taskId );
         sendMessageScheduled.setTaskId( taskId );
 
-        systemSettingManager.saveSystemSetting( KEY_TIME_FOR_SENDING_MESSAGE, timeSendingMessage );
+        systemSettingManager.saveSystemSetting( Setting.TIME_FOR_SENDING_MESSAGE, timeSendingMessage );
 
         if ( execute )
         {
@@ -174,8 +170,8 @@ public class ScheduleSendMessageTasksAction
                 
                 String cron = "0 " + Integer.parseInt( minute ) + " " + Integer.parseInt( hour ) + " ? * *";
 
-                keyCronMap.put( KEY_SEND_MESSAGE_SCHEDULED_TASKS, cron );
-                keyCronMap.put( KEY_SCHEDULE_MESSAGE_TASKS, "0 0 0 * * ?" );
+                keyCronMap.put( Setting.SEND_MESSAGE_SCHEDULED_TASKS.getName(), cron );
+                keyCronMap.put( Setting.SCHEDULE_MESSAGE_TASKS.getName(), "0 0 0 * * ?" );
 
                 schedulingManager.scheduleTasks( keyCronMap );
             }

@@ -122,6 +122,12 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    public Serializable getSystemSetting( Setting setting, Serializable defaultValue )
+    {
+        return getSystemSetting( setting.getName(), defaultValue );
+    }
+
+    @Override
     public List<SystemSetting> getAllSystemSettings()
     {
         return systemSettingStore.getAll();
