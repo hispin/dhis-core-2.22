@@ -172,6 +172,7 @@ public class ScheduleSendMessageTasksAction
                 {
                     minute = "0";
                 }
+                
                 String cron = "0 " + Integer.parseInt( minute ) + " " + Integer.parseInt( hour ) + " ? * *";
 
                 keyCronMap.put( KEY_SEND_MESSAGE_SCHEDULED_TASKS, cron );
