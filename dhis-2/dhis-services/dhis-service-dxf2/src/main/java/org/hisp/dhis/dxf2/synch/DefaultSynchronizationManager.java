@@ -29,14 +29,12 @@ package org.hisp.dhis.dxf2.synch;
  */
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_DATA_SYNC;
 
 import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.datavalue.DataValueService;
@@ -48,7 +46,9 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.joda.time.DateTime;
@@ -236,7 +236,7 @@ public class DefaultSynchronizationManager
     @Override
     public Date getLastSynchSuccess()
     {
-        return (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_DATA_SYNC );
+        return (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_DATA_SYNC );
     }
 
     @Override
@@ -278,7 +278,7 @@ public class DefaultSynchronizationManager
     {
         Date fallback = new DateTime().minusDays( 3 ).toDate();
 
-        return (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_DATA_SYNC, fallback );
+        return (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_DATA_SYNC, fallback );
     }
 
     /**
@@ -286,7 +286,7 @@ public class DefaultSynchronizationManager
      */
     private void setLastSynchSuccess( Date time )
     {
-        systemSettingManager.saveSystemSetting( KEY_LAST_SUCCESSFUL_DATA_SYNC, time );
+        systemSettingManager.saveSystemSetting( Setting.LAST_SUCCESSFUL_DATA_SYNC, time );
     }
 
     /**

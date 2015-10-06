@@ -28,7 +28,6 @@ package org.hisp.dhis.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SCHEDULED_TASKS;
 import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_NOT_STARTED;
 
 import java.util.HashMap;
@@ -37,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.Scheduler;
 
@@ -99,7 +99,7 @@ public class DefaultSchedulingManager
     @Override
     public void scheduleTasks( ListMap<String, String> cronKeyMap )
     {
-        systemSettingManager.saveSystemSetting( KEY_SCHEDULED_TASKS, new ListMap<>( cronKeyMap ) );
+        systemSettingManager.saveSystemSetting( Setting.SCHEDULED_TASKS, new ListMap<>( cronKeyMap ) );
         
         scheduleTasks();
     }
@@ -107,7 +107,7 @@ public class DefaultSchedulingManager
     @Override
     public void stopTasks()
     {
-        systemSettingManager.saveSystemSetting( KEY_SCHEDULED_TASKS, null );
+        systemSettingManager.saveSystemSetting( Setting.SCHEDULED_TASKS, null );
         
         scheduler.stopAllTasks();
     }
@@ -116,7 +116,7 @@ public class DefaultSchedulingManager
     @SuppressWarnings("unchecked")
     public ListMap<String, String> getCronKeyMap()
     {
-        return (ListMap<String, String>) systemSettingManager.getSystemSetting( KEY_SCHEDULED_TASKS, new ListMap<String, String>() );
+        return (ListMap<String, String>) systemSettingManager.getSystemSetting( Setting.SCHEDULED_TASKS, new ListMap<String, String>() );
     }
     
     @Override

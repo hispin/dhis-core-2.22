@@ -28,12 +28,11 @@ package org.hisp.dhis.trackedentity.action.schedule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.Scheduler;
 
@@ -121,7 +120,7 @@ public class ScheduleCaseAggregateConditionAction
             }
             else
             {
-                systemSettingManager.saveSystemSetting( KEY_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY,
+                systemSettingManager.saveSystemSetting( Setting.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY,
                     taskStrategy );
 
                 Map<String, String> keyCronMap = new HashMap<>();

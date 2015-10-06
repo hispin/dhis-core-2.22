@@ -28,12 +28,12 @@ package org.hisp.dhis.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SEND_MESSAGE_SCHEDULED_TASKS;
 import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_NOT_STARTED;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.Scheduler;
 
@@ -93,7 +93,7 @@ public class DefaultProgramSchedulingManager implements ProgramSchedulingManager
     @Override
     public void scheduleTasks( Map<String, String> keyCronMap )
     {
-        systemSettingManager.saveSystemSetting( KEY_SEND_MESSAGE_SCHEDULED_TASKS, new HashMap<>( keyCronMap ) );
+        systemSettingManager.saveSystemSetting( Setting.SEND_MESSAGE_SCHEDULED_TASKS, new HashMap<>( keyCronMap ) );
         
         scheduleTasks();
     }
@@ -101,7 +101,7 @@ public class DefaultProgramSchedulingManager implements ProgramSchedulingManager
     @Override
     public void stopTasks()
     {
-        systemSettingManager.saveSystemSetting( KEY_SEND_MESSAGE_SCHEDULED_TASKS, null );
+        systemSettingManager.saveSystemSetting( Setting.SEND_MESSAGE_SCHEDULED_TASKS, null );
         
         scheduler.stopAllTasks();
     }
@@ -126,7 +126,7 @@ public class DefaultProgramSchedulingManager implements ProgramSchedulingManager
     @SuppressWarnings("unchecked")
     public Map<String, String> getScheduledTasks()
     {
-        return (Map<String, String>) systemSettingManager.getSystemSetting( KEY_SEND_MESSAGE_SCHEDULED_TASKS, new HashMap<String, String>() );
+        return (Map<String, String>) systemSettingManager.getSystemSetting( Setting.SEND_MESSAGE_SCHEDULED_TASKS, new HashMap<String, String>() );
     }
     
     @Override
