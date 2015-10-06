@@ -84,6 +84,7 @@ public class ProgramStage
 
     private String excecutionDateLabel;
 
+    @Scanned
     private Set<TrackedEntityInstanceReminder> reminders = new HashSet<>();
 
     private Boolean autoGenerateEvent = true;
