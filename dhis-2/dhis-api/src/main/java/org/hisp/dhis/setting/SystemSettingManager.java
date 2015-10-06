@@ -161,6 +161,8 @@ public interface SystemSettingManager
 
     Serializable getSystemSetting( String name, Serializable defaultValue );
 
+    Serializable getSystemSetting( Setting setting );
+    
     List<SystemSetting> getAllSystemSettings();
 
     void deleteSystemSetting( String name );
