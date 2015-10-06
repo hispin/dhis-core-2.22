@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.configuration.ConfigurationService;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -96,18 +97,18 @@ public class SystemSettingInterceptor
         map.put( CalendarService.KEY_DATE_FORMAT, calendarService.getSystemDateFormatKey() );
         
         map.put( DATE_FORMAT, calendarService.getSystemDateFormat() );
-        map.put( KEY_CACHE_STRATEGY, systemSettingManager.getSystemSetting( KEY_CACHE_STRATEGY, DEFAULT_CACHE_STRATEGY ) );
-        map.put( KEY_ANALYTICS_MAX_LIMIT, systemSettingManager.getSystemSetting( KEY_ANALYTICS_MAX_LIMIT, DEFAULT_ANALYTICS_MAX_LIMIT ) );
-        map.put( KEY_ANALYSIS_RELATIVE_PERIOD, systemSettingManager.getSystemSetting( KEY_ANALYSIS_RELATIVE_PERIOD, DEFAULT_ANALYSIS_RELATIVE_PERIOD ) );
-        map.put( KEY_APPLICATION_TITLE, systemSettingManager.getSystemSetting( KEY_APPLICATION_TITLE, DEFAULT_APPLICATION_TITLE ) );
+        map.put( KEY_CACHE_STRATEGY, systemSettingManager.getSystemSetting( Setting.CACHE_STRATEGY ) );
+        map.put( KEY_ANALYTICS_MAX_LIMIT, systemSettingManager.getSystemSetting( Setting.ANALYTICS_MAX_LIMIT ) );
+        map.put( KEY_ANALYSIS_RELATIVE_PERIOD, systemSettingManager.getSystemSetting( Setting.ANALYSIS_RELATIVE_PERIOD ) );
+        map.put( KEY_APPLICATION_TITLE, systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE ) );
         map.put( KEY_APPLICATION_INTRO, systemSettingManager.getSystemSetting( KEY_APPLICATION_INTRO ) );
         map.put( KEY_APPLICATION_NOTIFICATION, systemSettingManager.getSystemSetting( KEY_APPLICATION_NOTIFICATION ) );
         map.put( KEY_APPLICATION_FOOTER, systemSettingManager.getSystemSetting( KEY_APPLICATION_FOOTER ) );
         map.put( KEY_APPLICATION_RIGHT_FOOTER, systemSettingManager.getSystemSetting( KEY_APPLICATION_RIGHT_FOOTER ) );
-        map.put( KEY_FLAG, systemSettingManager.getSystemSetting( KEY_FLAG, DEFAULT_FLAG ) );
+        map.put( KEY_FLAG, systemSettingManager.getSystemSetting( Setting.FLAG ) );
         map.put( KEY_FLAG_IMAGE, systemSettingManager.getFlagImage() );
-        map.put( KEY_START_MODULE, systemSettingManager.getSystemSetting( KEY_START_MODULE, DEFAULT_START_MODULE ) );
-        map.put( KEY_FACTOR_OF_DEVIATION, systemSettingManager.getSystemSetting( KEY_FACTOR_OF_DEVIATION, DEFAULT_FACTOR_OF_DEVIATION ) );
+        map.put( KEY_START_MODULE, systemSettingManager.getSystemSetting( Setting.START_MODULE ) );
+        map.put( KEY_FACTOR_OF_DEVIATION, systemSettingManager.getSystemSetting( Setting.FACTOR_OF_DEVIATION ) );
         map.put( KEY_PHONE_NUMBER_AREA_CODE, systemSettingManager.getSystemSetting( KEY_PHONE_NUMBER_AREA_CODE, "" ) );
         map.put( KEY_MULTI_ORGANISATION_UNIT_FORMS, systemSettingManager.getSystemSetting( KEY_MULTI_ORGANISATION_UNIT_FORMS, false ) );
         map.put( KEY_ACCOUNT_RECOVERY, systemSettingManager.getSystemSetting( KEY_ACCOUNT_RECOVERY, false ) );
@@ -123,8 +124,8 @@ public class SystemSettingInterceptor
         map.put( KEY_CUSTOM_LOGIN_PAGE_LOGO, systemSettingManager.getSystemSetting( KEY_CUSTOM_LOGIN_PAGE_LOGO, false ) );
         map.put( KEY_CUSTOM_TOP_MENU_LOGO, systemSettingManager.getSystemSetting( KEY_CUSTOM_TOP_MENU_LOGO, false ) );
         map.put( KEY_ANALYTICS_MAINTENANCE_MODE, systemSettingManager.getSystemSetting( KEY_ANALYTICS_MAINTENANCE_MODE, false ) );
-        map.put( KEY_DATABASE_SERVER_CPUS, systemSettingManager.getSystemSetting( KEY_DATABASE_SERVER_CPUS, DEFAULT_DATABASE_SERVER_CPUS ) );
-        map.put( KEY_HELP_PAGE_LINK, systemSettingManager.getSystemSetting( KEY_HELP_PAGE_LINK, DEFAULT_HELP_PAGE_LINK ) );
+        map.put( KEY_DATABASE_SERVER_CPUS, systemSettingManager.getSystemSetting( Setting.DATABASE_SERVER_CPUS ) );
+        map.put( KEY_HELP_PAGE_LINK, systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
         map.put( KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS, systemSettingManager.getSystemSetting( KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS, false ) );
         map.put( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, systemSettingManager.getSystemSetting( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, false ) );
         map.put( KEY_SYSTEM_NOTIFICATIONS_EMAIL, systemSettingManager.getSystemSetting( KEY_SYSTEM_NOTIFICATIONS_EMAIL ) );

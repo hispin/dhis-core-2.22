@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -248,9 +249,15 @@ public class DefaultSystemSettingManager
         for ( SystemSetting systemSetting : systemSettings )
         {
             Serializable settingValue = systemSetting.getValue();
+            
             if ( settingValue == null )
             {
-                settingValue = DEFAULT_SETTINGS_VALUES.get( systemSetting.getName() );
+                Optional<Setting> setting = Setting.getByName( systemSetting.getName() );
+                
+                if ( setting.isPresent() )
+                {
+                    settingValue = setting.get().getDefaultValue();
+                }
             }
 
             settingsMap.put( systemSetting.getName(), settingValue );
@@ -260,17 +267,27 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public Map<String, Serializable> getSystemSettings( Set<String> names )
+    public Map<String, Serializable> getSystemSettingsAsMap( Set<String> names )
     {
         Map<String, Serializable> map = new HashMap<>();
 
         for ( String name : names )
         {
-            Serializable setting = getSystemSetting( name, DEFAULT_SETTINGS_VALUES.get( name ) );
+            Serializable settingValue = getSystemSetting( name );
 
-            if ( setting != null )
+            if ( settingValue == null )
             {
-                map.put( name, setting );
+                Optional<Setting> setting = Setting.getByName( name );
+                
+                if ( setting.isPresent() )
+                {
+                    settingValue = setting.get().getDefaultValue();
+                }
+            }
+            
+            if ( settingValue != null )
+            {
+                map.put( name, settingValue );
             }
         }
 

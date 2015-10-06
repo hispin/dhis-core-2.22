@@ -146,7 +146,7 @@ public class SystemSettingController
 
         if ( key != null && !key.isEmpty() )
         {
-            value = systemSettingManager.getSystemSettings( key );
+            value = systemSettingManager.getSystemSettingsAsMap( key );
         }
         else
         {

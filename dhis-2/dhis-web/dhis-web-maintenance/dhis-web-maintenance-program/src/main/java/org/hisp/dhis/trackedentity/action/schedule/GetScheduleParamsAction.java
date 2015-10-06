@@ -28,10 +28,8 @@ package org.hisp.dhis.trackedentity.action.schedule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_TIME_FOR_SENDING_MESSAGE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_TIME_FOR_SENDING_MESSAGE;
-
 import org.hisp.dhis.scheduling.ProgramSchedulingManager;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.Scheduler;
 
@@ -96,7 +94,7 @@ public class GetScheduleParamsAction
     public String execute()
         throws Exception
     {
-        timeSendingMessage = (String)systemSettingManager.getSystemSetting( KEY_TIME_FOR_SENDING_MESSAGE, DEFAULT_TIME_FOR_SENDING_MESSAGE );
+        timeSendingMessage = (String)systemSettingManager.getSystemSetting( Setting.TIME_FOR_SENDING_MESSAGE );
         
         status = schedulingManager.getTaskStatus();
         running = Scheduler.STATUS_RUNNING.equals( status );
