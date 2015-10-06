@@ -188,6 +188,8 @@
                                    ng-required={{prStDe.compulsory}} 
                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
                                    ng-change="saveDatavalue(prStDe, innerForm.foo)" 
+                                   ng-true-value="true" 
+                                   ng-false-value="''"
                                    name="foo"/>
                         </div>
                         <div ng-switch-default>
@@ -215,12 +217,10 @@
                 <ng-form ng-if="eventRow !== currentEvent" name="innerform" >
                     <div ng-switch="prStDe.dataElement.valueType">
                          <div ng-switch-when="BOOLEAN">
-                            <select ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
-                                    class="form-control"
+                            <select class="form-control"
                                     ng-model="eventRow[prStDe.dataElement.id]" 
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
-                                    ng-change="saveDatavalue(prStDe, innerForm.foo)" 
+                                    ng-disabled="true" 
                                     name="foo">
                                 <option value="">{{'please_select'| translate}}</option>                        
                                 <option value="false">{{'no'| translate}}</option>
@@ -230,11 +230,11 @@
                         <div ng-switch-when="TRUE_ONLY">
                             <input type="checkbox"     
                                    class="form-control"
-                                   ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                    ng-model="eventRow[prStDe.dataElement.id]"                                                               
                                    ng-required={{prStDe.compulsory}} 
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
-                                   ng-change="saveDatavalue(prStDe, innerForm.foo)" 
+                                   ng-disabled="true" 
+                                   ng-true-value="true" 
+                                   ng-false-value="''"
                                    name="foo"/>
                         </div>
                         <div ng-switch-default>
