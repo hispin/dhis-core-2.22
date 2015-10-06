@@ -28,10 +28,7 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -44,7 +41,9 @@ import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Chau Thu Tran
@@ -117,7 +116,7 @@ public class AddProgramStageSectionAction
     {
         this.selectedIndicators = selectedIndicators;
     }
-    
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -140,30 +139,30 @@ public class AddProgramStageSectionAction
             psDataElements.add( psDataElement );
         }
 
-        ProgramStageSection section = new ProgramStageSection( StringUtils.trimToNull( name ), psDataElements, programStage
-            .getProgramStageSections().size() );
+        ProgramStageSection programStageSection = new ProgramStageSection( StringUtils.trimToNull( name ), psDataElements,
+            programStage.getProgramStageSections().size() );
+        programStageSection.setAutoFields();
 
         // ---------------------------------------------------------------------
         // Update program stage
         // ---------------------------------------------------------------------
 
         Set<ProgramStageSection> sections = programStage.getProgramStageSections();
+        sections.add( programStageSection );
 
-        sections.add( section );
-        
         // ---------------------------------------------------------------------
         // Program indicators
         // ---------------------------------------------------------------------
-        
+
         List<ProgramIndicator> programIndicators = new ArrayList<>();
+
         for ( Integer id : selectedIndicators )
         {
             ProgramIndicator indicator = programIndicatorService.getProgramIndicator( id );
             programIndicators.add( indicator );
         }
 
-        section.setProgramIndicators( programIndicators );
-        
+        programStageSection.setProgramIndicators( programIndicators );
 
         programStage.setProgramStageSections( sections );
         programStageService.updateProgramStage( programStage );
