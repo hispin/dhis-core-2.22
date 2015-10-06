@@ -95,7 +95,6 @@ public abstract class ActionPagingSupport<T>
         return Paging.DEFAULT_PAGE_SIZE;
     }
 
-    @SuppressWarnings( "unchecked" )
     private String getCurrentLink()
     {
         HttpServletRequest request = ServletActionContext.getRequest();
