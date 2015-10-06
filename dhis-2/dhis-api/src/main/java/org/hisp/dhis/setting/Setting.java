@@ -106,7 +106,12 @@ public enum Setting
     DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO( "keyDataImportRequireCategoryOptionCombo", Boolean.FALSE, Boolean.class ),
     DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO( "keyDataImportRequireAttributeOptionCombo", Boolean.FALSE, Boolean.class ),
     CUSTOM_JS( "keyCustomJs" ),
-    CUSTOM_CSS( "keyCustomCss" );
+    CUSTOM_CSS( "keyCustomCss" ),
+    CALENDAR( "keyCalendar", "iso8601", String.class ),
+    DATE_FORMAT( "keyDateFormat", "yyyy-MM-dd", String.class ),
+    APP_FOLDER_PATH( "appFolderPath" ),
+    APP_BASE_URL( "appBaseUrl" ),
+    APP_STORE_URL( "appStoreUrl", "http://www.dhis2.org/appstore", String.class );
     
     private final String name;
     

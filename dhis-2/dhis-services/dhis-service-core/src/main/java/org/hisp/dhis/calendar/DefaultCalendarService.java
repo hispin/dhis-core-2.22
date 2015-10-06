@@ -41,6 +41,7 @@ import javax.annotation.PostConstruct;
 import org.hisp.dhis.calendar.impl.Iso8601Calendar;
 import org.hisp.dhis.period.Cal;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -149,7 +150,7 @@ public class DefaultCalendarService
     public String getSystemCalendarKey()
     {
         String key = keyCache.get( KEY_CALENDAR );        
-        key = !isEmpty( key ) ? key : (String) settingManager.getSystemSetting( KEY_CALENDAR, DEFAULT_CALENDAR );        
+        key = !isEmpty( key ) ? key : (String) settingManager.getSystemSetting( Setting.CALENDAR );        
         keyCache.put( KEY_CALENDAR, key );        
         return key;
     }
@@ -165,7 +166,7 @@ public class DefaultCalendarService
     public String getSystemDateFormatKey()
     {
         String key = keyCache.get( KEY_DATE_FORMAT );
-        key = !isEmpty( key ) ? key : (String) settingManager.getSystemSetting( KEY_DATE_FORMAT, DEFAULT_DATE_FORMAT );
+        key = !isEmpty( key ) ? key : (String) settingManager.getSystemSetting( Setting.DATE_FORMAT );
         keyCache.put( KEY_DATE_FORMAT, key );
         return key;
     }
