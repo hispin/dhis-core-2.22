@@ -470,8 +470,6 @@ public class DataValueController
         response.setContentLength( Math.round( fileResource.getContentLength() ) );
         response.setHeader( HttpHeaders.CONTENT_DISPOSITION, "filename=" + fileResource.getName() );
 
-        request.setAttribute( "skip-etag-filter", true );
-
         InputStream inputStream = null;
 
         try
