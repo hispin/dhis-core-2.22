@@ -1679,12 +1679,22 @@ function insertDataValues( json )
             {
                 $( fieldId ).val( value.val );
 
+                var $container = $( '.entryfileresource-container[name=' + value.id + '-val]' );
+
+                var name = "", size = "";
+
                 if ( value.fileMeta )
                 {
-                    var $container = $( '.entryfileresource-container[name=' + value.id + '-val]' );
-                    $container.find( '.upload-fileinfo-name' ).text( value.fileMeta.name );
-                    $container.find( '.upload-fileinfo-size' ).text( '(' + filesize( value.fileMeta.size ) + ')' );
+                    name = value.fileMeta.name;
+                    size = '(' + filesize( value.fileMeta.size ) + ')';
                 }
+                else
+                {
+                    name = i18n_loading_file_info_failed;
+                }
+
+                $container.find( '.upload-fileinfo-name' ).text( name );
+                $container.find( '.upload-fileinfo-size' ).text( size );
             }
             else 
             {
