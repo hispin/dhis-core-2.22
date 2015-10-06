@@ -32,39 +32,70 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 /**
- * Subclass of Spring ShallowEtagHeaderFilter which ignores specific URL patterns.
+ * Subclass of {@link org.springframework.web.filter.ShallowEtagHeaderFilter} which allows exclusion of URIs matching a regex.
+ *
+ * The regex is given as the init-param named 'excludeUriRegex' in the filter configuration.
+ *
+ * Example configuration:
+ *  {@code
+ *  <filter>
+ *      <filter-name>ShallowEtagHeaderFilter</filter-name>
+ *      <filter-class>org.hisp.dhis.servlet.filter.ExcludableShallowEtagHeaderFilter</filter-class>
+ *      <init-param>
+ *          <param-name>excludeUriRegex</param-name>
+ *          <param-value>/api/dataValues|/api/dataValues/files</param-value>
+ *      </init-param>
+ *  </filter>
+ *  }
+ *
+ *  The example exactly matches and excludes any request to the '/api/dataValues' and '/api/dataValues/files' from the filter.
  * 
  * @author Lars Helge Overland
+ * @author Halvdan Hoem Grelland
  */
 public class ExcludableShallowEtagHeaderFilter
     extends ShallowEtagHeaderFilter
 {
-    private static final String EXCLUDE_REGEX = "/api/dataValueSets|/api/dataValues|/api/fileResources";
-    
+    private static final String EXCLUDE_URI_REGEX_NAME = "excludeUriRegex";
+
+    private Pattern pattern = null;
+
+    @Override
+    protected void initFilterBean()
+        throws ServletException
+    {
+        FilterConfig filterConfig = getFilterConfig();
+
+        String excludeRegex = filterConfig != null ? filterConfig.getInitParameter( EXCLUDE_URI_REGEX_NAME ) : "";
+
+        if ( StringUtils.isNotBlank( excludeRegex ) )
+        {
+            pattern = Pattern.compile( excludeRegex );
+        }
+    }
+
     @Override
     protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain )
         throws ServletException, IOException
     {
         String uri = request.getRequestURI();
-        
-        if ( Pattern.matches( EXCLUDE_REGEX, uri ) )
+
+        if ( pattern != null && pattern.matcher( uri ).matches() )
         {
-            // Proceed without invoking this filter
-            
-            filterChain.doFilter( request, response ); 
+            filterChain.doFilter( request, response ); // Proceed without invoking this filter
         }
         else
         {
-            // Do invoke this filter
-            
-            super.doFilterInternal( request, response, filterChain );
+            super.doFilterInternal( request, response, filterChain ); // Invoke this filter
         }
     }
 }
