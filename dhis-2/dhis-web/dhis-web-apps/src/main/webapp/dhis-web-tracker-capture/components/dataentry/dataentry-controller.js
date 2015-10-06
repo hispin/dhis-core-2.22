@@ -268,7 +268,7 @@ trackerCapture.controller('DataEntryController',
                     var eventStage = $scope.stagesById[dhis2Event.programStage];
                     if (angular.isObject(eventStage)) {
                         dhis2Event.name = eventStage.name;
-                        dhis2Event.reportDateDescription = eventStage.reportDateDescription;
+                        dhis2Event.reportDateDescription = eventStage.reportDateDescription ? eventStage.reportDateDescription : $translate.instant('event_date');
                         dhis2Event.dueDate = DateUtils.formatFromApiToUser(dhis2Event.dueDate);
                         dhis2Event.sortingDate = dhis2Event.dueDate;
 
