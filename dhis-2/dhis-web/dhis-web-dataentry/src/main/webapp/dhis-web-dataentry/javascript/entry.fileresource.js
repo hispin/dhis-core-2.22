@@ -158,12 +158,11 @@
         setButtonBlocked();
 
         $fileInput.fileupload( {
-            url: '../api/dataValues/files',
+            url: '../api/fileResources',
             paramName: 'file',
             multipart: true,
             replaceFileInput: false,
             progressInterval: 250, /* ms */
-            formData: formData,
             start: function( e )
             {
                 $button.button( 'disable' );
@@ -177,8 +176,9 @@
             },
             fail: function( e, data )
             {
-                setHeaderDelayMessage( i18n_file_upload_failed );
                 console.error( data.errorThrown );
+
+                setHeaderDelayMessage( i18n_file_upload_failed );
                 setButtonUpload();
             },
             done: function( e, data )
