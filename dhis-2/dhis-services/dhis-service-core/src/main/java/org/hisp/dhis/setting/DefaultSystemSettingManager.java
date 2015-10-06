@@ -132,7 +132,7 @@ public class DefaultSystemSettingManager
     {
         return systemSettingStore.getAll();
     }
-
+    
     @Override
     public void deleteSystemSetting( String name )
     {
@@ -142,6 +142,12 @@ public class DefaultSystemSettingManager
         {
             systemSettingStore.delete( setting );
         }
+    }
+
+    @Override
+    public void deleteSystemSetting( Setting setting )
+    {
+        deleteSystemSetting( setting.getName() );
     }
 
     // -------------------------------------------------------------------------
