@@ -43,10 +43,10 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
  * 
  * @author Lars Helge Overland
  */
-public class ExludableShallowEtagHeaderFilter
+public class ExcludableShallowEtagHeaderFilter
     extends ShallowEtagHeaderFilter
 {
-    private static final String EXLUDE_REGEX = "/api/dataValueSets|/api/dataValues|/api/fileResources";
+    private static final String EXCLUDE_REGEX = "/api/dataValueSets|/api/dataValues|/api/fileResources";
     
     @Override
     protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain )
@@ -54,7 +54,7 @@ public class ExludableShallowEtagHeaderFilter
     {
         String uri = request.getRequestURI();
         
-        if ( Pattern.matches( EXLUDE_REGEX, uri ) )
+        if ( Pattern.matches( EXCLUDE_REGEX, uri ) )
         {
             // Proceed without invoking this filter
             
