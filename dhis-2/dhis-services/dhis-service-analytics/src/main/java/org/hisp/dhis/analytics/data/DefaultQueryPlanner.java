@@ -55,6 +55,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
 import org.hisp.dhis.system.util.MathUtils;
@@ -225,7 +226,7 @@ public class DefaultQueryPlanner
     public void validateMaintenanceMode()
         throws MaintenanceModeException
     {
-        boolean maintenance = (Boolean) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_ANALYTICS_MAINTENANCE_MODE, false );
+        boolean maintenance = (Boolean) systemSettingManager.getSystemSetting( Setting.ANALYTICS_MAINTENANCE_MODE );
 
         if ( maintenance )
         {

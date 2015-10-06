@@ -122,6 +122,8 @@ public interface SystemSettingManager
     };
 
     void saveSystemSetting( String name, Serializable value );
+    
+    void saveSystemSetting( Setting setting, Serializable value );
 
     Serializable getSystemSetting( String name );
 

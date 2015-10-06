@@ -34,9 +34,6 @@ import static org.hisp.dhis.scheduling.SchedulingManager.TASK_DATA_SYNCH;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_MONITORING_LAST_DAY;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE;
 import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE_15_MINS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_MONITORING;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_DAILY_0AM;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_15MIN;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_MIN;
@@ -53,6 +50,7 @@ import org.hisp.dhis.dxf2.synch.SynchronizationManager;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.scheduling.SchedulingManager;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,9 +316,9 @@ public class ScheduleTasksAction
 
         levels = organisationUnitService.getOrganisationUnitLevels();
 
-        lastResourceTableSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE );
-        lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
-        lastMonitoringSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_MONITORING );
+        lastResourceTableSuccess = (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE );
+        lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
+        lastMonitoringSuccess = (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_MONITORING );
         lastDataSyncSuccess = synchronizationManager.getLastSynchSuccess();
 
         log.info( "Status: " + status );

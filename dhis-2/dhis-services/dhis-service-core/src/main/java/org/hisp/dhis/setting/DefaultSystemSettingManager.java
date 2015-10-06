@@ -94,6 +94,12 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    public void saveSystemSetting( Setting setting, Serializable value )
+    {
+        saveSystemSetting( setting.getName(), value );
+    }
+    
+    @Override
     public Serializable getSystemSetting( String name )
     {
         SystemSetting setting = systemSettingStore.getByName( name );
