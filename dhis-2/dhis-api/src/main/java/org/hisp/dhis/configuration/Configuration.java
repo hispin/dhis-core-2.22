@@ -31,6 +31,8 @@ package org.hisp.dhis.configuration;
 import java.io.Serializable;
 
 import org.hisp.dhis.indicator.IndicatorGroup;
+import org.hisp.dhis.common.BaseIdentifiableObject;
+import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -38,6 +40,10 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserGroup;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * @author Lars Helge Overland
@@ -125,7 +131,9 @@ public class Configuration
     {
         this.id = id;
     }
-
+    
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getSystemId()
     {
         return systemId;
@@ -136,6 +144,9 @@ public class Configuration
         this.systemId = systemId;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public UserGroup getFeedbackRecipients()
     {
         return feedbackRecipients;
@@ -146,16 +157,22 @@ public class Configuration
         this.feedbackRecipients = feedbackRecipients;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public OrganisationUnitLevel getOfflineOrganisationUnitLevel()
+    {
+        return offlineOrganisationUnitLevel;
+    }
+    
     public void setOfflineOrganisationUnitLevel( OrganisationUnitLevel offlineOrganisationUnitLevel )
     {
         this.offlineOrganisationUnitLevel = offlineOrganisationUnitLevel;
     }
 
-    public OrganisationUnitLevel getOfflineOrganisationUnitLevel()
-    {
-        return offlineOrganisationUnitLevel;
-    }
-
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public IndicatorGroup getInfrastructuralIndicators()
     {
         return infrastructuralIndicators;
@@ -166,6 +183,9 @@ public class Configuration
         this.infrastructuralIndicators = infrastructuralIndicators;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public DataElementGroup getInfrastructuralDataElements()
     {
         return infrastructuralDataElements;
@@ -176,6 +196,8 @@ public class Configuration
         this.infrastructuralDataElements = infrastructuralDataElements;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public PeriodType getInfrastructuralPeriodType()
     {
         return infrastructuralPeriodType;
@@ -186,6 +208,9 @@ public class Configuration
         this.infrastructuralPeriodType = infrastructuralPeriodType;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public UserAuthorityGroup getSelfRegistrationRole()
     {
         return selfRegistrationRole;
@@ -196,6 +221,9 @@ public class Configuration
         this.selfRegistrationRole = selfRegistrationRole;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public OrganisationUnit getSelfRegistrationOrgUnit()
     {
         return selfRegistrationOrgUnit;
@@ -206,6 +234,8 @@ public class Configuration
         this.selfRegistrationOrgUnit = selfRegistrationOrgUnit;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getRemoteServerUrl()
     {
         return remoteServerUrl;
@@ -216,6 +246,8 @@ public class Configuration
         this.remoteServerUrl = remoteServerUrl;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getRemoteServerUsername()
     {
         return remoteServerUsername;

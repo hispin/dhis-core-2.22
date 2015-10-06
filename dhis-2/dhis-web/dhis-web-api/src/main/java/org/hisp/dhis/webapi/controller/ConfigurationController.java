@@ -73,6 +73,12 @@ public class ConfigurationController
     // Resources
     // -------------------------------------------------------------------------
 
+    @RequestMapping( method = RequestMethod.GET )
+    public String getConfiguration( Model model, HttpServletRequest request )
+    {
+        return setModel( model, configurationService.getConfiguration() );
+    }
+    
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/systemId", method = RequestMethod.GET )
@@ -242,7 +248,6 @@ public class ConfigurationController
         configurationService.setConfiguration( config );
     }
 
-    @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/selfRegistrationOrgUnit", method = RequestMethod.GET )
     public String getSelfRegistrationOrgUnit( Model model, HttpServletRequest request )
     {
@@ -280,6 +285,12 @@ public class ConfigurationController
         configurationService.setConfiguration( config );
     }    
 
+    @RequestMapping( value = "/remoteServerUrl", method = RequestMethod.GET )
+    public String getRemoteServerUrl( Model model, HttpServletRequest request )
+    {
+        return setModel( model, configurationService.getConfiguration().getRemoteServerUrl() );
+    }
+    
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/remoteServerUrl/{url}", method = RequestMethod.POST )
@@ -292,6 +303,12 @@ public class ConfigurationController
         configurationService.setConfiguration( config );
     }
 
+    @RequestMapping( value = "/remoteServerUsername", method = RequestMethod.GET )
+    public String getRemoteServerUsername( Model model, HttpServletRequest request )
+    {
+        return setModel( model, configurationService.getConfiguration().getRemoteServerUsername() );
+    }
+    
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/remoteServerUsername/{username}", method = RequestMethod.POST )
@@ -323,7 +340,6 @@ public class ConfigurationController
     private String setModel( Model model, Object entity )
     {
         model.addAttribute( "model", entity );
-        model.addAttribute( "viewClass", "detailed" );
         return "config";
     }
 }
