@@ -339,8 +339,13 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 $rootScope.$broadcast('registrationWidget', {registrationMode: 'REGISTRATION'});
             }, 200);
         }
-        else{
-            $scope.doSearch = true;            
+        else{            
+            $scope.doSearch = true;
+            if(!$scope.trackedEntityList){
+                if($scope.doSearch){
+                    $scope.search($scope.searchMode);
+                }
+            }                        
             $scope.showTrackedEntityDiv = true;
         }
     };    
