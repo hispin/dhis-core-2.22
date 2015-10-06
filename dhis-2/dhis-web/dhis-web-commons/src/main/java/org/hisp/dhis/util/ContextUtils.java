@@ -88,7 +88,6 @@ public class ContextUtils
         return contentType != null ? contentType : defaultType;
     }
 
-    @SuppressWarnings( "unchecked" )
     public static Map<String, String> getParameterMap( HttpServletRequest request )
     {
         Enumeration<String> enumeration = request.getParameterNames();
