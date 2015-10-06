@@ -221,7 +221,7 @@ public class DefaultSystemSettingManager
     @Override
     public Integer credentialsExpires()
     {
-        return (Integer) (getSystemSetting( KEY_CREDENTIALS_EXPIRES ) == null ? 0 : getSystemSetting( KEY_CREDENTIALS_EXPIRES ));
+        return (Integer) (getSystemSetting( KEY_CREDENTIALS_EXPIRES ) == null ? 0 : getSystemSetting( KEY_CREDENTIALS_EXPIRES ) );
     }
 
     @Override

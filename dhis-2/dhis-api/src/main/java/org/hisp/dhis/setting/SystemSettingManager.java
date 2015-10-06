@@ -47,6 +47,8 @@ public interface SystemSettingManager
 {
     String ID = SystemSettingManager.class.getName();
 
+    //TODO migrate from strings to Setting enum throughout system
+    
     String KEY_APPLICATION_TITLE = "applicationTitle";
     String KEY_APPLICATION_INTRO = "keyApplicationIntro";
     String KEY_APPLICATION_NOTIFICATION = "keyApplicationNotification";
@@ -101,7 +103,8 @@ public interface SystemSettingManager
     String KEY_REQUIRE_ADD_TO_VIEW = "keyRequireAddToView";
     String KEY_ALLOW_OBJECT_ASSIGNMENT = "keyAllowObjectAssignment";
     String KEY_USE_CUSTOM_LOGO_FRONT = "keyUseCustomLogoFront";
-    String KEY_USE_CUSTOM_LOGO_BANNER = "keyUseCustomLogoBanner";    
+    String KEY_USE_CUSTOM_LOGO_BANNER = "keyUseCustomLogoBanner";
+    String KEY_METADATA_REPO_URL = "keyMetaDataRepoUrl";
     String KEY_DATA_IMPORT_STRICT_PERIODS = "keyDataImportStrictPeriods";
     String KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS = "keyDataImportStrictCategoryOptionCombos";
     String KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS = "keyDataImportStrictOrganisationUnits";

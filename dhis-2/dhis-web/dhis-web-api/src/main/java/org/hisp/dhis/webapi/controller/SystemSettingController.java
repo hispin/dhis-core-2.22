@@ -28,9 +28,19 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.util.ObjectUtils;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
@@ -46,14 +56,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -90,13 +92,15 @@ public class SystemSettingController
             throw new WebMessageException( WebMessageUtils.conflict( "Value must be specified as query param or as payload" ) );
         }
 
-        value = value != null ? value : valuePayload;
+        key = ObjectUtils.firstNonNull( key, keyParam );
 
-        key = key != null ? key : keyParam;
+        value = ObjectUtils.firstNonNull( value, valuePayload );
+        
+        Serializable valueObject = Setting.getAsRealClass( key, value );
+        
+        systemSettingManager.saveSystemSetting( key, valueObject );
 
-        systemSettingManager.saveSystemSetting( key, value );
-
-        webMessageService.send( WebMessageUtils.ok( "System setting " + key + " set as value '" + value + "'." ), response, request );
+        webMessageService.send( WebMessageUtils.ok( "System setting " + key + " set as value '" + valueObject + "'." ), response, request );
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = { ContextUtils.CONTENT_TYPE_JSON } )
