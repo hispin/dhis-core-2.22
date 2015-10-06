@@ -28,7 +28,6 @@ package org.hisp.dhis.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -42,6 +41,7 @@ import java.util.Set;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +166,7 @@ public class UserServiceTest
     @Test
     public void testManagedGroups()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         // TODO find way to override in parameters
         
@@ -226,7 +226,7 @@ public class UserServiceTest
     @Test
     public void testGetByPhoneNumber()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -257,7 +257,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroups()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -347,7 +347,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsLessAuthorities()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -430,7 +430,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsLessAuthoritiesDisjointRoles()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, false );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, false );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -518,7 +518,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsSearch()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -562,7 +562,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsSelfRegistered()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -602,7 +602,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsOrganisationUnit()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -645,7 +645,7 @@ public class UserServiceTest
     @Test
     public void testGetInvitations()
     {
-        systemSettingManager.saveSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );

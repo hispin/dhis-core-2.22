@@ -34,20 +34,22 @@ import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_EMAIL_NOTIFICATI
 import java.util.HashMap;
 import java.util.Set;
 
-import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.hisp.dhis.configuration.ConfigurationService;
-import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.commons.util.DebugUtils;
+import org.hisp.dhis.configuration.ConfigurationService;
+import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.scheduling.annotation.Async;
+
+import com.google.common.base.Strings;
 
 /**
  * @author Lars Helge Overland
@@ -230,7 +232,7 @@ public class EmailMessageSender
 
     private String customizeTitle( String title )
     {
-        String appTitle = (String) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_APPLICATION_TITLE );
+        String appTitle = (String) systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE );
 
         if ( appTitle != null && !appTitle.isEmpty() )
         {
