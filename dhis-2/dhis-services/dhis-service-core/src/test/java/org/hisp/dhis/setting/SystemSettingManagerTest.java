@@ -43,7 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author Stian Strandli
  * @author Lars Helge Overland
- * @version $Id: SystemSettingManagerTest.java 4866 2008-04-11 10:40:35Z larshelg $
  */
 public class SystemSettingManagerTest
     extends DhisSpringTest
@@ -62,10 +61,20 @@ public class SystemSettingManagerTest
     }
 
     @Test
-    public void testGetDefaultSystemSetting()
+    public void testSaveGetSetting()
     {
-        assertEquals( "valueA", systemSettingManager.getSystemSetting( "settingA", "valueA" ) );
-        assertEquals( "valueB", systemSettingManager.getSystemSetting( "settingB", "valueB" ) );
+        systemSettingManager.saveSystemSetting( Setting.APPLICATION_INTRO, "valueA" );
+        systemSettingManager.saveSystemSetting( Setting.APPLICATION_NOTIFICATION, "valueB" );
+
+        assertEquals( "valueA", systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
+        assertEquals( "valueB", systemSettingManager.getSystemSetting( Setting.APPLICATION_NOTIFICATION ) );
+    }
+
+    @Test
+    public void testSaveGetSettingWithDefault()
+    {
+        assertEquals( Setting.APP_STORE_URL.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.APP_STORE_URL ) );
+        assertEquals( Setting.EMAIL_PORT.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.EMAIL_PORT ) );
     }
 
     @Test

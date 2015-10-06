@@ -30,12 +30,14 @@ package org.hisp.dhis.appmanager;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.ant.compress.taskdefs.Unzip;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.datavalue.DefaultDataValueService;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -43,6 +45,7 @@ import org.hisp.dhis.user.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -212,7 +215,7 @@ public class DefaultAppManager
     @Override
     public String getAppFolderPath()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( KEY_APP_FOLDER_PATH ) );
+        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( Setting.APP_FOLDER_PATH ) );
     }
 
     @Override
@@ -240,7 +243,7 @@ public class DefaultAppManager
     @Override
     public String getAppBaseUrl()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( KEY_APP_BASE_URL ) );
+        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( Setting.APP_BASE_URL ) );
     }
 
     @Override
@@ -252,7 +255,7 @@ public class DefaultAppManager
     @Override
     public String getAppStoreUrl()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( KEY_APP_STORE_URL, DEFAULT_APP_STORE_URL ) );
+        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( Setting.APP_STORE_URL ) );
     }
 
     @Override
