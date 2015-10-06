@@ -517,6 +517,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     var convertFromUserToApi = function(enrollment){
         enrollment.incidentDate = DateUtils.formatFromUserToApi(enrollment.incidentDate);
         enrollment.enrollmentDate = DateUtils.formatFromUserToApi(enrollment.enrollmentDate);
+        delete enrollment.orgUnitName;
         return enrollment;
     };
     return {        
