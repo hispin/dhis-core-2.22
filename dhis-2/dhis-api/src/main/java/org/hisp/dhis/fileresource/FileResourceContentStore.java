@@ -30,6 +30,8 @@ package org.hisp.dhis.fileresource;
 
 import com.google.common.io.ByteSource;
 
+import java.net.URI;
+
 /**
  * @author Halvdan Hoem Grelland
  */
@@ -57,4 +59,11 @@ public interface FileResourceContentStore
      * @param key the key.
      */
     void deleteFileResourceContent( String key );
+
+    /**
+     * Create a signed GET request which gives access to the content.
+     * @param key the key.
+     * @return a URI containing the signed GET request or null if signed requests are not supported.
+     */
+    URI getSignedGetContentUri( String key );
 }

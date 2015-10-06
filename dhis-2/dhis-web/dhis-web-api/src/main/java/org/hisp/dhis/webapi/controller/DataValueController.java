@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -469,6 +470,23 @@ public class DataValueController
         response.setContentType( fileResource.getContentType() );
         response.setContentLength( Math.round( fileResource.getContentLength() ) );
         response.setHeader( HttpHeaders.CONTENT_DISPOSITION, "filename=" + fileResource.getName() );
+
+        // ---------------------------------------------------------------------
+        // Attempt to build signed URL request for content and redirect
+        // ---------------------------------------------------------------------
+
+        URI signedGetUri = fileResourceService.getSignedGetFileResourceContentUri( uid );
+
+        if ( signedGetUri != null )
+        {
+            response.setStatus( HttpServletResponse.SC_FOUND );
+            response.setHeader( HttpHeaders.LOCATION, signedGetUri.toASCIIString() );
+            return;
+        }
+
+        // ---------------------------------------------------------------------
+        // Request signing is not available, stream content back to client
+        // ---------------------------------------------------------------------
 
         InputStream inputStream = null;
 

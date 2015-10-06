@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.io.ByteSource;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -142,6 +143,19 @@ public class DefaultFileResourceService
     public void updateFileResource( FileResource fileResource )
     {
         fileResourceStore.update( fileResource );
+    }
+
+    @Override
+    public URI getSignedGetFileResourceContentUri( String uid )
+    {
+        FileResource fileResource = getFileResource( uid );
+
+        if ( fileResource == null )
+        {
+            return null;
+        }
+
+        return fileResourceContentStore.getSignedGetContentUri( getRelativeStorageKey( fileResource ) );
     }
 
     // ---------------------------------------------------------------------
