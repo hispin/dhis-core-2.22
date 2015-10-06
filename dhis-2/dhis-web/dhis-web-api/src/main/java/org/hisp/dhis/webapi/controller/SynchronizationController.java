@@ -38,7 +38,7 @@ import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.synch.AvailabilityStatus;
 import org.hisp.dhis.dxf2.synch.SynchronizationManager;
-import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -94,6 +94,6 @@ public class SynchronizationController
     @RequestMapping( value = "/metadataRepo", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody String getMetadataRepoIndex()
     {
-        return restTemplate.getForObject( SystemSettingManager.DEFAULT_METADATA_REPO_URL, String.class );
+        return restTemplate.getForObject( Setting.METADATA_REPO_URL.getDefaultValue().toString(), String.class );
     }
 }

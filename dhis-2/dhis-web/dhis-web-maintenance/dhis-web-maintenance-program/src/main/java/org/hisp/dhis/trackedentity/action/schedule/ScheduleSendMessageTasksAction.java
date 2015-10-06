@@ -28,7 +28,6 @@ package org.hisp.dhis.trackedentity.action.schedule;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_TIME_FOR_SENDING_MESSAGE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_SCHEDULE_MESSAGE_TASKS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_SEND_MESSAGE_SCHEDULED_TASKS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_TIME_FOR_SENDING_MESSAGE;
@@ -40,6 +39,7 @@ import org.hisp.dhis.scheduling.ProgramSchedulingManager;
 import org.hisp.dhis.scheduling.SendScheduledMessageTask;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.scheduling.Scheduler;
@@ -156,8 +156,7 @@ public class ScheduleSendMessageTasksAction
             else
             {
                 Map<String, String> keyCronMap = new HashMap<>();
-                String time = (String) systemSettingManager.getSystemSetting( KEY_TIME_FOR_SENDING_MESSAGE,
-                    DEFAULT_TIME_FOR_SENDING_MESSAGE );
+                String time = (String) systemSettingManager.getSystemSetting( Setting.TIME_FOR_SENDING_MESSAGE );
 
                 // Schedule for sending messages
                 String[] infor = time.split( ":" );

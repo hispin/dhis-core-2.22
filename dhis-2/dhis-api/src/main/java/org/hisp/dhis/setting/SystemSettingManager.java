@@ -29,13 +29,11 @@ package org.hisp.dhis.setting;
  */
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.QuarterlyPeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
@@ -112,38 +110,6 @@ public interface SystemSettingManager
     String KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO = "keyDataImportRequireCategoryOptionCombo";
     String KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO = "keyDataImportRequireAttributeOptionCombo";
 
-    String DEFAULT_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY = "lastMonth";
-    String DEFAULT_FLAG = "dhis2";
-    double DEFAULT_FACTOR_OF_DEVIATION = 2.0;
-    String DEFAULT_START_MODULE = "dhis-web-dashboard-integration";
-    String DEFAULT_APPLICATION_TITLE = "District Health Information Software 2";
-    int DEFAULT_EMAIL_PORT = 587;
-    String DEFAULT_TIME_FOR_SENDING_MESSAGE = "08:00";
-    String DEFAULT_CACHE_STRATEGY = "CACHE_6AM_TOMORROW";
-    int DEFAULT_ANALYTICS_MAX_LIMIT = 50000;
-    int DEFAULT_DATABASE_SERVER_CPUS = 0; // Detect automatically
-    String DEFAULT_HELP_PAGE_LINK = "../dhis-web-commons-about/help.action";
-    String DEFAULT_ANALYSIS_RELATIVE_PERIOD = "LAST_12_MONTHS";
-    String DEFAULT_METADATA_REPO_URL = "http://metadata.dhis2.org";
-	
-    Map<String, Serializable> DEFAULT_SETTINGS_VALUES = new HashMap<String, Serializable>()
-    {
-        {
-            put( KEY_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY, DEFAULT_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY );
-            put( KEY_FLAG, DEFAULT_FLAG );
-            put( CalendarService.KEY_CALENDAR, CalendarService.DEFAULT_CALENDAR );
-            put( CalendarService.KEY_DATE_FORMAT, CalendarService.DEFAULT_DATE_FORMAT );
-            put( KEY_FACTOR_OF_DEVIATION, DEFAULT_FACTOR_OF_DEVIATION );
-            put( KEY_START_MODULE, DEFAULT_START_MODULE );
-            put( KEY_APPLICATION_TITLE, DEFAULT_APPLICATION_TITLE );
-            put( KEY_EMAIL_PORT, DEFAULT_EMAIL_PORT );
-            put( KEY_TIME_FOR_SENDING_MESSAGE, DEFAULT_TIME_FOR_SENDING_MESSAGE );
-            put( KEY_CACHE_STRATEGY, DEFAULT_CACHE_STRATEGY );
-            put( KEY_ANALYTICS_MAX_LIMIT, DEFAULT_ANALYTICS_MAX_LIMIT );
-            put( KEY_ANALYSIS_RELATIVE_PERIOD, DEFAULT_ANALYSIS_RELATIVE_PERIOD );
-        }
-    };
-
     String SYSPROP_PORTAL = "runningAsPortal";
 
     HashSet<String> DEFAULT_SCHEDULED_PERIOD_TYPES = new HashSet<String>()
@@ -201,5 +167,5 @@ public interface SystemSettingManager
 
     Map<String, Serializable> getSystemSettingsAsMap();
     
-    Map<String, Serializable> getSystemSettings( Set<String> names );
+    Map<String, Serializable> getSystemSettingsAsMap( Set<String> names );
 }

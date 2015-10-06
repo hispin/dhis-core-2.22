@@ -28,7 +28,6 @@ package org.hisp.dhis.setting;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_APPLICATION_TITLE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_FOOTER;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_INTRO;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_NOTIFICATION;
@@ -63,7 +62,7 @@ public class DefaultTranslateSystemSettingManager
     {
         Map<String, String> translations = new Hashtable<>();
 
-        translations.put( KEY_APPLICATION_TITLE, getSystemSettingWithFallbacks( KEY_APPLICATION_TITLE, localeStr, DEFAULT_APPLICATION_TITLE ) );        
+        translations.put( KEY_APPLICATION_TITLE, getSystemSettingWithFallbacks( KEY_APPLICATION_TITLE, localeStr, Setting.APPLICATION_TITLE.getDefaultValue().toString() ) );        
         translations.put( KEY_APPLICATION_INTRO, getSystemSettingWithFallbacks( KEY_APPLICATION_INTRO, localeStr, "" ) );
         translations.put( KEY_APPLICATION_NOTIFICATION, getSystemSettingWithFallbacks( KEY_APPLICATION_NOTIFICATION, localeStr, "" ) );
         translations.put( KEY_APPLICATION_FOOTER, getSystemSettingWithFallbacks( KEY_APPLICATION_FOOTER, localeStr, "" ) );
@@ -76,7 +75,7 @@ public class DefaultTranslateSystemSettingManager
     {
         Map<String, String> translations = new Hashtable<>();
 
-        translations.put( KEY_APPLICATION_TITLE, systemSettingManager.getSystemSetting( KEY_APPLICATION_TITLE + localeStr, DEFAULT_APPLICATION_TITLE ).toString() );        
+        translations.put( KEY_APPLICATION_TITLE, systemSettingManager.getSystemSetting( KEY_APPLICATION_TITLE + localeStr, Setting.APPLICATION_TITLE.getDefaultValue().toString() ).toString() );        
         translations.put( KEY_APPLICATION_INTRO, systemSettingManager.getSystemSetting( KEY_APPLICATION_INTRO + localeStr, "" ).toString() );
         translations.put( KEY_APPLICATION_NOTIFICATION, systemSettingManager.getSystemSetting( KEY_APPLICATION_NOTIFICATION + localeStr, "" ).toString() );
         translations.put( KEY_APPLICATION_FOOTER, systemSettingManager.getSystemSetting( KEY_APPLICATION_FOOTER + localeStr, "" ).toString() );

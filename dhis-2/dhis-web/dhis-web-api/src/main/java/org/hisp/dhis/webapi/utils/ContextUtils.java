@@ -29,8 +29,6 @@ package org.hisp.dhis.webapi.utils;
  */
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.setting.SystemSettingManager.DEFAULT_CACHE_STRATEGY;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,8 +46,9 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.cache.CacheStrategy;
-import org.hisp.dhis.system.util.CodecUtils;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.system.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -105,7 +104,7 @@ public class ContextUtils
 
         if ( cacheStrategy.equals( CacheStrategy.RESPECT_SYSTEM_SETTING ) )
         {
-            String strategy = trimToNull( (String) systemSettingManager.getSystemSetting( KEY_CACHE_STRATEGY, DEFAULT_CACHE_STRATEGY ) );
+            String strategy = trimToNull( (String) systemSettingManager.getSystemSetting( Setting.CACHE_STRATEGY ) );
 
             cacheStrategy = strategy != null ? CacheStrategy.valueOf( strategy ) : CacheStrategy.NO_CACHE;
         }
