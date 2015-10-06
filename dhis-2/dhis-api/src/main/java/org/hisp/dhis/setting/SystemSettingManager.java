@@ -136,6 +136,12 @@ public interface SystemSettingManager
     List<SystemSetting> getAllSystemSettings();
 
     void deleteSystemSetting( String name );
+    
+    void deleteSystemSetting( Setting setting );
+
+    // -------------------------------------------------------------------------
+    // Specific methods
+    // -------------------------------------------------------------------------
 
     List<String> getFlags();
 
