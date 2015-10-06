@@ -37,15 +37,21 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.HibernateConfigurationProvider;
 import org.jclouds.ContextBuilder;
+import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.LocalBlobRequestSigner;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.internal.RequestSigningUnsupported;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
 import org.jclouds.filesystem.reference.FilesystemConstants;
+import org.jclouds.http.HttpRequest;
+import org.joda.time.Minutes;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +70,8 @@ public class JCloudsFileResourceContentStore
     private static final Log log = LogFactory.getLog( JCloudsFileResourceContentStore.class );
 
     private static final Pattern CONTAINER_NAME_PATTERN = Pattern.compile( "^((?!-)[a-zA-Z0-9-]{1,63}(?<!-))+$" );
+
+    private static final long FIVE_MINUTES_IN_SECONDS = Minutes.minutes( 5 ).toStandardDuration().getStandardSeconds();
 
     private BlobStore blobStore;
     private BlobStoreContext blobStoreContext;
@@ -202,6 +210,7 @@ public class JCloudsFileResourceContentStore
     // FileResourceContentStore implementation
     // -------------------------------------------------------------------------
 
+    @Override
     public ByteSource getFileResourceContent( String key )
     {
         final Blob blob = getBlob( key );
@@ -241,6 +250,7 @@ public class JCloudsFileResourceContentStore
         return isEmptyOrFailed ? null : byteSource;
     }
 
+    @Override
     public String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 )
     {
         Blob blob = createBlob( key, content, size, contentMd5 );
@@ -255,9 +265,34 @@ public class JCloudsFileResourceContentStore
         return key;
     }
 
+    @Override
     public void deleteFileResourceContent( String key )
     {
         deleteBlob( key );
+    }
+
+    @Override
+    public URI getSignedGetContentUri( String key )
+    {
+        BlobRequestSigner signer = blobStoreContext.getSigner();
+
+        if ( !requestSigningSupported( signer ) )
+        {
+            return null;
+        }
+
+        HttpRequest httpRequest = null;
+
+        try
+        {
+            httpRequest = signer.signGetBlob( container, key, FIVE_MINUTES_IN_SECONDS );
+        }
+        catch ( UnsupportedOperationException uoe )
+        {
+            return null;
+        }
+
+        return httpRequest.getEndpoint();
     }
 
     // -------------------------------------------------------------------------
@@ -319,5 +354,10 @@ public class JCloudsFileResourceContentStore
     private boolean isValidContainerName( String containerName ) 
     {
         return containerName != null && CONTAINER_NAME_PATTERN.matcher( containerName ).matches();
+    }
+
+    private boolean requestSigningSupported( BlobRequestSigner signer )
+    {
+        return !( signer instanceof RequestSigningUnsupported ) && !( signer instanceof LocalBlobRequestSigner );
     }
 }

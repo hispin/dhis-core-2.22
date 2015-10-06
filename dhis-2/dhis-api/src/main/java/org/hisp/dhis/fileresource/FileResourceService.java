@@ -30,6 +30,7 @@ package org.hisp.dhis.fileresource;
 
 import com.google.common.io.ByteSource;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -50,4 +51,6 @@ public interface FileResourceService
     boolean fileResourceExists( String uid );
     
     void updateFileResource( FileResource fileResource );
+
+    URI getSignedGetFileResourceContentUri( String uid );
 }
