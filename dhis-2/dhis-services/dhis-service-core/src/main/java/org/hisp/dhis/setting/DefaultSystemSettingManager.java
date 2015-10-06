@@ -150,6 +150,60 @@ public class DefaultSystemSettingManager
         deleteSystemSetting( setting.getName() );
     }
 
+    @Override
+    public Map<String, Serializable> getSystemSettingsAsMap()
+    {
+        Map<String, Serializable> settingsMap = new HashMap<>();
+        Collection<SystemSetting> systemSettings = getAllSystemSettings();
+
+        for ( SystemSetting systemSetting : systemSettings )
+        {
+            Serializable settingValue = systemSetting.getValue();
+            
+            if ( settingValue == null )
+            {
+                Optional<Setting> setting = Setting.getByName( systemSetting.getName() );
+                
+                if ( setting.isPresent() )
+                {
+                    settingValue = setting.get().getDefaultValue();
+                }
+            }
+
+            settingsMap.put( systemSetting.getName(), settingValue );
+        }
+
+        return settingsMap;
+    }
+
+    @Override
+    public Map<String, Serializable> getSystemSettingsAsMap( Set<String> names )
+    {
+        Map<String, Serializable> map = new HashMap<>();
+
+        for ( String name : names )
+        {
+            Serializable settingValue = getSystemSetting( name );
+
+            if ( settingValue == null )
+            {
+                Optional<Setting> setting = Setting.getByName( name );
+                
+                if ( setting.isPresent() )
+                {
+                    settingValue = setting.get().getDefaultValue();
+                }
+            }
+            
+            if ( settingValue != null )
+            {
+                map.put( name, settingValue );
+            }
+        }
+
+        return map;
+    }
+    
     // -------------------------------------------------------------------------
     // Specific methods
     // -------------------------------------------------------------------------
@@ -256,59 +310,5 @@ public class DefaultSystemSettingManager
         Serializable value = getSystemSetting( Setting.CORS_WHITELIST );
         
         return value != null ? (List<String>) value : Collections.emptyList();
-    }
-
-    @Override
-    public Map<String, Serializable> getSystemSettingsAsMap()
-    {
-        Map<String, Serializable> settingsMap = new HashMap<>();
-        Collection<SystemSetting> systemSettings = getAllSystemSettings();
-
-        for ( SystemSetting systemSetting : systemSettings )
-        {
-            Serializable settingValue = systemSetting.getValue();
-            
-            if ( settingValue == null )
-            {
-                Optional<Setting> setting = Setting.getByName( systemSetting.getName() );
-                
-                if ( setting.isPresent() )
-                {
-                    settingValue = setting.get().getDefaultValue();
-                }
-            }
-
-            settingsMap.put( systemSetting.getName(), settingValue );
-        }
-
-        return settingsMap;
-    }
-
-    @Override
-    public Map<String, Serializable> getSystemSettingsAsMap( Set<String> names )
-    {
-        Map<String, Serializable> map = new HashMap<>();
-
-        for ( String name : names )
-        {
-            Serializable settingValue = getSystemSetting( name );
-
-            if ( settingValue == null )
-            {
-                Optional<Setting> setting = Setting.getByName( name );
-                
-                if ( setting.isPresent() )
-                {
-                    settingValue = setting.get().getDefaultValue();
-                }
-            }
-            
-            if ( settingValue != null )
-            {
-                map.put( name, settingValue );
-            }
-        }
-
-        return map;
     }
 }

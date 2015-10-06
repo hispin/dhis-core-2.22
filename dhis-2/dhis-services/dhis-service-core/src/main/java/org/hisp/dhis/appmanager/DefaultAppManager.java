@@ -237,7 +237,7 @@ public class DefaultAppManager
             }
         }
 
-        appSettingManager.saveSystemSetting( KEY_APP_FOLDER_PATH, appFolderPath );
+        appSettingManager.saveSystemSetting( Setting.APP_FOLDER_PATH, appFolderPath );
     }
 
     @Override
@@ -249,7 +249,7 @@ public class DefaultAppManager
     @Override
     public void setAppBaseUrl( String appBaseUrl )
     {
-        appSettingManager.saveSystemSetting( KEY_APP_BASE_URL, appBaseUrl );
+        appSettingManager.saveSystemSetting( Setting.APP_BASE_URL, appBaseUrl );
     }
 
     @Override
@@ -261,7 +261,7 @@ public class DefaultAppManager
     @Override
     public void setAppStoreUrl( String appStoreUrl )
     {
-        appSettingManager.saveSystemSetting( KEY_APP_STORE_URL, appStoreUrl );
+        appSettingManager.saveSystemSetting( Setting.APP_STORE_URL, appStoreUrl );
     }
 
     // -------------------------------------------------------------------------

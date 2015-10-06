@@ -139,6 +139,10 @@ public interface SystemSettingManager
     
     void deleteSystemSetting( Setting setting );
 
+    Map<String, Serializable> getSystemSettingsAsMap();
+    
+    Map<String, Serializable> getSystemSettingsAsMap( Set<String> names );
+    
     // -------------------------------------------------------------------------
     // Specific methods
     // -------------------------------------------------------------------------
@@ -174,8 +178,4 @@ public interface SystemSettingManager
     Integer credentialsExpires();
 
     List<String> getCorsWhitelist();
-
-    Map<String, Serializable> getSystemSettingsAsMap();
-    
-    Map<String, Serializable> getSystemSettingsAsMap( Set<String> names );
 }

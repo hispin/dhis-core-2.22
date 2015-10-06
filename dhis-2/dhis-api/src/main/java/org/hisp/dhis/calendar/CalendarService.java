@@ -37,9 +37,6 @@ import java.util.List;
  */
 public interface CalendarService
 {
-    String KEY_CALENDAR = "keyCalendar";
-    String KEY_DATE_FORMAT = "keyDateFormat";
-    
     /**
      * Gets all available calendars as a sorted list.
      * @return All available calendars

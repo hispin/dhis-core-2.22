@@ -41,9 +41,6 @@ public interface AppManager
 {
     String ID = AppManager.class.getName();
 
-    String KEY_APP_FOLDER_PATH = "appFolderPath";
-    String KEY_APP_BASE_URL = "appBaseUrl";
-    String KEY_APP_STORE_URL = "appStoreUrl";
     String APPS_DIR = "/apps";
     String APPS_API_PATH = "/api/apps";
 

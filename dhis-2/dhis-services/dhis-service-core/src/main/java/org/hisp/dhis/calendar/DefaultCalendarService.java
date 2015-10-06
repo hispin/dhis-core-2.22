@@ -149,32 +149,32 @@ public class DefaultCalendarService
     @Override
     public String getSystemCalendarKey()
     {
-        String key = keyCache.get( KEY_CALENDAR );        
+        String key = keyCache.get( Setting.CALENDAR.getName() );        
         key = !isEmpty( key ) ? key : (String) settingManager.getSystemSetting( Setting.CALENDAR );        
-        keyCache.put( KEY_CALENDAR, key );        
+        keyCache.put( Setting.CALENDAR.getName(), key );        
         return key;
     }
     
     @Override
     public void setSystemCalendarKey( String calendarKey )
     {
-        keyCache.put( KEY_CALENDAR, calendarKey );
-        settingManager.saveSystemSetting( KEY_CALENDAR, calendarKey );
+        keyCache.put( Setting.CALENDAR.getName(), calendarKey );
+        settingManager.saveSystemSetting( Setting.CALENDAR.getName(), calendarKey );
     }
     
     @Override
     public String getSystemDateFormatKey()
     {
-        String key = keyCache.get( KEY_DATE_FORMAT );
+        String key = keyCache.get( Setting.DATE_FORMAT.getName() );
         key = !isEmpty( key ) ? key : (String) settingManager.getSystemSetting( Setting.DATE_FORMAT );
-        keyCache.put( KEY_DATE_FORMAT, key );
+        keyCache.put( Setting.DATE_FORMAT.getName(), key );
         return key;
     }
 
     @Override
     public void setSystemDateFormatKey( String dateFormatKey )
     {
-        keyCache.put( KEY_DATE_FORMAT, dateFormatKey );
-        settingManager.saveSystemSetting( KEY_DATE_FORMAT, dateFormatKey );
+        keyCache.put( Setting.DATE_FORMAT.getName(), dateFormatKey );
+        settingManager.saveSystemSetting( Setting.DATE_FORMAT.getName(), dateFormatKey );
     }
 }
