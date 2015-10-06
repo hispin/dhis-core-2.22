@@ -9,6 +9,7 @@ trackerCapture.controller('DataEntryController',
                 $timeout,
                 $translate,
                 Paginator,
+                CommonUtils,
                 DateUtils,
                 EventUtils,
                 orderByFilter,
@@ -513,24 +514,12 @@ trackerCapture.controller('DataEntryController',
         });
 
         if (oldValue !== value) {
-            if (value) {
-                if (prStDe.dataElement.valueType === 'DATE') {
-                    value = DateUtils.formatFromUserToApi(value);
-                }
-                if (prStDe.dataElement.optionSetValue) {
-                    if (prStDe.dataElement.optionSet && $scope.optionSets[prStDe.dataElement.optionSet.id] && $scope.optionSets[prStDe.dataElement.optionSet.id].options) {
-                        value = OptionSetService.getCode($scope.optionSets[prStDe.dataElement.optionSet.id].options, value);
-                    }
-                }
-            }
-
+            
+            value = CommonUtils.formatDataValue(value, prStDe.dataElement, $scope.optionSets, 'API');
+            
             $scope.updateSuccess = false;
 
-            $scope.currentElement = {id: prStDe.dataElement.id, event: eventToSave.event, saved: false};
-
-            if(value === false && prStDe.dataElement.valueType === "TRUE_ONLY" ) {
-                value = "";
-            }
+            $scope.currentElement = {id: prStDe.dataElement.id, event: eventToSave.event, saved: false};            
 
             var ev = {event: eventToSave.event,
                 orgUnit: eventToSave.orgUnit,
