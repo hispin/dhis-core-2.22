@@ -188,8 +188,6 @@
                                    ng-required={{prStDe.compulsory}} 
                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
                                    ng-change="saveDatavalue(prStDe, innerForm.foo)" 
-                                   ng-true-value="true" 
-                                   ng-false-value="''"
                                    name="foo"/>
                         </div>
                         <div ng-switch-default>
@@ -233,8 +231,6 @@
                                    ng-model="eventRow[prStDe.dataElement.id]"                                                               
                                    ng-required={{prStDe.compulsory}} 
                                    ng-disabled="true" 
-                                   ng-true-value="true" 
-                                   ng-false-value="''"
                                    name="foo"/>
                         </div>
                         <div ng-switch-default>

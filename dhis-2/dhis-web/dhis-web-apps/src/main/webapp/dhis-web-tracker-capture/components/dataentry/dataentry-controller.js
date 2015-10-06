@@ -528,6 +528,10 @@ trackerCapture.controller('DataEntryController',
 
             $scope.currentElement = {id: prStDe.dataElement.id, event: eventToSave.event, saved: false};
 
+            if(value === false && prStDe.dataElement.valueType === "TRUE_ONLY" ) {
+                value = "";
+            }
+
             var ev = {event: eventToSave.event,
                 orgUnit: eventToSave.orgUnit,
                 program: eventToSave.program,
