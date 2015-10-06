@@ -28,11 +28,8 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
@@ -42,10 +39,8 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
-import org.hisp.dhis.dxf2.webmessage.WebMessage;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
-import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
-import org.hisp.dhis.dxf2.webmessage.responses.FileResourceWebMessageResponse;
 import org.hisp.dhis.fileresource.FileResource;
 import org.hisp.dhis.fileresource.FileResourceDomain;
 import org.hisp.dhis.fileresource.FileResourceService;
@@ -56,21 +51,15 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.InvalidMimeTypeException;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -401,134 +390,6 @@ public class DataValueController
     }
 
     // ---------------------------------------------------------------------
-    // POST file
-    // ---------------------------------------------------------------------
-
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
-    @RequestMapping( value = "/files", method = RequestMethod.POST )
-    public @ResponseBody WebMessage saveDataValueFileResource(
-        @RequestParam String de,
-        @RequestParam( required = false ) String co,
-        @RequestParam( required = false ) String cc,
-        @RequestParam( required = false ) String cp,
-        @RequestParam String pe,
-        @RequestParam String ou,
-        @RequestParam( value = "file", required = true ) MultipartFile multipartFile,
-        HttpServletResponse response )
-        throws WebMessageException, IOException
-    {
-        boolean strictPeriods = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
-        boolean strictCategoryOptionCombos = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
-        boolean strictOrgUnits = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS, false );
-        boolean requireCategoryOptionCombo = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO, false );
-
-        // ---------------------------------------------------------------------
-        // Input validation
-        // ---------------------------------------------------------------------
-
-        DataElement dataElement = getAndValidateDataElement( de );
-
-        DataElementCategoryOptionCombo categoryOptionCombo = getAndValidateCategoryOptionCombo( co, requireCategoryOptionCombo );
-
-        getAndValidateAttributeOptionCombo( cc, cp );
-
-        Period period = getAndValidatePeriod( pe );
-
-        OrganisationUnit organisationUnit = getAndValidateOrganisationUnit( ou );
-
-        validateInvalidFuturePeriod( period, dataElement );
-
-        if ( multipartFile == null || multipartFile.isEmpty() )
-        {
-            throw new WebMessageException( WebMessageUtils.conflict( "File is missing",
-                "The multipart request didn't contain a file or the file was empty." ) );
-        }
-
-        // ---------------------------------------------------------------------
-        // Optional constraints
-        // ---------------------------------------------------------------------
-
-        if ( strictPeriods && !dataElement.getPeriodTypes().contains( period.getPeriodType() ) )
-        {
-            throw new WebMessageException( WebMessageUtils.conflict(
-                "Period type of period: " + period.getIsoDate() + " not valid for data element: " + dataElement.getUid() ) );
-        }
-
-        if ( strictCategoryOptionCombos && !dataElement.getCategoryCombo().getOptionCombos().contains( categoryOptionCombo ) )
-        {
-            throw new WebMessageException( WebMessageUtils.conflict(
-                "Category option combo: " + categoryOptionCombo.getUid() + " must be part of category combo of data element: " + dataElement.getUid() ) );
-        }
-
-        if ( strictOrgUnits && !dataElement.hasDataSetOrganisationUnit( organisationUnit ) )
-        {
-            throw new WebMessageException( WebMessageUtils.conflict(
-                "Data element: " + dataElement.getUid() + " must be assigned through data sets to organisation unit: " + organisationUnit.getUid() ) );
-        }
-
-        // ---------------------------------------------------------------------
-        // Locking validation
-        // ---------------------------------------------------------------------
-
-        validateDataSetNotLocked( dataElement, period, organisationUnit );
-
-        // ---------------------------------------------------------------------
-        // Validate and assemble FileResource
-        // ---------------------------------------------------------------------
-
-        String filename = StringUtils.defaultIfBlank( FilenameUtils.getName( multipartFile.getOriginalFilename() ), "untitled" );
-
-        String contentType = multipartFile.getContentType();
-        contentType = isValidContentType( contentType ) ? contentType : MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE;
-
-        long contentLength = multipartFile.getSize();
-
-        if ( contentLength <= 0 )
-        {
-            throw new WebMessageException( WebMessageUtils.conflict( "Could not read file or file is empty" ) );
-        }
-
-        ByteSource content = new ByteSource()
-        {
-            @Override
-            public InputStream openStream()
-            {
-                try
-                {
-                    return multipartFile.getInputStream();
-                }
-                catch ( IOException e )
-                {
-                    return new NullInputStream( 0 );
-                }
-            }
-        };
-
-        String contentMD5 = content.hash( Hashing.md5() ).toString(); // TODO Consider letting filestore create the hash
-
-        FileResource fileResource = new FileResource( filename, contentType, contentLength, contentMD5, FileResourceDomain.DATA_VALUE );
-        fileResource.setAssigned( false );
-        fileResource.setCreated( new Date() );
-        fileResource.setUser( currentUserService.getCurrentUser() );
-
-        // ---------------------------------------------------------------------
-        // Save file resource
-        // ---------------------------------------------------------------------
-
-        String uid = fileResourceService.saveFileResource( fileResource, content );
-
-        if ( uid == null )
-        {
-            throw new WebMessageException( WebMessageUtils.error( "Saving the file failed" ) );
-        }
-
-        WebMessage webMessage = new WebMessage( WebMessageStatus.OK, HttpStatus.CREATED );
-        webMessage.setResponse( new FileResourceWebMessageResponse( fileResource ) );
-
-        return webMessage;
-    }
-
-    // ---------------------------------------------------------------------
     // GET file
     // ---------------------------------------------------------------------
 
@@ -738,19 +599,5 @@ public class DataValueController
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Data set is locked" ) );
         }
-    }
-
-    private boolean isValidContentType( String contentType )
-    {
-        try
-        {
-            MimeTypeUtils.parseMimeType( contentType );
-        }
-        catch ( InvalidMimeTypeException e )
-        {
-            return false;
-        }
-
-        return true;
     }
 }
