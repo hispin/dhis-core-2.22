@@ -1480,7 +1480,7 @@ public class DefaultAnalyticsService
      */
     private int getProcessNo()
     {
-        Integer cores = (Integer) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_DATABASE_SERVER_CPUS );
+        Integer cores = (Integer) systemSettingManager.getSystemSetting( Setting.DATABASE_SERVER_CPUS );
 
         return ( cores == null || cores == 0 ) ? SystemUtils.getCpuCores() : cores;
     }
