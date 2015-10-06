@@ -12,7 +12,6 @@
         feedbackRecipients: getFieldValue('feedbackRecipients'),
         offlineOrganisationUnitLevel: getFieldValue('offlineOrganisationUnitLevel'),
         systemNotificationsEmail: getFieldValue('systemNotificationsEmail'),
-        omitIndicatorsZeroNumeratorDataMart: jQuery('#omitIndicatorsZeroNumeratorDataMart').is(':checked'),
         factorDeviation: getFieldValue('factorDeviation'),
         phoneNumberAreaCode: getFieldValue('phoneNumberAreaCode'),
         googleAnalyticsUA: getFieldValue('googleAnalyticsUA'),
@@ -171,11 +170,6 @@
 <div class="setting">
     <input type="checkbox" id="multiOrganisationUnitForms" name="multiOrganisationUnitForms" #if( $multiOrganisationUnitForms )checked="checked"#end>
     <label for="multiOrganisationUnitForms">$i18n.getString( "multi_organisation_unit_forms" )</label>
-</div>
-
-<div class="setting">
-    <input type="checkbox" id="omitIndicatorsZeroNumeratorDataMart" name="omitIndicatorsZeroNumeratorDataMart" #if( $omitIndicatorsZeroNumeratorDataMart )checked="checked"#end>
-    <label for="omitIndicatorsZeroNumeratorDataMart">$i18n.getString( "omit_indicators_zero_numerator_data_mart" )</label>
 </div>
 
 <div class="setting">

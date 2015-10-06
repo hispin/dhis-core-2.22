@@ -37,7 +37,6 @@ import static org.hisp.dhis.setting.SystemSettingManager.KEY_GOOGLE_ANALYTICS_UA
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_HELP_PAGE_LINK;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_INSTANCE_BASE_URL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_MULTI_ORGANISATION_UNIT_FORMS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_OMIT_INDICATORS_ZERO_NUMERATOR_DATAMART;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_PHONE_NUMBER_AREA_CODE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_SYSTEM_NOTIFICATIONS_EMAIL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ANALYSIS_RELATIVE_PERIOD;
@@ -168,13 +167,6 @@ public class SetGeneralSettingsAction
         this.analysisRelativePeriod = analysisRelativePeriod;
     }
 
-    private Boolean omitIndicatorsZeroNumeratorDataMart;
-
-    public void setOmitIndicatorsZeroNumeratorDataMart( Boolean omitIndicatorsZeroNumeratorDataMart )
-    {
-        this.omitIndicatorsZeroNumeratorDataMart = omitIndicatorsZeroNumeratorDataMart;
-    }
-
     private Double factorDeviation;
 
     public void setFactorDeviation( Double factorDeviation )
@@ -269,7 +261,6 @@ public class SetGeneralSettingsAction
         systemSettingManager.saveSystemSetting( KEY_CACHE_STRATEGY, cacheStrategy );
         systemSettingManager.saveSystemSetting( KEY_ANALYTICS_MAX_LIMIT, analyticsMaxLimit );
         systemSettingManager.saveSystemSetting( KEY_DATABASE_SERVER_CPUS, databaseServerCpus );
-        systemSettingManager.saveSystemSetting( KEY_OMIT_INDICATORS_ZERO_NUMERATOR_DATAMART, omitIndicatorsZeroNumeratorDataMart );
         systemSettingManager.saveSystemSetting( KEY_FACTOR_OF_DEVIATION, factorDeviation );
         systemSettingManager.saveSystemSetting( KEY_PHONE_NUMBER_AREA_CODE, phoneNumberAreaCode );
         systemSettingManager.saveSystemSetting( KEY_MULTI_ORGANISATION_UNIT_FORMS, multiOrganisationUnitForms );
