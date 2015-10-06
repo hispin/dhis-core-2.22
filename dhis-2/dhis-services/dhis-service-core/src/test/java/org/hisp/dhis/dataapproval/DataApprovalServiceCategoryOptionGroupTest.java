@@ -28,8 +28,6 @@ package org.hisp.dhis.dataapproval;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -63,6 +61,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -487,8 +486,8 @@ public class DataApprovalServiceCategoryOptionGroupTest
         periodA = createPeriod( "201801" );
         periodService.addPeriod( periodA );
 
-        systemSettingManager.saveSystemSetting( KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS, true );
-        systemSettingManager.saveSystemSetting( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, true );
+        systemSettingManager.saveSystemSetting( Setting.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, true );
+        systemSettingManager.saveSystemSetting( Setting.ACCEPTANCE_REQUIRED_FOR_APPROVAL, true );
     }
 
     @Override

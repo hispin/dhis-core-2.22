@@ -28,11 +28,18 @@ package org.hisp.dhis.user;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.AuditLogUtil;
+import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategory;
@@ -41,20 +48,13 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.security.PasswordManager;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.UserAuthorityGroupCanIssueFilter;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS;
+import com.google.common.collect.Lists;
 
 /**
  * @author Chau Thu Tran
@@ -242,7 +242,7 @@ public class DefaultUserService
 
     private void handleUserQueryParams( UserQueryParams params )
     {
-        boolean canGrantOwnRoles = (Boolean) systemSettingManager.getSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, false );
+        boolean canGrantOwnRoles = (Boolean) systemSettingManager.getSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS );
         params.setDisjointRoles( !canGrantOwnRoles );
 
         if ( params.getUser() == null )
@@ -518,7 +518,7 @@ public class DefaultUserService
     {
         User user = currentUserService.getCurrentUser();
 
-        boolean canGrantOwnUserAuthorityGroups = (Boolean) systemSettingManager.getSystemSetting( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, false );
+        boolean canGrantOwnUserAuthorityGroups = (Boolean) systemSettingManager.getSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS );
 
         FilterUtils.filter( userRoles, new UserAuthorityGroupCanIssueFilter( user, canGrantOwnUserAuthorityGroups ) );
     }

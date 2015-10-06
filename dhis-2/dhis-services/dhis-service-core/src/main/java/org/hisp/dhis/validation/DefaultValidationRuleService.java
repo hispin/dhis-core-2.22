@@ -52,6 +52,7 @@ import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -257,7 +258,7 @@ public class DefaultValidationRuleService
 
         Set<Period> periods = getAlertPeriodsFromRules( rules );
 
-        Date lastScheduledRun = (Date) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_LAST_MONITORING_RUN );
+        Date lastScheduledRun = (Date) systemSettingManager.getSystemSetting( Setting.LAST_MONITORING_RUN );
 
         // Any database changes after this moment will contribute to the next run.
 
@@ -278,7 +279,7 @@ public class DefaultValidationRuleService
 
         log.info( "Posted alerts, monitoring task done" );
 
-        systemSettingManager.saveSystemSetting( SystemSettingManager.KEY_LAST_MONITORING_RUN, thisRun );
+        systemSettingManager.saveSystemSetting( Setting.LAST_MONITORING_RUN, thisRun );
     }
 
     @Override

@@ -28,7 +28,15 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.io.ByteSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -48,6 +56,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
@@ -61,18 +70,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATA_IMPORT_STRICT_PERIODS;
+import com.google.common.io.ByteSource;
 
 /**
  * @author Lars Helge Overland
@@ -132,10 +130,10 @@ public class DataValueController
         @RequestParam( required = false ) boolean followUp, HttpServletResponse response )
         throws WebMessageException
     {
-        boolean strictPeriods = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_PERIODS, false );
-        boolean strictCategoryOptionCombos = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS, false );
-        boolean strictOrgUnits = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS, false );
-        boolean requireCategoryOptionCombo = (Boolean) systemSettingManager.getSystemSetting( KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO, false );
+        boolean strictPeriods = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_PERIODS );
+        boolean strictCategoryOptionCombos = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS );
+        boolean strictOrgUnits = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_ORGANISATION_UNITS );
+        boolean requireCategoryOptionCombo = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO );
         
         // ---------------------------------------------------------------------
         // Input validation

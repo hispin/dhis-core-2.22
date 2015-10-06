@@ -43,7 +43,7 @@ import org.hisp.dhis.sms.config.SmsConfiguration;
  */
 public enum Setting
 {
-    APPLICATION_TITLE( "applicationTitle", "District Health Information Software 2", String.class ), 
+    APPLICATION_TITLE( "applicationTitle", "DHIS 2", String.class ), 
     APPLICATION_INTRO( "keyApplicationIntro" ),
     APPLICATION_NOTIFICATION( "keyApplicationNotification" ),
     APPLICATION_FOOTER( "keyApplicationFooter" ),

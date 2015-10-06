@@ -109,7 +109,7 @@ public interface SystemSettingManager
     String KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS = "keyDataImportStrictAttributeOptionCombos";
     String KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO = "keyDataImportRequireCategoryOptionCombo";
     String KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO = "keyDataImportRequireAttributeOptionCombo";
-
+    
     String SYSPROP_PORTAL = "runningAsPortal";
 
     HashSet<String> DEFAULT_SCHEDULED_PERIOD_TYPES = new HashSet<String>()

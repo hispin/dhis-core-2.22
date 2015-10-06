@@ -28,17 +28,17 @@ package org.hisp.dhis.validation.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_MONITORING;
 import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 
 import java.util.Date;
 
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
-import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.validation.ValidationRuleService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +99,6 @@ public class MonitoringTask
             throw ex;
         }
         
-        systemSettingManager.saveSystemSetting( KEY_LAST_SUCCESSFUL_MONITORING, startTime );
+        systemSettingManager.saveSystemSetting( Setting.LAST_SUCCESSFUL_MONITORING, startTime );
     }
 }

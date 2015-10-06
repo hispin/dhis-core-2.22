@@ -37,7 +37,6 @@ import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVABLE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_ABOVE;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_READY;
 import static org.hisp.dhis.dataapproval.DataApprovalState.UNAPPROVED_WAITING;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,6 +69,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.user.CurrentUserService;
@@ -360,7 +360,7 @@ public class HibernateDataApprovalStore
                     }
                 }
 
-                boolean acceptanceRequiredForApproval = (Boolean) systemSettingManager.getSystemSetting( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, false );
+                boolean acceptanceRequiredForApproval = (Boolean) systemSettingManager.getSystemSetting( Setting.ACCEPTANCE_REQUIRED_FOR_APPROVAL );
 
                 readyBelowSubquery = "not exists (select 1 from _orgunitstructure ous " +
                     "where not exists (select 1 from dataapproval da " +

@@ -28,9 +28,6 @@ package org.hisp.dhis.system;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +43,7 @@ import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.external.location.LocationManagerException;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.database.DatabaseInfoProvider;
 import org.hisp.dhis.system.util.DateUtils;
@@ -95,8 +93,8 @@ public class DefaultSystemService
         // Set volatile properties
         // ---------------------------------------------------------------------
 
-        Date lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
-        String lastAnalyticsTableRuntime = (String) systemSettingManager.getSystemSetting( KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME );
+        Date lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
+        String lastAnalyticsTableRuntime = (String) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME );
         
         Date now = new Date();
         

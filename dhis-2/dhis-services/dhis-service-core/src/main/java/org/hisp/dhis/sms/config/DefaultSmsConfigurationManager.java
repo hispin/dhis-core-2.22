@@ -34,6 +34,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -100,13 +101,13 @@ public class DefaultSmsConfigurationManager
     @Override
     public SmsConfiguration getSmsConfiguration()
     {
-        return (SmsConfiguration) systemSettingManager.getSystemSetting( SystemSettingManager.KEY_SMS_CONFIG );
+        return (SmsConfiguration) systemSettingManager.getSystemSetting( Setting.SMS_CONFIG );
     }
 
     @Override
     public void updateSmsConfiguration( SmsConfiguration config )
     {
-        systemSettingManager.saveSystemSetting( SystemSettingManager.KEY_SMS_CONFIG, config );
+        systemSettingManager.saveSystemSetting( Setting.SMS_CONFIG, config );
 
         initializeSmsConfigurables();
     }

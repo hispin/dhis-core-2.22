@@ -28,20 +28,17 @@ package org.hisp.dhis.resourcetable.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_TITLE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE;
-
 import java.util.Date;
 
+import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.resourcetable.ResourceTableService;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.util.Clock;
-import org.hisp.dhis.commons.util.DebugUtils;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -90,7 +87,7 @@ public class ResourceTableTask
         }
         catch ( RuntimeException ex )
         {
-            String appTitle = (String) systemSettingManager.getSystemSetting( KEY_APPLICATION_TITLE, TextUtils.EMPTY );
+            String appTitle = (String) systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE );
             
             notifier.notify( taskId, NotificationLevel.ERROR, "Process failed: " + ex.getMessage(), true );
             
@@ -104,7 +101,7 @@ public class ResourceTableTask
             throw ex;
         }
 
-        systemSettingManager.saveSystemSetting( KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE, startTime );
+        systemSettingManager.saveSystemSetting( Setting.LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE, startTime );
     }    
 
     // -------------------------------------------------------------------------
