@@ -178,9 +178,10 @@ public class UserAuthorityGroup
     }
 
     @JsonProperty
-    @JsonView( { DetailedView.class } )
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "users", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "user", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "userObject", namespace = DxfNamespaces.DXF_2_0 )
     public List<User> getUsers()
     {
         List<User> users = new ArrayList<>();
