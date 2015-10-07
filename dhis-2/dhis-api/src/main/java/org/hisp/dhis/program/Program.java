@@ -97,6 +97,7 @@ public class Program
     @Scanned
     private Set<UserAuthorityGroup> userRoles = new HashSet<>();
 
+    @Scanned
     private Set<ProgramIndicator> programIndicators = new HashSet<>();
 
     private Boolean onlyEnrollOnce = false;
