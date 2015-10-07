@@ -28,6 +28,10 @@ package org.hisp.dhis.system.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.springframework.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.Callable;
+
 /**
  * Scheduler for managing the scheduling and execution of tasks.
  *
@@ -52,6 +56,15 @@ public interface Scheduler
      * @task the task to execute.
      */
     void executeTask( Runnable task );
+
+    /**
+     * Execute the given task immediately and return a ListenableFuture.
+     *
+     * @param callable the task to execute.
+     * @param <T> return type of the supplied callable.
+     * @return a ListenableFuture representing the result of the task.
+     */
+    <T> ListenableFuture<T> executeTask( Callable<T> callable );
     
     /**
      * Schedule the given task for future execution. The task can be referenced

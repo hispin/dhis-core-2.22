@@ -31,13 +31,15 @@ package org.hisp.dhis.system.scheduling;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledFuture;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.util.concurrent.ListenableFuture;
 
 /**
  * {@link Scheduler} implementation for use within the Spring framework.
@@ -61,9 +63,9 @@ public class SpringScheduler
         this.taskScheduler = taskScheduler;
     }
     
-    private TaskExecutor taskExecutor;
+    private AsyncListenableTaskExecutor taskExecutor;
 
-    public void setTaskExecutor( TaskExecutor taskExecutor )
+    public void setTaskExecutor( AsyncListenableTaskExecutor taskExecutor )
     {
         this.taskExecutor = taskExecutor;
     }
@@ -76,6 +78,12 @@ public class SpringScheduler
     public void executeTask( Runnable task )
     {
         taskExecutor.execute( task );
+    }
+
+    @Override
+    public <T> ListenableFuture<T> executeTask( Callable<T> callable )
+    {
+        return taskExecutor.submitListenable( callable );
     }
 
     @Override
