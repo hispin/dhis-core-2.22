@@ -29,13 +29,17 @@ package org.hisp.dhis.fileresource;
  */
 
 import com.google.common.hash.HashCode;
+import com.google.common.io.ByteSink;
 import com.google.common.io.ByteSource;
+import com.google.common.io.FileWriteMode;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.HibernateConfigurationProvider;
+import org.hisp.dhis.system.scheduling.Scheduler;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
@@ -48,16 +52,22 @@ import org.jclouds.domain.Location;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.http.HttpRequest;
 import org.joda.time.Minutes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -127,6 +137,9 @@ public class JCloudsFileResourceContentStore
     {
         this.configurationProvider = configurationProvider;
     }
+
+    @Autowired
+    private Scheduler scheduler;
 
     // -------------------------------------------------------------------------
     // Life cycle management
@@ -261,6 +274,49 @@ public class JCloudsFileResourceContentStore
         }
 
         putBlob( blob );
+
+        return key;
+    }
+
+    @Override
+    public String saveFileResourceContent2( String key, ByteSource content, long size, String contentMd5 ) throws IOException
+    {
+        Path tempDir = Files.createTempDirectory( null );
+        Path tmpFile = Files.createTempFile( tempDir, null, null );
+
+        ByteSink byteSink = com.google.common.io.Files.asByteSink( tmpFile.toFile(), FileWriteMode.APPEND );
+        IOUtils.copy( content.openStream(), byteSink.openStream() );
+
+        ListenableFuture<String> uploadResult = scheduler.executeTask( () -> {
+            Blob blob = blobStore.blobBuilder( key )
+                .payload( tmpFile.toFile() )
+                .contentLength( size )
+                .build();
+
+            return putBlob( blob );
+        } );
+
+        uploadResult.addCallback( new ListenableFutureCallback<String>()
+        {
+            @Override
+            public void onFailure( Throwable ex )
+            {
+                log.error( ex );
+            }
+
+            @Override
+            public void onSuccess( String result )
+            {
+                if ( result != null )
+                {
+                    log.info( "File uploaded: " + result );
+                }
+                else
+                {
+                    log.info( "Upload failed" );
+                }
+            }
+        } );
 
         return key;
     }

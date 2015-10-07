@@ -30,6 +30,7 @@ package org.hisp.dhis.fileresource;
 
 import com.google.common.io.ByteSource;
 
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -53,6 +54,8 @@ public interface FileResourceContentStore
      * @return the key on success or null if saving failed.
      */
     String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 );
+
+    String saveFileResourceContent2( String key, ByteSource content, long size, String contentMd5 ) throws IOException;
 
     /**
      * Delete the content bytes of a file resource.
