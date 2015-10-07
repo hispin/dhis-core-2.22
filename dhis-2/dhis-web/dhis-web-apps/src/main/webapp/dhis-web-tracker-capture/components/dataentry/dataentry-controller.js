@@ -120,7 +120,7 @@ trackerCapture.controller('DataEntryController',
                     if (effect.dataElement) {
                         
                         if(effect.ineffect) {
-                            $scope.errorMessages[effect.dataElement.id] = effect.content;
+                            $scope.errorMessages[effect.dataElement.id] = effect.content + effect.data;
                         } else {
                             $scope.errorMessages[effect.dataElement.id] = false;
                         }
@@ -131,7 +131,7 @@ trackerCapture.controller('DataEntryController',
                 } else if (effect.action === "SHOWWARNING") {
                     if (effect.dataElement) {
                         if(effect.ineffect) {
-                            $scope.warningMessages[effect.dataElement.id] = effect.content;
+                            $scope.warningMessages[effect.dataElement.id] = effect.content + effect.data;
                         } else {
                             $scope.warningMessages[effect.dataElement.id] = false;
                         }
