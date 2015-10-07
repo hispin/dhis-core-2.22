@@ -109,8 +109,8 @@ public class SpringScheduler
         if ( key != null )
         {
             ScheduledFuture<?> future = futures.get( key );
-
-            boolean result = future != null && future.cancel( true );
+            
+            boolean result = future != null ? future.cancel( true ) : false;
             
             futures.remove( key );
             
@@ -133,7 +133,7 @@ public class SpringScheduler
             
             ScheduledFuture<?> future = futures.get( key );
             
-            boolean result = future != null && future.cancel( true );
+            boolean result = future != null ? future.cancel( true ) : false;
             
             keys.remove();
             
