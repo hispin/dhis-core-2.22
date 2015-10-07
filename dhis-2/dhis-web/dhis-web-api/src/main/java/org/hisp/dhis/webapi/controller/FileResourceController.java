@@ -55,8 +55,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Date;
 
 /**
@@ -78,6 +81,9 @@ public class FileResourceController
 
     @Autowired
     private CurrentUserService currentUserService;
+
+    @Autowired
+    private ServletContext servletContext;
 
     // ---------------------------------------------------------------------
     // Controller methods
@@ -109,7 +115,7 @@ public class FileResourceController
 
         if ( contentLength <= 0 )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "Could not read file or file is empty" ) );
+            throw new WebMessageException( WebMessageUtils.conflict( "Could not read file or file is empty." ) );
         }
 
         ByteSource bytes = new ByteSource()
@@ -135,14 +141,16 @@ public class FileResourceController
         fileResource.setCreated( new Date() );
         fileResource.setUser( currentUserService.getCurrentUser() );
 
-        String uid = fileResourceService.saveFileResource( fileResource, bytes );
+        File tmpFile = toTempFile( file );
+
+        String uid = fileResourceService.saveFileResourceAsync( fileResource, tmpFile );
 
         if ( uid == null )
         {
-            throw new WebMessageException( WebMessageUtils.error( "Saving the file failed" ) );
+            throw new WebMessageException( WebMessageUtils.error( "Saving the file failed." ) );
         }
 
-        WebMessage webMessage = new WebMessage( WebMessageStatus.OK, HttpStatus.CREATED );
+        WebMessage webMessage = new WebMessage( WebMessageStatus.OK, HttpStatus.ACCEPTED );
         webMessage.setResponse( new FileResourceWebMessageResponse( fileResource ) );
 
         return webMessage;
@@ -164,5 +172,18 @@ public class FileResourceController
         }
 
         return true;
+    }
+
+    private File toTempFile( MultipartFile multipartFile )
+        throws IOException
+    {
+        File tempDir = (File) servletContext.getAttribute( ServletContext.TEMPDIR );
+        File tmpFile = Files.createTempFile( tempDir.toPath(), "org.hisp.dhis", null ).toFile();
+
+        System.out.println( "TEMP FILE: " + tmpFile.getAbsolutePath() );
+
+        multipartFile.transferTo( tmpFile );
+
+        return tmpFile;
     }
 }

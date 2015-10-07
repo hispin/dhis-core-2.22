@@ -28,32 +28,13 @@ package org.hisp.dhis.fileresource;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.io.ByteSource;
-
-import java.io.File;
-import java.net.URI;
-import java.util.List;
-
 /**
  * @author Halvdan Hoem Grelland
  */
-public interface FileResourceService
+public enum FileResourceStorageStatus
 {
-    FileResource getFileResource( String uid );
-
-    List<FileResource> getFileResources( List<String> uids );
-    
-    String saveFileResource( FileResource fileResource, ByteSource content );
-
-    String saveFileResourceAsync( FileResource fileResource, File file );
-
-    void deleteFileResource( String uid );
-    
-    ByteSource getFileResourceContent( FileResource fileResource );
-    
-    boolean fileResourceExists( String uid );
-    
-    void updateFileResource( FileResource fileResource );
-
-    URI getSignedGetFileResourceContentUri( String uid );
+    NONE,       // No content stored
+    PENDING,    // In transit to store, not available
+    FAILED,     // Storing the resource failed
+    STORED      // Is available from store
 }
