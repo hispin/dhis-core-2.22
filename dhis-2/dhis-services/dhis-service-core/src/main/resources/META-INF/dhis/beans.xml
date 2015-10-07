@@ -1634,7 +1634,6 @@
 
   <bean id="org.hisp.dhis.program.ProgramStageDataElementDeletionHandler"
     class="org.hisp.dhis.program.ProgramStageDataElementDeletionHandler">
-    <property name="programStageDataElementService" ref="org.hisp.dhis.program.ProgramStageDataElementService" />
   </bean>
 
   <bean id="org.hisp.dhis.program.ProgramStageDeletionHandler"
