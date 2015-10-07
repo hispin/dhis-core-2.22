@@ -79,6 +79,7 @@ public class UserAuthorityGroup
     @Scanned
     private Set<DataSet> dataSets = new HashSet<>();
 
+    @Scanned
     private Set<Program> programs = new HashSet<>();
 
     // -------------------------------------------------------------------------
@@ -255,8 +256,7 @@ public class UserAuthorityGroup
             }
             else if ( strategy.isMerge() )
             {
-                description = userAuthorityGroup.getDescription() == null ? description : userAuthorityGroup
-                    .getDescription();
+                description = userAuthorityGroup.getDescription() == null ? description : userAuthorityGroup.getDescription();
             }
 
             removeAllAuthorities();
