@@ -494,9 +494,10 @@ public class Program
         this.onlyEnrollOnce = onlyEnrollOnce;
     }
 
-    @JsonProperty
+    @JsonProperty( "trackedEntityInstanceReminders" )
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlElementWrapper( localName = "trackedEntityInstanceReminders", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "trackedEntityInstanceReminder", namespace = DxfNamespaces.DXF_2_0 )
     public Set<TrackedEntityInstanceReminder> getInstanceReminders()
     {
         return instanceReminders;
