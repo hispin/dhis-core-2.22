@@ -28,11 +28,11 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Iterator;
-
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.system.deletion.DeletionHandler;
+
+import java.util.Iterator;
 
 /**
  * @author Chau Thu Tran
@@ -44,11 +44,11 @@ public class ProgramStageDataElementDeletionHandler
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private ProgramStageDataElementService programStageDEService;
+    private ProgramStageDataElementService programStageDataElementService;
 
-    public void setProgramStageDEService( ProgramStageDataElementService programStageDEService )
+    public void setProgramStageDataElementService( ProgramStageDataElementService programStageDEService )
     {
-        this.programStageDEService = programStageDEService;
+        this.programStageDataElementService = programStageDEService;
     }
 
     // -------------------------------------------------------------------------
@@ -69,16 +69,16 @@ public class ProgramStageDataElementDeletionHandler
         while ( iterator.hasNext() )
         {
             ProgramStageDataElement de = iterator.next();
-            programStageDEService.deleteProgramStageDataElement( de );
+            programStageDataElementService.deleteProgramStageDataElement( de );
         }
     }
 
     @Override
     public void deleteDataElement( DataElement dataElement )
     {
-        if ( DataElementDomain.TRACKER.equals( dataElement.getDomainType() ) )
+        if ( DataElementDomain.TRACKER == dataElement.getDomainType() )
         {
-            Iterator<ProgramStageDataElement> iterator = programStageDEService.getAllProgramStageDataElements().iterator();
+            Iterator<ProgramStageDataElement> iterator = programStageDataElementService.getAllProgramStageDataElements().iterator();
 
             while ( iterator.hasNext() )
             {
@@ -86,7 +86,7 @@ public class ProgramStageDataElementDeletionHandler
 
                 if ( element.getDataElement() != null && element.getDataElement().equals( dataElement ) )
                 {
-                    programStageDEService.deleteProgramStageDataElement( element );
+                    programStageDataElementService.deleteProgramStageDataElement( element );
                 }
             }
         }
