@@ -28,14 +28,16 @@ package org.hisp.dhis.fileresource;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.io.ByteSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.system.scheduling.Scheduler;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.concurrent.ListenableFuture;
 
-import com.google.common.io.ByteSource;
-
+import java.io.File;
 import java.net.URI;
 import java.util.List;
 
@@ -63,6 +65,20 @@ public class DefaultFileResourceService
     public void setFileResourceContentStore( FileResourceContentStore fileResourceContentStore )
     {
         this.fileResourceContentStore = fileResourceContentStore;
+    }
+
+    private Scheduler scheduler;
+
+    public void setScheduler( Scheduler scheduler )
+    {
+        this.scheduler = scheduler;
+    }
+
+    private FileResourceUploadCallbackProvider uploadCallbackProvider;
+
+    public void setUploadCallbackProvider( FileResourceUploadCallbackProvider uploadCallbackProvider )
+    {
+        this.uploadCallbackProvider = uploadCallbackProvider;
     }
 
     // -------------------------------------------------------------------------
@@ -105,6 +121,26 @@ public class DefaultFileResourceService
         }
 
         return fileResource.getUid();
+    }
+
+    @Transactional
+    @Override
+    public String saveFileResourceAsync( FileResource fileResource, File file )
+    {
+        fileResource.setStorageStatus( FileResourceStorageStatus.PENDING );
+        fileResourceStore.save( fileResource );
+
+        String storageKey = getRelativeStorageKey( fileResource );
+
+        ListenableFuture<String> saveContentTask =
+            scheduler.executeTask( () -> fileResourceContentStore.saveFileResourceContent(
+                storageKey, file, fileResource.getContentLength(), fileResource.getContentMd5() ) );
+
+        String uid = fileResource.getUid();
+
+        saveContentTask.addCallback( uploadCallbackProvider.getCallback( uid ) );
+
+        return uid;
     }
 
     @Transactional

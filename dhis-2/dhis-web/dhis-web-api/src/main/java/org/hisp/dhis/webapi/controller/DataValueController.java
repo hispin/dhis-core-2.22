@@ -49,10 +49,13 @@ import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
 import org.hisp.dhis.dxf2.utils.InputUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.dxf2.webmessage.responses.FileResourceWebMessageResponse;
 import org.hisp.dhis.fileresource.FileResource;
 import org.hisp.dhis.fileresource.FileResourceDomain;
 import org.hisp.dhis.fileresource.FileResourceService;
+import org.hisp.dhis.fileresource.FileResourceStorageStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
@@ -446,14 +449,22 @@ public class DataValueController
 
         FileResource fileResource = fileResourceService.getFileResource( uid );
 
-        if ( fileResource == null )
+        if ( fileResource == null || fileResource.getDomain() != FileResourceDomain.DATA_VALUE )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "The file resource reference id " + uid + " was not found." ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "A data value file resource with id " + uid + " does not exist." ) );
         }
 
-        if ( fileResource.getDomain() != FileResourceDomain.DATA_VALUE )
+        if ( fileResource.getStorageStatus() != FileResourceStorageStatus.STORED )
         {
-            throw  new WebMessageException( WebMessageUtils.conflict( "File resource domain must be DATA_VALUE" ) );
+            // Special case:
+            //  The FileResource exists and has been tied to this DataValue, however, the underlying file
+            //  content is still in transit (PENDING) to the (most likely external) file store provider.
+
+            WebMessage webMessage = WebMessageUtils.conflict( "The content is being processed and is not available yet. Try again later.",
+                "The content requested is in transit to the file store and will be available at a later time." );
+            webMessage.setResponse( new FileResourceWebMessageResponse( fileResource ) );
+
+            throw new WebMessageException( webMessage );
         }
 
         ByteSource content = fileResourceService.getFileResourceContent( fileResource );

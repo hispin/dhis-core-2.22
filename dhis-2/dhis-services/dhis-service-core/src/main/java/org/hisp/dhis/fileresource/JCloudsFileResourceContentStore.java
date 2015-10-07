@@ -49,9 +49,11 @@ import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.http.HttpRequest;
 import org.joda.time.Minutes;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -266,6 +268,35 @@ public class JCloudsFileResourceContentStore
     }
 
     @Override
+    public String saveFileResourceContent( String key, File file, long size, String contentMd5 )
+    {
+        Blob blob = blobStore.blobBuilder( key )
+            .payload( file )
+            .contentLength( size )
+            .contentMD5( HashCode.fromString( contentMd5 ) )
+            .build();
+
+        if ( blob == null )
+        {
+            return null;
+        }
+
+        putBlob( blob );
+
+        try
+        {
+            Files.deleteIfExists( file.toPath() );
+        }
+        catch ( IOException ioe )
+        {
+            // Intentionally ignored. If it can't be deleted, it can't be deleted
+            log.warn( "Temporary file '" + file.toPath() + "' could not be deleted.", ioe );
+        }
+
+        return key;
+    }
+
+    @Override
     public void deleteFileResourceContent( String key )
     {
         deleteBlob( key );
@@ -281,7 +312,7 @@ public class JCloudsFileResourceContentStore
             return null;
         }
 
-        HttpRequest httpRequest = null;
+        HttpRequest httpRequest;
 
         try
         {
