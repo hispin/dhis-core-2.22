@@ -575,10 +575,20 @@ public class ProgramStage
             }
 
             programStageDataElements.clear();
-            programStageDataElements.addAll( programStage.getProgramStageDataElements() );
+
+            for ( ProgramStageDataElement programStageDataElement : programStage.getProgramStageDataElements() )
+            {
+                programStageDataElements.add( programStageDataElement );
+                programStageDataElement.setProgramStage( this );
+            }
 
             programStageSections.clear();
-            programStageSections.addAll( programStage.getProgramStageSections() );
+
+            for ( ProgramStageSection programStageSection : programStage.getProgramStageSections() )
+            {
+                programStageSections.add( programStageSection );
+                programStageSection.setProgramStage( this );
+            }
 
             reminders.clear();
             reminders.addAll( programStage.getReminders() );
