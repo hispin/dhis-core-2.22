@@ -65,7 +65,7 @@ public class DefaultOutboundSmsTransportService
     private static final String MODEM_GATEWAY = "modem_gw";
     private static final String SMPP_GATEWAY = "smpp_gw";
     
-    public static final Map<String, String> gatewayMap = new HashMap<>(); //TODO fix, poor solution
+    public static final Map<String, String> GATEWAY_MAP = new HashMap<>(); //TODO fix, poor solution
 
     private SmsConfiguration config;
 
@@ -77,19 +77,38 @@ public class DefaultOutboundSmsTransportService
 
     private IInboundMessageNotification smppInboundMessageNotification;
 
+    public void setSmppInboundMessageNotification( IInboundMessageNotification smppInboundMessageNotification )
+    {
+        this.smppInboundMessageNotification = smppInboundMessageNotification;
+    }
+    
     private OutboundSmsService outboundSmsService;
 
+    public void setOutboundSmsService( OutboundSmsService outboundSmsService )
+    {
+        this.outboundSmsService = outboundSmsService;
+    }
+
     private SmsPublisher smsPublisher;
+
+    public void setSmsPublisher( SmsPublisher smsPublisher )
+    {
+        this.smsPublisher = smsPublisher;
+    }
+
+    // -------------------------------------------------------------------------
+    // OutboundSmsTransportService implementation
+    // -------------------------------------------------------------------------
 
     @Override
     public Map<String, String> getGatewayMap()
     {
-        if ( gatewayMap == null || gatewayMap.isEmpty() )
+        if ( GATEWAY_MAP == null || GATEWAY_MAP.isEmpty() )
         {
             reloadConfig();
         }
         
-        return gatewayMap;
+        return GATEWAY_MAP;
     }
 
     @Override
@@ -117,7 +136,6 @@ public class DefaultOutboundSmsTransportService
             message = "Unable to stop smsLib service" + e.getCause().getMessage();
             log.warn( "Unable to stop smsLib service", e );
         }
-
     }
 
     @Override
@@ -130,7 +148,7 @@ public class DefaultOutboundSmsTransportService
             try
             {
                 getService().startService();
-                if ( gatewayMap.containsKey( SMPP_GATEWAY ) )
+                if ( GATEWAY_MAP.containsKey( SMPP_GATEWAY ) )
                 {
                     getService().setInboundMessageNotification( smppInboundMessageNotification );
                 }
@@ -206,25 +224,23 @@ public class DefaultOutboundSmsTransportService
 
                     if ( gatewayConfig instanceof BulkSmsGatewayConfig )
                     {
-                        gatewayMap.put( BULK_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( BULK_GATEWAY, gateway.getGatewayId() );
                     }
                     else if ( gatewayConfig instanceof ClickatellGatewayConfig )
                     {
-                        gatewayMap.put( CLICKATELL_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( CLICKATELL_GATEWAY, gateway.getGatewayId() );
                     }
                     else if ( gatewayConfig instanceof GenericHttpGatewayConfig )
                     {
-                        gatewayMap.put( HTTP_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( HTTP_GATEWAY, gateway.getGatewayId() );
                     }
                     else if ( gatewayConfig instanceof SMPPGatewayConfig )
                     {
-                        gatewayMap.put( SMPP_GATEWAY, gateway.getGatewayId() );
-                        // Service.getInstance().setInboundMessageNotification(
-                        // new InboundNotification() );
+                        GATEWAY_MAP.put( SMPP_GATEWAY, gateway.getGatewayId() );
                     }
                     else
                     {
-                        gatewayMap.put( MODEM_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( MODEM_GATEWAY, gateway.getGatewayId() );
                     }
 
                     log.debug( "Added gateway " + gatewayConfig.getName() );
@@ -292,23 +308,23 @@ public class DefaultOutboundSmsTransportService
 
         if ( gatewayConfig instanceof BulkSmsGatewayConfig )
         {
-            gatewayId = gatewayMap.get( BULK_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( BULK_GATEWAY );
         }
         else if ( gatewayConfig instanceof ClickatellGatewayConfig )
         {
-            gatewayId = gatewayMap.get( CLICKATELL_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( CLICKATELL_GATEWAY );
         }
         else if ( gatewayConfig instanceof GenericHttpGatewayConfig )
         {
-            gatewayId = gatewayMap.get( HTTP_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( HTTP_GATEWAY );
         }
         else if ( gatewayConfig instanceof SMPPGatewayConfig )
         {
-            gatewayId = gatewayMap.get( SMPP_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( SMPP_GATEWAY );
         }
         else
         {
-            gatewayId = gatewayMap.get( MODEM_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( MODEM_GATEWAY );
         }
 
         return gatewayId;
@@ -393,6 +409,7 @@ public class DefaultOutboundSmsTransportService
         OutboundMessage outboundMessage = new OutboundMessage( recipient, sms.getMessage() );
 
         // Check if text contain any specific unicode character
+        
         for ( char each : sms.getMessage().toCharArray() )
         {
             if ( !Character.UnicodeBlock.of( each ).equals( UnicodeBlock.BASIC_LATIN ) )
@@ -516,35 +533,5 @@ public class DefaultOutboundSmsTransportService
     private void removeGroup( String groupName )
     {
         getService().removeGroup( groupName );
-    }
-
-    public IInboundMessageNotification getSmppInboundMessageNotification()
-    {
-        return smppInboundMessageNotification;
-    }
-
-    public void setSmppInboundMessageNotification( IInboundMessageNotification smppInboundMessageNotification )
-    {
-        this.smppInboundMessageNotification = smppInboundMessageNotification;
-    }
-
-    public OutboundSmsService getOutboundSmsService()
-    {
-        return outboundSmsService;
-    }
-
-    public void setOutboundSmsService( OutboundSmsService outboundSmsService )
-    {
-        this.outboundSmsService = outboundSmsService;
-    }
-
-    public SmsPublisher getSmsPublisher()
-    {
-        return smsPublisher;
-    }
-
-    public void setSmsPublisher( SmsPublisher smsPublisher )
-    {
-        this.smsPublisher = smsPublisher;
     }
 }

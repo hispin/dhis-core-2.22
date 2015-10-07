@@ -70,5 +70,4 @@ public interface IncomingSmsService
     List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max );
 
     IncomingSms convertToIncomingSms( InboundMessage message );
-
 }

@@ -80,5 +80,4 @@ public class BulkSmsGatewayConfig
     {
         return true;
     }
-
 }

@@ -81,6 +81,7 @@ public class AdvanceHttpPostGateWay
             requestParameters.put( MESSAGE, outboundMessage.getText() );
 
             String sender = outboundMessage.getFrom();
+            
             if ( sender != null )
             {
                 log.debug( "Adding sender " + sender + " " + getGatewayId() );
@@ -133,8 +134,8 @@ public class AdvanceHttpPostGateWay
             }
 
             return 1;
-
         }
+        
         return super.sendMessages( outboundMessages );
     }
 

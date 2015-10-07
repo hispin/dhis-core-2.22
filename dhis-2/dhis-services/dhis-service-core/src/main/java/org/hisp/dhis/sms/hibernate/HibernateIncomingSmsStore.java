@@ -141,6 +141,7 @@ public class HibernateIncomingSmsStore
     {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( IncomingSms.class ).addOrder( Order.desc( "sentDate" ) );
+        
         if ( status != null )
         {
             criteria.add( Restrictions.eq( "status", status ) );
@@ -151,6 +152,7 @@ public class HibernateIncomingSmsStore
         {
             criteria.setFirstResult( min ).setMaxResults( max );
         }
+        
         return criteria.list();
     }
 }

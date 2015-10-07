@@ -54,22 +54,37 @@ public class DHISMessageAlertListener
 {
     private SMSCommandService smsCommandService;
 
-    private UserService userService;
-
-    private MessageService messageService;
-
-    private SmsMessageSender smsMessageSender;
-
-    private IncomingSmsService incomingSmsService;
-
-    public SMSCommandService getSmsCommandService()
-    {
-        return smsCommandService;
-    }
-
     public void setSmsCommandService( SMSCommandService smsCommandService )
     {
         this.smsCommandService = smsCommandService;
+    }
+
+    private UserService userService;
+
+    public void setUserService( UserService userService )
+    {
+        this.userService = userService;
+    }
+
+    private MessageService messageService;
+
+    public void setMessageService( MessageService messageService )
+    {
+        this.messageService = messageService;
+    }
+
+    private SmsMessageSender smsMessageSender;
+
+    public void setSmsMessageSender( SmsMessageSender smsMessageSender )
+    {
+        this.smsMessageSender = smsMessageSender;
+    }
+    
+    private IncomingSmsService incomingSmsService;
+
+    public void setIncomingSmsService( IncomingSmsService incomingSmsService )
+    {
+        this.incomingSmsService = incomingSmsService;
     }
 
     @Transactional
@@ -169,45 +184,5 @@ public class DHISMessageAlertListener
                     "No user associated with this phone number. Please contact your supervisor." );
             }
         }
-    }
-
-    public UserService getUserService()
-    {
-        return userService;
-    }
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
-    public MessageService getMessageService()
-    {
-        return messageService;
-    }
-
-    public void setMessageService( MessageService messageService )
-    {
-        this.messageService = messageService;
-    }
-
-    public SmsMessageSender getSmsMessageSender()
-    {
-        return smsMessageSender;
-    }
-
-    public void setSmsMessageSender( SmsMessageSender smsMessageSender )
-    {
-        this.smsMessageSender = smsMessageSender;
-    }
-
-    public IncomingSmsService getIncomingSmsService()
-    {
-        return incomingSmsService;
-    }
-
-    public void setIncomingSmsService( IncomingSmsService incomingSmsService )
-    {
-        this.incomingSmsService = incomingSmsService;
     }
 }

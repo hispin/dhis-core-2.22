@@ -80,5 +80,4 @@ public class ClickatellGatewayConfig
     {
         return true;
     }
-
 }

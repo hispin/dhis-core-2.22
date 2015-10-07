@@ -1,7 +1,5 @@
 package org.hisp.dhis.sms.incoming;
 
-import org.springframework.transaction.annotation.Transactional;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -29,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+import org.springframework.transaction.annotation.Transactional;
 
 public interface IncomingSmsListener
 {
