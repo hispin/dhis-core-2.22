@@ -455,7 +455,7 @@ function getTrackedEntityAttributes( data )
             dhis2.tc.store.get('attributes', teAttribute.id).done(function(obj) {
                 if((!obj || obj.version !== teAttribute.version) && attributesInPromise.indexOf(teAttribute.id) === -1) {
                     attributesInPromise.push( teAttribute.id );
-                    promise = promise.then( getD2Object( teAttribute.id, 'attributes', '../api/trackedEntityAttributes', 'fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,optionSet[id,version]', 'idb' ) );
+                    promise = promise.then( getD2Object( teAttribute.id, 'attributes', '../api/trackedEntityAttributes', 'fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,programScope,orgunitScope,confidential,optionSet[id,version]', 'idb' ) );
                 }
                 d.resolve();
             });
