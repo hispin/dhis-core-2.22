@@ -966,6 +966,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }
     });
     
+    $scope.interacted = function(field) {
+        var status = false;
+        if(field){            
+            status = $scope.outerForm.submitted || field.$dirty;
+        }
+        return status;        
+    };
+
     //listen for rule effect changes    
     $scope.$on('ruleeffectsupdated', function(event, args) {
         $scope.warningMessages = [];

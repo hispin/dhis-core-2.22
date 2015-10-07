@@ -34,7 +34,7 @@
                            name="eventDate" 
                            input-field-id='eventDate' 
                            class="form-control">
-                    <div ng-messages="outerForm.eventDate.$error" ng-if="outerForm.eventDate.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                    <div ng-messages="outerForm.eventDate.$error" ng-if="interacted(outerForm.eventDate)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
                     </div>
                 </td>
             </tr>
@@ -49,7 +49,7 @@
                            d2-coordinate-validator
                            ng-required="false"
                            class="form-control"/>
-                    <div ng-messages="outerForm.latitude.$error" ng-if="outerForm.latitude.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
+                    <div ng-messages="outerForm.latitude.$error" ng-if="interacted(outerForm.latitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
                     </div>
                 </td>                                            
             </tr>
@@ -64,7 +64,7 @@
                            d2-coordinate-validator
                            ng-required="false"
                            class="form-control"/>
-                    <div ng-messages="outerForm.longitude.$error" ng-if="outerForm.longitude.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
+                    <div ng-messages="outerForm.longitude.$error" ng-if="interacted(outerForm.longitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
                     </div>
                 </td>                                                            
             </tr>            
@@ -239,7 +239,7 @@
                                     class="form-control"> 
                             </div>
                         </div>                        
-                        <div ng-messages="innerForm.foo.$error" ng-if="innerForm.foo.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                        <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
                         </div>                        
                     </ng-form>                    
                 </td>
@@ -274,7 +274,7 @@
                            name="eventDate" 
                            input-field-id='eventDate' 
                            class="form-control">
-                    <div ng-messages="outerForm.eventDate.$error" ng-if="outerForm.eventDate.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                    <div ng-messages="outerForm.eventDate.$error" ng-if="interacted(outerForm.eventDate)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
                     </div>
                 </td>
             </tr>
@@ -289,7 +289,7 @@
                            d2-coordinate-validator
                            ng-required="false"
                            class="form-control"/>
-                    <div ng-messages="outerForm.latitude.$error" ng-if="outerForm.latitude.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
+                    <div ng-messages="outerForm.latitude.$error" ng-if="interacted(outerForm.latitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
                     </div>
                 </td>                                            
             </tr>
@@ -304,7 +304,7 @@
                            d2-coordinate-validator
                            ng-required="false"
                            class="form-control"/>
-                    <div ng-messages="outerForm.longitude.$error" ng-if="outerForm.longitude.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
+                    <div ng-messages="outerForm.longitude.$error" ng-if="interacted(outerForm.longitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
                     </div>
                 </td>                                            
             </tr>        
@@ -504,7 +504,7 @@
                                         class="form-control"/> 
                                 </div>
                             </div>                        
-                            <div ng-messages="innerForm.foo.$error" ng-if="innerForm.foo.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                            <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
                             </div>
                             <div ng-if="warningMessages[de.dataElement.id]">
                                 {{warningMessages[de.dataElement.id]}}
