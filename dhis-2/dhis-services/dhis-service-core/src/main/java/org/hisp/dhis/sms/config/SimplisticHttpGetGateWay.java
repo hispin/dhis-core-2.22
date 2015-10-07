@@ -71,7 +71,6 @@ import org.smslib.TimeoutException;
  * <li>username
  * <li>password
  * </ul>
- * 
  */
 public class SimplisticHttpGetGateWay
     extends AGateway
@@ -161,6 +160,7 @@ public class SimplisticHttpGetGateWay
             }
 
             HttpURLConnection httpConnection = (HttpURLConnection) conn;
+            
             if ( httpConnection.getResponseCode() != HttpURLConnection.HTTP_OK )
             {
                 log.warn( "Couldn't send message, got response " + response + " " + getGatewayId() );

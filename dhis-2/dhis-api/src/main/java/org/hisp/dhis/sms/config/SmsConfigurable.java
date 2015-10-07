@@ -36,10 +36,9 @@ import org.hisp.dhis.sms.SmsServiceException;
 public interface SmsConfigurable
 {
     /**
-     * Initialize the service with the provided configuration.
-     * <p>
-     * Services implementing this interface are also expected to be able to
-     * reinitialize based on these setting in a safe way when running.
+     * Initialize the service with the provided configuration. Services 
+     * implementing this interface are also expected to be able to reinitialize 
+     * based on these setting in a safe way when running.
      * 
      * @param smsConfiguration The SMS configuration
      * @throws SmsServiceException if the service cannot be initialized with the
@@ -47,5 +46,4 @@ public interface SmsConfigurable
      */
     String initialize( SmsConfiguration smsConfiguration )
         throws SmsServiceException;
-
 }

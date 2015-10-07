@@ -191,5 +191,4 @@ public class IncomingSms
     {
         this.parsed = parsed;
     }
-
 }

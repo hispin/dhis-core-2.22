@@ -127,6 +127,7 @@ public class SmsConfiguration
                 return gw;
             }
         }
+        
         return null;
     }
 }

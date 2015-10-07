@@ -42,8 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Manages the {@link SmsConfiguration} for the DHIS instance.
  * <p>
  * The manager looks up all beans implementing {@link SmsConfigurable} in the
- * context, initializing them on startup and on any sms configuration changes.
- * 
+ * context, initializing them on startup and on any SMS configuration changes.
  */
 public class DefaultSmsConfigurationManager
     implements SmsConfigurationManager

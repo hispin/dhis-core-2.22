@@ -128,7 +128,7 @@ public class DefaultSmsSender
     {
         String message = null;
 
-        if ( transportService == null || DefaultOutboundSmsTransportService.gatewayMap == null )
+        if ( transportService == null || DefaultOutboundSmsTransportService.GATEWAY_MAP == null )
         {
             message = "No gateway";
             return message;
@@ -172,10 +172,9 @@ public class DefaultSmsSender
 
                 text = createMessage( subject, text, sender );
 
-                // Bulk is limited in sending long SMS, need to cut into small
-                // pieces
-                if ( DefaultOutboundSmsTransportService.gatewayMap.get( "bulk_gw" ) != null
-                    && DefaultOutboundSmsTransportService.gatewayMap.get( "bulk_gw" ).equals( gatewayId ) )
+                // Bulk is limited in sending long SMS, need to cut into small pieces
+                if ( DefaultOutboundSmsTransportService.GATEWAY_MAP.get( "bulk_gw" ) != null
+                    && DefaultOutboundSmsTransportService.GATEWAY_MAP.get( "bulk_gw" ).equals( gatewayId ) )
                 {
                     // Check if text contain any specific unicode character
                     for ( char each : text.toCharArray() )
@@ -271,10 +270,6 @@ public class DefaultSmsSender
         sms.setMessage( text );
         sms.setRecipients( recipients );
 
-        // Disable wasted messsage check due to incorrect detection
-        // message = isWastedSMS( sms );
-        // if ( message == null )
-
         try
         {
             message = transportService.sendMessage( sms, gateWayId );
@@ -318,6 +313,7 @@ public class DefaultSmsSender
     public String isWastedSMS( OutboundSms sms )
     {
         List<OutboundSms> listOfRecentOutboundSms = outboundSmsService.getAllOutboundSms( 0, 10 );
+        
         for ( OutboundSms each : listOfRecentOutboundSms )
         {
             if ( each.getRecipients().equals( sms.getRecipients() )
@@ -326,6 +322,7 @@ public class DefaultSmsSender
                 return "system is trying to send out wasted SMS";
             }
         }
+        
         return null;
     }
 

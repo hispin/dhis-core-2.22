@@ -92,5 +92,4 @@ public class SMPPGatewayConfig
     {
         this.address = address;
     }
-
 }

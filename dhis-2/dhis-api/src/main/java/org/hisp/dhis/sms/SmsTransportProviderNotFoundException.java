@@ -29,7 +29,7 @@ package org.hisp.dhis.sms;
  */
 
 /**
- * SmsServiceException signalling no transport provider available to sms service
+ * SmsServiceException signaling no transport provider available to SMS service
  */
 public class SmsTransportProviderNotFoundException
     extends SmsServiceException

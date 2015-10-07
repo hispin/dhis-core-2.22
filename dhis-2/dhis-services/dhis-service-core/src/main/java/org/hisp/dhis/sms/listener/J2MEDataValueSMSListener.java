@@ -75,15 +75,49 @@ public class J2MEDataValueSMSListener
 {
     private DataValueService dataValueService;
 
+    public void setDataValueService( DataValueService dataValueService )
+    {
+        this.dataValueService = dataValueService;
+    }
+
     private DataElementCategoryService dataElementCategoryService;
+
+    public void setDataElementCategoryService( DataElementCategoryService dataElementCategoryService )
+    {
+        this.dataElementCategoryService = dataElementCategoryService;
+    }
 
     private SMSCommandService smsCommandService;
 
+    public void setSmsCommandService( SMSCommandService smsCommandService )
+    {
+        this.smsCommandService = smsCommandService;
+    }
+
     private UserService userService;
+
+    public void setUserService( UserService userService )
+    {
+        this.userService = userService;
+    }
 
     private CompleteDataSetRegistrationService registrationService;
 
+    public void setRegistrationService( CompleteDataSetRegistrationService registrationService )
+    {
+        this.registrationService = registrationService;
+    }
+
     private SmsSender smsSender;
+
+    public void setSmsSender( SmsSender smsSender )
+    {
+        this.smsSender = smsSender;
+    }
+
+    // -------------------------------------------------------------------------
+    // IncomingSmsListener implementation
+    // -------------------------------------------------------------------------
 
     @Transactional
     @Override
@@ -493,6 +527,7 @@ public class J2MEDataValueSMSListener
             Calendar cal = Calendar.getInstance();
 
             int month = 0;
+            
             if ( periodName.substring( 0, periodName.indexOf( " " ) ).equals( "Jan" ) )
             {
                 month = 1;
@@ -519,69 +554,8 @@ public class J2MEDataValueSMSListener
             {
                 return periodType.createPeriod( cal.getTime() );
             }
-
         }
 
         throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName() + " and name " + periodName );
-    }
-
-    public DataValueService getDataValueService()
-    {
-        return dataValueService;
-    }
-
-    public void setDataValueService( DataValueService dataValueService )
-    {
-        this.dataValueService = dataValueService;
-    }
-
-    public SMSCommandService getSmsCommandService()
-    {
-        return smsCommandService;
-    }
-
-    public void setSmsCommandService( SMSCommandService smsCommandService )
-    {
-        this.smsCommandService = smsCommandService;
-    }
-
-    public UserService getUserService()
-    {
-        return userService;
-    }
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
-    public CompleteDataSetRegistrationService getRegistrationService()
-    {
-        return registrationService;
-    }
-
-    public void setRegistrationService( CompleteDataSetRegistrationService registrationService )
-    {
-        this.registrationService = registrationService;
-    }
-
-    public DataElementCategoryService getDataElementCategoryService()
-    {
-        return dataElementCategoryService;
-    }
-
-    public void setDataElementCategoryService( DataElementCategoryService dataElementCategoryService )
-    {
-        this.dataElementCategoryService = dataElementCategoryService;
-    }
-
-    public SmsSender getSmsSender()
-    {
-        return smsSender;
-    }
-
-    public void setSmsSender( SmsSender smsSender )
-    {
-        this.smsSender = smsSender;
     }
 }

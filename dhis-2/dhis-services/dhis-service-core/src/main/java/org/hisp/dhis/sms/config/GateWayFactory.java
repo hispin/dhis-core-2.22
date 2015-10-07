@@ -115,7 +115,7 @@ public class GateWayFactory
 
     public AGateway createModemGateway( ModemGatewayConfig c )
     {
-        // TODO: DETECT MODEM CLASS AND INSTANTIATE
+        // TODO Detect modem class and instantiate
         SerialModemGateway gateway = new SerialModemGateway( c.getName(), c.getPort(), c.getBaudRate(),
             c.getManufacturer(), c.getModel() );
 
@@ -147,8 +147,8 @@ public class GateWayFactory
 
     public AGateway createSimplisticHttpGetGateway( GenericHttpGatewayConfig c )
     {
-        SimplisticHttpGetGateWay gateway = new SimplisticHttpGetGateWay( c.getName(), c.getUrlTemplate(),
-            c.getParameters() );
+        SimplisticHttpGetGateWay gateway = new SimplisticHttpGetGateWay( 
+            c.getName(), c.getUrlTemplate(), c.getParameters() );
         gateway.setOutbound( true );
         gateway.setInbound( false );
         return gateway;

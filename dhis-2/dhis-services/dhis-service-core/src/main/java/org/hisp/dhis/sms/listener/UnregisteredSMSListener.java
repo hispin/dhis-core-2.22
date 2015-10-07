@@ -55,15 +55,44 @@ public class UnregisteredSMSListener
 {
     private SMSCommandService smsCommandService;
 
+    public void setSmsCommandService( SMSCommandService smsCommandService )
+    {
+        this.smsCommandService = smsCommandService;
+    }
+
     private UserService userService;
+
+    public void setUserService( UserService userService )
+    {
+        this.userService = userService;
+    }
 
     private MessageService messageService;
 
+    public void setMessageService( MessageService messageService )
+    {
+        this.messageService = messageService;
+    }
+
     private SmsMessageSender smsMessageSender;
+
+    public void setSmsMessageSender( SmsMessageSender smsMessageSender )
+    {
+        this.smsMessageSender = smsMessageSender;
+    }
 
     private IncomingSmsService incomingSmsService;
 
+    public void setIncomingSmsService( IncomingSmsService incomingSmsService )
+    {
+        this.incomingSmsService = incomingSmsService;
+    }
+
     public static final String USER_NAME = "anonymous";
+
+    // -------------------------------------------------------------------------
+    // IncomingSmsListener implementation
+    // -------------------------------------------------------------------------
 
     @Transactional
     @Override
@@ -122,11 +151,13 @@ public class UnregisteredSMSListener
                 {
                     User user = iterator.next();
                     messageError += user.getName();
+                    
                     if ( iterator.hasNext() )
                     {
                         messageError += ", ";
                     }
                 }
+                
                 throw new SMSParserException( messageError );
             }
             else
@@ -168,30 +199,5 @@ public class UnregisteredSMSListener
                 incomingSmsService.update( sms );
             }
         }
-    }
-
-    public void setSmsCommandService( SMSCommandService smsCommandService )
-    {
-        this.smsCommandService = smsCommandService;
-    }
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
-    public void setMessageService( MessageService messageService )
-    {
-        this.messageService = messageService;
-    }
-
-    public void setSmsMessageSender( SmsMessageSender smsMessageSender )
-    {
-        this.smsMessageSender = smsMessageSender;
-    }
-
-    public void setIncomingSmsService( IncomingSmsService incomingSmsService )
-    {
-        this.incomingSmsService = incomingSmsService;
     }
 }

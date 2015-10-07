@@ -43,7 +43,6 @@ public class SMSSpecialCharacter
 
     public SMSSpecialCharacter()
     {
-        
     }
     
     public SMSSpecialCharacter( String name, String value )
