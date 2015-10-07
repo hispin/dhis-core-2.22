@@ -7,7 +7,7 @@
         <td>
             <ng-form name="innerForm">
                 <span ng-if="attribute.optionSetValue">
-                    <ui-select  ng-model="selectedTei[attribute.id]"
+                    <ui-select  ng-model="selectedTei[attribute.id]" 
                                 theme="select2" 
                                 ng-required="attribute.mandatory || attribute.unique"
                                 ng-disabled="editingDisabled"
@@ -27,9 +27,12 @@
                                name="foo" 
                                class="form-control" 
                                d2-date
-                               d2-date-validator
+                               d2-date-validator 
                                max-date="attribute.allowFutureDate ? '' : 0"
                                ng-model="selectedTei[attribute.id]"
+                               ng-model-options="{ updateOn: 'blur' }"
+                               d2-attribute-validator 
+                               attribute-data="attribute" 
                                ng-disabled="editingDisabled" 
                                blur-or-change="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
@@ -39,6 +42,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
+                               ng-model-options="{ updateOn: 'blur' }"
+                               d2-attribute-validator 
+                               attribute-data="attribute" 
                                ng-disabled="editingDisabled" 
                                ng-change="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
@@ -46,6 +52,9 @@
                     <span ng-switch-when="BOOLEAN">
                         <select name="foo" 
                                 ng-model="selectedTei[attribute.id]" 
+                                ng-model-options="{ updateOn: 'blur' }" 
+                                d2-attribute-validator 
+                                attribute-data="attribute" 
                                 class="form-control" 
                                 ng-disabled="editingDisabled" 
                                 ng-change="teiValueUpdated(selectedTei, attribute.id)"
@@ -60,6 +69,11 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
+                               ng-model-options="{ updateOn: 'blur' }" 
+                               d2-attribute-validator 
+                               attribute-data="attribute" 
+                               d2-number-validator 
+                               number-type={{attribute.valueType}} 
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
@@ -69,6 +83,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
+                               ng-model-options="{ updateOn: 'blur' }" 
+                               d2-attribute-validator 
+                               attribute-data="attribute" 
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
@@ -78,6 +95,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
+                               ng-model-options="{ updateOn: 'blur' }" 
+                               d2-attribute-validator 
+                               attribute-data="attribute" 
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique">                                   
@@ -88,6 +108,10 @@
                                name="foo" 
                                class="form-control-trimmed" 
                                ng-model="selectedTei[attribute.id]" 
+                               ng-model-options="{ updateOn: 'blur' }" 
+                               d2-attribute-validator 
+                               attribute-data="attribute" 
+                               ng-model-options="{ updateOn: 'blur' }"
                                ng-disabled="true" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                style="width:75%;"
@@ -104,6 +128,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
+                               ng-model-options="{ updateOn: 'blur' }" 
+                               d2-attribute-validator 
+                               attribute-data="attribute" 
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>                                    

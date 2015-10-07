@@ -292,7 +292,7 @@ trackerCapture.controller('TEIAddController',
         $scope.selectedProgramForRelative = program;
         AttributesFactory.getByProgram($scope.selectedProgramForRelative).then(function(atts){
             $scope.attributes = atts;
-            $scope.attributes = $scope.generateAttributeFilters($scope.attributes);
+            $scope.attributes = AttributesFactory.generateAttributeFilters(atts);
             $scope.gridColumns = $scope.generateGridColumns($scope.attributes);
         });
         
@@ -318,17 +318,6 @@ trackerCapture.controller('TEIAddController',
     $scope.getPage = function(page){
         $scope.pager.page = page;
         $scope.search($scope.selectedSearchMode);
-    };
-    
-    $scope.generateAttributeFilters = function(attributes){
-
-        angular.forEach(attributes, function(attribute){
-            if(attribute.valueType === 'number' || attribute.valueType === 'date'){
-                attribute.operator = $scope.defaultOperators[0];
-            }
-        });
-                    
-        return attributes;
     };
 
     //generate grid columns from teilist attributes
