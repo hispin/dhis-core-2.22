@@ -55,7 +55,6 @@ public enum Setting
     EMAIL_HOST_NAME( "keyEmailHostName" ),
     EMAIL_PORT( "keyEmailPort", 587, Integer.class ),
     EMAIL_USERNAME( "keyEmailUsername" ),
-    EMAIL_PASSWORD( "keyEmailPassword" ),
     EMAIL_TLS( "keyEmailTls", Boolean.TRUE, Boolean.class ),
     EMAIL_SENDER( "keyEmailSender" ),
     INSTANCE_BASE_URL( "keyInstanceBaseUrl" ),
