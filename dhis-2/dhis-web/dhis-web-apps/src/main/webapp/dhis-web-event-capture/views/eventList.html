@@ -332,7 +332,7 @@
                                                                name="foo" 
                                                                ng-class="getInputNotifcationClass(eventGridColumn.id,false)"/>                                                    
                                                 </div>
-                                                <div ng-messages="innerFormGrid.foo.$error" ng-if="innerFormGrid.foo.$touched" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
+                                                <div ng-messages="innerFormGrid.foo.$error" ng-if="interacted(innerFormGrid.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
                                                 </div>
                                             </div>
                                         </div>                                                                            
