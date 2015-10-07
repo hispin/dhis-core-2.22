@@ -28,12 +28,15 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.system.deletion.DeletionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
@@ -61,11 +64,11 @@ public class ProgramStageDataElementDeletionHandler
     @Override
     public void deleteProgramStage( ProgramStage programStage )
     {
-        Iterator<ProgramStageDataElement> programStageDataElementIterator = programStage.getProgramStageDataElements().iterator();
+        List<ProgramStageDataElement> programStageDataElements = new ArrayList<>( programStage.getProgramStageDataElements() );
 
-        while ( programStageDataElementIterator.hasNext() )
+        for ( ProgramStageDataElement programStageDataElement : programStageDataElements )
         {
-            ProgramStageDataElement programStageDataElement = programStageDataElementIterator.next();
+            programStage.getProgramStageDataElements().remove( programStageDataElement );
             programStageDataElementService.deleteProgramStageDataElement( programStageDataElement );
         }
     }

@@ -32,8 +32,9 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.system.deletion.DeletionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
@@ -74,11 +75,11 @@ public class ProgramStageSectionDeletionHandler
     @Override
     public void deleteProgramStage( ProgramStage programStage )
     {
-        Iterator<ProgramStageSection> programStageSectionIterator = programStage.getProgramStageSections().iterator();
+        List<ProgramStageSection> programStageSections = new ArrayList<>( programStage.getProgramStageSections() );
 
-        while ( programStageSectionIterator.hasNext() )
+        for ( ProgramStageSection programStageSection : programStageSections )
         {
-            ProgramStageSection programStageSection = programStageSectionIterator.next();
+            programStage.getProgramStageSections().remove( programStageSection );
             programStageSectionService.deleteProgramStageSection( programStageSection );
         }
     }
