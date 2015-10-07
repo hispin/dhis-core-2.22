@@ -26,7 +26,7 @@
 
     <property name="irregular" column="irregular" />
 
-    <set name="programStageDataElements" order-by="sort_order">
+    <set name="programStageDataElements" order-by="sort_order" cascade="save-update">
       <key column="programstageid" />
       <one-to-many class="org.hisp.dhis.program.ProgramStageDataElement" />
     </set>
@@ -36,7 +36,7 @@
 
     <property name="standardInterval" />
 
-    <set name="programStageSections" order-by="sortOrder" cascade="all,delete-orphan">
+    <set name="programStageSections" order-by="sortOrder" cascade="save-update">
       <key column="programstageid" />
       <one-to-many class="org.hisp.dhis.program.ProgramStageSection" />
     </set>
