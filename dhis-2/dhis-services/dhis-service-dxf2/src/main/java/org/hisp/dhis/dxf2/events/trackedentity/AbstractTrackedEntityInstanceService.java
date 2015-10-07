@@ -28,7 +28,12 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.commons.collection.CachingMap;
@@ -51,12 +56,7 @@ import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.google.common.collect.Lists;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -103,9 +103,16 @@ public abstract class AbstractTrackedEntityInstanceService
     // -------------------------------------------------------------------------
 
     @Override
-    public List<TrackedEntityInstance> getTrackedEntityInstances( List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances )
+    public List<TrackedEntityInstance> getTrackedEntityInstances( List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances, boolean includeRelationships )
     {
-        return trackedEntityInstances.stream().map( this::getTrackedEntityInstance ).collect( Collectors.toList() );
+        List<TrackedEntityInstance> teiItems = new ArrayList<>();
+
+        for ( org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
+        {
+            teiItems.add( getTrackedEntityInstance( trackedEntityInstance, includeRelationships ) );
+        }
+
+        return teiItems;
     }
 
     @Override
@@ -121,7 +128,7 @@ public abstract class AbstractTrackedEntityInstanceService
     }
 
     @Override
-    public TrackedEntityInstance getTrackedEntityInstance( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance, boolean expandRelative )
+    public TrackedEntityInstance getTrackedEntityInstance( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance, boolean includeRelationships )
     {
         if ( entityInstance == null )
         {
@@ -136,19 +143,21 @@ public abstract class AbstractTrackedEntityInstanceService
         trackedEntityInstance.setLastUpdated( entityInstance.getLastUpdated().toString() );
         trackedEntityInstance.setInactive( entityInstance.isInactive() );
 
-        Collection<Relationship> relationships = relationshipService.getRelationshipsForTrackedEntityInstance( entityInstance );
-
-        for ( Relationship entityRelationship : relationships )
-        {
-            org.hisp.dhis.dxf2.events.trackedentity.Relationship relationship = new org.hisp.dhis.dxf2.events.trackedentity.Relationship();
-            relationship.setDisplayName( entityRelationship.getRelationshipType().getDisplayName() );
-            relationship.setTrackedEntityInstanceA( entityRelationship.getEntityInstanceA().getUid() );
-            relationship.setTrackedEntityInstanceB( entityRelationship.getEntityInstanceB().getUid() );
-
-            relationship.setRelationship( entityRelationship.getRelationshipType().getUid() );
-
-            if ( expandRelative )
+        if ( includeRelationships )
+        {            
+            //TODO include relationships in data model and void transactional query in for-loop
+            
+            Collection<Relationship> relationships = relationshipService.getRelationshipsForTrackedEntityInstance( entityInstance );
+    
+            for ( Relationship entityRelationship : relationships )
             {
+                org.hisp.dhis.dxf2.events.trackedentity.Relationship relationship = new org.hisp.dhis.dxf2.events.trackedentity.Relationship();
+                relationship.setDisplayName( entityRelationship.getRelationshipType().getDisplayName() );
+                relationship.setTrackedEntityInstanceA( entityRelationship.getEntityInstanceA().getUid() );
+                relationship.setTrackedEntityInstanceB( entityRelationship.getEntityInstanceB().getUid() );
+    
+                relationship.setRelationship( entityRelationship.getRelationshipType().getUid() );
+    
                 // we might have cases where A <=> A, so we only include the relative if the UIDs do not match
                 if ( !entityRelationship.getEntityInstanceA().getUid().equals( entityInstance.getUid() ) )
                 {
@@ -158,9 +167,9 @@ public abstract class AbstractTrackedEntityInstanceService
                 {
                     relationship.setRelative( getTrackedEntityInstance( entityRelationship.getEntityInstanceB(), false ) );
                 }
+    
+                trackedEntityInstance.getRelationships().add( relationship );
             }
-
-            trackedEntityInstance.getRelationships().add( relationship );
         }
 
         for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
