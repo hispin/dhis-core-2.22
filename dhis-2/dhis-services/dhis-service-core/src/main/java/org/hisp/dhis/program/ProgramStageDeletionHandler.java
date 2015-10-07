@@ -28,9 +28,9 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Iterator;
-
 import org.hisp.dhis.system.deletion.DeletionHandler;
+
+import java.util.Iterator;
 
 /**
  * @author Lars Helge Overland

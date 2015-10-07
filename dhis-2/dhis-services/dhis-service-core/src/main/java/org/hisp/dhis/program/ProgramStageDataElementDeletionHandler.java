@@ -31,6 +31,7 @@ package org.hisp.dhis.program;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Iterator;
 
@@ -44,12 +45,8 @@ public class ProgramStageDataElementDeletionHandler
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private ProgramStageDataElementService programStageDataElementService;
-
-    public void setProgramStageDataElementService( ProgramStageDataElementService programStageDEService )
-    {
-        this.programStageDataElementService = programStageDEService;
-    }
 
     // -------------------------------------------------------------------------
     // Implementation methods
@@ -64,12 +61,12 @@ public class ProgramStageDataElementDeletionHandler
     @Override
     public void deleteProgramStage( ProgramStage programStage )
     {
-        Iterator<ProgramStageDataElement> iterator = programStage.getProgramStageDataElements().iterator();
+        Iterator<ProgramStageDataElement> programStageDataElementIterator = programStage.getProgramStageDataElements().iterator();
 
-        while ( iterator.hasNext() )
+        while ( programStageDataElementIterator.hasNext() )
         {
-            ProgramStageDataElement de = iterator.next();
-            programStageDataElementService.deleteProgramStageDataElement( de );
+            ProgramStageDataElement programStageDataElement = programStageDataElementIterator.next();
+            programStageDataElementService.deleteProgramStageDataElement( programStageDataElement );
         }
     }
 
