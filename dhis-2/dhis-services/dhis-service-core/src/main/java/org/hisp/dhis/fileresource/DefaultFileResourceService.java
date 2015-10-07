@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.io.ByteSource;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -87,8 +88,22 @@ public class DefaultFileResourceService
     {
         String storageKey = getRelativeStorageKey( fileResource );
 
-        String key = fileResourceContentStore.saveFileResourceContent(
-            storageKey, content, fileResource.getContentLength(), fileResource.getContentMd5() );
+//        String key = fileResourceContentStore.saveFileResourceContent(
+//            storageKey, content, fileResource.getContentLength(), fileResource.getContentMd5() );
+
+        //
+        String key = null;
+
+        try
+        {
+            key = fileResourceContentStore.saveFileResourceContent2(
+                storageKey, content, fileResource.getContentLength(), fileResource.getContentMd5() );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        //
 
         if ( key == null )
         {
