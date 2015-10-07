@@ -50,10 +50,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.ImmutableMap;
@@ -150,10 +147,11 @@ public class StaticContentController
      * @throws WebMessageException
      * @throws IOException
      */
+    @ResponseStatus( HttpStatus.NO_CONTENT )
     @RequestMapping( value = "/{key}", method = RequestMethod.POST )
     public void updateStaticContent(
         @PathVariable( "key" ) String key,
-        @RequestParam( value = "file", required = false ) MultipartFile file )
+        @RequestParam( value = "file", required = true ) MultipartFile file )
         throws WebMessageException, IOException
     {
         if ( file == null || file.isEmpty() )
