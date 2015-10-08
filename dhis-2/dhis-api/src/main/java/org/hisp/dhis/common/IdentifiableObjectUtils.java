@@ -49,6 +49,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * @author Lars Helge Overland
  */
@@ -58,14 +60,10 @@ public class IdentifiableObjectUtils
     private static final String SEPARATOR_JOIN = ", ";
     private static final SimpleDateFormat LONG_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
-    public static final Map<String, String> CLASS_ALIAS = new HashMap<String, String>()
-    {
-        {
-            put( "CategoryOption", DataElementCategoryOption.class.getSimpleName() );
-            put( "Category", DataElementCategory.class.getSimpleName() );
-            put( "CategoryCombo", DataElementCategoryCombo.class.getSimpleName() );
-        }
-    };
+    public static final Map<String, String> CLASS_ALIAS = ImmutableMap.<String, String>builder().
+    	put( "CategoryOption", DataElementCategoryOption.class.getSimpleName() ).
+    	put( "Category", DataElementCategory.class.getSimpleName() ).
+    	put( "CategoryCombo", DataElementCategoryCombo.class.getSimpleName()).build();
 
     /**
      * Joins the names of the IdentifiableObjects in the given list and separates

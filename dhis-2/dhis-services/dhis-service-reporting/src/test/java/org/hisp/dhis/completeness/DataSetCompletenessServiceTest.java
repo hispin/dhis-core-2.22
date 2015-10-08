@@ -50,7 +50,6 @@ import org.hisp.dhis.dataset.CompleteDataSetRegistration;
 import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.datavalue.DataValueService;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -74,9 +73,6 @@ public class DataSetCompletenessServiceTest
     extends DhisSpringTest
 {
     @Autowired
-    private DataSetCompletenessStore completenessStore;
-
-    @Autowired
     private PeriodService periodService;
 
     @Autowired
@@ -99,9 +95,6 @@ public class DataSetCompletenessServiceTest
 
     @Autowired
     private DataElementCategoryService categoryService;
-
-    @Autowired
-    private DataValueService dataValueService;
 
     @Autowired
     private DataSetCompletenessService registrationCompletenessService;

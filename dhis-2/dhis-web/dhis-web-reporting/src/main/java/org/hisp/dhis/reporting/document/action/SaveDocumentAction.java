@@ -1,5 +1,13 @@
 package org.hisp.dhis.reporting.document.action;
 
+import java.io.File;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.document.Document;
+import org.hisp.dhis.document.DocumentService;
+import org.hisp.dhis.external.location.LocationManager;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -29,15 +37,6 @@ package org.hisp.dhis.reporting.document.action;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.document.Document;
-import org.hisp.dhis.document.DocumentService;
-import org.hisp.dhis.external.location.LocationManager;
-import org.hisp.dhis.user.CurrentUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.File;
 
 /**
  * @author Lars Helge Overland
@@ -68,9 +67,6 @@ public class SaveDocumentAction
     {
         this.documentService = documentService;
     }
-
-    @Autowired
-    private CurrentUserService currentUserService;
 
     // -------------------------------------------------------------------------
     // Input

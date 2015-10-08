@@ -33,7 +33,6 @@ import java.io.Writer;
 import java.util.Date;
 
 import org.hisp.dhis.i18n.I18nFormat;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.report.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,6 @@ public class GetReportAndParamsAction
 {
     @Autowired
     private ReportService reportService;
-    
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
     
     private I18nFormat format;
 

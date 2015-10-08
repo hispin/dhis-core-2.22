@@ -100,9 +100,6 @@ public class CaseAggregationConditionStoreTest
     private DataElementCategoryService categoryService;
 
     @Autowired
-    private DataElementCategoryService dataElementCategoryService;
-
-    @Autowired
     private ProgramInstanceService programInstanceService;
 
     @Autowired

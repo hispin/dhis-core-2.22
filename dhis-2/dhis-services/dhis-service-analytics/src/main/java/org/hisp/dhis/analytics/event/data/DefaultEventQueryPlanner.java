@@ -38,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.analytics.QueryPlanner;
-import org.hisp.dhis.analytics.event.EventAnalyticsManager;
 import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.analytics.event.EventQueryPlanner;
 import org.hisp.dhis.analytics.partition.PartitionManager;
@@ -46,7 +45,6 @@ import org.hisp.dhis.analytics.table.PartitionUtils;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.common.QueryItem;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.setting.Setting;
@@ -64,12 +62,6 @@ public class DefaultEventQueryPlanner
     @Autowired
     private QueryPlanner queryPlanner;
 
-    @Autowired
-    private EventAnalyticsManager analyticsManager;
-    
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
-    
     @Autowired
     private SystemSettingManager systemSettingManager;
     

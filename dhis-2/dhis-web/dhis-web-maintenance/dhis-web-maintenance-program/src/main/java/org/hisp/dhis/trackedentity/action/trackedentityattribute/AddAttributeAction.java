@@ -1,5 +1,20 @@
 package org.hisp.dhis.trackedentity.action.trackedentityattribute;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.option.OptionService;
+import org.hisp.dhis.system.util.AttributeUtils;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
+import org.hisp.dhis.trackedentity.TrackedEntityService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -29,21 +44,6 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.analytics.AggregationType;
-import org.hisp.dhis.attribute.AttributeService;
-import org.hisp.dhis.common.ValueType;
-import org.hisp.dhis.legend.LegendService;
-import org.hisp.dhis.option.OptionService;
-import org.hisp.dhis.period.PeriodService;
-import org.hisp.dhis.system.util.AttributeUtils;
-import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
-import org.hisp.dhis.trackedentity.TrackedEntityService;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -74,9 +74,6 @@ public class AddAttributeAction
 
     @Autowired
     private OptionService optionService;
-
-    @Autowired
-    private PeriodService periodService;
 
     @Autowired
     private LegendService legendService;

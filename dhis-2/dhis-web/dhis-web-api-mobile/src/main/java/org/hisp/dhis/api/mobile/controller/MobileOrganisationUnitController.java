@@ -65,7 +65,6 @@ import org.hisp.dhis.api.mobile.model.LWUITmodel.Relationship;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.relationship.RelationshipTypeService;
 import org.hisp.dhis.sms.command.SMSCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -90,9 +89,6 @@ public class MobileOrganisationUnitController
 
     @Autowired
     private IProgramService programService;
-
-    @Autowired
-    private RelationshipTypeService relationshipTypeService;
 
     @Autowired
     private FacilityReportingService facilityReportingService;

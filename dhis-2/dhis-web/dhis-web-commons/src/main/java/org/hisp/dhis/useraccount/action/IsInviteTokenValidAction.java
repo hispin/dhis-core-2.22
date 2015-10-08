@@ -31,7 +31,6 @@ package org.hisp.dhis.useraccount.action;
 import org.hisp.dhis.security.RestoreOptions;
 import org.hisp.dhis.security.RestoreType;
 import org.hisp.dhis.security.SecurityService;
-import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +41,8 @@ import com.opensymphony.xwork2.Action;
  * @author Jim Grace
  */
 public class IsInviteTokenValidAction
-        implements Action
+    implements Action
 {
-    @Autowired
-    private SystemSettingManager systemSettingManager;
-
     @Autowired
     private SecurityService securityService;
 

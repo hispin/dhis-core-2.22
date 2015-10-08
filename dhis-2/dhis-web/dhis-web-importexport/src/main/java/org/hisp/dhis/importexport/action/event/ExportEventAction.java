@@ -29,8 +29,6 @@ package org.hisp.dhis.importexport.action.event;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.hisp.dhis.dxf2.events.event.EventService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -40,9 +38,6 @@ public class ExportEventAction implements Action
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
-
-    @Autowired
-    private EventService eventService;
 
     // -------------------------------------------------------------------------
     // Input & Output
