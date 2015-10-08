@@ -32,7 +32,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -88,36 +87,6 @@ public class HibernateOrganisationUnitStore
         }
 
         return object;
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<OrganisationUnit> getByNames( Collection<String> names )
-    {
-        if ( names == null || names.isEmpty() )
-        {
-            return new ArrayList<>();
-        }
-
-        Query query = getQuery( "from OrganisationUnit where name in :names" );
-        query.setParameterList( "names", names );
-
-        return query.list();
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<OrganisationUnit> getByCodes( Collection<String> codes )
-    {
-        if ( codes == null || codes.isEmpty() )
-        {
-            return new ArrayList<>();
-        }
-
-        Query query = getQuery( "from OrganisationUnit where code in :codes" );
-        query.setParameterList( "codes", codes );
-
-        return query.list();
     }
 
     @Override

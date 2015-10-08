@@ -54,9 +54,6 @@ public class ProgramStageSectionServiceTest
     private ProgramStageSectionService programStageSectionService;
 
     @Autowired
-    private ProgramStageDataElementStore programStageDataElementStore;
-
-    @Autowired
     private OrganisationUnitService organisationUnitService;
 
     @Autowired

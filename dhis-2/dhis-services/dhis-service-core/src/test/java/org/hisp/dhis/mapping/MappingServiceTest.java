@@ -53,9 +53,6 @@ public class MappingServiceTest
     extends DhisSpringTest
 {
     @Autowired
-    private MappingService mappingService;
-
-    @Autowired
     private OrganisationUnitService organisationUnitService;
 
     @Autowired

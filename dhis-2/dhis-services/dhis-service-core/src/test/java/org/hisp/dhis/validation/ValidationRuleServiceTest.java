@@ -64,7 +64,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
-import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.WeeklyPeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
@@ -101,9 +100,6 @@ public class ValidationRuleServiceTest
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
-    @Autowired
-    private PeriodService periodService;
-    
     private DataElement dataElementA;
 
     private DataElement dataElementB;

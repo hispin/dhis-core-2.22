@@ -256,13 +256,13 @@ public class DefaultOrganisationUnitService
     @Override
     public List<OrganisationUnit> getOrganisationUnitsByNames( Collection<String> names )
     {
-        return i18n( i18nService, organisationUnitStore.getByNames( names ) );
+        return i18n( i18nService, organisationUnitStore.getByName( names ) );
     }
 
     @Override
     public List<OrganisationUnit> getOrganisationUnitsByCodes( Collection<String> codes )
     {
-        return i18n( i18nService, organisationUnitStore.getByCodes( codes ) );
+        return i18n( i18nService, organisationUnitStore.getByCode( codes ) );
     }
 
     @Override
