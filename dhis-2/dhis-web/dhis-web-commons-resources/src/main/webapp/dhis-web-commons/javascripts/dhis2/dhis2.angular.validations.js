@@ -135,4 +135,55 @@ d2Directives.directive('d2NumberValidator', function() {
             };
         }
     };
+})
+
+.directive("d2AttributeValidator", function($q, TEIService, AttributesFactory, EntityQueryFactory, SessionStorageService) {
+    return {
+        restrict: "A",         
+        require: "ngModel", 
+        scope: {
+            'attributeData': '=',
+            'selectedProgram': '='
+        },
+        link: function(scope, element, attrs, ngModel) {
+            
+            if( scope.attributeData && scope.attributeData.unique ){                
+ 
+                ngModel.$asyncValidators.uniqunessValidator = function (modelValue, viewValue) {
+                    var pager = {pageSize: 1, page: 1, toolBarDisplay: 5};
+                    var deferred = $q.defer(), currentValue = modelValue || viewValue, programUrl = null, ouMode = 'ALL';
+                    
+                    if (currentValue) {
+                        
+                        scope.attributeData.value = currentValue;
+                        var atts = AttributesFactory.generateAttributeFilters([scope.attributeData]);
+                        var attUrl = EntityQueryFactory.getAttributesQuery(atts, null);                        
+                        var ouId = SessionStorageService.get('ouSelected');
+                        
+                        if(scope.selectedProgram && scope.attributeData.programScope){
+                            programUrl = 'program=' + scope.selectedProgram;
+                        }
+                        
+                        if(scope.attributeData.orgUnitScope){
+                            ouMode = 'SELECTED';
+                        }                        
+                        
+                        TEIService.search(ouId, ouMode, null, programUrl, attUrl.url, pager, true).then(function(data) {
+                            if (data.rows.length > 0) {    
+                                deferred.reject();
+                            }
+                            else {
+                                deferred.resolve();
+                            }
+                        });
+                    }
+                    else {
+                        deferred.resolve();
+                    }
+
+                    return deferred.promise;
+                };
+            }            
+        }
+    };
 });
