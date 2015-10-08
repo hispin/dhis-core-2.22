@@ -30,9 +30,9 @@
                                d2-date-validator 
                                max-date="attribute.allowFutureDate ? '' : 0"
                                ng-model="selectedTei[attribute.id]"
-                               ng-model-options="{ updateOn: 'blur' }"
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator 
-                               attribute-data="attribute" 
+                               attribute-data="attribute" selected-program="selectedProgram.id"  
                                ng-disabled="editingDisabled" 
                                blur-or-change="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
@@ -42,9 +42,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur' }"
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator 
-                               attribute-data="attribute" 
+                               attribute-data="attribute" selected-program="selectedProgram.id"  
                                ng-disabled="editingDisabled" 
                                ng-change="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
@@ -52,9 +52,9 @@
                     <span ng-switch-when="BOOLEAN">
                         <select name="foo" 
                                 ng-model="selectedTei[attribute.id]" 
-                                ng-model-options="{ updateOn: 'blur' }" 
+                                ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
                                 d2-attribute-validator 
-                                attribute-data="attribute" 
+                                attribute-data="attribute" selected-program="selectedProgram.id"  
                                 class="form-control" 
                                 ng-disabled="editingDisabled" 
                                 ng-change="teiValueUpdated(selectedTei, attribute.id)"
@@ -69,9 +69,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur' }" 
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
                                d2-attribute-validator 
-                               attribute-data="attribute" 
+                               attribute-data="attribute" selected-program="selectedProgram.id"  
                                d2-number-validator 
                                number-type={{attribute.valueType}} 
                                ng-disabled="editingDisabled" 
@@ -83,9 +83,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur' }" 
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
                                d2-attribute-validator 
-                               attribute-data="attribute" 
+                               attribute-data="attribute" selected-program="selectedProgram.id"  
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
@@ -95,9 +95,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur' }" 
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
                                d2-attribute-validator 
-                               attribute-data="attribute" 
+                               attribute-data="attribute" selected-program="selectedProgram.id"  
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique">                                   
@@ -108,10 +108,10 @@
                                name="foo" 
                                class="form-control-trimmed" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur' }" 
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
                                d2-attribute-validator 
-                               attribute-data="attribute" 
-                               ng-model-options="{ updateOn: 'blur' }"
+                               attribute-data="attribute" selected-program="selectedProgram.id"  
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                ng-disabled="true" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                style="width:75%;"
@@ -128,9 +128,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur' }" 
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
                                d2-attribute-validator 
-                               attribute-data="attribute" 
+                               attribute-data="attribute" selected-program="selectedProgram.id"  
                                ng-disabled="editingDisabled" 
                                ng-blur="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>                                    
