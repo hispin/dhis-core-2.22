@@ -136,7 +136,6 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.period.comparator.AscendingPeriodEndDateComparator;
-import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.reporttable.ReportTable;
@@ -202,9 +201,6 @@ public class DefaultAnalyticsService
     
     @Autowired
     private ProgramStageService programStageService;
-    
-    @Autowired
-    private ProgramIndicatorService programIndicatorService;
     
     @Autowired
     private CurrentUserService currentUserService;

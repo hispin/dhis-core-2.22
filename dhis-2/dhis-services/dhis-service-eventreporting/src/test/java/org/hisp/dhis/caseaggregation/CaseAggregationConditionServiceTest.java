@@ -63,16 +63,17 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-
 /**
  * @author Chau Thu Tran
- * @version $ CaseAggregationConditionServiceTest.java Nov 29, 2013 10:01:48 AM
- *          $
  */
 public class CaseAggregationConditionServiceTest
     extends DhisSpringTest
@@ -97,9 +98,6 @@ public class CaseAggregationConditionServiceTest
 
     @Autowired
     private DataElementCategoryService categoryService;
-
-    @Autowired
-    private DataElementCategoryService dataElementCategoryService;
 
     @Autowired
     private ProgramInstanceService programInstanceService;

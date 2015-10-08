@@ -31,10 +31,10 @@ package org.hisp.dhis.analytics.event.data;
 import static org.hisp.dhis.analytics.AnalyticsService.NAMES_META_KEY;
 import static org.hisp.dhis.analytics.AnalyticsService.OU_HIERARCHY_KEY;
 import static org.hisp.dhis.analytics.AnalyticsService.OU_NAME_HIERARCHY_KEY;
-import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_NAME_SEP;
 import static org.hisp.dhis.common.DimensionalObject.ITEM_SEP;
+import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
+import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionFromParam;
 import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionItemsFromParam;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
@@ -84,14 +84,12 @@ import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
-import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -138,9 +136,6 @@ public class DefaultEventAnalyticsService
     private ProgramIndicatorService programIndicatorService;
     
     @Autowired
-    private OrganisationUnitService organisationUnitService;
-
-    @Autowired
     private LegendService legendService;
 
     @Autowired
@@ -154,9 +149,6 @@ public class DefaultEventAnalyticsService
 
     @Autowired
     private AnalyticsService analyticsService;
-
-    @Autowired
-    private SystemSettingManager systemSettingManager;
 
     @Autowired
     private CurrentUserService currentUserService;

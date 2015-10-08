@@ -41,7 +41,6 @@ import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
 import org.hisp.dhis.legend.LegendService;
-import org.hisp.dhis.mapping.MappingService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -59,9 +58,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class GeoToolsMapLayerTest
     extends DhisSpringTest
 {
-    @Autowired
-    private MappingService mappingService;
-
     @Autowired
     private OrganisationUnitService organisationUnitService;
 

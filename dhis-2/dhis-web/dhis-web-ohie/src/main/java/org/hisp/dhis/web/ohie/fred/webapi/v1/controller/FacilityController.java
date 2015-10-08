@@ -51,10 +51,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 
-import org.hisp.dhis.webapi.controller.organisationunit.OrganisationUnitLevelController;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.hierarchy.HierarchyViolationException;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.web.ohie.fred.webapi.v1.domain.Facilities;
 import org.hisp.dhis.web.ohie.fred.webapi.v1.domain.Facility;
 import org.hisp.dhis.web.ohie.fred.webapi.v1.domain.Identifier;
@@ -68,11 +71,7 @@ import org.hisp.dhis.web.ohie.fred.webapi.v1.utils.MessageUtils;
 import org.hisp.dhis.web.ohie.fred.webapi.v1.utils.ValidationUtils;
 import org.hisp.dhis.web.ohie.fred.webapi.v1.validation.group.Create;
 import org.hisp.dhis.web.ohie.fred.webapi.v1.validation.group.Update;
-import org.hisp.dhis.hierarchy.HierarchyViolationException;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.webapi.controller.organisationunit.OrganisationUnitLevelController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpHeaders;
@@ -108,9 +107,6 @@ public class FacilityController
 
     @Autowired
     private DataSetService dataSetService;
-
-    @Autowired
-    private CurrentUserService currentUserService;
 
     @Autowired
     private ConversionService conversionService;

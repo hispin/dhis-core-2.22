@@ -1,5 +1,7 @@
 package org.hisp.dhis.importexport.action.datavalue;
 
+import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -29,7 +31,6 @@ package org.hisp.dhis.importexport.action.datavalue;
  */
 
 import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
-import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
 import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_CSV;
 import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_JSON;
 import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_XML;
@@ -47,7 +48,6 @@ import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
 import org.hisp.dhis.util.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,9 +73,6 @@ public class ExportDataValueAction
 
     @Autowired
     private SelectionTreeManager selectionTreeManager;
-
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
 
     @Autowired
     private DataValueSetService dataValueSetService;

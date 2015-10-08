@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -54,9 +53,6 @@ public class DataSetCompletenessServiceExportTest
     extends DhisSpringTest
 {
     @Autowired
-    private DataSetCompletenessStore completenessStore;
-
-    @Autowired
     private PeriodService periodService;
 
     @Autowired
@@ -64,9 +60,6 @@ public class DataSetCompletenessServiceExportTest
 
     @Autowired
     private DataSetService dataSetService;
-
-    @Autowired
-    private CompleteDataSetRegistrationService registrationService;
 
     private PeriodType monthly;
 

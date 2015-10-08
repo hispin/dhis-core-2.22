@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.quick.StatementHolder;
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
@@ -66,9 +65,6 @@ public class TableAlteror
 
     @Autowired
     private StatementBuilder statementBuilder;
-
-    @Autowired
-    private BatchHandlerFactory batchHandlerFactory;
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
