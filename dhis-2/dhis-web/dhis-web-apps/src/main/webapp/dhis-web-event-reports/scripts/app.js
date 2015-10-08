@@ -7349,10 +7349,10 @@ Ext.onReady( function() {
                         ns.app.dateTotal = new Date();
 
                         // after render
-                        ns.app.layout = layout;
-                        ns.app.xLayout = xLayout;
-                        ns.app.response = response;
-                        ns.app.xResponse = xResponse;
+                        //ns.app.layout = layout;
+                        //ns.app.xLayout = xLayout;
+                        //ns.app.response = response;
+                        //ns.app.xResponse = xResponse;
                         ns.app.xColAxis = xColAxis;
                         ns.app.xRowAxis = xRowAxis;
                         ns.app.uuidDimUuidsMap = table.uuidDimUuidsMap;
@@ -7436,6 +7436,9 @@ Ext.onReady( function() {
 
                     getOptionSets(xResponse, getReport);
 				};
+
+                ns.app.layout = layout;
+                ns.app.response = response;
 
                 if (!response.rows.length) {
                     ns.app.centerRegion.removeAll(true);
