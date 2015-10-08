@@ -745,6 +745,33 @@ public class DefaultIdentifiableObjectManager
 
     @Override
     @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> List<T> getObjects( Class<T> clazz, IdentifiableProperty property, Collection<String> identifiers )
+    {
+        GenericIdentifiableObjectStore<T> store = (GenericIdentifiableObjectStore<T>) getIdentifiableObjectStore( clazz );
+
+        if ( identifiers != null && !identifiers.isEmpty() )
+        {
+            if ( property == null || IdentifiableProperty.UID.equals( property ) )
+            {
+                return store.getByUid( identifiers );
+            }
+            else if ( IdentifiableProperty.CODE.equals( property ) )
+            {
+                return store.getByCode( identifiers );
+            }
+            else if ( IdentifiableProperty.NAME.equals( property ) )
+            {
+                return store.getByName( identifiers );
+            }
+            
+            throw new IllegalArgumentException( "Invalid identifiable property / class combination: " + property );
+        }
+
+        return null;
+    }
+    
+    @Override
+    @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String id )
     {
         GenericIdentifiableObjectStore<T> store = (GenericIdentifiableObjectStore<T>) getIdentifiableObjectStore( clazz );

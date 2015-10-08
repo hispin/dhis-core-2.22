@@ -28,15 +28,27 @@ package org.hisp.dhis.dxf2.gml;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Maps;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.impl.io.MalformedByteSequenceException;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -46,7 +58,6 @@ import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.organisationunit.FeatureType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.notification.NotificationLevel;
 import org.hisp.dhis.system.notification.Notifier;
@@ -56,19 +67,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.google.common.base.Strings;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 
 /**
  * Import geospatial data from GML documents and merge into OrganisationUnits.
@@ -109,9 +110,6 @@ public class DefaultGmlImportService
 
     @Autowired
     private RenderService renderService;
-
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
 
     @Autowired
     private IdentifiableObjectManager idObjectManager;
@@ -266,6 +264,7 @@ public class DefaultGmlImportService
         for ( OrganisationUnit orgUnit : sourceList ) // Identifier Matching priority: uid, code, name
         {
             // Only matches if UID is actually in DB as an empty UID on input will be replaced by auto-generated value
+            
             if ( !Strings.isNullOrEmpty( orgUnit.getUid() ) && idObjectManager.exists( OrganisationUnit.class, orgUnit.getUid() ) )
             {
                 uidMap.put( orgUnit.getUid(), orgUnit );
@@ -281,19 +280,11 @@ public class DefaultGmlImportService
         }
     }
 
-    private Map<String, OrganisationUnit> getMatchingPersistedOrgUnits( Collection<String> identifiers, final IdentifiableProperty idProperty )
+    private Map<String, OrganisationUnit> getMatchingPersistedOrgUnits( Collection<String> identifiers, final IdentifiableProperty property )
     {
-        Collection<OrganisationUnit> orgUnits =
-            idProperty == IdentifiableProperty.UID ? organisationUnitService.getOrganisationUnitsByUid( identifiers ) :
-                idProperty == IdentifiableProperty.CODE ? organisationUnitService.getOrganisationUnitsByCodes( identifiers ) :
-                    idProperty == IdentifiableProperty.NAME ? organisationUnitService.getOrganisationUnitsByNames( identifiers ) :
-                        new HashSet<>();
+        List<OrganisationUnit> orgUnits = idObjectManager.getObjects( OrganisationUnit.class, property, identifiers );
 
-        return Maps.uniqueIndex( orgUnits,
-            organisationUnit -> idProperty == IdentifiableProperty.UID ? organisationUnit.getUid() :
-                idProperty == IdentifiableProperty.CODE ? organisationUnit.getCode() :
-                    idProperty == IdentifiableProperty.NAME ? organisationUnit.getName() : null
-        );
+        return IdentifiableObjectUtils.getMap( orgUnits, property );
     }
 
     private void mergeNonGeoData( OrganisationUnit source, OrganisationUnit target )

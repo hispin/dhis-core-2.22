@@ -254,18 +254,6 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public List<OrganisationUnit> getOrganisationUnitsByNames( Collection<String> names )
-    {
-        return i18n( i18nService, organisationUnitStore.getByName( names ) );
-    }
-
-    @Override
-    public List<OrganisationUnit> getOrganisationUnitsByCodes( Collection<String> codes )
-    {
-        return i18n( i18nService, organisationUnitStore.getByCode( codes ) );
-    }
-
-    @Override
     public List<OrganisationUnit> getRootOrganisationUnits()
     {
         return i18n( i18nService, organisationUnitStore.getRootOrganisationUnits() );
