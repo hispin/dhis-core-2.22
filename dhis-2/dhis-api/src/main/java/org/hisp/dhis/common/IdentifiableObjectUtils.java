@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.calendar.Calendar;
@@ -100,17 +101,18 @@ public class IdentifiableObjectUtils
      */
     public static <T extends IdentifiableObject> List<String> getUids( Collection<T> objects )
     {
-        List<String> uids = new ArrayList<>();
+        return objects != null ? objects.stream().map( o -> o.getUid() ).collect( Collectors.toList() ) : null;
+    }
 
-        if ( objects != null )
-        {
-            for ( T object : objects )
-            {
-                uids.add( object.getUid() );
-            }
-        }
-
-        return uids;
+    /**
+     * Returns a list of internal identifiers for the given collection of IdentifiableObjects.
+     *
+     * @param objects the list of IdentifiableObjects.
+     * @return a list of uids.
+     */
+    public static <T extends IdentifiableObject> List<Integer> getIdentifiers( Collection<T> objects )
+    {
+        return objects != null ? objects.stream().map( o -> o.getId() ).collect( Collectors.toList() ) : null;
     }
 
     /**
@@ -163,27 +165,6 @@ public class IdentifiableObjectUtils
         }
 
         return period.getPeriodType().getIsoDate( calendar.fromIso( period.getStartDate() ) );
-    }
-
-    /**
-     * Returns a list of internal identifiers for the given collection of IdentifiableObjects.
-     *
-     * @param objects the list of IdentifiableObjects.
-     * @return a list of uids.
-     */
-    public static <T extends IdentifiableObject> List<Integer> getIdentifiers( Collection<T> objects )
-    {
-        List<Integer> uids = new ArrayList<>();
-
-        if ( objects != null )
-        {
-            for ( T object : objects )
-            {
-                uids.add( object.getId() );
-            }
-        }
-
-        return uids;
     }
 
     /**
@@ -329,30 +310,6 @@ public class IdentifiableObjectUtils
     public static String getLastUpdatedTag( IdentifiableObject object )
     {
         return object != null ? LONG_DATE_FORMAT.format( object.getLastUpdated() ) : null;
-    }
-
-    /**
-     * Returns a list of database identifiers from a list of idObjects
-     *
-     * @param identifiableObjects Collection of idObjects
-     * @return List of database identifiers for idObjects
-     */
-    public static List<Integer> getIdList( Collection<? extends IdentifiableObject> identifiableObjects )
-    {
-        List<Integer> integers = new ArrayList<>();
-
-        if ( identifiableObjects != null )
-        {
-            for ( IdentifiableObject identifiableObject : identifiableObjects )
-            {
-                if ( identifiableObject != null )
-                {
-                    integers.add( identifiableObject.getId() );
-                }
-            }
-        }
-
-        return integers;
     }
 
     /**
