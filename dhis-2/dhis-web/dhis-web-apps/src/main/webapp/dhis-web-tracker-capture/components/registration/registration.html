@@ -13,7 +13,9 @@
                             {{'entity_type'| translate}}
                         </td>
                         <td>
-                            <select class="form-control" ng-model="trackedEntities.selected" ng-options="trackedEntity.name for trackedEntity in trackedEntities.available | orderBy: 'name'">                                
+                            <select class="form-control" 
+                                    ng-model="trackedEntities.selected"                                     
+                                    ng-options="trackedEntity.name for trackedEntity in trackedEntities.available | orderBy: 'name'">                                
                             </select>                            
                         </td>
                     </tr>                   
