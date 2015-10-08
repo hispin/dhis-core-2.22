@@ -39,7 +39,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.treeLoaded = false;    
     $scope.selectedSection = {id: 'ALL'};    
     $rootScope.ruleeffects = {};
-    $scope.hiddenFields = {};
+    $scope.hiddenFields = [];
+    $scope.assignedFields = [];
     
     $scope.calendarSetting = CalendarService.getSetting();
     
@@ -979,6 +980,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.warningMessages = [];
         $scope.hiddenSections = [];
         $scope.hiddenFields = [];
+        $scope.assignedFields = [];
         
         //console.log('args.event:  ', $rootScope.ruleeffects['SINGLE_EVENT'][0]);
         if($rootScope.ruleeffects[args.event]) {
@@ -1019,12 +1021,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                             $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
                         }
                     }
-                    if(effect.action === "HIDESECTION") {
+                    else if(effect.action === "HIDESECTION") {
                         if(effect.programStageSection){
                             $scope.hiddenSections[effect.programStageSection] = effect.programStageSection;
                         }
                     }
-                    if(effect.action === "SHOWERROR" && effect.dataElement.id){
+                    else if(effect.action === "SHOWERROR" && effect.dataElement.id){
                         var dialogOptions = {
                             headerText: 'validation_error',
                             bodyText: effect.content + effect.data
@@ -1033,8 +1035,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
                         $scope.currentEvent[effect.dataElement.id] = $scope.currentEventOriginialValue[effect.dataElement.id];
                     }
-                    if(effect.action === "SHOWWARNING"){
+                    else if(effect.action === "SHOWWARNING"){
                         $scope.warningMessages.push(effect.content + effect.data);
+                    }
+                    else if (effect.action === "ASSIGNVARIABLE") {
+                        
+                        //For "ASSIGNVARIABLE" actions where we have a dataelement, we save the calculated value to the dataelement:
+                        affectedEvent[effect.dataElement.id] = effect.data;
+                        $scope.assignedFields[effect.dataElement.id] = true;
                     }
                 }
             });

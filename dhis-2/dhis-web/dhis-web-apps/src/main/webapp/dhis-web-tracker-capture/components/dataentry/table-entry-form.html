@@ -22,7 +22,7 @@
                        ng-class="getInputDueDateClass(eventRow)"
                        d2-date 
                        ng-model="eventRow.eventDate"
-                       ng-disabled="eventRow.status === 'SKIPPED' || eventRow.enrollmentStatus !== 'ACTIVE' || eventRow.editingNotAllowed"    
+                       ng-disabled="eventRow.status === 'SKIPPED' || eventRow.enrollmentStatus !== 'ACTIVE' || eventRow.editingNotAllowed "    
                        ng-required="true"
                        blur-or-change="saveEventDateForEvent(eventRow)"/>
                 <span ng-if="invalidDate === eventRow.event" class="error">{{'date_required'| translate}}</span>
@@ -34,7 +34,7 @@
                             <ui-select  ng-model="eventRow[prStDe.dataElement.id]" 
                                         theme="select2" 
                                         ng-required={{prStDe.compulsory}} 
-                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                         name="foo" 
                                         on-select="saveDatavalue(prStDe, innerForm.foo)"
                                         style="width:100%;">
@@ -51,7 +51,7 @@
                                     class="form-control"
                                     name={{prStDe.dataElement.id}}
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                     ng-model="eventRow[prStDe.dataElement.id]"
                                     ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                     value=""> {{'no_value' | translate}}<br>                                       
@@ -63,7 +63,7 @@
                                         ng-class='getInputNotifcationClass(prStDe.dataElement.id,true)'
                                         name={{prStDe.dataElement.id}}
                                         ng-required={{prStDe.compulsory}} 
-                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                         ng-model="eventRow[prStDe.dataElement.id]"
                                         ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                         value={{option.name}}> {{option.name}}
@@ -80,7 +80,7 @@
                                    ng-model="eventRow[prStDe.dataElement.id]"                                    
                                    d2-number-validator
                                    ng-required={{prStDe.compulsory}}
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div> 
@@ -138,7 +138,7 @@
                                     class="form-control"
                                     ng-model="eventRow[prStDe.dataElement.id]" 
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                     ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo">
                                 </textarea>
@@ -149,7 +149,7 @@
                                     class="form-control"
                                     ng-model="eventRow[prStDe.dataElement.id]" 
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                     ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo"/>                 
                         </div>
@@ -158,7 +158,7 @@
                                     class="form-control"
                                     ng-model="eventRow[prStDe.dataElement.id]" 
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                     ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo">
                                 <option value="">{{'please_select'| translate}}</option>                        
@@ -176,7 +176,7 @@
                                    ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                    ng-model="eventRow[prStDe.dataElement.id]"                                    
                                    ng-required={{prStDe.compulsory}}  
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                    blur-or-change="saveDatavalue(prStDe, innerForm.foo)"
                                    name="foo"/>
                         </div>
@@ -186,7 +186,7 @@
                                    ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                    ng-model="eventRow[prStDe.dataElement.id]"                                                               
                                    ng-required={{prStDe.compulsory}} 
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                    ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>
@@ -196,7 +196,7 @@
                                 ng-class='getInputNotifcationClass(prStDe.dataElement.id,false)'
                                 ng-model="eventRow[prStDe.dataElement.id]" 
                                 ng-required={{prStDe.compulsory}} 
-                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                                 ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                 name="foo"/> 
                         </div>
@@ -254,7 +254,7 @@
                 <div class="align-center" ng-show="prStDe.allowProvidedElsewhere">
                     <input type="checkbox" 
                            ng-model="eventRow.providedElsewhere[prStDe.dataElement.id]" 
-                           ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed" 
+                           ng-disabled="selectedEnrollment.status !== 'ACTIVE' || eventRow.editingNotAllowed || assignedFields[prStDe.dataElement.id] " 
                            ng-change="saveDatavalueLocation(prStDe)"/>                
                 </div>
             </td>-->
