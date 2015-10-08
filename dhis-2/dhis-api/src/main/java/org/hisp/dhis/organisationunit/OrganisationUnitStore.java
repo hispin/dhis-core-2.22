@@ -28,7 +28,6 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -58,22 +57,6 @@ public interface OrganisationUnitStore
      * @return the object with the given uid.
      */
     OrganisationUnit getByUuid( String uuid );
-
-    /**
-     * Retrieves all OrganisationUnits matching the given names.
-     *
-     * @param names names of the OrganisationUnits to return.
-     * @return all OrganisationUnits matching the given names.
-     */
-    List<OrganisationUnit> getByNames( Collection<String> names );
-
-    /**
-     * Retrieves all OrganisationUnits matching the given codes.
-     *
-     * @param codes codes of the OrganisationUnits to return.
-     * @return all OrganisationUnits matching the given codes.
-     */
-    List<OrganisationUnit> getByCodes( Collection<String> codes );
 
     /**
      * Returns all OrganisationUnits by lastUpdated.

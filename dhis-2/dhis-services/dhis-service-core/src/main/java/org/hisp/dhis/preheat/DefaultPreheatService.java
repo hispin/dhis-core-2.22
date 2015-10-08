@@ -32,8 +32,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -42,9 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DefaultPreheatService implements PreheatService
 {
-    @Autowired
-    private IdentifiableObjectManager identifiableObjectManager;
-
     @Override
     public void preheat( Set<Class<?>> classes )
     {

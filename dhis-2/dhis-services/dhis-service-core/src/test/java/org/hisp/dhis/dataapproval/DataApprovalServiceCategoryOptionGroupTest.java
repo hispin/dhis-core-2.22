@@ -46,7 +46,6 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataapproval.exceptions.DataApprovalException;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
-import org.hisp.dhis.dataelement.CategoryOptionGroupStore;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
@@ -101,9 +100,6 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
     @Autowired
     private DataElementCategoryService categoryService;
-
-    @Autowired
-    private CategoryOptionGroupStore categoryOptionGroupStore;
 
     @Autowired
     private HibernateCategoryOptionGroupStore hibernateCategoryOptionGroupStore;

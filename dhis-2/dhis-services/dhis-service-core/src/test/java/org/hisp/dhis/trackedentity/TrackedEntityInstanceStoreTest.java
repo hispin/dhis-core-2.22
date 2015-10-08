@@ -36,10 +36,6 @@ import static org.junit.Assert.assertTrue;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.program.ProgramInstanceService;
-import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
-import org.hisp.dhis.validation.ValidationCriteriaService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,22 +49,10 @@ public class TrackedEntityInstanceStoreTest
     private TrackedEntityInstanceStore entityInstanceStore;
 
     @Autowired
-    private ProgramService programService;
-
-    @Autowired
-    private ProgramInstanceService programInstanceService;
-
-    @Autowired
     private OrganisationUnitService organisationUnitService;
 
     @Autowired
     private TrackedEntityAttributeService attributeService;
-
-    @Autowired
-    private TrackedEntityAttributeValueService attributeValueService;
-
-    @Autowired
-    private ValidationCriteriaService validationCriteriaService;
 
     private TrackedEntityInstance entityInstanceA1;
 

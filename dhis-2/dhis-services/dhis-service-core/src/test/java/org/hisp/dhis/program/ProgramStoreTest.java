@@ -36,7 +36,6 @@ import java.util.List;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.validation.ValidationCriteriaService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,9 +50,6 @@ public class ProgramStoreTest
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
-
-    @Autowired
-    private ValidationCriteriaService validationCriteriaService;
 
     private OrganisationUnit organisationUnitA;
 

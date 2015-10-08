@@ -40,13 +40,9 @@ import java.util.Set;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.program.ProgramInstanceService;
-import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
-import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
-import org.hisp.dhis.validation.ValidationCriteriaService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -60,22 +56,10 @@ public class TrackedEntityInstanceServiceTest
     private TrackedEntityInstanceService entityInstanceService;
 
     @Autowired
-    private ProgramService programService;
-
-    @Autowired
-    private ProgramInstanceService programInstanceService;
-
-    @Autowired
     private OrganisationUnitService organisationUnitService;
 
     @Autowired
     private TrackedEntityAttributeService attributeService;
-
-    @Autowired
-    private TrackedEntityAttributeValueService attributeValueService;
-
-    @Autowired
-    private ValidationCriteriaService validationCriteriaService;
 
     @Autowired
     private RelationshipTypeService relationshipTypeService;

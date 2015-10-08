@@ -52,9 +52,6 @@ public class ProgramValidationStoreTest
     private ProgramValidationStore programValidationStore;
 
     @Autowired
-    private ProgramStageInstanceService programStageInstanceService;
-
-    @Autowired
     private ProgramStageDataElementService programStageDataElementService;
 
     @Autowired

@@ -162,6 +162,26 @@ public class OrganisationUnitServiceTest
     }
     
     @Test
+    public void testGetOrganisationUnitByCode()
+    {
+        OrganisationUnit unit1 = createOrganisationUnit( 'A' );
+        OrganisationUnit unit2 = createOrganisationUnit( 'B' );
+        OrganisationUnit unit3 = createOrganisationUnit( 'C' );
+        
+        organisationUnitService.addOrganisationUnit( unit1 );
+        organisationUnitService.addOrganisationUnit( unit2 );
+        organisationUnitService.addOrganisationUnit( unit3 );
+        
+        Set<String> codes = Sets.newHashSet( unit2.getCode(), unit3.getCode() );
+        
+        List<OrganisationUnit> units = organisationUnitService.getOrganisationUnitsByCodes( codes );
+        
+        assertEquals( 2, units.size() );
+        assertTrue( units.contains( unit2 ) );
+        assertTrue( units.contains( unit3 ) );
+    }
+    
+    @Test
     public void testGetOrganisationUnitLevel()
     {
         OrganisationUnit unitA = createOrganisationUnit( 'A' );

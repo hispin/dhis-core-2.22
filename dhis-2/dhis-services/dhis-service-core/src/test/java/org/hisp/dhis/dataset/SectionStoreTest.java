@@ -37,7 +37,6 @@ import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.junit.Test;
@@ -55,9 +54,6 @@ public class SectionStoreTest
     @Autowired
     private DataSetService dataSetService;
 
-    @Autowired
-    private DataElementCategoryService categoryService;
-    
     @Autowired
     private SectionStore sectionStore;
     

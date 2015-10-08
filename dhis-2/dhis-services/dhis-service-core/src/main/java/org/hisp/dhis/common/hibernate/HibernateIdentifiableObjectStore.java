@@ -436,6 +436,30 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    public List<T> getByCode( Collection<String> codes )
+    {
+        if ( codes == null || codes.isEmpty() )
+        {
+            return new ArrayList<>();
+        }
+
+        return getSharingCriteria().add( Restrictions.in( "code", codes ) ).list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<T> getByName( Collection<String> names )
+    {
+        if ( names == null || names.isEmpty() )
+        {
+            return new ArrayList<>();
+        }
+
+        return getSharingCriteria().add( Restrictions.in( "name", names ) ).list();
+    }
+
+    @Override
     public List<T> getByUidNoAcl( Collection<String> uids )
     {
         List<T> list = new ArrayList<>();
