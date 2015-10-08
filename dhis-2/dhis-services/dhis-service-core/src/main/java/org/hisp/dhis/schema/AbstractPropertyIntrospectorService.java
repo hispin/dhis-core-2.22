@@ -40,6 +40,7 @@ import org.hibernate.persister.collection.CollectionPersister;
 import org.hibernate.persister.entity.Joinable;
 import org.hibernate.type.AssociationType;
 import org.hibernate.type.CollectionType;
+import org.hibernate.type.CustomType;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
@@ -57,6 +58,7 @@ import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.dataelement.DataElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
@@ -274,7 +276,7 @@ public abstract class AbstractPropertyIntrospectorService
                 property.setOneToOne( true );
             }
 
-            if ( SingleColumnType.class.isInstance( type ) )
+            if ( SingleColumnType.class.isInstance( type ) || CustomType.class.isInstance( type ) )
             {
                 Column column = (Column) hibernateProperty.getColumnIterator().next();
 
