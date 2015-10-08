@@ -6454,7 +6454,7 @@ Ext.onReady( function() {
 			//}
 		};
 
-        setGui = function(layout, xLayout, response, updateGui, table) {
+        setGui = function(layout, response, updateGui) {
 			var dimensions = Ext.Array.clean([].concat(layout.columns || [], layout.rows || [], layout.filters || [])),
 				recMap = ns.core.service.layout.getObjectNameDimensionItemsMapFromDimensionArray(dimensions);
 
@@ -7222,8 +7222,6 @@ Ext.onReady( function() {
 					disableCaching: false,
 					scope: this,
 					failure: function(r) {
-						//ns.app.viewport.setGui(layout, xLayout, isUpdateGui);
-
 						web.mask.hide(ns.app.centerRegion);
 
                         ns.alert(r);
@@ -7232,8 +7230,6 @@ Ext.onReady( function() {
                         ns.app.dateCreate = new Date();
 
                         var response = api.response.Response(Ext.decode(r.responseText));
-
-                        //if (response) {
 
                         // add to dimConf, TODO
                         for (var i = 0, map = dimConf.objectNameMap, header; i < response.headers.length; i++) {
@@ -7245,7 +7241,6 @@ Ext.onReady( function() {
                                 name: header.column
                             };
                         }
-                        //}
 
                         web.mask.show(ns.app.centerRegion, 'Creating table..');
 
@@ -7350,9 +7345,9 @@ Ext.onReady( function() {
 
                         // after render
                         //ns.app.layout = layout;
-                        //ns.app.xLayout = xLayout;
+                        ns.app.xLayout = xLayout;
                         //ns.app.response = response;
-                        //ns.app.xResponse = xResponse;
+                        ns.app.xResponse = xResponse;
                         ns.app.xColAxis = xColAxis;
                         ns.app.xRowAxis = xRowAxis;
                         ns.app.uuidDimUuidsMap = table.uuidDimUuidsMap;
@@ -7363,8 +7358,6 @@ Ext.onReady( function() {
                             web.events.setColumnHeaderMouseHandlers(layout, response, xResponse);
                             web.storage.session.set(layout, 'eventtable');
                         }
-
-                        ns.app.accordion.setGui(layout, xLayout, response, isUpdateGui, table);
 
                         web.mask.hide(ns.app.centerRegion);
 
@@ -7418,15 +7411,13 @@ Ext.onReady( function() {
                         ns.app.centerRegion.update(table.html);
 
                         // after render
-                        ns.app.layout = layout;
-                        ns.app.response = response;
+                        //ns.app.layout = layout;
+                        //ns.app.response = response;
                         ns.app.xResponse = xResponse;
 
                         if (NS.isSessionStorage) {
                             web.events.setColumnHeaderMouseHandlers(layout, response, xResponse);
                         }
-
-                        ns.app.accordion.setGui(layout, null, response, isUpdateGui, table);
 
                         web.mask.hide(ns.app.centerRegion);
                     };
@@ -7437,9 +7428,13 @@ Ext.onReady( function() {
                     getOptionSets(xResponse, getReport);
 				};
 
+                // success
                 ns.app.layout = layout;
-                ns.app.response = response;
+                ns.app.response = response;                
 
+                ns.app.accordion.setGui(layout, response, isUpdateGui);
+
+                // no data
                 if (!response.rows.length) {
                     ns.app.centerRegion.removeAll(true);
                     ns.app.centerRegion.update('');
