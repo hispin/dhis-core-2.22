@@ -313,25 +313,15 @@ public class IdentifiableObjectUtils
     }
 
     /**
-     * Returns a mapping between the uid and the name of the given identifiable
-     * objects.
+     * Returns a mapping between the uid and the display name of the given 
+     * identifiable objects.
      *
      * @param objects the identifiable objects.
-     * @return mapping between the uid and the name of the given objects.
+     * @return mapping between the uid and the display name of the given objects.
      */
     public static Map<String, String> getUidNameMap( Collection<? extends IdentifiableObject> objects )
-    {
-        Map<String, String> map = new HashMap<>();
-
-        if ( objects != null )
-        {
-            for ( IdentifiableObject object : objects )
-            {
-                map.put( object.getUid(), object.getDisplayName() );
-            }
-        }
-
-        return map;
+    {        
+        return objects.stream().collect( Collectors.toMap( IdentifiableObject::getUid, IdentifiableObject::getDisplayName ) );
     }
 
     /**
