@@ -95,6 +95,7 @@ trackerCapture.controller('TEIAddController',
     $scope.searchFilterExists = false;   
     $scope.defaultOperators = OperatorFactory.defaultOperators;
     $scope.boolOperators = OperatorFactory.boolOperators;
+    $scope.selectedTrackedEntity = null;
     
     $scope.trackedEntityList = null; 
     $scope.enrollment = {programStartDate: '', programEndDate: '', operator: $scope.defaultOperators[0]};
@@ -125,7 +126,10 @@ trackerCapture.controller('TEIAddController',
         }
         
         CurrentSelection.setRelationshipOwner({});
-        //$scope.selectedTei = {};
+        
+        if($scope.selectedAttribute && $scope.selectedAttribute.trackedEntity && $scope.selectedAttribute.trackedEntity.id){
+            $scope.selectedTrackedEntity = $scope.selectedAttribute.trackedEntity;
+        }
     }
     
     if(angular.isObject($scope.programs) && $scope.programs.length === 1){
@@ -243,6 +247,20 @@ trackerCapture.controller('TEIAddController',
                 $scope.teiFetched = false;   
                 $scope.teiCount = null;
                 return;
+            }
+        }
+        
+        if( $scope.addingTeiAssociate ){            
+            if(!$scope.selectedTrackedEntity){
+                var dialogOptions = {
+                    headerText: 'searching_error',
+                    bodyText: $translate.instant('no_enity_for_tracker_associate_attribute')
+                };
+                DialogService.showDialog({}, dialogOptions);
+                return;
+            }
+            else{
+                $scope.programUrl = $scope.programUrl ? $scope.programUrl + '&trackedEntity=' + $scope.selectedTrackedEntity.id : 'trackedEntity=' + $scope.selectedTrackedEntity.id;
             }
         }
         
