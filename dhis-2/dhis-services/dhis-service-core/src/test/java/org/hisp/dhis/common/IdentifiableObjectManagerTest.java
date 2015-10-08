@@ -615,4 +615,24 @@ public class IdentifiableObjectManagerTest
 
         assertEquals( expected, actual );
     }
+    
+    @Test
+    public void testGetObjects()
+    {
+        OrganisationUnit unit1 = createOrganisationUnit( 'A' );
+        OrganisationUnit unit2 = createOrganisationUnit( 'B' );
+        OrganisationUnit unit3 = createOrganisationUnit( 'C' );
+        
+        identifiableObjectManager.save( unit1 );
+        identifiableObjectManager.save( unit2 );
+        identifiableObjectManager.save( unit3 );
+        
+        Set<String> codes = Sets.newHashSet( unit2.getCode(), unit3.getCode() );
+        
+        List<OrganisationUnit> units = identifiableObjectManager.getObjects( OrganisationUnit.class, IdentifiableProperty.CODE, codes );
+        
+        assertEquals( 2, units.size() );
+        assertTrue( units.contains( unit2 ) );
+        assertTrue( units.contains( unit3 ) );
+    }    
 }
