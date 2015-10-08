@@ -37,13 +37,13 @@ import java.util.Set;
  */
 public interface SchedulingManager
 {
-    final String TASK_RESOURCE_TABLE = "resourceTableTask";
-    final String TASK_RESOURCE_TABLE_15_MINS = "resourceTable15MinTask";
-    final String TASK_DATAMART_LAST_YEAR = "dataMartLastYearTask";
-    final String TASK_ANALYTICS_ALL = "analyticsAllTask";
-    final String TASK_ANALYTICS_LAST_3_YEARS = "analyticsLast3YearsTask";
-    final String TASK_MONITORING_LAST_DAY = "monitoringLastDayTask";
-    final String TASK_DATA_SYNCH = "dataSynchTask";
+    String TASK_RESOURCE_TABLE = "resourceTableTask";
+    String TASK_RESOURCE_TABLE_15_MINS = "resourceTable15MinTask";
+    String TASK_DATAMART_LAST_YEAR = "dataMartLastYearTask";
+    String TASK_ANALYTICS_ALL = "analyticsAllTask";
+    String TASK_ANALYTICS_LAST_3_YEARS = "analyticsLast3YearsTask";
+    String TASK_MONITORING_LAST_DAY = "monitoringLastDayTask";
+    String TASK_DATA_SYNCH = "dataSynchTask";
     
     /**
      * Schedules all tasks.
