@@ -25,7 +25,7 @@
                             <ui-select  ng-model="currentEvent[prStDe.dataElement.id]" 
                                         theme="select2" 
                                         ng-required={{prStDe.compulsory}} 
-                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                         name="foo" 
                                         on-select="saveDatavalue(prStDe, innerForm.foo)"
                                         style="width:100%;">
@@ -42,7 +42,7 @@
                                     ng-class="getInputNotifcationClass(prStDe.dataElement.id,false, currentEvent)"
                                     name={{prStDe.dataElement.id}}
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                     ng-model="currentEvent[prStDe.dataElement.id]"
                                     ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                     value=""> {{'no_value' | translate}}<br>                                       
@@ -54,7 +54,7 @@
                                         ng-class="getInputNotifcationClass(prStDe.dataElement.id,false, currentEvent)"
                                         name={{prStDe.dataElement.id}}
                                         ng-required={{prStDe.compulsory}} 
-                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                         ng-model="currentEvent[prStDe.dataElement.id]"
                                         ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                         value={{option.name}}> {{option.name}}
@@ -71,7 +71,7 @@
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                    
                                    d2-number-validator
                                    ng-required={{prStDe.compulsory}}
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>
@@ -83,7 +83,7 @@
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                    
                                    d2-number-validator
                                    ng-required={{prStDe.compulsory}}
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>
@@ -95,7 +95,7 @@
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                    
                                    d2-number-validator
                                    ng-required={{prStDe.compulsory}}
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>
@@ -107,7 +107,7 @@
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                    
                                    d2-number-validator
                                    ng-required={{prStDe.compulsory}}
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>
@@ -119,7 +119,7 @@
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                    
                                    d2-number-validator
                                    ng-required={{prStDe.compulsory}}
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                    ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>                        
@@ -129,7 +129,7 @@
                                 class="form-control"
                                 ng-model="currentEvent[prStDe.dataElement.id]" 
                                 ng-required={{prStDe.compulsory}} 
-                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                 ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                 name="foo">
                             </textarea>
@@ -140,7 +140,7 @@
                                     class="form-control"
                                     ng-model="currentEvent[prStDe.dataElement.id]" 
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                     ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo"/>                            
                         </div>
@@ -149,7 +149,7 @@
                                     class="form-control"
                                     ng-model="currentEvent[prStDe.dataElement.id]" 
                                     ng-required={{prStDe.compulsory}} 
-                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                     ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo">
                                 <option value="">{{'please_select'| translate}}</option>                        
@@ -167,7 +167,7 @@
                                    ng-class="getInputNotifcationClass(prStDe.dataElement.id,false, currentEvent)"
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                    
                                    ng-required={{prStDe.compulsory}}  
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                    blur-or-change="saveDatavalue(prStDe, innerForm.foo)"
                                    name="foo"/>
                         </div>
@@ -177,7 +177,7 @@
                                    ng-class="getInputNotifcationClass(prStDe.dataElement.id,false, currentEvent)"
                                    ng-model="currentEvent[prStDe.dataElement.id]"                                                               
                                    ng-required={{prStDe.compulsory}} 
-                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                    ng-change="saveDatavalue(prStDe, innerForm.foo)" 
                                    name="foo"/>
                         </div>
@@ -187,7 +187,7 @@
                                 ng-class="getInputNotifcationClass(prStDe.dataElement.id,false, currentEvent)"
                                 ng-model="currentEvent[prStDe.dataElement.id]" 
                                 ng-required={{prStDe.compulsory}} 
-                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[prStDe.dataElement.id]" 
                                 ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                 name="foo"/> 
                         </div>
@@ -246,7 +246,7 @@
                                             <ui-select  ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]" 
                                                         theme="select2" 
                                                         ng-required={{prStDes[de.dataElement.id].compulsory}} 
-                                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                         name="foo" 
                                                         on-select="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)"  
                                                         style="width:100%;">
@@ -263,7 +263,7 @@
                                                     ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                     name={{currentEvent[prStDes[de.dataElement.id].dataElement.id]}}
                                                     ng-required={{prStDes[de.dataElement.id].compulsory}} 
-                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                     ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"
                                                     ng-change="saveDatavalue(prStDes[de.dataElement.id])" 
                                                     value=""> {{'no_value' | translate}}<br>                                       
@@ -275,7 +275,7 @@
                                                         ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                         name={{currentEvent[prStDes[de.dataElement.id].dataElement.id]}}
                                                         ng-required={{prStDes[de.dataElement.id].compulsory}} 
-                                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                         ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"
                                                         ng-change="saveDatavalue(prStDes[de.dataElement.id])" 
                                                         value={{option.name}}> {{option.name}}
@@ -292,7 +292,7 @@
                                                    ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                    ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)" 
                                                    name="foo"/>
                                         </div>
@@ -304,7 +304,7 @@
                                                    ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                    ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)" 
                                                    name="foo"/>
                                         </div>
@@ -316,7 +316,7 @@
                                                    ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                    ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)" 
                                                    name="foo"/>
                                         </div>
@@ -328,7 +328,7 @@
                                                    ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                    ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)" 
                                                    name="foo"/>
                                         </div>
@@ -340,7 +340,7 @@
                                                    ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                    ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)" 
                                                    name="foo"/>
                                         </div>
@@ -349,7 +349,7 @@
                                                     ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                     ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]" 
                                                     ng-required={{prStDes[de.dataElement.id].compulsory}} 
-                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                     ng-change="saveDatavalue(prStDes[de.dataElement.id])" 
                                                     name="foo">
                                                 <option value="">{{'please_select'| translate}}</option>                        
@@ -367,7 +367,7 @@
                                                    ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}}  
-                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                    blur-or-change="saveDatavalue(prStDes[de.dataElement.id])"
                                                    name="foo"/>
                                         </div>
@@ -377,7 +377,7 @@
                                                    ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                    ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                               
                                                    ng-required={{prStDes[de.dataElement.id].compulsory}} 
-                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                   ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                    ng-change="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)" 
                                                    name="foo"/>
                                         </div>
@@ -387,7 +387,7 @@
                                                     ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                     ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                     ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                     ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)"
                                                     name="foo">
                                             </textarea>
@@ -398,7 +398,7 @@
                                                     ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                     ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]"                                                    
                                                     ng-required={{prStDes[de.dataElement.id].compulsory}}
-                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                    ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                     ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)"
                                                     name="foo"/>                                              
                                         </div>                                        
@@ -408,7 +408,7 @@
                                                 ng-class="getInputNotifcationClass(prStDes[de.dataElement.id].dataElement.id,false, currentEvent)"
                                                 ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]" 
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}} 
-                                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
+                                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[de.dataElement.id]" 
                                                 ng-blur="saveDatavalue(prStDes[de.dataElement.id])" 
                                                 name="foo"/>
                                         </div>

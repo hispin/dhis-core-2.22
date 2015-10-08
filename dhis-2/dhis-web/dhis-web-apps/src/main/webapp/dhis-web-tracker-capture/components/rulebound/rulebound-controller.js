@@ -47,7 +47,11 @@ trackerCapture.controller('RuleBoundController',
                     {
                         keyDataInEffect = true;
                     }
-                } else {
+                }
+                else if(effect.action === "ASSIGNVARIABLE") {
+                    //the dataentry control saves the variable and or dataelement
+                }
+                else {
                     $log.warn("action: '" + effect.action + "' not supported by rulebound-controller.js");
                 }
             }

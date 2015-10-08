@@ -39,7 +39,8 @@ trackerCapture.controller('DataEntryController',
     //variable is set while looping through the program stages later.
     $scope.stagesCanBeShownAsTable = false;
     $scope.showHelpText = {};
-    $scope.hiddenFields = {};
+    $scope.hiddenFields = [];
+    $scope.assignedFields = [];
     $scope.errorMessages = {};
     $scope.warningMessages = {};
     $scope.hiddenSections = {};
@@ -90,6 +91,11 @@ trackerCapture.controller('DataEntryController',
             });
         }
 
+        $scope.assignedFields = [];
+        $scope.hiddenSections = [];
+        $scope.warningMessages = [];
+        $scope.errorMessages = [];
+        
         angular.forEach($rootScope.ruleeffects[event], function (effect) {
             if (effect.dataElement) {
                 //in the data entry controller we only care about the "hidefield", showerror and showwarning actions
@@ -150,8 +156,15 @@ trackerCapture.controller('DataEntryController',
                     else {
                         $log.warn("ProgramRuleAction " + effect.id + " is of type HIDESECTION, bot does not have a section defined");
                     }
+                } else if (effect.action === "ASSIGNVARIABLE") {
+                    if(effect.ineffect && effect.dataElement) {
+                        //For "ASSIGNVARIABLE" actions where we have a dataelement, we save the calculated value to the dataelement:
+                        //Blank out the value:
+                        affectedEvent[effect.dataElement.id] = effect.data;
+                        $scope.assignedFields[effect.dataElement.id] = true;
+                        $scope.saveDatavalueForEvent($scope.prStDes[effect.dataElement.id], null, affectedEvent);
+                    }
                 }
-                
             }
         });
     };
