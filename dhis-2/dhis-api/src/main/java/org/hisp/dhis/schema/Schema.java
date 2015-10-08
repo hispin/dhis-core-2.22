@@ -444,15 +444,22 @@ public class Schema implements Ordered, Klass
         this.propertyMap = propertyMap;
     }
 
+    private Set<Class> references;
+
     @JsonProperty
     @JacksonXmlElementWrapper( localName = "references", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "reference", namespace = DxfNamespaces.DXF_2_0 )
     @SuppressWarnings( "rawtypes" )
     public Set<Class> getReferences()
     {
-        return getProperties().stream()
-            .filter( p -> p.isCollection() ? PropertyType.REFERENCE == p.getItemPropertyType() : PropertyType.REFERENCE == p.getPropertyType() )
-            .map( p -> p.isCollection() ? p.getItemKlass() : p.getKlass() ).collect( Collectors.toSet() );
+        if ( references == null )
+        {
+            references = getProperties().stream()
+                .filter( p -> p.isCollection() ? PropertyType.REFERENCE == p.getItemPropertyType() : PropertyType.REFERENCE == p.getPropertyType() )
+                .map( p -> p.isCollection() ? p.getItemKlass() : p.getKlass() ).collect( Collectors.toSet() );
+        }
+
+        return references;
     }
 
     public Map<String, Property> getPersistedProperties()
@@ -461,7 +468,8 @@ public class Schema implements Ordered, Klass
         {
             persistedProperties = new HashMap<>();
 
-            getPropertyMap().entrySet().stream().filter( entry -> entry.getValue().isPersisted() )
+            getPropertyMap().entrySet().stream()
+                .filter( entry -> entry.getValue().isPersisted() )
                 .forEach( entry -> persistedProperties.put( entry.getKey(), entry.getValue() ) );
         }
 
@@ -474,7 +482,8 @@ public class Schema implements Ordered, Klass
         {
             nonPersistedProperties = new HashMap<>();
 
-            getPropertyMap().entrySet().stream().filter( entry -> !entry.getValue().isPersisted() )
+            getPropertyMap().entrySet().stream()
+                .filter( entry -> !entry.getValue().isPersisted() )
                 .forEach( entry -> nonPersistedProperties.put( entry.getKey(), entry.getValue() ) );
         }
 
@@ -523,7 +532,8 @@ public class Schema implements Ordered, Klass
         {
             List<String> authorityList = Lists.newArrayList();
 
-            authorities.stream().filter( authority -> type.equals( authority.getType() ) )
+            authorities.stream()
+                .filter( authority -> type.equals( authority.getType() ) )
                 .forEach( authority -> authorityList.addAll( authority.getAuthorities() ) );
 
             authorityMap.put( type, authorityList );
