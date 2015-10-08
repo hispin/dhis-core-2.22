@@ -31,6 +31,7 @@ package org.hisp.dhis.dxf2.events.trackedentity;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.importexport.ImportStrategy;
+import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +48,7 @@ public interface TrackedEntityInstanceService
     // READ
     // -------------------------------------------------------------------------
 
-    List<TrackedEntityInstance> getTrackedEntityInstances( List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances, boolean includeRelationships );
+    List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 
     TrackedEntityInstance getTrackedEntityInstance( String uid );
 
