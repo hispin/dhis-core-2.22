@@ -180,8 +180,6 @@ public class FileResourceController
         File tempDir = (File) servletContext.getAttribute( ServletContext.TEMPDIR );
         File tmpFile = Files.createTempFile( tempDir.toPath(), "org.hisp.dhis", null ).toFile();
 
-        System.out.println( "TEMP FILE: " + tmpFile.getAbsolutePath() );
-
         multipartFile.transferTo( tmpFile );
 
         return tmpFile;
