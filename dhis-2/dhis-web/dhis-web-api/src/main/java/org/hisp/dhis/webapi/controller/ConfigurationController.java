@@ -113,6 +113,18 @@ public class ConfigurationController
         configurationService.setConfiguration( config );
     }
 
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
+    @RequestMapping( value = "/feedbackRecipients", method = RequestMethod.DELETE )
+    public void setFeedbackRecipients()
+    {
+        Configuration config = configurationService.getConfiguration();
+
+        config.setFeedbackRecipients( null );
+
+        configurationService.setConfiguration( config );
+    }
+
     @RequestMapping( value = "/offlineOrganisationUnitLevel", method = RequestMethod.GET )
     public String getOfflineOrganisationUnitLevel( Model model, HttpServletRequest request )
     {
