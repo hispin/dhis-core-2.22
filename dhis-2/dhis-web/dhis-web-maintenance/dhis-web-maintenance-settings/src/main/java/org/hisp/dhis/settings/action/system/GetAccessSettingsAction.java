@@ -30,14 +30,16 @@ package org.hisp.dhis.settings.action.system;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.commons.filter.FilterUtils;
+import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.NonCriticalUserAuthorityGroupFilter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,7 @@ public class GetAccessSettingsAction
     private OrganisationUnitService organisationUnitService;
 
     @Autowired
-    private SystemSettingManager systemSettingManager;
+    private ConfigurationService configurationService;
 
     // -------------------------------------------------------------------------
     // Output
@@ -77,9 +79,9 @@ public class GetAccessSettingsAction
         return selfRegistrationOrgUnits;
     }
 
-    private List<String> corsWhitelist = new ArrayList<>();
+    private Set<String> corsWhitelist = new HashSet<>();
 
-    public List<String> getCorsWhitelist()
+    public Set<String> getCorsWhitelist()
     {
         return corsWhitelist;
     }
@@ -99,7 +101,7 @@ public class GetAccessSettingsAction
         selfRegistrationOrgUnits.addAll( organisationUnitService.getOrganisationUnitsAtLevel( 1 ) );
         selfRegistrationOrgUnits.addAll( organisationUnitService.getOrganisationUnitsAtLevel( 2 ) );
 
-        corsWhitelist = systemSettingManager.getCorsWhitelist();
+        corsWhitelist = configurationService.getConfiguration().getCorsWhitelist();
         
         return SUCCESS;        
     }

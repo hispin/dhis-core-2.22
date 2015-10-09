@@ -28,6 +28,9 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -35,6 +38,7 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -49,6 +53,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -68,6 +73,9 @@ public class ConfigurationController
 
     @Autowired
     private PeriodService periodService;
+
+    @Autowired
+    private RenderService renderService;
 
     // -------------------------------------------------------------------------
     // Resources
@@ -341,6 +349,28 @@ public class ConfigurationController
         Configuration config = configurationService.getConfiguration();
         
         config.setRemoteServerPassword( password );
+        
+        configurationService.setConfiguration( config );
+    }
+
+    @RequestMapping( value = "/corsWhitelist", method = RequestMethod.GET, produces = "application/json" )
+    public String getCorsWhitelist( Model model, HttpServletRequest request )
+    {
+        return setModel( model, configurationService.getConfiguration().getCorsWhitelist() );
+    }
+    
+    @SuppressWarnings("unchecked")
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
+    @ResponseStatus( value = HttpStatus.OK )
+    @RequestMapping( value = "/corsWhitelist", method = RequestMethod.POST, consumes = "application/json" )
+    public void setCorsWhitelist( @RequestBody String input )
+        throws IOException
+    {
+        Set<String> corsWhitelist = renderService.fromJson( input, Set.class );
+        
+        Configuration config = configurationService.getConfiguration();
+        
+        config.setCorsWhitelist( corsWhitelist );
         
         configurationService.setConfiguration( config );
     }

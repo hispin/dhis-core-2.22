@@ -29,16 +29,15 @@ package org.hisp.dhis.settings.action.system;
  */
 
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCOUNT_RECOVERY;
+import static org.hisp.dhis.setting.SystemSettingManager.KEY_ALLOW_OBJECT_ASSIGNMENT;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_CREDENTIALS_EXPIRES;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_OPENID_PROVIDER;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_OPENID_PROVIDER_LABEL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_SELF_REGISTRATION_NO_RECAPTCHA;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ALLOW_OBJECT_ASSIGNMENT;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.configuration.Configuration;
@@ -138,9 +137,9 @@ public class SetAccessSettingsAction
         this.openIdProviderLabel = openIdProviderLabel;
     }
 
-    private List<String> corsWhitelist = new ArrayList<>();
+    private Set<String> corsWhitelist = new HashSet<>();
 
-    public void setCorsWhitelist( ArrayList<String> corsWhitelist )
+    public void setCorsWhitelist( Set<String> corsWhitelist )
     {
         this.corsWhitelist = corsWhitelist;
     }
@@ -186,6 +185,7 @@ public class SetAccessSettingsAction
         Configuration config = configurationService.getConfiguration();
         config.setSelfRegistrationRole( group );
         config.setSelfRegistrationOrgUnit( unit );
+        config.setCorsWhitelist( corsWhitelist );
         configurationService.setConfiguration( config );
 
         systemSettingManager.saveSystemSetting( KEY_ACCOUNT_RECOVERY, accountRecovery );
@@ -203,8 +203,6 @@ public class SetAccessSettingsAction
         {
             systemSettingManager.saveSystemSetting( KEY_CREDENTIALS_EXPIRES, credentialsExpires );
         }
-
-        systemSettingManager.saveSystemSetting( SystemSettingManager.KEY_CORS_WHITELIST, (Serializable) corsWhitelist );
 
         message = i18n.getString( "settings_updated" );
 

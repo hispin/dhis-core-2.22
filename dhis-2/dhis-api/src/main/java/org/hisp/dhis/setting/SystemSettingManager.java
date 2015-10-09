@@ -176,6 +176,4 @@ public interface SystemSettingManager
     String googleAnalyticsUA();
 
     Integer credentialsExpires();
-
-    List<String> getCorsWhitelist();
 }
