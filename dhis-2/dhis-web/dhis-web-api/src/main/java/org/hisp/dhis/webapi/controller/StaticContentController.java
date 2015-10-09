@@ -100,7 +100,7 @@ public class StaticContentController
 
         Boolean useCustomFile = Boolean.parseBoolean( (String) systemSettingManager.getSystemSetting( KEY_WHITELIST_MAP.get( key ) ) );
 
-        if ( !useCustomFile ) // Serve the default
+        if ( !useCustomFile ) // Serve default
         {
             try
             {
@@ -111,7 +111,7 @@ public class StaticContentController
                 throw new WebMessageException( WebMessageUtils.error( "Can't read the file." ) );
             }
         }
-        else // Serve the custom
+        else // Serve custom
         {
             InputStream in = null;
 
@@ -159,7 +159,8 @@ public class StaticContentController
             throw new WebMessageException( WebMessageUtils.badRequest( "Missing parameter 'file'" ) );
         }
 
-        // Only PNG is accepted at the current time. Ensure file is a PNG image.
+        // Only PNG is accepted at the current time
+        
         MimeType mimeType = MimeTypeUtils.parseMimeType( file.getContentType() );
 
         if( !mimeType.isCompatibleWith( MimeTypeUtils.IMAGE_PNG ))
@@ -168,13 +169,14 @@ public class StaticContentController
         }
 
         // Only keys in the white list are accepted at the current time
+        
         if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {
             throw new WebMessageException(
                 WebMessageUtils.badRequest( "This key is not supported." ) );
         }
 
-        File out;
+        File out = null;
 
         try
         {

@@ -302,13 +302,4 @@ public class DefaultSystemSettingManager
     {
         return (Integer) getSystemSetting( Setting.CREDENTIALS_EXPIRES );
     }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<String> getCorsWhitelist()
-    {
-        Serializable value = getSystemSetting( Setting.CORS_WHITELIST );
-        
-        return value != null ? (List<String>) value : Collections.emptyList();
-    }
 }

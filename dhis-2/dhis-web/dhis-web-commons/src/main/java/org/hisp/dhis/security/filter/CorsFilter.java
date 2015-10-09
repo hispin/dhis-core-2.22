@@ -28,13 +28,8 @@ package org.hisp.dhis.security.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.setting.SystemSettingManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -44,32 +39,31 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.configuration.ConfigurationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class CorsFilter implements Filter
+public class CorsFilter 
+    implements Filter
 {
     private static final Log log = LogFactory.getLog( CorsFilter.class );
 
     public static final String CORS_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
-
     public static final String CORS_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-
     public static final String CORS_MAX_AGE = "Access-Control-Max-Age";
-
     public static final String CORS_ALLOW_HEADERS = "Access-Control-Allow-Headers";
-
     public static final String CORS_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
-
     public static final String CORS_REQUEST_HEADERS = "Access-Control-Request-Headers";
-
     public static final String CORS_ALLOW_METHODS = "Access-Control-Allow-Methods";
-
     public static final String CORS_REQUEST_METHOD = "Access-Control-Request-Method";
-
     public static final String CORS_ORIGIN = "Origin";
 
     private static final String EXPOSED_HEADERS = "ETag";
@@ -77,7 +71,7 @@ public class CorsFilter implements Filter
     private static final Integer MAX_AGE = 60 * 60; // 1hr max-age
 
     @Autowired
-    private SystemSettingManager systemSettingManager;
+    private ConfigurationService configurationService;
 
     @Override
     public void doFilter( ServletRequest req, ServletResponse res, FilterChain filterChain ) throws IOException, ServletException
@@ -88,6 +82,7 @@ public class CorsFilter implements Filter
         String origin = request.getHeader( CORS_ORIGIN );
 
         // Origin header is required for CORS requests
+        
         if ( StringUtils.isEmpty( origin ) )
         {
             filterChain.doFilter( request, response );
@@ -115,7 +110,10 @@ public class CorsFilter implements Filter
             response.addHeader( CORS_MAX_AGE, String.valueOf( MAX_AGE ) );
 
             response.setStatus( HttpServletResponse.SC_NO_CONTENT );
-            return; // CORS preflight requires a 2xx status code, so we need to short-circuit the filter chain here
+            
+            // CORS preflight requires a 2xx status code, so short-circuit the filter chain
+            
+            return; 
         }
         else
         {
@@ -147,7 +145,8 @@ public class CorsFilter implements Filter
                 .scheme( forwardedProto ).build().toUriString();
         }
 
-        List<String> whitelist = systemSettingManager.getCorsWhitelist();
+        Set<String> whitelist = configurationService.getConfiguration().getCorsWhitelist();
+
         return !StringUtils.isEmpty( origin ) && (localUrl.equals( origin ) || whitelist.contains( origin ));
     }
 

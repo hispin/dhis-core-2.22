@@ -29,11 +29,13 @@ package org.hisp.dhis.configuration;
  */
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.period.PeriodType;
@@ -44,10 +46,12 @@ import org.hisp.dhis.user.UserGroup;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * @author Lars Helge Overland
  */
+@JacksonXmlRootElement( localName = "configuration", namespace = DxfNamespaces.DXF_2_0 )
 public class Configuration
     implements Serializable
 {
@@ -79,6 +83,8 @@ public class Configuration
     private UserAuthorityGroup selfRegistrationRole;
     
     private OrganisationUnit selfRegistrationOrgUnit;
+    
+    private Set<String> corsWhitelist = new HashSet<>();
 
     // -------------------------------------------------------------------------
     // Remote synch
@@ -282,5 +288,17 @@ public class Configuration
     public void setSmtpPassword( String smtpPassword )
     {
         this.smtpPassword = smtpPassword;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Set<String> getCorsWhitelist()
+    {
+        return corsWhitelist;
+    }
+
+    public void setCorsWhitelist( Set<String> corsWhitelist )
+    {
+        this.corsWhitelist = corsWhitelist;
     }
 }
