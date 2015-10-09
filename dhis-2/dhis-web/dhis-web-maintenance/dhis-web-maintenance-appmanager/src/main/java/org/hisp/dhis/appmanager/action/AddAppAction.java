@@ -141,12 +141,13 @@ public class AddAppAction
                 
                 AppStatus appStatus = appManager.installApp( file, fileName, contextPath );
 
-                if(appStatus == AppStatus.NAMESPACE_TAKEN)
+                if ( appStatus == AppStatus.NAMESPACE_TAKEN )
                 {
                     message = i18n.getString( "appmanager_namespace_taken" );
                     log.warn( "Namespace in the app's manifest already taken." );
                     return FAILURE;
                 }
+                
                 message = i18n.getString( "appmanager_install_success" );
                 
                 return SUCCESS;
