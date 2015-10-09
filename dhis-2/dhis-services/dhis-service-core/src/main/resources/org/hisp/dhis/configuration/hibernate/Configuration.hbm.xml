@@ -46,7 +46,7 @@
 	<set name="corsWhitelist" table="configuration_corswhitelist">
 		<cache usage="read-write" />
 		<key column="configurationid" foreign-key="fk_configuration_corswhitelist" />
-    	<element type="string" column="corswhitelist" />
+		<element type="string" column="corswhitelist" />
 	</set> 
 	
   </class>
