@@ -30,7 +30,6 @@ package org.hisp.dhis.dxf2.events.event;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,6 +57,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -85,7 +85,6 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -110,7 +109,7 @@ public abstract class AbstractEventService
     implements EventService
 {
     private static final Log log = LogFactory.getLog( AbstractEventService.class );
-    
+
     public static final String OPTIONS_SEP = ";";
 
     // -------------------------------------------------------------------------
@@ -164,10 +163,10 @@ public abstract class AbstractEventService
 
     @Autowired
     protected IdentifiableObjectManager manager;
-    
+
     @Autowired
     protected DataElementCategoryService categoryService;
-    
+
     @Autowired
     protected InputUtils inputUtils;
 
@@ -368,8 +367,16 @@ public abstract class AbstractEventService
 
             if ( programInstances.isEmpty() )
             {
-                return new ImportSummary( ImportStatus.ERROR,
-                    "There is no program instance for program " + program.getUid() );
+                // this is a WOR program, so just create the PI if it doesn't exist (should only be one)
+                ProgramInstance pi = new ProgramInstance();
+                pi.setEnrollmentDate( new Date() );
+                pi.setIncidentDate( new Date() );
+                pi.setProgram( program );
+                pi.setStatus( ProgramStatus.ACTIVE );
+
+                programInstanceService.addProgramInstance( pi );
+
+                programInstances.add( pi );
             }
             else if ( programInstances.size() > 1 )
             {
@@ -534,27 +541,27 @@ public abstract class AbstractEventService
         {
             throw new IllegalQueryException( "Tracked entity instance is specified but does not exist: " + trackedEntityInstance );
         }
-        
+
         if ( attributeCoc.isDefault() )
-        {            
+        {
             DataElementCategoryCombo cc = null;
-            
+
             if ( pr != null )
             {
-                cc = pr.getCategoryCombo();                
+                cc = pr.getCategoryCombo();
             }
-            
-            if( cc == null && ps != null)
-            {                
+
+            if ( cc == null && ps != null )
+            {
                 cc = ps.getProgram().getCategoryCombo();
             }
-            
-            if( cc != null && !cc.isDefault())
-            {                
+
+            if ( cc != null && !cc.isDefault() )
+            {
                 throw new IllegalQueryException( "Default attribute option combo is specified while program has non-default attribute category combo:  " + cc.getUid() );
             }
         }
-        
+
         params.setProgram( pr );
         params.setProgramStage( ps );
         params.setOrgUnit( ou );
@@ -1036,7 +1043,7 @@ public abstract class AbstractEventService
 
     private void updateProgramStageInstance( ProgramStage programStage, ProgramInstance programInstance,
         OrganisationUnit organisationUnit, Date dueDate, Date executionDate, int status, Coordinate coordinate,
-        String storedBy, ProgramStageInstance programStageInstance,  DataElementCategoryOptionCombo coc )
+        String storedBy, ProgramStageInstance programStageInstance, DataElementCategoryOptionCombo coc )
     {
         programStageInstance.setProgramInstance( programInstance );
         programStageInstance.setProgramStage( programStage );
@@ -1088,14 +1095,14 @@ public abstract class AbstractEventService
         Date dueDate = DateUtils.parseDate( event.getDueDate() );
 
         String storedBy = getStoredBy( event, importSummary, user );
-        
+
         DataElementCategoryOptionCombo coc = categoryService.getDefaultDataElementCategoryOptionCombo();
-        
+
         if ( event.getAttributeCategoryOptions() != null && program.getCategoryCombo() != null )
         {
             coc = inputUtils.getAttributeOptionCombo( program.getCategoryCombo(), event.getAttributeCategoryOptions() );
-            
-            if ( coc == null)
+
+            if ( coc == null )
             {
                 importSummary.getConflicts().add( new ImportConflict( "Invalid attribute option combo for option names.", event.getAttributeCategoryOptions() ) );
             }
