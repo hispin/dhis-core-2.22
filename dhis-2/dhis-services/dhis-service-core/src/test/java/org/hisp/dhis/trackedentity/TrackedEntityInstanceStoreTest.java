@@ -33,15 +33,20 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.junit.Test;
@@ -60,10 +65,13 @@ public class TrackedEntityInstanceStoreTest
     private OrganisationUnitService organisationUnitService;
 
     @Autowired
-    private TrackedEntityAttributeService attributeService;
+    private IdentifiableObjectManager idObjectManager;
 
     @Autowired
     private TrackedEntityAttributeValueService attributeValueService;
+    
+    @Autowired
+    private ProgramInstanceService programInstanceService;
 
     private TrackedEntityInstance teiA;
     private TrackedEntityInstance teiB;
@@ -78,10 +86,20 @@ public class TrackedEntityInstanceStoreTest
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
     private OrganisationUnit ouC;
+        
+    private Program prA;
+    private Program prB;
     
     @Override
     public void setUpTest()
     {
+        atA = createTrackedEntityAttribute( 'A' );
+        atB = createTrackedEntityAttribute( 'B' );
+        atB.setUnique( true );
+
+        idObjectManager.save( atA );
+        idObjectManager.save( atB );
+
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B', ouA );
         ouC = createOrganisationUnit( 'C', ouB );
@@ -90,12 +108,11 @@ public class TrackedEntityInstanceStoreTest
         organisationUnitService.addOrganisationUnit( ouB );
         organisationUnitService.addOrganisationUnit( ouC );
 
-        atA = createTrackedEntityAttribute( 'A' );
-        atB = createTrackedEntityAttribute( 'B' );
-        atB.setUnique( true );
-
-        attributeService.addTrackedEntityAttribute( atA );
-        attributeService.addTrackedEntityAttribute( atB );
+        prA = createProgram( 'A', null, null );
+        prB = createProgram( 'B', null, null );
+        
+        idObjectManager.save( prA );
+        idObjectManager.save( prB );        
       
         teiA = createTrackedEntityInstance( 'A', ouA );
         teiB = createTrackedEntityInstance( 'B', ouB );
@@ -168,11 +185,18 @@ public class TrackedEntityInstanceStoreTest
         attributeValueService.addTrackedEntityAttributeValue( new TrackedEntityAttributeValue( atA, teiE, "Male" ) );
         attributeValueService.addTrackedEntityAttributeValue( new TrackedEntityAttributeValue( atA, teiF, "Female" ) );
         
+        programInstanceService.enrollTrackedEntityInstance( teiB, prA, new Date(), new Date(), ouB );
+        programInstanceService.enrollTrackedEntityInstance( teiE, prA, new Date(), new Date(), ouB );
+        
+        // Get all
+        
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
         
         List<TrackedEntityInstance> teis = teiStore.getTrackedEntityInstances( params );
         
         assertEquals( 6, teis.size() );
+        
+        // Filter by attribute
         
         params = new TrackedEntityInstanceQueryParams();
         params.addFilter( new QueryItem( atA, QueryOperator.EQ, "Male", ValueType.TEXT, AggregationType.NONE, null ) );
@@ -180,5 +204,55 @@ public class TrackedEntityInstanceStoreTest
         teis = teiStore.getTrackedEntityInstances( params );
 
         assertEquals( 2, teis.size() );
+        assertTrue( teis.contains( teiD ) );
+        assertTrue( teis.contains( teiE ) );
+        
+        // Filter by attribute
+
+        params = new TrackedEntityInstanceQueryParams();
+        params.addFilter( new QueryItem( atA, QueryOperator.EQ, "Female", ValueType.TEXT, AggregationType.NONE, null ) );
+        
+        teis = teiStore.getTrackedEntityInstances( params );
+
+        assertEquals( 1, teis.size() );
+        assertTrue( teis.contains( teiF ) );
+        
+        // Filter by selected org units
+        
+        params = new TrackedEntityInstanceQueryParams();
+        params.addOrganisationUnit( ouB );
+        params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
+
+        teis = teiStore.getTrackedEntityInstances( params );
+
+        assertEquals( 2, teis.size() );
+        assertTrue( teis.contains( teiB ) );
+        assertTrue( teis.contains( teiC ) );
+
+        // Filter by descendants org units
+        
+        params = new TrackedEntityInstanceQueryParams();
+        params.addOrganisationUnit( ouB );
+        params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
+
+        teis = teiStore.getTrackedEntityInstances( params );
+
+        assertEquals( 5, teis.size() );
+        assertTrue( teis.contains( teiB ) );
+        assertTrue( teis.contains( teiC ) );
+        assertTrue( teis.contains( teiD ) );
+        assertTrue( teis.contains( teiE ) );
+        assertTrue( teis.contains( teiF ) );
+        
+        // Filter by program enrollment
+
+        params = new TrackedEntityInstanceQueryParams();
+        params.setProgram( prA );
+
+        teis = teiStore.getTrackedEntityInstances( params );
+
+        assertEquals( 2, teis.size() );
+        assertTrue( teis.contains( teiB ) );
+        assertTrue( teis.contains( teiE ) );
     }
 }
