@@ -124,13 +124,22 @@ trackerCapture.controller('RegistrationController',
     var goToDashboard = function(destination, teiId){
         //reset form
         $scope.selectedTei = {};
-        $scope.selectedEnrollment = {};
-        $scope.outerForm.submitted = false;         
+        $scope.selectedEnrollment = {enrollmentDate: $scope.today, incidentDate: $scope.today, orgUnitName: $scope.selectedOrgUnit.name};
+        $scope.outerForm.submitted = false;
+        $scope.outerForm.$setPristine();
 
         if(destination === 'DASHBOARD') {
             $location.path('/dashboard').search({tei: teiId,                                            
                                     program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
-        }        
+        }
+        else{
+            //notify user
+            var dialogOptions = {
+                    headerText: 'success',
+                    bodyText: 'registration_complete'
+                };
+            DialogService.showDialog({}, dialogOptions);
+        }
     };
     
     var reloadProfileWidget = function(){
