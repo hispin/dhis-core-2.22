@@ -140,16 +140,10 @@ d2Directives.directive('d2NumberValidator', function() {
 .directive("d2AttributeValidator", function($q, TEIService, AttributesFactory, EntityQueryFactory, SessionStorageService) {
     return {
         restrict: "A",         
-        require: "ngModel", 
-        scope: {
-            'attributeData': '=',
-            'selectedProgramId': '=',
-            'selectedTeiId': '=',
-            'ngDisabled': '='
-        },
-        link: function(scope, element, attrs, ngModel) {
+        require: "ngModel",
+        link: function(scope, element, attrs, ngModel) {            
             
-            function uniqunessValidatior(){
+            function uniqunessValidatior(attributeData){
                 
                 ngModel.$asyncValidators.uniqunessValidator = function (modelValue, viewValue) {
                     var pager = {pageSize: 1, page: 1, toolBarDisplay: 5};
@@ -157,22 +151,22 @@ d2Directives.directive('d2NumberValidator', function() {
                     
                     if (currentValue) {
                         
-                        scope.attributeData.value = currentValue;
-                        var atts = AttributesFactory.generateAttributeFilters([scope.attributeData]);
+                        attributeData.value = currentValue;
+                        var atts = AttributesFactory.generateAttributeFilters([attributeData]);
                         var attUrl = EntityQueryFactory.getAttributesQuery(atts, null);                        
                         var ouId = SessionStorageService.get('ouSelected');
                         
-                        if(scope.selectedProgram && scope.attributeData.programScope){
-                            programUrl = 'program=' + scope.selectedProgram;
+                        if(attrs.selectedProgram && attributeData.programScope){
+                            programUrl = 'program=' + attrs.selectedProgram;
                         }
                         
-                        if(scope.attributeData.orgUnitScope){
+                        if(attributeData.orgUnitScope){
                             ouMode = 'SELECTED';
                         }                        
 
                         TEIService.search(ouId, ouMode, null, programUrl, attUrl.url, pager, true).then(function(data) {
-                            if(scope.selectedTeiId){
-                                if(data.rows[0][0] !== scope.selectedTeiId){
+                            if(attrs.selectedTeiId){
+                                if(data.rows[0][0] !== attrs.selectedTeiId){
                                     deferred.reject();
                                 }
                             }
@@ -190,15 +184,16 @@ d2Directives.directive('d2NumberValidator', function() {
 
                     return deferred.promise;
                 };
-            }
-                      
-            scope.$watch('ngDisabled', function(value){
+            }                      
+            
+            scope.$watch(attrs.ngDisabled, function(value){
+                var attributeData = scope.$eval(attrs.attributeData);
                 if(!value){
-                    if( scope.attributeData && scope.attributeData.unique && !scope.ngDisabled ){                
-                        uniqunessValidatior();
+                    if( attributeData && attributeData.unique && !value ){
+                        uniqunessValidatior(attributeData);
                     }
                 }              
-            });       
+            });     
         }
     };
 });
