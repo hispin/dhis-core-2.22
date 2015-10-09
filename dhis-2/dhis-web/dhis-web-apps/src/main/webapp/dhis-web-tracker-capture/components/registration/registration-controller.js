@@ -132,7 +132,7 @@ trackerCapture.controller('RegistrationController',
             $location.path('/dashboard').search({tei: teiId,                                            
                                     program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
         }
-        else{
+        else if (destination === 'SELF'){
             //notify user
             var dialogOptions = {
                     headerText: 'success',
@@ -161,7 +161,7 @@ trackerCapture.controller('RegistrationController',
             if(reg.reference && reg.status === 'SUCCESS'){                
                 $scope.tei.trackedEntityInstance = reg.reference;
                 
-                if( $scope.registrationMode === 'PROFILE' ){                    
+                if( $scope.registrationMode === 'PROFILE' ){
                     reloadProfileWidget();
                 }
                 else{

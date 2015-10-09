@@ -143,12 +143,14 @@ d2Directives.directive('d2NumberValidator', function() {
         require: "ngModel", 
         scope: {
             'attributeData': '=',
-            'selectedProgram': '='
+            'selectedProgramId': '=',
+            'selectedTeiId': '=',
+            'ngDisabled': '='
         },
         link: function(scope, element, attrs, ngModel) {
             
-            if( scope.attributeData && scope.attributeData.unique ){                
- 
+            function uniqunessValidatior(){
+                
                 ngModel.$asyncValidators.uniqunessValidator = function (modelValue, viewValue) {
                     var pager = {pageSize: 1, page: 1, toolBarDisplay: 5};
                     var deferred = $q.defer(), currentValue = modelValue || viewValue, programUrl = null, ouMode = 'ALL';
@@ -167,14 +169,19 @@ d2Directives.directive('d2NumberValidator', function() {
                         if(scope.attributeData.orgUnitScope){
                             ouMode = 'SELECTED';
                         }                        
-                        
+
                         TEIService.search(ouId, ouMode, null, programUrl, attUrl.url, pager, true).then(function(data) {
-                            if (data.rows.length > 0) {    
-                                deferred.reject();
+                            if(scope.selectedTeiId){
+                                if(data.rows[0][0] !== scope.selectedTeiId){
+                                    deferred.reject();
+                                }
                             }
-                            else {
-                                deferred.resolve();
-                            }
+                            else{
+                                if (data.rows.length > 0) {    
+                                    deferred.reject();
+                                }
+                            }                            
+                            deferred.resolve();
                         });
                     }
                     else {
@@ -183,7 +190,15 @@ d2Directives.directive('d2NumberValidator', function() {
 
                     return deferred.promise;
                 };
-            }            
+            }
+                      
+            scope.$watch('ngDisabled', function(value){
+                if(!value){
+                    if( scope.attributeData && scope.attributeData.unique && !scope.ngDisabled ){                
+                        uniqunessValidatior();
+                    }
+                }              
+            });       
         }
     };
 });
