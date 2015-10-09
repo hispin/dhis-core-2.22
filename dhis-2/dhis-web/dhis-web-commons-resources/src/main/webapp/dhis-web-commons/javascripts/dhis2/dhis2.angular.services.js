@@ -497,7 +497,10 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     ' element-id="' + i + '"' +
                                     this.getAttributesAsString(attributes) +
                                     ' d2-focus-next-on-enter' +
-                                    ' ng-model="selectedTei.' + attId + '" ' +                                    
+                                    ' ng-model="selectedTei.' + attId + '" ' + 
+                                    ' attribute-data="attributesById.' + attId + '" ' + 
+                                    ' selected-program-id="selectedProgram.id" ' +
+                                    ' selected-tei-id="selectedTei.trackedEntityInstance" ' +
                                     ' ng-disabled="editingDisabled || isHidden(attributesById.' + attId + '.id) || ' + isTrackerAssociate + '"' +                                    
                                     ' d2-validation ' +
                                     ' ng-required=" ' + (att.mandatory || att.unique) + '" ';
