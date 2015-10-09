@@ -150,6 +150,7 @@ public class DefaultAppManager
         if ( appNamespace != null && ( this.appNamespaces.containsKey( appNamespace ) && 
             !app.equals( appNamespaces.get( appNamespace ) ) ) )
         {
+            zip.close();
             return AppStatus.NAMESPACE_TAKEN;
         }
 
