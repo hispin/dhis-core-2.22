@@ -1,5 +1,31 @@
 package org.hisp.dhis.appmanager;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import javax.annotation.PostConstruct;
+
+import org.apache.ant.compress.taskdefs.Unzip;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.datavalue.DefaultDataValueService;
+import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
+import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserCredentials;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -30,33 +56,6 @@ package org.hisp.dhis.appmanager;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.ant.compress.taskdefs.Unzip;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.datavalue.DefaultDataValueService;
-import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
-import org.hisp.dhis.setting.Setting;
-import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.user.User;
-import org.hisp.dhis.user.UserCredentials;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.PostConstruct;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * @author Saptarshi Purkayastha
@@ -146,23 +145,23 @@ public class DefaultAppManager
         // ---------------------------------------------------------------------
         // Check for namespace and if it's already taken by another app
         // ---------------------------------------------------------------------
+        
         String appNamespace = app.getActivities().getDhis().getNamespace();
-        if ( appNamespace != null &&
-            ( this.appNamespaces.containsKey( appNamespace ) && !app.equals( appNamespaces.get( appNamespace ) ) ) )
+        if ( appNamespace != null && ( this.appNamespaces.containsKey( appNamespace ) && 
+            !app.equals( appNamespaces.get( appNamespace ) ) ) )
         {
             return AppStatus.NAMESPACE_TAKEN;
         }
 
-
         // ---------------------------------------------------------------------
         // Delete if app is already installed
         // ---------------------------------------------------------------------
+        
         if ( getApps().contains( app ) )
         {
             String folderPath = getAppFolderPath() + File.separator + app.getFolderName();
             FileUtils.forceDelete( new File( folderPath ) );
         }
-
 
         String dest = getAppFolderPath() + File.separator + fileName.substring( 0, fileName.lastIndexOf( '.' ) );
         Unzip unzip = new Unzip();
