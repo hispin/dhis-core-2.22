@@ -886,7 +886,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         generateAttributeFilters: function(attributes){
             angular.forEach(attributes, function(attribute){
-                if(attribute.type === 'number' || attribute.type === 'date'){
+                if(attribute.valueType === 'NUMBER' || attribute.valueType === 'DATE'){
                     attribute.operator = OperatorFactory.defaultOperators[0];
                 }
             });            
