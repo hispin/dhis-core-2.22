@@ -97,7 +97,6 @@ public interface SystemSettingManager
     String KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL = "keyAcceptanceRequiredForApproval";
     String KEY_SYSTEM_NOTIFICATIONS_EMAIL = "keySystemNotificationsEmail";
     String KEY_ANALYSIS_RELATIVE_PERIOD = "keyAnalysisRelativePeriod";
-    String KEY_CORS_WHITELIST = "keyCorsWhitelist";
     String KEY_REQUIRE_ADD_TO_VIEW = "keyRequireAddToView";
     String KEY_ALLOW_OBJECT_ASSIGNMENT = "keyAllowObjectAssignment";
     String KEY_USE_CUSTOM_LOGO_FRONT = "keyUseCustomLogoFront";
