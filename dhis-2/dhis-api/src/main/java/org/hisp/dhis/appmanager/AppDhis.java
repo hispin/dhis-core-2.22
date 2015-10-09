@@ -45,6 +45,9 @@ public class AppDhis
     @JsonProperty( "href" )
     private String href;
 
+    @JsonProperty( "namespace" )
+    private String namespace;
+
     public String getHref()
     {
         return href;
@@ -53,5 +56,15 @@ public class AppDhis
     public void setHref( String href )
     {
         this.href = href;
+    }
+
+    public String getNamespace()
+    {
+        return namespace;
+    }
+
+    public void setNamespace( String namespace )
+    {
+        this.namespace = namespace;
     }
 }

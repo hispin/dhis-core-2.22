@@ -69,7 +69,7 @@ public interface AppManager
      * @param rootPath the root path of the instance.
      * @throws IOException if the app manifest file could not be read.
      */
-    void installApp( File file, String fileName, String rootPath )
+    AppStatus installApp( File file, String fileName, String rootPath )
         throws IOException;
 
     /**
@@ -84,11 +84,12 @@ public interface AppManager
      * Deletes the app with the given name.
      *
      * @param name the app name.
+     * @param deleteAppData decide if associated data in dataStore should be deleted or not.
      * @return true if the delete was successful, false if there is no app with
      * the given name or if the app could not be removed from the file
      * system.
      */
-    boolean deleteApp( String name );
+    boolean deleteApp( String name, boolean deleteAppData );
 
     /**
      * Reload list of apps.
@@ -140,4 +141,12 @@ public interface AppManager
     boolean isAccessible( App app );
 
     boolean isAccessible( App app, User user );
+
+    /**
+     * Returns the app associated with the namespace, or null if no app is associated.
+     * @param namespace the namespace to check
+     * @return App or null
+     */
+    App getAppByNamespace( String namespace);
+
 }

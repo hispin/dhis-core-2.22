@@ -41,6 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.appmanager.AppManager;
+import org.hisp.dhis.appmanager.AppStatus;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -138,8 +139,14 @@ public class AddAppAction
             {
                 String contextPath = ContextUtils.getContextPath( request );
                 
-                appManager.installApp( file, fileName, contextPath );
-                
+                AppStatus appStatus = appManager.installApp( file, fileName, contextPath );
+
+                if(appStatus == AppStatus.NAMESPACE_TAKEN)
+                {
+                    message = i18n.getString( "appmanager_namespace_taken" );
+                    log.warn( "Namespace in the app's manifest already taken." );
+                    return FAILURE;
+                }
                 message = i18n.getString( "appmanager_install_success" );
                 
                 return SUCCESS;

@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
+import org.hisp.dhis.appmanager.AppStatus;
 import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -91,35 +92,37 @@ public class AppController
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
-    public void getApps( @RequestParam(required=false) String key, HttpServletResponse response )
+    public void getApps( @RequestParam( required = false ) String key, HttpServletResponse response )
         throws IOException
     {
         List<App> apps = new ArrayList<>();
-        
+
         if ( key != null )
         {
             App app = appManager.getApp( key );
-            
+
             if ( app == null )
             {
                 response.sendError( HttpServletResponse.SC_NOT_FOUND );
                 return;
             }
-            
+
             apps.add( app );
         }
         else
         {
             apps = appManager.getApps();
         }
-        
+
         renderService.toJson( response.getOutputStream(), apps );
     }
 
     @RequestMapping( method = RequestMethod.POST )
     @ResponseStatus( HttpStatus.NO_CONTENT )
     @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
-    public void installApp( @RequestParam( "file" ) MultipartFile file, HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
+    public void installApp( @RequestParam( "file" ) MultipartFile file, HttpServletRequest request,
+        HttpServletResponse response )
+        throws IOException, WebMessageException
     {
         File tempFile = File.createTempFile( "IMPORT_", "_ZIP" );
         file.transferTo( tempFile );
@@ -128,7 +131,14 @@ public class AppController
 
         try
         {
-            appManager.installApp( tempFile, file.getOriginalFilename(), contextPath );
+            AppStatus appStatus = appManager.installApp( tempFile, file.getOriginalFilename(), contextPath );
+
+            if ( appStatus.equals( AppStatus.NAMESPACE_TAKEN ) )
+            {
+                throw new WebMessageException(
+                    WebMessageUtils.conflict( "The namespace defined in manifest.webapp is already protected." ) );
+            }
+
         }
         catch ( JsonParseException ex )
         {
@@ -136,7 +146,8 @@ public class AppController
         }
         catch ( IOException ex )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "App could not not be installed on file system, check permissions" ) );
+            throw new WebMessageException(
+                WebMessageUtils.conflict( "App could not not be installed on file system, check permissions" ) );
         }
     }
 
@@ -149,7 +160,8 @@ public class AppController
     }
 
     @RequestMapping( value = "/{app}/**", method = RequestMethod.GET )
-    public void renderApp( @PathVariable( "app" ) String app, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    public void renderApp( @PathVariable( "app" ) String app, HttpServletRequest request, HttpServletResponse response )
+        throws IOException
     {
         Iterable<Resource> locations = Lists.newArrayList(
             resourceLoader.getResource( "file:" + appManager.getAppFolderPath() + "/" + app + "/" ),
@@ -215,14 +227,15 @@ public class AppController
 
     @RequestMapping( value = "/{app}", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
-    public void deleteApp( @PathVariable( "app" ) String app, HttpServletRequest request, HttpServletResponse response ) throws WebMessageException
+    public void deleteApp( @PathVariable( "app" ) String app, @RequestParam(value = "deleteappdata", required = false, defaultValue = "false") boolean deleteAppData, HttpServletRequest request, HttpServletResponse response )
+        throws WebMessageException
     {
         if ( !appManager.exists( app ) )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "App does not exist: " + app ) );
         }
 
-        if ( !appManager.deleteApp( app ) )
+        if ( !appManager.deleteApp( app, deleteAppData ) )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "There was an error deleting app: " + app ) );
         }
@@ -231,7 +244,8 @@ public class AppController
     @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "/config", method = RequestMethod.POST, consumes = ContextUtils.CONTENT_TYPE_JSON )
     @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
-    public void setConfig( HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException
+    public void setConfig( HttpServletRequest request, HttpServletResponse response )
+        throws IOException, WebMessageException
     {
         Map<String, String> config = renderService.fromJson( request.getInputStream(), Map.class );
 
@@ -277,7 +291,8 @@ public class AppController
     // Helpers
     //--------------------------------------------------------------------------
 
-    private Resource findResource( Iterable<Resource> locations, String resourceName ) throws IOException
+    private Resource findResource( Iterable<Resource> locations, String resourceName )
+        throws IOException
     {
         for ( Resource location : locations )
         {

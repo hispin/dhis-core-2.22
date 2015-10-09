@@ -35,17 +35,49 @@ import java.util.List;
  */
 public interface KeyJsonValueService
 {
+    /**
+     * Retrieves a list of existing namespaces
+     * @return a list of strings representing the existing namespaces
+     */
     List<String> getNamespaces();
 
+    /**
+     * Retrieves a list of keys from a namespace
+     * @param namespace the namespace to retrieve keys from
+     * @return a list of strings representing the keys from the namespace
+     */
     List<String> getKeysInNamespace( String namespace );
 
+    /**
+     * Deletes all keys associated with a given namespace
+     * @param namespace the namespace to delete
+     */
     void deleteNamespace( String namespace );
 
+    /**
+     * Retrieves a KeyJsonValue based on a namespace and key
+     * @param namespace the namespace where the key is associated
+     * @param key the key referencing the value
+     * @return the KeyJsonValue matching the key and namespace
+     */
     KeyJsonValue getKeyJsonValue( String namespace, String key );
 
+    /**
+     * Adds a new KeyJsonValue
+     * @param keyJsonValue the KeyJsonValue to be stored
+     * @return the id of the KeyJsonValue stored
+     */
     int addKeyJsonValue( KeyJsonValue keyJsonValue );
 
+    /**
+     * Updates a KeyJsonValue
+     * @param keyJsonValue the updated KeyJsonValue
+     */
     void updateKeyJsonValue( KeyJsonValue keyJsonValue );
 
+    /**
+     * Deletes a keyJsonValue
+     * @param keyJsonValue the KeyJsonValue to be deleted.
+     */
     void deleteKeyJsonValue( KeyJsonValue keyJsonValue );
 }

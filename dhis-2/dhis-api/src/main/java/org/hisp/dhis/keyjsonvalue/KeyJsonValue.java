@@ -37,10 +37,19 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 public class KeyJsonValue
     extends BaseIdentifiableObject
 {
+    /**
+     * A namespace represents a collection of keys
+     */
     private String namespace;
 
+    /**
+     * A key belongs to a namespace, and represent a value
+     */
     private String key;
 
+    /**
+     * A value referenced by a key and namespace, json-formatted data stored as a string.
+     */
     private String value;
 
     @JsonProperty
