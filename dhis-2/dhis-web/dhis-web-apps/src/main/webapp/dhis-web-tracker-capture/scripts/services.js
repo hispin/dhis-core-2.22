@@ -492,6 +492,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }
                 delete tei[k];
             }
+            formTei.attributes = tei.attributes;
             return {tei: tei, formEmpty: formEmpty};
         }
     };
