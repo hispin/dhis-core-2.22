@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.datavalue.DefaultDataValueService;
+import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
 import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
@@ -50,7 +51,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -68,6 +71,11 @@ public class DefaultAppManager
      */
     private List<App> apps = new ArrayList<>();
 
+    /**
+     * Mapping dataStore-namespaces and apps
+     */
+    private HashMap<String, App> appNamespaces = new HashMap<>();
+
     @PostConstruct
     private void init()
     {
@@ -79,6 +87,9 @@ public class DefaultAppManager
 
     @Autowired
     private CurrentUserService currentUserService;
+
+    @Autowired
+    private KeyJsonValueService keyJsonValueService;
 
     // -------------------------------------------------------------------------
     // AppManagerService implementation
@@ -120,7 +131,7 @@ public class DefaultAppManager
     }
 
     @Override
-    public void installApp( File file, String fileName, String rootPath )
+    public AppStatus installApp( File file, String fileName, String rootPath )
         throws IOException
     {
         ZipFile zip = new ZipFile( file );
@@ -133,14 +144,25 @@ public class DefaultAppManager
         App app = mapper.readValue( inputStream, App.class );
 
         // ---------------------------------------------------------------------
+        // Check for namespace and if it's already taken by another app
+        // ---------------------------------------------------------------------
+        String appNamespace = app.getActivities().getDhis().getNamespace();
+        if ( appNamespace != null &&
+            ( this.appNamespaces.containsKey( appNamespace ) && !app.equals( appNamespaces.get( appNamespace ) ) ) )
+        {
+            return AppStatus.NAMESPACE_TAKEN;
+        }
+
+
+        // ---------------------------------------------------------------------
         // Delete if app is already installed
         // ---------------------------------------------------------------------
-
         if ( getApps().contains( app ) )
         {
             String folderPath = getAppFolderPath() + File.separator + app.getFolderName();
             FileUtils.forceDelete( new File( folderPath ) );
         }
+
 
         String dest = getAppFolderPath() + File.separator + fileName.substring( 0, fileName.lastIndexOf( '.' ) );
         Unzip unzip = new Unzip();
@@ -167,6 +189,8 @@ public class DefaultAppManager
         zip.close();
 
         reloadApps(); // Reload app state
+
+        return AppStatus.OK;
     }
 
     @Override
@@ -184,7 +208,7 @@ public class DefaultAppManager
     }
 
     @Override
-    public boolean deleteApp( String name )
+    public boolean deleteApp( String name, boolean deleteAppData )
     {
         for ( App app : getApps() )
         {
@@ -194,6 +218,17 @@ public class DefaultAppManager
                 {
                     String folderPath = getAppFolderPath() + File.separator + app.getFolderName();
                     FileUtils.forceDelete( new File( folderPath ) );
+
+                    // If deleteAppData is true and a namespace associated with the app exists, delete it.
+                    if(deleteAppData && appNamespaces.containsValue( app ))
+                    {
+                        appNamespaces.forEach( ( namespace, app1 ) -> {
+                            if( app1 == app)
+                            {
+                                keyJsonValueService.deleteNamespace( namespace );
+                            }
+                        } );
+                    }
 
                     return true;
                 }
@@ -275,6 +310,7 @@ public class DefaultAppManager
     public void reloadApps()
     {
         List<App> appList = new ArrayList<>();
+        HashMap<String, App> appNamespaces = new HashMap<>(  );
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
 
@@ -299,6 +335,13 @@ public class DefaultAppManager
                                 App app = mapper.readValue( appManifest, App.class );
                                 app.setFolderName( folder.getName() );
                                 appList.add( app );
+
+                                // Add namespace
+                                String appNamespace = app.getActivities().getDhis().getNamespace();
+                                if ( appNamespace != null )
+                                {
+                                    appNamespaces.put(appNamespace, app);
+                                }
                             }
                             catch ( IOException ex )
                             {
@@ -311,6 +354,7 @@ public class DefaultAppManager
         }
 
         this.apps = appList;
+        this.appNamespaces = appNamespaces;
 
         log.info( "Detected apps: " + apps );
     }
@@ -334,5 +378,11 @@ public class DefaultAppManager
         return userCredentials.getAllAuthorities().contains( "ALL" ) ||
             userCredentials.getAllAuthorities().contains( "M_dhis-web-maintenance-appmanager" ) ||
             userCredentials.getAllAuthorities().contains( "See " + app.getName().trim() );
+    }
+
+    @Override
+    public App getAppByNamespace( String namespace )
+    {
+        return appNamespaces.get( namespace );
     }
 }

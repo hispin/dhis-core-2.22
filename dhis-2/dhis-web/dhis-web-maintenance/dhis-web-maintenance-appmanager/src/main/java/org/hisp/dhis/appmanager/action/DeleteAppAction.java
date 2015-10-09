@@ -76,7 +76,7 @@ public class DeleteAppAction
     public String execute()
         throws Exception
     {
-        if ( appName != null && appManager.deleteApp( appName ) )
+        if ( appName != null && appManager.deleteApp( appName, false ) )
         {
             message = i18n.getString( "appmanager_delete_success" );
         }
