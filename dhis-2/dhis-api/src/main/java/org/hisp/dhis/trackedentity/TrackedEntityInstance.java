@@ -168,11 +168,13 @@ public class TrackedEntityInstance
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
-	public Boolean isInactive() {
-		return inactive;
-	}
+    public Boolean isInactive()
+    {
+        return inactive;
+    }
 
-	public void setInactive(Boolean inactive) {
-		this.inactive = inactive;
-	}
+    public void setInactive( Boolean inactive )
+    {
+        this.inactive = inactive;
+    }
 }
