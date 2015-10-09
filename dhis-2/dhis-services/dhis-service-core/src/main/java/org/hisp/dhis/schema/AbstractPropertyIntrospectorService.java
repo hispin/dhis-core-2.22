@@ -275,7 +275,8 @@ public abstract class AbstractPropertyIntrospectorService
                 property.setOneToOne( true );
             }
 
-            if ( SingleColumnType.class.isInstance( type ) || CustomType.class.isInstance( type ) )
+            if ( SingleColumnType.class.isInstance( type ) || CustomType.class.isInstance( type )
+                || ManyToOneType.class.isInstance( type ) )
             {
                 Column column = (Column) hibernateProperty.getColumnIterator().next();
 
