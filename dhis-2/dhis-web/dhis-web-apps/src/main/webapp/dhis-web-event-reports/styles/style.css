@@ -256,17 +256,17 @@ table.pivot {
 	user-select: all;
 }
 
-table.pivot.displaydensity-comfortable td {
+table.pivot.displaydensity-COMFORTABLE td {
 	padding: 7px;
 }
-table.pivot.displaydensity-compact td {
+table.pivot.displaydensity-COMPACT td {
 	padding: 3px;
 }
 
-table.pivot.fontsize-large td {
+table.pivot.fontsize-LARGE td {
 	font-size: 13px;
 }
-table.pivot.fontsize-small td {
+table.pivot.fontsize-SMALL td {
 	font-size: 10px;
 }
 
@@ -383,11 +383,11 @@ table.pivot.fontsize-small td {
 
 .ns-viewport-text * {
     padding: 3px 10px;
-    font-size: 11px;
-    color: #515a62;
+    font-size: 13px;
+    color: #777;
 }
 .ns-viewport-text h3 {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: #333;
     padding: 0 0 8px 0;
