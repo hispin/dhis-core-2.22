@@ -129,6 +129,7 @@ Ext.onReady( function() {
         Ext.define('Ext.ux.panel.DataElementIntegerContainer', {
 			extend: 'Ext.container.Container',
 			alias: 'widget.dataelementintegerpanel',
+            cls: 'ns-dxselector',
 			layout: 'column',
             bodyStyle: 'border:0 none',
             style: 'margin: ' + margin,
@@ -412,7 +413,7 @@ Ext.onReady( function() {
                         fields: [idProperty, nameProperty]
                     }),
                     listeners: {
-                        added: function(cb) {                            
+                        added: function(cb) {
                             cb.store.add({
                                 id: defaultRangeSetId,
                                 name: 'No range set'
@@ -420,7 +421,7 @@ Ext.onReady( function() {
 
                             if (container.dataElement.legendSet) {
                                 var legendSet = ns.core.init.idLegendSetMap[container.dataElement.legendSet.id];
-                                
+
                                 if (Ext.isObject(legendSet)) {
                                     cb.store.add(legendSet);
 
@@ -463,6 +464,7 @@ Ext.onReady( function() {
         Ext.define('Ext.ux.panel.DataElementStringContainer', {
 			extend: 'Ext.container.Container',
 			alias: 'widget.dataelementstringpanel',
+            cls: 'ns-dxselector',
 			layout: 'column',
             bodyStyle: 'border:0 none',
             style: 'margin: ' + margin,
@@ -556,6 +558,7 @@ Ext.onReady( function() {
         Ext.define('Ext.ux.panel.DataElementDateContainer', {
 			extend: 'Ext.container.Container',
 			alias: 'widget.dataelementdatepanel',
+            cls: 'ns-dxselector',
 			layout: 'column',
             bodyStyle: 'border:0 none',
             style: 'margin: ' + margin,
@@ -657,6 +660,7 @@ Ext.onReady( function() {
 		Ext.define('Ext.ux.panel.DataElementBooleanContainer', {
 			extend: 'Ext.container.Container',
 			alias: 'widget.dataelementbooleanpanel',
+            cls: 'ns-dxselector',
 			layout: 'column',
             bodyStyle: 'border:0 none',
             style: 'margin: ' + margin,
@@ -893,6 +897,7 @@ Ext.onReady( function() {
 		Ext.define('Ext.ux.panel.OrganisationUnitGroupSetContainer', {
 			extend: 'Ext.container.Container',
 			alias: 'widget.organisationunitgroupsetpanel',
+            cls: 'ns-dxselector',
 			layout: 'column',
             bodyStyle: 'border:0 none',
             style: 'margin: ' + margin,
@@ -1800,6 +1805,10 @@ Ext.onReady( function() {
 		});
 
         addDimension = function(record, store, excludedStores, force) {
+            if (record.isProgramIndicator) {
+                return;
+            }
+
             store = store && force ? store : dimensionStoreMap[record.id] || store || filterStore;
 
             if (hasDimension(record.id, excludedStores)) {
@@ -3971,9 +3980,11 @@ Ext.onReady( function() {
         // cache
             stageStorage = {},
             attributeStorage = {},
+            programIndicatorStorage = {},
             dataElementStorage = {},
 
 		// gui
+            onTypeClick,
             setLayout,
 			program,
             onProgramSelect,
@@ -4095,7 +4106,7 @@ Ext.onReady( function() {
 		});
 
 		dataElementsByStageStore = Ext.create('Ext.data.Store', {
-			fields: ['id', 'name', 'isAttribute'],
+			fields: ['id', 'name', 'isAttribute', 'isProgramIndicator'],
 			data: [],
 			sorters: [
                 {
@@ -4108,6 +4119,8 @@ Ext.onReady( function() {
                 }
             ],
             onLoadData: function() {
+
+                // layout window
                 var layoutWindow = ns.app.aggregateLayoutWindow;
 
                 this.each( function(record) {
@@ -4115,6 +4128,19 @@ Ext.onReady( function() {
                         layoutWindow.valueStore.add(record.data);
                     }
                 });
+
+                this.toggleProgramIndicators();
+            },
+            toggleProgramIndicators: function(type) {
+                type = type || ns.app.typeToolbar.getType();
+
+                this.clearFilter();
+
+                if (type === finalsDataTypeConf.aggregated_values) {
+                    this.filterBy(function(record) {
+                        return !record.data.isProgramIndicator;
+                    });
+                }
             }
 		});
 
@@ -4156,6 +4182,15 @@ Ext.onReady( function() {
         // components
 
             // data element
+        onTypeClick = function(type) {
+
+            // available
+            dataElementsByStageStore.toggleProgramIndicators(type);
+
+            // selected
+            dataElementSelected.toggleProgramIndicators(type);
+        };
+
         setLayout = function(layout) {
 			var dimensions = Ext.Array.clean([].concat(layout.columns || [], layout.rows || [], layout.filters || [])),
 				recMap = ns.core.service.layout.getObjectNameDimensionItemsMapFromDimensionArray(dimensions),
@@ -4350,11 +4385,12 @@ Ext.onReady( function() {
             }
             else {
                 Ext.Ajax.request({
-                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programStages[id,name],programTrackedEntityAttributes[trackedEntityAttribute[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet[id,name]]]&paging=false',
+                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programIndicators[id,name],programStages[id,name],programTrackedEntityAttributes[trackedEntityAttribute[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet[id,name]]]&paging=false',
                     success: function(r) {
                         var program = Ext.decode(r.responseText).programs[0],
                             stages,
                             attributes,
+                            programIndicators,
                             stageId;
 
                         if (!program) {
@@ -4363,6 +4399,7 @@ Ext.onReady( function() {
 
                         stages = program.programStages;
                         attributes = Ext.Array.pluck(program.programTrackedEntityAttributes, 'trackedEntityAttribute');
+                        programIndicators = program.programIndicators;
 
                         // mark as attribute
                         for (var i = 0; i < attributes.length; i++) {
@@ -4372,6 +4409,16 @@ Ext.onReady( function() {
                         // attributes cache
                         if (Ext.isArray(attributes) && attributes.length) {
                             attributeStorage[programId] = attributes;
+                        }
+
+                        // mark as program indicator
+                        for (var i = 0; i < programIndicators.length; i++) {
+                            programIndicators[i].isProgramIndicator = true;
+                        }
+
+                        // program indicator cache
+                        if (Ext.isArray(programIndicators) && programIndicators.length) {
+                            programIndicatorStorage[programId] = programIndicators;
                         }
 
                         if (Ext.isArray(stages) && stages.length) {
@@ -4435,7 +4482,8 @@ Ext.onReady( function() {
 
 			load = function(dataElements) {
                 var attributes = attributeStorage[programId],
-                    data = Ext.Array.clean([].concat(attributes || [], dataElements || []));
+                    programIndicators = programIndicatorStorage[programId],
+                    data = Ext.Array.clean([].concat(attributes || [], programIndicators || [], dataElements || []));
 
 				dataElementsByStageStore.loadData(data);
                 dataElementsByStageStore.onLoadData();
@@ -4672,7 +4720,22 @@ Ext.onReady( function() {
 				for (var i = 0; i < len; i++) {
 					items[0].removeDataElement(reset);
 				}
-			}
+			},
+            toggleProgramIndicators: function(type) {
+				var items = this.items.items,
+					len = items.length;
+
+				for (var i = 0, item; i < len; i++) {
+					item = items[i];
+
+                    if (type === finalsDataTypeConf.aggregated_values && item.isProgramIndicator) {
+                        item.disable();
+                    }
+                    else {
+                        item.enable();
+                    }
+				}
+            }
         });
 
         addUxFromDataElement = function(element, index) {
@@ -4703,13 +4766,16 @@ Ext.onReady( function() {
 					return 'Ext.ux.panel.DataElementBooleanContainer';
 				}
 
-				return 'Ext.ux.panel.DataElementStringContainer';
+				return 'Ext.ux.panel.DataElementIntegerContainer';
 			};
 
 			// add
 			ux = dataElementSelected.insert(index, Ext.create(getUxType(element), {
 				dataElement: element
 			}));
+
+            ux.isAttribute = element.isAttribute;
+            ux.isProgramIndicator = element.isProgramIndicator;
 
 			ux.removeDataElement = function(reset) {
 				dataElementSelected.remove(ux);
@@ -6455,8 +6521,6 @@ Ext.onReady( function() {
 		};
 
         setGui = function(layout, response, updateGui) {
-			var dimensions = Ext.Array.clean([].concat(layout.columns || [], layout.rows || [], layout.filters || [])),
-				recMap = ns.core.service.layout.getObjectNameDimensionItemsMapFromDimensionArray(dimensions);
 
 			// state
 			ns.app.downloadButton.enable();
@@ -6468,11 +6532,9 @@ Ext.onReady( function() {
             ns.app.statusBar.setStatus(layout, response);
 
 			// set gui
-			if (!updateGui) {
-				return;
+			if (updateGui) {
+				setLayout(layout);
 			}
-
-            setLayout(layout);
 		};
 
 		getView = function(config) {
@@ -6690,6 +6752,8 @@ Ext.onReady( function() {
 			reset: reset,
 			setGui: setGui,
 			getView: getView,
+
+            onTypeClick: onTypeClick,
 
             getUxArray: function(id) {
                 return dataElementSelected.getUxArrayById(id);
@@ -7430,7 +7494,7 @@ Ext.onReady( function() {
 
                 // success
                 ns.app.layout = layout;
-                ns.app.response = response;                
+                ns.app.response = response;
 
                 ns.app.accordion.setGui(layout, response, isUpdateGui);
 
@@ -7594,6 +7658,8 @@ Ext.onReady( function() {
 			if (!button.pressed) {
 				button.toggle();
 			}
+
+            ns.app.accordion.onTypeClick(typeToolbar.getType());
 
 			update();
 		};
@@ -8307,7 +8373,7 @@ Ext.onReady( function() {
                 finalsStyleConf = ns.core.conf.finals.style;
                 styleConf = ns.core.conf.style;
                 finalsDataTypeConf = ns.core.conf.finals.dataType;
-                
+
 				ns.app.viewport = createViewport();
 
                 ns.core.app.getViewportWidth = function() { return ns.app.viewport.getWidth(); };
