@@ -45,6 +45,7 @@ public interface ObjectBridge
      * 
      * @param preheatClasses the classes to preheat.
      */
+    @SuppressWarnings( "rawtypes" )
     void init( Set<Class> preheatClasses );
 
     /**

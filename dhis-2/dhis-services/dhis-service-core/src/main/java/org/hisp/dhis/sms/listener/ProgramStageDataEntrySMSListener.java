@@ -112,11 +112,11 @@ public class ProgramStageDataEntrySMSListener
         SMSCommand smsCommand = smsCommandService.getSMSCommand( commandString,
             ParserType.TRACKED_ENTITY_REGISTRATION_PARSER );
         
-        Map<String, String> parsedMessage = this.parse( message, smsCommand );
+        this.parse( message, smsCommand );
 
-        Date date = lookForDate( message );
+        lookForDate( message );
         
-        //TODO and?
+        //TODO what to do with the above?
         
         String senderPhoneNumber = StringUtils.replace( sms.getOriginator(), "+", "" );
         Collection<OrganisationUnit> orgUnits = getOrganisationUnitsByPhoneNumber( senderPhoneNumber );

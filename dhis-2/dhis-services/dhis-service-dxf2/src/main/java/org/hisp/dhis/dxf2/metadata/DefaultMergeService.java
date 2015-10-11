@@ -46,7 +46,7 @@ public class DefaultMergeService implements MergeService
     private SchemaService schemaService;
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
     public <T> void merge( T source, T target, MergeStrategy mergeStrategy )
     {
         if ( source == null || target == null )

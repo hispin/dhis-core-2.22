@@ -41,7 +41,7 @@ import java.util.Date;
  */
 public final class QueryUtils
 {
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
     static public <T> T getValue( Class<T> klass, Object objectValue )
     {
         if ( klass.isInstance( objectValue ) )

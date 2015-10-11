@@ -70,6 +70,7 @@ public class DefaultImportService
     // Dependencies
     //-------------------------------------------------------------------------------------------------------
 
+    @SuppressWarnings("rawtypes")
     @Autowired( required = false )
     private Set<Importer> importerClasses = new HashSet<>();
 
@@ -231,6 +232,7 @@ public class DefaultImportService
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Importer<T> findImporterClass( Class<?> clazz )
     {
         if ( clazz != null )
