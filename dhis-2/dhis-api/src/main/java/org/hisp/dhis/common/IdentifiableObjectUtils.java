@@ -51,6 +51,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 /**
  * @author Lars Helge Overland
@@ -333,17 +334,7 @@ public class IdentifiableObjectUtils
      */
     public static <T extends IdentifiableObject> Map<String, T> getUidObjectMap( Collection<T> objects )
     {
-        Map<String, T> map = new HashMap<>();
-
-        if ( objects != null )
-        {
-            for ( T object : objects )
-            {
-                map.put( object.getUid(), object );
-            }
-        }
-
-        return map;
+        return objects != null ? Maps.uniqueIndex( objects, T::getUid ) : Maps.newHashMap();
     }
 
     /**
