@@ -134,7 +134,7 @@ public class DefaultObjectBridge
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
     public void init( Set<Class> preheatClasses )
     {
         if ( preheatClasses.isEmpty() )
