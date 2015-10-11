@@ -151,7 +151,7 @@ public class DefaultDataApprovalService
 
             if ( status == null || !status.getPermissions().isMayApprove() )
             {
-                log.warn( "approveData: data may not be approved, state " +
+                log.info( "approveData: data may not be approved, state " +
                     ( status == null ? "(null)" : status.getState().name() ) + " " + da );
 
                 throw new DataMayNotBeApprovedException();
@@ -159,7 +159,7 @@ public class DefaultDataApprovalService
 
             if ( da.getOrganisationUnit().getLevel() != da.getDataApprovalLevel().getOrgUnitLevel() )
             {
-                log.warn( "approveData: org unit " + da.getOrganisationUnit().getUid() + " '" + da.getOrganisationUnit().getName() +
+                log.info( "approveData: org unit " + da.getOrganisationUnit().getUid() + " '" + da.getOrganisationUnit().getName() +
                     "' has wrong org unit level " + da.getOrganisationUnit().getLevel() +
                     " for approval level " + da.getDataApprovalLevel().getLevel());
 
@@ -201,7 +201,7 @@ public class DefaultDataApprovalService
 
             if ( status == null || !status.getPermissions().isMayUnapprove() )
             {
-                log.warn( "unapproveData: data may not be unapproved, state " + ( status == null ? "(null)" : status.getState().name() ) + " " + da );
+                log.info( "unapproveData: data may not be unapproved, state " + ( status == null ? "(null)" : status.getState().name() ) + " " + da );
 
                 throw new DataMayNotBeUnapprovedException();
             }
@@ -264,7 +264,7 @@ public class DefaultDataApprovalService
 
             if ( status == null || !status.getPermissions().isMayAccept() )
             {
-                log.warn( "acceptData: data may not be accepted, state " + ( status == null ? "(null)" : status.getState().name() ) + " " + da );
+                log.info( "acceptData: data may not be accepted, state " + ( status == null ? "(null)" : status.getState().name() ) + " " + da );
 
                 throw new DataMayNotBeAcceptedException();
             }
@@ -283,7 +283,7 @@ public class DefaultDataApprovalService
 
             if ( d == null )
             {
-                log.warn( "acceptData: approval not found at " + da );
+                log.info( "acceptData: approval not found at " + da );
 
                 throw new DataMayNotBeAcceptedException();
             }
@@ -324,7 +324,7 @@ public class DefaultDataApprovalService
 
             if ( !status.getPermissions().isMayUnaccept() )
             {
-                log.warn( "unacceptData: data may not be unaccepted, state " + status.getState().name() + " " + da + " " + status.getPermissions() );
+                log.info( "unacceptData: data may not be unaccepted, state " + status.getState().name() + " " + da + " " + status.getPermissions() );
 
                 throw new DataMayNotBeUnacceptedException();
             }
@@ -341,7 +341,7 @@ public class DefaultDataApprovalService
 
             if ( d == null )
             {
-                log.warn( "unacceptData: approval not found at " + da );
+                log.info( "unacceptData: approval not found at " + da );
 
                 throw new DataMayNotBeUnacceptedException();
             }
