@@ -37,6 +37,7 @@ import static org.hisp.dhis.common.DimensionType.ORGANISATIONUNIT_GROUPSET;
 import static org.hisp.dhis.common.DimensionType.PERIOD;
 import static org.hisp.dhis.common.DimensionType.PROGRAM_ATTRIBUTE;
 import static org.hisp.dhis.common.DimensionType.PROGRAM_DATAELEMENT;
+import static org.hisp.dhis.common.DimensionType.PROGRAM_INDICATOR;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.commons.util.TextUtils.splitSafe;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_LEVEL;
@@ -87,10 +88,12 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension;
 import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
+import org.hisp.dhis.trackedentity.TrackedEntityProgramIndicatorDimension;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,6 +175,14 @@ public class DefaultDimensionService
         {
             pde.setDimensionType( DimensionType.PROGRAM_DATAELEMENT );
             return pde;
+        }
+        
+        ProgramIndicator pin = identifiableObjectManager.get( ProgramIndicator.class, uid );
+        
+        if ( pin != null )
+        {
+            pin.setDimensionType( DimensionType.PROGRAM_INDICATOR );
+            return pin;
         }
         
         return null;
@@ -282,6 +293,13 @@ public class DefaultDimensionService
         if ( pde != null && DataElementDomain.TRACKER.equals( pde.getDomainType() ) )
         {
             return DimensionType.PROGRAM_DATAELEMENT;
+        }
+        
+        ProgramIndicator pin = identifiableObjectManager.get( ProgramIndicator.class, uid );
+        
+        if ( pin != null )
+        {
+            return DimensionType.PROGRAM_INDICATOR;
         }
 
         final Map<String, DimensionType> dimObjectTypeMap = new HashMap<>();
@@ -567,6 +585,15 @@ public class DefaultDimensionService
                     dataElementDimension.setFilter( dimension.getFilter() );
                     
                     object.getDataElementDimensions().add( dataElementDimension );
+                }
+                else if ( PROGRAM_INDICATOR.equals( type ) )
+                {
+                    TrackedEntityProgramIndicatorDimension programIndicatorDimension = new TrackedEntityProgramIndicatorDimension();
+                    programIndicatorDimension.setProgramIndicator( identifiableObjectManager.get( ProgramIndicator.class, dimensionId ) );
+                    programIndicatorDimension.setLegendSet( dimension.hasLegendSet() ? identifiableObjectManager.get( LegendSet.class, dimension.getLegendSet().getUid() ) : null );
+                    programIndicatorDimension.setFilter( dimension.getFilter() );
+                    
+                    object.getProgramIndicatorDimensions().add( programIndicatorDimension );
                 }
             }
         }

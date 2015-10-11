@@ -77,6 +77,7 @@ import org.hisp.dhis.period.comparator.AscendingPeriodComparator;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension;
 import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
+import org.hisp.dhis.trackedentity.TrackedEntityProgramIndicatorDimension;
 import org.hisp.dhis.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -148,6 +149,9 @@ public abstract class BaseAnalyticalObject
     @Scanned
     protected List<TrackedEntityDataElementDimension> dataElementDimensions = new ArrayList<>();
     
+    @Scanned
+    protected List<TrackedEntityProgramIndicatorDimension> programIndicatorDimensions = new ArrayList<>();
+ 
     private Program program;
 
     protected boolean userOrganisationUnit;
@@ -475,6 +479,17 @@ public abstract class BaseAnalyticalObject
 
                 return new BaseDimensionalObject( dimension, DimensionType.PROGRAM_DATAELEMENT, null, tedd.getDisplayName(), tedd.getLegendSet(), tedd.getFilter() );
             }
+
+            // Tracked entity program indicator
+            
+            Map<String, TrackedEntityProgramIndicatorDimension> programIndicators = Maps.uniqueIndex( programIndicatorDimensions, TrackedEntityProgramIndicatorDimension::getUid );
+                        
+            if ( programIndicators.containsKey( dimension ) )
+            {
+                TrackedEntityProgramIndicatorDimension teid = programIndicators.get( dimension );
+                
+                return new BaseDimensionalObject( dimension, DimensionType.PROGRAM_INDICATOR, null, teid.getDisplayName(), teid.getLegendSet(), teid.getFilter() );
+            }            
         }
 
         IdentifiableObjectUtils.removeDuplicates( items );
@@ -657,6 +672,17 @@ public abstract class BaseAnalyticalObject
 
                 return new BaseDimensionalObject( dimension, DimensionType.PROGRAM_DATAELEMENT, null, tedd.getDisplayName(), tedd.getLegendSet(), tedd.getFilter() );
             }
+
+            // Tracked entity program indicator
+            
+            Map<String, TrackedEntityProgramIndicatorDimension> programIndicators = Maps.uniqueIndex( programIndicatorDimensions, TrackedEntityProgramIndicatorDimension::getUid );
+                        
+            if ( programIndicators.containsKey( dimension ) )
+            {
+                TrackedEntityProgramIndicatorDimension teid = programIndicators.get( dimension );
+                
+                return new BaseDimensionalObject( dimension, DimensionType.PROGRAM_INDICATOR, null, teid.getDisplayName(), teid.getLegendSet(), teid.getFilter() );
+            }
         }
 
         throw new IllegalArgumentException( "Not a valid dimension: " + dimension );
@@ -797,6 +823,7 @@ public abstract class BaseAnalyticalObject
         categoryOptionGroups.clear();
         attributeDimensions.clear();
         dataElementDimensions.clear();
+        programIndicatorDimensions.clear();
         userOrganisationUnit = false;
         userOrganisationUnitChildren = false;
         userOrganisationUnitGrandChildren = false;
@@ -837,6 +864,7 @@ public abstract class BaseAnalyticalObject
             categoryOptionGroups.addAll( object.getCategoryOptionGroups() );
             attributeDimensions.addAll( object.getAttributeDimensions() );
             dataElementDimensions.addAll( object.getDataElementDimensions() );
+            programIndicatorDimensions.addAll( object.getProgramIndicatorDimensions() );
             userOrganisationUnitChildren = object.isUserOrganisationUnitChildren();
             userOrganisationUnitGrandChildren = object.isUserOrganisationUnitGrandChildren();
             itemOrganisationUnitGroups = object.getItemOrganisationUnitGroups();
@@ -1006,6 +1034,20 @@ public abstract class BaseAnalyticalObject
     public void setDataElementDimensions( List<TrackedEntityDataElementDimension> dataElementDimensions )
     {
         this.dataElementDimensions = dataElementDimensions;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "programIndicatorDimensions", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programIndicatorDimension", namespace = DxfNamespaces.DXF_2_0 )
+    public List<TrackedEntityProgramIndicatorDimension> getProgramIndicatorDimensions()
+    {
+        return programIndicatorDimensions;
+    }
+
+    public void setProgramIndicatorDimensions( List<TrackedEntityProgramIndicatorDimension> programIndicatorDimensions )
+    {
+        this.programIndicatorDimensions = programIndicatorDimensions;
     }
 
     @JsonProperty
