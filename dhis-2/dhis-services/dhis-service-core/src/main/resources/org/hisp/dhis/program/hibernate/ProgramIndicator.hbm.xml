@@ -8,6 +8,8 @@
 <hibernate-mapping>
   <class name="org.hisp.dhis.program.ProgramIndicator" table="programindicator">
 
+    <cache usage="read-write" />
+	
     <id name="id" column="programindicatorid">
       <generator class="native" />
     </id>

@@ -384,12 +384,14 @@
     class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
     <property name="clazz" value="org.hisp.dhis.legend.Legend" />
     <property name="sessionFactory" ref="sessionFactory" />
+    <property name="cacheable" value="true" />
   </bean>
 
   <bean id="org.hisp.dhis.legend.LegendSetStore"
     class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
     <property name="clazz" value="org.hisp.dhis.legend.LegendSet" />
     <property name="sessionFactory" ref="sessionFactory" />
+    <property name="cacheable" value="true" />
   </bean>
 
   <bean id="org.hisp.dhis.sms.hibernate.IncomingSmsStore"
@@ -412,6 +414,7 @@
     class="org.hisp.dhis.program.hibernate.HibernateProgramIndicatorStore">
     <property name="clazz" value="org.hisp.dhis.program.ProgramIndicator" />
     <property name="sessionFactory" ref="sessionFactory" />
+    <property name="cacheable" value="true" />
   </bean>
 
   <bean id="org.hisp.dhis.relationship.RelationshipStore"
