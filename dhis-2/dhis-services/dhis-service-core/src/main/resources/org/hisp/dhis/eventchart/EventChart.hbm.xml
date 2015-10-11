@@ -73,6 +73,13 @@
         foreign-key="fk_eventchart_dataelementdimensions_dataelementdimensionid" />
     </list>
 
+    <list name="programIndicatorDimensions" table="eventchart_programindicatordimensions" cascade="all, delete-orphan">
+      <key column="eventchartid" foreign-key="fk_eventchart_programindicatordimensions_eventchartid" />
+      <list-index column="sort_order" base="0" />
+      <many-to-many column="trackedentityprogramindicatordimensionid" class="org.hisp.dhis.trackedentity.TrackedEntityProgramIndicatorDimension"
+        foreign-key="fk_eventchart_programindicatordimensions_programindicatordimensionid" />
+    </list>
+
     <property name="userOrganisationUnit" />
 
     <property name="userOrganisationUnitChildren" />
