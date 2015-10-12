@@ -438,7 +438,9 @@ public class JdbcEventAnalyticsManager
             {
                 ProgramIndicator in = (ProgramIndicator) queryItem.getItem();
                 
-                columns.add( "(" + programIndicatorService.getAnalyticsSQl( in.getExpression() ) + ")" );
+                String asClause = " as " + statementBuilder.columnQuote( in.getUid() );
+                
+                columns.add( "(" + programIndicatorService.getAnalyticsSQl( in.getExpression() ) + ")" + asClause );
             }
             else
             {
