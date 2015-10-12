@@ -87,7 +87,6 @@ public class StaticContentController
      * request will redirect to the default.
      *
      * @param key key associated with the file.
-     * @throws WebMessageException
      */
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
     public void getStaticContent(
@@ -97,7 +96,7 @@ public class StaticContentController
 
         if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Key does not exist" ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Key does not exist." ) );
         }
 
         boolean useCustomFile = (boolean) systemSettingManager.getSystemSetting( KEY_WHITELIST_MAP.get( key ) );
@@ -144,10 +143,8 @@ public class StaticContentController
     /**
      * Uploads PNG images based on a key. Only accepts PNG and white listed keys.
      *
-     * @param key the key
-     * @param file the image file
-     * @throws WebMessageException
-     * @throws IOException
+     * @param key the key.
+     * @param file the image file.
      */
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( HttpStatus.NO_CONTENT )
@@ -168,7 +165,7 @@ public class StaticContentController
 
         if( !mimeType.isCompatibleWith( MimeTypeUtils.IMAGE_PNG ))
         {
-            throw new WebMessageException( new WebMessage(WebMessageStatus.WARNING, HttpStatus.UNSUPPORTED_MEDIA_TYPE ) );
+            throw new WebMessageException( new WebMessage( WebMessageStatus.WARNING, HttpStatus.UNSUPPORTED_MEDIA_TYPE ) );
         }
 
         // Only keys in the white list are accepted at the current time
@@ -187,7 +184,7 @@ public class StaticContentController
         }
         catch( LocationManagerException e)
         {
-            throw new WebMessageException( WebMessageUtils.error(e.getMessage()) );
+            throw new WebMessageException( WebMessageUtils.error( e.getMessage() ) );
         }
 
         try
