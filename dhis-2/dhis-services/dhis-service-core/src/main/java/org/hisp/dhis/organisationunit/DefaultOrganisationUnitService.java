@@ -46,7 +46,6 @@ import java.util.Set;
 import org.apache.commons.lang3.ObjectUtils;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
-import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.hierarchy.HierarchyViolationException;
@@ -606,21 +605,6 @@ public class DefaultOrganisationUnitService
     public OrganisationUnitLevel getOrganisationUnitLevel( String uid )
     {
         return organisationUnitLevelStore.getByUid( uid );
-    }
-
-    @Override
-    public List<OrganisationUnitLevel> getOrganisationUnitLevels( final Collection<Integer> identifiers )
-    {
-        List<OrganisationUnitLevel> objects = getOrganisationUnitLevels();
-
-        return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnitLevel>()
-        {
-            @Override
-            public boolean retain( OrganisationUnitLevel object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override

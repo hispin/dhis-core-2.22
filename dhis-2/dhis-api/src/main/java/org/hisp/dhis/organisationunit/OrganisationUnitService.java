@@ -415,8 +415,6 @@ public interface OrganisationUnitService
 
     OrganisationUnitLevel getOrganisationUnitLevel( String uid );
 
-    List<OrganisationUnitLevel> getOrganisationUnitLevels( Collection<Integer> identifiers );
-
     void deleteOrganisationUnitLevel( OrganisationUnitLevel level );
 
     void deleteOrganisationUnitLevels();

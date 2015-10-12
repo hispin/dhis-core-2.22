@@ -29,7 +29,6 @@ package org.hisp.dhis.reporttable.impl;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +48,6 @@ import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.system.grid.ListGrid;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -186,21 +183,6 @@ public class DefaultReportTableService
         return reportTableStore.getByUidNoAcl( uid );
     }
 
-    @Override
-    public List<ReportTable> getReportTables( final Collection<Integer> identifiers )
-    {
-        List<ReportTable> objects = getAllReportTables();
-
-        return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<ReportTable>()
-        {
-            @Override
-            public boolean retain( ReportTable object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
-    }
-    
     @Override
     public List<ReportTable> getReportTablesByUid( List<String> uids )
     {

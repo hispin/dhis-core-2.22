@@ -77,14 +77,6 @@ public interface OrganisationUnitGroupService
     OrganisationUnitGroup getOrganisationUnitGroup( int id );
 
     /**
-     * Returns the OrganisationUnitGroup with the given identifiers.
-     * 
-     * @param identifiers the list of identifiers.
-     * @return the OrganisationUnitGroup with the given identifiers.
-     */
-    List<OrganisationUnitGroup> getOrganisationUnitGroups( Collection<Integer> identifiers );
-    
-    /**
      * Returns the OrganisationUnitGroups with the given UIDs.
      * 
      * @param uids the collection of UIDs.
@@ -195,14 +187,6 @@ public interface OrganisationUnitGroupService
      *         match.
      */
     OrganisationUnitGroupSet getOrganisationUnitGroupSet( String uid );
-
-    /**
-     * Returns the OrganisationUnitGroupSets with the given identifiers.
-     * 
-     * @param identifiers the identifiers.
-     * @return the OrganisationUnitGroupSets with the given identifiers.
-     */
-    List<OrganisationUnitGroupSet> getOrganisationUnitGroupSets( Collection<Integer> identifiers );
 
     /**
      * Returns the OrganisationUnitGroupSets with the given uids.

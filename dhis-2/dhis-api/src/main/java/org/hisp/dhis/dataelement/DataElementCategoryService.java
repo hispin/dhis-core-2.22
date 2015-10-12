@@ -99,15 +99,6 @@ public interface DataElementCategoryService
     DataElementCategory getDataElementCategory( String uid );
 
     /**
-     * Retrieves the DataElementCategories with the given identifiers.
-     * 
-     * @param identifiers the identifiers of the DataElementCategories to
-     *        retrieve.
-     * @return a list of DataElementCategories.
-     */
-    List<DataElementCategory> getDataElementCategories( Collection<Integer> identifiers );
-
-    /**
      * Retrieves the DataElementCategories with the given uids.
      * 
      * @param uids the uids of the DataElementCategories to retrieve.
@@ -213,15 +204,6 @@ public interface DataElementCategoryService
     DataElementCategoryOption getDataElementCategoryOption( String uid );
 
     /**
-     * Retrieves the DataElementCategoryOptions with the given identifiers.
-     * 
-     * @param identifiers the identifiers of the DataElementCategoryOption to
-     *        retrieve.
-     * @return a list of DataElementCategoryOptions.
-     */
-    List<DataElementCategoryOption> getDataElementCategoryOptions( Collection<Integer> identifiers );
-
-    /**
      * Retrieves the DataElementCategoryOptions with the given uids.
      * 
      * @param uids the uids of the DataElementCategoryOption to retrieve.
@@ -311,14 +293,6 @@ public interface DataElementCategoryService
      * @return the DataElementCategoryCombo.
      */
     DataElementCategoryCombo getDataElementCategoryCombo( String uid );
-
-    /**
-     * Retrieves the DataElementCategoryCombo with the given identifiers.
-     * 
-     * @param identifiers the identifiers.
-     * @return a list of DataElementCategoryCombos.
-     */
-    List<DataElementCategoryCombo> getDataElementCategoryCombos( Collection<Integer> identifiers );
 
     /**
      * Retrieves the DataElementCategoryCombo with the given name.
@@ -422,15 +396,6 @@ public interface DataElementCategoryService
      * @return the DataElementCategoryOptionCombo.
      */
     DataElementCategoryOptionCombo getDataElementCategoryOptionComboByCode( String code );
-
-    /**
-     * Retrieves the DataElementCategoryOptionCombos with the given identifiers.
-     * 
-     * @param identifiers the identifiers of the
-     *        DataElementCategoryOptionCombos.
-     * @return a list of DataElementCategoryOptionCombos.
-     */
-    List<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombos( Collection<Integer> identifiers );
 
     /**
      * Retrieves the DataElementCategoryOptionCombos with the given uids.

@@ -30,7 +30,6 @@ package org.hisp.dhis.report;
 
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -171,14 +170,6 @@ public interface ReportService
      * @return the Report.
      */
     List<Report> getReportByName( String name );
-
-    /**
-     * Retrieves all Reports with the given identifiers.
-     *
-     * @param identifiers the Collection of identifiers.
-     * @return a Collection of Reports.
-     */
-    List<Report> getReports( Collection<Integer> identifiers );
 
     /**
      * Retrieves Reports with the given uids.

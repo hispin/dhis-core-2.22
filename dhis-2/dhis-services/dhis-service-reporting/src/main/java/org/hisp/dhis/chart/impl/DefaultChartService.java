@@ -35,7 +35,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,8 +78,6 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.jfree.chart.ChartFactory;
@@ -958,21 +955,6 @@ public class DefaultChartService
     public Chart getChartByName( String name )
     {
         return chartStore.getByName( name );
-    }
-
-    @Override
-    public List<Chart> getCharts( final Collection<Integer> identifiers )
-    {
-        List<Chart> charts = getAllCharts();
-
-        return identifiers == null ? charts : FilterUtils.filter( charts, new Filter<Chart>()
-        {
-            @Override
-            public boolean retain( Chart object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override

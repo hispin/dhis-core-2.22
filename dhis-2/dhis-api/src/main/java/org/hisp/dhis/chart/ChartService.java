@@ -28,7 +28,6 @@ package org.hisp.dhis.chart;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -101,8 +100,6 @@ public interface ChartService
     List<Chart> getAllCharts();
     
     Chart getChartByName( String name );
-
-    List<Chart> getCharts( final Collection<Integer> identifiers );
 
     List<Chart> getChartsBetween( int first, int max );
 

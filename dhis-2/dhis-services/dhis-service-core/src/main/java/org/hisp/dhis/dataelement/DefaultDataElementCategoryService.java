@@ -45,8 +45,6 @@ import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -182,21 +180,6 @@ public class DefaultDataElementCategoryService
     public DataElementCategory getDataElementCategory( String uid )
     {
         return i18n( i18nService, categoryStore.getByUid( uid ) );
-    }
-
-    @Override
-    public List<DataElementCategory> getDataElementCategories( final Collection<Integer> identifiers )
-    {
-        List<DataElementCategory> categories = getAllDataElementCategories();
-
-        return identifiers == null ? categories : FilterUtils.filter( categories, new Filter<DataElementCategory>()
-        {
-            @Override
-            public boolean retain( DataElementCategory object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override
@@ -338,22 +321,6 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
-    public List<DataElementCategoryOption> getDataElementCategoryOptions( final Collection<Integer> identifiers )
-    {
-        List<DataElementCategoryOption> categoryOptions = getAllDataElementCategoryOptions();
-
-        return identifiers == null ? categoryOptions : FilterUtils.filter( categoryOptions,
-            new Filter<DataElementCategoryOption>()
-            {
-                @Override
-                public boolean retain( DataElementCategoryOption object )
-                {
-                    return identifiers.contains( object.getId() );
-                }
-            } );
-    }
-
-    @Override
     public List<DataElementCategoryOption> getDataElementCategoryOptionsByUid( Collection<String> uids )
     {
         return i18n( i18nService, categoryOptionStore.getByUid( uids ) );
@@ -434,22 +401,6 @@ public class DefaultDataElementCategoryService
     public DataElementCategoryCombo getDataElementCategoryCombo( String uid )
     {
         return i18n( i18nService, categoryComboStore.getByUid( uid ) );
-    }
-
-    @Override
-    public List<DataElementCategoryCombo> getDataElementCategoryCombos( final Collection<Integer> identifiers )
-    {
-        List<DataElementCategoryCombo> categoryCombos = getAllDataElementCategoryCombos();
-
-        return identifiers == null ? categoryCombos : FilterUtils.filter( categoryCombos,
-            new Filter<DataElementCategoryCombo>()
-            {
-                @Override
-                public boolean retain( DataElementCategoryCombo object )
-                {
-                    return identifiers.contains( object.getId() );
-                }
-            } );
     }
 
     @Override
@@ -574,23 +525,6 @@ public class DefaultDataElementCategoryService
     public DataElementCategoryOptionCombo getDataElementCategoryOptionComboByCode( String code )
     {
         return categoryOptionComboStore.getByCode( code );
-    }
-
-    @Override
-    public List<DataElementCategoryOptionCombo> getDataElementCategoryOptionCombos(
-        final Collection<Integer> identifiers )
-    {
-        List<DataElementCategoryOptionCombo> categoryOptionCombos = getAllDataElementCategoryOptionCombos();
-
-        return identifiers == null ? categoryOptionCombos : FilterUtils.filter( categoryOptionCombos,
-            new Filter<DataElementCategoryOptionCombo>()
-            {
-                @Override
-                public boolean retain( DataElementCategoryOptionCombo object )
-                {
-                    return identifiers.contains( object.getId() );
-                }
-            } );
     }
 
     @Override
