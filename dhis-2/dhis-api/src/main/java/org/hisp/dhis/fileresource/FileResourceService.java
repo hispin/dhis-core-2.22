@@ -42,10 +42,8 @@ public interface FileResourceService
     FileResource getFileResource( String uid );
 
     List<FileResource> getFileResources( List<String> uids );
-    
-    String saveFileResource( FileResource fileResource, ByteSource content );
 
-    String saveFileResourceAsync( FileResource fileResource, File file );
+    String saveFileResource( FileResource fileResource, File file );
 
     void deleteFileResource( String uid );
     

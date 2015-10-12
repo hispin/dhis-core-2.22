@@ -475,14 +475,6 @@ public class DataValueController
         }
 
         // ---------------------------------------------------------------------
-        // Build response and return
-        // ---------------------------------------------------------------------
-
-        response.setContentType( fileResource.getContentType() );
-        response.setContentLength( Math.round( fileResource.getContentLength() ) );
-        response.setHeader( HttpHeaders.CONTENT_DISPOSITION, "filename=" + fileResource.getName() );
-
-        // ---------------------------------------------------------------------
         // Attempt to build signed URL request for content and redirect
         // ---------------------------------------------------------------------
 
@@ -490,10 +482,19 @@ public class DataValueController
 
         if ( signedGetUri != null )
         {
-            response.setStatus( HttpServletResponse.SC_FOUND );
+            response.setStatus( HttpServletResponse.SC_TEMPORARY_REDIRECT );
             response.setHeader( HttpHeaders.LOCATION, signedGetUri.toASCIIString() );
+
             return;
         }
+
+        // ---------------------------------------------------------------------
+        // Build response and return
+        // ---------------------------------------------------------------------
+
+        response.setContentType( fileResource.getContentType() );
+        response.setContentLength( Math.round( fileResource.getContentLength() ) );
+        response.setHeader( HttpHeaders.CONTENT_DISPOSITION, "filename=" + fileResource.getName() );
 
         // ---------------------------------------------------------------------
         // Request signing is not available, stream content back to client

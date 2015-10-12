@@ -254,28 +254,9 @@ public class JCloudsFileResourceContentStore
     }
 
     @Override
-    public String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 )
+    public String saveFileResourceContent( FileResource fileResource, File file )
     {
-        Blob blob = createBlob( key, content, size, contentMd5 );
-
-        if ( blob == null )
-        {
-            return null;
-        }
-
-        putBlob( blob );
-
-        return key;
-    }
-
-    @Override
-    public String saveFileResourceContent( String key, File file, long size, String contentMd5 )
-    {
-        Blob blob = blobStore.blobBuilder( key )
-            .payload( file )
-            .contentLength( size )
-            .contentMD5( HashCode.fromString( contentMd5 ) )
-            .build();
+        Blob blob = createBlob( fileResource, file );
 
         if ( blob == null )
         {
@@ -294,7 +275,7 @@ public class JCloudsFileResourceContentStore
             log.warn( "Temporary file '" + file.toPath() + "' could not be deleted.", ioe );
         }
 
-        return key;
+        return fileResource.getStorageKey();
     }
 
     @Override
@@ -368,12 +349,14 @@ public class JCloudsFileResourceContentStore
         return etag;
     }
 
-    private Blob createBlob( String key, ByteSource content, long size, String contentMd5 )
+    private Blob createBlob( FileResource fileResource, File file )
     {
-        return blobStore.blobBuilder( key )
-            .payload( content )
-            .contentLength( size )
-            .contentMD5( HashCode.fromString( contentMd5 ) )
+        return blobStore.blobBuilder( fileResource.getStorageKey() )
+            .payload( file )
+            .contentLength( fileResource.getContentLength() )
+            .contentMD5( HashCode.fromString( fileResource.getContentMd5() ) )
+            .contentType( fileResource.getContentType() )
+            .contentDisposition( "filename=" + fileResource.getName() )
             .build();
     }
 
