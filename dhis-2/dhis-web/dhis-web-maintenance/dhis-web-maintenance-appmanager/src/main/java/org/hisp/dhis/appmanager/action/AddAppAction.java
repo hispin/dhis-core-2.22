@@ -57,9 +57,9 @@ public class AddAppAction
     implements Action
 {
     private static final Log log = LogFactory.getLog( AddAppAction.class );
-    
+
     private static final String FAILURE = "failure";
-    
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -108,7 +108,7 @@ public class AddAppAction
         throws Exception
     {
         HttpServletRequest request = ServletActionContext.getRequest();
-        
+
         if ( file == null )
         {
             message = i18n.getString( "appmanager_no_file_specified" );
@@ -122,48 +122,55 @@ public class AddAppAction
             log.warn( "App is not a zip archive" );
             return FAILURE;
         }
-        
-        try ( ZipFile zip = new ZipFile( file ) )
+
+        try (ZipFile zip = new ZipFile( file ))
         {
             ZipEntry entry = zip.getEntry( "manifest.webapp" );
-    
-            if ( entry == null)
+
+            if ( entry == null )
             {
                 zip.close();
                 message = i18n.getString( "appmanager_manifest_not_found" );
                 log.warn( "Manifest file could not be found in app" );
                 return FAILURE;
             }
-            
-            try
-            {
-                String contextPath = ContextUtils.getContextPath( request );
-                
-                AppStatus appStatus = appManager.installApp( file, fileName, contextPath );
 
-                if ( appStatus == AppStatus.NAMESPACE_TAKEN )
-                {
-                    message = i18n.getString( "appmanager_namespace_taken" );
-                    log.warn( "Namespace in the app's manifest already taken." );
-                    return FAILURE;
-                }
-                
-                message = i18n.getString( "appmanager_install_success" );
-                
-                return SUCCESS;
-            }
-            catch ( JsonParseException ex )
+            String contextPath = ContextUtils.getContextPath( request );
+
+            switch ( appManager.installApp( file, fileName, contextPath ) )
             {
-                message = i18n.getString( "appmanager_invalid_json" );
-                log.error( "Error parsing JSON in manifest", ex );
+            case OK:
+                break;
+
+            case NAMESPACE_TAKEN:
+                message = i18n.getString( "appmanager_namespace_taken" );
+                log.warn( "Namespace in the app's manifest is already protected." );
                 return FAILURE;
-            }
-            catch ( IOException ex )
-            {
+
+            case INVALID_ZIP_FORMAT:
+                message = i18n.getString( "appmanager_zip_unreadable" );
+                log.warn( "The zip uploaded could not be read." );
+                return FAILURE;
+
+            case INVALID_MANIFEST_JSON:
+                message = i18n.getString( "appmanager_invalid_json" );
+                log.error( "Error parsing JSON in manifest");
+                return FAILURE;
+
+            case INSTALLATION_FAILED:
                 message = i18n.getString( "appmanager_could_not_read_file_check_server_permissions" );
-                log.error( "App could not not be read, check server permissions" );
+                log.error( "App could not be read, check server permissions" );
                 return FAILURE;
             }
         }
+        catch ( IOException e )
+        {
+            message = i18n.getString( "appmanager_could_not_read_file_check_server_permissions" );
+            log.error( "App could not be read, check server permissions" );
+            return FAILURE;
+        }
+
+        message = i18n.getString( "appmanager_install_success" );
+        return SUCCESS;
     }
 }

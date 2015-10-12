@@ -36,10 +36,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import javax.annotation.PostConstruct;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.ant.compress.taskdefs.Unzip;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -131,66 +134,95 @@ public class DefaultAppManager
 
     @Override
     public AppStatus installApp( File file, String fileName, String rootPath )
-        throws IOException
     {
-        ZipFile zip = new ZipFile( file );
-        ZipEntry entry = zip.getEntry( "manifest.webapp" );
-
-        InputStream inputStream = zip.getInputStream( entry );
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
-
-        App app = mapper.readValue( inputStream, App.class );
-
-        // ---------------------------------------------------------------------
-        // Check for namespace and if it's already taken by another app
-        // ---------------------------------------------------------------------
-        
-        String appNamespace = app.getActivities().getDhis().getNamespace();
-        if ( appNamespace != null && ( this.appNamespaces.containsKey( appNamespace ) && 
-            !app.equals( appNamespaces.get( appNamespace ) ) ) )
+        try
         {
-            zip.close();
-            return AppStatus.NAMESPACE_TAKEN;
-        }
 
-        // ---------------------------------------------------------------------
-        // Delete if app is already installed
-        // ---------------------------------------------------------------------
-        
-        if ( getApps().contains( app ) )
-        {
-            String folderPath = getAppFolderPath() + File.separator + app.getFolderName();
-            FileUtils.forceDelete( new File( folderPath ) );
-        }
+            // ---------------------------------------------------------------------
+            // Parse zip file and it's manifest.webapp file.
+            // ---------------------------------------------------------------------
 
-        String dest = getAppFolderPath() + File.separator + fileName.substring( 0, fileName.lastIndexOf( '.' ) );
-        Unzip unzip = new Unzip();
-        unzip.setSrc( file );
-        unzip.setDest( new File( dest ) );
-        unzip.execute();
+            ZipFile zip = new ZipFile( file );
 
-        // ---------------------------------------------------------------------
-        // Set dhis server location
-        // ---------------------------------------------------------------------
+            ZipEntry entry = zip.getEntry( "manifest.webapp" );
+            InputStream inputStream = zip.getInputStream( entry );
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
 
-        File updateManifest = new File( dest + File.separator + "manifest.webapp" );
-        App installedApp = mapper.readValue( updateManifest, App.class );
+            App app = mapper.readValue( inputStream, App.class );
 
-        if ( installedApp.getActivities() != null && installedApp.getActivities().getDhis() != null )
-        {
-            if ( "*".equals( installedApp.getActivities().getDhis().getHref() ) )
+            // ---------------------------------------------------------------------
+            // Check for namespace and if it's already taken by another app
+            // ---------------------------------------------------------------------
+
+            String appNamespace = app.getActivities().getDhis().getNamespace();
+            if ( appNamespace != null && (this.appNamespaces.containsKey( appNamespace ) &&
+                !app.equals( appNamespaces.get( appNamespace ) )) )
             {
-                installedApp.getActivities().getDhis().setHref( rootPath );
-                mapper.writeValue( updateManifest, installedApp );
+                zip.close();
+                return AppStatus.NAMESPACE_TAKEN;
             }
+
+            // ---------------------------------------------------------------------
+            // Delete if app is already installed.
+            // Assuming app-update, so no data is deleted.
+            // ---------------------------------------------------------------------
+
+            deleteApp( app.getName(), false );
+
+            // ---------------------------------------------------------------------
+            // Unzip the app
+            // ---------------------------------------------------------------------
+
+            String dest = getAppFolderPath() + File.separator + fileName.substring( 0, fileName.lastIndexOf( '.' ) );
+            Unzip unzip = new Unzip();
+            unzip.setSrc( file );
+            unzip.setDest( new File( dest ) );
+            unzip.execute();
+
+            // ---------------------------------------------------------------------
+            // Set dhis server location
+            // ---------------------------------------------------------------------
+
+            File updateManifest = new File( dest + File.separator + "manifest.webapp" );
+            App installedApp = mapper.readValue( updateManifest, App.class );
+
+            if ( installedApp.getActivities() != null && installedApp.getActivities().getDhis() != null )
+            {
+                if ( "*".equals( installedApp.getActivities().getDhis().getHref() ) )
+                {
+                    installedApp.getActivities().getDhis().setHref( rootPath );
+                    mapper.writeValue( updateManifest, installedApp );
+                }
+            }
+
+            // ---------------------------------------------------------------------
+            // Installation complete. Closing zip, reloading apps and return OK
+            // ---------------------------------------------------------------------
+
+            zip.close();
+
+            reloadApps();
+
+            return AppStatus.OK;
+
         }
-
-        zip.close();
-
-        reloadApps(); // Reload app state
-
-        return AppStatus.OK;
+        catch ( ZipException e )
+        {
+            return AppStatus.INVALID_ZIP_FORMAT;
+        }
+        catch ( JsonParseException e )
+        {
+            return AppStatus.INVALID_MANIFEST_JSON;
+        }
+        catch ( JsonMappingException e )
+        {
+            return AppStatus.INVALID_MANIFEST_JSON;
+        }
+        catch ( IOException e )
+        {
+            return AppStatus.INSTALLATION_FAILED;
+        }
     }
 
     @Override
@@ -220,10 +252,10 @@ public class DefaultAppManager
                     FileUtils.forceDelete( new File( folderPath ) );
 
                     // If deleteAppData is true and a namespace associated with the app exists, delete it.
-                    if(deleteAppData && appNamespaces.containsValue( app ))
+                    if ( deleteAppData && appNamespaces.containsValue( app ) )
                     {
                         appNamespaces.forEach( ( namespace, app1 ) -> {
-                            if( app1 == app)
+                            if ( app1 == app )
                             {
                                 keyJsonValueService.deleteNamespace( namespace );
                             }
@@ -310,7 +342,7 @@ public class DefaultAppManager
     public void reloadApps()
     {
         List<App> appList = new ArrayList<>();
-        HashMap<String, App> appNamespaces = new HashMap<>(  );
+        HashMap<String, App> appNamespaces = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
 
@@ -340,7 +372,7 @@ public class DefaultAppManager
                                 String appNamespace = app.getActivities().getDhis().getNamespace();
                                 if ( appNamespace != null )
                                 {
-                                    appNamespaces.put(appNamespace, app);
+                                    appNamespaces.put( appNamespace, app );
                                 }
                             }
                             catch ( IOException ex )
