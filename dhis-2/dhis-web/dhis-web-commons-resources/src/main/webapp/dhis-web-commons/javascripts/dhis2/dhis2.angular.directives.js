@@ -27,32 +27,7 @@ var d2Directives = angular.module('d2Directives', [])
 
     return {
         restrict: 'E',
-        template: '<span id="showLeftBar">\n\
-        <a href="javascript:dhis2.leftBar.showAnimated()" title="$i18n.getString(\'show_menu\' )">\n\
-        <i class="fa fa-arrow-right leftBarIcon"></i></a>\n\
-    </span>\n\
-    <div id="leftBar">\n\
-        <div id="hideLeftBar">\n\
-                <a href="index.action" title="{{\'show_main_menu\' | translate}}" id="showMainMenuLink"><i class="fa fa-home leftBarIcon"></i></a>\n\
-                <a href="javascript:dhis2.leftBar.hideAnimated()" title="{{\'hide_menu\' | translate}}" id="hideMainMenuLink"><i class="fa fa-arrow-left leftBarIcon"></i></a>\n\
-                <a href="javascript:dhis2.leftBar.extendAnimated()" title="{{\'extend_menu\' | translate}}" id="extendMainMenuLink"><i class="fa fa-arrow-right leftBarIcon"></i></a>\n\
-        </div>\n\
-        <div style="margin-top:20px">\n\
-            <img id="searchIcon" src="../images/search.png" style="cursor: pointer" title="{{searchOusLabel}}">\n\
-            <span id="searchSpan" style="width:100%;display:none;">\n\
-                    <input type="text" id="searchField" name="key"/>\n\
-                    <input type="button" value="{{findLabel}}" onclick="selection.findByName()"/>\n\
-            </span>\n\
-        </div>\n\
-        <div id="orgUnitTree">\n\
-            <ul>\n\
-            </ul>\n\
-        </div>\n\
-        <img id="ouwt_loader" src="../images/ajax-loader-bar.gif"/>\n\
-        <div class="small-horizonal-spacing" ng-if="!treeLoaded">\n\
-            {{\'loading_tree\'| translate}}\n\
-        </div>\n\
-    </div>',
+        templateUrl: 'views/left-bar.html',
         link: function (scope, element, attrs) {
 
             $("#searchIcon").click(function () {
