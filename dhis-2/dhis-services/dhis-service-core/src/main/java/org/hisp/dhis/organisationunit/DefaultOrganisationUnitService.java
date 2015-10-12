@@ -197,18 +197,9 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public List<OrganisationUnit> getOrganisationUnits( final Collection<Integer> identifiers )
+    public List<OrganisationUnit> getOrganisationUnits( Collection<Integer> identifiers )
     {
-        List<OrganisationUnit> objects = getAllOrganisationUnits();
-
-        return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnit>()
-        {
-            @Override
-            public boolean retain( OrganisationUnit object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
+        return i18n( i18nService, organisationUnitStore.getById( identifiers ) );
     }
 
     @Override

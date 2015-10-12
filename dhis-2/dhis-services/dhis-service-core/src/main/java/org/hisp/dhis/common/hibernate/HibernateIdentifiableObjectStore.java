@@ -425,6 +425,18 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
 
     @Override
     @SuppressWarnings( "unchecked" )
+    public List<T> getById( Collection<Integer> ids )
+    {
+        if ( ids == null ||ids.isEmpty() )
+        {
+            return new ArrayList<>();
+        }
+
+        return getSharingCriteria().add( Restrictions.in( "id", ids ) ).list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
     public List<T> getByUid( Collection<String> uids )
     {
         if ( uids == null || uids.isEmpty() )

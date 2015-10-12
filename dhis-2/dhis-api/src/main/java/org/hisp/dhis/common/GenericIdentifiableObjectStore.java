@@ -185,6 +185,14 @@ public interface GenericIdentifiableObjectStore<T>
     int getCountLikeName( String name );
 
     /**
+     * Retrieves a list of objects referenced by the given collection of ids.
+     *
+     * @param uids a collection of ids.
+     * @return a list of objects.
+     */
+    List<T> getById( Collection<Integer> ids );
+    
+    /**
      * Retrieves a list of objects referenced by the given collection of uids.
      *
      * @param uids a collection of uids.

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
@@ -49,6 +50,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
@@ -168,10 +170,12 @@ public abstract class AbstractDataSetCompletenessService
             periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
 
         final List<DataSetCompletenessResult> results = new ArrayList<>();
-
+        
+        final Map<Integer, OrganisationUnit> orgUnits = Maps.uniqueIndex( organisationUnitService.getOrganisationUnits( organisationUnitIds ), OrganisationUnit::getId );
+        
         for ( final Integer unitId : organisationUnitIds )
         {
-            final OrganisationUnit unit = organisationUnitService.getOrganisationUnit( unitId );
+            final OrganisationUnit unit = orgUnits.get( unitId );
 
             final Set<Integer> children = organisationUnitService.getOrganisationUnitHierarchy().getChildren(
                 unit.getId() );
