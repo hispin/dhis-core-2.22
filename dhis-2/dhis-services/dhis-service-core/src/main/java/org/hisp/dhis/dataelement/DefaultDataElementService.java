@@ -137,12 +137,6 @@ public class DefaultDataElementService
     }
 
     @Override
-    public List<DataElement> getDataElements( final Collection<Integer> identifiers )
-    {
-        return getAllDataElements().stream().filter( p -> identifiers.contains( p.getId() ) ).collect( Collectors.toList() );
-    }
-
-    @Override
     public List<DataElement> getDataElementsByUid( Collection<String> uids )
     {
         return i18n( i18nService, dataElementStore.getByUid( uids ) );
@@ -428,12 +422,6 @@ public class DefaultDataElementService
     }
 
     @Override
-    public List<DataElementGroup> getDataElementGroups( final Collection<Integer> identifiers )
-    {
-        return getAllDataElementGroups().stream().filter( p -> identifiers.contains( p.getId() ) ).collect( Collectors.toList() );
-    }
-
-    @Override
     public List<DataElementGroup> getDataElementGroupsByUid( Collection<String> uids )
     {
         return i18n( i18nService, dataElementGroupStore.getByUid( uids ) );
@@ -573,12 +561,6 @@ public class DefaultDataElementService
     public List<DataElementGroupSet> getAllDataElementGroupSets()
     {
         return i18n( i18nService, dataElementGroupSetStore.getAll() );
-    }
-
-    @Override
-    public List<DataElementGroupSet> getDataElementGroupSets( final Collection<Integer> identifiers )
-    {
-        return getAllDataElementGroupSets().stream().filter( p -> identifiers.contains( p.getId() ) ).collect( Collectors.toList() );
     }
 
     @Override

@@ -56,8 +56,6 @@ public interface IndicatorService
 
     List<Indicator> getAllIndicators();
 
-    List<Indicator> getIndicators( Collection<Integer> identifiers );
-
     List<Indicator> getIndicatorsByUid( Collection<String> uids );
 
     List<Indicator> getIndicatorByName( String name );
@@ -96,8 +94,6 @@ public interface IndicatorService
 
     IndicatorType getIndicatorType( String uid );
 
-    List<IndicatorType> getIndicatorTypes( Collection<Integer> identifiers );
-
     List<IndicatorType> getAllIndicatorTypes();
 
     IndicatorType getIndicatorTypeByName( String name );
@@ -123,8 +119,6 @@ public interface IndicatorService
     IndicatorGroup getIndicatorGroup( int id );
 
     IndicatorGroup getIndicatorGroup( int id, boolean i18nIndicators );
-
-    List<IndicatorGroup> getIndicatorGroups( Collection<Integer> identifiers );
 
     IndicatorGroup getIndicatorGroup( String uid );
 
@@ -161,8 +155,6 @@ public interface IndicatorService
     List<IndicatorGroupSet> getCompulsoryIndicatorGroupSetsWithMembers();
 
     List<IndicatorGroupSet> getAllIndicatorGroupSets();
-
-    List<IndicatorGroupSet> getIndicatorGroupSets( Collection<Integer> identifiers );
 
     List<IndicatorGroupSet> getIndicatorGroupSetsBetween( int first, int max );
 

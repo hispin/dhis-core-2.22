@@ -28,7 +28,6 @@ package org.hisp.dhis.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -100,15 +99,6 @@ public interface DataEntryFormService
      * @return A collection containing all DataEntryForms.
      */
     List<DataEntryForm> getAllDataEntryForms();    
-    
-    /**
-     * Return the DataEntryForms with the given collection of identifiers. If the
-     * given argument is null, all DataEntryForms are returned.
-     * 
-     * @param identifiers the collection of identifiers.
-     * @return a collection of DataEntryForms.
-     */
-    List<DataEntryForm> getDataEntryForms( Collection<Integer> identifiers );
     
     /**
      * Prepare DataEntryForm code for save by reversing the effects of

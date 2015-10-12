@@ -34,8 +34,6 @@ import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.CachingMap;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
@@ -47,7 +45,6 @@ import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.system.callable.IdentifiableObjectCallable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -495,21 +492,6 @@ public class DefaultDataEntryFormService
         }
 
         return dataEntryFormStore.listDistinctDataEntryFormByDataSetIds( dataSetIds );
-    }
-
-    @Override
-    public List<DataEntryForm> getDataEntryForms( final Collection<Integer> identifiers )
-    {
-        List<DataEntryForm> dataEntryForms = getAllDataEntryForms();
-
-        return identifiers == null ? dataEntryForms : FilterUtils.filter( dataEntryForms, new Filter<DataEntryForm>()
-        {
-            @Override
-            public boolean retain( DataEntryForm object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     // -------------------------------------------------------------------------

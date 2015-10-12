@@ -36,7 +36,6 @@ import org.hisp.dhis.i18n.I18nFormat;
 
 /**
  * @author Kristian Nordal
- * @version $Id: PeriodService.java 5983 2008-10-17 17:42:44Z larshelg $
  */
 public interface PeriodService
 {
@@ -104,14 +103,6 @@ public interface PeriodService
      */
     List<Period> getAllPeriods();
 
-    /**
-     * Returns all Periods with corresponding identifiers.
-     * 
-     * @param identifiers a collection of identifiers.
-     * @return a list of Periods.
-     */
-    List<Period> getPeriods( Collection<Integer> identifiers );
-    
     /**
      * Returns all Periods with start date after or equal the specified start
      * date and end date before or equal the specified end date.
