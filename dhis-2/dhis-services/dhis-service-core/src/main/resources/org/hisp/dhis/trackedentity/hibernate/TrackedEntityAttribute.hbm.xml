@@ -8,6 +8,8 @@
 <hibernate-mapping>
   <class name="org.hisp.dhis.trackedentity.TrackedEntityAttribute" table="trackedentityattribute">
 
+    <cache usage="read-write" />
+    
     <id name="id" column="trackedentityattributeid">
       <generator class="native" />
     </id>
