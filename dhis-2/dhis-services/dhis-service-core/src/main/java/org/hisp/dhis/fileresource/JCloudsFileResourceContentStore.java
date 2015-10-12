@@ -277,8 +277,6 @@ public class JCloudsFileResourceContentStore
             .contentMD5( HashCode.fromString( contentMd5 ) )
             .build();
 
-        org.jclouds.filesystem.util.Utils
-
         if ( blob == null )
         {
             return null;
@@ -292,7 +290,7 @@ public class JCloudsFileResourceContentStore
         }
         catch ( IOException ioe )
         {
-            // Intentionally ignored. If it can't be deleted, it can't be deleted
+            // Intentionally ignored
             log.warn( "Temporary file '" + file.toPath() + "' could not be deleted.", ioe );
         }
 
