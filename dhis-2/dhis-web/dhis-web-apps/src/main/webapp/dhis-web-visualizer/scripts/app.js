@@ -7773,6 +7773,11 @@ Ext.onReady( function() {
 						}
 					}
 
+                    // remove params from url
+                    if (id || session) {
+                        history.pushState(null, null, '.')
+                    }
+
                     var initEl = document.getElementById('init');
                     initEl.parentNode.removeChild(initEl);
 
