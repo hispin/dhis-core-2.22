@@ -253,6 +253,26 @@ public class ListUtils
         
         return union;
     }
+
+    /**
+     * Unions the given array of lists into a single list with distinct items.
+     * 
+     * @param <T> type.
+     * @param lists the array of lists.
+     * @return a union of the given lists.
+     */
+    @SafeVarargs
+    public static final <T> List<T> distinctUnion( final List<T>... lists )
+    {
+        final List<T> union = new UniqueArrayList<>();
+        
+        for ( List<T> list : lists )
+        {
+            union.addAll( list );
+        }
+        
+        return union;
+    }
     
     /**
      * Returns a contiguous list of Integers starting on and including a, ending

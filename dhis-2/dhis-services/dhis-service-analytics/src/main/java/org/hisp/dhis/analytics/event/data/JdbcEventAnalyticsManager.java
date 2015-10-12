@@ -56,6 +56,7 @@ import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
+import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.commons.util.ExpressionUtils;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.jdbc.StatementBuilder;
@@ -104,7 +105,7 @@ public class JdbcEventAnalyticsManager
     {
         String countClause = getAggregateClause( params );
         
-        String sql = "select " + countClause + " as value," + getSelectColumns( params ) + " ";
+        String sql = "select " + countClause + " as value," + StringUtils.join( getSelectColumns( params ), "," ) + " ";
 
         // ---------------------------------------------------------------------
         // Criteria
@@ -116,7 +117,7 @@ public class JdbcEventAnalyticsManager
         // Group by
         // ---------------------------------------------------------------------
 
-        sql += "group by " + getSelectColumns( params ) + " ";
+        sql += "group by " + StringUtils.join( getSelectColumns( params ), "," ) + " ";
 
         // ---------------------------------------------------------------------
         // Sort order
@@ -217,7 +218,9 @@ public class JdbcEventAnalyticsManager
     {
         List<String> fixedCols = Lists.newArrayList( "psi", "ps", "executiondate", "longitude", "latitude", "ouname", "oucode" );
         
-        String sql = "select " + getSelectString( fixedCols ) + getSelectColumns( params ) + " ";
+        List<String> selectCols = ListUtils.distinctUnion( fixedCols, getSelectColumns( params ) );
+        
+        String sql = "select " + StringUtils.join( selectCols, "," ) + " ";
 
         // ---------------------------------------------------------------------
         // Criteria
@@ -405,11 +408,11 @@ public class JdbcEventAnalyticsManager
         {
             if ( EventOutputType.TRACKED_ENTITY_INSTANCE.equals( outputType ) && params.isProgramRegistration() )
             {
-                return Lists.newArrayList( "tei" );
+                return Lists.newArrayList( statementBuilder.columnQuote( "tei" ) );
             }
             else if ( EventOutputType.ENROLLMENT.equals( outputType ) )
             {
-                return Lists.newArrayList( "pi" );
+                return Lists.newArrayList( statementBuilder.columnQuote( "pi" ) );
             }
         }
         
@@ -418,15 +421,15 @@ public class JdbcEventAnalyticsManager
     
     /**
      * Returns the dynamic select columns. Dimensions come first and query items
-     * second.
+     * second. Program indicator expressions are converted to SQL expressions.
      */
-    private String getSelectColumns( EventQueryParams params )
+    private List<String> getSelectColumns( EventQueryParams params )
     {
-        String sql = "";
+        List<String> columns = Lists.newArrayList();
         
         for ( DimensionalObject dimension : params.getDimensions() )
         {
-            sql += statementBuilder.columnQuote( dimension.getDimensionName() ) + ",";
+            columns.add( statementBuilder.columnQuote( dimension.getDimensionName() ) );
         }
         
         for ( QueryItem queryItem : params.getItems() )
@@ -435,17 +438,53 @@ public class JdbcEventAnalyticsManager
             {
                 ProgramIndicator in = (ProgramIndicator) queryItem.getItem();
                 
-                sql += "(" + programIndicatorService.getAnalyticsSQl( in.getExpression() ) + "),";
+                columns.add( "(" + programIndicatorService.getAnalyticsSQl( in.getExpression() ) + ")" );
             }
             else
             {
-                sql += statementBuilder.columnQuote( queryItem.getItemName() ) + ",";
+                columns.add( statementBuilder.columnQuote( queryItem.getItemName() ) );
             }
         }
         
-        return removeLastComma( sql );
+        return columns;
     }
 
+    /**
+     * Returns the dynamic select columns. Dimensions come first and query items
+     * second. Program indicator expressions are exploded into attributes and
+     * data element identifiers.
+     */
+    private List<String> getPartitionSelectColumns( EventQueryParams params )
+    {
+        List<String> columns = Lists.newArrayList();
+        
+        for ( DimensionalObject dimension : params.getDimensions() )
+        {
+            columns.add( statementBuilder.columnQuote( dimension.getDimensionName() ) );
+        }
+        
+        for ( QueryItem queryItem : params.getItems() )
+        {
+            if ( queryItem.isProgramIndicator() )
+            {
+                ProgramIndicator in = (ProgramIndicator) queryItem.getItem();
+                
+                Set<String> uids = ProgramIndicator.getDataElementAndAttributeIdentifiers( in.getExpression() );
+                
+                for ( String uid : uids )
+                {
+                    columns.add( statementBuilder.columnQuote( uid ) );
+                }
+            }
+            else
+            {
+                columns.add( statementBuilder.columnQuote( queryItem.getItemName() ) );
+            }
+        }
+        
+        return columns;
+    }
+    
     private String getFromWhereClause( EventQueryParams params, List<String> fixedColumns )
     {
         if ( params.spansMultiplePartitions() )
@@ -460,15 +499,17 @@ public class JdbcEventAnalyticsManager
     
     private String getFromWhereMultiplePartitionsClause( EventQueryParams params, List<String> fixedColumns )
     {
-        List<String> aggregateCols = getAggregateColumns( params );
+        List<String> cols = ListUtils.distinctUnion( fixedColumns, getAggregateColumns( params ), getPartitionSelectColumns( params ) );
+        
+        String selectCols = StringUtils.join( cols, "," );
         
         String sql = "from (";
         
         for ( String partition : params.getPartitions().getPartitions() )
         {
-            sql += "select " + getSelectString( fixedColumns ) + getSelectString( aggregateCols ) + getSelectColumns( params );
+            sql += "select " + selectCols + " ";
             
-            sql += " " + getFromWhereSinglePartitionClause( params, partition );
+            sql += getFromWhereSinglePartitionClause( params, partition );
             
             sql += "union all ";
         }
@@ -627,22 +668,6 @@ public class JdbcEventAnalyticsManager
         String sqlFilter = filter.getSqlFilter( encodedFilter );
         
         return numeric ? sqlFilter : sqlFilter.toLowerCase();
-    }
-
-    /**
-     * Creates a comma separated string based on the items in the given lists.
-     * Appends a comma at the end of the string if not empty.
-     */
-    private String getSelectString( List<String> columns )
-    {
-        if ( columns == null || columns.isEmpty() )
-        {
-            return StringUtils.EMPTY;
-        }
-        
-        String fixedCols = StringUtils.join( columns, ", " );
-        
-        return StringUtils.defaultIfEmpty( fixedCols + ", ", fixedCols );
     }
 
     /**
