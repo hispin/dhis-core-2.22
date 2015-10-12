@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -276,6 +277,8 @@ public class JCloudsFileResourceContentStore
             .contentMD5( HashCode.fromString( contentMd5 ) )
             .build();
 
+        org.jclouds.filesystem.util.Utils
+
         if ( blob == null )
         {
             return null;
@@ -342,7 +345,26 @@ public class JCloudsFileResourceContentStore
 
     private String putBlob( Blob blob )
     {
-        return blobStore.putBlob( container, blob );
+        String etag = null;
+
+        try
+        {
+            etag = blobStore.putBlob( container, blob );
+        }
+        catch ( RuntimeException rte )
+        {
+            Throwable cause = rte.getCause();
+
+            if ( ( cause == null ) || !( cause instanceof UserPrincipalNotFoundException ) )
+            {
+                throw rte;
+            }
+            // Else:
+            //  Intentionally ignored exception which occurs with JClouds on
+            //  non-English Windows installation while trying to resolve the "Everyone" group.
+        }
+
+        return etag;
     }
 
     private Blob createBlob( String key, ByteSource content, long size, String contentMd5 )
