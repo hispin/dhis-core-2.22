@@ -71,9 +71,7 @@ public class KeyJsonValueController
      * @throws IOException
      */
     @RequestMapping( value = "", method = RequestMethod.GET, produces = "application/json" )
-    public
-    @ResponseBody
-    List<String> getNamespaces( HttpServletResponse response )
+    public @ResponseBody List<String> getNamespaces( HttpServletResponse response )
         throws IOException
     {
         return keyJsonValueService.getNamespaces();
@@ -89,11 +87,7 @@ public class KeyJsonValueController
      * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}", method = RequestMethod.GET, produces = "application/json" )
-    public
-    @ResponseBody
-    List<String> getKeysInNamespace(
-        @PathVariable String namespace,
-        HttpServletResponse response )
+    public @ResponseBody List<String> getKeysInNamespace( @PathVariable String namespace, HttpServletResponse response )
         throws IOException, WebMessageException
     {
         if ( !keyJsonValueService.getNamespaces().contains( namespace ) )
@@ -114,11 +108,7 @@ public class KeyJsonValueController
      * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}", method = RequestMethod.DELETE )
-    public
-    @ResponseBody
-    WebMessage deleteNamespace(
-        @PathVariable String namespace,
-        HttpServletResponse response )
+    public @ResponseBody WebMessage deleteNamespace( @PathVariable String namespace, HttpServletResponse response )
         throws WebMessageException
     {
         if ( !hasAccess( namespace ) )
@@ -149,12 +139,8 @@ public class KeyJsonValueController
      * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.GET, produces = "application/json" )
-    public
-    @ResponseBody
-    KeyJsonValue getKeyJsonValue(
-        @PathVariable String namespace,
-        @PathVariable String key,
-        HttpServletResponse response )
+    public @ResponseBody KeyJsonValue getKeyJsonValue(
+        @PathVariable String namespace, @PathVariable String key, HttpServletResponse response )
         throws IOException, WebMessageException
     {
         if ( !hasAccess( namespace ) )
@@ -186,13 +172,8 @@ public class KeyJsonValueController
      * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.POST, produces = "application/json", consumes = "application/json" )
-    public
-    @ResponseBody
-    KeyJsonValue addKey(
-        @PathVariable String namespace,
-        @PathVariable String key,
-        @RequestBody String body,
-        HttpServletResponse response )
+    public @ResponseBody KeyJsonValue addKey(
+        @PathVariable String namespace, @PathVariable String key, @RequestBody String body, HttpServletResponse response )
         throws IOException, WebMessageException
     {
         if ( !hasAccess( namespace ) )
@@ -237,14 +218,8 @@ public class KeyJsonValueController
      * @throws IOException
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json" )
-    public
-    @ResponseBody
-    KeyJsonValue updateKeyJsonValue(
-        @PathVariable String namespace,
-        @PathVariable String key,
-        @RequestBody String body,
-        HttpServletRequest request,
-        HttpServletResponse response )
+    public @ResponseBody KeyJsonValue updateKeyJsonValue( @PathVariable String namespace, @PathVariable String key, @RequestBody String body,
+        HttpServletRequest request, HttpServletResponse response )
         throws WebMessageException, IOException
     {
 
@@ -284,12 +259,8 @@ public class KeyJsonValueController
      * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.DELETE, produces = "application/json" )
-    public
-    @ResponseBody
-    WebMessage deleteKeyJsonValue(
-        @PathVariable String namespace,
-        @PathVariable String key,
-        HttpServletResponse response )
+    public @ResponseBody WebMessage deleteKeyJsonValue(
+        @PathVariable String namespace, @PathVariable String key, HttpServletResponse response )
         throws WebMessageException
     {
         if ( !hasAccess( namespace ) )
