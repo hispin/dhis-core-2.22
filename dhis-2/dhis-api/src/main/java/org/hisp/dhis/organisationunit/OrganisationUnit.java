@@ -28,21 +28,14 @@ package org.hisp.dhis.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.NameableObjectUtils.getDisplayProperty;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -64,14 +57,20 @@ import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.hisp.dhis.user.User;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.hisp.dhis.common.NameableObjectUtils.getDisplayProperty;
 
 /**
  * @author Kristian Nordal
@@ -102,7 +101,7 @@ public class OrganisationUnit
     private String path;
 
     private Integer hierarchyLevel;
-    
+
     private Date openingDate;
 
     private Date closedDate;
@@ -586,6 +585,11 @@ public class OrganisationUnit
      * Returns the list of ancestor organisation units for this organisation unit.
      * Does not include itself. The list is ordered by root first.
      */
+    @JsonProperty( "parents" )
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class } )
+    @JacksonXmlElementWrapper( localName = "parents", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "organisationUnit", namespace = DxfNamespaces.DXF_2_0 )
     public List<OrganisationUnit> getAncestors()
     {
         List<OrganisationUnit> units = new ArrayList<>();
@@ -868,27 +872,27 @@ public class OrganisationUnit
     }
 
     /**
-     * Used by persistence layer. Purpose is to have a column for use in database 
+     * Used by persistence layer. Purpose is to have a column for use in database
      * queries. For application use see {@link getLevel()} which has better performance.
      */
     public Integer getHierarchyLevel()
     {
         Set<String> uids = Sets.newHashSet( uid );
-        
+
         OrganisationUnit current = this;
-        
-        while ( ( current = current.getParent() ) != null )
+
+        while ( (current = current.getParent()) != null )
         {
             boolean add = uids.add( current.getUid() );
-            
+
             if ( !add )
             {
                 break; // Protect against cyclic org unit graphs
             }
         }
-        
+
         hierarchyLevel = uids.size();
-        
+
         return hierarchyLevel;
     }
 
