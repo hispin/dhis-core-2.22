@@ -95,7 +95,7 @@ public class CacheManifestAction
     {
         File cacheManifest = null;
         File i18nFolder = null;
-        StringBuffer stringBuffer = null;
+        StringBuilder builder = null;
         
         String locale = localeManager.getCurrentLocale().toString();
         
@@ -140,15 +140,15 @@ public class CacheManifestAction
         {
             try ( BufferedReader bufferedReader = new BufferedReader( new FileReader( cacheManifest ) ) )
             {
-                stringBuffer = new StringBuffer();
+                builder = new StringBuilder();
                 String line;
                 while ( (line = bufferedReader.readLine()) != null )
                 {
-                    stringBuffer.append( line );
-                    stringBuffer.append( "\n" );
+                    builder.append( line );
+                    builder.append( "\n" );
                 }
-                stringBuffer.append( revisionTag );
-                stringBuffer.append( "\n" );
+                builder.append( revisionTag );
+                builder.append( "\n" );
 
                 if ( i18nFolder != null )
                 {
@@ -159,21 +159,21 @@ public class CacheManifestAction
                         if ( i18nfiles[i].isFile() && i18nfiles[i].getName().equalsIgnoreCase( translationFile ) )
                         {
                             fileExists = true;
-                            stringBuffer.append( i18nPath + "/" + translationFile );
-                            stringBuffer.append( "\n" );
+                            builder.append( i18nPath + "/" + translationFile );
+                            builder.append( "\n" );
                             break;
                         }
                     }
 
                     if ( !fileExists )
                     {
-                        stringBuffer.append( i18nPath + "/" + defaultTranslationFile );
-                        stringBuffer.append( "\n" );
+                        builder.append( i18nPath + "/" + defaultTranslationFile );
+                        builder.append( "\n" );
 
                     }
                 }
 
-                inputStream = new ByteArrayInputStream( stringBuffer.toString().getBytes() );
+                inputStream = new ByteArrayInputStream( builder.toString().getBytes() );
 
                 return SUCCESS;
 
@@ -184,15 +184,15 @@ public class CacheManifestAction
             }
         }
 
-        stringBuffer = new StringBuffer();
-        stringBuffer.append( "CACHE MANIFEST" );
-        stringBuffer.append( revisionTag );
-        stringBuffer.append( "\n" );
-        stringBuffer.append( "NETWORK:" );
-        stringBuffer.append( "\n" );
-        stringBuffer.append( "*" );
+        builder = new StringBuilder();
+        builder.append( "CACHE MANIFEST" );
+        builder.append( revisionTag );
+        builder.append( "\n" );
+        builder.append( "NETWORK:" );
+        builder.append( "\n" );
+        builder.append( "*" );
 
-        inputStream = new ByteArrayInputStream( stringBuffer.toString().getBytes() );
+        inputStream = new ByteArrayInputStream( builder.toString().getBytes() );
 
         return SUCCESS;
     }
