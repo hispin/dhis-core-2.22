@@ -28,8 +28,6 @@ package org.hisp.dhis.dataapproval;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Date;
-
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.view.DetailedView;
@@ -87,25 +85,14 @@ public class DataApprovalLevel
         this.categoryOptionGroupSet = categoryOptionGroupSet;
     }
 
-    public DataApprovalLevel( String name, int level, int orgUnitLevel, CategoryOptionGroupSet categoryOptionGroupSet,
-                              Date created, Date lastUpdated )
+    public DataApprovalLevel( DataApprovalLevel level )
     {
-        this.name = name;
-        this.level = level;
-        this.orgUnitLevel = orgUnitLevel;
-        this.categoryOptionGroupSet = categoryOptionGroupSet;
-        this.created = created;
-        this.lastUpdated = lastUpdated;
-    }
-
-    public DataApprovalLevel( DataApprovalLevel d )
-    {
-        this.name = d.name;
-        this.level = d.level;
-        this.orgUnitLevel = d.orgUnitLevel;
-        this.categoryOptionGroupSet = d.categoryOptionGroupSet;
-        this.created = d.created;
-        this.lastUpdated = d.lastUpdated;
+        this.name = level.name;
+        this.level = level.level;
+        this.orgUnitLevel = level.orgUnitLevel;
+        this.categoryOptionGroupSet = level.categoryOptionGroupSet;
+        this.created = level.created;
+        this.lastUpdated = level.lastUpdated;
     }
 
     // -------------------------------------------------------------------------
