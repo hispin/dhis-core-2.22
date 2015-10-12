@@ -353,13 +353,16 @@ public class JCloudsFileResourceContentStore
         {
             Throwable cause = rte.getCause();
 
-            if ( ( cause == null ) || !( cause instanceof UserPrincipalNotFoundException ) )
+            if ( cause != null && cause instanceof UserPrincipalNotFoundException )
+            {
+                //  Intentionally ignored exception which occurs with JClouds on non-English
+                //  Windows installations while trying to resolve the "Everyone" group.
+                log.debug( "Ignored UserPrincipalNotFoundException as a workaround for bug with JClouds filesystem provider on Windows" );
+            }
+            else
             {
                 throw rte;
             }
-            // Else:
-            //  Intentionally ignored exception which occurs with JClouds on
-            //  non-English Windows installation while trying to resolve the "Everyone" group.
         }
 
         return etag;
