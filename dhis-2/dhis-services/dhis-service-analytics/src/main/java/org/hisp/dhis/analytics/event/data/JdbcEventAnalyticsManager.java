@@ -39,6 +39,8 @@ import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
 import static org.hisp.dhis.system.util.MathUtils.getRounded;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -337,7 +339,7 @@ public class JdbcEventAnalyticsManager
     // -------------------------------------------------------------------------
 
     /**
-     * Returns the count clause based on the output type.
+     * Returns the count clause based on value dimension and output type.
      * 
      * TODO include output type if aggregation type is count
      */
@@ -380,6 +382,38 @@ public class JdbcEventAnalyticsManager
                 return "count(psi)";
             }
         }
+    }
+
+    /**
+     * Returns columns based on value dimension and output type.
+     */
+    private List<String> getAggregateColumns( EventQueryParams params )
+    {
+        EventOutputType outputType = params.getOutputType();
+        
+        if ( params.hasValueDimension() )
+        {
+            return Lists.newArrayList( statementBuilder.columnQuote( params.getValue().getUid() ) );
+        }
+        else if ( params.hasProgramIndicatorDimension() )
+        {
+            Set<String> uids = ProgramIndicator.getDataElementAndAttributeIdentifiers( params.getProgramIndicator().getExpression() );
+            
+            return uids.stream().map( uid -> statementBuilder.columnQuote( uid ) ).collect( Collectors.toList() );
+        }
+        else
+        {
+            if ( EventOutputType.TRACKED_ENTITY_INSTANCE.equals( outputType ) && params.isProgramRegistration() )
+            {
+                return Lists.newArrayList( "tei" );
+            }
+            else if ( EventOutputType.ENROLLMENT.equals( outputType ) )
+            {
+                return Lists.newArrayList( "pi" );
+            }
+        }
+        
+        return Lists.newArrayList();
     }
     
     /**
@@ -426,11 +460,13 @@ public class JdbcEventAnalyticsManager
     
     private String getFromWhereMultiplePartitionsClause( EventQueryParams params, List<String> fixedColumns )
     {
+        List<String> aggregateCols = getAggregateColumns( params );
+        
         String sql = "from (";
         
         for ( String partition : params.getPartitions().getPartitions() )
         {
-            sql += "select " + getSelectString( fixedColumns ) + getSelectColumns( params );
+            sql += "select " + getSelectString( fixedColumns ) + getSelectString( aggregateCols ) + getSelectColumns( params );
             
             sql += " " + getFromWhereSinglePartitionClause( params, partition );
             
