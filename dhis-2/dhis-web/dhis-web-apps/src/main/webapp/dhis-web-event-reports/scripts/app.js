@@ -4225,10 +4225,6 @@ Ext.onReady( function() {
             programStore.add(layout.program);
             program.setValue(layout.program.id);
 
-            stagesByProgramStore.add(layout.programStage);
-            stage.setValue(layout.programStage.id);
-            stage.enable();
-
             // periods
 			period.reset();
 
@@ -4323,7 +4319,7 @@ Ext.onReady( function() {
 			}
 
 			// data items
-            onStageSelect(null, layout);
+            onProgramSelect(layout.program.id, layout);
         };
 
 		program = Ext.create('Ext.form.field.ComboBox', {
@@ -4385,7 +4381,7 @@ Ext.onReady( function() {
             }
             else {
                 Ext.Ajax.request({
-                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programIndicators[id,name],programStages[id,name],programTrackedEntityAttributes[trackedEntityAttribute[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet[id,name]]]&paging=false',
+                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programStages[id,name],programIndicators[id,name],programTrackedEntityAttributes[trackedEntityAttribute[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet[id,name]]]&paging=false',
                     success: function(r) {
                         var program = Ext.decode(r.responseText).programs[0],
                             stages,
