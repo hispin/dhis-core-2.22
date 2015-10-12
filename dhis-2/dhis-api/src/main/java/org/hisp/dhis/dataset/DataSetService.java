@@ -177,14 +177,6 @@ public interface DataSetService
     List<DataSet> getDataSetsByPeriodType( PeriodType periodType );
 
     /**
-     * Get all DataSets with corresponding identifiers.
-     *
-     * @param identifiers the collection of identifiers.
-     * @return a list of indicators.
-     */
-    List<DataSet> getDataSets( Collection<Integer> identifiers );
-
-    /**
      * Returns a list of data sets with the given uids.
      *
      * @param uids the collection of uids.

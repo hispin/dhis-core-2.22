@@ -39,8 +39,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dataapproval.DataApprovalService;
 import org.hisp.dhis.dataapproval.DataApprovalStatus;
 import org.hisp.dhis.dataelement.DataElement;
@@ -235,21 +233,6 @@ public class DefaultDataSetService
     public List<DataSet> getDataSetsByPeriodType( PeriodType periodType )
     {
         return i18n( i18nService, dataSetStore.getDataSetsByPeriodType( periodType ) );
-    }
-
-    @Override
-    public List<DataSet> getDataSets( final Collection<Integer> identifiers )
-    {
-        List<DataSet> dataSets = getAllDataSets();
-
-        return identifiers == null ? dataSets : FilterUtils.filter( dataSets, new Filter<DataSet>()
-        {
-            @Override
-            public boolean retain( DataSet object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override

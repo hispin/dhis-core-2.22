@@ -28,6 +28,9 @@ package org.hisp.dhis.reporttable;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.Date;
+import java.util.List;
+
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElement;
@@ -36,10 +39,6 @@ import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author Lars Helge Overland
@@ -105,14 +104,6 @@ public interface ReportTableService
      */
     List<ReportTable> getAllReportTables();
 
-    /**
-     * Retrieves ReportTables with the given identifiers.
-     *
-     * @param reportTables the identifiers of the ReportTables to retrieve.
-     * @return a Collection of ReportTables.
-     */
-    List<ReportTable> getReportTables( Collection<Integer> reportTables );
-    
     /**
      * Retrieves ReportTables with the given uids.
      * 

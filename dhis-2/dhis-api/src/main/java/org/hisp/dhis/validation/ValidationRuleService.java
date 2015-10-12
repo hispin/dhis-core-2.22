@@ -163,14 +163,6 @@ public interface ValidationRuleService
     ValidationRule getValidationRule( String uid );
 
     /**
-     * Get the ValidationRules with the corresponding identifiers.
-     *
-     * @param identifiers the collection of identifiers.
-     * @return a collection of validation rules.
-     */
-    List<ValidationRule> getValidationRules( Collection<Integer> identifiers );
-
-    /**
      * Get all validation rules.
      *
      * @return a List of ValidationRule or null if it there are no validation rules.

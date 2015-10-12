@@ -122,21 +122,6 @@ public class DefaultOrganisationUnitGroupService
     }
 
     @Override
-    public List<OrganisationUnitGroup> getOrganisationUnitGroups( final Collection<Integer> identifiers )
-    {
-        List<OrganisationUnitGroup> objects = getAllOrganisationUnitGroups();
-
-        return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnitGroup>()
-        {
-            @Override
-            public boolean retain( OrganisationUnitGroup object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
-    }
-
-    @Override
     public List<OrganisationUnitGroup> getOrganisationUnitGroupsByUid( Collection<String> uids )
     {
         return i18n( i18nService, organisationUnitGroupStore.getByUid( uids ) );
@@ -256,21 +241,6 @@ public class DefaultOrganisationUnitGroupService
     public OrganisationUnitGroupSet getOrganisationUnitGroupSet( String uid )
     {
         return i18n( i18nService, organisationUnitGroupSetStore.getByUid( uid ) );
-    }
-
-    @Override
-    public List<OrganisationUnitGroupSet> getOrganisationUnitGroupSets( final Collection<Integer> identifiers )
-    {
-        List<OrganisationUnitGroupSet> objects = getAllOrganisationUnitGroupSets();
-
-        return identifiers == null ? objects : FilterUtils.filter( objects, new Filter<OrganisationUnitGroupSet>()
-        {
-            @Override
-            public boolean retain( OrganisationUnitGroupSet object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override

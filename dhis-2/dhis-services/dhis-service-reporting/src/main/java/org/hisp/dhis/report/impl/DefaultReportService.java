@@ -36,7 +36,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +54,6 @@ import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.commons.util.Encoder;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.i18n.I18nFormat;
@@ -350,21 +347,6 @@ public class DefaultReportService
     public List<Report> getReportByName( String name )
     {
         return reportStore.getAllEqName( name );
-    }
-
-    @Override
-    public List<Report> getReports( final Collection<Integer> identifiers )
-    {
-        List<Report> reports = getAllReports();
-
-        return identifiers == null ? reports : FilterUtils.filter( reports, new Filter<Report>()
-        {
-            @Override
-            public boolean retain( Report object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override
