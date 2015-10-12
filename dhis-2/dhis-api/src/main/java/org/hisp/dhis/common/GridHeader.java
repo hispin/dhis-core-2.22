@@ -149,6 +149,11 @@ public class GridHeader
     {
         return type != null && NUMERIC_TYPES.contains( type );
     }
+    
+    public boolean hasLegendSet()
+    {
+        return legendSet != null;
+    }
 
     // -------------------------------------------------------------------------
     // Getters and setters

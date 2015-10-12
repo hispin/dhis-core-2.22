@@ -292,7 +292,7 @@ public class JdbcEventAnalyticsManager
             
             for ( GridHeader header : grid.getHeaders() )
             {
-                if ( Double.class.getName().equals( header.getType() ) )
+                if ( Double.class.getName().equals( header.getType() ) && !header.hasLegendSet() )
                 {
                     double val = rowSet.getDouble( index );
                     grid.addValue( params.isSkipRounding() ? val : MathUtils.getRounded( val ) );
