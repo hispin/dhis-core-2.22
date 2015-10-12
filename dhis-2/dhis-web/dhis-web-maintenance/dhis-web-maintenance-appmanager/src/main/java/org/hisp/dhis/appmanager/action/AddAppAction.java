@@ -41,13 +41,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.appmanager.AppManager;
-import org.hisp.dhis.appmanager.AppStatus;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -123,7 +121,7 @@ public class AddAppAction
             return FAILURE;
         }
 
-        try (ZipFile zip = new ZipFile( file ))
+        try ( ZipFile zip = new ZipFile( file ) )
         {
             ZipEntry entry = zip.getEntry( "manifest.webapp" );
 
@@ -139,29 +137,32 @@ public class AddAppAction
 
             switch ( appManager.installApp( file, fileName, contextPath ) )
             {
-            case OK:
-                break;
-
-            case NAMESPACE_TAKEN:
-                message = i18n.getString( "appmanager_namespace_taken" );
-                log.warn( "Namespace in the app's manifest is already protected." );
-                return FAILURE;
-
-            case INVALID_ZIP_FORMAT:
-                message = i18n.getString( "appmanager_zip_unreadable" );
-                log.warn( "The zip uploaded could not be read." );
-                return FAILURE;
-
-            case INVALID_MANIFEST_JSON:
-                message = i18n.getString( "appmanager_invalid_json" );
-                log.error( "Error parsing JSON in manifest");
-                return FAILURE;
-
-            case INSTALLATION_FAILED:
-                message = i18n.getString( "appmanager_could_not_read_file_check_server_permissions" );
-                log.error( "App could not be read, check server permissions" );
-                return FAILURE;
+                case OK:
+                    break;
+    
+                case NAMESPACE_TAKEN:
+                    message = i18n.getString( "appmanager_namespace_taken" );
+                    log.warn( "Namespace in the app's manifest is already protected." );
+                    return FAILURE;
+    
+                case INVALID_ZIP_FORMAT:
+                    message = i18n.getString( "appmanager_zip_unreadable" );
+                    log.warn( "The zip uploaded could not be read." );
+                    return FAILURE;
+    
+                case INVALID_MANIFEST_JSON:
+                    message = i18n.getString( "appmanager_invalid_json" );
+                    log.error( "Error parsing JSON in manifest");
+                    return FAILURE;
+    
+                case INSTALLATION_FAILED:
+                    message = i18n.getString( "appmanager_could_not_read_file_check_server_permissions" );
+                    log.error( "App could not be read, check server permissions" );
+                    return FAILURE;
             }
+            
+            message = i18n.getString( "appmanager_install_success" );
+            return SUCCESS;
         }
         catch ( IOException e )
         {
@@ -169,8 +170,5 @@ public class AddAppAction
             log.error( "App could not be read, check server permissions" );
             return FAILURE;
         }
-
-        message = i18n.getString( "appmanager_install_success" );
-        return SUCCESS;
     }
 }
