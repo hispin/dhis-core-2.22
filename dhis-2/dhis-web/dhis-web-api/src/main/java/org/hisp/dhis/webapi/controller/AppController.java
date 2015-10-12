@@ -28,20 +28,11 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
-import org.hisp.dhis.appmanager.AppStatus;
 import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -59,17 +50,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -129,25 +121,22 @@ public class AppController
 
         String contextPath = ContextUtils.getContextPath( request );
 
-        try
+        switch ( appManager.installApp( tempFile, file.getOriginalFilename(), contextPath ) )
         {
-            AppStatus appStatus = appManager.installApp( tempFile, file.getOriginalFilename(), contextPath );
-
-            if ( appStatus.equals( AppStatus.NAMESPACE_TAKEN ) )
-            {
-                throw new WebMessageException(
-                    WebMessageUtils.conflict( "The namespace defined in manifest.webapp is already protected." ) );
-            }
-
-        }
-        catch ( JsonParseException ex )
-        {
-            throw new WebMessageException( WebMessageUtils.conflict( "Invalid JSON in app manifest file." ) );
-        }
-        catch ( IOException ex )
-        {
+        case OK:
+            break;
+        case NAMESPACE_TAKEN:
             throw new WebMessageException(
-                WebMessageUtils.conflict( "App could not not be installed on file system, check permissions" ) );
+                WebMessageUtils.conflict( "The namespace defined in manifest.webapp is already protected." ) );
+        case INVALID_ZIP_FORMAT:
+            throw new WebMessageException(
+                WebMessageUtils.unprocessableEntity( "Zip-file could not be read." ) );
+        case INVALID_MANIFEST_JSON:
+            throw new WebMessageException(
+                WebMessageUtils.conflict( "Invalid JSON in app manifest file." ) );
+        case INSTALLATION_FAILED:
+            throw new WebMessageException(
+                WebMessageUtils.conflict( "App could not be installed on file system, check permissions." ) );
         }
     }
 
@@ -227,7 +216,9 @@ public class AppController
 
     @RequestMapping( value = "/{app}", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
-    public void deleteApp( @PathVariable( "app" ) String app, @RequestParam(value = "deleteappdata", required = false, defaultValue = "false") boolean deleteAppData, HttpServletRequest request, HttpServletResponse response )
+    public void deleteApp( @PathVariable( "app" ) String app,
+        @RequestParam( value = "deleteappdata", required = false, defaultValue = "false" ) boolean deleteAppData,
+        HttpServletRequest request, HttpServletResponse response )
         throws WebMessageException
     {
         if ( !appManager.exists( app ) )
