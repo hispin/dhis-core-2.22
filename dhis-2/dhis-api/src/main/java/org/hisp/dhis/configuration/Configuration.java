@@ -34,6 +34,7 @@ import java.util.Set;
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.adapter.JacksonPeriodTypeSerializer;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -203,6 +204,7 @@ public class Configuration
     }
 
     @JsonProperty
+    @JsonSerialize( using = JacksonPeriodTypeSerializer.class )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public PeriodType getInfrastructuralPeriodType()
     {
