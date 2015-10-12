@@ -33,7 +33,7 @@
         <div id="loginField">
         <div id="loginArea">
             <div id="bannerArea">
-            <a href="http://www.dhis2.org"><img src="/api/staticContent/logo_front" style="border:none"></a>
+            <a href="http://www.dhis2.org"><img src="../../api/staticContent/logo_front" style="border:none"></a>
             </div>
             
             <form id="loginForm" action="../../dhis-web-commons-security/login.action" method="post">

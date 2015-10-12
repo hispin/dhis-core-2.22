@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
@@ -90,10 +91,9 @@ public class StaticContentController
      */
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
     public void getStaticContent(
-        @PathVariable( "key" ) String key, HttpServletResponse response )
+        @PathVariable( "key" ) String key, HttpServletRequest request, HttpServletResponse response )
         throws WebMessageException
     {
-
         if ( !KEY_WHITELIST_MAP.containsKey( key ) )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Key does not exist." ) );
@@ -105,7 +105,7 @@ public class StaticContentController
         {
             try
             {
-                response.sendRedirect( getDefaultLogoUrl( key ) );
+                response.sendRedirect( getDefaultLogoUrl( request, key ) );
             }
             catch ( IOException e )
             {
@@ -203,18 +203,18 @@ public class StaticContentController
      * @param key the key associated with the logo or null if the key does not exist.
      * @return the relative url of the logo.
      */
-    private String getDefaultLogoUrl( String key )
+    private String getDefaultLogoUrl( HttpServletRequest request, String key )
     {
-        String relativeUrlToImage = null;
+        String relativeUrlToImage = request.getContextPath();        
 
         if ( key.equals( LOGO_BANNER ) )
         {
-            relativeUrlToImage = "/dhis-web-commons/css/" + styleManager.getCurrentStyleDirectory() + "/logo_banner.png";
+            relativeUrlToImage += "/dhis-web-commons/css/" + styleManager.getCurrentStyleDirectory() + "/logo_banner.png";
         }
 
         if ( key.equals( LOGO_FRONT ) )
         {
-            relativeUrlToImage = "/dhis-web-commons/security/logo_front.png";
+            relativeUrlToImage += "/dhis-web-commons/security/logo_front.png";
         }
 
         return relativeUrlToImage;
