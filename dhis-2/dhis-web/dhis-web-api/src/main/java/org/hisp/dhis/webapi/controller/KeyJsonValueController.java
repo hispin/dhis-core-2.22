@@ -63,12 +63,8 @@ public class KeyJsonValueController
     private AppManager appManager;
 
     /**
-     * Returns a json-array of strings representing the different namespaces used.
-     * If no namespace exists, an empty array is returned.
-     *
-     * @param response
-     * @return the list of namespaces
-     * @throws IOException
+     * Returns a JSON array of strings representing the different namespaces used.
+     * If no namespaces exist, an empty array is returned.
      */
     @RequestMapping( value = "", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody List<String> getNamespaces( HttpServletResponse response )
@@ -79,12 +75,6 @@ public class KeyJsonValueController
 
     /**
      * Returns a list of strings representing keys in the given namespace.
-     *
-     * @param namespace the namespace requested
-     * @param response
-     * @return a list of keys
-     * @throws IOException
-     * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody List<String> getKeysInNamespace( @PathVariable String namespace, HttpServletResponse response )
@@ -101,11 +91,6 @@ public class KeyJsonValueController
 
     /**
      * Deletes all keys with the given namespace.
-     *
-     * @param namespace the namespace to be deleted.
-     * @param response
-     * @return
-     * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}", method = RequestMethod.DELETE )
     public @ResponseBody WebMessage deleteNamespace( @PathVariable String namespace, HttpServletResponse response )
@@ -130,13 +115,6 @@ public class KeyJsonValueController
 
     /**
      * Retrieves the KeyJsonValue represented by the given key from the given namespace.
-     *
-     * @param namespace where the key is associated
-     * @param key       representing the json stored
-     * @param response
-     * @return a KeyJsonValue object
-     * @throws IOException
-     * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody KeyJsonValue getKeyJsonValue(
@@ -162,14 +140,6 @@ public class KeyJsonValueController
 
     /**
      * Creates a new KeyJsonValue Object on the given namespace with the key and value supplied.
-     *
-     * @param namespace where the key is associated
-     * @param key       representing the value
-     * @param body      the value to be stored (json format)
-     * @param response
-     * @return the object created
-     * @throws IOException
-     * @throws WebMessageException
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.POST, produces = "application/json", consumes = "application/json" )
     public @ResponseBody KeyJsonValue addKey(
@@ -206,23 +176,13 @@ public class KeyJsonValueController
     }
 
     /**
-     * Update a key in the given namespace
-     *
-     * @param namespace namespace where the key is associated
-     * @param key       key to be updated
-     * @param body      the new value to be stored
-     * @param request
-     * @param response
-     * @return The updated object
-     * @throws WebMessageException
-     * @throws IOException
+     * Update a key in the given namespace.
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json" )
     public @ResponseBody KeyJsonValue updateKeyJsonValue( @PathVariable String namespace, @PathVariable String key, @RequestBody String body,
         HttpServletRequest request, HttpServletResponse response )
         throws WebMessageException, IOException
     {
-
         if ( !hasAccess( namespace ) )
         {
             throw new WebMessageException( WebMessageUtils.forbidden( "The namespace '" + namespace +
@@ -250,13 +210,7 @@ public class KeyJsonValueController
     }
 
     /**
-     * Delete a key from the given namespace
-     *
-     * @param namespace namespace where the key is associated
-     * @param key       key to be deleted
-     * @param response
-     * @return the success of the deletion
-     * @throws WebMessageException
+     * Delete a key from the given namespace.
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.DELETE, produces = "application/json" )
     public @ResponseBody WebMessage deleteKeyJsonValue(
