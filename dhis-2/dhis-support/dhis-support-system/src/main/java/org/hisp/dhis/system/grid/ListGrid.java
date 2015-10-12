@@ -919,7 +919,7 @@ public class ListGrid
     @Override
     public String toString()
     {
-        StringBuffer buffer = new StringBuffer( "[\n" );
+        StringBuilder builder = new StringBuilder( "[\n" );
 
         if ( headers != null && headers.size() > 0 )
         {
@@ -930,15 +930,15 @@ public class ListGrid
                 headerNames.add( header.getName() );
             }
 
-            buffer.append( headerNames ).append( "\n" );
+            builder.append( headerNames ).append( "\n" );
         }
 
         for ( List<Object> row : grid )
         {
-            buffer.append( row ).append( "\n" );
+            builder.append( row ).append( "\n" );
         }
 
-        return buffer.append( "]" ).toString();
+        return builder.append( "]" ).toString();
     }
 
     // -------------------------------------------------------------------------

@@ -408,14 +408,14 @@ public class ReportTable
      */
     public static String getPrettyColumnName( List<NameableObject> objects )
     {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for ( NameableObject object : objects )
         {
-            buffer.append( object != null ? (object.getShortName() + SPACE) : EMPTY );
+            builder.append( object != null ? (object.getShortName() + SPACE) : EMPTY );
         }
 
-        return buffer.length() > 0 ? buffer.substring( 0, buffer.lastIndexOf( SPACE ) ) : TOTAL_COLUMN_PRETTY_NAME;
+        return builder.length() > 0 ? builder.substring( 0, builder.lastIndexOf( SPACE ) ) : TOTAL_COLUMN_PRETTY_NAME;
     }
 
     /**
