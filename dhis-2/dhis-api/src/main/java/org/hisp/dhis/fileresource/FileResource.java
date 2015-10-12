@@ -214,6 +214,6 @@ public class FileResource
 
     private String generateStorageKey()
     {
-        return UUID.randomUUID().toString();
+        return domain.getContainerName() + "/" + UUID.randomUUID().toString();
     }
 }

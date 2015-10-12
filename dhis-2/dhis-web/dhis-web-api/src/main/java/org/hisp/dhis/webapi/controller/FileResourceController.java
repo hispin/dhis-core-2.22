@@ -143,7 +143,7 @@ public class FileResourceController
 
         File tmpFile = toTempFile( file );
 
-        String uid = fileResourceService.saveFileResourceAsync( fileResource, tmpFile );
+        String uid = fileResourceService.saveFileResource( fileResource, tmpFile );
 
         if ( uid == null )
         {

@@ -29,7 +29,6 @@ package org.hisp.dhis.fileresource;
  */
 
 import com.google.common.io.ByteSource;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
@@ -99,42 +98,13 @@ public class DefaultFileResourceService
 
     @Transactional
     @Override
-    public String saveFileResource( FileResource fileResource, ByteSource content )
-    {
-        String storageKey = getRelativeStorageKey( fileResource );
-
-        String key = fileResourceContentStore.saveFileResourceContent(
-            storageKey, content, fileResource.getContentLength(), fileResource.getContentMd5() );
-
-        if ( key == null )
-        {
-            log.debug( "Failed saving content for FileResource" );
-            return null;
-        }
-
-        int id = fileResourceStore.save( fileResource );
-
-        if ( id <= 0 )
-        {
-            log.debug( "Failed persisting the FileResource: " + fileResource.getName() );
-            return null;
-        }
-
-        return fileResource.getUid();
-    }
-
-    @Transactional
-    @Override
-    public String saveFileResourceAsync( FileResource fileResource, File file )
+    public String saveFileResource( FileResource fileResource, File file )
     {
         fileResource.setStorageStatus( FileResourceStorageStatus.PENDING );
         fileResourceStore.save( fileResource );
 
-        String storageKey = getRelativeStorageKey( fileResource );
-
         ListenableFuture<String> saveContentTask =
-            scheduler.executeTask( () -> fileResourceContentStore.saveFileResourceContent(
-                storageKey, file, fileResource.getContentLength(), fileResource.getContentMd5() ) );
+            scheduler.executeTask( () -> fileResourceContentStore.saveFileResourceContent( fileResource, file ) );
 
         String uid = fileResource.getUid();
 
@@ -159,14 +129,14 @@ public class DefaultFileResourceService
             return;
         }
 
-        fileResourceContentStore.deleteFileResourceContent( getRelativeStorageKey( fileResource ) );
+        fileResourceContentStore.deleteFileResourceContent( fileResource.getStorageKey() );
         fileResourceStore.delete( fileResource );
     }
 
     @Override
     public ByteSource getFileResourceContent( FileResource fileResource )
     {
-        return fileResourceContentStore.getFileResourceContent( getRelativeStorageKey( fileResource ) );
+        return fileResourceContentStore.getFileResourceContent( fileResource.getStorageKey() );
     }
 
     @Override
@@ -191,15 +161,6 @@ public class DefaultFileResourceService
             return null;
         }
 
-        return fileResourceContentStore.getSignedGetContentUri( getRelativeStorageKey( fileResource ) );
-    }
-
-    // ---------------------------------------------------------------------
-    // Supportive methods
-    // ---------------------------------------------------------------------
-
-    private String getRelativeStorageKey( FileResource fileResource )
-    {
-        return StringUtils.prependIfMissing( fileResource.getStorageKey(), fileResource.getDomain().getContainerName() + "/" );
+        return fileResourceContentStore.getSignedGetContentUri( fileResource.getStorageKey() );
     }
 }

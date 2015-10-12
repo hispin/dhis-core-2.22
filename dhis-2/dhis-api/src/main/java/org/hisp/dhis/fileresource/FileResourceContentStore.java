@@ -46,24 +46,13 @@ public interface FileResourceContentStore
     ByteSource getFileResourceContent( String key );
 
     /**
-     * Save the content bytes of a FileResource to the file store.
-     * @param key the key to use. Must be unique in the file store.
-     * @param content a ByteSource providing a stream of the content to save.
-     * @param size the byte length of the content.
-     * @param contentMd5 the MD5 digest of the content.
-     * @return the key on success or null if saving failed.
-     */
-    String saveFileResourceContent( String key, ByteSource content, long size, String contentMd5 );
-
-    /**
      * Save the content of the file to the file store.
-     * @param key the key to use. Must be unique in the file store.
+     * @param fileResource the FileResource object. Must be complete and include the storageKey,
+     *                     contentLength, contentMd5 and name.
      * @param file the file. The file will be consumed and deleted upon completion.
-     * @param size the byte length of the file.
-     * @param contentMd5 the MD5 digest of the file.
      * @return the key on success or null if saving failed.
      */
-    String saveFileResourceContent( String key, File file, long size, String contentMd5 );
+    String saveFileResourceContent( FileResource fileResource, File file );
 
     /**
      * Delete the content bytes of a file resource.
