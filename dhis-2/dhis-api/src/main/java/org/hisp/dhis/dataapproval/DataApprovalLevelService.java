@@ -188,6 +188,15 @@ public interface DataApprovalLevelService
     boolean dataApprovalLevelExists ( DataApprovalLevel level );
 
     /**
+     * Reorders the existing approval levels to prepare insert of the given
+     * approval level. Should be followed by saving of the approval level.
+     * 
+     * @param level the level to add.
+     * @return true if the level can be added, false if not.
+     */
+    boolean prepareAddDataApproval( DataApprovalLevel level );
+    
+    /**
      * Adds a new data approval level. Adds the new level at the highest
      * position possible (to facilitate the use case where users add the
      * approval levels from low to high.)
@@ -198,7 +207,7 @@ public interface DataApprovalLevelService
     int addDataApprovalLevel( DataApprovalLevel level );
     
     /**
-     * Adds a new data approval level. Sets the level epxlicitl.
+     * Adds a new data approval level. Sets the level explicitly.
      * 
      * @param approvalLevel the new level to add.
      * @param level the level.

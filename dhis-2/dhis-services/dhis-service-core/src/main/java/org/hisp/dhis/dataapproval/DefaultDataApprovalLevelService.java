@@ -427,7 +427,7 @@ public class DefaultDataApprovalLevelService
     }
 
     @Override
-    public int addDataApprovalLevel( DataApprovalLevel level )
+    public boolean prepareAddDataApproval( DataApprovalLevel level )
     {
         List<DataApprovalLevel> dataApprovalLevels = getAllDataApprovalLevels();
 
@@ -435,7 +435,7 @@ public class DefaultDataApprovalLevelService
 
         if ( index < 0 )
         {
-            return -1;
+            return false;
         }
 
         dataApprovalLevels.add( index, level );
@@ -448,6 +448,17 @@ public class DefaultDataApprovalLevelService
         }
 
         level.setLevel( index + 1 );
+        
+        return true;
+    }
+    
+    @Override
+    public int addDataApprovalLevel( DataApprovalLevel level )
+    {
+        if ( !prepareAddDataApproval( level ) )
+        {
+            return -1;
+        }
 
         return dataApprovalLevelStore.save( level );
     }
