@@ -132,21 +132,6 @@ public class DefaultIndicatorService
     }
 
     @Override
-    public List<Indicator> getIndicators( final Collection<Integer> identifiers )
-    {
-        List<Indicator> indicators = getAllIndicators();
-
-        return identifiers == null ? indicators : FilterUtils.filter( indicators, new Filter<Indicator>()
-        {
-            @Override
-            public boolean retain( Indicator object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
-    }
-
-    @Override
     public List<Indicator> getIndicatorsByUid( Collection<String> uids )
     {
         return i18n( i18nService, indicatorStore.getByUid( uids ) );
@@ -253,21 +238,6 @@ public class DefaultIndicatorService
     }
 
     @Override
-    public List<IndicatorType> getIndicatorTypes( final Collection<Integer> identifiers )
-    {
-        List<IndicatorType> types = getAllIndicatorTypes();
-
-        return identifiers == null ? types : FilterUtils.filter( types, new Filter<IndicatorType>()
-        {
-            @Override
-            public boolean retain( IndicatorType object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
-    }
-
-    @Override
     public List<IndicatorType> getAllIndicatorTypes()
     {
         return i18n( i18nService, indicatorTypeStore.getAll() );
@@ -342,21 +312,6 @@ public class DefaultIndicatorService
         }
 
         return group;
-    }
-
-    @Override
-    public List<IndicatorGroup> getIndicatorGroups( final Collection<Integer> identifiers )
-    {
-        List<IndicatorGroup> groups = getAllIndicatorGroups();
-
-        return identifiers == null ? groups : FilterUtils.filter( groups, new Filter<IndicatorGroup>()
-        {
-            @Override
-            public boolean retain( IndicatorGroup object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override
@@ -471,21 +426,6 @@ public class DefaultIndicatorService
     public List<IndicatorGroupSet> getAllIndicatorGroupSets()
     {
         return i18n( i18nService, indicatorGroupSetStore.getAll() );
-    }
-
-    @Override
-    public List<IndicatorGroupSet> getIndicatorGroupSets( final Collection<Integer> identifiers )
-    {
-        List<IndicatorGroupSet> groupSets = getAllIndicatorGroupSets();
-
-        return identifiers == null ? groupSets : FilterUtils.filter( groupSets, new Filter<IndicatorGroupSet>()
-        {
-            @Override
-            public boolean retain( IndicatorGroupSet object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override

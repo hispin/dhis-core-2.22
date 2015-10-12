@@ -140,15 +140,6 @@ public interface DataElementService
      * Returns all DataElements with corresponding identifiers. Returns all
      * DataElements if the given argument is null.
      *
-     * @param identifiers the collection of identifiers.
-     * @return a list of DataElements.
-     */
-    List<DataElement> getDataElements( Collection<Integer> identifiers );
-
-    /**
-     * Returns all DataElements with corresponding identifiers. Returns all
-     * DataElements if the given argument is null.
-     *
      * @param uids the collection of uids.
      * @return a list of DataElements.
      */
@@ -354,14 +345,6 @@ public interface DataElementService
     DataElementGroup getDataElementGroup( int id, boolean i18nDataElements );
 
     /**
-     * Returns data element groups with identifiers in the given collection.
-     *
-     * @param identifiers the id collection.
-     * @return data elements with identifiers in the given collection.
-     */
-    List<DataElementGroup> getDataElementGroups( Collection<Integer> identifiers );
-
-    /**
      * Returns the data element groups with the given uids.
      *
      * @param uids the uid collection.
@@ -476,8 +459,6 @@ public interface DataElementService
     List<DataElementGroupSet> getCompulsoryDataElementGroupSetsWithMembers();
 
     List<DataElementGroupSet> getAllDataElementGroupSets();
-
-    List<DataElementGroupSet> getDataElementGroupSets( Collection<Integer> identifiers );
 
     List<DataElementGroupSet> getDataElementGroupSetsByUid( Collection<String> uids );
 

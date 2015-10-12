@@ -41,8 +41,6 @@ import java.util.Set;
 
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -109,21 +107,6 @@ public class DefaultPeriodService
     public List<Period> getAllPeriods()
     {
         return periodStore.getAll();
-    }
-
-    @Override
-    public List<Period> getPeriods( final Collection<Integer> identifiers )
-    {
-        List<Period> periods = getAllPeriods();
-
-        return identifiers == null ? periods : FilterUtils.filter( periods, new Filter<Period>()
-        {
-            @Override
-            public boolean retain( Period object )
-            {
-                return identifiers.contains( object.getId() );
-            }
-        } );
     }
 
     @Override
