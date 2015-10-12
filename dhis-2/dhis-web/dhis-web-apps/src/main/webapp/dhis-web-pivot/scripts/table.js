@@ -409,6 +409,8 @@ Ext.onReady( function() {
 
 				// hideEmptyRows: boolean (false)
 
+                // skipRounding: boolean (false)
+
                 // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
 
                 // dataApprovalLevel: object
@@ -590,6 +592,7 @@ Ext.onReady( function() {
 					layout.showRowSubTotals = Ext.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (Ext.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
 					layout.showDimensionLabels = Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (Ext.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
 					layout.hideEmptyRows = Ext.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
+                    layout.skipRounding = Ext.isBoolean(config.skipRounding) ? config.skipRounding : false;
                     layout.aggregationType = Ext.isString(config.aggregationType) ? config.aggregationType : conf.finals.style.default_;
 					layout.dataApprovalLevel = Ext.isObject(config.dataApprovalLevel) && Ext.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
 
@@ -1750,6 +1753,10 @@ Ext.onReady( function() {
 					delete layout.hideEmptyRows;
 				}
 
+				if (!layout.skipRounding) {
+					delete layout.skipRounding;
+				}
+
 				if (!layout.showHierarchy) {
 					delete layout.showHierarchy;
 				}
@@ -2182,6 +2189,11 @@ Ext.onReady( function() {
                 // relative period date
                 if (xLayout.relativePeriodDate) {
                     paramString += '&relativePeriodDate=' + xLayout.relativePeriodDate;
+                }
+
+                // skip rounding
+                if (xLayout.skipRounding) {
+                    paramString += '&skipRounding=true';
                 }
 
 				return paramString.replace(/#/g, '.');
@@ -3255,10 +3267,10 @@ Ext.onReady( function() {
         css += '.td-nobreak { white-space: nowrap; } \n';
         css += '.td-hidden { display: none; } \n';
         css += '.td-collapsed { display: none; } \n';
-        css += 'table.pivot.displaydensity-comfortable td { padding: 7px } \n';
-        css += 'table.pivot.displaydensity-compact td { padding: 3px } \n';
-        css += 'table.pivot.fontsize-large td { font-size: 13px } \n';
-        css += 'table.pivot.fontsize-small td { font-size: 10px } \n';
+        css += 'table.pivot.displaydensity-COMFORTABLE td { padding: 7px } \n';
+        css += 'table.pivot.displaydensity-COMPACT td { padding: 3px } \n';
+        css += 'table.pivot.fontsize-LARGE td { font-size: 13px } \n';
+        css += 'table.pivot.fontsize-SMALL td { font-size: 10px } \n';
         css += '.pivot td { font-family: arial, sans-serif, helvetica neue, helvetica !important; padding: 5px; border: 1px solid #b2b2b2; font-size: 11px } \n';
         css += '.pivot-dim { background-color: #dae6f8; text-align: center; } \n';
         css += '.pivot-dim.highlighted { background-color: #c5d8f6; } \n';
