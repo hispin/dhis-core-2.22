@@ -31,8 +31,6 @@ package org.hisp.dhis.program;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,13 +53,8 @@ import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
-import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
-import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
-import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
-import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,8 +73,6 @@ public class DefaultProgramIndicatorService
         put( DaysBetweenSqlFunction.KEY, new DaysBetweenSqlFunction() ).
         put( ConditionalSqlFunction.KEY, new ConditionalSqlFunction() ).build();
 
-    private static final String NULL_REPLACEMENT = "null";
-    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -107,32 +98,11 @@ public class DefaultProgramIndicatorService
         this.dataElementService = dataElementService;
     }
 
-    private TrackedEntityDataValueService dataValueService;
-
-    public void setDataValueService( TrackedEntityDataValueService dataValueService )
-    {
-        this.dataValueService = dataValueService;
-    }
-
-    private ProgramStageInstanceService programStageInstanceService;
-
-    public void setProgramStageInstanceService( ProgramStageInstanceService programStageInstanceService )
-    {
-        this.programStageInstanceService = programStageInstanceService;
-    }
-
     private TrackedEntityAttributeService attributeService;
 
     public void setAttributeService( TrackedEntityAttributeService attributeService )
     {
         this.attributeService = attributeService;
-    }
-
-    private TrackedEntityAttributeValueService attributeValueService;
-
-    public void setAttributeValueService( TrackedEntityAttributeValueService attributeValueService )
-    {
-        this.attributeValueService = attributeValueService;
     }
 
     private ConstantService constantService;
@@ -217,176 +187,6 @@ public class DefaultProgramIndicatorService
     public List<ProgramIndicator> getAllProgramIndicators()
     {
         return i18n( i18nService, programIndicatorStore.getAll() );
-    }
-
-    @Override
-    @Transactional
-    public Double getProgramIndicatorValue( ProgramIndicator indicator, ProgramInstance programInstance )
-    {
-        StringBuffer buffer = new StringBuffer();
-
-        String expression = indicator.getExpression();
-
-        Matcher matcher = ProgramIndicator.EXPRESSION_PATTERN.matcher( expression );
-
-        int valueCount = 0;
-        int zeroPosValueCount = 0;
-
-        while ( matcher.find() )
-        {
-            String key = matcher.group( 1 );
-            String uid = matcher.group( 2 );
-
-            if ( ProgramIndicator.KEY_DATAELEMENT.equals( key ) )
-            {
-                String de = matcher.group( 3 );
-                ProgramStage programStage = programStageService.getProgramStage( uid );
-                DataElement dataElement = dataElementService.getDataElement( de );
-
-                if ( programStage != null && dataElement != null )
-                {
-                    ProgramStageInstance psi = programStageInstanceService.getProgramStageInstance( programInstance, programStage );
-
-                    TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue( psi, dataElement );
-
-                    String value = null;
-                    
-                    if ( dataValue == null )
-                    {
-                        value = NULL_REPLACEMENT;
-                    }
-                    else
-                    {
-                        value = dataValue.getValue();
-                    }
-                    
-                    matcher.appendReplacement( buffer, value );
-
-                    valueCount++;
-                    zeroPosValueCount = isZeroOrPositive( value ) ? (zeroPosValueCount + 1) : zeroPosValueCount;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else if ( ProgramIndicator.KEY_ATTRIBUTE.equals( key ) )
-            {
-                TrackedEntityAttribute attribute = attributeService.getTrackedEntityAttribute( uid );
-
-                if ( attribute != null )
-                {
-                    TrackedEntityAttributeValue attributeValue = attributeValueService.getTrackedEntityAttributeValue(
-                        programInstance.getEntityInstance(), attribute );
-
-                    String value = null;
-                    
-                    if ( attributeValue == null )
-                    {
-                        value = NULL_REPLACEMENT;
-                    }
-                    else
-                    {
-                        value = attributeValue.getValue();
-                    }
-                    
-                    matcher.appendReplacement( buffer, value );
-
-                    valueCount++;
-                    zeroPosValueCount = isZeroOrPositive( value ) ? (zeroPosValueCount + 1) : zeroPosValueCount;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else if ( ProgramIndicator.KEY_CONSTANT.equals( key ) )
-            {
-                Constant constant = constantService.getConstant( uid );
-
-                if ( constant != null )
-                {
-                    matcher.appendReplacement( buffer, String.valueOf( constant.getValue() ) );
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else if ( ProgramIndicator.KEY_PROGRAM_VARIABLE.equals( key ) )
-            {
-                Date currentDate = new Date();
-                Date date = null;
-
-                if ( ProgramIndicator.VAR_ENROLLMENT_DATE.equals( uid ) )
-                {
-                    date = programInstance.getEnrollmentDate();
-                }
-                else if ( ProgramIndicator.VAR_INCIDENT_DATE.equals( uid ) )
-                {
-                    date = programInstance.getIncidentDate();
-                }
-                else if ( ProgramIndicator.VAR_CURRENT_DATE.equals( uid ) )
-                {
-                    date = currentDate;
-                }
-
-                // TODO ProgramIndicator.VAR_EXECUTION_DATE, DUE_DATE
-
-                if ( date != null )
-                {
-                    matcher.appendReplacement( buffer, DateUtils.daysBetween( currentDate, date ) + "" );
-                }
-            }
-        }
-
-        expression = TextUtils.appendTail( matcher, buffer );
-
-        // ---------------------------------------------------------------------
-        // Value count variable
-        // ---------------------------------------------------------------------
-
-        buffer = new StringBuffer();
-        matcher = ProgramIndicator.VALUECOUNT_PATTERN.matcher( expression );
-
-        while ( matcher.find() )
-        {
-            String var = matcher.group( 1 );
-
-            if ( ProgramIndicator.VAR_VALUE_COUNT.equals( var ) )
-            {
-                matcher.appendReplacement( buffer, String.valueOf( valueCount ) );
-            }
-            else if ( ProgramIndicator.VAR_ZERO_POS_VALUE_COUNT.equals( var ) )
-            {
-                matcher.appendReplacement( buffer, String.valueOf( zeroPosValueCount ) );
-            }
-        }
-
-        expression = TextUtils.appendTail( matcher, buffer );
-        
-        return MathUtils.calculateExpression( expression );
-    }
-
-    @Override
-    @Transactional
-    public Map<String, Double> getProgramIndicatorValues( ProgramInstance programInstance )
-    {
-        Map<String, Double> result = new HashMap<>();
-
-        Set<ProgramIndicator> programIndicators = programInstance.getProgram().getProgramIndicators();
-
-        for ( ProgramIndicator programIndicator : programIndicators )
-        {
-            Double value = getProgramIndicatorValue( programIndicator, programInstance );
-
-            if ( value != null )
-            {
-                result.put( programIndicator.getDisplayName(), value );
-            }
-        }
-
-        return result;
     }
 
     @Override
@@ -804,10 +604,5 @@ public class DefaultProgramIndicatorService
     private String getIgnoreNullSql( String column )
     {
         return "coalesce(" + column + ",0)";
-    }
-    
-    private boolean isZeroOrPositive( String value )
-    {
-        return MathUtils.isNumeric( value ) && Double.valueOf( value ) >= 0d;
     }
 }
