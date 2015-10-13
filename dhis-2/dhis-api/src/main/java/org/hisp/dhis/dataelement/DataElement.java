@@ -219,15 +219,6 @@ public class DataElement
     }
 
     /**
-     * Indicates whether the value type of this data element is date.
-     */
-    public boolean isDateType()
-    {
-        // TODO optimize when using persisted valueType
-        return ValueType.DATE == getValueType() || ValueType.DATETIME == getValueType();
-    }
-
-    /**
      * Indicates whether the value type of this data element is a file (externally stored resource)
      */
     public boolean isFileType()
@@ -315,7 +306,7 @@ public class DataElement
      */
     public Set<PeriodType> getPeriodTypes()
     {
-        return Sets.newHashSet( dataSets ).stream().map( dataSet -> dataSet.getPeriodType() ).collect( Collectors.toSet() );
+        return Sets.newHashSet( dataSets ).stream().map( DataSet::getPeriodType ).collect( Collectors.toSet() );
     }
 
     /**
@@ -426,14 +417,6 @@ public class DataElement
     }
 
     /**
-     * Returns the domain type, or the default domain type if it does not exist.
-     */
-    public String getDomainTypeNullSafe()
-    {
-        return domainType != null ? domainType.getValue() : DataElementDomain.AGGREGATE.getValue();
-    }
-
-    /**
      * Returns the form name, or the name if it does not exist.
      */
     public String getFormNameFallback()
@@ -441,8 +424,8 @@ public class DataElement
         return formName != null && !formName.isEmpty() ? getDisplayFormName() : getDisplayName();
     }
 
-    @JsonView( { DetailedView.class, DimensionalView.class } )
     @JsonProperty
+    @JsonView( { DetailedView.class, DimensionalView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getDisplayFormName()
     {
