@@ -44,7 +44,6 @@ import java.util.Collection;
 
 /**
  * @author Thanh Nguyen
- * @version $Id: AddRoleAction.java 5701 2008-09-14 20:34:46Z larshelg $
  */
 public class AddRoleAction
     implements Action
@@ -101,19 +100,19 @@ public class AddRoleAction
     {
         this.selectedListAuthority = selectedListAuthority;
     }
-    
-	private Collection<String> selectedProgramList = new ArrayList<>();
 
-	public void setSelectedProgramList(Collection<String> selectedProgramList) {
-		this.selectedProgramList = selectedProgramList;
-	}
+    private Collection<String> selectedProgramList = new ArrayList<>();
+
+    public void setSelectedProgramList( Collection<String> selectedProgramList )
+    {
+        this.selectedProgramList = selectedProgramList;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
-
-  
-	@Override
+    
+    @Override
     public String execute()
         throws Exception
     {

@@ -44,7 +44,6 @@ import java.util.Collection;
 
 /**
  * @author Thanh Nguyen
- * @version $Id: UpdateRoleAction.java 5701 2008-09-14 20:34:46Z larshelg $
  */
 public class UpdateRoleAction
     implements Action
@@ -70,13 +69,6 @@ public class UpdateRoleAction
     @Autowired
     private ProgramService programService;
     
-    private String message;
-
-    public String getMessage()
-    {
-        return message;
-    }
-
     // -------------------------------------------------------------------------
     // Input
     // -------------------------------------------------------------------------
@@ -115,12 +107,13 @@ public class UpdateRoleAction
     {
         this.selectedListAuthority = selectedListAuthority;
     }
-    
+
     private Collection<String> selectedProgramList = new ArrayList<>();
 
-	public void setSelectedProgramList(Collection<String> selectedProgramList) {
-		this.selectedProgramList = selectedProgramList;
-	}
+    public void setSelectedProgramList( Collection<String> selectedProgramList )
+    {
+        this.selectedProgramList = selectedProgramList;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
