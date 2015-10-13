@@ -111,7 +111,7 @@ public class JCloudsFileResourceContentStore
     // Defaults
     // -------------------------------------------------------------------------
 
-    private static final String DEFAULT_CONTAINER = "dhis2-file-store";
+    private static final String DEFAULT_CONTAINER = "files";
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -154,7 +154,7 @@ public class JCloudsFileResourceContentStore
             {
                 log.warn( "Container name '" + container + "' is illegal." +
                     "Standard domain name naming conventions apply (and underscores are not allowed). " +
-                    "Using default container name." );
+                    "Using default container name '" + DEFAULT_CONTAINER + "'." );
             }
 
             container = DEFAULT_CONTAINER;
@@ -181,7 +181,7 @@ public class JCloudsFileResourceContentStore
 
             if ( credentials.identity.isEmpty() || credentials.credential.isEmpty() )
             {
-                log.warn( "AWS S3 store configured with empty credentials, authentication not possible" );
+                log.warn( "AWS S3 store configured with empty credentials, authentication not possible." );
             }
         }
 
