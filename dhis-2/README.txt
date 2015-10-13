@@ -48,3 +48,21 @@ hibernate.hbm2ddl.auto = update
 #hibernate.show_sql = true
 #hibernate.format_sql = true
 
+# File store configuration
+
+# Supported providers are 'filesystem' and 'aws-s3'
+filestore.provider = filesystem
+
+# Bucket on AWS S3, root files folder within DHIS2 home on file system.
+filestore.container = files
+
+# Location/region, unapplicable if using AWS S3 standard region or filesystem
+# NOTE: eu-central-1 is currently not supported
+#filestore.location = eu-west-1
+
+# Access key id on AWS, does not apply to file system
+#filestore.identity = YOURIDENTITY
+
+# Does not apply to file system
+#filestore.secret = YOURSECRET
+
