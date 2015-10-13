@@ -29,11 +29,11 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import com.google.common.collect.Lists;
-import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.schema.SchemaValidator;
 import org.hisp.dhis.dxf2.schema.ValidationViolation;
-import org.hisp.dhis.dxf2.schema.ValidationViolations;
+import org.hisp.dhis.dxf2.webmessage.WebMessage;
+import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
@@ -43,9 +43,10 @@ import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.schema.Schemas;
 import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.service.LinkService;
+import org.hisp.dhis.webapi.service.WebMessageService;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,7 +83,10 @@ public class SchemaController
     private FieldFilterService fieldFilterService;
 
     @Autowired
-    protected ContextService contextService;
+    private ContextService contextService;
+
+    @Autowired
+    private WebMessageService webMessageService;
 
     @RequestMapping
     public @ResponseBody RootNode getSchemas()
@@ -128,7 +132,7 @@ public class SchemaController
         throw new HttpClientErrorException( HttpStatus.NOT_FOUND, "Type " + type + " does not exist." );
     }
 
-    @RequestMapping( value = "/{type}", method = { RequestMethod.POST, RequestMethod.PUT }, consumes = MediaType.APPLICATION_JSON_VALUE )
+    @RequestMapping( value = "/{type}", method = { RequestMethod.POST, RequestMethod.PUT } )
     public void validateSchemaJson( @PathVariable String type, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         Schema schema = getSchemaFromType( type );
@@ -141,23 +145,8 @@ public class SchemaController
         Object object = renderService.fromJson( request.getInputStream(), schema.getKlass() );
         List<ValidationViolation> validationViolations = schemaValidator.validate( object );
 
-        renderService.toJson( response.getOutputStream(), validationViolations );
-    }
-
-    @RequestMapping( value = "/{type}", method = { RequestMethod.POST, RequestMethod.PUT }, consumes = MediaType.APPLICATION_XML_VALUE )
-    public void validateSchemaXml( @PathVariable String type, HttpServletRequest request, HttpServletResponse response ) throws IOException
-    {
-        Schema schema = getSchemaFromType( type );
-
-        if ( schema == null )
-        {
-            throw new HttpClientErrorException( HttpStatus.NOT_FOUND, "Type " + type + " does not exist." );
-        }
-
-        Object object = renderService.fromXml( request.getInputStream(), schema.getKlass() );
-        List<ValidationViolation> validationViolations = schemaValidator.validate( object );
-
-        renderService.toXml( response.getOutputStream(), new ValidationViolations( validationViolations ) );
+        WebMessage webMessage = WebMessageUtils.validationViolations( validationViolations );
+        webMessageService.send( webMessage, response, request );
     }
 
     @RequestMapping( value = "/{type}/{property}", method = RequestMethod.GET )
