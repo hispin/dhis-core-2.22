@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.completeness.DataSetCompletenessResult;
 import org.hisp.dhis.completeness.DataSetCompletenessService;
 import org.hisp.dhis.completeness.DataSetCompletenessStore;
@@ -44,7 +45,6 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
-import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
@@ -70,13 +70,6 @@ public abstract class AbstractDataSetCompletenessService
         this.organisationUnitService = organisationUnitService;
     }
 
-    private OrganisationUnitGroupService organisationUnitGroupService;
-
-    public void setOrganisationUnitGroupService( OrganisationUnitGroupService organisationUnitGroupService )
-    {
-        this.organisationUnitGroupService = organisationUnitGroupService;
-    }
-
     private DataSetService dataSetService;
 
     public void setDataSetService( DataSetService dataSetService )
@@ -96,6 +89,13 @@ public abstract class AbstractDataSetCompletenessService
     public void setCompletenessStore( DataSetCompletenessStore completenessStore )
     {
         this.completenessStore = completenessStore;
+    }
+    
+    private IdentifiableObjectManager idObjectManager;
+
+    public void setIdObjectManager( IdentifiableObjectManager idObjectManager )
+    {
+        this.idObjectManager = idObjectManager;
     }
 
     // -------------------------------------------------------------------------
@@ -127,6 +127,8 @@ public abstract class AbstractDataSetCompletenessService
 
         final List<DataSet> dataSets = dataSetService.getAllDataSets();
 
+        final Set<OrganisationUnitGroup> groups = groupIds != null ? Sets.newHashSet( idObjectManager.getObjects( OrganisationUnitGroup.class, groupIds ) ) : null;
+        
         final List<DataSetCompletenessResult> results = new ArrayList<>();
 
         for ( final DataSet dataSet : dataSets )
@@ -134,7 +136,7 @@ public abstract class AbstractDataSetCompletenessService
             final List<Integer> periodsBetweenDates = getIdentifiers( 
                 periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
 
-            final Set<Integer> relevantSources = getRelevantSources( dataSet, children, groupIds );
+            final Set<Integer> relevantSources = getRelevantSources( dataSet, children, groups );
 
             final DataSetCompletenessResult result = new DataSetCompletenessResult();
 
@@ -169,9 +171,11 @@ public abstract class AbstractDataSetCompletenessService
         final List<Integer> periodsBetweenDates = getIdentifiers( 
             periodService.getPeriodsBetweenDates( dataSet.getPeriodType(), period.getStartDate(), period.getEndDate() ) );
 
-        final List<DataSetCompletenessResult> results = new ArrayList<>();
-        
         final Map<Integer, OrganisationUnit> orgUnits = Maps.uniqueIndex( organisationUnitService.getOrganisationUnits( organisationUnitIds ), OrganisationUnit::getId );
+        
+        final Set<OrganisationUnitGroup> groups = groupIds != null ? Sets.newHashSet( idObjectManager.getObjects( OrganisationUnitGroup.class, groupIds ) ) : null;
+        
+        final List<DataSetCompletenessResult> results = new ArrayList<>();
         
         for ( final Integer unitId : organisationUnitIds )
         {
@@ -180,7 +184,7 @@ public abstract class AbstractDataSetCompletenessService
             final Set<Integer> children = organisationUnitService.getOrganisationUnitHierarchy().getChildren(
                 unit.getId() );
 
-            final Set<Integer> relevantSources = getRelevantSources( dataSet, children, groupIds );
+            final Set<Integer> relevantSources = getRelevantSources( dataSet, children, groups );
 
             final DataSetCompletenessResult result = getDataSetCompleteness( period, periodsBetweenDates, unit, relevantSources, dataSet );
 
@@ -219,15 +223,14 @@ public abstract class AbstractDataSetCompletenessService
         return result;
     }
 
-    private Set<Integer> getRelevantSources( DataSet dataSet, Set<Integer> sources, Set<Integer> groupIds )
+    private Set<Integer> getRelevantSources( DataSet dataSet, Set<Integer> sources, Set<OrganisationUnitGroup> groups )
     {
         Set<Integer> dataSetSources = new HashSet<>( getIdentifiers( dataSet.getSources() ) );
 
-        if ( groupIds != null )
+        if ( groups != null )
         {
-            for ( Integer groupId : groupIds )
+            for ( OrganisationUnitGroup group : groups )
             {
-                OrganisationUnitGroup group = organisationUnitGroupService.getOrganisationUnitGroup( groupId );
                 List<Integer> ids = getIdentifiers( group.getMembers() );
                 dataSetSources.retainAll( ids );
             }
