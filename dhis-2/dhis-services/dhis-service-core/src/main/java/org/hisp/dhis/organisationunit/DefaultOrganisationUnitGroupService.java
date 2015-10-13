@@ -77,21 +77,11 @@ public class DefaultOrganisationUnitGroupService
         i18nService = service;
     }
 
+    @Autowired
     private CurrentUserService currentUserService;
 
     @Autowired
-    public void setCurrentUserService( CurrentUserService currentUserService )
-    {
-        this.currentUserService = currentUserService;
-    }
-
     private OrganisationUnitService organisationUnitService;
-
-    @Autowired
-    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
-    {
-        this.organisationUnitService = organisationUnitService;
-    }
 
     // -------------------------------------------------------------------------
     // OrganisationUnitGroup
