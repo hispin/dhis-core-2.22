@@ -116,6 +116,10 @@ public enum Setting
     
     private final Class<?> clazz;
 
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
+
     private Setting( String name )
     {
         this.name = name;
@@ -136,7 +140,11 @@ public enum Setting
         this.defaultValue = defaultValue;
         this.clazz = clazz;
     }
-    
+
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------
+
     public static Optional<Setting> getByName( String name )
     {
         for ( Setting setting : Setting.values() )
@@ -177,6 +185,15 @@ public enum Setting
         return value;
     }
     
+    public boolean hasDefaultValue()
+    {
+        return defaultValue != null;
+    }
+
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
+
     public String getName()
     {
         return name;
