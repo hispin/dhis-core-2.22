@@ -32,9 +32,13 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
+import org.hisp.dhis.dxf2.schema.ValidationViolation;
 import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
+import org.hisp.dhis.dxf2.webmessage.responses.ValidationViolationsWebMessageResponse;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -238,6 +242,20 @@ public final class WebMessageUtils
         }
 
         webMessage.setResponse( importSummaries );
+
+        return webMessage;
+    }
+
+    public static WebMessage validationViolations( List<ValidationViolation> validationViolations )
+    {
+        WebMessage webMessage = new WebMessage();
+        webMessage.setResponse( new ValidationViolationsWebMessageResponse( validationViolations ) );
+
+        if ( !validationViolations.isEmpty() )
+        {
+            webMessage.setStatus( WebMessageStatus.ERROR );
+            webMessage.setHttpStatus( HttpStatus.BAD_REQUEST );
+        }
 
         return webMessage;
     }
