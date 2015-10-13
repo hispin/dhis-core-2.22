@@ -108,6 +108,7 @@ public class DashboardItem
     // -------------------------------------------------------------------------
 
     @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public DashboardItemType getType()
     {
