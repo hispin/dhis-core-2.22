@@ -92,10 +92,10 @@
         <option value="INTEGER_POSITIVE" #if( $!dataElement.valueType == 'INTEGER_POSITIVE' ) selected="selected" #end >$i18n.getString( "positive_integer" )</option>
         <option value="INTEGER_NEGATIVE" #if( $!dataElement.valueType == 'INTEGER_NEGATIVE' ) selected="selected" #end >$i18n.getString( "negative_integer" )</option>
         <option value="INTEGER_ZERO_OR_POSITIVE" #if( $!dataElement.valueType == 'INTEGER_ZERO_OR_POSITIVE' ) selected="selected" #end >$i18n.getString( "zero_positive_int" )</option>
-        <option value="COORDINATE" #if( $!dataElement.valueType == 'COORDINATE' ) selected="selected" #end >$i18n.getString( "coordinate" )</option>
         <option value="NUMBER" #if( $!dataElement.valueType == 'NUMBER' ) selected="selected" #end >$i18n.getString( "number" )</option>
         <option value="UNIT_INTERVAL" #if( $!dataElement.valueType == 'UNIT_INTERVAL' ) selected="selected" #end >$i18n.getString( "unit_interval" )</option>
         <option value="PERCENTAGE" #if( $!dataElement.valueType == 'PERCENTAGE' ) selected="selected" #end >$i18n.getString( "percentage" )</option>
+        <option value="COORDINATE" #if( $!dataElement.valueType == 'COORDINATE' ) selected="selected" #end >$i18n.getString( "coordinate" )</option>
         <option value="TEXT" #if( $!dataElement.valueType == 'TEXT' ) selected="selected" #end >$i18n.getString( "text" )</option>
         <option value="LONG_TEXT" #if( $!dataElement.valueType == 'LONG_TEXT' ) selected="selected" #end >$i18n.getString( "long_text" )</option>
         <option value="FILE_RESOURCE" #if( $!dataElement.valueType == 'FILE_RESOURCE' ) selected="selected" #end>$i18n.getString( "file" )</option>
