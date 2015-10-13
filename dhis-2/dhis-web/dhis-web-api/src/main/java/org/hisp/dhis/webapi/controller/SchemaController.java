@@ -47,6 +47,7 @@ import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -132,8 +133,8 @@ public class SchemaController
         throw new HttpClientErrorException( HttpStatus.NOT_FOUND, "Type " + type + " does not exist." );
     }
 
-    @RequestMapping( value = "/{type}", method = { RequestMethod.POST, RequestMethod.PUT } )
-    public void validateSchemaJson( @PathVariable String type, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    @RequestMapping( value = "/{type}", method = { RequestMethod.POST, RequestMethod.PUT }, consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE } )
+    public void validateSchema( @PathVariable String type, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         Schema schema = getSchemaFromType( type );
 
