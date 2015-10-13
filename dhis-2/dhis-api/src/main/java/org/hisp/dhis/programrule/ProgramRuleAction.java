@@ -42,6 +42,7 @@ import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
@@ -114,6 +115,15 @@ public class ProgramRuleAction
     private TrackedEntityAttribute attribute;
 
     /**
+     * The program indicator that is affected by the rule action.
+     * Used for:
+     * <ul>
+     * <li>hidefield</li>
+     * </ul>
+     */
+    private ProgramIndicator programIndicator;
+
+    /**
      * The program stage section that is affected by the rule action.
      */
     private ProgramStageSection programStageSection;
@@ -148,13 +158,14 @@ public class ProgramRuleAction
     }
 
     public ProgramRuleAction( String name, ProgramRule programRule, ProgramRuleActionType programRuleActionType, 
-        DataElement dataElement, TrackedEntityAttribute attribute, String location, String content, String data )
+        DataElement dataElement, TrackedEntityAttribute attribute, ProgramIndicator programIndicator, String location, String content, String data )
     {
         this.name = name;
         this.programRule = programRule;
         this.programRuleActionType = programRuleActionType;
         this.dataElement = dataElement;
         this.attribute = attribute;
+        this.programIndicator = programIndicator;
         this.location = location;
         this.content = content;
         this.data = data;
@@ -216,6 +227,18 @@ public class ProgramRuleAction
         this.attribute = attribute;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public ProgramIndicator getProgramIndicator()
+    {
+        return programIndicator;
+    }
+
+    public void setProgramIndicator( ProgramIndicator programIndicator )
+    {
+        this.programIndicator = programIndicator;
+    }
 
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
