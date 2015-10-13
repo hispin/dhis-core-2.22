@@ -67,6 +67,11 @@ body,
     color: #444;
 }
 
+#init .brand {
+    font-weight: 600;
+    padding-right: 5px;
+}
+
 	/* Scrollbar Webkit */
 ::-webkit-scrollbar {
     width: 8px;
