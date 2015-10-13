@@ -79,6 +79,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -116,7 +117,6 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.commons.collection.ListUtils;
-import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -1159,9 +1159,9 @@ public class DefaultAnalyticsService
 
         if ( ORGUNIT_DIM_ID.equals( dimension ) )
         {
-            List<NameableObject> ous = new UniqueArrayList<>();
-            List<Integer> levels = new UniqueArrayList<>();
-            List<OrganisationUnitGroup> groups = new UniqueArrayList<>();
+            List<NameableObject> ous = new ArrayList<>();
+            List<Integer> levels = new ArrayList<>();
+            List<OrganisationUnitGroup> groups = new ArrayList<>();
 
             for ( String ou : items )
             {
@@ -1208,7 +1208,9 @@ public class DefaultAnalyticsService
                 }
             }
 
-            List<NameableObject> orgUnits = new UniqueArrayList<>();
+            ous = ous.stream().distinct().collect( Collectors.toList() ); // Remove duplicates
+            
+            List<NameableObject> orgUnits = new ArrayList<>();
             List<OrganisationUnit> ousList = NameableObjectUtils.asTypedList( ous );
 
             if ( !levels.isEmpty() )
@@ -1235,6 +1237,8 @@ public class DefaultAnalyticsService
                 throw new IllegalQueryException( "Dimension ou is present in query without any valid dimension options" );
             }
 
+            orgUnits = orgUnits.stream().distinct().collect( Collectors.toList() ); // Remove duplicates
+            
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ORGANISATIONUNIT, null, DISPLAY_NAME_ORGUNIT, orgUnits );
 
             return object;
