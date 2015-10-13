@@ -31,8 +31,6 @@ trackerCapture.controller('RegistrationController',
     $scope.registrationMode = 'REGISTRATION';    
     $scope.hiddenFields = {};
     
-    //$scope.editingDisabled = angular.isUndefined($scope.editingDisabled) ? false : $scope.editingDisabled;
-    
     $scope.attributesById = CurrentSelection.getAttributesById();
     if(!$scope.attributesById){
         $scope.attributesById = [];
@@ -66,19 +64,23 @@ trackerCapture.controller('RegistrationController',
         $scope.trackedEntities.selected = $scope.trackedEntities.available[0];
     });
 
+    var getProgramRules = function(){
+        $scope.trackedEntityForm = null;
+        $scope.customForm = null;        
+        $scope.allProgramRules = {constants: [], programIndicators: {}, programValidations: [], programVariables: [], programRules: []};
+        if( angular.isObject($scope.selectedProgram) && $scope.selectedProgram.id ){
+            TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                $scope.allProgramRules = rules;
+            });
+        }        
+    };
+    
     //watch for selection of program
     $scope.$watch('selectedProgram', function(newValue, oldValue) {
         if( newValue !== oldValue )
         {
-            $scope.trackedEntityForm = null;
-            $scope.customForm = null;        
-            $scope.allProgramRules = {constants: [], programIndicators: {}, programValidations: [], programVariables: [], programRules: []};
-            if( angular.isObject($scope.selectedProgram) && $scope.selectedProgram.id ){
-                TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-                    $scope.allProgramRules = rules;
-                });
-            }
-
+            getProgramRules();
+            
             if($scope.registrationMode === 'REGISTRATION'){
                 $scope.getAttributes($scope.registrationMode);
             }
@@ -102,6 +104,10 @@ trackerCapture.controller('RegistrationController',
         }
 
         $scope.getAttributes($scope.registrationMode);
+        
+        if($scope.selectedProgram && $scope.selectedProgram.id){
+            getProgramRules();
+        }
     });
         
     $scope.getAttributes = function(_mode){        
