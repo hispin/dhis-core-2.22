@@ -571,6 +571,11 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
+  <bean id="org.hisp.dhis.keyjsonvalue.KeyJsonValueStore" class="org.hisp.dhis.keyjsonvalue.hibernate.HibernateKeyJsonValueStore">
+    <property name="clazz" value="org.hisp.dhis.keyjsonvalue.KeyJsonValue" />
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
   <bean id="org.hisp.dhis.fileresource.FileResourceStore" class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
     <property name="clazz" value="org.hisp.dhis.fileresource.FileResource" />
     <property name="sessionFactory" ref="sessionFactory" />
@@ -582,14 +587,15 @@
     <property name="locationManager" ref="locationManager" />
   </bean>
 
+  <!-- File resource tasks -->
+
   <bean id="org.hisp.dhis.fileresource.FileResourceUploadCallbackProvider"
     class="org.hisp.dhis.fileresource.FileResourceUploadCallbackProvider"
     scope="prototype" />
 
-  <bean id="org.hisp.dhis.keyjsonvalue.KeyJsonValueStore" class="org.hisp.dhis.keyjsonvalue.hibernate.HibernateKeyJsonValueStore">
-    <property name="clazz" value="org.hisp.dhis.keyjsonvalue.KeyJsonValue" />
-    <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
+  <bean id="org.hisp.dhis.fileresource.FileResourceCleanUpTask"
+    class="org.hisp.dhis.fileresource.FileResourceCleanUpTask"
+    scope="prototype" />
 
   <!-- Service definitions -->
 
@@ -598,6 +604,7 @@
     <property name="fileResourceContentStore" ref="org.hisp.dhis.fileresource.FileResourceContentStore" />
     <property name="scheduler" ref="scheduler" />
     <property name="uploadCallbackProvider" ref="org.hisp.dhis.fileresource.FileResourceUploadCallbackProvider" />
+    <property name="fileResourceCleanUpTask" ref="org.hisp.dhis.fileresource.FileResourceCleanUpTask" />
   </bean>
 
   <bean id="org.hisp.dhis.dataelement.DataElementOperandService" class="org.hisp.dhis.dataelement.DefaultDataElementOperandService">

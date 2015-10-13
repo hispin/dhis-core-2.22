@@ -31,12 +31,18 @@ package org.hisp.dhis.fileresource;
 import com.google.common.io.ByteSource;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.system.scheduling.Scheduler;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Hours;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Halvdan Hoem Grelland
@@ -44,6 +50,13 @@ import java.util.List;
 public class DefaultFileResourceService
     implements FileResourceService
 {
+    private static final String KEY_FILE_CLEANUP_TASK = "fileResourceCleanupTask";
+
+    private static final Predicate<FileResource> IS_ORPHAN_PREDICATE =
+        ( fr -> !fr.isAssigned() || fr.getStorageStatus() != FileResourceStorageStatus.STORED );
+
+    private static final Duration IS_ORPHAN_TIME_DELTA = Hours.TWO.toStandardDuration();
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -76,6 +89,27 @@ public class DefaultFileResourceService
         this.uploadCallbackProvider = uploadCallbackProvider;
     }
 
+    private FileResourceCleanUpTask fileResourceCleanUpTask;
+
+    public void setFileResourceCleanUpTask( FileResourceCleanUpTask fileResourceCleanUpTask )
+    {
+        this.fileResourceCleanUpTask = fileResourceCleanUpTask;
+    }
+
+    // -------------------------------------------------------------------------
+    // Init
+    // -------------------------------------------------------------------------
+
+    @PostConstruct
+    public void init()
+    {
+        // Background task which queries for non-assigned or failed-upload
+        // FileResources and deletes them from the database and/or file store.
+        // Runs every day at 2 AM server time.
+
+        scheduler.scheduleTask( KEY_FILE_CLEANUP_TASK, fileResourceCleanUpTask, Scheduler.CRON_DAILY_2AM );
+    }
+
     // -------------------------------------------------------------------------
     // FileResourceService implementation
     // -------------------------------------------------------------------------
@@ -90,6 +124,14 @@ public class DefaultFileResourceService
     public List<FileResource> getFileResources( List<String> uids )
     {
         return fileResourceStore.getByUid( uids );
+    }
+
+    @Transactional
+    @Override
+    public List<FileResource> getOrphanedFileResources( )
+    {
+        return fileResourceStore.getAllLeCreated( new DateTime().minus( IS_ORPHAN_TIME_DELTA ).toDate() )
+            .stream().filter( IS_ORPHAN_PREDICATE ).collect( Collectors.toList() );
     }
 
     @Transactional

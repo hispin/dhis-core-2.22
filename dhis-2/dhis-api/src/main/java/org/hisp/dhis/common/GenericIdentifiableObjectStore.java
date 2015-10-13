@@ -234,6 +234,14 @@ public interface GenericIdentifiableObjectStore<T>
     List<T> getAllGeCreated( Date created );
 
     /**
+     * Returns all objects which are equal to or older than the given date.
+     *
+     * @param created Date to compare with.
+     * @return All objects equals to or older than the given date.
+     */
+    List<T> getAllLeCreated( Date created );
+
+    /**
      * Returns all objects that are equal to or newer than given date.
      *
      * @param lastUpdated Date to compare with.

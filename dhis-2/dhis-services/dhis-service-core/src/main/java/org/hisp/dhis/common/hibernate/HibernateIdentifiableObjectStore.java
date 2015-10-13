@@ -380,6 +380,16 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
 
     @Override
     @SuppressWarnings( "unchecked" )
+    public List<T> getAllLeCreated( Date created )
+    {
+        return getSharingCriteria()
+            .add( Restrictions.le( "created", created ) )
+            .addOrder( Order.desc( "created" ) )
+            .list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
     public List<T> getAllGeCreatedOrderedName( Date created )
     {
         return getSharingCriteria()

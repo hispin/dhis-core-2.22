@@ -28,55 +28,59 @@ package org.hisp.dhis.fileresource;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * Deletes any orphaned FileResources.
+ *
  * @author Halvdan Hoem Grelland
  */
-public class FileResourceUploadCallbackProvider
+public class FileResourceCleanUpTask
+    implements Runnable
 {
-    Log log = LogFactory.getLog( FileResourceUploadCallbackProvider.class );
+    private static final Log log = LogFactory.getLog( FileResourceCleanUpTask.class );
 
     @Autowired
-    private IdentifiableObjectManager idObjectManager;
+    private FileResourceService fileResourceService;
 
-    public ListenableFutureCallback<String> getCallback( String fileResourceUid )
+    @Override
+    public void run()
     {
-        return new ListenableFutureCallback<String>()
+        List<Pair<String, String>> deleted = new ArrayList<>();
+
+        fileResourceService.getOrphanedFileResources()
+            .stream()
+            .forEach( fr -> {
+                deleted.add( ImmutablePair.of( fr.getName(), fr.getUid() ) );
+                fileResourceService.deleteFileResource( fr.getUid() );
+            } );
+
+        if ( !deleted.isEmpty() )
         {
-            @Override
-            public void onFailure( Throwable ex )
-            {
-                log.error( "Saving file content failed", ex );
+            log.warn( "Deleted " + deleted.size() + " orphaned FileResources: " + prettyPrint( deleted ) );
+        }
+    }
 
-                FileResource fetchedFileResource = idObjectManager.get( FileResource.class, fileResourceUid );
-                fetchedFileResource.setStorageStatus( FileResourceStorageStatus.FAILED );
-                idObjectManager.update( fetchedFileResource );
-            }
+    private String prettyPrint( List<Pair<String, String>> list )
+    {
+        if ( list.isEmpty() )
+        {
+            return "";
+        }
 
-            @Override
-            public void onSuccess( String result )
-            {
-                log.info( "File content stored: " + result );
+        StringBuilder sb = new StringBuilder( "[ " );
 
-                FileResource fetchedFileResource = idObjectManager.get( FileResource.class, fileResourceUid );
+        list.forEach( pair -> sb.append( pair.getLeft() ).append( " , uid: " ).append( pair.getRight() ).append( " ," ) );
 
-                if ( result != null && fetchedFileResource != null )
-                {
-                    fetchedFileResource.setStorageStatus( FileResourceStorageStatus.STORED );
-                }
-                else
-                {
-                    log.error( "Conflict: content was stored but FileResource with uid: " + fileResourceUid + " could not be found." );
-                    return;
-                }
+        sb.deleteCharAt( sb.lastIndexOf( "," ) ).append( "]" );
 
-                idObjectManager.update( fetchedFileResource );
-            }
-        };
+        return sb.toString();
     }
 }

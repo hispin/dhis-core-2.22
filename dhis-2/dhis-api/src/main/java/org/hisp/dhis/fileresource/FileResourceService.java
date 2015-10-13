@@ -43,6 +43,8 @@ public interface FileResourceService
 
     List<FileResource> getFileResources( List<String> uids );
 
+    List<FileResource> getOrphanedFileResources();
+
     String saveFileResource( FileResource fileResource, File file );
 
     void deleteFileResource( String uid );
