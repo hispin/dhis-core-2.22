@@ -124,6 +124,10 @@ public interface SystemSettingManager
     
     void saveSystemSetting( Setting setting, Serializable value );
 
+    void deleteSystemSetting( String name );
+    
+    void deleteSystemSetting( Setting setting );
+
     Serializable getSystemSetting( String name );
 
     Serializable getSystemSetting( String name, Serializable defaultValue );
@@ -133,10 +137,6 @@ public interface SystemSettingManager
     Serializable getSystemSetting( Setting setting, Serializable defaultValue );
     
     List<SystemSetting> getAllSystemSettings();
-
-    void deleteSystemSetting( String name );
-    
-    void deleteSystemSetting( Setting setting );
 
     Map<String, Serializable> getSystemSettingsAsMap();
     

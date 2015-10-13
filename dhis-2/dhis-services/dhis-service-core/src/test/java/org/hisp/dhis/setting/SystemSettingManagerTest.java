@@ -31,6 +31,7 @@ package org.hisp.dhis.setting;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.io.Serializable;
 import java.util.List;
@@ -75,6 +76,29 @@ public class SystemSettingManagerTest
     {
         assertEquals( Setting.APP_STORE_URL.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.APP_STORE_URL ) );
         assertEquals( Setting.EMAIL_PORT.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.EMAIL_PORT ) );
+    }
+
+    @Test
+    public void testSaveGetDeleteSetting()
+    {
+        assertNull( systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
+        assertEquals( Setting.HELP_PAGE_LINK.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
+        
+        systemSettingManager.saveSystemSetting( Setting.APPLICATION_INTRO, "valueA" );
+        systemSettingManager.saveSystemSetting( Setting.HELP_PAGE_LINK, "valueB" );
+
+        assertEquals( "valueA", systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
+        assertEquals( "valueB", systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
+        
+        systemSettingManager.deleteSystemSetting( Setting.APPLICATION_INTRO );
+
+        assertNull( systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
+        assertEquals( "valueB", systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
+
+        systemSettingManager.deleteSystemSetting( Setting.HELP_PAGE_LINK );
+        
+        assertNull( systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
+        assertEquals( Setting.HELP_PAGE_LINK.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );        
     }
 
     @Test

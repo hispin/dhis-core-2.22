@@ -28,10 +28,6 @@ package org.hisp.dhis.setting;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.system.util.ValidationUtils;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,6 +36,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.system.util.ValidationUtils;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 /**
  * @author Stian Strandli
@@ -49,6 +54,15 @@ import java.util.Set;
 public class DefaultSystemSettingManager
     implements SystemSettingManager
 {
+    /**
+     * Cache for system settings. Does not accept nulls.
+     */
+    private static Cache<String, Serializable> SETTING_CACHE = CacheBuilder.newBuilder()
+        .expireAfterAccess( 5, TimeUnit.MINUTES )
+        .initialCapacity( 200 )
+        .maximumSize( 400 )
+        .build();
+    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -74,6 +88,8 @@ public class DefaultSystemSettingManager
     @Override
     public void saveSystemSetting( String name, Serializable value )
     {
+        SETTING_CACHE.invalidate( name );
+        
         SystemSetting setting = systemSettingStore.getByName( name );
 
         if ( setting == null )
@@ -96,9 +112,30 @@ public class DefaultSystemSettingManager
     @Override
     public void saveSystemSetting( Setting setting, Serializable value )
     {
+        SETTING_CACHE.invalidate( setting.getName() );
+        
         saveSystemSetting( setting.getName(), value );
     }
-    
+
+    @Override
+    public void deleteSystemSetting( String name )
+    {
+        SystemSetting setting = systemSettingStore.getByName( name );
+
+        if ( setting != null )
+        {
+            SETTING_CACHE.invalidate( name );
+            
+            systemSettingStore.delete( setting );
+        }
+    }
+
+    @Override
+    public void deleteSystemSetting( Setting setting )
+    {
+        deleteSystemSetting( setting.getName() );
+    }
+
     @Override
     public Serializable getSystemSetting( String name )
     {
@@ -118,7 +155,21 @@ public class DefaultSystemSettingManager
     @Override
     public Serializable getSystemSetting( Setting setting )
     {
-        return getSystemSetting( setting.getName(), setting.getDefaultValue() );
+        if ( setting.hasDefaultValue() )
+        {
+            try
+            {
+                return SETTING_CACHE.get( setting.getName(), () -> getSystemSetting( setting.getName(), setting.getDefaultValue() ) );
+            }
+            catch ( ExecutionException ignored )
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return getSystemSetting( setting.getName(), setting.getDefaultValue() );
+        }        
     }
 
     @Override
@@ -133,23 +184,6 @@ public class DefaultSystemSettingManager
         return systemSettingStore.getAll();
     }
     
-    @Override
-    public void deleteSystemSetting( String name )
-    {
-        SystemSetting setting = systemSettingStore.getByName( name );
-
-        if ( setting != null )
-        {
-            systemSettingStore.delete( setting );
-        }
-    }
-
-    @Override
-    public void deleteSystemSetting( Setting setting )
-    {
-        deleteSystemSetting( setting.getName() );
-    }
-
     @Override
     public Map<String, Serializable> getSystemSettingsAsMap()
     {
