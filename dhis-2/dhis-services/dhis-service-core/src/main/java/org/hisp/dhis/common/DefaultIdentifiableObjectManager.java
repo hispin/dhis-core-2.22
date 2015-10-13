@@ -769,6 +769,20 @@ public class DefaultIdentifiableObjectManager
 
         return null;
     }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> List<T> getObjects( Class<T> clazz, Collection<Integer> identifiers )
+    {
+        GenericIdentifiableObjectStore<T> store = (GenericIdentifiableObjectStore<T>) getIdentifiableObjectStore( clazz );
+
+        if ( store == null )
+        {
+            return null;
+        }
+
+        return store.getById( identifiers );
+    }
     
     @Override
     @SuppressWarnings( "unchecked" )
