@@ -147,7 +147,8 @@ public class ProgramRuleAction
 
     }
 
-    public ProgramRuleAction( String name, ProgramRule programRule, ProgramRuleActionType programRuleActionType, DataElement dataElement, TrackedEntityAttribute attribute, String location, String content, String data )
+    public ProgramRuleAction( String name, ProgramRule programRule, ProgramRuleActionType programRuleActionType, 
+        DataElement dataElement, TrackedEntityAttribute attribute, String location, String content, String data )
     {
         this.name = name;
         this.programRule = programRule;

@@ -29,7 +29,6 @@ package org.hisp.dhis.security.filter;
  */
 
 import java.io.IOException;
-import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -145,9 +144,8 @@ public class CorsFilter
                 .scheme( forwardedProto ).build().toUriString();
         }
 
-        Set<String> whitelist = configurationService.getConfiguration().getCorsWhitelist();
-
-        return !StringUtils.isEmpty( origin ) && (localUrl.equals( origin ) || whitelist.contains( origin ));
+        return !StringUtils.isEmpty( origin ) && ( localUrl.equals( origin ) || 
+            configurationService.getConfiguration().getCorsWhitelist().contains( origin ) );
     }
 
     @Override
