@@ -29,7 +29,6 @@ package org.hisp.dhis.program;
  */
 
 import static org.hisp.dhis.program.ProgramIndicator.KEY_ATTRIBUTE;
-import static org.hisp.dhis.program.ProgramIndicator.KEY_CONSTANT;
 import static org.hisp.dhis.program.ProgramIndicator.KEY_DATAELEMENT;
 import static org.hisp.dhis.program.ProgramIndicator.KEY_PROGRAM_VARIABLE;
 import static org.junit.Assert.assertEquals;
@@ -39,7 +38,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
@@ -141,14 +139,6 @@ public class ProgramIndicatorServiceTest
     private ProgramIndicator indicatorD;
 
     private ProgramIndicator indicatorE;
-
-    private ProgramIndicator indicatorF;
-
-    private ProgramIndicator indicatorG;
-
-    private ProgramIndicator indicatorH;
-
-    private ProgramIndicator indicatorI;
 
     @Override
     public void setUpTest()
@@ -295,26 +285,6 @@ public class ProgramIndicatorServiceTest
             + "{" + atB.getUid() + "}";
         String filterE = KEY_DATAELEMENT + "{" + psA.getUid() + "." + deA.getUid() + "} + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} > 10";
         indicatorE = createProgramIndicator( 'E', programB, expressionE, filterE );
-
-        String expressionF = "(" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + KEY_DATAELEMENT
-            + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + "
-            + KEY_ATTRIBUTE + "{" + atB.getUid() + "}";
-        indicatorF = createProgramIndicator( 'F', programB, expressionF, null );
-
-        String expressionG = "((" + KEY_DATAELEMENT + "{" + psB.getUid() + "." + deB.getUid() + "} - " + KEY_DATAELEMENT
-            + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_ATTRIBUTE + "{" + atA.getUid() + "} + "
-            + KEY_ATTRIBUTE + "{" + atB.getUid() + "}) * " + KEY_CONSTANT + "{" + constantA.getUid() + "}";
-        indicatorG = createProgramIndicator( 'G', programB, expressionG, null );
-
-        String expressionH = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.VAR_CURRENT_DATE + "} - "
-            + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
-            + psA.getUid() + "." + deA.getUid() + "}";
-        indicatorH = createProgramIndicator( 'H', programB, expressionH, null );
-
-        String expressionI = "(" + KEY_PROGRAM_VARIABLE + "{" + ProgramIndicator.VAR_CURRENT_DATE + "} - "
-            + KEY_DATAELEMENT + "{" + psA.getUid() + "." + deB.getUid() + "} ) + " + KEY_DATAELEMENT + "{"
-            + psA.getUid() + "." + deA.getUid() + "}";
-        indicatorI = createProgramIndicator( 'I', programB, expressionI, null );
     }
 
     // -------------------------------------------------------------------------
@@ -398,40 +368,6 @@ public class ProgramIndicatorServiceTest
     // -------------------------------------------------------------------------
     // Logic tests
     // -------------------------------------------------------------------------
-
-    @Test
-    public void testGetProgramIndicatorValue()
-    {
-        programIndicatorService.addProgramIndicator( indicatorB );
-        programIndicatorService.addProgramIndicator( indicatorA );
-        programIndicatorService.addProgramIndicator( indicatorE );
-        programIndicatorService.addProgramIndicator( indicatorF );
-        programIndicatorService.addProgramIndicator( indicatorG );
-        programIndicatorService.addProgramIndicator( indicatorH );
-        programIndicatorService.addProgramIndicator( indicatorI );
-
-        Double valueINT = programIndicatorService.getProgramIndicatorValue( indicatorA, programInstance );
-        assertEquals( 10.0, valueINT, 0.01 );
-
-        Double valueE = programIndicatorService.getProgramIndicatorValue( indicatorE, programInstance );
-        assertEquals( 9.0, valueE, 0.01 );
-
-        Double valueF = programIndicatorService.getProgramIndicatorValue( indicatorF, programInstance );
-        assertEquals( 9.0, valueF, 0.01 );
-
-        Double valueG = programIndicatorService.getProgramIndicatorValue( indicatorG, programInstance );
-        assertEquals( 63.0, valueG, 0.01 );
-    }
-
-    @Test
-    public void testGetProgramIndicatorValues()
-    {
-        programIndicatorService.addProgramIndicator( indicatorA );
-        programIndicatorService.addProgramIndicator( indicatorB );
-
-        Map<String, Double> indicatorMap = programIndicatorService.getProgramIndicatorValues( programInstance );
-        assertEquals( 10.0, indicatorMap.get( "IndicatorA" ), 0.01 );
-    }
 
     @Test
     public void testGetExpressionDescription()

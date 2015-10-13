@@ -29,8 +29,6 @@ package org.hisp.dhis.fileresource;
  */
 
 import com.google.common.io.ByteSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +44,6 @@ import java.util.List;
 public class DefaultFileResourceService
     implements FileResourceService
 {
-    private static final Log log = LogFactory.getLog( DefaultFileResourceService.class );
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------

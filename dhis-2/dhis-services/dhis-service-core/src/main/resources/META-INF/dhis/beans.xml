@@ -1118,12 +1118,9 @@
     <property name="programIndicatorStore" ref="org.hisp.dhis.program.ProgramIndicatorStore" />
     <property name="programStageService" ref="org.hisp.dhis.program.ProgramStageService" />
     <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
-    <property name="dataValueService" ref="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService" />
-    <property name="programStageInstanceService" ref="org.hisp.dhis.program.ProgramStageInstanceService" />
     <property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />
     <property name="attributeService" ref="org.hisp.dhis.trackedentity.TrackedEntityAttributeService" />
     <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
-    <property name="attributeValueService" ref="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService" />
     <property name="statementBuilder" ref="statementBuilder" />
   </bean>
 
