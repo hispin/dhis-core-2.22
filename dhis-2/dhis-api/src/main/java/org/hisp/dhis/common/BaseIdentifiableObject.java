@@ -161,7 +161,7 @@ public class BaseIdentifiableObject
     @Override
     public int compareTo( IdentifiableObject object )
     {
-        return name == null ? ( object.getName() == null ? 0 : -1 ) : name.compareTo( object.getName() );
+        return name == null ? ( object.getDisplayName() == null ? 0 : -1 ) : name.compareTo( object.getDisplayName() );
     }
 
     // -------------------------------------------------------------------------
