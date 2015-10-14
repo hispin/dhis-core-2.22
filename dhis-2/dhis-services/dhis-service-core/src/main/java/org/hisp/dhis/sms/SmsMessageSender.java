@@ -43,9 +43,10 @@ import org.hisp.dhis.sms.outbound.OutboundSms;
 import org.hisp.dhis.sms.outbound.OutboundSmsTransportService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.user.UserSetting;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.Serializable;
 
 /**
  * @author Nguyen Kim Lai
@@ -181,9 +182,9 @@ public class SmsMessageSender
         else
         // Receiver is user
         {
-            UserSetting userSetting = userSettingService.getUserSetting( user, UserSettingService.KEY_MESSAGE_SMS_NOTIFICATION );
+            Serializable userSetting = userSettingService.getUserSetting( UserSettingService.KEY_MESSAGE_SMS_NOTIFICATION, null, user );
 
-            return (userSetting != null && userSetting.getValue() != null) ? (Boolean) userSetting.getValue() : false;
+            return userSetting != null ? (Boolean) userSetting : false;
         }
     }
 

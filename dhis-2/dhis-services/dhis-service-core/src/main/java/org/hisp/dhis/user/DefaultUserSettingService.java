@@ -31,8 +31,15 @@ package org.hisp.dhis.user;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
+import org.hisp.dhis.common.DimensionalObject;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -41,6 +48,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class DefaultUserSettingService
     implements UserSettingService
 {
+    /**
+     * Cache for user settings. Does not accept nulls. Key is name + username.
+     */
+    private static Cache<String, Optional<Serializable>> SETTING_CACHE = CacheBuilder.newBuilder()
+        .expireAfterAccess( 15, TimeUnit.MINUTES )
+        .initialCapacity( 200 )
+        .maximumSize( 10000 )
+        .build();
+    
+    private String getCacheKey( String settingName, String username )
+    {
+        return settingName + DimensionalObject.ITEM_SEP + username;
+    }
+    
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -73,6 +94,8 @@ public class DefaultUserSettingService
     @Override
     public void addUserSetting( UserSetting userSetting )
     {
+        SETTING_CACHE.invalidate( getCacheKey( userSetting.getName(), userSetting.getUser().getUsername() ) );
+        
         userSettingStore.addUserSetting( userSetting );
     }
 
@@ -103,7 +126,9 @@ public class DefaultUserSettingService
             return;
         }
 
-        UserSetting userSetting = getUserSetting( user, name );
+        SETTING_CACHE.invalidate( getCacheKey( name, user.getUsername() ) );
+        
+        UserSetting userSetting = userSettingStore.getUserSetting( user, name );
 
         if ( userSetting == null )
         {
@@ -118,22 +143,18 @@ public class DefaultUserSettingService
         {
             userSetting.setValue( value );
 
-            updateUserSetting( userSetting );
+            userSettingStore.updateUserSetting( userSetting );
         }
-    }
-
-    @Override
-    public void updateUserSetting( UserSetting userSetting )
-    {
-        userSettingStore.updateUserSetting( userSetting );
     }
 
     @Override
     public void deleteUserSetting( UserSetting userSetting )
     {
+        SETTING_CACHE.invalidate( getCacheKey( userSetting.getName(), userSetting.getUser().getUsername() ) );
+        
         userSettingStore.deleteUserSetting( userSetting );
     }
-
+    
     @Override
     public void deleteUserSetting( String name )
     {
@@ -141,69 +162,87 @@ public class DefaultUserSettingService
 
         if ( currentUser != null )
         {
-            deleteUserSetting( getUserSetting( currentUser, name ) );
+            UserSetting setting = userSettingStore.getUserSetting( currentUser, name );
+            
+            if ( setting != null )
+            {
+                deleteUserSetting( setting );
+            }
         }
     }
     
     @Override
-    public UserSetting getUserSetting( User user, String name )
+    public void deleteUserSetting( String name, User user )
     {
-        return userSettingStore.getUserSetting( user, name );
+        UserSetting setting = userSettingStore.getUserSetting( user, name );
+        
+        if ( setting != null )
+        {
+            deleteUserSetting( setting );
+        }
     }
-
+    
     @Override
     public Serializable getUserSetting( String name, Serializable defaultValue )
     {
-        User currentUser = currentUserService.getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
-        if ( currentUser == null )
+        if ( user == null )
         {
             return defaultValue;
         }
 
-        UserSetting userSetting = getUserSetting( currentUser, name );
+        Optional<Serializable> userSetting = getUserSetting( name, user );
 
-        if ( userSetting != null )
-        {
-            return userSetting.getValue();
-        }
-
-        return defaultValue;
+        return userSetting.orElse( defaultValue );
     }
 
     @Override
     public Serializable getUserSetting( String name )
     {
-        User currentUser = currentUserService.getCurrentUser();
+        User user = currentUserService.getCurrentUser();
         
-        return getUserSetting( name, currentUser );
-    }
-
-    private Serializable getUserSetting( String name, User currentUser ) 
-    {
-        if ( currentUser == null )
+        if ( user == null )
         {
             return null;
         }
 
-        UserSetting userSetting = getUserSetting( currentUser, name );
-
-        if ( userSetting != null )
-        {
-            return userSetting.getValue();
-        }
-
-        return null;
+        Optional<Serializable> setting = getUserSetting( name, user );
+        
+        return setting.orElse( null );
     }
 
     @Override
-    public Serializable getUserSettingValue( User user, String name, Serializable defaultValue )
+    public Serializable getUserSetting( String name, Serializable defaultValue, User user )
     {
-        UserSetting setting = getUserSetting( user, name );
+        Optional<Serializable> setting = getUserSetting( name, user );
 
-        return setting != null && setting.getValue() != null ? setting.getValue() : defaultValue;
+        return setting.orElse( defaultValue );
     }
 
+    private Optional<Serializable> getUserSetting( String name, User user )
+    {
+        try
+        {
+            String cacheKey = getCacheKey( name, user.getUsername() );
+            
+            Optional<Serializable> setting = SETTING_CACHE.get( cacheKey, () -> getUserSettingOptional( user, name ) );
+            
+            return setting;
+        }
+        catch ( ExecutionException ignored )
+        {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<Serializable> getUserSettingOptional( User user, String name )
+    {
+        UserSetting setting = userSettingStore.getUserSetting( user, name );
+        
+        return setting != null && setting.getValue() != null ? Optional.of( setting.getValue() ) : Optional.empty();
+    }
+    
     @Override
     public List<UserSetting> getAllUserSettings()
     {
@@ -221,5 +260,11 @@ public class DefaultUserSettingService
     public List<UserSetting> getAllUserSettings( User user )
     {
         return userSettingStore.getAllUserSettings( user );
+    }
+
+    @Override
+    public void invalidateCache()
+    {
+        SETTING_CACHE.invalidateAll();
     }
 }

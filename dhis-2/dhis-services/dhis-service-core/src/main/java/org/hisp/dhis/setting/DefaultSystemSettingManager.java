@@ -58,7 +58,7 @@ public class DefaultSystemSettingManager
      * Cache for system settings. Does not accept nulls.
      */
     private static Cache<String, Serializable> SETTING_CACHE = CacheBuilder.newBuilder()
-        .expireAfterAccess( 5, TimeUnit.MINUTES )
+        .expireAfterAccess( 15, TimeUnit.MINUTES )
         .initialCapacity( 200 )
         .maximumSize( 400 )
         .build();
@@ -111,9 +111,7 @@ public class DefaultSystemSettingManager
 
     @Override
     public void saveSystemSetting( Setting setting, Serializable value )
-    {
-        SETTING_CACHE.invalidate( setting.getName() );
-        
+    {        
         saveSystemSetting( setting.getName(), value );
     }
 
@@ -236,6 +234,12 @@ public class DefaultSystemSettingManager
         }
 
         return map;
+    }
+    
+    @Override
+    public void invalidateCache()
+    {
+        SETTING_CACHE.invalidateAll();
     }
     
     // -------------------------------------------------------------------------
