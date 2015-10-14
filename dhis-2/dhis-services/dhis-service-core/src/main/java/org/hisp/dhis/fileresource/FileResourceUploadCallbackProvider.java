@@ -54,8 +54,12 @@ public class FileResourceUploadCallbackProvider
                 log.error( "Saving file content failed", ex );
 
                 FileResource fetchedFileResource = idObjectManager.get( FileResource.class, fileResourceUid );
-                fetchedFileResource.setStorageStatus( FileResourceStorageStatus.FAILED );
-                idObjectManager.update( fetchedFileResource );
+
+                if ( fetchedFileResource != null )
+                {
+                    fetchedFileResource.setStorageStatus( FileResourceStorageStatus.FAILED );
+                    idObjectManager.update( fetchedFileResource );
+                }
             }
 
             @Override
