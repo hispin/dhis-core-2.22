@@ -50,8 +50,7 @@
                     $field.val( '' );
                     setButtonUpload();
                 },
-                error: function( data )
-                {
+                error: function( data ) {
                     console.log( data.errorThrown );
                 }
             } );
