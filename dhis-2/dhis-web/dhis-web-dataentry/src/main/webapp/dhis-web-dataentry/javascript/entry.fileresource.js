@@ -45,7 +45,6 @@
                 success: function() {
                     $fileinfoName.text( '' );
                     $fileinfoSize.text( '' );
-                    $fileinfo.hide();
                     $displayField.css( 'background-color', '' );
                     $field.val( '' );
                     setButtonUpload();
