@@ -133,7 +133,7 @@ public class EmailMessageSender
 
             for ( User user : users )
             {
-                boolean doSend = forceSend || (Boolean) userSettingService.getUserSettingValue( user, KEY_MESSAGE_EMAIL_NOTIFICATION, false );
+                boolean doSend = forceSend || (Boolean) userSettingService.getUserSetting( KEY_MESSAGE_EMAIL_NOTIFICATION, false, user );
 
                 if ( doSend && user.getEmail() != null && !user.getEmail().trim().isEmpty() )
                 {

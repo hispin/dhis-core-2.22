@@ -36,7 +36,6 @@ import java.util.List;
  * the current user from {@link CurrentUserService}.
  * 
  * @author Torgeir Lorange Ostby
- * @version $Id: UserSettingService.java 2869 2007-02-20 14:26:09Z andegje $
  */
 public interface UserSettingService
 {
@@ -50,11 +49,13 @@ public interface UserSettingService
     String KEY_MESSAGE_SMS_NOTIFICATION = "keyMessageSmsNotification";
     String KEY_UI_LOCALE = "keyUiLocale";
     String KEY_DB_LOCALE = "keyDbLocale";
-    String KEY_GENERATE_REPORT_INTERFACE = "keyGenerateReportInterface";
     String KEY_ANALYSIS_DISPLAY_PROPERTY = "keyAnalysisDisplayProperty";
     String AUTO_SAVE_CASE_ENTRY_FORM = "autoSaveCaseEntryForm";
     String AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM = "autoSavetTrackedEntityForm";
+    
     String DEFAULT_ANALYSIS_DISPLAY_PROPERTY = "name";
+    
+    //TODO use enum for names
     
     // -------------------------------------------------------------------------
     // UserSettings
@@ -99,13 +100,6 @@ public interface UserSettingService
     void saveUserSetting( String name, Serializable value, User user );
 
     /**
-     * Updates a UserSetting.
-     *
-     * @param userSetting the UserSetting to update.
-     */
-    void updateUserSetting( UserSetting userSetting );
-
-    /**
      * Deletes a UserSetting.
      *
      * @param userSetting the UserSetting to delete.
@@ -119,37 +113,15 @@ public interface UserSettingService
      * @throws NoCurrentUserException if there is no current user.
      */
     void deleteUserSetting( String name );
+
+    /**
+     * Deletes the user setting with the given name for the given user.
+     * 
+     * @param name the name of the user setting to delete.
+     * @user the user.
+     */
+    void deleteUserSetting( String name, User user );
     
-    /**
-     * Retrieves the UserSetting associated with the given User for the given
-     * UserSetting name.
-     *
-     * @param user the User.
-     * @param name the name of the UserSetting.
-     * @return the UserSetting.
-     */
-    UserSetting getUserSetting( User user, String name );
-
-    /**
-     * Retrieves a user setting value for the given user and setting name. Returns
-     * the given default value if the setting does not exist or the setting value
-     * is null.
-     *
-     * @param user         the user.
-     * @param name         the setting name.
-     * @param defaultValue the default value.
-     * @return a setting value.
-     */
-    Serializable getUserSettingValue( User user, String name, Serializable defaultValue );
-
-    /**
-     * Retrieves all UserSettings for the given User.
-     *
-     * @param user the User.
-     * @return a List of UserSettings.
-     */
-    List<UserSetting> getAllUserSettings( User user );
-
     /**
      * Returns the value of the user setting specified by the given name.
      * 
@@ -174,10 +146,35 @@ public interface UserSettingService
     Serializable getUserSetting( String name, Serializable defaultValue );
 
     /**
+     * Retrieves a user setting value for the given user and setting name. Returns
+     * the given default value if the setting does not exist or the setting value
+     * is null.
+     *
+     * @param name         the setting name.
+     * @param defaultValue the default value.
+     * @param user         the user.
+     * @return a setting value.
+     */
+    Serializable getUserSetting( String name, Serializable defaultValue, User user );
+
+    /**
+     * Retrieves all UserSettings for the given User.
+     *
+     * @param user the User.
+     * @return a List of UserSettings.
+     */
+    List<UserSetting> getAllUserSettings( User user );
+
+    /**
      * Returns all user settings belonging to the current user.
      * 
      * @return all user settings belonging to the current user.
      * @throws NoCurrentUserException if there is no current user.
      */
     List<UserSetting> getAllUserSettings();
+    
+    /**
+     * Invalidates in-memory caches.
+     */
+    void invalidateCache();
 }

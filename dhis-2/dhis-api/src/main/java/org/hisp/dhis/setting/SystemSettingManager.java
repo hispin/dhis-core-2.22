@@ -142,6 +142,8 @@ public interface SystemSettingManager
     
     Map<String, Serializable> getSystemSettingsAsMap( Set<String> names );
     
+    void invalidateCache();
+    
     // -------------------------------------------------------------------------
     // Specific methods
     // -------------------------------------------------------------------------

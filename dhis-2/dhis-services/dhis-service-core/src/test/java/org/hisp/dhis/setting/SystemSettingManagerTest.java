@@ -51,6 +51,12 @@ public class SystemSettingManagerTest
     @Autowired
     private SystemSettingManager systemSettingManager;
 
+    @Override
+    public void setUpTest()
+    {
+        systemSettingManager.invalidateCache();
+    }
+    
     @Test
     public void testSaveGetSystemSetting()
     {
