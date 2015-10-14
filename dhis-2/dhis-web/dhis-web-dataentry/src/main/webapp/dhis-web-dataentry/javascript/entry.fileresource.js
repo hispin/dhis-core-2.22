@@ -23,7 +23,7 @@
 
         var dataElementId = split.dataElementId;
         var optionComboId = split.optionComboId;
-        var orgUnitid = dhis2.de.currentOrganisationUnitId;
+        var orgUnitid = split.organisationUnitId;
         var periodId = $( '#selectedPeriodId' ).val();
 
         var formData = {
@@ -118,7 +118,14 @@
         var onFileDataValueSavedSuccess = function( fileResource ) {
             var name = fileResource.name, size = '(' + filesize( fileResource.contentLength ) + ')';
 
-            $fileinfoName.text( name );
+            //$fileinfoName.text( name );
+
+            $('<a>', {
+                text: name,
+                title: name,
+                href: createDownloadLink()
+            } ).appendTo( $fileinfoName );
+
             $fileinfoSize.text( size );
             $fileinfo.show();
             $progressBar.toggleClass( 'upload-progress-bar-complete' );
@@ -133,6 +140,10 @@
             var percent = parseInt( loaded / total * 100, 10 );
             $progressBar.css( 'width', percent + '%' );
             $progressInfo.text( percent + '%' );
+        };
+
+        var createDownloadLink = function() {
+            return "../api/dataValues/files?" + $.param( formData );
         };
 
         var disableField = function() {
