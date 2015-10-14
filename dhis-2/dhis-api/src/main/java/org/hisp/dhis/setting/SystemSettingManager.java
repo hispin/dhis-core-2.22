@@ -130,8 +130,6 @@ public interface SystemSettingManager
 
     Serializable getSystemSetting( String name );
 
-    Serializable getSystemSetting( String name, Serializable defaultValue );
-
     Serializable getSystemSetting( Setting setting );
     
     Serializable getSystemSetting( Setting setting, Serializable defaultValue );
