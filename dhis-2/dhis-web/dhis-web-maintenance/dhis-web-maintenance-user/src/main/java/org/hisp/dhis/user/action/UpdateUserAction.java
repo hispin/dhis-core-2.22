@@ -51,7 +51,6 @@ import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.user.UserSetting;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -367,8 +366,8 @@ public class UpdateUserAction
         // User settings
         // ---------------------------------------------------------------------
 
-        userSettingService.addOrUpdateUserSetting( new UserSetting( user, UserSettingService.KEY_UI_LOCALE, LocaleUtils.getLocale( localeUi ) ) );
-        userSettingService.addOrUpdateUserSetting( new UserSetting( user, UserSettingService.KEY_DB_LOCALE, LocaleUtils.getLocale( localeDb ) ) );
+        userSettingService.saveUserSetting( UserSettingService.KEY_UI_LOCALE, LocaleUtils.getLocale( localeUi ), user );
+        userSettingService.saveUserSetting( UserSettingService.KEY_DB_LOCALE, LocaleUtils.getLocale( localeDb ), user );
 
         // ---------------------------------------------------------------------
         // User groups

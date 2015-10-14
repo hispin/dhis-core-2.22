@@ -67,15 +67,7 @@ public interface UserSettingService
      * @param userSetting the UserSetting to add.
      */
     void addUserSetting( UserSetting userSetting );
-
-    /**
-     * If a matching UserSetting exists, based on its user and name, it will be
-     * updated, if not, the given UserSetting will be added.
-     *
-     * @param userSetting the UserSetting.
-     */
-    void addOrUpdateUserSetting( UserSetting userSetting );
-
+    
     /**
      * Saves the name/value pair as a user setting connected to the currently
      * logged in user.
@@ -87,7 +79,8 @@ public interface UserSettingService
     void saveUserSetting( String name, Serializable value );
 
     /**
-     * Saves the name/value pair as a user setting connected to user identified by username
+     * Saves the name/value pair as a user setting connected to user identified 
+     * by username.
      *
      * @param name the name/handle of the value.
      * @param value the value to store.
@@ -95,6 +88,16 @@ public interface UserSettingService
      * @throws NoCurrentUserException if there is no user.
      */
     void saveUserSetting( String name, Serializable value, String username );
+
+    /**
+     * Saves the name/value pair as a user setting connected to user.
+     *
+     * @param name the name/handle of the value.
+     * @param value the value to store.
+     * @param username the user.
+     * @throws NoCurrentUserException if there is no user.
+     */
+    void saveUserSetting( String name, Serializable value, User user );
 
     /**
      * Updates a UserSetting.
@@ -213,5 +216,4 @@ public interface UserSettingService
      * @throws NoCurrentUserException if there is no current user.
      */
     List<UserSetting> getAllUserSettings();
-
 }
