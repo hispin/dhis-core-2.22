@@ -86,7 +86,7 @@ public class GetInterpretations
         List<Interpretation> finalInterpretations = new ArrayList<>();
 
         Iterator<Interpretation> i = tempInterpretations.iterator();
-    
+
         while ( i.hasNext() )
         {
             Interpretation currentInterpretation = i.next();
