@@ -1679,6 +1679,15 @@ function insertDataValues( json )
             {
                 $( fieldId ).val( value.val );
 
+                var split = dhis2.de.splitFieldId( value.id );
+
+                var dvParams = {
+                    'de': split.dataElementId,
+                    'co': split.optionComboId,
+                    'ou': split.organisationUnitId,
+                    'pe': $( '#selectedPeriodId' ).val()
+                };
+
                 var $container = $( '.entryfileresource-container[name=' + value.id + '-val]' );
 
                 var name = "", size = "";
@@ -1693,7 +1702,14 @@ function insertDataValues( json )
                     name = i18n_loading_file_info_failed;
                 }
 
-                $container.find( '.upload-fileinfo-name' ).text( name );
+                var $filename = $container.find( '.upload-fileinfo-name' );
+
+                $( '<a>', {
+                    text: name,
+                    title: name,
+                    href: "../api/dataValues/files?" + $.param( dvParams )
+                } ).appendTo( $filename );
+
                 $container.find( '.upload-fileinfo-size' ).text( size );
             }
             else 
