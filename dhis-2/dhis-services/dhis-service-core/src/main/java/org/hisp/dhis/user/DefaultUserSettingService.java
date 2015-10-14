@@ -135,13 +135,6 @@ public class DefaultUserSettingService
     }
 
     @Override
-    public void removeUserSettings( User user )
-    {
-        userSettingStore.removeUserSettings( user );
-    }
-
-
-    @Override
     public void deleteUserSetting( String name )
     {
         User currentUser = currentUserService.getCurrentUser();
@@ -152,12 +145,6 @@ public class DefaultUserSettingService
         }
     }
     
-    @Override
-    public List<UserSetting> getUserSettings( String name )
-    {
-        return userSettingStore.getUserSettings( name );
-    }
-
     @Override
     public UserSetting getUserSetting( User user, String name )
     {
@@ -190,14 +177,6 @@ public class DefaultUserSettingService
         User currentUser = currentUserService.getCurrentUser();
         
         return getUserSetting( name, currentUser );
-    }
-
-    @Override
-    public Serializable getUserSetting( String name, String username )
-    {
-        UserCredentials credentials = userService.getUserCredentialsByUsername( username );
-        
-        return getUserSetting( name, credentials == null ? null : credentials.getUserInfo() );
     }
 
     private Serializable getUserSetting( String name, User currentUser ) 

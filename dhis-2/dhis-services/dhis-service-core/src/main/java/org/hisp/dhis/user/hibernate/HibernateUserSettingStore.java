@@ -100,17 +100,6 @@ public class HibernateUserSettingStore
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<UserSetting> getUserSettings( String name )
-    {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery( "from UserSetting us where us.name = :name" );
-        query.setString( "name", name );
-
-        return query.list();
-    }
-
-    @Override
     public void deleteUserSetting( UserSetting userSetting )
     {
         Session session = sessionFactory.getCurrentSession();
