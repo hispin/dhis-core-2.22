@@ -49,7 +49,7 @@ public class DefaultUserSettingService
     implements UserSettingService
 {
     /**
-     * Cache for user settings. Does not accept nulls. Key is name + username.
+     * Cache for user settings. Does not accept nulls. Key is "name-username".
      */
     private static Cache<String, Optional<Serializable>> SETTING_CACHE = CacheBuilder.newBuilder()
         .expireAfterAccess( 15, TimeUnit.MINUTES )
@@ -226,9 +226,7 @@ public class DefaultUserSettingService
         {
             String cacheKey = getCacheKey( name, user.getUsername() );
             
-            Optional<Serializable> setting = SETTING_CACHE.get( cacheKey, () -> getUserSettingOptional( user, name ) );
-            
-            return setting;
+            return SETTING_CACHE.get( cacheKey, () -> getUserSettingOptional( user, name ) );
         }
         catch ( ExecutionException ignored )
         {
