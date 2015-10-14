@@ -57,7 +57,7 @@ public class DefaultSystemSettingManager
     /**
      * Cache for system settings. Does not accept nulls.
      */
-    private static Cache<String, Serializable> SETTING_CACHE = CacheBuilder.newBuilder()
+    private static Cache<String, Optional<Serializable>> SETTING_CACHE = CacheBuilder.newBuilder()
         .expireAfterAccess( 15, TimeUnit.MINUTES )
         .initialCapacity( 200 )
         .maximumSize( 400 )
@@ -143,37 +143,31 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public Serializable getSystemSetting( String name, Serializable defaultValue )
-    {
-        SystemSetting setting = systemSettingStore.getByName( name );
-
-        return setting != null && setting.hasValue() ? setting.getValue() : defaultValue;
-    }
-
-    @Override
     public Serializable getSystemSetting( Setting setting )
     {
-        if ( setting.hasDefaultValue() )
+        try
         {
-            try
-            {
-                return SETTING_CACHE.get( setting.getName(), () -> getSystemSetting( setting.getName(), setting.getDefaultValue() ) );
-            }
-            catch ( ExecutionException ignored )
-            {
-                return null;
-            }
+            Optional<Serializable> value = SETTING_CACHE.get( setting.getName(), () -> getSystemSettingOptional( setting.getName(), setting.getDefaultValue() ) );
+            
+            return value.orElse( null );
         }
-        else
+        catch ( ExecutionException ignored )
         {
-            return getSystemSetting( setting.getName(), setting.getDefaultValue() );
-        }        
+            return null;
+        }
     }
 
     @Override
     public Serializable getSystemSetting( Setting setting, Serializable defaultValue )
     {
-        return getSystemSetting( setting.getName(), defaultValue );
+        return getSystemSettingOptional( setting.getName(), defaultValue ).orElse( null );
+    }
+
+    private Optional<Serializable> getSystemSettingOptional( String name, Serializable defaultValue )
+    {
+        SystemSetting setting = systemSettingStore.getByName( name );
+        
+        return setting != null && setting.hasValue() ? Optional.of( setting.getValue() ) : Optional.ofNullable( defaultValue );
     }
 
     @Override
@@ -186,6 +180,7 @@ public class DefaultSystemSettingManager
     public Map<String, Serializable> getSystemSettingsAsMap()
     {
         Map<String, Serializable> settingsMap = new HashMap<>();
+        
         Collection<SystemSetting> systemSettings = getAllSystemSettings();
 
         for ( SystemSetting systemSetting : systemSettings )

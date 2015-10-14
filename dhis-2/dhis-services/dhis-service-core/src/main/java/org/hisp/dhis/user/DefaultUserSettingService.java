@@ -224,7 +224,7 @@ public class DefaultUserSettingService
     {
         UserSetting setting = userSettingStore.getUserSetting( user, name );
         
-        return setting != null && setting.getValue() != null ? Optional.of( setting.getValue() ) : Optional.empty();
+        return setting != null ? Optional.ofNullable( setting.getValue() ) : Optional.empty();
     }
     
     @Override

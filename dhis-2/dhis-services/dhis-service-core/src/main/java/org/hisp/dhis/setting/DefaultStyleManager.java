@@ -35,15 +35,11 @@ import org.hisp.dhis.user.UserSettingService;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class DefaultStyleManager
     implements StyleManager
 {
-    private static final String SETTING_NAME_STYLE = "currentStyle";
-
     private static final String SEPARATOR = "/";
-
     private static final String SYSTEM_SEPARATOR = File.separator;
 
     // -------------------------------------------------------------------------
@@ -64,13 +60,6 @@ public class DefaultStyleManager
         this.userSettingService = userSettingService;
     }
 
-    private String defaultStyle;
-
-    public void setDefaultStyle( String defaultStyle )
-    {
-        this.defaultStyle = defaultStyle;
-    }
-
     /**
      * Map for styles. The key refers to the user setting key and the value refers
      * to the path to the CSS file of the style relative to /dhis-web-commons/.
@@ -89,19 +78,19 @@ public class DefaultStyleManager
     @Override
     public void setSystemStyle( String style )
     {
-         systemSettingManager.saveSystemSetting( SETTING_NAME_STYLE, style );
+        systemSettingManager.saveSystemSetting( Setting.STYLE.getName(), style );
     }
     
     @Override
     public void setUserStyle( String style )
     {
-        userSettingService.saveUserSetting( SETTING_NAME_STYLE, style );
+        userSettingService.saveUserSetting( Setting.STYLE.getName(), style );
     }
 
     @Override
     public String getCurrentStyle()
     {
-        String style = (String) userSettingService.getUserSetting( SETTING_NAME_STYLE );
+        String style = (String) userSettingService.getUserSetting( Setting.STYLE.getName() );
         
         if ( style != null )
         {
@@ -114,7 +103,7 @@ public class DefaultStyleManager
     @Override
     public String getSystemStyle()
     {
-        return (String) systemSettingManager.getSystemSetting( SETTING_NAME_STYLE, styles.get( defaultStyle ) );
+        return (String) systemSettingManager.getSystemSetting( Setting.STYLE );
     }
 
     @Override
