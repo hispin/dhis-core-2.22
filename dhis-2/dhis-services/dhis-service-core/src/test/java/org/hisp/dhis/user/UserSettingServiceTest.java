@@ -58,10 +58,10 @@ public class UserSettingServiceTest
         
         userA = createUser( 'A' );
         userService.addUser( userA );
-        UserCredentials userCredentials = userA.getUserCredentials();
-        userCredentials.setUsername( "usernameA" );
-        userCredentials.setUserInfo( userA );
-        userService.addUserCredentials( userCredentials );
+        UserCredentials userCredentialsA = userA.getUserCredentials();
+        userCredentialsA.setUsername( "usernameA" );
+        userCredentialsA.setUserInfo( userA );
+        userService.addUserCredentials( userCredentialsA );
     }
 
     @Test

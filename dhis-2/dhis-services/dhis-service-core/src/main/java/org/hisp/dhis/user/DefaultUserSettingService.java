@@ -182,37 +182,35 @@ public class DefaultUserSettingService
     @Override
     public Serializable getUserSetting( String name )
     {
-        User user = currentUserService.getCurrentUser();
-        
-        return getUserSetting( name, user ).orElse( null );
+        return getUserSetting( name, Optional.empty() ).orElse( null );
     }
 
     @Override
     public Serializable getUserSetting( String name, Serializable defaultValue )
     {
-        User user = currentUserService.getCurrentUser();
-
-        return getUserSetting( name, user ).orElse( defaultValue );
+        return getUserSetting( name, Optional.empty() ).orElse( defaultValue );
     }
 
     @Override
     public Serializable getUserSetting( String name, Serializable defaultValue, User user )
     {
-        return getUserSetting( name, user ).orElse( defaultValue );
+        return getUserSetting( name, Optional.ofNullable( user ) ).orElse( defaultValue );
     }
 
-    private Optional<Serializable> getUserSetting( String name, User user )
+    private Optional<Serializable> getUserSetting( String name, Optional<User> user )
     {
-        if ( name == null || user == null )
+        if ( name == null )
         {
             return Optional.empty();
         }
         
+        String username = user.isPresent() ? user.get().getUsername() : currentUserService.getCurrentUsername();
+
         try
         {
-            String cacheKey = getCacheKey( name, user.getUsername() );
+            String cacheKey = getCacheKey( name, username );
             
-            return SETTING_CACHE.get( cacheKey, () -> getUserSettingOptional( user, name ) );
+            return SETTING_CACHE.get( cacheKey, () -> getUserSettingOptional( username, name ) );
         }
         catch ( ExecutionException ignored )
         {
@@ -220,9 +218,16 @@ public class DefaultUserSettingService
         }
     }
 
-    private Optional<Serializable> getUserSettingOptional( User user, String name )
+    private Optional<Serializable> getUserSettingOptional( String username, String settingName )
     {
-        UserSetting setting = userSettingStore.getUserSetting( user, name );
+        UserCredentials userCredentials = userService.getUserCredentialsByUsername( username );
+
+        if ( userCredentials == null )
+        {
+            return Optional.empty();
+        }
+        
+        UserSetting setting = userSettingStore.getUserSetting( userCredentials.getUserInfo(), settingName );
         
         return setting != null ? Optional.ofNullable( setting.getValue() ) : Optional.empty();
     }
