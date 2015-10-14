@@ -64,6 +64,8 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
+
 /**
  * @author Halvdan Hoem Grelland
  */
@@ -328,7 +330,7 @@ public class JCloudsFileResourceContentStore
 
         try
         {
-            etag = blobStore.putBlob( container, blob );
+            etag = blobStore.putBlob( container, blob, multipart() );
         }
         catch ( RuntimeException rte )
         {
