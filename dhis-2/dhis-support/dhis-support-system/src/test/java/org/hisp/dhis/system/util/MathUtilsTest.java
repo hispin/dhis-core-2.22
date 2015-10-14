@@ -360,26 +360,4 @@ public class MathUtilsTest
         assertEquals( 84d, MathUtils.calculateExpression( "70/1000*12*100" ), DELTA );
         assertEquals( 1158d, MathUtils.calculateExpression( "70+1000-12+100" ), DELTA );        
     }
-    
-    @Test
-    public void testCalculateExpressionOneIfZeroOrPositive()
-    {
-        assertEquals( 1d, MathUtils.calculateExpression( "oizp(314)" ), DELTA );
-        assertEquals( 1d, MathUtils.calculateExpression( "oizp(0)" ), DELTA );
-        assertEquals( 0d, MathUtils.calculateExpression( "oizp(-3)" ), DELTA );
-        assertEquals( 5d, MathUtils.calculateExpression( "4 + oizp(314)" ), DELTA );
-        assertEquals( 4d, MathUtils.calculateExpression( "oizp(0) + 3" ), DELTA );
-        assertEquals( 5d, MathUtils.calculateExpression( "oizp(-3) + 5" ), DELTA );
-    }
-
-    @Test
-    public void testCalculateExpressionZeroIfNegative()
-    {
-        assertEquals( 314d, MathUtils.calculateExpression( "zing(314)" ), DELTA );
-        assertEquals( 0d, MathUtils.calculateExpression( "zing(0)" ), DELTA );
-        assertEquals( 0d, MathUtils.calculateExpression( "zing(-3)" ), DELTA );
-        assertEquals( -3d, MathUtils.calculateExpression( "zing(0) - 3" ), DELTA );
-        assertEquals( 5d, MathUtils.calculateExpression( "zing(-3) + 5" ), DELTA );
-        assertEquals( -2d, MathUtils.calculateExpression( "zing(-3) - 2" ), DELTA );
-    }
 }

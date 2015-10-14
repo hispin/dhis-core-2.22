@@ -38,8 +38,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.validator.routines.DoubleValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.hisp.dhis.expression.Operator;
-import org.hisp.dhis.system.math.OneIfZeroOrPositiveFunction;
-import org.hisp.dhis.system.math.ZeroIfNegativeFunction;
 import org.nfunk.jep.JEP;
 
 /**
@@ -158,9 +156,6 @@ public class MathUtils
     {
         final JEP parser = new JEP();
         parser.addStandardFunctions();
-        parser.addStandardConstants();
-        parser.addFunction( OneIfZeroOrPositiveFunction.NAME, new OneIfZeroOrPositiveFunction() );
-        parser.addFunction( ZeroIfNegativeFunction.NAME, new ZeroIfNegativeFunction() );
         return parser;
     }
     
