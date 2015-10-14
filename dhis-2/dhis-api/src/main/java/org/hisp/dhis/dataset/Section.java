@@ -170,7 +170,7 @@ public class Section
     {
         return dataElements != null && !dataElements.isEmpty();
     }
-    
+
     @Override
     public boolean haveUniqueNames()
     {
@@ -286,18 +286,10 @@ public class Section
             }
 
             removeAllDataElements();
-
-            for ( DataElement dataElement : section.getDataElements() )
-            {
-                addDataElement( dataElement );
-            }
+            section.getDataElements().forEach( this::addDataElement );
 
             removeAllGreyedFields();
-
-            for ( DataElementOperand dataElementOperand : section.getGreyedFields() )
-            {
-                addGreyedField( dataElementOperand );
-            }
+            section.getGreyedFields().forEach( this::addGreyedField );
         }
     }
 }
