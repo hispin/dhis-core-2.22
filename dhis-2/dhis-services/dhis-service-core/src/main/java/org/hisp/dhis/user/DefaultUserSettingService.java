@@ -30,15 +30,12 @@ package org.hisp.dhis.user;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Torgeir Lorange Ostby
- * @version $Id: DefaultUserSettingService.java 5724 2008-09-18 14:37:01Z larshelg $
  */
 @Transactional
 public class DefaultUserSettingService
@@ -226,19 +223,6 @@ public class DefaultUserSettingService
         UserSetting setting = getUserSetting( user, name );
 
         return setting != null && setting.getValue() != null ? setting.getValue() : defaultValue;
-    }
-
-    @Override
-    public Map<User, Serializable> getUserSettings( String name, Serializable defaultValue )
-    {
-        Map<User, Serializable> map = new HashMap<>();
-
-        for ( UserSetting setting : userSettingStore.getUserSettings( name ) )
-        {
-            map.put( setting.getUser(), setting.getValue() != null ? setting.getValue() : defaultValue );
-        }
-
-        return map;
     }
 
     @Override

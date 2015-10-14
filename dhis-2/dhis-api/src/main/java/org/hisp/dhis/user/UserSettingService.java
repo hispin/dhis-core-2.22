@@ -30,7 +30,6 @@ package org.hisp.dhis.user;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The main interface for working with user settings. Implementation need to get
@@ -165,16 +164,6 @@ public interface UserSettingService
      * @return a List of UserSettings.
      */
     List<UserSetting> getUserSettings( String name );
-
-    /**
-     * Returns a Map with an entry for all UserSettings with the given name where
-     * the key is the user and the value is the value of the user setting.
-     *
-     * @param name         the name of the UserSetting.
-     * @param defaultValue the value to return if the UserSetting value is null.
-     * @return a Map.
-     */
-    Map<User, Serializable> getUserSettings( String name, Serializable defaultValue );
 
     /**
      * Returns the value of the user setting specified by the given name.
