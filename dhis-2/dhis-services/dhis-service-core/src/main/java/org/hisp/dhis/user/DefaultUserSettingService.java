@@ -80,29 +80,13 @@ public class DefaultUserSettingService
     }
 
     @Override
-    public void addOrUpdateUserSetting( UserSetting userSetting )
-    {
-        UserSetting setting = getUserSetting( userSetting.getUser(), userSetting.getName() );
-
-        if ( setting != null )
-        {
-            setting.mergeWith( userSetting );
-            updateUserSetting( setting );
-        }
-        else
-        {
-            addUserSetting( userSetting );
-        }
-    }
-
-    @Override
     public void saveUserSetting( String name, Serializable value, String username )
     {
         UserCredentials credentials = userService.getUserCredentialsByUsername( username );
         
         if ( credentials != null )
         {        
-            save( name, value, credentials.getUserInfo() );
+            saveUserSetting( name, value, credentials.getUserInfo() );
         }
     }
 
@@ -111,10 +95,11 @@ public class DefaultUserSettingService
     {
         User currentUser = currentUserService.getCurrentUser();
         
-        save( name, value, currentUser );
+        saveUserSetting( name, value, currentUser );
     }
 
-    private void save( String name, Serializable value, User user )
+    @Override
+    public void saveUserSetting( String name, Serializable value, User user )
     {
         if ( user == null )
         {
