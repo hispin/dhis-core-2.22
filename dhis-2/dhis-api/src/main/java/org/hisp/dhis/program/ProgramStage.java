@@ -52,10 +52,10 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Abyot Asalefew
@@ -143,17 +143,9 @@ public class ProgramStage
 
     public List<DataElement> getAllDataElements()
     {
-        List<DataElement> dataElements = new ArrayList<>();
-
-        for ( ProgramStageDataElement element : programStageDataElements )
-        {
-            if ( element.getDataElement() != null )
-            {
-                dataElements.add( element.getDataElement() );
-            }
-        }
-
-        return dataElements;
+        return programStageDataElements.stream()
+            .filter( element -> element.getDataElement() != null )
+            .map( ProgramStageDataElement::getDataElement ).collect( Collectors.toList() );
     }
 
     @JsonProperty
