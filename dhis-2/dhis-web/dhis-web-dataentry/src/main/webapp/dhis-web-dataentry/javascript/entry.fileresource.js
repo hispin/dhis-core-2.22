@@ -42,8 +42,7 @@
                 type: 'POST',
                 dataType: 'json',
                 data: postData,
-                success: function()
-                {
+                success: function() {
                     $fileinfoName.text( '' );
                     $fileinfoSize.text( '' );
                     $fileinfo.hide();
@@ -163,26 +162,22 @@
             multipart: true,
             replaceFileInput: false,
             progressInterval: 250, /* ms */
-            start: function( e )
-            {
+            start: function( e ) {
                 $button.button( 'disable' );
                 $progressBar.toggleClass( 'upload-progress-bar-complete', false );
                 $fileinfo.hide();
                 $progress.show();
             },
-            progress: function( e, data )
-            {
+            progress: function( e, data ) {
                 updateProgress( data.loaded, data.total );
             },
-            fail: function( e, data )
-            {
+            fail: function( e, data ) {
                 console.error( data.errorThrown );
 
                 setHeaderDelayMessage( i18n_file_upload_failed );
                 setButtonUpload();
             },
-            done: function( e, data )
-            {
+            done: function( e, data ) {
                 var fileResource = data.result.response.fileResource;
                 $field.val( fileResource.id );
 
