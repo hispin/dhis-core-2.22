@@ -113,13 +113,6 @@ public interface UserSettingService
     void deleteUserSetting( UserSetting userSetting );
 
     /**
-     * Removes all user settings associated with the given user.
-     *
-     * @param user the user.
-     */
-    void removeUserSettings( User user );
-
-    /**
      * Deletes the user setting with the given name.
      * 
      * @param name the name of the user setting to delete.
@@ -158,14 +151,6 @@ public interface UserSettingService
     List<UserSetting> getAllUserSettings( User user );
 
     /**
-     * Retrieves all UserSettings with the given name.
-     * 
-     * @param name the name.
-     * @return a List of UserSettings.
-     */
-    List<UserSetting> getUserSettings( String name );
-
-    /**
      * Returns the value of the user setting specified by the given name.
      * 
      * @param name the name of the user setting.
@@ -174,16 +159,6 @@ public interface UserSettingService
      * @throws NoCurrentUserException if there is no current user.
      */
     Serializable getUserSetting( String name );
-
-    /**
-     * Returns the value of the user setting specified by the given name.
-     * 
-     * @param name the name of the user setting.
-     * @return the value corresponding to the named user setting, or null if
-     *         there is no match.
-     * @throws NoCurrentUserException if there is no current user.
-     */
-    Serializable getUserSetting( String name, String username );
 
     /**
      * Returns the value of the user setting specified by the given name. If

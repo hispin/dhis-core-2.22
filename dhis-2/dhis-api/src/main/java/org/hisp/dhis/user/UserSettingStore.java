@@ -72,14 +72,6 @@ public interface UserSettingStore
     void deleteUserSetting( UserSetting userSetting );
 
     /**
-     * Returns all UserSettings with the given name.
-     *
-     * @param name the name.
-     * @return a List of UserSettings.
-     */
-    List<UserSetting> getUserSettings( String name );
-
-    /**
      * Removes all user settings associated with the given user.
      * 
      * @param user the user.
