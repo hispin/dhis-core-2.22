@@ -62,11 +62,6 @@ import java.util.List;
 public class Interpretation
     extends BaseIdentifiableObject
 {
-    public static final String TYPE_CHART = "chart";
-    public static final String TYPE_MAP = "map";
-    public static final String TYPE_REPORT_TABLE = "reportTable";
-    public static final String TYPE_DATASET_REPORT = "dataSetReport";
-
     private Chart chart;
 
     private Map map;
