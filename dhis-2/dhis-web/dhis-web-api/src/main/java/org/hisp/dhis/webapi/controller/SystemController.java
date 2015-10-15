@@ -39,6 +39,8 @@ import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.node.types.SimpleNode;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.setting.StyleManager;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.SystemInfo;
 import org.hisp.dhis.system.SystemService;
 import org.hisp.dhis.system.notification.Notification;
@@ -60,6 +62,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.UUID;
 
 /**
@@ -75,7 +78,13 @@ public class SystemController
     private CurrentUserService currentUserService;
 
     @Autowired
-    private SystemService systemService;
+    private SystemService systemService;    
+
+    @Autowired
+    private StyleManager styleManager;
+
+    @Autowired
+    private SystemSettingManager systemSettingManager;
 
     @Autowired
     private Notifier notifier;
@@ -187,5 +196,17 @@ public class SystemController
     public @ResponseBody String ping( Model model )
     {
         return "pong";
+    }
+    
+    @RequestMapping( value = "/flags", method = RequestMethod.GET, produces = { "application/json" } )
+    public @ResponseBody List<String> getFlags()
+    {
+        return systemSettingManager.getFlags();
+    }
+    
+    @RequestMapping( value = "/styles", method = RequestMethod.GET, produces = { "application/json" } )
+    public @ResponseBody SortedMap<String, String> getStyles()
+    {
+        return styleManager.getStyles();
     }
 }
