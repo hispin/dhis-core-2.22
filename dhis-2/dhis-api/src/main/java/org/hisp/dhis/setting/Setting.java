@@ -109,7 +109,7 @@ public enum Setting
     APP_FOLDER_PATH( "appFolderPath" ),
     APP_BASE_URL( "appBaseUrl" ),
     APP_STORE_URL( "appStoreUrl", "http://www.dhis2.org/appstore", String.class ),
-    STYLE( "currentStyle", "light_blue", String.class );
+    STYLE( "currentStyle", "light_blue/light_blue.css", String.class );
     
     private final String name;
     
