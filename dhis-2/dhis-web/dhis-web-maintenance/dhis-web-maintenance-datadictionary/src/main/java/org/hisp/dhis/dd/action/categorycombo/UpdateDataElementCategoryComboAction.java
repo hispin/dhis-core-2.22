@@ -119,6 +119,8 @@ public class UpdateDataElementCategoryComboAction
 
         dataElementCategoryService.updateDataElementCategoryCombo( categoryCombo );
 
+        dataElementCategoryService.updateOptionCombos( categoryCombo );
+        
         return SUCCESS;
     }
 }
