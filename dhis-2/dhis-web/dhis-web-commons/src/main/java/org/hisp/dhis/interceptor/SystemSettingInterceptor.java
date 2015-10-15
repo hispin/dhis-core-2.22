@@ -29,39 +29,27 @@ package org.hisp.dhis.interceptor;
  */
 
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCOUNT_RECOVERY;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ALLOW_OBJECT_ASSIGNMENT;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ANALYSIS_RELATIVE_PERIOD;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_ANALYTICS_MAINTENANCE_MODE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ANALYTICS_MAX_LIMIT;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_FOOTER;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_INTRO;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_NOTIFICATION;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_RIGHT_FOOTER;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_TITLE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CACHE_STRATEGY;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_CONFIGURATION;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_CREDENTIALS_EXPIRES;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CUSTOM_LOGIN_PAGE_LOGO;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CUSTOM_TOP_MENU_LOGO;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_DATABASE_SERVER_CPUS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_FACTOR_OF_DEVIATION;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_FLAG;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_FLAG_IMAGE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_GOOGLE_ANALYTICS_UA;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_HELP_PAGE_LINK;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_INSTANCE_BASE_URL;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_MULTI_ORGANISATION_UNIT_FORMS;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_OPENID_PROVIDER;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_OPENID_PROVIDER_LABEL;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_PHONE_NUMBER_AREA_CODE;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_REQUIRE_ADD_TO_VIEW;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_SELF_REGISTRATION_NO_RECAPTCHA;
 import static org.hisp.dhis.setting.SystemSettingManager.KEY_START_MODULE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SYSTEM_NOTIFICATIONS_EMAIL;
 import static org.hisp.dhis.setting.SystemSettingManager.SYSPROP_PORTAL;
 
 import java.util.HashMap;
@@ -129,9 +117,6 @@ public class SystemSettingInterceptor
         map.put( Setting.DATE_FORMAT.getName(), calendarService.getSystemDateFormatKey() );
         
         map.put( DATE_FORMAT, calendarService.getSystemDateFormat() );
-        map.put( KEY_CACHE_STRATEGY, systemSettingManager.getSystemSetting( Setting.CACHE_STRATEGY ) );
-        map.put( KEY_ANALYTICS_MAX_LIMIT, systemSettingManager.getSystemSetting( Setting.ANALYTICS_MAX_LIMIT ) );
-        map.put( KEY_ANALYSIS_RELATIVE_PERIOD, systemSettingManager.getSystemSetting( Setting.ANALYSIS_RELATIVE_PERIOD ) );
         map.put( KEY_APPLICATION_TITLE, systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE ) );
         map.put( KEY_APPLICATION_INTRO, systemSettingManager.getSystemSetting( KEY_APPLICATION_INTRO ) );
         map.put( KEY_APPLICATION_NOTIFICATION, systemSettingManager.getSystemSetting( KEY_APPLICATION_NOTIFICATION ) );
@@ -140,8 +125,6 @@ public class SystemSettingInterceptor
         map.put( KEY_FLAG, systemSettingManager.getSystemSetting( Setting.FLAG ) );
         map.put( KEY_FLAG_IMAGE, systemSettingManager.getFlagImage() );
         map.put( KEY_START_MODULE, systemSettingManager.getSystemSetting( Setting.START_MODULE ) );
-        map.put( KEY_FACTOR_OF_DEVIATION, systemSettingManager.getSystemSetting( Setting.FACTOR_OF_DEVIATION ) );
-        map.put( KEY_PHONE_NUMBER_AREA_CODE, systemSettingManager.getSystemSetting( Setting.PHONE_NUMBER_AREA_CODE ) );
         map.put( KEY_MULTI_ORGANISATION_UNIT_FORMS, systemSettingManager.getSystemSetting( Setting.MULTI_ORGANISATION_UNIT_FORMS ) );
         map.put( KEY_ACCOUNT_RECOVERY, systemSettingManager.getSystemSetting( Setting.ACCOUNT_RECOVERY ) );
         map.put( KEY_CONFIGURATION, configurationService.getConfiguration() );
@@ -152,15 +135,8 @@ public class SystemSettingInterceptor
         map.put( KEY_SELF_REGISTRATION_NO_RECAPTCHA, systemSettingManager.selfRegistrationNoRecaptcha() );
         map.put( KEY_OPENID_PROVIDER, systemSettingManager.getSystemSetting( KEY_OPENID_PROVIDER ) );
         map.put( KEY_OPENID_PROVIDER_LABEL, systemSettingManager.getSystemSetting( KEY_OPENID_PROVIDER_LABEL ) );
-        map.put( KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, systemSettingManager.getSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS ) );
-        map.put( KEY_CUSTOM_LOGIN_PAGE_LOGO, systemSettingManager.getSystemSetting( Setting.CUSTOM_LOGIN_PAGE_LOGO ) );
-        map.put( KEY_CUSTOM_TOP_MENU_LOGO, systemSettingManager.getSystemSetting( Setting.CUSTOM_TOP_MENU_LOGO ) );
         map.put( KEY_ANALYTICS_MAINTENANCE_MODE, systemSettingManager.getSystemSetting( Setting.ANALYTICS_MAINTENANCE_MODE ) );
-        map.put( KEY_DATABASE_SERVER_CPUS, systemSettingManager.getSystemSetting( Setting.DATABASE_SERVER_CPUS ) );
         map.put( KEY_HELP_PAGE_LINK, systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
-        map.put( KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS, systemSettingManager.getSystemSetting( Setting.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, false ) );
-        map.put( KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL, systemSettingManager.getSystemSetting( Setting.ACCEPTANCE_REQUIRED_FOR_APPROVAL ) );
-        map.put( KEY_SYSTEM_NOTIFICATIONS_EMAIL, systemSettingManager.getSystemSetting( KEY_SYSTEM_NOTIFICATIONS_EMAIL ) );
         map.put( KEY_REQUIRE_ADD_TO_VIEW, systemSettingManager.getSystemSetting( Setting.REQUIRE_ADD_TO_VIEW ) );
         map.put( KEY_ALLOW_OBJECT_ASSIGNMENT, systemSettingManager.getSystemSetting( Setting.ALLOW_OBJECT_ASSIGNMENT ) );
         map.put( SYSPROP_PORTAL, defaultIfEmpty( System.getProperty( SYSPROP_PORTAL ), String.valueOf( false ) ) );
