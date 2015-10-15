@@ -286,7 +286,7 @@ trackerCapture.controller('RegistrationController',
                         if(effect.ineffect) {
                             var dialogOptions = {
                                 headerText: 'validation_error',
-                                bodyText: effect.content + effect.data
+                                bodyText: effect.content + (effect.data ? effect.data : "")
                             };
                             DialogService.showDialog({}, dialogOptions);
                             $scope.selectedTei[effect.trackedEntityAttribute.id] = $scope.tei[effect.trackedEntityAttribute.id];
@@ -298,7 +298,7 @@ trackerCapture.controller('RegistrationController',
                 } else if (effect.action === "SHOWWARNING") {
                     if (effect.trackedEntityAttribute) {
                         if(effect.ineffect) {
-                            $scope.warningMessages.push(effect.content + effect.data);
+                            $scope.warningMessages.push(effect.content + (effect.data ? effect.data : ""));
                         }
                     }
                     else {
