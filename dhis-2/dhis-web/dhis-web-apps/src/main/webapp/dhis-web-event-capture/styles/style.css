@@ -372,3 +372,8 @@ div#orgUnitTree {
 .bold {
     font-weight: bold;
 }
+
+.ui-datepicker-group .ui-datepicker-header {
+    //height: 1.5em; 
+    height: inherit;  //this is to make it play nice with bootstrap
+}
