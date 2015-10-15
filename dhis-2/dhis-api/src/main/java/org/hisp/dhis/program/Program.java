@@ -440,7 +440,7 @@ public class Program
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public boolean isRegistration()
     {
-        return programType.equals( ProgramType.WITH_REGISTRATION );
+        return programType == ProgramType.WITH_REGISTRATION;
     }
 
     @JsonProperty
@@ -448,7 +448,7 @@ public class Program
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public boolean isWithoutRegistration()
     {
-        return programType.equals( ProgramType.WITHOUT_REGISTRATION );
+        return programType == ProgramType.WITHOUT_REGISTRATION;
     }
 
     @JsonProperty
