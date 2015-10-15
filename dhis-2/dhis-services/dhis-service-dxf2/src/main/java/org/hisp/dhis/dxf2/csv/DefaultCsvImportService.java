@@ -197,7 +197,7 @@ public class DefaultCsvImportService
 
                 String domainType = getSafe( values, 6, DataElementDomain.AGGREGATE.getValue(), 16 );
                 object.setDomainType( DataElementDomain.fromValue( domainType ) );
-                object.setValueType( ValueType.valueOf( getSafe( values, 7, ValueType.TEXT.toString(), 50 ) ) );
+                object.setValueType( ValueType.valueOf( getSafe( values, 7, ValueType.INTEGER.toString(), 50 ) ) );
 
                 object.setAggregationType( AggregationType.valueOf( getSafe( values, 8, AggregationType.SUM.toString(), 50 ) ) );
                 String categoryComboUid = getSafe( values, 9, null, 11 );

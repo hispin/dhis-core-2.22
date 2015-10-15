@@ -56,7 +56,7 @@
         <interceptor-ref name="params" />
         <interceptor-ref name="i18nInterceptor" />
         <interceptor-ref name="systemSettingInterceptor" />
-        <!-- The securityInterceptor is put after the i18nInterceptor so that the access denied error pages can use internationalisation. -->
+        <!-- The securityInterceptor is put after the i18nInterceptor so that the access denied error pages can use internationalization. -->
         <interceptor-ref name="securityInterceptor" />
         <interceptor-ref name="loginInterceptor" />
         <interceptor-ref name="userSettingInterceptor" />
