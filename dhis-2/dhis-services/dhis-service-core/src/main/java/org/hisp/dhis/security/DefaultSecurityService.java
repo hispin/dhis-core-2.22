@@ -553,13 +553,18 @@ public class DefaultSecurityService
     @Override
     public boolean hasAnyAuthority( String... authorities )
     {
-        UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
-
-        for ( String authority : authorities )
+        User user = currentUserService.getCurrentUser();
+        
+        if ( user != null && user.getUserCredentials() != null )
         {
-            if ( userCredentials.isAuthorized( authority ) )
+            UserCredentials userCredentials = user.getUserCredentials();
+    
+            for ( String authority : authorities )
             {
-                return true;
+                if ( userCredentials.isAuthorized( authority ) )
+                {
+                    return true;
+                }
             }
         }
 
