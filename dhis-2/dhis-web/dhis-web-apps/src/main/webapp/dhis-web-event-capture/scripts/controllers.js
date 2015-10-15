@@ -1029,14 +1029,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     else if(effect.action === "SHOWERROR" && effect.dataElement.id){
                         var dialogOptions = {
                             headerText: 'validation_error',
-                            bodyText: effect.content + effect.data
+                            bodyText: effect.content + (effect.data ? effect.data : "")
                         };
                         DialogService.showDialog({}, dialogOptions);
             
                         $scope.currentEvent[effect.dataElement.id] = $scope.currentEventOriginialValue[effect.dataElement.id];
                     }
                     else if(effect.action === "SHOWWARNING"){
-                        $scope.warningMessages.push(effect.content + effect.data);
+                        $scope.warningMessages.push(effect.content + (effect.data ? effect.data : ""));
                     }
                     else if (effect.action === "ASSIGNVARIABLE") {
                         
