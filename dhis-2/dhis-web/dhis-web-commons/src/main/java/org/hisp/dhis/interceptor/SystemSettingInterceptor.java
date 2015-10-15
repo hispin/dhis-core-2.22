@@ -29,7 +29,6 @@ package org.hisp.dhis.interceptor;
  */
 
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.hisp.dhis.setting.SystemSettingManager.SYSPROP_PORTAL;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +51,7 @@ public class SystemSettingInterceptor
     implements Interceptor
 {
     private static final String DATE_FORMAT = "dateFormat";
+    private static final String SYSPROP_PORTAL = "runningAsPortal";
 
     private static final Set<Setting> SETTINGS = Sets.newHashSet( Setting.APPLICATION_TITLE, Setting.APPLICATION_INTRO,
         Setting.APPLICATION_NOTIFICATION, Setting.APPLICATION_FOOTER, Setting.APPLICATION_RIGHT_FOOTER,
@@ -105,10 +105,9 @@ public class SystemSettingInterceptor
         map.put( DATE_FORMAT, calendarService.getSystemDateFormat() );
         map.put( Setting.CONFIGURATION.getName(), configurationService.getConfiguration() );
         map.put( Setting.FLAG_IMAGE.getName(), systemSettingManager.getFlagImage() );
-        map.put( SYSPROP_PORTAL, defaultIfEmpty( System.getProperty( SYSPROP_PORTAL ), String.valueOf( false ) ) );
-        
         map.put( Setting.CREDENTIALS_EXPIRES.getName(), systemSettingManager.credentialsExpires() );
         map.put( Setting.SELF_REGISTRATION_NO_RECAPTCHA.getName(), systemSettingManager.selfRegistrationNoRecaptcha() );
+        map.put( SYSPROP_PORTAL, defaultIfEmpty( System.getProperty( SYSPROP_PORTAL ), String.valueOf( false ) ) );
         
         map.putAll( systemSettingManager.getSystemSettings( SETTINGS ) );
         
