@@ -230,6 +230,24 @@ public class DefaultSystemSettingManager
 
         return map;
     }
+
+    @Override
+    public Map<String, Serializable> getSystemSettings( Collection<Setting> settings )
+    {
+        Map<String, Serializable> map = new HashMap<>();
+        
+        for ( Setting setting : settings )
+        {
+            Serializable value = getSystemSetting( setting );
+            
+            if ( value != null )
+            {
+                map.put( setting.getName(), value );
+            }
+        }
+        
+        return map;
+    }
     
     @Override
     public void invalidateCache()
