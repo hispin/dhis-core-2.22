@@ -1180,7 +1180,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 {name:"d2:countIfZeroPos",parameters:1},
                                 {name:"d2:countIfValue",parameters:2},
                                 {name:"d2:ceil",parameters:1},
-                                {name:"d2:round",parameters:1}];
+                                {name:"d2:round",parameters:1},
+                                {name:"d2:hasValue",parameters:1}];
             var continueLooping = true;
             //Safety harness on 10 loops, in case of unanticipated syntax causing unintencontinued looping
             for(var i = 0; i < 10 && continueLooping; i++ ) { 
@@ -1391,6 +1392,25 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             var rounded = Math.round(parameters[0]);
                             //Replace the end evaluation of the dhis function:
                             expression = expression.replace(callToThisFunction, rounded);
+                            successfulExecution = true;
+                        }
+                        else if(dhisFunction.name === "d2:hasValue") {
+                            var variableName = parameters[0];
+                            var variableObject = variablesHash[variableName];
+                            var valueFound = false;
+                            if(variableObject)
+                            {
+                                if(variableObject.hasValue){
+                                    valueFound = true;
+                                }
+                            }
+                            else
+                            {
+                                $log.warn("could not find variable to check if has value: " + variableName);
+                            }
+
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, valueFound);
                             successfulExecution = true;
                         }
                     });
