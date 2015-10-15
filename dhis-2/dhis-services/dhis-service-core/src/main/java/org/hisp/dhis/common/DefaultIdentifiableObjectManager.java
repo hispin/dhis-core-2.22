@@ -857,6 +857,12 @@ public class DefaultIdentifiableObjectManager
     }
 
     @Override
+    public void evict( Object object )
+    {
+        sessionFactory.getCurrentSession().evict( object );
+    }
+
+    @Override
     @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> T getNoAcl( Class<T> clazz, String uid )
     {
