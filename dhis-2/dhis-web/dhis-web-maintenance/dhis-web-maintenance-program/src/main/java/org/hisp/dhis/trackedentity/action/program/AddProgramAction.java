@@ -119,7 +119,7 @@ public class AddProgramAction
 
     private String incidentDateLabel;
 
-    public void setIncidentDateDescription( String incidentDateLabel )
+    public void setIncidentDateLabel( String incidentDateLabel )
     {
         this.incidentDateLabel = incidentDateLabel;
     }
