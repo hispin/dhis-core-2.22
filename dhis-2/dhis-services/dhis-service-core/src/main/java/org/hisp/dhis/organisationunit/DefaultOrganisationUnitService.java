@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.configuration.ConfigurationService;
@@ -447,7 +446,7 @@ public class DefaultOrganisationUnitService
 
         if ( currentUser != null && !currentUser.getUserCredentials().isSuper() )
         {
-            List<String> userDataSets = IdentifiableObjectUtils.getUids( currentUser.getUserCredentials().getAllDataSets() );
+            Set<String> userDataSets = Sets.newHashSet( getUids( currentUser.getUserCredentials().getAllDataSets() ) );
 
             for ( Set<String> dataSets : associationMap.values() )
             {
@@ -473,7 +472,7 @@ public class DefaultOrganisationUnitService
 
             List<OrganisationUnit> organisationUnitsWithChildren = getOrganisationUnitsWithChildren( parentIds, maxLevels );
 
-            List<String> children = getUids( organisationUnitsWithChildren );
+            Set<String> children = Sets.newHashSet( getUids( organisationUnitsWithChildren ) );
 
             associationMap.keySet().retainAll( children );
         }
