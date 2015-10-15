@@ -241,7 +241,7 @@ public class UpdateDataElementAction
         dataElement.setCode( StringUtils.trimToNull( code ) );
         dataElement.setDescription( StringUtils.trimToNull( description ) );
         dataElement.setFormName( StringUtils.trimToNull( formName ) );
-        dataElement.setDomainType( DataElementDomain.fromValue( domainType ) );
+        dataElement.setDomainType( DataElementDomain.valueOf( domainType ) );
         dataElement.setValueType( ValueType.valueOf( valueType ) );
         dataElement.setAggregationType( AggregationType.valueOf( aggregationType ) );
         dataElement.setUrl( url );

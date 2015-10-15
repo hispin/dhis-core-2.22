@@ -140,7 +140,7 @@ function removeDataElement( context ) {
 }
 
 function domainTypeChange( domainType ) {
-  if( domainType == 'aggregate' ) {
+  if( domainType == 'AGGREGATE' ) {
     enable('selectedCategoryComboId');
   }
   else {
