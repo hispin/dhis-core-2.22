@@ -29,31 +29,11 @@ package org.hisp.dhis.interceptor;
  */
 
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ACCOUNT_RECOVERY;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ALLOW_OBJECT_ASSIGNMENT;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_ANALYTICS_MAINTENANCE_MODE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_FOOTER;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_INTRO;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_NOTIFICATION;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_RIGHT_FOOTER;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_APPLICATION_TITLE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CONFIGURATION;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_CREDENTIALS_EXPIRES;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_FLAG;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_FLAG_IMAGE;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_GOOGLE_ANALYTICS_UA;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_HELP_PAGE_LINK;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_INSTANCE_BASE_URL;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_MULTI_ORGANISATION_UNIT_FORMS;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_OPENID_PROVIDER;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_OPENID_PROVIDER_LABEL;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_REQUIRE_ADD_TO_VIEW;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_SELF_REGISTRATION_NO_RECAPTCHA;
-import static org.hisp.dhis.setting.SystemSettingManager.KEY_START_MODULE;
 import static org.hisp.dhis.setting.SystemSettingManager.SYSPROP_PORTAL;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.configuration.ConfigurationService;
@@ -61,6 +41,7 @@ import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.Sets;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
@@ -71,6 +52,12 @@ public class SystemSettingInterceptor
     implements Interceptor
 {
     private static final String DATE_FORMAT = "dateFormat";
+
+    private static final Set<Setting> SETTINGS = Sets.newHashSet( Setting.APPLICATION_TITLE, Setting.APPLICATION_INTRO,
+        Setting.APPLICATION_NOTIFICATION, Setting.APPLICATION_FOOTER, Setting.APPLICATION_RIGHT_FOOTER,
+        Setting.FLAG, Setting.START_MODULE, Setting.MULTI_ORGANISATION_UNIT_FORMS, Setting.ACCOUNT_RECOVERY,
+        Setting.APP_BASE_URL, Setting.INSTANCE_BASE_URL, Setting.GOOGLE_ANALYTICS_UA, Setting.OPENID_PROVIDER,
+        Setting.OPENID_PROVIDER_LABEL, Setting.HELP_PAGE_LINK, Setting.REQUIRE_ADD_TO_VIEW, Setting.ALLOW_OBJECT_ASSIGNMENT );
     
     // -------------------------------------------------------------------------
     // Dependencies
@@ -114,33 +101,17 @@ public class SystemSettingInterceptor
         Map<String, Object> map = new HashMap<>();
 
         map.put( Setting.CALENDAR.getName(), calendarService.getSystemCalendarKey() );
-        map.put( Setting.DATE_FORMAT.getName(), calendarService.getSystemDateFormatKey() );
-        
+        map.put( Setting.DATE_FORMAT.getName(), calendarService.getSystemDateFormatKey() );        
         map.put( DATE_FORMAT, calendarService.getSystemDateFormat() );
-        map.put( KEY_APPLICATION_TITLE, systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE ) );
-        map.put( KEY_APPLICATION_INTRO, systemSettingManager.getSystemSetting( KEY_APPLICATION_INTRO ) );
-        map.put( KEY_APPLICATION_NOTIFICATION, systemSettingManager.getSystemSetting( KEY_APPLICATION_NOTIFICATION ) );
-        map.put( KEY_APPLICATION_FOOTER, systemSettingManager.getSystemSetting( KEY_APPLICATION_FOOTER ) );
-        map.put( KEY_APPLICATION_RIGHT_FOOTER, systemSettingManager.getSystemSetting( KEY_APPLICATION_RIGHT_FOOTER ) );
-        map.put( KEY_FLAG, systemSettingManager.getSystemSetting( Setting.FLAG ) );
-        map.put( KEY_FLAG_IMAGE, systemSettingManager.getFlagImage() );
-        map.put( KEY_START_MODULE, systemSettingManager.getSystemSetting( Setting.START_MODULE ) );
-        map.put( KEY_MULTI_ORGANISATION_UNIT_FORMS, systemSettingManager.getSystemSetting( Setting.MULTI_ORGANISATION_UNIT_FORMS ) );
-        map.put( KEY_ACCOUNT_RECOVERY, systemSettingManager.getSystemSetting( Setting.ACCOUNT_RECOVERY ) );
-        map.put( KEY_CONFIGURATION, configurationService.getConfiguration() );
-        map.put( Setting.APP_BASE_URL.getName(), systemSettingManager.getSystemSetting( Setting.APP_BASE_URL ) );
-        map.put( KEY_INSTANCE_BASE_URL, systemSettingManager.getSystemSetting( KEY_INSTANCE_BASE_URL ) );
-        map.put( KEY_GOOGLE_ANALYTICS_UA, systemSettingManager.getSystemSetting( Setting.GOOGLE_ANALYTICS_UA ) );
-        map.put( KEY_CREDENTIALS_EXPIRES, systemSettingManager.credentialsExpires() );
-        map.put( KEY_SELF_REGISTRATION_NO_RECAPTCHA, systemSettingManager.selfRegistrationNoRecaptcha() );
-        map.put( KEY_OPENID_PROVIDER, systemSettingManager.getSystemSetting( KEY_OPENID_PROVIDER ) );
-        map.put( KEY_OPENID_PROVIDER_LABEL, systemSettingManager.getSystemSetting( KEY_OPENID_PROVIDER_LABEL ) );
-        map.put( KEY_ANALYTICS_MAINTENANCE_MODE, systemSettingManager.getSystemSetting( Setting.ANALYTICS_MAINTENANCE_MODE ) );
-        map.put( KEY_HELP_PAGE_LINK, systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
-        map.put( KEY_REQUIRE_ADD_TO_VIEW, systemSettingManager.getSystemSetting( Setting.REQUIRE_ADD_TO_VIEW ) );
-        map.put( KEY_ALLOW_OBJECT_ASSIGNMENT, systemSettingManager.getSystemSetting( Setting.ALLOW_OBJECT_ASSIGNMENT ) );
+        map.put( Setting.CONFIGURATION.getName(), configurationService.getConfiguration() );
+        map.put( Setting.FLAG_IMAGE.getName(), systemSettingManager.getFlagImage() );
         map.put( SYSPROP_PORTAL, defaultIfEmpty( System.getProperty( SYSPROP_PORTAL ), String.valueOf( false ) ) );
-
+        
+        map.put( Setting.CREDENTIALS_EXPIRES.getName(), systemSettingManager.credentialsExpires() );
+        map.put( Setting.SELF_REGISTRATION_NO_RECAPTCHA.getName(), systemSettingManager.selfRegistrationNoRecaptcha() );
+        
+        map.putAll( systemSettingManager.getSystemSettings( SETTINGS ) );
+        
         invocation.getStack().push( map );
 
         return invocation.invoke();

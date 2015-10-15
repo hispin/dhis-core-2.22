@@ -29,6 +29,7 @@ package org.hisp.dhis.setting;
  */
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -45,70 +46,6 @@ public interface SystemSettingManager
 {
     String ID = SystemSettingManager.class.getName();
 
-    //TODO migrate from strings to Setting enum throughout system
-    
-    String KEY_APPLICATION_TITLE = "applicationTitle";
-    String KEY_APPLICATION_INTRO = "keyApplicationIntro";
-    String KEY_APPLICATION_NOTIFICATION = "keyApplicationNotification";
-    String KEY_APPLICATION_FOOTER = "keyApplicationFooter";
-    String KEY_APPLICATION_RIGHT_FOOTER = "keyApplicationRightFooter";
-    String KEY_FLAG = "keyFlag";
-    String KEY_FLAG_IMAGE = "keyFlagImage";
-    String KEY_START_MODULE = "startModule";
-    String KEY_FACTOR_OF_DEVIATION = "factorDeviation";
-    String KEY_EMAIL_HOST_NAME = "keyEmailHostName";
-    String KEY_EMAIL_PORT = "keyEmailPort";
-    String KEY_EMAIL_USERNAME = "keyEmailUsername";
-    String KEY_EMAIL_PASSWORD = "keyEmailPassword";
-    String KEY_EMAIL_TLS = "keyEmailTls";
-    String KEY_EMAIL_SENDER = "keyEmailSender";
-    String KEY_INSTANCE_BASE_URL = "keyInstanceBaseUrl";
-    String KEY_SCHEDULED_TASKS = "keySchedTasks";
-    String KEY_SMS_CONFIG = "keySmsConfig";
-    String KEY_CACHE_STRATEGY = "keyCacheStrategy";
-    String KEY_TIME_FOR_SENDING_MESSAGE = "timeSendingMessage";
-    String KEY_SEND_MESSAGE_SCHEDULED_TASKS = "sendMessageScheduled";
-    String KEY_SCHEDULE_MESSAGE_TASKS = "scheduleMessage";
-    String KEY_PHONE_NUMBER_AREA_CODE = "phoneNumberAreaCode";
-    String KEY_MULTI_ORGANISATION_UNIT_FORMS = "multiOrganisationUnitForms";
-    String KEY_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASKS = "scheduleAggregateQueryBuilder";
-    String KEY_SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY = "scheduleAggregateQueryBuilderTackStrategy";
-    String KEY_CONFIGURATION = "keyConfig";
-    String KEY_ACCOUNT_RECOVERY = "keyAccountRecovery";
-    String KEY_LAST_MONITORING_RUN = "keyLastMonitoringRun";
-    String KEY_GOOGLE_ANALYTICS_UA = "googleAnalyticsUA";
-    String KEY_CREDENTIALS_EXPIRES = "credentialsExpires";
-    String KEY_SELF_REGISTRATION_NO_RECAPTCHA = "keySelfRegistrationNoRecaptcha";
-    String KEY_OPENID_PROVIDER = "keyOpenIdProvider";
-    String KEY_OPENID_PROVIDER_LABEL = "keyOpenIdProviderLabel";
-    String KEY_CAN_GRANT_OWN_USER_AUTHORITY_GROUPS = "keyCanGrantOwnUserAuthorityGroups";
-    String KEY_HIDE_UNAPPROVED_DATA_IN_ANALYTICS = "keyHideUnapprovedDataInAnalytics";
-    String KEY_ANALYTICS_MAX_LIMIT = "keyAnalyticsMaxLimit";
-    String KEY_CUSTOM_LOGIN_PAGE_LOGO = "keyCustomLoginPageLogo";
-    String KEY_CUSTOM_TOP_MENU_LOGO = "keyCustomTopMenuLogo";
-    String KEY_ANALYTICS_MAINTENANCE_MODE = "keyAnalyticsMaintenanceMode";
-    String KEY_DATABASE_SERVER_CPUS = "keyDatabaseServerCpus";
-    String KEY_LAST_SUCCESSFUL_DATA_SYNC = "keyLastSuccessfulDataSynch";
-    String KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE = "keyLastSuccessfulAnalyticsTablesUpdate";
-    String KEY_LAST_SUCCESSFUL_ANALYTICS_TABLES_RUNTIME = "keyLastSuccessfulAnalyticsTablesRuntime";
-    String KEY_LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE = "keyLastSuccessfulResourceTablesUpdate";
-    String KEY_LAST_SUCCESSFUL_MONITORING = "keyLastSuccessfulMonitoring";
-    String KEY_HELP_PAGE_LINK = "helpPageLink";
-    String KEY_ACCEPTANCE_REQUIRED_FOR_APPROVAL = "keyAcceptanceRequiredForApproval";
-    String KEY_SYSTEM_NOTIFICATIONS_EMAIL = "keySystemNotificationsEmail";
-    String KEY_ANALYSIS_RELATIVE_PERIOD = "keyAnalysisRelativePeriod";
-    String KEY_REQUIRE_ADD_TO_VIEW = "keyRequireAddToView";
-    String KEY_ALLOW_OBJECT_ASSIGNMENT = "keyAllowObjectAssignment";
-    String KEY_USE_CUSTOM_LOGO_FRONT = "keyUseCustomLogoFront";
-    String KEY_USE_CUSTOM_LOGO_BANNER = "keyUseCustomLogoBanner";
-    String KEY_METADATA_REPO_URL = "keyMetaDataRepoUrl";
-    String KEY_DATA_IMPORT_STRICT_PERIODS = "keyDataImportStrictPeriods";
-    String KEY_DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS = "keyDataImportStrictCategoryOptionCombos";
-    String KEY_DATA_IMPORT_STRICT_ORGANISATION_UNITS = "keyDataImportStrictOrganisationUnits";
-    String KEY_DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS = "keyDataImportStrictAttributeOptionCombos";
-    String KEY_DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO = "keyDataImportRequireCategoryOptionCombo";
-    String KEY_DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO = "keyDataImportRequireAttributeOptionCombo";
-    
     String SYSPROP_PORTAL = "runningAsPortal";
 
     HashSet<String> DEFAULT_SCHEDULED_PERIOD_TYPES = new HashSet<String>()
@@ -139,6 +76,8 @@ public interface SystemSettingManager
     Map<String, Serializable> getSystemSettingsAsMap();
     
     Map<String, Serializable> getSystemSettingsAsMap( Set<String> names );
+    
+    Map<String, Serializable> getSystemSettings( Collection<Setting> settings );
     
     void invalidateCache();
     
