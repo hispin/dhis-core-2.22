@@ -137,7 +137,7 @@ d2Directives.directive('d2NumberValidator', function() {
     };
 })
 
-.directive("d2AttributeValidator", function($q, TEIService, AttributesFactory, EntityQueryFactory, SessionStorageService) {
+.directive("d2AttributeValidator", function($q, TEIService, SessionStorageService) {
     return {
         restrict: "A",         
         require: "ngModel",
@@ -151,9 +151,8 @@ d2Directives.directive('d2NumberValidator', function() {
                     
                     if (currentValue) {
                         
-                        attributeData.value = currentValue;
-                        var atts = AttributesFactory.generateAttributeFilters([attributeData]);
-                        var attUrl = EntityQueryFactory.getAttributesQuery(atts, null);                        
+                        attributeData.value = currentValue;                        
+                        var attUrl = 'filter=' + attributeData.id + ':EQ:' + attributeData.value;
                         var ouId = SessionStorageService.get('ouSelected');
                         
                         if(attrs.selectedProgram && attributeData.programScope){
@@ -164,7 +163,7 @@ d2Directives.directive('d2NumberValidator', function() {
                             ouMode = 'SELECTED';
                         }                        
 
-                        TEIService.search(ouId, ouMode, null, programUrl, attUrl.url, pager, true).then(function(data) {
+                        TEIService.search(ouId, ouMode, null, programUrl, attUrl, pager, true).then(function(data) {
                             if(attrs.selectedTeiId){
                                 if(data.rows[0][0] !== attrs.selectedTeiId){
                                     deferred.reject();
