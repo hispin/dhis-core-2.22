@@ -147,6 +147,8 @@ public interface IdentifiableObjectManager
 
     void refresh( Object object );
 
+    void evict( Object object );
+
     // -------------------------------------------------------------------------
     // NO ACL
     // -------------------------------------------------------------------------
