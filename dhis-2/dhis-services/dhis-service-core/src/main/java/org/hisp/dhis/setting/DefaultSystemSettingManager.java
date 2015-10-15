@@ -58,7 +58,7 @@ public class DefaultSystemSettingManager
      * Cache for system settings. Does not accept nulls.
      */
     private static Cache<String, Optional<Serializable>> SETTING_CACHE = CacheBuilder.newBuilder()
-        .expireAfterAccess( 15, TimeUnit.MINUTES )
+        .expireAfterAccess( 1, TimeUnit.HOURS )
         .initialCapacity( 200 )
         .maximumSize( 400 )
         .build();

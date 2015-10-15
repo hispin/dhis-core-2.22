@@ -39,8 +39,6 @@ import java.util.Set;
  */
 public interface SystemSettingManager
 {
-    String ID = SystemSettingManager.class.getName();
-
     void saveSystemSetting( String name, Serializable value );
     
     void saveSystemSetting( Setting setting, Serializable value );
