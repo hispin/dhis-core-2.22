@@ -30,14 +30,9 @@ package org.hisp.dhis.setting;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.hisp.dhis.period.MonthlyPeriodType;
-import org.hisp.dhis.period.QuarterlyPeriodType;
-import org.hisp.dhis.period.YearlyPeriodType;
 
 /**
  * @author Stian Strandli
@@ -45,17 +40,6 @@ import org.hisp.dhis.period.YearlyPeriodType;
 public interface SystemSettingManager
 {
     String ID = SystemSettingManager.class.getName();
-
-    String SYSPROP_PORTAL = "runningAsPortal";
-
-    HashSet<String> DEFAULT_SCHEDULED_PERIOD_TYPES = new HashSet<String>()
-    {
-        {
-            add( MonthlyPeriodType.NAME );
-            add( QuarterlyPeriodType.NAME );
-            add( YearlyPeriodType.NAME );
-        }
-    };
 
     void saveSystemSetting( String name, Serializable value );
     
