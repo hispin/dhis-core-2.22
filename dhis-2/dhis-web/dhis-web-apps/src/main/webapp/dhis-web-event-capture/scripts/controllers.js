@@ -146,6 +146,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         $scope.selectedProgramStage = null;
         $scope.eventFetched = false;
+        $scope.optionsReady = false;
         
         //Filtering
         $scope.reverse = false;
@@ -227,6 +228,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     angular.forEach($scope.selectedProgram.categoryCombo.categories, function(cat){
                         categoryIds.push(cat.id);
                     });
+                }
+                else{
+                    $scope.optionsReady = true;
                 }
                 
                 MetaDataFactory.getByIds('categories', categoryIds).then(function(categories){
