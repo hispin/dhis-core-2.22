@@ -1174,3 +1174,9 @@ input, button, select, textarea {
     padding: 5px !important;
     color: #555 !important;
 }
+
+.this-active-program {
+    font-weight: bold;
+    cursor: none;
+    width: 100%;
+}

@@ -11,20 +11,11 @@ trackerCapture.controller('ActiveProgramsController',
     $scope.$on('selectedItems', function(event, args) {        
         var selections = CurrentSelection.get();
         $scope.selectedTeiId = selections.tei ? selections.tei.trackedEntityInstance : null;
-        $scope.activeEnrollments =  [];        
+        $scope.activeEnrollments =  [];
+        $scope.selectedProgram = selections.pr ? selections.pr : null;
         angular.forEach(selections.enrollments, function(en){
             if(en.status === "ACTIVE"){
-                if( !selections.pr ){
-                    $scope.activeEnrollments.push(en);
-                }
-                if( selections.pr && selections.pr.id ){
-                    if(selections.pr.id !== en.program){
-                        $scope.activeEnrollments.push(en);
-                    }
-                    else{
-                        $scope.emptyActiveProgramLabel = $translate.instant('no_active_program_than_selected');
-                    }
-                }                
+                $scope.activeEnrollments.push(en);                           
             }
         });
     });
