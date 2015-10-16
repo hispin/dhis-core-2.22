@@ -165,7 +165,7 @@ d2Directives.directive('d2NumberValidator', function() {
 
                         TEIService.search(ouId, ouMode, null, programUrl, attUrl, pager, true).then(function(data) {
                             if(attrs.selectedTeiId){
-                                if(data.rows[0][0] !== attrs.selectedTeiId){
+                                if(data && data.rows && data.rows.length && data.rows[0] && data.rows[0].length && data.rows[0][0] !== attrs.selectedTeiId){
                                     deferred.reject();
                                 }
                             }
