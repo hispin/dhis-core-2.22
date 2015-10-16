@@ -51,8 +51,8 @@
 
 <div class="setting">
 <select id="currentStyle" name="currentStyle">
-#foreach( $style in $styles.entrySet() )
-	<option value="$style.value" #if( $style.value == $currentStyle )selected="selected"#end>$i18n.getString( $style.key )</option>
+#foreach( $style in $styles )
+	<option value="$style.path" #if( $style.path == $currentStyle )selected="selected"#end>$encoder.htmlEncode( $style.name )</option>
 #end
 </select>
 </div>

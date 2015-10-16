@@ -35,13 +35,13 @@ import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_SMS_NOTIFICATION
 
 import java.util.List;
 import java.util.Locale;
-import java.util.SortedMap;
 
 import java.io.Serializable;
 
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.setting.StyleManager;
+import org.hisp.dhis.setting.StyleObject;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.opensymphony.xwork2.Action;
@@ -123,9 +123,9 @@ public class GetGeneralSettingsAction
         return currentStyle;
     }
 
-    private SortedMap<String, String> styles;
+    private List<StyleObject> styles;
 
-    public SortedMap<String, String> getStyles()
+    public List<StyleObject> getStyles()
     {
         return styles;
     }

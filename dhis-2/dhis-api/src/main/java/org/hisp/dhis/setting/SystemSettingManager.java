@@ -68,6 +68,8 @@ public interface SystemSettingManager
     // -------------------------------------------------------------------------
 
     List<String> getFlags();
+    
+    List<StyleObject> getFlagObjects();
 
     String getFlagImage();
 

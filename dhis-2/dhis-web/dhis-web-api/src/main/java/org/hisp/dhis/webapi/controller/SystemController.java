@@ -28,6 +28,14 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.dataintegrity.DataIntegrityReport;
 import org.hisp.dhis.dataintegrity.FlattenedDataIntegrityReport;
@@ -40,6 +48,7 @@ import org.hisp.dhis.node.types.SimpleNode;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.setting.StyleManager;
+import org.hisp.dhis.setting.StyleObject;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.SystemInfo;
 import org.hisp.dhis.system.SystemService;
@@ -56,14 +65,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.UUID;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -199,13 +200,13 @@ public class SystemController
     }
     
     @RequestMapping( value = "/flags", method = RequestMethod.GET, produces = { "application/json" } )
-    public @ResponseBody List<String> getFlags()
+    public @ResponseBody List<StyleObject> getFlags()
     {
-        return systemSettingManager.getFlags();
+        return systemSettingManager.getFlagObjects();
     }
     
     @RequestMapping( value = "/styles", method = RequestMethod.GET, produces = { "application/json" } )
-    public @ResponseBody SortedMap<String, String> getStyles()
+    public @ResponseBody List<StyleObject> getStyles()
     {
         return styleManager.getStyles();
     }

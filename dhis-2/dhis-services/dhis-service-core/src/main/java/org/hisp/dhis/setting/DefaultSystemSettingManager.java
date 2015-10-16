@@ -40,11 +40,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.system.util.ValidationUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 
 /**
  * @author Stian Strandli
@@ -80,6 +84,9 @@ public class DefaultSystemSettingManager
     {
         this.flags = flags;
     }
+
+    @Autowired
+    private I18nManager i18nManager;
 
     // -------------------------------------------------------------------------
     // SystemSettingManager implementation
@@ -264,6 +271,26 @@ public class DefaultSystemSettingManager
     {
         Collections.sort( flags );
         return flags;
+    }
+    
+    @Override
+    public List<StyleObject> getFlagObjects()
+    {
+        Collections.sort( flags );
+        
+        I18n i18n = i18nManager.getI18n();
+        
+        List<StyleObject> list = Lists.newArrayList();
+        
+        for ( String flag : flags )
+        {
+            String name = i18n.getString( flag );
+            String file = flag + ".png";
+            
+            list.add( new StyleObject( name, flag, file ) );
+        }
+        
+        return list;
     }
 
     @Override

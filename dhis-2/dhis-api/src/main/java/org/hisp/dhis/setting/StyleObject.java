@@ -28,24 +28,60 @@ package org.hisp.dhis.setting;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Lars Helge Overland
  */
-public interface StyleManager
+public class StyleObject
 {
-    String ID = StyleManager.class.getName();
+    private String name;
     
-    void setSystemStyle( String file );
+    private String key;
     
-    void setUserStyle( String style );
+    private String path;
+
+    public StyleObject()
+    {
+    }
+
+    public StyleObject( String name, String key, String path )
+    {
+        this.name = name;
+        this.key = key;
+        this.path = path;
+    }
     
-    String getCurrentStyle();
-    
-    String getSystemStyle();
-    
-    String getCurrentStyleDirectory();
-        
-    List<StyleObject> getStyles();
+    @JsonProperty
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    @JsonProperty
+    public String getKey()
+    {
+        return key;
+    }
+
+    public void setKey( String key )
+    {
+        this.key = key;
+    }
+
+    @JsonProperty
+    public String getPath()
+    {
+        return path;
+    }
+
+    public void setPath( String path )
+    {
+        this.path = path;
+    }
 }
