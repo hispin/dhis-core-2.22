@@ -10,12 +10,15 @@
         </span>        
     </div>    
     <div ng-show="activeProgramsWidget.expand" class="panel-body dashboard-widget-container">        
-        <div ng-show="activeEnrollments.length === 0" class="alert alert-warning">{{emptyActiveProgramLabel}}</div> 
-        <div class="row" ng-if="activeEnrollments.length > 0">
-            <table class="table table-striped dhis2-table-hover">
-                <tr ng-repeat="activeEnrollment in activeEnrollments" ng-click="changeProgram(activeEnrollment.program)">
-                    <td>
+        <div ng-show="activeEnrollments.length === 0" class="alert alert-warning">{{'no_active_programs_exist' | translate}}</div> 
+        <div ng-if="activeEnrollments.length > 0">
+            <table class="table table-striped dhis2-table-hover table-bordered">
+                <tr ng-repeat="activeEnrollment in activeEnrollments">
+                    <td ng-if="selectedProgram && selectedProgram.id !== activeEnrollment.program" title="{{'set_as_current'| translate}}" ng-click="changeProgram(activeEnrollment.program)">
                         {{programNames[activeEnrollment.program].name}}
+                    </td>
+                    <td ng-if="selectedProgram && selectedProgram.id === activeEnrollment.program">
+                        <div class="this-active-program">{{programNames[activeEnrollment.program].name}}</div>
                     </td>
                 </tr>
             </table> 
