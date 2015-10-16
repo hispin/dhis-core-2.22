@@ -1,8 +1,5 @@
 package org.hisp.dhis.webportal.module;
 
-import org.hisp.dhis.appmanager.App;
-import org.hisp.dhis.commons.util.TextUtils;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -31,6 +28,9 @@ import org.hisp.dhis.commons.util.TextUtils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.appmanager.App;
+import org.hisp.dhis.commons.util.TextUtils;
+
 /**
  * @author Torgeir Lorange Ostby
  * @version $Id: Module.java 2869 2007-02-20 14:26:09Z andegje $
@@ -42,6 +42,8 @@ public class Module
     private String namespace;
 
     private String defaultAction;
+    
+    private String displayName;
     
     // Apps only
     
@@ -135,6 +137,16 @@ public class Module
         this.defaultAction = defaultAction;
     }
 
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    public void setDisplayName( String displayName )
+    {
+        this.displayName = displayName;
+    }
+
     public String getIcon()
     {
         return icon;
@@ -195,6 +207,5 @@ public class Module
     public String toString()
     {
         return "[Name: " + name + ", namespace: " + namespace + ", default action: " + defaultAction + "]";
-    }
-    
+    }    
 }
