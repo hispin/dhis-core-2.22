@@ -80,19 +80,19 @@ public class CrudControllerAdvice
     @ExceptionHandler( { NotAuthenticatedException.class } )
     public void notAuthenticatedExceptionHandler( NotAuthenticatedException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.unathorized( ex.getClass().getName() ), response, request );
+        webMessageService.send( WebMessageUtils.unathorized( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( { NotFoundException.class } )
     public void notFoundExceptionHandler( NotFoundException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.notFound( ex.getClass().getName() ), response, request );
+        webMessageService.send( WebMessageUtils.notFound( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( ConstraintViolationException.class )
     public void constraintViolationExceptionHandler( ConstraintViolationException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.unprocessableEntity( ex.getClass().getName() ), response, request );
+        webMessageService.send( WebMessageUtils.unprocessableEntity( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( { IllegalQueryException.class, IllegalArgumentException.class, DeleteNotAllowedException.class } )
@@ -104,13 +104,13 @@ public class CrudControllerAdvice
     @ExceptionHandler( MaintenanceModeException.class )
     public void maintenanceModeExceptionHandler( MaintenanceModeException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.serviceUnavailable( ex.getClass().getName() ), response, request );
+        webMessageService.send( WebMessageUtils.serviceUnavailable( ex.getMessage() ), response, request );
     }
 
     @ExceptionHandler( DataApprovalException.class )
     public void dataApprovalExceptionHandler( DataApprovalException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.conflict( ex.getClass().getName() ), response, request ); //TODO fix message
+        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request ); //TODO fix message
     }
 
     @ExceptionHandler( AccessDeniedException.class )
