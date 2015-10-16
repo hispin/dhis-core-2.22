@@ -33,6 +33,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.configuration.Configuration;
@@ -299,7 +300,7 @@ public class ConfigurationController
     {
         Configuration config = configurationService.getConfiguration();
         
-        config.setSmtpPassword( password );
+        config.setSmtpPassword( StringUtils.trimToNull( password ) );
         
         configurationService.setConfiguration( config );
     }    
@@ -317,7 +318,7 @@ public class ConfigurationController
     {
         Configuration config = configurationService.getConfiguration();
         
-        config.setRemoteServerUrl( url );
+        config.setRemoteServerUrl( StringUtils.trimToNull( url ) );
         
         configurationService.setConfiguration( config );
     }
@@ -335,7 +336,7 @@ public class ConfigurationController
     {
         Configuration config = configurationService.getConfiguration();
         
-        config.setRemoteServerUsername( username );
+        config.setRemoteServerUsername( StringUtils.trimToNull( username ) );
         
         configurationService.setConfiguration( config );
     }
@@ -347,7 +348,7 @@ public class ConfigurationController
     {
         Configuration config = configurationService.getConfiguration();
         
-        config.setRemoteServerPassword( password );
+        config.setRemoteServerPassword( StringUtils.trimToNull( password ) );
         
         configurationService.setConfiguration( config );
     }
