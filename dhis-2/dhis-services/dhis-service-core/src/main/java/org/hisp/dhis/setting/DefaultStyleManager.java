@@ -29,9 +29,16 @@ package org.hisp.dhis.setting;
  */
 
 import java.io.File;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 
+import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.user.UserSettingService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Lars Helge Overland
@@ -70,6 +77,9 @@ public class DefaultStyleManager
     {
         this.styles = styles;
     }
+    
+    @Autowired
+    private I18nManager i18nManager;
 
     // -------------------------------------------------------------------------
     // StyleManager implementation
@@ -125,8 +135,19 @@ public class DefaultStyleManager
     }
 
     @Override
-    public SortedMap<String, String> getStyles()
+    public List<StyleObject> getStyles()
     {
-        return styles;
+        I18n i18n = i18nManager.getI18n();
+        
+        List<StyleObject> list = Lists.newArrayList();
+        
+        for ( Entry<String, String> entry : styles.entrySet() )
+        {
+            String name = i18n.getString( entry.getKey() );
+            
+            list.add( new StyleObject( name, entry.getKey(), entry.getValue() ) );
+        }
+        
+        return list;
     }
 }
