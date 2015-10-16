@@ -568,6 +568,10 @@ div#searchOuTree h4{
     margin-top: 15px !important;    
 }
 
+.add-default-left-padding {
+	padding-left: 15px !important;
+}
+
 .visit-details {
     margin-top: -5px;
     margin-left: 15px;    

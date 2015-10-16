@@ -3,7 +3,7 @@
         {{dataentryWidget.title| translate}}        
 
         <span class="pull-right widget-link">
-            
+
             <a href ng-click="toggleEventsTableDisplay()" title="{{showEventsAsTables ? 'toggle_table_view_off' : 'toggle_table_view_on'| translate}}" ng-show="stagesCanBeShownAsTable"><span ng-if="!showEventsAsTables"><i class="fa fa-bars vertical-center"></i></span><span ng-if="showEventsAsTables"><i class="fa fa-square vertical-center"></i></span></a>
             <a href ng-click="filterEvents = !filterEvents" title="{{filterEvents ? 'list_events' : 'filter_events'| translate}}" ng-show="eventFilteringRequired"><span ng-if="!filterEvents"><i class="fa fa-filter vertical-center"></i></span><span ng-if="filterEvents"><i class="fa fa-list vertical-center"></i></span></a>
             <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}" class="small-horizonal-spacing"><i class="fa fa-info-circle vertical-center"></i></a>
@@ -33,7 +33,7 @@
                     <tr>
                         <th class="active" style="vertical-align:middle" ng-repeat="stage in programStages">                            
                             {{stage.name}}  
-                            
+
                             <!-- event add/filter icon begins -->
                             <span class='pull-right'>
 
@@ -42,7 +42,7 @@
                                 </span>
                             </span>
                             <!-- event add/filter icon ends -->
-                            
+
                         </th>
                     </tr>
                 </thead>
@@ -62,7 +62,7 @@
                             <span ng-if="eventsByStage[stage.id].length > 1 && filterEvents">
                                 <span ng-if="currentEvent.programStage !== stage.id">
                                     <div class="event-paging">
-                                        <a href class="event-paging" ng-click="showDataEntryForEvent(eventsByStage[stage.id][0])">{{'show_more' | translate}}</a>
+                                        <a href class="event-paging" ng-click="showDataEntryForEvent(eventsByStage[stage.id][0])">{{'show_more'| translate}}</a>
                                     </div>                                    
                                 </span>
                                 <event-paginator ng-if="stage.id === currentEvent.programStage"></event-paginator>                             
@@ -192,23 +192,24 @@
 
         <div ng-show="currentEvent" class='remove-default-padding overflow-ellipsis'>
             <div class='row'><hr></div>
-            <textarea class="form-control" rows="3" ng-model="note" placeholder="{{'add_new_note_here'| translate}}"></textarea> 
-            <div class="vertical-spacing">
-                <button type="button" 
-                        class="btn btn-primary small-horizonal-spacing"
-                        ng-click="addNote()">
-                    {{'add'| translate}}
-                </button>        
-                <button type="button" 
-                        class="btn btn-default small-horizonal-spacing" 
-                        ng-click="clearNote()">
-                    {{'clear'| translate}}
-                </button>
+            <div class="add-default-padding">
+                <textarea class="form-control" rows="3" ng-model="note" placeholder="{{'add_new_note_here'| translate}}"></textarea> 
+                <div class="vertical-spacing">
+                    <button type="button" 
+                            class="btn btn-primary"
+                            ng-click="addNote()">
+                        {{'add'| translate}}
+                    </button>        
+                    <button type="button" 
+                            class="btn btn-default small-horizonal-spacing" 
+                            ng-click="clearNote()">
+                        {{'clear'| translate}}
+                    </button>
+                </div>
             </div>
-
             <table class="table table-striped dhis2-table-hover">
                 <tr ng-repeat="note in currentEvent.notes">
-                    <td class="overflow-ellipsis">
+                    <td class="add-default-left-padding">
                         <d2-pop-over content="note" template="popover.html" details="{{'details'| translate}}">
                             <div>{{note.value}}</div>
                         </d2-pop-over>
@@ -222,5 +223,6 @@
                 </tr>
             </table>
         </div>
+        <div ng-show="currentEvent && !currentEvent.notes" class="alert alert-warning">{{'empty_notes'| translate}}</div> 
     </div>        
 </div>
