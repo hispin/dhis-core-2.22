@@ -8,8 +8,8 @@ trackerCapture.controller('RuleBoundController',
     $scope.widget = $scope.$parent.$parent.biggerWidget ? $scope.$parent.$parent.biggerWidget
     : $scope.$parent.$parent.smallerWidget ? $scope.$parent.$parent.smallerWidget : null;
     $scope.widgetTitle = $scope.widget.title;    
-    $scope.emptyFeedbackListLabel = $translate.instant('empty_feedback_list');
-    $scope.emptyIndicatorListLabel = $translate.instant('empty_inidcator_list');
+    $scope.emptyFeedbackListLabel = $translate.instant('no_feedback_exist');
+    $scope.emptyIndicatorListLabel = $translate.instant('no_indicators_exist');
     
     $scope.widgetTitleLabel = $translate.instant($scope.widgetTitle);
     
