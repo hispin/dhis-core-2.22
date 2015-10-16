@@ -52,7 +52,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -103,8 +102,8 @@ public class ConfigurationController
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/feedbackRecipients/{uid}", method = RequestMethod.POST )
-    public void setFeedbackRecipients( @PathVariable( "uid" ) String uid )
+    @RequestMapping( value = "/feedbackRecipients", method = RequestMethod.POST )
+    public void setFeedbackRecipients( @RequestBody String uid )
         throws NotFoundException
     {
         UserGroup group = identifiableObjectManager.get( UserGroup.class, uid );
@@ -141,8 +140,8 @@ public class ConfigurationController
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/offlineOrganisationUnitLevel/{uid}", method = RequestMethod.POST )
-    public void setOfflineOrganisationUnitLevels( @PathVariable( "uid" ) String uid )
+    @RequestMapping( value = "/offlineOrganisationUnitLevel", method = RequestMethod.POST )
+    public void setOfflineOrganisationUnitLevels( @RequestBody String uid )
         throws NotFoundException
     {
         OrganisationUnitLevel organisationUnitLevel = identifiableObjectManager.get( OrganisationUnitLevel.class, uid );
@@ -167,8 +166,8 @@ public class ConfigurationController
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/infrastructuralIndicators/{uid}", method = RequestMethod.POST )
-    public void setInfrastructuralIndicators( @PathVariable( "uid" ) String uid )
+    @RequestMapping( value = "/infrastructuralIndicators", method = RequestMethod.POST )
+    public void setInfrastructuralIndicators( @RequestBody String uid )
         throws NotFoundException
     {
         IndicatorGroup group = identifiableObjectManager.get( IndicatorGroup.class, uid );
@@ -193,8 +192,8 @@ public class ConfigurationController
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/infrastructuralDataElements/{uid}", method = RequestMethod.POST )
-    public void setInfrastructuralDataElements( @PathVariable("uid") String uid )
+    @RequestMapping( value = "/infrastructuralDataElements", method = RequestMethod.POST )
+    public void setInfrastructuralDataElements( @RequestBody String uid )
         throws NotFoundException
     {
         DataElementGroup group = identifiableObjectManager.get( DataElementGroup.class, uid );
@@ -222,8 +221,8 @@ public class ConfigurationController
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/infrastructuralPeriodType/{name}", method = RequestMethod.POST )
-    public void setInfrastructuralPeriodType( @PathVariable( "name" ) String name )
+    @RequestMapping( value = "/infrastructuralPeriodType", method = RequestMethod.POST )
+    public void setInfrastructuralPeriodType( @RequestBody String name )
         throws NotFoundException
     {
         PeriodType periodType = PeriodType.getPeriodTypeByName( name );
@@ -250,8 +249,8 @@ public class ConfigurationController
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/selfRegistrationRole/{uid}", method = RequestMethod.POST )
-    public void setSelfRegistrationRole( @PathVariable( "uid" ) String uid )
+    @RequestMapping( value = "/selfRegistrationRole", method = RequestMethod.POST )
+    public void setSelfRegistrationRole( @RequestBody String uid )
         throws NotFoundException
     {
         UserAuthorityGroup userGroup = identifiableObjectManager.get( UserAuthorityGroup.class, uid );
@@ -275,8 +274,8 @@ public class ConfigurationController
     }
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @RequestMapping( value = "/selfRegistrationOrgUnit/{uid}", method = RequestMethod.POST )
-    public void setSelfRegistrationOrgUnit( @PathVariable( "uid" ) String uid )
+    @RequestMapping( value = "/selfRegistrationOrgUnit", method = RequestMethod.POST )
+    public void setSelfRegistrationOrgUnit( @RequestBody String uid )
         throws NotFoundException
     {
         OrganisationUnit orgunit = identifiableObjectManager.get( OrganisationUnit.class, uid );
@@ -295,8 +294,8 @@ public class ConfigurationController
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/smtpPassword/{password}", method = RequestMethod.POST )
-    public void setSmtpPassword( @PathVariable String password  )
+    @RequestMapping( value = "/smtpPassword", method = RequestMethod.POST )
+    public void setSmtpPassword( @RequestBody String password  )
     {
         Configuration config = configurationService.getConfiguration();
         
@@ -313,8 +312,8 @@ public class ConfigurationController
     
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerUrl/{url}", method = RequestMethod.POST )
-    public void setRemoteServerUrl( @PathVariable String url )
+    @RequestMapping( value = "/remoteServerUrl", method = RequestMethod.POST )
+    public void setRemoteServerUrl( @RequestBody String url )
     {
         Configuration config = configurationService.getConfiguration();
         
@@ -331,8 +330,8 @@ public class ConfigurationController
     
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerUsername/{username}", method = RequestMethod.POST )
-    public void setRemoteServerUsername( @PathVariable String username )
+    @RequestMapping( value = "/remoteServerUsername", method = RequestMethod.POST )
+    public void setRemoteServerUsername( @RequestBody String username )
     {
         Configuration config = configurationService.getConfiguration();
         
@@ -343,8 +342,8 @@ public class ConfigurationController
     
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerPassword/{password}", method = RequestMethod.POST )
-    public void setRemoteServerPassword( @PathVariable String password )
+    @RequestMapping( value = "/remoteServerPassword", method = RequestMethod.POST )
+    public void setRemoteServerPassword( @RequestBody String password )
     {
         Configuration config = configurationService.getConfiguration();
         
