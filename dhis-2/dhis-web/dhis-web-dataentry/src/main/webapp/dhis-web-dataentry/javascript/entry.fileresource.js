@@ -115,34 +115,50 @@
         };
 
         var onFileDataValueSavedSuccess = function( fileResource ) {
-            var name = fileResource.name, size = '(' + filesize( fileResource.contentLength ) + ')';
+            var name = fileResource.name;
+            var size = '(' + filesize( fileResource.contentLength ) + ')';
 
-            //$fileinfoName.text( name );
-
-            $('<a>', {
-                text: name,
-                title: name,
-                href: createDownloadLink()
-            } ).appendTo( $fileinfoName );
-
+            $fileinfoName.text( name );
             $fileinfoSize.text( size );
             $fileinfo.show();
-            $progressBar.toggleClass( 'upload-progress-bar-complete' );
-            $displayField.css( 'background-color', dhis2.de.cst.colorGreen );
-
+            $displayField.css( 'background-color', dhis2.de.cst.colorYellow );
             resetAndHideProgress();
-            setButtonDelete();
-            $button.button( 'enable' );
+
+            function pollForFileResourceStored() {
+                $.ajax( {
+                    url: '../api/fileResources/' + fileResource.id,
+                    type: 'GET',
+                    dataType: 'json'
+                } ).done( function( data, textStatus, jqXHR ) {
+                    if ( data.storageStatus != 'STORED' ) {
+                        setTimeout( pollForFileResourceStored, 4000 /* 4 sec polling time */ );
+                    } else {
+                        $fileinfoName.text( '' );
+
+                        $( '<a>', {
+                            text: name,
+                            title: name,
+                            href: '../api/dataValues/files?' + $.param( formData )
+                        } ).appendTo( $fileinfoName );
+
+                        $displayField.css( 'background-color', dhis2.de.cst.colorGreen );
+
+                        setButtonDelete();
+                        $button.button( 'enable' );
+                    }
+                } ).fail( function( jqXHR, textStatus, errorThrown ) {
+                    // Really shouldn't happen...
+                    $displayField.css( 'background-color', dhis2.de.cst.colorRed );
+                    throw 'Checking storage status of file failed: ' + errorThrown;
+                } );
+            }
+            setTimeout( pollForFileResourceStored, 1500 );
         };
 
         var updateProgress = function( loaded, total ) {
             var percent = parseInt( loaded / total * 100, 10 );
             $progressBar.css( 'width', percent + '%' );
             $progressInfo.text( percent + '%' );
-        };
-
-        var createDownloadLink = function() {
-            return "../api/dataValues/files?" + $.param( formData );
         };
 
         var disableField = function() {
@@ -182,7 +198,7 @@
             },
             fail: function( e, data ) {
                 console.error( data.errorThrown );
-
+                $displayField.css( 'background-color', dhis2.de.cst.colorRed );
                 setHeaderDelayMessage( i18n_file_upload_failed );
                 setButtonUpload();
             },
