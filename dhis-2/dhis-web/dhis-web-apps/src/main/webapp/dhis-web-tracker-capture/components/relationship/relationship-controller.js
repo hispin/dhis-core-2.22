@@ -123,10 +123,7 @@ trackerCapture.controller('RelationshipController',
                             };
                         DialogService.showDialog({}, dialogOptions);
                         return;
-                    }
-
-                    var selections = CurrentSelection.get();
-                    CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});                                
+                    }                    
                     setRelationships();
                 });
             }
@@ -158,6 +155,9 @@ trackerCapture.controller('RelationshipController',
             var relative = {trackedEntityInstance: teiId, relName: relName, relId: rel.relationship, attributes: getRelativeAttributes(rel)};            
             $scope.relatedTeis.push(relative);
         });
+        
+        var selections = CurrentSelection.get();
+        CurrentSelection.set({tei: $scope.selectedTei, te: $scope.selectedTei.trackedEntity, prs: selections.prs, pr: $scope.selectedProgram, prNames: selections.prNames, prStNames: selections.prStNames, enrollments: selections.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: selections.optionSets});       
     };
     
     var getRelativeAttributes = function(tei){
