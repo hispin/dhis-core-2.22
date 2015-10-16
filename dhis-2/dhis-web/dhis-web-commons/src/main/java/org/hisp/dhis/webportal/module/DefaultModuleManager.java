@@ -44,6 +44,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
+import org.hisp.dhis.i18n.I18n;
+import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.security.ActionAccessResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -75,6 +77,9 @@ public class DefaultModuleManager
 
     @Autowired
     private AppManager appManager;
+    
+    @Autowired
+    private I18nManager i18nManager;
 
     private ActionAccessResolver actionAccessResolver;
 
@@ -187,11 +192,14 @@ public class DefaultModuleManager
         {
             return;
         }
+        
+        I18n i18n = i18nManager.getI18n();
 
         for ( PackageConfig packageConfig : getPackageConfigs() )
         {
             String name = packageConfig.getName();
             String namespace = packageConfig.getNamespace();
+            String displayName = i18n.getString( name );
 
             log.debug( "Package config: " + name + ", " + namespace );
 
@@ -221,6 +229,7 @@ public class DefaultModuleManager
             }
 
             Module module = new Module( name, namespace );
+            module.setDisplayName( displayName );
             modulesByName.put( name, module );
             modulesByNamespace.put( namespace, module );
 
