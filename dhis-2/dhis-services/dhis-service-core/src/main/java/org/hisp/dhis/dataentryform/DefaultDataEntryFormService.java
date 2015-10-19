@@ -370,6 +370,28 @@ public class DefaultDataEntryFormService
 
                     appendCode += " name=\"entryfield\" class=\"entryfield entryarea\" tabindex=\"" + i++ + "\"" + "></textarea>";
                 }
+                else if ( ValueType.FILE_RESOURCE == valueType )
+                {
+                    inputHtml = inputHtml.replace( "input", "div" );
+
+                    appendCode += " class=\"entryfileresource\" tabindex=\"" + i++ + "\">" +
+                                    "<input class=\"entryfileresource-input\" id=\"input-"+ dataElementId + "-" + optionComboId + "-val\">" +
+                                    "<div class=\"upload-field\">" +
+                                        "<div class=\"upload-fileinfo\"> " +
+                                            "<div class=\"upload-fileinfo-size\"></div>" +
+                                            "<div class=\"upload-fileinfo-name\"></div>" +
+                                        "</div>" +
+                                        "<div class=\"upload-progress\">" +
+                                            "<div class=\"upload-progress-bar\"></div>" +
+                                            "<div class=\"upload-progress-info\"></div>" +
+                                        "</div>" +
+                                    "</div>" +
+                                    "<div class=\"upload-button-group\">" +
+                                        "<button class=\"upload-button\"></button>" +
+                                    "</div>" +
+                                    "<input type=\"file\" style=\"display: none;\">" +
+                                "</div>";
+                }
                 else
                 {
                     appendCode += " type=\"text\" name=\"entryfield\" class=\"entryfield\" tabindex=\"" + i++ + "\"" + TAG_CLOSE;
