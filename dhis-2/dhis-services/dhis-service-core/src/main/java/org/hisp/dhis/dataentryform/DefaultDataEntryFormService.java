@@ -377,7 +377,7 @@ public class DefaultDataEntryFormService
                     appendCode += " class=\"entryfileresource\" tabindex=\"" + i++ + "\">" +
                                     "<input class=\"entryfileresource-input\" id=\"input-"+ dataElementId + "-" + optionComboId + "-val\">" +
                                     "<div class=\"upload-field\">" +
-                                        "<div class=\"upload-fileinfo\"> " +
+                                        "<div class=\"upload-fileinfo\">" +
                                             "<div class=\"upload-fileinfo-size\"></div>" +
                                             "<div class=\"upload-fileinfo-name\"></div>" +
                                         "</div>" +
