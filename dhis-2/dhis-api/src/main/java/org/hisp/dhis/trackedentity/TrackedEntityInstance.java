@@ -36,6 +36,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -63,7 +65,7 @@ public class TrackedEntityInstance
     private TrackedEntityInstance representative;
 
     private TrackedEntity trackedEntity;
-    
+
     private Boolean inactive = false;
 
     // -------------------------------------------------------------------------
@@ -176,5 +178,37 @@ public class TrackedEntityInstance
     public void setInactive( Boolean inactive )
     {
         this.inactive = inactive;
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            TrackedEntityInstance trackedEntityInstance = (TrackedEntityInstance) other;
+
+            if ( strategy.isReplace() )
+            {
+                organisationUnit = trackedEntityInstance.getOrganisationUnit();
+                inactive = trackedEntityInstance.isInactive();
+                trackedEntity = trackedEntityInstance.getTrackedEntity();
+                representative = trackedEntityInstance.getRepresentative();
+            }
+            else if ( strategy.isMerge() )
+            {
+                organisationUnit = trackedEntityInstance.getOrganisationUnit() == null ? organisationUnit : trackedEntityInstance.getOrganisationUnit();
+                inactive = trackedEntityInstance.isInactive() == null ? inactive : trackedEntityInstance.isInactive();
+                trackedEntity = trackedEntityInstance.getTrackedEntity() == null ? trackedEntity : trackedEntityInstance.getTrackedEntity();
+                representative = trackedEntityInstance.getRepresentative() == null ? representative : trackedEntityInstance.getRepresentative();
+            }
+
+            attributeValues.clear();
+            attributeValues.addAll( trackedEntityInstance.getAttributeValues() );
+
+            programInstances.clear();
+            programInstances.addAll( trackedEntityInstance.getProgramInstances() );
+        }
     }
 }
