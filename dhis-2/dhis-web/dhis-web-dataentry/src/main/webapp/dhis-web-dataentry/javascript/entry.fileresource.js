@@ -1,19 +1,19 @@
 ( function ( $ ) {
     $.fn.fileEntryField = function() {
-        var $container = $( this );
+        var $field = $( this );
 
-        var $field = $container.find( '.entryfileresource' );
-        var $displayField = $container.find( '.upload-field' );
+        var $input = $field.find( 'input[class="entryfileresource-input"]');
+        var $displayField = $field.find( '.upload-field' );
 
-        var $button = $container.find( '.upload-button' );
+        var $button = $field.find( '.upload-button' );
 
-        var $fileInput = $container.find( 'input[type=file]' );
+        var $fileInput = $field.find( 'input[type=file]' );
 
-        var $fileinfo = $container.find( '.upload-fileinfo' );
+        var $fileinfo = $field.find( '.upload-fileinfo' );
         var $fileinfoName = $fileinfo.find( '.upload-fileinfo-name' );
         var $fileinfoSize = $fileinfo.find( '.upload-fileinfo-size' );
 
-        var $progress = $container.find( '.upload-progress' );
+        var $progress = $field.find( '.upload-progress' );
         var $progressBar = $progress.find( '.upload-progress-bar' );
         var $progressInfo = $progress.find( '.upload-progress-info' );
 
@@ -46,7 +46,7 @@
                     $fileinfoName.text( '' );
                     $fileinfoSize.text( '' );
                     $displayField.css( 'background-color', '' );
-                    $field.val( '' );
+                    $input.val( '' );
                     setButtonUpload();
                 },
                 error: function( data ) {
@@ -173,7 +173,7 @@
         };
 
         $( document ).on( dhis2.de.event.dataValuesLoaded, function() {
-            ( !$field.val() ) ? setButtonUpload() : setButtonDelete();
+            ( !$input.val() ) ? setButtonUpload() : setButtonDelete();
         } );
 
         $( document ).on( "dhis2.offline", disableField );
@@ -205,9 +205,9 @@
             },
             done: function( e, data ) {
                 var fileResource = data.result.response.fileResource;
-                $field.val( fileResource.id );
+                $input.val( fileResource.id );
 
-                saveFileResource( dataElementId, optionComboId, id, fileResource, function() {
+                saveFileResource( dataElementId, optionComboId, $input.attr( 'id' ), fileResource, function() {
                     onFileDataValueSavedSuccess( fileResource );
                 } );
             }
