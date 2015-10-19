@@ -31,6 +31,7 @@ package org.hisp.dhis.common;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
@@ -46,6 +47,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 /**
 * @author Lars Helge Overland
@@ -98,7 +100,13 @@ public interface DimensionalObject
         put( DataElementGroupSet.class, DataElementGroup.class ).
         put( OrganisationUnitGroupSet.class, OrganisationUnitGroup.class ).
         put( CategoryOptionGroupSet.class, CategoryOptionGroup.class ).build();
-        
+    
+    Set<ValueType> ARITHMETIC_VALUE_TYPES = Sets.newHashSet(
+        ValueType.BOOLEAN, ValueType.TRUE_ONLY, ValueType.NUMBER, ValueType.INTEGER, 
+        ValueType.INTEGER_POSITIVE, ValueType.INTEGER_NEGATIVE, ValueType.INTEGER_ZERO_OR_POSITIVE, 
+        ValueType.UNIT_INTERVAL, ValueType.PERCENTAGE
+    );
+    
     /**
      * Gets the dimension identifier.
      */

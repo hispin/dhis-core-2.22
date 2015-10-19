@@ -31,17 +31,16 @@ package org.hisp.dhis.trackedentity.action.programindicator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.system.filter.AggregatableTrackedEntityAttributeValueFilter;
+import org.hisp.dhis.system.predicate.ArithmeticValueTypeTrackedEntityAttributeFilter;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.commons.filter.FilterUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
@@ -122,13 +121,13 @@ public class GetProgramIndicatorAction
         return filter;
     }
 
-    private List<TrackedEntityAttribute> attributes = new ArrayList<>();
-    
-    public List<TrackedEntityAttribute> getAttributes()
+    private List<TrackedEntityAttribute> expressionAttributes = new ArrayList<>();
+        
+    public List<TrackedEntityAttribute> getExpressionAttributes()
     {
-        return attributes;
+        return expressionAttributes;
     }
-    
+
     private List<Constant> constants = new ArrayList<>();
 
     public List<Constant> getConstants()
@@ -150,21 +149,21 @@ public class GetProgramIndicatorAction
             program = programIndicator.getProgram();
             expressionDescription = programIndicatorService.getExpressionDescription( programIndicator.getExpression() );
             filterDescription = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
-            filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );
-            attributes = new ArrayList<>( program.getTrackedEntityAttributes() );
+            filter = programIndicatorService.getExpressionDescription( programIndicator.getFilter() );            
         }
         else if ( programId != null )
         {            
             program = programService.getProgram( programId );
-            attributes = new ArrayList<>( program.getTrackedEntityAttributes() );
         }
         
+        expressionAttributes = new ArrayList<>( program.getTrackedEntityAttributes() );
         constants = new ArrayList<>( constantService.getAllConstants() );
 
-        FilterUtils.filter( attributes, AggregatableTrackedEntityAttributeValueFilter.INSTANCE );
-        Collections.sort( attributes, IdentifiableObjectNameComparator.INSTANCE );
-        Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
+        expressionAttributes = expressionAttributes.stream().filter( ArithmeticValueTypeTrackedEntityAttributeFilter.INSTANCE ).collect( Collectors.toList() );
         
+        Collections.sort( expressionAttributes );
+        Collections.sort( constants );
+                
         return SUCCESS;
     }
 }
