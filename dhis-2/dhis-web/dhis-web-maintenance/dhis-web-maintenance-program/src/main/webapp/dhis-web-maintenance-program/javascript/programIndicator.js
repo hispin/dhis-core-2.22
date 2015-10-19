@@ -164,7 +164,7 @@ function setExpressionCount(type) {
 		$('#expression').val('V{enrollment_count}');
 	}
 	else if ('tei' == type) {
-		$('.#expression').val('V{tei_count}');
+		$('#expression').val('V{tei_count}');
 	}
 }
 
