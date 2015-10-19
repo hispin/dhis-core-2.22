@@ -128,7 +128,7 @@ public class GetProgramIndicatorAction
     {
         return attributes;
     }
-
+    
     private List<Constant> constants = new ArrayList<>();
 
     public List<Constant> getConstants()

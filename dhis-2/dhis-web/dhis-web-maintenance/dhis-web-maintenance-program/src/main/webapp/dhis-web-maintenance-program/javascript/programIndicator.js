@@ -1,3 +1,9 @@
+dhis2.util.namespace( 'dhis2.pi' );
+
+dhis2.pi.aggregatableValueTypes = [
+  'BOOLEAN', 'TRUE_ONLY', 'NUMBER', 'UNIT_INTERVAL', 'PERCENTAGE',
+  'INTEGER', 'INTEGER_POSITIVE', 'INTEGER_NEGATIVE', 'INTEGER_ZERO_OR_POSITIVE' ];  
+
 $(function() {
   dhis2.contextmenu.makeContextMenu({
     menuId: 'contextMenu',
@@ -72,7 +78,12 @@ function getTrackedEntityDataElements( type ) {
     }, function( json ) {
       var dataElements = jQuery('#' + fieldId);
       for( i in json.dataElements ) {
-        dataElements.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + "' suggested='" + json.dataElements[i].optionset + "'>" + json.dataElements[i].name + "</option>");
+		var de = json.dataElements[i];
+		
+		if ( !('expression' == type && de.valueType && !dhis2.pi.aggregatableValueTypes.indexOf(de.valueType))) {
+          dataElements.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + 
+            "' suggested='" + json.dataElements[i].optionset + "'>" + json.dataElements[i].name + "</option>");
+        }
       }
     });
 }
