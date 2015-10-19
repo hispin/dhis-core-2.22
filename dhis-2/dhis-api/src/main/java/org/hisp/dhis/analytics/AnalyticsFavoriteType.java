@@ -28,10 +28,14 @@ package org.hisp.dhis.analytics;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.DxfNamespaces;
+
 /**
  * @author Lars Helge Overland
  */
+@JacksonXmlRootElement( localName = "analyticsFavoriteType", namespace = DxfNamespaces.DXF_2_0 )
 public enum AnalyticsFavoriteType
 {
-    CHART, EVENT_CHART, REPORT_TABLE, EVENT_REPORT, MAP, DATASET_REPORT;
+    CHART, EVENT_CHART, REPORT_TABLE, EVENT_REPORT, MAP, DATASET_REPORT
 }

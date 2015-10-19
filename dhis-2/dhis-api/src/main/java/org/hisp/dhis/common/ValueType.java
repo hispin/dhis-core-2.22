@@ -31,6 +31,7 @@ package org.hisp.dhis.common;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import com.google.common.collect.Lists;
@@ -38,6 +39,7 @@ import com.google.common.collect.Lists;
 /**
  * @author Lars Helge Overland
  */
+@JacksonXmlRootElement( localName = "valueType", namespace = DxfNamespaces.DXF_2_0 )
 public enum ValueType
 {
     TEXT( String.class ),

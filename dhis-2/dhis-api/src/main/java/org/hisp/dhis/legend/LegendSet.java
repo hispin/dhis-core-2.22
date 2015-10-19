@@ -40,8 +40,6 @@ import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.indicator.Indicator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -62,8 +60,7 @@ public class LegendSet
     {
     }
 
-    public LegendSet( String name, String type, String symbolizer, Set<Legend> legends,
-        Set<Indicator> indicators, Set<DataElement> dataElements )
+    public LegendSet( String name, String symbolizer, Set<Legend> legends )
     {
         this.name = name;
         this.symbolizer = symbolizer;
@@ -78,7 +75,7 @@ public class LegendSet
     {
         legends.clear();
     }
-    
+
     public Legend getLegendByUid( String uid )
     {
         for ( Legend legend : legends )
@@ -88,7 +85,7 @@ public class LegendSet
                 return legend;
             }
         }
-        
+
         return null;
     }
 
