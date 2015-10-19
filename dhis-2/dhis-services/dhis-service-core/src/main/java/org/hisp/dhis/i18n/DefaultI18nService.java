@@ -31,6 +31,7 @@ package org.hisp.dhis.i18n;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationService;
 import org.hisp.dhis.user.UserSettingService;
@@ -78,20 +79,13 @@ public class DefaultI18nService
     }
 
     // -------------------------------------------------------------------------
-    // Internationalise
+    // I18nService implementation
     // -------------------------------------------------------------------------
 
     @Override
     public void internationalise( Object object )
     {
-        if ( isCollection( object ) )
-        {
-            internationaliseCollection( (Collection<?>) object, getCurrentLocale() );
-        }
-        else
-        {
-            internationaliseObject( object, getCurrentLocale() );
-        }
+        internationalise( object, getCurrentLocale() );
     }
 
     @Override
@@ -109,7 +103,7 @@ public class DefaultI18nService
 
     private void internationaliseObject( Object object, Locale locale )
     {
-        if ( locale == null || object == null )
+        if ( locale == null || object == null || locale.equals( LocaleManager.DEFAULT_LOCALE ) )
         {
             return;
         }
@@ -134,7 +128,7 @@ public class DefaultI18nService
 
     private void internationaliseCollection( Collection<?> objects, Locale locale )
     {
-        if ( locale == null || objects == null || objects.size() == 0 )
+        if ( locale == null || objects == null || locale.equals( LocaleManager.DEFAULT_LOCALE ) || objects.size() == 0 )
         {
             return;
         }
@@ -189,7 +183,7 @@ public class DefaultI18nService
             return null;
         }
 
-        if ( !(object instanceof IdentifiableObject) )
+        if ( !( object instanceof IdentifiableObject ) )
         {
             throw new IllegalArgumentException( "I18n object must be identifiable: " + object );
         }
@@ -199,8 +193,8 @@ public class DefaultI18nService
             return Arrays.asList( DataElement.I18N_PROPERTIES );
         }
 
-        return (object instanceof NameableObject) ? Arrays.asList( NameableObject.I18N_PROPERTIES ) : Arrays
-            .asList( IdentifiableObject.I18N_PROPERTIES );
+        return (object instanceof NameableObject) ? Arrays.asList( NameableObject.I18N_PROPERTIES ) : 
+            Arrays.asList( IdentifiableObject.I18N_PROPERTIES );
     }
 
     // -------------------------------------------------------------------------

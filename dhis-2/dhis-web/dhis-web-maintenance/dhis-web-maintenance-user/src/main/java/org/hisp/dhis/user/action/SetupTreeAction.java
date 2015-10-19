@@ -256,13 +256,13 @@ public class SetupTreeAction
             
             attributeValues = AttributeUtils.getAttributeValueMap( user.getAttributeValues() );
             
-            currentLocale = (Locale) userSettingService.getUserSetting( KEY_UI_LOCALE, LocaleManager.DHIS_STANDARD_LOCALE, user );
+            currentLocale = (Locale) userSettingService.getUserSetting( KEY_UI_LOCALE, LocaleManager.DEFAULT_LOCALE, user );
             
             currentLocaleDb = (Locale) userSettingService.getUserSetting( KEY_DB_LOCALE, null, user );
         }
         else
         {            
-            currentLocale = LocaleManager.DHIS_STANDARD_LOCALE;
+            currentLocale = LocaleManager.DEFAULT_LOCALE;
         }
 
         availableLocales = localeManager.getAvailableLocales();

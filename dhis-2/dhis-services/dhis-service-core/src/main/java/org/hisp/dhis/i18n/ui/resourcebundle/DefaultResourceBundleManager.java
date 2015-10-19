@@ -240,7 +240,7 @@ public class DefaultResourceBundleManager
             }
         }
 
-        return LocaleManager.DHIS_STANDARD_LOCALE;
+        return LocaleManager.DEFAULT_LOCALE;
     }
 
     // -------------------------------------------------------------------------

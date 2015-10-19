@@ -77,7 +77,7 @@ public class UserSettingLocaleManager
             return locale;
         }
 
-        return DHIS_STANDARD_LOCALE;
+        return DEFAULT_LOCALE;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class UserSettingLocaleManager
             locales.add( userLocale );
         }
 
-        locales.add( DHIS_STANDARD_LOCALE );
+        locales.add( DEFAULT_LOCALE );
 
         return locales;
     }
@@ -111,7 +111,7 @@ public class UserSettingLocaleManager
     @Override
     public Locale getFallbackLocale()
     {
-        return DHIS_STANDARD_LOCALE;
+        return DEFAULT_LOCALE;
     }
     
     @Override
