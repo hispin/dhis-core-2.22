@@ -56,7 +56,7 @@
 		        <tr>
 					<td>
 						<select multiple id="expression-attributes" name="expression-attributes" size="7" style="width:100%" ondblclick="insertAttribute('expression');">
-							#foreach( $programAttribute in $attributes )
+							#foreach( $programAttribute in $expressionAttributes )
 								<option value='$programAttribute.uid'>$encoder.htmlEncode($programAttribute.displayName)</option>
 							#end
 						</select>
