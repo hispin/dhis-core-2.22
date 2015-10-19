@@ -542,7 +542,7 @@ public class DefaultProgramService
 
             inputHtml += "</select>";
         }
-        else if ( ValueType.OPTION_SET == attribute.getValueType() )
+        else if ( attribute.hasOptionSet() )
         {
             inputHtml = inputHtml.replaceFirst( "input", "select" ) + ">";
             inputHtml += "<option value=\"\" selected>" + i18n.getString( "no_value" ) + "</option>";

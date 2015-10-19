@@ -42,7 +42,7 @@ public class AggregatableTrackedEntityAttributeValueFilter
 
     private static final Set<ValueType> TYPES = Sets.newHashSet(
         ValueType.INTEGER, ValueType.INTEGER_POSITIVE, ValueType.INTEGER_NEGATIVE, ValueType.INTEGER_ZERO_OR_POSITIVE, ValueType.NUMBER,
-        ValueType.UNIT_INTERVAL, ValueType.PERCENTAGE, ValueType.BOOLEAN, ValueType.OPTION_SET );
+        ValueType.UNIT_INTERVAL, ValueType.PERCENTAGE, ValueType.BOOLEAN );
 
     //TODO Option set is not robust as it might contain any value type, needs to change with new Enum is in place
     @Override

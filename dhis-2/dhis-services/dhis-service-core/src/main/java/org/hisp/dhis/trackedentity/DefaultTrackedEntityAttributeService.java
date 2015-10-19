@@ -292,7 +292,7 @@ public class DefaultTrackedEntityAttributeService
                 return "Value is not pointing to a valid username for attribute " + trackedEntityAttribute.getUid();
             }
         }
-        else if ( ValueType.OPTION_SET == valueType && !trackedEntityAttribute.isValidOptionValue( value ) )
+        else if ( trackedEntityAttribute.hasOptionSet() && !trackedEntityAttribute.isValidOptionValue( value ) )
         {
             return "Value is not pointing to a valid option for attribute " + trackedEntityAttribute.getUid();
         }

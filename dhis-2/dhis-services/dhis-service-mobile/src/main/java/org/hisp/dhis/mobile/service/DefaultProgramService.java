@@ -35,7 +35,6 @@ import org.hisp.dhis.api.mobile.model.ModelList;
 import org.hisp.dhis.api.mobile.model.OptionSet;
 import org.hisp.dhis.api.mobile.model.Program;
 import org.hisp.dhis.api.mobile.model.ProgramStage;
-import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageSection;
@@ -330,7 +329,7 @@ public class DefaultProgramService
 
         mobileAttribute.setMandatory( ppa.isMandatory() );
 
-        if ( ValueType.OPTION_SET == pa.getValueType() )
+        if ( pa.hasOptionSet() )
         {
             OptionSet optionSet = new OptionSet();
 
