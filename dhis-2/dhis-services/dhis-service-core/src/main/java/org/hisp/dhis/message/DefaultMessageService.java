@@ -419,7 +419,7 @@ public class DefaultMessageService
 
         values.put( "responseUrl", baseUrl + "/dhis-web-dashboard-integration/readMessage.action?id=" + conversation.getUid() );
 
-        Locale locale = (Locale) userSettingService.getUserSetting( UserSettingService.KEY_UI_LOCALE, LocaleManager.DHIS_STANDARD_LOCALE, conversation.getUser() );
+        Locale locale = (Locale) userSettingService.getUserSetting( UserSettingService.KEY_UI_LOCALE, LocaleManager.DEFAULT_LOCALE, conversation.getUser() );
         values.put( "i18n", i18nManager.getI18n( locale ) );
 
         return new VelocityManager().render( values , MESSAGE_EMAIL_FOOTER_TEMPLATE );

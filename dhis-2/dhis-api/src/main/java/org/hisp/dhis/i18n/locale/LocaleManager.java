@@ -39,7 +39,7 @@ public interface LocaleManager
 {
     String ID = LocaleManager.class.getName();
 
-    Locale DHIS_STANDARD_LOCALE = new Locale( "en" );
+    Locale DEFAULT_LOCALE = new Locale( "en" );
 
     Locale getCurrentLocale();
 
