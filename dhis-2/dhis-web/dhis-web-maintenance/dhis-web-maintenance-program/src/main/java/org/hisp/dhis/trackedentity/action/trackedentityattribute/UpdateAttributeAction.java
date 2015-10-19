@@ -206,6 +206,8 @@ public class UpdateAttributeAction
         throws Exception
     {
         OptionSet optionSet = optionService.getOptionSet( optionSetId );
+
+        valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
         
         TrackedEntityAttribute trackedEntityAttribute = trackedEntityAttributeService.getTrackedEntityAttribute( id );
 

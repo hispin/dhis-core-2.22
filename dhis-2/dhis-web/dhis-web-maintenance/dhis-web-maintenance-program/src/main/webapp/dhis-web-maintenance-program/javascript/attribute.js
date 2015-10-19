@@ -5,6 +5,7 @@ $(function() {
   });
 
   typeOnChange();
+  optionSetChanged();
 });
 
 // -----------------------------------------------------------------------------
@@ -66,7 +67,6 @@ function attributeTypeMap() {
   typeMap['DATE'] = i18n_date;
   typeMap['PHONE_NUMBER'] = i18n_phone_number;
   typeMap['TRACKER_ASSOCIATE'] = i18n_tracker_associate;
-  typeMap['OPTION_SET'] = i18n_option_set;
   return typeMap;
 }
 
@@ -82,16 +82,10 @@ function removeAttribute(context) {
 function typeOnChange() {
   var type = getFieldValue('valueType');
 
-  hideById("optionSetRow");
-  disable("optionSetId");
   hideById("trackedEntityRow");
   disable("trackedEntityId");
 
-  if( type == "OPTION_SET" ) {
-    showById("optionSetRow");
-    enable("optionSetId");
-  }
-  else if( type == "TRACKER_ASSOCIATE" ) {
+  if( type == "TRACKER_ASSOCIATE" ) {
     showById("trackedEntityRow");
     enable("trackedEntityId");
   }
@@ -104,6 +98,18 @@ function typeOnChange() {
   }
 }
 
+function optionSetChanged() {
+  var optionSetId = $('#optionSetId').val();
+  var valueType = $('#optionSetId').find(':selected').data('valuetype');
+  if ( optionSetId != 0 && valueType ) {
+	  $('#valueType').val(valueType);
+	  $('#valueType').prop('disabled', true);
+  }
+  else {
+	  $('#valueType').prop('disabled', false);
+  }
+}
+
 function uniqueOnChange() {
   if( $('#unique').attr('checked') == "checked" ) {
     jQuery('[name=uniqueTR]').show();
@@ -112,7 +118,6 @@ function uniqueOnChange() {
     jQuery('#valueType [value=DATE]').hide();
     jQuery('#valueType [value=TRACKER_ASSOCIATE]').hide();
     jQuery('#valueType [value=USERNAME]').hide();
-    jQuery('#valueType [value=OPTION_SET]').hide();
   }
   else {
     jQuery('[name=uniqueTR]').hide();
@@ -121,6 +126,5 @@ function uniqueOnChange() {
     jQuery('#valueType [value=DATE]').show();
     jQuery('#valueType [value=TRACKER_ASSOCIATE]').show();
     jQuery('#valueType [value=USERNAME]').show();
-    jQuery('#valueType [value=OPTION_SET]').show();
   }
 }

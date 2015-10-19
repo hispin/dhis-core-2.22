@@ -79,7 +79,19 @@
 		</td>		
 		<td></td>				
 	</tr>
-      <tr>
+        
+	<tr>
+		<td><label for="optionSetId">$i18n.getString( "option_set" )</label></td>
+		<td><select id="optionSetId" name="optionSetId" onchange="optionSetChanged()">
+		    <option value="0">[$i18n.getString('please_select')]</option>
+			#foreach($optionSet in $optionSets)
+				<option data-valuetype="$!optionSet.valueType" value="$optionSet.id" #if($attribute.optionSet.id==$optionSet.id) selected#end>$encoder.htmlEncode($optionSet.name)</option>
+			#end
+			</select>
+		</td>
+	</tr>
+        
+    <tr>
         <td><label for="valueType">$i18n.getString( "value_type" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
         <td>
           <select id="valueType" name="valueType" onchange="typeOnChange();">
@@ -97,9 +109,9 @@
             <option value="OPTION_SET" #if( $attribute.unique=='true' ) style='display:none' #end #if( $attribute.valueType == 'OPTION_SET' ) selected="selected" #end>$i18n.getString( "option_set" )</option>
           </select>
         </td>
-      </tr>
+    </tr>
 
-      <tr>
+    <tr>
         <td><label for="aggregationType">$i18n.getString( "aggregation_type" )</label></td>
         <td>
             <select id="aggregationType" name="aggregationType">
@@ -113,16 +125,6 @@
             </select>
         </td>
     </tr>
-
-	<tr id="optionSetRow" #if($attribute.optionSet) #else class="hidden" #end>
-		<td><label for="optionSetId">$i18n.getString( "option_set" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
-		<td><select id="optionSetId" name="optionSetId" class="{validate:{required:true}}">
-				#foreach($optionSet in $optionSets)
-					<option value="$optionSet.id" #if($attribute.optionSet.id==$optionSet.id) selected#end>$encoder.htmlEncode($optionSet.name)</option>
-				#end
-			</select>
-		</td>
-	</tr>
 
 	<tr id="trackedEntityRow" #if($attribute.trackedEntity) #else class="hidden" #end>
 			<td><label for="trackedEntityId">$i18n.getString( "tracked_entity" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>

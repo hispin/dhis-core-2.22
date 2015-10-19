@@ -201,6 +201,8 @@ public class AddAttributeAction
     {
         OptionSet optionSet = optionService.getOptionSet( optionSetId );
         
+        valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
+        
         TrackedEntityAttribute trackedEntityAttribute = new TrackedEntityAttribute();
 
         trackedEntityAttribute.setName( StringUtils.trimToNull( name ) );
