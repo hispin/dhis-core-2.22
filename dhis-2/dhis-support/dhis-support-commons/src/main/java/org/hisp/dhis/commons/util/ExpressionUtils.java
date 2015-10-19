@@ -191,8 +191,6 @@ public class ExpressionUtils
         }
         catch ( JexlException ex )
         {
-            System.out.println( ex.getMessage() );
-            System.out.println( DebugUtils.getStackTrace( ex ) );
             if ( ex.getMessage().contains( "divide error" ) )
             {
                 return true; //TODO Masking bug in Jexl, fix
