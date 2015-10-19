@@ -37,52 +37,46 @@ public final class ObjectHandlerUtils
 {
     public static <T> void preObjectHandlers( T object, List<ObjectHandler<T>> objectHandlers )
     {
-        for ( ObjectHandler<T> objectHandler : objectHandlers )
+        if ( objectHandlers.isEmpty() )
         {
-            if ( objectHandler.canHandle( object.getClass() ) )
-            {
-                objectHandler.preImportObject( object );
-            }
+            return;
         }
+
+        objectHandlers.stream().filter( objectHandler -> objectHandler.canHandle( object.getClass() ) )
+            .forEach( objectHandler -> objectHandler.preImportObject( object ) );
     }
 
     public static <T> void postObjectHandlers( T object, List<ObjectHandler<T>> objectHandlers )
     {
-        for ( ObjectHandler<T> objectHandler : objectHandlers )
+        if ( objectHandlers.isEmpty() )
         {
-            if ( objectHandler.canHandle( object.getClass() ) )
-            {
-                objectHandler.postImportObject( object );
-            }
+            return;
         }
+
+        objectHandlers.stream().filter( objectHandler -> objectHandler.canHandle( object.getClass() ) )
+            .forEach( objectHandler -> objectHandler.postImportObject( object ) );
     }
 
     public static <T> void preObjectsHandlers( List<T> objects, List<ObjectHandler<T>> objectHandlers )
     {
-        if ( !objects.isEmpty() )
+        if ( objectHandlers.isEmpty() )
         {
-            for ( ObjectHandler<T> objectHandler : objectHandlers )
-            {
-                if ( objectHandler.canHandle( objects.get( 0 ).getClass() ) )
-                {
-                    objectHandler.preImportObjects( objects );
-                }
-            }
+            return;
         }
+
+        objectHandlers.stream().filter( objectHandler -> objectHandler.canHandle( objects.get( 0 ).getClass() ) )
+            .forEach( objectHandler -> objectHandler.preImportObjects( objects ) );
     }
 
     public static <T> void postObjectsHandlers( List<T> objects, List<ObjectHandler<T>> objectHandlers )
     {
-        if ( !objects.isEmpty() )
+        if ( objectHandlers.isEmpty() )
         {
-            for ( ObjectHandler<T> objectHandler : objectHandlers )
-            {
-                if ( objectHandler.canHandle( objects.get( 0 ).getClass() ) )
-                {
-                    objectHandler.postImportObjects( objects );
-                }
-            }
+            return;
         }
+
+        objectHandlers.stream().filter( objectHandler -> objectHandler.canHandle( objects.get( 0 ).getClass() ) )
+            .forEach( objectHandler -> objectHandler.postImportObjects( objects ) );
     }
 
     private ObjectHandlerUtils()
