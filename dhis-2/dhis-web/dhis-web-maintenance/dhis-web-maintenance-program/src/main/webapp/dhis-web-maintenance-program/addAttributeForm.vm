@@ -79,10 +79,21 @@
 		<td><label for="confidential">$i18n.getString( "confidential" )</label></td>
 		<td>
 			<input type='checkbox' id="confidential" name="confidential" value='true'>
-		</td>		
+		</td>
 		<td></td>				
 	</tr>
 
+	<tr>
+		<td><label for="optionSetId">$i18n.getString( "option_set" )</label></td>
+		<td><select id="optionSetId" name="optionSetId" onchange="optionSetChanged()">
+		    <option value="0">[$i18n.getString('please_select')]</option>
+			#foreach($optionSet in $optionSets)
+				<option data-valuetype="$!optionSet.valueType" value="$optionSet.id">$encoder.htmlEncode($optionSet.name)</option>
+			#end
+			</select>
+		</td>
+	</tr>
+	
     <tr>
       <td><label for="valueType">$i18n.getString( "value_type" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
       <td>
@@ -119,16 +130,6 @@
         </td>
     </tr>
 
-	<tr id="optionSetRow" class="hidden">
-		<td><label for="optionSetId">$i18n.getString( "option_set" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
-		<td><select id="optionSetId" name="optionSetId" class="{validate:{required:true}}" disabled>
-				#foreach($optionSet in $optionSets)
-					<option value="$optionSet.id">$encoder.htmlEncode($optionSet.name)</option>
-				#end
-			</select>
-		</td>
-	</tr>
-	
 	<tr id="trackedEntityRow" class="hidden">
 		<td><label for="trackedEntityId">$i18n.getString( "tracked_entity" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
 		<td><select id="trackedEntityId" name="trackedEntityId" class="{validate:{required:true}}" disabled>

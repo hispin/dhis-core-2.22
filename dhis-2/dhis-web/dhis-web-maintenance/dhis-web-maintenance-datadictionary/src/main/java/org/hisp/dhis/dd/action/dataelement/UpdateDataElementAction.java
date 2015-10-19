@@ -136,9 +136,9 @@ public class UpdateDataElementAction
         this.domainType = domainType;
     }
 
-    private String valueType;
+    private ValueType valueType;
 
-    public void setValueType( String valueType )
+    public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
     }
@@ -236,13 +236,15 @@ public class UpdateDataElementAction
         OptionSet commentOptionSet = optionService.getOptionSet( selectedCommentOptionSetId );
         LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
 
+        valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
+        
         dataElement.setName( StringUtils.trimToNull( name ) );
         dataElement.setShortName( StringUtils.trimToNull( shortName ) );
         dataElement.setCode( StringUtils.trimToNull( code ) );
         dataElement.setDescription( StringUtils.trimToNull( description ) );
         dataElement.setFormName( StringUtils.trimToNull( formName ) );
         dataElement.setDomainType( DataElementDomain.valueOf( domainType ) );
-        dataElement.setValueType( ValueType.valueOf( valueType ) );
+        dataElement.setValueType( valueType );
         dataElement.setAggregationType( AggregationType.valueOf( aggregationType ) );
         dataElement.setUrl( url );
         dataElement.setZeroIsSignificant( zeroIsSignificant );
