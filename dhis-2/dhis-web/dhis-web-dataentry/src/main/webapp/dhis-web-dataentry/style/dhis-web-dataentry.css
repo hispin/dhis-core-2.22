@@ -266,7 +266,7 @@
 {
     height: 28px;
     width: 200px;
-    border: 1px solid #dadada;
+    border: 1px solid #aaa;
     display: table-cell;
     overflow: hidden;
     position: relative;
@@ -274,7 +274,16 @@
 
 .upload-field-disabled
 {
+    color: #aaa !important;
     background-color: #f3f3f3 !important;
+    border-color: #dadada !important;
+}
+
+.upload-field-disabled a
+{
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
 }
 
 /* Upload progress display */
@@ -324,6 +333,10 @@
     max-width: 95%;
     z-index: 2;
     white-space: nowrap;
+
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 
 .upload-fileinfo-size
@@ -351,7 +364,7 @@
 
 .upload-button
 {
-    margin: 2px 2px 2px 4px;
+    margin: 1px 2px 2px 4px;
     height: 100%;
 }
 
