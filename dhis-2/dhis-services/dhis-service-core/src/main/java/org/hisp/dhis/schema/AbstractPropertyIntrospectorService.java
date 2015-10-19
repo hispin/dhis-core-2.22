@@ -150,7 +150,7 @@ public abstract class AbstractPropertyIntrospectorService
 
                 if ( !joinTableToRoles.containsKey( associatedJoinable.getTableName() ) )
                 {
-                    joinTableToRoles.put( associatedJoinable.getTableName(), new ArrayList<String>() );
+                    joinTableToRoles.put( associatedJoinable.getTableName(), new ArrayList<>() );
                 }
 
                 joinTableToRoles.get( associatedJoinable.getTableName() ).add( collection.getRole() );
