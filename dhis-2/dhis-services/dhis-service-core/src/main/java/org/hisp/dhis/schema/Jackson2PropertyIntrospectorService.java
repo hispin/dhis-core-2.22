@@ -242,7 +242,7 @@ public class Jackson2PropertyIntrospectorService
 
     private String getFieldName( Method method )
     {
-        String name = null;
+        String name;
 
         String[] getters = new String[]{
             "is", "has", "get"
@@ -266,23 +266,18 @@ public class Jackson2PropertyIntrospectorService
         Map<String, Method> methodMap = ReflectionUtils.getMethodMap( klass );
         List<Property> properties = Lists.newArrayList();
 
-        for ( Method method : methodMap.values() )
-        {
-            if ( method.isAnnotationPresent( JsonProperty.class ) )
-            {
-                if ( method.getGenericParameterTypes().length == 0 )
-                {
-                    String fieldName = getFieldName( method );
-                    String setterName = "set" + StringUtils.capitalize( fieldName );
+        methodMap.values().stream()
+            .filter( method -> method.isAnnotationPresent( JsonProperty.class ) && method.getGenericParameterTypes().length == 0 )
+            .forEach( method -> {
+                String fieldName = getFieldName( method );
+                String setterName = "set" + StringUtils.capitalize( fieldName );
 
-                    Property property = new Property( klass, method, null );
-                    property.setFieldName( fieldName );
-                    property.setSetterMethod( methodMap.get( setterName ) );
+                Property property = new Property( klass, method, null );
+                property.setFieldName( fieldName );
+                property.setSetterMethod( methodMap.get( setterName ) );
 
-                    properties.add( property );
-                }
-            }
-        }
+                properties.add( property );
+            } );
 
         return properties;
     }
