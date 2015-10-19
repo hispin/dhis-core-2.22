@@ -657,22 +657,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         // TODO optimize this using field filter (collection filtering)
         if ( !rootNode.getChildren().isEmpty() && rootNode.getChildren().get( 0 ).isCollection() )
         {
-            for ( Node node : rootNode.getChildren().get( 0 ).getChildren() )
-            {
-                if ( node.isComplex() )
-                {
-                    for ( Node child : node.getChildren() )
-                    {
-                        if ( child.isSimple() && child.getName().equals( "id" ) )
-                        {
-                            if ( !((SimpleNode) child).getValue().equals( pvItemId ) )
-                            {
-                                rootNode.getChildren().get( 0 ).removeChild( node );
-                            }
-                        }
-                    }
-                }
-            }
+            rootNode.getChildren().get( 0 ).getChildren().stream().filter( Node::isComplex ).forEach( node -> {
+                node.getChildren().stream()
+                    .filter( child -> child.isSimple() && child.getName().equals( "id" ) && !((SimpleNode) child).getValue().equals( pvItemId ) )
+                    .forEach( child -> rootNode.getChildren().get( 0 ).removeChild( node ) );
+            } );
         }
 
         return rootNode;
@@ -1141,18 +1130,5 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         }
 
         return entitySimpleName;
-    }
-
-    @SuppressWarnings( "unchecked" )
-    protected T getEntityInstance()
-    {
-        try
-        {
-            return (T) Class.forName( getEntityName() ).newInstance();
-        }
-        catch ( InstantiationException | IllegalAccessException | ClassNotFoundException ex )
-        {
-            throw new RuntimeException( ex );
-        }
     }
 }

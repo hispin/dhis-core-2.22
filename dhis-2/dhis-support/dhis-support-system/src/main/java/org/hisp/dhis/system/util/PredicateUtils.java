@@ -30,55 +30,32 @@ package org.hisp.dhis.system.util;
 
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.annotation.Scanned;
-import org.hisp.dhis.commons.functional.Predicate;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class PredicateUtils
 {
-    public static final Predicate<Field> alwaysTrue = new StaticReply( true );
-
-    public static final Predicate<Field> alwaysFalse = new StaticReply( false );
-
     public static final Predicate<Field> idObjects = new ObjectWithTypePredicate( IdentifiableObject.class );
 
     public static final Predicate<Field> collections = new CollectionPredicate();
 
     public static final Predicate<Field> idObjectCollections = new CollectionWithTypePredicate( IdentifiableObject.class );
 
-    public static final Predicate<Field> objectCollectionsWithScanned = new CollectionWithAnnotationPredicate( Scanned.class );
-
     public static final Predicate<Field> idObjectCollectionsWithScanned = new CollectionWithTypeAndAnnotationPredicate( IdentifiableObject.class, Scanned.class );
-
-    public static class StaticReply
-        implements Predicate<Field>
-    {
-        private boolean value = false;
-
-        public StaticReply( boolean value )
-        {
-            this.value = value;
-        }
-
-        @Override
-        public boolean evaluate( Field object )
-        {
-            return value;
-        }
-    }
 
     public static class CollectionPredicate
         implements Predicate<Field>
     {
         @Override
-        public boolean evaluate( Field field )
+        public boolean test( Field field )
         {
             return Collection.class.isAssignableFrom( field.getType() );
         }
@@ -97,9 +74,9 @@ public class PredicateUtils
         }
 
         @Override
-        public boolean evaluate( Field field )
+        public boolean test( Field field )
         {
-            if ( collectionPredicate.evaluate( field ) )
+            if ( collectionPredicate.test( field ) )
             {
                 ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
                 Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
@@ -110,33 +87,6 @@ public class PredicateUtils
                     {
                         return true;
                     }
-                }
-            }
-
-            return false;
-        }
-    }
-
-    public static class CollectionWithAnnotationPredicate
-        implements Predicate<Field>
-    {
-        private CollectionPredicate collectionPredicate = new CollectionPredicate();
-
-        private Class<? extends Annotation> annotation;
-
-        public CollectionWithAnnotationPredicate( Class<? extends Annotation> annotation )
-        {
-            this.annotation = annotation;
-        }
-
-        @Override
-        public boolean evaluate( Field field )
-        {
-            if ( field.isAnnotationPresent( annotation ) )
-            {
-                if ( collectionPredicate.evaluate( field ) )
-                {
-                    return true;
                 }
             }
 
@@ -158,11 +108,11 @@ public class PredicateUtils
         }
 
         @Override
-        public boolean evaluate( Field field )
+        public boolean test( Field field )
         {
             if ( field.isAnnotationPresent( annotation ) )
             {
-                if ( collectionWithTypePredicate.evaluate( field ) )
+                if ( collectionWithTypePredicate.test( field ) )
                 {
                     return true;
                 }
@@ -183,7 +133,7 @@ public class PredicateUtils
         }
 
         @Override
-        public boolean evaluate( Field field )
+        public boolean test( Field field )
         {
             return type.isAssignableFrom( field.getType() );
         }
