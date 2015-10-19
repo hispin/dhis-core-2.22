@@ -1176,11 +1176,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             if ( !Attribute.class.isAssignableFrom( object.getClass() ) )
             {
                 Set<AttributeValue> attributeValues = extractAttributeValues( object );
-
-                for ( AttributeValue attributeValue : attributeValues )
-                {
-                    attributeService.deleteAttributeValue( attributeValue );
-                }
+                attributeValues.forEach( attributeService::deleteAttributeValue );
             }
         }
 
@@ -1224,11 +1220,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         private void deleteDataElementOperands( T object, String fieldName )
         {
             Collection<DataElementOperand> dataElementOperands = extractDataElementOperands( object, fieldName );
-
-            for ( DataElementOperand dataElementOperand : dataElementOperands )
-            {
-                dataElementOperandService.deleteDataElementOperand( dataElementOperand );
-            }
+            dataElementOperands.forEach( dataElementOperandService::deleteDataElementOperand );
         }
 
         private List<ProgramTrackedEntityAttribute> extractProgramTrackedEntityAttributes( T object )
