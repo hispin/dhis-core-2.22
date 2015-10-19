@@ -41,7 +41,7 @@ public enum EventStatus
 
     private final int value;
 
-    private EventStatus( int value )
+    EventStatus( int value )
     {
         this.value = value;
     }
@@ -63,15 +63,10 @@ public enum EventStatus
 
         throw new IllegalArgumentException();
     }
-    
+
     public static boolean isExistingEvent( EventStatus status )
     {
-        if ( status == null )
-        {
-            return false;
-        }
-        
-        return COMPLETED.equals( status ) || VISITED.equals( status );
+        return status != null && (COMPLETED.equals( status ) || VISITED.equals( status ));
     }
 }
 

@@ -28,11 +28,13 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.DxfNamespaces;
+
 /**
  * @author Chau Thu Tran
- * 
- * @version $ DataElementDomain.java Jun 14, 2014 12:12:23 PM $
  */
+@JacksonXmlRootElement( localName = "dataElementDomain", namespace = DxfNamespaces.DXF_2_0 )
 public enum DataElementDomain
 {
     AGGREGATE( "aggregate" ), TRACKER( "tracker" );
