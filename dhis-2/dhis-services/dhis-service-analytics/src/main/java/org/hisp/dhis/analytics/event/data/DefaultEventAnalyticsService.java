@@ -322,7 +322,7 @@ public class DefaultEventAnalyticsService
         // Data
         // ---------------------------------------------------------------------
 
-        Timer timer = new Timer().start();
+        Timer timer = new Timer().start().disablePrint();
 
         params = queryPlanner.planEventQuery( params );
 
