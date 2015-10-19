@@ -73,8 +73,6 @@ public class ProgramStageDataElement extends Model
 
     public static final String TYPE_DATE = "date";
 
-    public static final String TYPE_OPTION_SET = "optionSet";
-
     public static final String TYPE_TRACKER_ASSOCIATE = "trackerAssociate";
 
     public static final String TYPE_USERS = "users";
@@ -227,10 +225,6 @@ public class ProgramStageDataElement extends Model
         else if ( type == ValueType.LONG_TEXT )
         {
             this.setType( TYPE_STRING );
-        }
-        else if ( type == ValueType.OPTION_SET )
-        {
-            this.setType( TYPE_OPTION_SET );
         }
         else if ( type == ValueType.PHONE_NUMBER )
         {

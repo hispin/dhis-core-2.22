@@ -59,7 +59,6 @@ public enum ValueType
     INTEGER_NEGATIVE( Integer.class ),
     INTEGER_ZERO_OR_POSITIVE( Integer.class ),
     TRACKER_ASSOCIATE( TrackedEntityInstance.class ),
-    OPTION_SET( String.class ),
     USERNAME( String.class ),
     FILE_RESOURCE( String.class ),
     COORDINATE( String.class);

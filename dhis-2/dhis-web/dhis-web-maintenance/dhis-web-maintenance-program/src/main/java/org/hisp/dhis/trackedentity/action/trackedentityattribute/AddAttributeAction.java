@@ -9,6 +9,7 @@ import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.option.OptionService;
+import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -198,6 +199,8 @@ public class AddAttributeAction
     public String execute()
         throws Exception
     {
+        OptionSet optionSet = optionService.getOptionSet( optionSetId );
+        
         TrackedEntityAttribute trackedEntityAttribute = new TrackedEntityAttribute();
 
         trackedEntityAttribute.setName( StringUtils.trimToNull( name ) );
@@ -208,6 +211,7 @@ public class AddAttributeAction
         trackedEntityAttribute.setAggregationType( AggregationType.fromValue( aggregationType ) );
         trackedEntityAttribute.setExpression( expression );
         trackedEntityAttribute.setDisplayOnVisitSchedule( false );
+        trackedEntityAttribute.setOptionSet( optionSet );
 
         unique = unique != null;
         trackedEntityAttribute.setUnique( unique );
@@ -235,10 +239,6 @@ public class AddAttributeAction
 
             trackedEntityAttribute.setOrgunitScope( orgunitScope );
             trackedEntityAttribute.setProgramScope( programScope );
-        }
-        else if ( ValueType.OPTION_SET == valueType )
-        {
-            trackedEntityAttribute.setOptionSet( optionService.getOptionSet( optionSetId ) );
         }
         else if ( ValueType.TRACKER_ASSOCIATE == valueType )
         {
