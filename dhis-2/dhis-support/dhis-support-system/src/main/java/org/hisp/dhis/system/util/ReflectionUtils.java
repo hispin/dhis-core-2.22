@@ -28,6 +28,10 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import javassist.util.proxy.ProxyFactory;
+import org.hibernate.collection.spi.PersistentCollection;
+import org.springframework.util.StringUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -43,12 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javassist.util.proxy.ProxyFactory;
-
-import org.hibernate.collection.spi.PersistentCollection;
-import org.hisp.dhis.commons.functional.Predicate;
-import org.springframework.util.StringUtils;
+import java.util.function.Predicate;
 
 /**
  * @author Lars Helge Overland
@@ -469,12 +468,6 @@ public class ReflectionUtils
         }
     }
 
-    @SuppressWarnings( "unchecked" )
-    public static <T> T getFieldObject( Field field, T target )
-    {
-        return (T) invokeGetterMethod( field.getName(), target );
-    }
-
     public static Collection<Field> collectFields( Class<?> clazz, Predicate<Field> predicate )
     {
         Class<?> type = clazz;
@@ -486,7 +479,7 @@ public class ReflectionUtils
 
             for ( Field field : declaredFields )
             {
-                if ( Modifier.isStatic( field.getModifiers() ) || (predicate != null && !predicate.evaluate( field )) )
+                if ( Modifier.isStatic( field.getModifiers() ) || (predicate != null && !predicate.test( field )) )
                 {
                     continue;
                 }

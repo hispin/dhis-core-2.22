@@ -28,56 +28,25 @@ package org.hisp.dhis.commons.collection;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.commons.functional.Predicate;
-
-import java.lang.reflect.Method;
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Utility methods for operations on various collections.
- * 
+ *
  * @author Morten Olav Hansen
  */
 public class CollectionUtils
 {
     public static final String[] STRING_ARR = new String[0];
-    public static final String[][] STRING_2D_ARR = new String[0][];
-
-    /**
-     * Filters the given Collection on the given Predicate.
-     *
-     * @param collection the Collection.
-     * @param predicate the Predicate.
-     * @param <T> the type.
-     */
-    public static <T> void filter( Collection<T> collection, Predicate<T> predicate )
-    {
-        Iterator<T> iterator = collection.iterator();
-
-        while ( iterator.hasNext() )
-        {
-            T object = iterator.next();
-
-            if ( !predicate.evaluate( object ) )
-            {
-                iterator.remove();
-            }
-        }
-    }
 
     /**
      * Returns the intersection of the given Collections.
      *
-     * @param c1 the first Collection.
-     * @param c2 the second Collection.
+     * @param c1  the first Collection.
+     * @param c2  the second Collection.
      * @param <T> the type.
      * @return the intersection of the Collections.
      */
@@ -89,166 +58,28 @@ public class CollectionUtils
     }
 
     /**
-     * Constructs a Map Entry (key, value). Used to construct a Map with asMap.
-     *
-     * @param key map entry key.
-     * @param value map entry value.
-     * @param <K> key type.
-     * @param <V> value type.
-     * @return entry with the key and value.
-     */
-    public static <K, V> AbstractMap.SimpleEntry<K, V> asEntry( K key, V value )
-    {
-        return new AbstractMap.SimpleEntry<>( key, value );
-    }
-
-    /**
-     * Constructs a Map from Entries, each containing a (key, value) pair.
-     *
-     * @param entries any number of (key, value) pairs.
-     * @param <K> key type.
-     * @param <V> value type.
-     * @return Map of the entries
-     */
-    @SafeVarargs
-    public static final <K, V> Map<K, V> asMap( final AbstractMap.SimpleEntry<K, V>... entries )
-    {
-        Map<K, V> map = new HashMap<>();
-
-        for ( AbstractMap.SimpleEntry<K, V> entry : entries )
-        {
-            map.put( entry.getKey(), entry.getValue() );
-        }
-
-        return map;
-    }
-
-    /**
-     * Creates a map with the elements of the collection as values using the
-     * specified keyMethod to obtain the key from the elements.
-     *
-     * @param collection the Collection.
-     * @param keyMethod the name of the method to obtain the key.
-     * @param <K> key type.
-     * @param <T> value type.
-     * @return Map of the elements.
-     */
-    @SuppressWarnings( "unchecked" )
-    public static <K, T> Map<K, T> createMap( Collection<T> collection, String keyMethod )
-    {
-        Map<K, T> map = new HashMap<>( collection.size() );
-
-        if ( collection.isEmpty() )
-        {
-            return map;
-        }
-
-        Class<?> elementClass = collection.iterator().next().getClass();
-
-        Method getKeyMethod;
-
-        try
-        {
-            getKeyMethod = elementClass.getMethod( keyMethod, new Class[0] );
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException( "Failed to get key method", e );
-        }
-
-        for ( T element : collection )
-        {
-            K key;
-            try
-            {
-                key = (K) getKeyMethod.invoke( element, (Object[]) null );
-            }
-            catch ( Exception e )
-            {
-                throw new RuntimeException( "Failed to get key", e );
-            }
-
-            map.put( key, element );
-        }
-
-        return map;
-    }
-
-    /**
-     * Creates a list of values extracted from the provided list using the
-     * specified value method, keeping the order of the provided list.
-     *
-     * @param list the List.
-     * @param valueMethod the name of the method to obtain the value.
-     * @param <K> key type.
-     * @param <T> value type.
-     * @return an ordered List of the obtained values.
-     */
-    @SuppressWarnings( "unchecked" )
-    public static <K, T> List<K> createList( List<T> list, String valueMethod )
-    {
-        List<K> valueList = new ArrayList<>( list.size() );
-
-        if ( list.isEmpty() )
-        {
-            return valueList;
-        }
-
-        Class<?> elementClass = list.iterator().next().getClass();
-
-        Method getValueMethod;
-
-        try
-        {
-            getValueMethod = elementClass.getMethod( valueMethod, new Class[0] );
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException( "Failed to get key method", e );
-        }
-
-        for ( T element : list )
-        {
-            K value;
-
-            try
-            {
-                value = (K) getValueMethod.invoke( element, (Object[]) null );
-            }
-            catch ( Exception e )
-            {
-                throw new RuntimeException( "Failed to get key", e );
-            }
-
-            valueList.add( value );
-        }
-
-        return valueList;
-    }
-    
-    /**
      * Searches for and returns the first string which starts with the given
      * prefix. Removes the match from the collection.
-     * 
+     *
      * @param collection the collection.
-     * @param prefix the string prefix.
+     * @param prefix     the string prefix.
      * @return a string, or null if no matches.
      */
     public static String popStartsWith( Collection<String> collection, String prefix )
     {
         Iterator<String> iterator = collection.iterator();
-        
+
         while ( iterator.hasNext() )
         {
             String element = iterator.next();
-            
+
             if ( element != null && element.startsWith( prefix ) )
             {
                 iterator.remove();
                 return element;
             }
         }
-        
+
         return null;
     }
 }
