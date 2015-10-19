@@ -542,6 +542,18 @@ public class ProgramIndicatorServiceTest
         assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( indicatorA.getExpression() ) );
         assertEquals( ProgramIndicator.EXPRESSION_NOT_WELL_FORMED, programIndicatorService.expressionIsValid( indicatorD.getExpression() ) );
     }
+    
+    @Test
+    public void testExpressionWithFunctionIsValid()
+    {
+        String exprA = "#{" + psA.getUid() + "." + deA.getUid() + "}";
+        String exprB = "d2:zing(#{" + psA.getUid() + "." + deA.getUid() + "})";
+        String exprC = "d2:condition('#{" + psA.getUid() + "." + deA.getUid() + "} > 10',2,1)";
+        
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( exprA ) );
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( exprB ) );
+        assertEquals( ProgramIndicator.VALID, programIndicatorService.expressionIsValid( exprC ) );
+    }
 
     @Test
     public void testFilterIsValid()
