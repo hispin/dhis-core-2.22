@@ -639,7 +639,7 @@ dhis2.de.addEventListeners = function()
         } );
     } );
 
-    $( '.entryfileresource-container' ).each( function()
+    $( '.entryfileresource' ).each( function()
     {
         $( this ).fileEntryField();
     } );
@@ -1537,12 +1537,12 @@ function loadDataValues()
 }
 
 function clearFileEntryFields() {
-    var $containers = $( '.entryfileresource-container' );
-    $containers.find( '.upload-fileinfo-name' ).text( '' );
-    $containers.find( '.upload-fileinfo-size' ).text( '' );
+    var $fields = $( '.entryfileresource' );
+    $fields.find( '.upload-fileinfo-name' ).text( '' );
+    $fields.find( '.upload-fileinfo-size' ).text( '' );
 
-    $containers.find( '.upload-field' ).css( 'background-color', dhis2.de.cst.colorWhite );
-    $containers.find( '.entryfileresource' ).val( '' );
+    $fields.find( '.upload-field' ).css( 'background-color', dhis2.de.cst.colorWhite );
+    $fields.find( 'input' ).val( '' );
 }
 
 function getAndInsertDataValues()
@@ -1677,7 +1677,9 @@ function insertDataValues( json )
             }
             else if ( $( fieldId ).attr( 'class' ) == 'entryfileresource' )
             {
-                $( fieldId ).val( value.val );
+                var $field = $( fieldId );
+
+                $field.find( 'input[class="entryfileresource-input"]' ).val( value.val );
 
                 var split = dhis2.de.splitFieldId( value.id );
 
@@ -1687,8 +1689,6 @@ function insertDataValues( json )
                     'ou': split.organisationUnitId,
                     'pe': $( '#selectedPeriodId' ).val()
                 };
-
-                var $container = $( '.entryfileresource-container[name=' + value.id + '-val]' );
 
                 var name = "", size = "";
 
@@ -1702,7 +1702,7 @@ function insertDataValues( json )
                     name = i18n_loading_file_info_failed;
                 }
 
-                var $filename = $container.find( '.upload-fileinfo-name' );
+                var $filename = $field.find( '.upload-fileinfo-name' );
 
                 $( '<a>', {
                     text: name,
@@ -1711,7 +1711,7 @@ function insertDataValues( json )
                     href: "../api/dataValues/files?" + $.param( dvParams )
                 } ).appendTo( $filename );
 
-                $container.find( '.upload-fileinfo-size' ).text( size );
+                $field.find( '.upload-fileinfo-size' ).text( size );
             }
             else 
             {
