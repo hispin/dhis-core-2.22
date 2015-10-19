@@ -189,6 +189,7 @@ public class HibernateDataApprovalStore
         final User user = currentUserService.getCurrentUser();
 
         Set<DataSet> validDataSets = new HashSet<>();
+        
         for ( DataSet set : dataSets )
         {
             if ( set.isApproveData() )
@@ -199,7 +200,7 @@ public class HibernateDataApprovalStore
 
         if ( CollectionUtils.isEmpty( validDataSets ) )
         {
-            log.warn( " No valid data sets specified for getting approvals, period " + period.getName()
+            log.debug( " No valid data sets specified for getting approvals, period " + period.getName()
                 + " user " + ( user == null ? "(null)" : user.getUsername() ) );
 
             return new ArrayList<>();
@@ -260,7 +261,7 @@ public class HibernateDataApprovalStore
 
             if ( catComboIds.isEmpty() )
             {
-                log.warn( "No dataset categorycombos to check for approval, user " + ( user == null ? "(null)" : user.getUsername() ) + " datasetIds " + dataSetIds );
+                log.info( "No dataset categorycombos to check for approval, user " + ( user == null ? "(null)" : user.getUsername() ) + " datasetIds " + dataSetIds );
 
                 return new ArrayList<>();
             }
@@ -272,7 +273,7 @@ public class HibernateDataApprovalStore
 
         if ( CollectionUtils.isEmpty( approvalLevels ) )
         {
-            log.warn( " No approval levels configured." );
+            log.info( "No approval levels configured" );
 
             return new ArrayList<>(); // Unapprovable.
         }
