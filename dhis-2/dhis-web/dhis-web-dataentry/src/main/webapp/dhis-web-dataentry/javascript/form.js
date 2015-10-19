@@ -1707,7 +1707,7 @@ function insertDataValues( json )
                 $( '<a>', {
                     text: name,
                     title: name,
-                    target: '__blank',
+                    target: '_blank',
                     href: "../api/dataValues/files?" + $.param( dvParams )
                 } ).appendTo( $filename );
 
