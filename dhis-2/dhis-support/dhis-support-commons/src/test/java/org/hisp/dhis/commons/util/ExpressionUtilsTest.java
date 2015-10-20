@@ -208,7 +208,7 @@ public class ExpressionUtilsTest
         assertTrue( ExpressionUtils.isValid( "d2:condition('1 > 100',5,100)", null ) );
         assertTrue( ExpressionUtils.isValid( "1/(1/100)", null ) );
         assertTrue( ExpressionUtils.isValid( "SUM(1)", null ) );
-        assertTrue( ExpressionUtils.isValid( "average(2+1)", null ) );
+        assertTrue( ExpressionUtils.isValid( "avg(2+1)", null ) );
         
         assertFalse( ExpressionUtils.isValid( "2 a 3", null ) );
         assertFalse( ExpressionUtils.isValid( "4 b", vars ) );
