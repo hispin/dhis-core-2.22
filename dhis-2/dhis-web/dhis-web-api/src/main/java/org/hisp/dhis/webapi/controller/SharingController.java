@@ -30,14 +30,16 @@ package org.hisp.dhis.webapi.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.security.acl.AccessStringHelper;
-import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.security.acl.AccessStringHelper;
+import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupAccess;
 import org.hisp.dhis.user.UserGroupAccessService;
@@ -49,6 +51,7 @@ import org.hisp.dhis.webapi.webdomain.sharing.SharingUserGroupAccess;
 import org.hisp.dhis.webapi.webdomain.sharing.SharingUserGroups;
 import org.hisp.dhis.webapi.webdomain.sharing.comparator.SharingUserGroupAccessNameComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,7 +94,10 @@ public class SharingController
     @Autowired
     private WebMessageService webMessageService;
 
-    @RequestMapping( method = RequestMethod.GET, produces = { "application/json" } )
+    @Autowired
+    private RenderService renderService;
+
+    @RequestMapping( method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
     public void getSharing( @RequestParam String type, @RequestParam String id, HttpServletResponse response ) throws IOException, WebMessageException
     {
         if ( !aclService.isShareable( type ) )
@@ -107,15 +113,17 @@ public class SharingController
             throw new WebMessageException( WebMessageUtils.notFound( "Object of type " + type + " with ID " + id + " was not found." ) );
         }
 
-        if ( !aclService.canManage( currentUserService.getCurrentUser(), object ) )
+        User user = currentUserService.getCurrentUser();
+
+        if ( !aclService.canManage( user, object ) )
         {
             throw new AccessDeniedException( "You do not have manage access to this object." );
         }
 
         Sharing sharing = new Sharing();
 
-        sharing.getMeta().setAllowPublicAccess( aclService.canCreatePublic( currentUserService.getCurrentUser(), object.getClass() ) );
-        sharing.getMeta().setAllowExternalAccess( aclService.canExternalize( currentUserService.getCurrentUser(), object.getClass() ) );
+        sharing.getMeta().setAllowPublicAccess( aclService.canCreatePublic( user, object.getClass() ) );
+        sharing.getMeta().setAllowExternalAccess( aclService.canExternalize( user, object.getClass() ) );
 
         sharing.getObject().setId( object.getUid() );
         sharing.getObject().setName( object.getDisplayName() );
@@ -125,7 +133,7 @@ public class SharingController
         {
             String access;
 
-            if ( aclService.canCreatePublic( currentUserService.getCurrentUser(), klass ) )
+            if ( aclService.canCreatePublic( user, klass ) )
             {
                 access = AccessStringHelper.newInstance().enable( AccessStringHelper.Permission.READ ).enable( AccessStringHelper.Permission.WRITE ).build();
             }
@@ -159,10 +167,10 @@ public class SharingController
 
         Collections.sort( sharing.getObject().getUserGroupAccesses(), SharingUserGroupAccessNameComparator.INSTANCE );
 
-        JacksonUtils.toJson( response.getOutputStream(), sharing );
+        renderService.toJson( response.getOutputStream(), sharing );
     }
 
-    @RequestMapping( method = { RequestMethod.POST, RequestMethod.PUT }, consumes = "application/json" )
+    @RequestMapping( method = { RequestMethod.POST, RequestMethod.PUT }, consumes = MediaType.APPLICATION_JSON_VALUE )
     public void setSharing( @RequestParam String type, @RequestParam String id, HttpServletResponse response, HttpServletRequest request ) throws IOException, WebMessageException
     {
         Class<? extends IdentifiableObject> sharingClass = aclService.classForType( type );
@@ -179,7 +187,9 @@ public class SharingController
             throw new WebMessageException( WebMessageUtils.notFound( "Object of type " + type + " with ID " + id + " was not found." ) );
         }
 
-        if ( !aclService.canManage( currentUserService.getCurrentUser(), object ) )
+        User user = currentUserService.getCurrentUser();
+
+        if ( !aclService.canManage( user, object ) )
         {
             throw new AccessDeniedException( "You do not have manage access to this object." );
         }
@@ -187,20 +197,20 @@ public class SharingController
         Sharing sharing = JacksonUtils.fromJson( request.getInputStream(), Sharing.class );
 
         // Ignore externalAccess if user is not allowed to make objects external
-        if ( aclService.canExternalize( currentUserService.getCurrentUser(), object.getClass() ) )
+        if ( aclService.canExternalize( user, object.getClass() ) )
         {
             object.setExternalAccess( sharing.getObject().hasExternalAccess() );
         }
 
         // Ignore publicAccess if user is not allowed to make objects public
-        if ( aclService.canCreatePublic( currentUserService.getCurrentUser(), object.getClass() ) )
+        if ( aclService.canCreatePublic( user, object.getClass() ) )
         {
             object.setPublicAccess( sharing.getObject().getPublicAccess() );
         }
 
         if ( object.getUser() == null )
         {
-            object.setUser( currentUserService.getCurrentUser() );
+            object.setUser( user );
         }
 
         Iterator<UserGroupAccess> iterator = object.getUserGroupAccesses().iterator();
@@ -257,7 +267,7 @@ public class SharingController
         webMessageService.send( WebMessageUtils.ok( "Access control set" ), response, request );
     }
 
-    @RequestMapping( value = "/search", method = RequestMethod.GET, produces = { "application/json" } )
+    @RequestMapping( value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
     public void searchUserGroups( @RequestParam String key, @RequestParam( required = false ) Integer pageSize,
         HttpServletResponse response ) throws IOException, WebMessageException
     {
@@ -282,6 +292,6 @@ public class SharingController
             sharingUserGroups.getUserGroups().add( sharingUserGroupAccess );
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), sharingUserGroups );
+        renderService.toJson( response.getOutputStream(), sharingUserGroups );
     }
 }
