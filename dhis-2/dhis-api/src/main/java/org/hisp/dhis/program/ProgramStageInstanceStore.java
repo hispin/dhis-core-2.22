@@ -29,9 +29,7 @@ package org.hisp.dhis.program;
  */
 
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
-import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import java.util.Collection;
@@ -107,32 +105,6 @@ public interface ProgramStageInstanceStore
     int getOverDueCount( ProgramStage programStage, Collection<Integer> orgunitIds, Date startDate, Date endDate );
 
     /**
-     * Get the number of program instances completed
-     *
-     * @param program    Program
-     * @param orgunitIds The ids of orgunits where the events happened
-     * @param after      Optional date the instance should be on or after.
-     * @param before     Optional date the instance should be on or before.
-     * @param status     The status of event. There are four statuses for events,
-     *                   includes COMPLETED_STATUS, VISITED_STATUS, FUTURE_VISIT_STATUS,
-     *                   LATE_VISIT_STATUS
-     * @return A number
-     */
-    int averageNumberCompleted( Program program, Collection<Integer> orgunitIds, Date after, Date before, ProgramStatus status );
-
-    /**
-     * Get/Export a report about the number of events of a program completed on
-     * a orgunit
-     *
-     * @param orgunitIds The ids of orgunits where the events happened
-     * @param program    The program needs for reporting
-     * @param startDate  Optional date the instance should be on or after.
-     * @param endDate    Optional date the instance should be on or before.
-     * @return Grid
-     */
-    Grid getCompleteness( Collection<Integer> orgunitIds, Program program, String startDate, String endDate, I18n i18n );
-
-    /**
      * Get the number of ProgramStageInstances updates since the given Date.
      *
      * @param time the time.
@@ -140,5 +112,11 @@ public interface ProgramStageInstanceStore
      */
     long getProgramStageInstanceCountLastUpdatedAfter( Date time );
 
+    /**
+     * Checks for the existence of a PSI by UID
+     *
+     * @param uid PSI UID to check for
+     * @return true/false depending on result
+     */
     boolean exists( String uid );
 }
