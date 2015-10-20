@@ -208,6 +208,14 @@ public interface TrackedEntityInstanceService
     TrackedEntityInstance getTrackedEntityInstance( String uid );
 
     /**
+     * Checks for the existence of a TEI by UID
+     *
+     * @param uid PSI UID to check for
+     * @return true/false depending on result
+     */
+    boolean trackedEntityInstanceExists(String uid);
+
+    /**
      * Register a new entityInstance
      *
      * @param entityInstance     TrackedEntityInstance

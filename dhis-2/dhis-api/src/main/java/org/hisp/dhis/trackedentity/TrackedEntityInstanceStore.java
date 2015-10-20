@@ -60,4 +60,12 @@ public interface TrackedEntityInstanceStore
      * @return
      */
     String validate( TrackedEntityInstance instance, TrackedEntityAttributeValue attributeValue, Program program );
+
+    /**
+     * Checks for the existence of a TEI by UID
+     *
+     * @param uid PSI UID to check for
+     * @return true/false depending on result
+     */
+    boolean exists( String uid );
 }

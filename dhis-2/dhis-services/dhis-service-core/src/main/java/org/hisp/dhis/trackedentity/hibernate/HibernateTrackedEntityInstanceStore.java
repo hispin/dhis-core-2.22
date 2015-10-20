@@ -542,4 +542,11 @@ public class HibernateTrackedEntityInstanceStore
 
         return null;
     }
+
+    @Override
+    public boolean exists( String uid )
+    {
+        Integer result = jdbcTemplate.queryForObject( "select count(*) from trackedentityinstance where uid=?", Integer.class, uid );
+        return result != null && result > 0;
+    }
 }
