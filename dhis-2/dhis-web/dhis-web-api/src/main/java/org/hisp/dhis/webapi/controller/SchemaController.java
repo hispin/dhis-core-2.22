@@ -58,7 +58,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -126,7 +126,7 @@ public class SchemaController
         {
             linkService.generateSchemaLinks( schema );
 
-            CollectionNode collectionNode = fieldFilterService.filter( Schema.class, Arrays.asList( schema ), fields );
+            CollectionNode collectionNode = fieldFilterService.filter( Schema.class, Collections.singletonList( schema ), fields );
             return NodeUtils.createRootNode( collectionNode.getChildren().get( 0 ) );
         }
 
