@@ -53,8 +53,8 @@ var d2Directives = angular.module('d2Directives', [])
             //once ou tree is loaded, start meta-data download
             $(function () {
                 dhis2.ou.store.open().done(function () {
-                    selection.load();                    
-                    if(dhis2.tc && dhis2.tc.metaDataCached){                        
+                    if(dhis2.tc && dhis2.tc.metaDataCached){
+                    	selection.load();
                         var ouId = SessionStorageService.get('ouSelected');
                         OrgUnitService.get(ouId).then(function(ou){
                             if(ou && ou.id && ou.name){                                    
