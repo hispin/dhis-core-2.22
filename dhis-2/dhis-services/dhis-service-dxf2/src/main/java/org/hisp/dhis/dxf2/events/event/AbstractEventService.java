@@ -606,10 +606,11 @@ public abstract class AbstractEventService
     public ImportSummaries updateEvents( List<Event> events, boolean singleValue )
     {
         ImportSummaries importSummaries = new ImportSummaries();
+        User user = currentUserService.getCurrentUser();
 
         for ( Event event : events )
         {
-            importSummaries.addImportSummary( updateEvent( event, singleValue ) );
+            importSummaries.addImportSummary( updateEvent( event, user, singleValue, null ) );
         }
 
         return importSummaries;
@@ -623,6 +624,11 @@ public abstract class AbstractEventService
 
     @Override
     public ImportSummary updateEvent( Event event, boolean singleValue, ImportOptions importOptions )
+    {
+        return updateEvent( event, currentUserService.getCurrentUser(), singleValue, importOptions );
+    }
+
+    private ImportSummary updateEvent( Event event, User user, boolean singleValue, ImportOptions importOptions )
     {
         ImportSummary importSummary = new ImportSummary();
         ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( event.getEvent() );
@@ -660,7 +666,7 @@ public abstract class AbstractEventService
             dueDate = DateUtils.parseDate( event.getDueDate() );
         }
 
-        String storedBy = getStoredBy( event, null, currentUserService.getCurrentUser() );
+        String storedBy = getStoredBy( event, null, user );
 
         if ( event.getStatus() == EventStatus.ACTIVE )
         {
@@ -743,10 +749,7 @@ public abstract class AbstractEventService
 
         if ( !singleValue )
         {
-            for ( TrackedEntityDataValue value : dataValues )
-            {
-                dataValueService.deleteTrackedEntityDataValue( value );
-            }
+            dataValues.forEach( dataValueService::deleteTrackedEntityDataValue );
         }
 
         return importSummary;
