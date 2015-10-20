@@ -32,24 +32,17 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.event.EventStatus;
-import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.program.ProgramStageInstanceStore;
-import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.program.SchedulingProgramObject;
-import org.hisp.dhis.system.grid.GridUtils;
-import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
@@ -221,41 +214,6 @@ public class HibernateProgramStageInstanceStore
     }
 
     @Override
-    public Grid getCompleteness( Collection<Integer> orgunitIds, Program program, String startDate, String endDate,
-        I18n i18n )
-    {
-        String sql = "select ou.name as orgunit, ps.name as events, psi.completeduser as user_name, count(psi.programstageinstanceid) as number_of_events "
-            + "from programstageinstance psi "
-            + "inner join programstage ps on psi.programstageid = ps.programstageid "
-            + "inner join organisationunit ou on ou.organisationunitid=psi.organisationunitid "
-            + "inner join program pg on pg.programid = ps.programid "
-            + "where ou.organisationunitid in ( " + TextUtils.getCommaDelimitedString( orgunitIds ) + " ) "
-            + "and pg.programid = " + program.getId() + " "
-            + "group by ou.name, ps.name, psi.completeduser, psi.completeddate, psi.status "
-            + "having psi.completeddate >= '" + startDate + "' AND psi.completeddate <= '" + endDate + "' "
-            + "and psi.status='" + EventStatus.COMPLETED.name() + "' "
-            + "order by ou.name, ps.name, psi.completeduser";
-
-        SqlRowSet rs = jdbcTemplate.queryForRowSet( sql );
-
-        Grid grid = new ListGrid();
-
-        grid.setTitle( program.getDisplayName() );
-        grid.setSubtitle( i18n.getString( "from" ) + " " + startDate + " " + i18n.getString( "to" ) + " " + endDate );
-
-        int cols = rs.getMetaData().getColumnCount();
-
-        for ( int i = 1; i <= cols; i++ )
-        {
-            grid.addHeader( new GridHeader( i18n.getString( rs.getMetaData().getColumnLabel( i ) ), false, false ) );
-        }
-
-        GridUtils.addRows( grid, rs );
-
-        return grid;
-    }
-
-    @Override
     public long getProgramStageInstanceCountLastUpdatedAfter( Date time )
     {
         Number rs = (Number) getCriteria()
@@ -264,31 +222,6 @@ public class HibernateProgramStageInstanceStore
             .uniqueResult();
 
         return rs != null ? rs.longValue() : 0;
-    }
-
-    @Override
-    public int averageNumberCompleted( Program program, Collection<Integer> orgunitIds, Date after, Date before, ProgramStatus status )
-    {
-        Collection<ProgramInstance> programInstances = programInstanceService.getProgramInstancesByStatus( status, program, orgunitIds, after, before );
-
-        Criteria criteria = getCriteria();
-        criteria.createAlias( "programInstance", "programInstance" );
-        criteria.createAlias( "programStage", "programStage" );
-        criteria.createAlias( "programInstance.entityInstance", "entityInstance" );
-        criteria.add( Restrictions.eq( "programInstance.program", program ) );
-        criteria.add( Restrictions.eq( "programInstance.status", status ) );
-        criteria.add( Restrictions.in( "organisationUnit.id", orgunitIds ) );
-        criteria.add( Restrictions.between( "programInstance.endDate", after, before ) );
-        criteria.add( Restrictions.eq( "status", EventStatus.COMPLETED ) );
-
-        if ( programInstances != null && programInstances.size() > 0 )
-        {
-            criteria.add( Restrictions.not( Restrictions.in( "programInstance", programInstances ) ) );
-        }
-
-        Number rs = (Number) criteria.setProjection( Projections.rowCount() ).uniqueResult();
-
-        return rs != null ? rs.intValue() : 0;
     }
 
     @Override
