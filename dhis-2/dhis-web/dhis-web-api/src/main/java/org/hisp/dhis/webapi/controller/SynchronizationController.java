@@ -28,14 +28,8 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.synch.AvailabilityStatus;
 import org.hisp.dhis.dxf2.synch.SynchronizationManager;
 import org.hisp.dhis.setting.Setting;
@@ -48,6 +42,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
+
 /**
  * @author Lars Helge Overland
  */
@@ -56,12 +55,15 @@ import org.springframework.web.client.RestTemplate;
 public class SynchronizationController
 {
     public static final String RESOURCE_PATH = "/synchronization";
-    
+
     @Autowired
     private SynchronizationManager synchronizationManager;
-    
+
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private RenderService renderService;
 
     @PreAuthorize( "hasRole('ALL') or hasRole('F_EXPORT_DATA')" )
     @RequestMapping( value = "/dataPush", method = RequestMethod.POST )
@@ -71,18 +73,18 @@ public class SynchronizationController
         ImportSummary summary = synchronizationManager.executeDataPush();
 
         response.setContentType( CONTENT_TYPE_JSON );
-        JacksonUtils.toJson( response.getOutputStream(), summary );
+        renderService.toJson( response.getOutputStream(), summary );
     }
-    
+
     @PreAuthorize( "hasRole('ALL')" )
     @RequestMapping( value = "/metadataPull", method = RequestMethod.POST )
     public void importMetaData( @RequestParam String url, HttpServletResponse response )
         throws IOException
     {
         org.hisp.dhis.dxf2.metadata.ImportSummary summary = synchronizationManager.executeMetadataPull( url );
-        
+
         response.setContentType( CONTENT_TYPE_JSON );
-        JacksonUtils.toJson( response.getOutputStream(), summary );        
+        renderService.toJson( response.getOutputStream(), summary );
     }
 
     @RequestMapping( value = "/availability", method = RequestMethod.GET, produces = "application/json" )
@@ -90,7 +92,7 @@ public class SynchronizationController
     {
         return synchronizationManager.isRemoteServerAvailable();
     }
-    
+
     @RequestMapping( value = "/metadataRepo", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody String getMetadataRepoIndex()
     {
