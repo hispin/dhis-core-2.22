@@ -28,14 +28,6 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-import java.util.List;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -51,6 +43,11 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Lars Helge Overland
@@ -69,7 +66,7 @@ public class TrackedEntityInstanceStoreTest
 
     @Autowired
     private TrackedEntityAttributeValueService attributeValueService;
-    
+
     @Autowired
     private ProgramInstanceService programInstanceService;
 
@@ -82,14 +79,14 @@ public class TrackedEntityInstanceStoreTest
 
     private TrackedEntityAttribute atA;
     private TrackedEntityAttribute atB;
-    
+
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
     private OrganisationUnit ouC;
-        
+
     private Program prA;
     private Program prB;
-    
+
     @Override
     public void setUpTest()
     {
@@ -103,23 +100,35 @@ public class TrackedEntityInstanceStoreTest
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B', ouA );
         ouC = createOrganisationUnit( 'C', ouB );
-        
+
         organisationUnitService.addOrganisationUnit( ouA );
         organisationUnitService.addOrganisationUnit( ouB );
         organisationUnitService.addOrganisationUnit( ouC );
 
         prA = createProgram( 'A', null, null );
         prB = createProgram( 'B', null, null );
-        
+
         idObjectManager.save( prA );
-        idObjectManager.save( prB );        
-      
+        idObjectManager.save( prB );
+
         teiA = createTrackedEntityInstance( 'A', ouA );
         teiB = createTrackedEntityInstance( 'B', ouB );
         teiC = createTrackedEntityInstance( 'C', ouB );
         teiD = createTrackedEntityInstance( 'D', ouC );
         teiE = createTrackedEntityInstance( 'E', ouC );
         teiF = createTrackedEntityInstance( 'F', ouC );
+    }
+
+    @Test
+    public void testTrackedEntityInstanceExists()
+    {
+        teiStore.save( teiA );
+        teiStore.save( teiB );
+
+        assertTrue( teiStore.exists( teiA.getUid() ) );
+        assertTrue( teiStore.exists( teiB.getUid() ) );
+        assertFalse( teiStore.exists( "aaaabbbbccc" ) );
+        assertFalse( teiStore.exists( null ) );
     }
 
     @Test
@@ -170,7 +179,7 @@ public class TrackedEntityInstanceStoreTest
 
         assertTrue( equals( teiStore.getAll(), teiA, teiB ) );
     }
-    
+
     @Test
     public void testQuery()
     {
@@ -180,45 +189,45 @@ public class TrackedEntityInstanceStoreTest
         teiStore.save( teiD );
         teiStore.save( teiE );
         teiStore.save( teiF );
-        
+
         attributeValueService.addTrackedEntityAttributeValue( new TrackedEntityAttributeValue( atA, teiD, "Male" ) );
         attributeValueService.addTrackedEntityAttributeValue( new TrackedEntityAttributeValue( atA, teiE, "Male" ) );
         attributeValueService.addTrackedEntityAttributeValue( new TrackedEntityAttributeValue( atA, teiF, "Female" ) );
-        
+
         programInstanceService.enrollTrackedEntityInstance( teiB, prA, new Date(), new Date(), ouB );
         programInstanceService.enrollTrackedEntityInstance( teiE, prA, new Date(), new Date(), ouB );
-        
+
         // Get all
-        
+
         TrackedEntityInstanceQueryParams params = new TrackedEntityInstanceQueryParams();
-        
+
         List<TrackedEntityInstance> teis = teiStore.getTrackedEntityInstances( params );
-        
+
         assertEquals( 6, teis.size() );
-        
+
         // Filter by attribute
-        
+
         params = new TrackedEntityInstanceQueryParams();
         params.addFilter( new QueryItem( atA, QueryOperator.EQ, "Male", ValueType.TEXT, AggregationType.NONE, null ) );
-        
+
         teis = teiStore.getTrackedEntityInstances( params );
 
         assertEquals( 2, teis.size() );
         assertTrue( teis.contains( teiD ) );
         assertTrue( teis.contains( teiE ) );
-        
+
         // Filter by attribute
 
         params = new TrackedEntityInstanceQueryParams();
         params.addFilter( new QueryItem( atA, QueryOperator.EQ, "Female", ValueType.TEXT, AggregationType.NONE, null ) );
-        
+
         teis = teiStore.getTrackedEntityInstances( params );
 
         assertEquals( 1, teis.size() );
         assertTrue( teis.contains( teiF ) );
-        
+
         // Filter by selected org units
-        
+
         params = new TrackedEntityInstanceQueryParams();
         params.addOrganisationUnit( ouB );
         params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
@@ -230,7 +239,7 @@ public class TrackedEntityInstanceStoreTest
         assertTrue( teis.contains( teiC ) );
 
         // Filter by descendants org units
-        
+
         params = new TrackedEntityInstanceQueryParams();
         params.addOrganisationUnit( ouB );
         params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
@@ -243,7 +252,7 @@ public class TrackedEntityInstanceStoreTest
         assertTrue( teis.contains( teiD ) );
         assertTrue( teis.contains( teiE ) );
         assertTrue( teis.contains( teiF ) );
-        
+
         // Filter by program enrollment
 
         params = new TrackedEntityInstanceQueryParams();
