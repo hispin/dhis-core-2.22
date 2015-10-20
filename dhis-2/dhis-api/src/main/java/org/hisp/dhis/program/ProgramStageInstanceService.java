@@ -69,6 +69,8 @@ public interface ProgramStageInstanceService
      */
     void updateProgramStageInstance( ProgramStageInstance programStageInstance );
 
+    boolean programStageInstanceExists(String uid);
+
     /**
      * Returns a {@link TrackedEntityAttribute}.
      *

@@ -291,6 +291,13 @@ public class HibernateProgramStageInstanceStore
         return rs != null ? rs.intValue() : 0;
     }
 
+    @Override
+    public boolean exists( String uid )
+    {
+        Integer result = jdbcTemplate.queryForObject( "select count(*) from programstageinstance where uid=?", Integer.class, uid );
+        return result != null && result > 0;
+    }
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------

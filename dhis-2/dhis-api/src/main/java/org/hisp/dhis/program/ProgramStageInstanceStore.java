@@ -139,4 +139,6 @@ public interface ProgramStageInstanceStore
      * @return the number of ProgramStageInstances.
      */
     long getProgramStageInstanceCountLastUpdatedAfter( Date time );
+
+    boolean exists( String uid );
 }
