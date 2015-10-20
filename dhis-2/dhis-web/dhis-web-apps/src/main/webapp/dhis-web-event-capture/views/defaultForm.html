@@ -1,4 +1,5 @@
 <div  ng-if='!selectedProgramStage.programStageSections.length'>
+    <div ng-include="'views/event-details.html'"></div>
     <table class="dhis2-list-table-striped">
         <thead>                        
             <tr>
@@ -10,64 +11,7 @@
                 </th>         
             </tr>                        
         </thead>
-        <tbody>
-            <tr ng-if="selectedProgramStage.preGenerateUID || editingEventInFull">
-                <td>
-                    {{'form_id' | translate}}
-                </td>
-                <td>
-                    <input type="text" ng-disabled="true" ng-model="currentEvent['uid']" class="form-control">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {{selectedProgramStage.reportDateDescription ? selectedProgramStage.reportDateDescription : 'incident_date'| translate }}<span class="required">*</span>
-                </td>
-                <td>
-                    <input type="text"                                                   
-                           placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
-                           d2-date
-                           max-date='0'
-                           ng-model="currentEvent.eventDate"  
-                           ng-required="true"                            
-                           d2-date-validator
-                           name="eventDate" 
-                           input-field-id='eventDate' 
-                           class="form-control">
-                    <div ng-messages="outerForm.eventDate.$error" ng-if="interacted(outerForm.eventDate)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
-                    </div>
-                </td>
-            </tr>
-            <tr ng-if="selectedProgramStage.captureCoordinates">
-                <td>
-                    {{'latitude'| translate}}<span class="pull-right"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
-                </td>
-                <td>
-                    <input type="number" 
-                           ng-model="currentEvent.coordinate.latitude"                              
-                           name="latitude"
-                           d2-coordinate-validator
-                           ng-required="false"
-                           class="form-control"/>
-                    <div ng-messages="outerForm.latitude.$error" ng-if="interacted(outerForm.latitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
-                    </div>
-                </td>                                            
-            </tr>
-            <tr ng-if="selectedProgramStage.captureCoordinates">
-                <td>
-                    {{'longitude'| translate}}<span class="pull-right"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
-                </td>
-                <td>
-                    <input type="number" 
-                           ng-model="currentEvent.coordinate.longitude"                             
-                           name="longitude" 
-                           d2-coordinate-validator
-                           ng-required="false"
-                           class="form-control"/>
-                    <div ng-messages="outerForm.longitude.$error" ng-if="interacted(outerForm.longitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
-                    </div>
-                </td>                                                            
-            </tr>            
+        <tbody>          
             <tr ng-repeat="eventGridColumn in eventGridColumns" ng-if="eventGridColumn.id !== 'comment' && eventGridColumn.id !== 'uid' && eventGridColumn.id !== 'eventDate' && !hiddenFields[eventGridColumn.id]">
                 <td >
                     {{eventGridColumn.name}}<span ng-if="eventGridColumn.compulsory" class="required">*</span>
@@ -264,67 +208,7 @@
 </div>
 
 <div ng-if='selectedProgramStage.programStageSections.length'>
-    <table class="dhis2-list-table-striped">        
-        <tbody>
-            <tr ng-if="selectedProgramStage.preGenerateUID && currentEvent['uid']">
-                <td>
-                    {{'form_id' | translate}}
-                </td>
-                <td>
-                    <input type="text" ng-disabled="true" ng-model="currentEvent['uid']" class="form-control">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {{selectedProgramStage.reportDateDescription ? selectedProgramStage.reportDateDescription : 'incident_date'| translate }}<span class="required">*</span>
-                </td>
-                <td>
-                    <input type="text"                                                   
-                           placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
-                           d2-date
-                           max-date='0'
-                           ng-model="currentEvent.eventDate" 
-                           ng-required="true"                            
-                           d2-date-validator
-                           name="eventDate" 
-                           input-field-id='eventDate' 
-                           class="form-control">
-                    <div ng-messages="outerForm.eventDate.$error" ng-if="interacted(outerForm.eventDate)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
-                    </div>
-                </td>
-            </tr>
-            <tr ng-if="selectedProgramStage.captureCoordinates">
-                <td>
-                    {{'latitude'| translate}}<span class="pull-right"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
-                </td>
-                <td>
-                    <input type="number" 
-                           ng-model="currentEvent.coordinate.latitude"                             
-                           name="latitude"
-                           d2-coordinate-validator
-                           ng-required="false"
-                           class="form-control"/>
-                    <div ng-messages="outerForm.latitude.$error" ng-if="interacted(outerForm.latitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                        
-                    </div>
-                </td>                                            
-            </tr>
-            <tr ng-if="selectedProgramStage.captureCoordinates">
-                <td>
-                    {{'longitude'| translate}}<span class="pull-right"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
-                </td>
-                <td>
-                    <input type="number" 
-                           ng-model="currentEvent.coordinate.longitude"                              
-                           name="longitude" 
-                           d2-coordinate-validator
-                           ng-required="false"
-                           class="form-control"/>
-                    <div ng-messages="outerForm.longitude.$error" ng-if="interacted(outerForm.longitude)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
-                    </div>
-                </td>                                            
-            </tr>        
-        </tbody>
-    </table>    
+    <div ng-include="'views/event-details.html'"></div>
 
     <div ng-repeat='section in selectedProgramStage.programStageSections' ng-if="section.id === selectedSection.id || selectedSection.id === 'ALL' && !hiddenSections[section.id] ">
         <div class="vertical-spacing section-label">
