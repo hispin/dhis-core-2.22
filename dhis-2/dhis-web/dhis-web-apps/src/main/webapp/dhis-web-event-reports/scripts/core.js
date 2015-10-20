@@ -214,7 +214,7 @@ Ext.onReady( function() {
                 ],
                 idNameMap: {}
             };
-            
+
             conf.valueType = {
             	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
             	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
@@ -2586,7 +2586,7 @@ Ext.onReady( function() {
 				if (view.completedOnly) {
 					paramString += '&completedOnly=true';
 				}
-                
+
                 // sorting
                 if (view.dataType === conf.finals.dataType.individual_cases && view.sorting) {
                     if (view.sorting.id && view.sorting.direction) {
@@ -2607,7 +2607,7 @@ Ext.onReady( function() {
                 if (view.collapseDataDimensions) {
                     paramString += '&collapseDataDimensions=true';
                 }
-                
+
                 // relative period date
                 if (view.relativePeriodDate) {
                     paramString += '&relativePeriodDate=' + view.relativePeriodDate;
@@ -3576,8 +3576,9 @@ Ext.onReady( function() {
 
 					for (var j = 0, str, header, name; j < dimensionHeaders.length; j++) {
 						header = dimensionHeaders[j];
+                        isBoolean = header.type === 'java.lang.Boolean';
 						str = row[header.index];
-                        str = optionNames[header.name + str] || optionNames[str] || booleanNames[str] || names[str] || str;
+                        str = optionNames[header.name + str] || optionNames[str] || (isBoolean ? booleanNames[str] : null) || names[str] || str;
 						name = web.report.query.format(str);
 
 						//if (header.name === 'ouname' && layout.showHierarchy) {
