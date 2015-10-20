@@ -80,7 +80,7 @@ function getTrackedEntityDataElements( type ) {
       for( i in json.dataElements ) {
 		var de = json.dataElements[i];
 		
-		if ( !('expression' == type && de.valueType && !dhis2.pi.aggregatableValueTypes.indexOf(de.valueType))) {
+		if ( !('expression' == type && de.valueType && dhis2.pi.aggregatableValueTypes.indexOf(de.valueType) == -1)) {
           dataElements.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + 
             "' suggested='" + json.dataElements[i].optionset + "'>" + json.dataElements[i].name + "</option>");
         }

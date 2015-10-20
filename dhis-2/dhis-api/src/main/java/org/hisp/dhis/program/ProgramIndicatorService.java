@@ -138,7 +138,7 @@ public interface ProgramIndicatorService
      * 
      * @param expression An expression string.
      * @return the string {@link ProgramIndicator.VALID} if valid, if not any of
-     *         {@link ProgramIndicator.EXPRESSION_NOT_WELL_FORMED},
+     *         {@link ProgramIndicator.EXPRESSION_NOT_VALID},
      *         {@link ProgramIndicator.INVALID_VARIABLES_IN_EXPRESSION}.
      */
     String expressionIsValid( String expression );

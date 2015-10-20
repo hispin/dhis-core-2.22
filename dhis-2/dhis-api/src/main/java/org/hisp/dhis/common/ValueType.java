@@ -69,6 +69,9 @@ public enum ValueType
     public static final Set<ValueType> NUMERIC_TYPES = Sets.newHashSet(
         INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE, NUMBER, UNIT_INTERVAL, PERCENTAGE );
 
+    public static final Set<ValueType> BOOLEAN_TYPES = Sets.newHashSet(
+        BOOLEAN, TRUE_ONLY );
+    
     public static final Set<ValueType> TEXT_TYPES = Sets.newHashSet( 
         TEXT, LONG_TEXT, LETTER, COORDINATE );
     
@@ -100,6 +103,11 @@ public enum ValueType
     public boolean isNumeric()
     {
         return NUMERIC_TYPES.contains( this );
+    }
+    
+    public boolean isBoolean()
+    {
+        return BOOLEAN_TYPES.contains( this );
     }
 
     public boolean isText()
