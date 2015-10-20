@@ -273,6 +273,7 @@ public class ProgramStageInstanceStoreTest
         assertTrue( programStageInstanceStore.exists( programStageInstanceA.getUid() ) );
         assertTrue( programStageInstanceStore.exists( programStageInstanceB.getUid() ) );
         assertFalse( programStageInstanceStore.exists( "aaaabbbbccc" ) );
+        assertFalse( programStageInstanceStore.exists( null ) );
     }
 
     @Test
