@@ -308,7 +308,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 })
 
 /* service for dealing with custom form */
-.service('CustomFormService', function ($translate) {
+.service('CustomFormService', function ($translate, DialogService) {
 
     return {
         getForProgramStage: function (programStage, programStageDataElements) {
@@ -367,15 +367,16 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 attributes['name'] = fieldId;
                             }
 
-                            var prStDe = programStageDataElements[fieldId];
-
-                            var commonInputFieldProperty = this.getAttributesAsString(attributes) +
-                                    ' ng-model="currentEvent.' + fieldId + '" ' +
-                                    ' input-field-id="' + fieldId + '"' +                                   
-                                    ' ng-disabled="isHidden(prStDes.' + fieldId + '.dataElement.id) || selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
-                                    ' ng-required="{{prStDes.' + fieldId + '.compulsory}}" ';
+                            var prStDe = programStageDataElements[fieldId];                            
 
                             if (prStDe && prStDe.dataElement && prStDe.dataElement.valueType) {
+                            	
+                            	var commonInputFieldProperty = this.getAttributesAsString(attributes) +
+	                                ' ng-model="currentEvent.' + fieldId + '" ' +
+	                                ' input-field-id="' + fieldId + '"' +                                   
+	                                ' ng-disabled="isHidden(prStDes.' + fieldId + '.dataElement.id) || selectedEnrollment.status===\'CANCELLED\' || selectedEnrollment.status===\'COMPLETED\' || currentEvent[uid]==\'uid\' || currentEvent.editingNotAllowed"' +
+	                                ' ng-required="{{prStDes.' + fieldId + '.compulsory}}" ';
+                            	
                                 //check if dataelement has optionset								
                                 if (prStDe.dataElement.optionSetValue) {
                                     var optionSetId = prStDe.dataElement.optionSet.id;                 
@@ -442,6 +443,14 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     }
                                 }
                             }
+                            else{
+                            	var dialogOptions = {
+            		                headerText: 'error',
+            		                bodyText: 'custom_form_has_invalid_dataelement'
+            		            };		
+            		            DialogService.showDialog({}, dialogOptions);
+            		            return;
+                            }
                         }
                         newInputField = newInputField + ' <span ng-messages="outerForm.' + fieldId + '.$error" class="required" ng-if="interacted(outerForm.' + fieldId + ')" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html"></span>';
 
@@ -481,18 +490,15 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                         attributes[this.nodeName] = this.value;
                     });
 
-                    var attId = '', newInputField, programId;
+                    var attId = '', fieldName = '', newInputField, programId;
                     if (attributes.hasOwnProperty('attributeid')) {
                         attId = attributes['attributeid'];
-
-                        var fieldName = attId;
-                        var attMaxDate = trackedEntityFormAttributes[attId].allowFutureDate ? '' : 0;
-
-                        var att = trackedEntityFormAttributes[attId];
-                        var isTrackerAssociate = att.valueType === 'TRACKER_ASSOCIATE';
+                        fieldName = attId;
+                        var att = trackedEntityFormAttributes[attId];                        
 
                         if (att) {
-
+                            var attMaxDate = att.allowFutureDate ? '' : 0;
+                            var isTrackerAssociate = att.valueType === 'TRACKER_ASSOCIATE';
                             var commonInputFieldProperty = ' name="' + fieldName + '"' +
                                     ' element-id="' + i + '"' +
                                     this.getAttributesAsString(attributes) +
@@ -575,7 +581,14 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 }
                             }
                         }
-
+                        else{
+                        	var dialogOptions = {
+        		                headerText: 'error',
+        		                bodyText: 'custom_form_has_invalid_attribute'
+        		            };		
+        		            DialogService.showDialog({}, dialogOptions);
+        		            return;
+                        }
                     }
 
                     if (attributes.hasOwnProperty('programid')) {
