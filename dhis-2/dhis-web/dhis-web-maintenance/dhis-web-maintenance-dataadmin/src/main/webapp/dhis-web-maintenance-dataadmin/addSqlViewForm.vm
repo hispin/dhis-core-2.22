@@ -18,6 +18,18 @@
             <td><textarea id="description" name="description"></textarea></td>
         </tr>
         <tr>
+            <td><label for="cacheStrategy">$encoder.htmlEncode( $i18n.getString( "cache_strategy" ) )</label></td>
+            <td>
+                <select id="cacheStrategy" name="cacheStrategy">
+                    <option value="RESPECT_SYSTEM_SETTING">$i18n.getString( "respect_system_setting" )</option>
+                    <option value="NO_CACHE">$i18n.getString( "no_cache" )</option>
+                    <option value="CACHE_1_HOUR">$i18n.getString( "cache_for_one_hour" )</option>
+                    <option value="CACHE_6AM_TOMORROW">$i18n.getString( "cache_until_6am_tomorrow" )</option>
+                    <option value="CACHE_TWO_WEEKS">$i18n.getString( "cache_for_two_weeks" )</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td><label for="type">$encoder.htmlEncode( $i18n.getString( "sql_type" ) )</label></td>
             <td>
                 <select id="type" name="type">

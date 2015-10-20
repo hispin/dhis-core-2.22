@@ -29,7 +29,6 @@ package org.hisp.dhis.dataadmin.action.sqlview;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.lang3.EnumUtils;
 import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.sqlview.SqlViewService;
@@ -78,9 +77,9 @@ public class UpdateSqlViewAction
         this.sqlquery = sqlquery;
     }
 
-    private String cacheStrategy;
+    private CacheStrategy cacheStrategy;
 
-    public void setCacheStrategy( String cacheStrategy )
+    public void setCacheStrategy( CacheStrategy cacheStrategy )
     {
         this.cacheStrategy = cacheStrategy;
     }
@@ -99,8 +98,7 @@ public class UpdateSqlViewAction
 
         if ( cacheStrategy != null )
         {
-            CacheStrategy strategy = EnumUtils.getEnum( CacheStrategy.class, cacheStrategy );
-            sqlView.setCacheStrategy( strategy != null ? strategy : SqlView.DEFAULT_CACHE_STRATEGY );
+            sqlView.setCacheStrategy( cacheStrategy != null ? cacheStrategy : SqlView.DEFAULT_CACHE_STRATEGY );
         }
 
         sqlViewService.updateSqlView( sqlView.cleanSqlQuery() );
