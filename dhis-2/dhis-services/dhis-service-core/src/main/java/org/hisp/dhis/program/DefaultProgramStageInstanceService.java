@@ -148,6 +148,12 @@ public class DefaultProgramStageInstanceService
     }
 
     @Override
+    public boolean programStageInstanceExists( String uid )
+    {
+        return programStageInstanceStore.exists( uid );
+    }
+
+    @Override
     public List<ProgramStageInstance> getProgramStageInstances( Collection<ProgramInstance> programInstances,
         EventStatus status )
     {

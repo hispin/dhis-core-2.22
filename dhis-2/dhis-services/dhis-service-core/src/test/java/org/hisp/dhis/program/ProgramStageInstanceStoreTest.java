@@ -28,16 +28,6 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -51,6 +41,15 @@ import org.hisp.dhis.trackedentity.TrackedEntityInstanceService;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Chau Thu Tran
@@ -230,9 +229,9 @@ public class ProgramStageInstanceStoreTest
 
         DateTime testDate1 = DateTime.now();
         testDate1.withTimeAtStartOfDay();
-        testDate1 = testDate1.minusDays( 70  );
+        testDate1 = testDate1.minusDays( 70 );
         incidenDate = testDate1.toDate();
-        
+
         DateTime testDate2 = DateTime.now();
         testDate2.withTimeAtStartOfDay();
         enrollmentDate = testDate2.toDate();
@@ -263,6 +262,17 @@ public class ProgramStageInstanceStoreTest
         programStageInstanceD2 = new ProgramStageInstance( programInstanceB, stageD );
         programStageInstanceD2.setDueDate( enrollmentDate );
         programStageInstanceD2.setUid( "UID-D2" );
+    }
+
+    @Test
+    public void testProgramStageInstanceExists()
+    {
+        programStageInstanceStore.save( programStageInstanceA );
+        programStageInstanceStore.save( programStageInstanceB );
+
+        assertTrue( programStageInstanceStore.exists( programStageInstanceA.getUid() ) );
+        assertTrue( programStageInstanceStore.exists( programStageInstanceB.getUid() ) );
+        assertFalse( programStageInstanceStore.exists( "aaaabbbbccc" ) );
     }
 
     @Test
@@ -305,7 +315,7 @@ public class ProgramStageInstanceStoreTest
         assertTrue( stageInstances.contains( programStageInstanceB ) );
         assertTrue( stageInstances.contains( programStageInstanceD1 ) );
     }
-    
+
     @Test
     public void testGetOverDueEventCount()
     {
