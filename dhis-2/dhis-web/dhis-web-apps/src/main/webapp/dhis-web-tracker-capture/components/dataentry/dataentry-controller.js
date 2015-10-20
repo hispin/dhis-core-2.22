@@ -850,7 +850,23 @@ trackerCapture.controller('DataEntryController',
                     }
                     else {
                         if ($scope.currentStage.allowGenerateNextVisit) {
-                            $scope.showCreateEvent($scope.currentStage);
+                            if($scope.currentStage.repeatable){
+                                $scope.showCreateEvent($scope.currentStage);
+                            }
+                            else{
+                                var index = -1, stage = null;
+                                for(var i=0; i<$scope.programStages.length && index===-1; i++){
+                                    if($scope.currentStage.id === $scope.programStages[i].id){
+                                        index = i;
+                                        stage = $scope.programStages[i+1];
+                                    }
+                                }
+                                if(stage ){
+                                    if(!$scope.eventsByStage[stage.id] || $scope.eventsByStage[stage.id] && $scope.eventsByStage[stage.id].length === 0){
+                                        $scope.showCreateEvent(stage);
+                                    }
+                                }                                
+                            }
                         }
                     }
                 }
