@@ -31,7 +31,7 @@ package org.hisp.dhis.webapi.controller.organisationunit;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
@@ -39,16 +39,13 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.system.filter.OrganisationUnitPolygonCoveringCoordinateFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -65,6 +62,9 @@ public class OrganisationUnitLocationController
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
+    @Autowired
+    private RenderService renderService;
+
     /**
      * Get Organisation Units within a distance from a location
      */
@@ -73,9 +73,7 @@ public class OrganisationUnitLocationController
         @RequestParam Double longitude,
         @RequestParam Double latitude,
         @RequestParam Double distance,
-        @RequestParam( required = false ) String orgUnitGroupSetId,
-        Model model, HttpServletRequest request, HttpServletResponse response )
-        throws Exception
+        @RequestParam( required = false ) String orgUnitGroupSetId, HttpServletResponse response ) throws Exception
     {
         List<OrganisationUnit> entityList = new ArrayList<>(
             organisationUnitService.getOrganisationUnitWithinDistance( longitude, latitude, distance ) );
@@ -113,7 +111,7 @@ public class OrganisationUnitLocationController
             organisationUnit.removeAllOrganisationUnitGroups();
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), entityList );
+        renderService.toJson( response.getOutputStream(), entityList );
     }
 
     /**
@@ -124,10 +122,7 @@ public class OrganisationUnitLocationController
         @RequestParam Double longitude,
         @RequestParam Double latitude,
         @RequestParam( required = false ) String topOrgUnit,
-        @RequestParam( required = false ) Integer targetLevel,
-        @RequestParam Map<String, String> parameters,
-        Model model, HttpServletRequest request, HttpServletResponse response )
-        throws Exception
+        @RequestParam( required = false ) Integer targetLevel, HttpServletResponse response ) throws Exception
     {
         List<OrganisationUnit> entityList = new ArrayList<>(
             organisationUnitService.getOrganisationUnitByCoordinate( longitude, latitude, topOrgUnit, targetLevel ) );
@@ -143,19 +138,15 @@ public class OrganisationUnitLocationController
             organisationUnit.removeAllOrganisationUnitGroups();
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), entityList );
+        renderService.toJson( response.getOutputStream(), entityList );
     }
 
     /**
      * Check if the location lies within the organisation unit boundary
      */
     @RequestMapping( value = "/locationWithinOrgUnitBoundary", method = RequestMethod.GET, produces = { "*/*", "application/json" } )
-    public void checkLocationWithinOrgUnit(
-        @RequestParam String orgUnitUid,
-        @RequestParam Double longitude,
-        @RequestParam Double latitude,
-        Model model, HttpServletRequest request, HttpServletResponse response )
-        throws Exception
+    public void checkLocationWithinOrgUnit( @RequestParam String orgUnitUid,
+        @RequestParam Double longitude, @RequestParam Double latitude, HttpServletResponse response ) throws Exception
     {
         boolean withinOrgUnit = false;
 
@@ -168,6 +159,6 @@ public class OrganisationUnitLocationController
             withinOrgUnit = true;
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), withinOrgUnit );
+        renderService.toJson( response.getOutputStream(), withinOrgUnit );
     }
 }

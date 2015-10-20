@@ -35,7 +35,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.event.Event;
 import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 import org.hisp.dhis.dxf2.events.event.EventService;
@@ -48,6 +47,7 @@ import org.hisp.dhis.dxf2.events.report.EventRows;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.event.EventStatus;
@@ -98,7 +98,6 @@ public class EventController
     // Dependencies
     //--------------------------------------------------------------------------
 
-
     @Autowired
     private CurrentUserService currentUserService;
 
@@ -122,6 +121,9 @@ public class EventController
 
     @Autowired
     private InputUtils inputUtils;
+
+    @Autowired
+    private RenderService renderService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -447,7 +449,7 @@ public class EventController
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
-        Event updatedEvent = JacksonUtils.fromXml( request.getInputStream(), Event.class );
+        Event updatedEvent = renderService.fromXml( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         ImportSummary importSummary = eventService.updateEvent( updatedEvent, false, importOptions );
@@ -465,7 +467,7 @@ public class EventController
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
-        Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
+        Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         ImportSummary importSummary = eventService.updateEvent( updatedEvent, false, importOptions );
@@ -490,7 +492,7 @@ public class EventController
             throw new WebMessageException( WebMessageUtils.notFound( "DataElement not found for uid: " + dataElementUid ) );
         }
 
-        Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
+        Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         ImportSummary importSummary = eventService.updateEvent( updatedEvent, true );
@@ -508,7 +510,7 @@ public class EventController
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
-        Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
+        Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         eventService.updateEventForNote( updatedEvent );
@@ -526,7 +528,7 @@ public class EventController
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
         }
 
-        Event updatedEvent = JacksonUtils.fromJson( request.getInputStream(), Event.class );
+        Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         eventService.updateEventForEventDate( updatedEvent );

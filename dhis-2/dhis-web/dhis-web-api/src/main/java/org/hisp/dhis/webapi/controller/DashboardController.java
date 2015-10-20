@@ -35,7 +35,6 @@ import org.hisp.dhis.dashboard.DashboardItemType;
 import org.hisp.dhis.dashboard.DashboardSearchResult;
 import org.hisp.dhis.dashboard.DashboardService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
@@ -90,7 +89,7 @@ public class DashboardController
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        Dashboard dashboard = JacksonUtils.fromJson( request.getInputStream(), Dashboard.class );
+        Dashboard dashboard = renderService.fromJson( request.getInputStream(), Dashboard.class );
 
         dashboardService.mergeDashboard( dashboard );
         dashboardService.saveDashboard( dashboard );
@@ -115,7 +114,7 @@ public class DashboardController
             throw new UpdateAccessDeniedException( "You don't have the proper permissions to update this dashboard." );
         }
 
-        Dashboard newDashboard = JacksonUtils.fromJson( request.getInputStream(), Dashboard.class );
+        Dashboard newDashboard = renderService.fromJson( request.getInputStream(), Dashboard.class );
 
         dashboard.setName( newDashboard.getName() ); // TODO Name only for now
 
@@ -161,7 +160,7 @@ public class DashboardController
             throw new UpdateAccessDeniedException( "You don't have the proper permissions to update this dashboard." );
         }
 
-        DashboardItem item = JacksonUtils.fromJson( request.getInputStream(), DashboardItem.class );
+        DashboardItem item = renderService.fromJson( request.getInputStream(), DashboardItem.class );
 
         dashboardService.mergeDashboardItem( item );
 

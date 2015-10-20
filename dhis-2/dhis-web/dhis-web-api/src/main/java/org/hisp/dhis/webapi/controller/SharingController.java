@@ -33,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.security.acl.AccessStringHelper;
@@ -194,7 +193,7 @@ public class SharingController
             throw new AccessDeniedException( "You do not have manage access to this object." );
         }
 
-        Sharing sharing = JacksonUtils.fromJson( request.getInputStream(), Sharing.class );
+        Sharing sharing = renderService.fromJson( request.getInputStream(), Sharing.class );
 
         // Ignore externalAccess if user is not allowed to make objects external
         if ( aclService.canExternalize( user, object.getClass() ) )

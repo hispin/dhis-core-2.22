@@ -28,20 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataentryform.DataEntryForm;
@@ -76,6 +62,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -140,7 +139,7 @@ public class DataSetController
         Map<String, Integer> versionMap = new HashMap<>();
         versionMap.put( "version", dataSet.getVersion() );
 
-        JacksonUtils.toJson( response.getOutputStream(), versionMap );
+        renderService.toJson( response.getOutputStream(), versionMap );
     }
 
     @RequestMapping( value = "/{uid}/dataValueSet", method = RequestMethod.GET )
@@ -188,7 +187,7 @@ public class DataSetController
 
         Form form = getForm( dataSets, ou, pe, metaData );
 
-        JacksonUtils.toJson( response.getOutputStream(), form );
+        renderService.toJson( response.getOutputStream(), form );
     }
 
     @RequestMapping( value = "/{uid}/form", method = RequestMethod.GET, produces = { "application/xml", "text/xml" } )
@@ -216,7 +215,7 @@ public class DataSetController
 
         Form form = getForm( dataSets, ou, pe, metaData );
 
-        JacksonUtils.toXml( response.getOutputStream(), form );
+        renderService.toXml( response.getOutputStream(), form );
     }
 
     private Form getForm( List<DataSet> dataSets, OrganisationUnit ou, Period pe, boolean metaData )

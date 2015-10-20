@@ -38,7 +38,8 @@ import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.CompleteDataSetRegistrations;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
@@ -48,7 +49,6 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.CurrentUserService;
-import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -102,6 +102,9 @@ public class CompleteDataSetRegistrationController
     @Autowired
     private I18nManager i18nManager;
 
+    @Autowired
+    private RenderService renderService;
+
     @RequestMapping( method = RequestMethod.GET, produces = CONTENT_TYPE_JSON )
     public void getCompleteDataSetRegistrationsJson(
         @RequestParam Set<String> dataSet,
@@ -116,7 +119,7 @@ public class CompleteDataSetRegistrationController
         CompleteDataSetRegistrations completeDataSetRegistrations = getCompleteDataSetRegistrations( dataSet, period,
             startDate, endDate, orgUnit, children );
 
-        JacksonUtils.toJson( response.getOutputStream(), completeDataSetRegistrations );
+        renderService.toJson( response.getOutputStream(), completeDataSetRegistrations );
     }
 
     private CompleteDataSetRegistrations getCompleteDataSetRegistrations( Set<String> dataSet, String period,

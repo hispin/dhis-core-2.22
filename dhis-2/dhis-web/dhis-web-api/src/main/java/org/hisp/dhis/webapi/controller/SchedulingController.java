@@ -29,7 +29,7 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.scheduling.SchedulingManager;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.webdomain.SchedulingStrategy;
@@ -63,13 +63,16 @@ public class SchedulingController
     @Autowired
     private SchedulingManager schedulingManager;
 
+    @Autowired
+    private RenderService renderService;
+
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SCHEDULING_ADMIN')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( method = { RequestMethod.POST, RequestMethod.PUT }, consumes = { ContextUtils.CONTENT_TYPE_JSON } )
     public void schedule( HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {
-        SchedulingStrategy strategy = JacksonUtils.fromJson( request.getInputStream(), SchedulingStrategy.class );
+        SchedulingStrategy strategy = renderService.fromJson( request.getInputStream(), SchedulingStrategy.class );
 
         ListMap<String, String> cronKeyMap = new ListMap<>();
 

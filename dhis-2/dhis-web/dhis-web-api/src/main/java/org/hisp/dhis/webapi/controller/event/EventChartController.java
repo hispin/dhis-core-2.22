@@ -30,9 +30,8 @@ package org.hisp.dhis.webapi.controller.event;
 
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.DimensionService;
-import org.hisp.dhis.system.util.CodecUtils;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.eventchart.EventChart;
 import org.hisp.dhis.eventchart.EventChartService;
@@ -44,9 +43,9 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.schema.descriptors.EventChartSchemaDescriptor;
+import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -105,7 +104,7 @@ public class EventChartController
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        EventChart eventChart = JacksonUtils.fromJson( request.getInputStream(), EventChart.class );
+        EventChart eventChart = renderService.fromJson( request.getInputStream(), EventChart.class );
 
         mergeEventChart( eventChart );
 
@@ -126,7 +125,7 @@ public class EventChartController
             throw new WebMessageException( WebMessageUtils.notFound( "Event chart does not exist: " + uid ) );
         }
 
-        EventChart newEventChart = JacksonUtils.fromJson( request.getInputStream(), EventChart.class );
+        EventChart newEventChart = renderService.fromJson( request.getInputStream(), EventChart.class );
 
         mergeEventChart( newEventChart );
 

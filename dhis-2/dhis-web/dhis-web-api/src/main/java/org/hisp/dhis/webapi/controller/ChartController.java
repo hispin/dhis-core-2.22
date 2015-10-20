@@ -28,20 +28,10 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensions;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.chart.ChartService;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.cache.CacheStrategy;
-import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -58,6 +48,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.schema.descriptors.ChartSchemaDescriptor;
+import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.jfree.chart.ChartUtilities;
@@ -68,6 +59,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Set;
+
+import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensions;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -109,14 +108,14 @@ public class ChartController
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        Chart chart = JacksonUtils.fromJson( request.getInputStream(), Chart.class );
+        Chart chart = renderService.fromJson( request.getInputStream(), Chart.class );
 
         mergeChart( chart );
 
         chartService.addChart( chart );
 
         response.addHeader( "Location", ChartSchemaDescriptor.API_ENDPOINT + "/" + chart.getUid() );
-        
+
         webMessageService.send( WebMessageUtils.created( "Chart created" ), response, request );
     }
 

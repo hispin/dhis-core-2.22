@@ -31,8 +31,8 @@ package org.hisp.dhis.webapi.controller;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.i18n.I18nManager;
@@ -45,7 +45,6 @@ import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.schema.descriptors.ReportTableSchemaDescriptor;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
-import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,14 +98,14 @@ public class ReportTableController
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        ReportTable reportTable = JacksonUtils.fromJson( request.getInputStream(), ReportTable.class );
+        ReportTable reportTable = renderService.fromJson( request.getInputStream(), ReportTable.class );
 
         mergeReportTable( reportTable );
 
         reportTableService.saveReportTable( reportTable );
 
         response.addHeader( "Location", ReportTableSchemaDescriptor.API_ENDPOINT + "/" + reportTable.getUid() );
-        
+
         webMessageService.send( WebMessageUtils.created( "Report table created" ), response, request );
     }
 
@@ -121,7 +120,7 @@ public class ReportTableController
             throw new WebMessageException( WebMessageUtils.notFound( "Report table does not exist: " + uid ) );
         }
 
-        ReportTable newReportTable = JacksonUtils.fromJson( request.getInputStream(), ReportTable.class );
+        ReportTable newReportTable = renderService.fromJson( request.getInputStream(), ReportTable.class );
 
         mergeReportTable( newReportTable );
 

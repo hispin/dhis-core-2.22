@@ -30,7 +30,7 @@ package org.hisp.dhis.webapi.controller.event;
 
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.eventreport.EventReportService;
@@ -86,7 +86,7 @@ public class EventReportController
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        EventReport report = JacksonUtils.fromJson( request.getInputStream(), EventReport.class );
+        EventReport report = renderService.fromJson( request.getInputStream(), EventReport.class );
 
         mergeEventReport( report );
 
@@ -107,7 +107,7 @@ public class EventReportController
             throw new WebMessageException( WebMessageUtils.notFound( "Event report does not exist: " + uid ) );
         }
 
-        EventReport newReport = JacksonUtils.fromJson( request.getInputStream(), EventReport.class );
+        EventReport newReport = renderService.fromJson( request.getInputStream(), EventReport.class );
 
         mergeEventReport( newReport );
 
