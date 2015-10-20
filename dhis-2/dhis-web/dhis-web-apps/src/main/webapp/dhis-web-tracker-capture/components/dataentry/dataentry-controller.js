@@ -282,7 +282,7 @@ trackerCapture.controller('DataEntryController',
                     var eventStage = $scope.stagesById[dhis2Event.programStage];
                     if (angular.isObject(eventStage)) {
                         dhis2Event.name = eventStage.name;
-                        dhis2Event.reportDateDescription = eventStage.reportDateDescription ? eventStage.reportDateDescription : $translate.instant('event_date');
+                        dhis2Event.excecutionDateLabel = eventStage.excecutionDateLabel ? eventStage.excecutionDateLabel : $translate.instant('event_date');
                         dhis2Event.dueDate = DateUtils.formatFromApiToUser(dhis2Event.dueDate);
                         dhis2Event.sortingDate = dhis2Event.dueDate;
 
@@ -387,7 +387,7 @@ trackerCapture.controller('DataEntryController',
                 var newEvent = ev;
                 newEvent.orgUnitName = dummyEvent.orgUnitName;
                 newEvent.name = dummyEvent.name;
-                newEvent.reportDateDescription = dummyEvent.reportDateDescription;
+                newEvent.excecutionDateLabel = dummyEvent.excecutionDateLabel;
                 newEvent.sortingDate = ev.eventDate ? ev.eventDate : ev.dueDate,
                 newEvent.statusColor = EventUtils.getEventStatusColor(ev);
                 newEvent.eventDate = DateUtils.formatFromApiToUser(ev.eventDate);
@@ -1113,7 +1113,7 @@ trackerCapture.controller('DataEntryController',
     $scope.eventPeriods = eventPeriods;
     $scope.selectedStage = $scope.stagesById[dummyEvent.programStage];
 
-    $scope.dhis2Event = {eventDate: '', dueDate: dummyEvent.dueDate, reportDateDescription: dummyEvent.reportDateDescription, name: dummyEvent.name, invalid: true};
+    $scope.dhis2Event = {eventDate: '', dueDate: dummyEvent.dueDate, excecutionDateLabel: dummyEvent.excecutionDateLabel, name: dummyEvent.name, invalid: true};
 
     if ($scope.selectedStage.periodType) {
         $scope.dhis2Event.eventDate = dummyEvent.dueDate;

@@ -1612,7 +1612,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                               orgUnit: orgUnit.id,
                               orgUnitName: orgUnit.name,
                               name: programStage.name,
-                              reportDateDescription: programStage.reportDateDescription,
+                              excecutionDateLabel: programStage.excecutionDateLabel,
                               enrollmentStatus: 'ACTIVE',
                               enrollment: enrollment.enrollment,
                               status: 'SCHEDULED'};
