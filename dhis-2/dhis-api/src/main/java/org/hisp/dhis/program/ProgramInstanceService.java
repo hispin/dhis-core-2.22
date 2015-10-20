@@ -85,6 +85,14 @@ public interface ProgramInstanceService
     ProgramInstance getProgramInstance( String uid );
 
     /**
+     * Checks for the existence of a PI by UID
+     *
+     * @param uid PSI UID to check for
+     * @return true/false depending on result
+     */
+    boolean programInstanceExists( String uid );
+
+    /**
      * Returns a ProgramInstanceQueryParams based on the given input.
      *
      * @param ou                    the set of organisation unit identifiers.
