@@ -348,7 +348,7 @@ function getProgramStages( programs )
                 var p = d.promise();
                 dhis2.ec.store.get('programStages', program.programStages[0].id).done(function(obj) {
                     if(!obj || obj.version !== program.programStages[0].version) {
-                        promise = promise.then( getD2Object( program.programStages[0].id, 'programStages', '../api/programStages', 'fields=id,name,version,description,reportDateDescription,captureCoordinates,dataEntryForm,minDaysFromStart,repeatable,preGenerateUID,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,sortOrder,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,name,valueType,optionSetValue,formName,optionSet[id]]]', 'idb' ) );
+                        promise = promise.then( getD2Object( program.programStages[0].id, 'programStages', '../api/programStages', 'fields=id,name,version,description,excecutionDateLabel,captureCoordinates,dataEntryForm,minDaysFromStart,repeatable,preGenerateUID,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,sortOrder,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,name,valueType,optionSetValue,formName,optionSet[id]]]', 'idb' ) );
                     }
 
                     d.resolve();
