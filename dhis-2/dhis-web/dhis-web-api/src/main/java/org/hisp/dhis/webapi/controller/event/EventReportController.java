@@ -30,7 +30,6 @@ package org.hisp.dhis.webapi.controller.event;
 
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.eventreport.EventReportService;
