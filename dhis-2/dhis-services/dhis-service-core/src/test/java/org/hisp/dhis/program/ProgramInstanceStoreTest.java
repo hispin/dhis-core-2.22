@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -174,6 +175,18 @@ public class ProgramInstanceStoreTest
 
         programInstanceD = new ProgramInstance( enrollmentDate, incidentDate, entityInstanceB, programA );
         programInstanceD.setUid( "UID-D" );
+    }
+
+    @Test
+    public void testProgramStageInstanceExists()
+    {
+        programInstanceStore.save( programInstanceA );
+        programInstanceStore.save( programInstanceB );
+
+        assertTrue( programInstanceStore.exists( programInstanceA.getUid() ) );
+        assertTrue( programInstanceStore.exists( programInstanceB.getUid() ) );
+        assertFalse( programInstanceStore.exists( "aaaabbbbccc" ) );
+        assertFalse( programInstanceStore.exists( null ) );
     }
 
     @Test

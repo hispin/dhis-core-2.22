@@ -389,6 +389,13 @@ public class HibernateProgramInstanceStore
         return criteria.list();
     }
 
+    @Override
+    public boolean exists( String uid )
+    {
+        Integer result = jdbcTemplate.queryForObject( "select count(*) from programinstance where uid=?", Integer.class, uid );
+        return result != null && result > 0;
+    }
+
     //TODO from here this class must be rewritten
 
     @Override

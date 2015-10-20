@@ -247,4 +247,12 @@ public interface ProgramInstanceStore
      * @return A SchedulingProgramObject list
      */
     Collection<SchedulingProgramObject> getSendMesssageEvents( String dateToCompare );
+
+    /**
+     * Checks for the existence of a PI by UID
+     *
+     * @param uid PSI UID to check for
+     * @return true/false depending on result
+     */
+    boolean exists( String uid );
 }
