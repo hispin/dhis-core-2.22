@@ -28,11 +28,6 @@ package org.hisp.dhis.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
@@ -41,6 +36,11 @@ import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.validation.ValidationCriteria;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>This interface is responsible for retrieving tracked entity instances (TEI).
@@ -213,7 +213,7 @@ public interface TrackedEntityInstanceService
      * @param uid PSI UID to check for
      * @return true/false depending on result
      */
-    boolean trackedEntityInstanceExists(String uid);
+    boolean trackedEntityInstanceExists( String uid );
 
     /**
      * Register a new entityInstance
