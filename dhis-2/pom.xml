@@ -239,6 +239,7 @@
                   <mkdir dir="${project.build.outputDirectory}" />
                   <exec executable="bzr" outputproperty="revision" failifexecutionfails="false">
                     <arg value="revno" />
+                    <arg value="--tree" />
                   </exec>
                   <echo file="${project.build.outputDirectory}/build.properties"
                     message="build.version = ${project.version}&#10;build.time = ${now}&#10;build.revision = ${revision}&#10;" />
