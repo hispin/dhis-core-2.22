@@ -28,19 +28,11 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.dataintegrity.DataIntegrityReport;
 import org.hisp.dhis.dataintegrity.FlattenedDataIntegrityReport;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.metadata.ImportSummary;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.node.exception.InvalidTypeException;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
@@ -66,6 +58,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
@@ -79,7 +78,7 @@ public class SystemController
     private CurrentUserService currentUserService;
 
     @Autowired
-    private SystemService systemService;    
+    private SystemService systemService;
 
     @Autowired
     private StyleManager styleManager;
@@ -90,21 +89,24 @@ public class SystemController
     @Autowired
     private Notifier notifier;
 
+    @Autowired
+    private RenderService renderService;
+
     //--------------------------------------------------------------------------
     // UID Generator
     //--------------------------------------------------------------------------
 
     @RequestMapping( value = { "/uid", "/id" }, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE } )
-    public @ResponseBody RootNode getUid( @RequestParam( required = false, defaultValue = "1" ) Integer n, HttpServletResponse response )
+    public @ResponseBody RootNode getUid( @RequestParam( required = false, defaultValue = "1" ) Integer limit )
         throws IOException, InvalidTypeException
     {
-        n = Math.min( n, 10000 );
+        limit = Math.min( limit, 10000 );
 
         RootNode rootNode = new RootNode( "codes" );
         CollectionNode collectionNode = rootNode.addChild( new CollectionNode( "codes" ) );
         collectionNode.setWrapping( false );
 
-        for ( int i = 0; i < n; i++ )
+        for ( int i = 0; i < limit; i++ )
         {
             collectionNode.addChild( new SimpleNode( "code", CodeGenerator.generateCode() ) );
         }
@@ -113,16 +115,16 @@ public class SystemController
     }
 
     @RequestMapping( value = "/uuid", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE } )
-    public @ResponseBody RootNode getUuid( @RequestParam( required = false, defaultValue = "1" ) Integer n, HttpServletResponse response )
+    public @ResponseBody RootNode getUuid( @RequestParam( required = false, defaultValue = "1" ) Integer limit )
         throws IOException, InvalidTypeException
     {
-        n = Math.min( n, 10000 );
+        limit = Math.min( limit, 10000 );
 
         RootNode rootNode = new RootNode( "codes" );
         CollectionNode collectionNode = rootNode.addChild( new CollectionNode( "codes" ) );
         collectionNode.setWrapping( false );
 
-        for ( int i = 0; i < n; i++ )
+        for ( int i = 0; i < limit; i++ )
         {
             collectionNode.addChild( new SimpleNode( "code", UUID.randomUUID().toString() ) );
         }
@@ -145,7 +147,7 @@ public class SystemController
             notifications = notifier.getNotifications( taskId, lastId );
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), notifications );
+        renderService.toJson( response.getOutputStream(), notifications );
     }
 
     @RequestMapping( value = "/taskSummaries/{category}", method = RequestMethod.GET, produces = { "*/*", "application/json" } )
@@ -161,22 +163,22 @@ public class SystemController
             if ( taskCategory.equals( TaskCategory.DATAINTEGRITY ) )
             {
                 DataIntegrityReport dataIntegrityReport = (DataIntegrityReport) notifier.getTaskSummary( taskId );
-                JacksonUtils.toJson( response.getOutputStream(), new FlattenedDataIntegrityReport( dataIntegrityReport ) );
+                renderService.toJson( response.getOutputStream(), new FlattenedDataIntegrityReport( dataIntegrityReport ) );
                 return;
             }
             else
             {
                 ImportSummary importSummary = (ImportSummary) notifier.getTaskSummary( taskId );
-                JacksonUtils.toJson( response.getOutputStream(), importSummary );
+                renderService.toJson( response.getOutputStream(), importSummary );
                 return;
             }
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), new ImportSummary() );
+        renderService.toJson( response.getOutputStream(), new ImportSummary() );
     }
 
     @RequestMapping( value = "/info", method = RequestMethod.GET, produces = { "application/json", "application/javascript" } )
-    public String getSystemInfo( Model model, HttpServletRequest request, HttpServletResponse response )
+    public String getSystemInfo( Model model, HttpServletRequest request )
     {
         SystemInfo info = systemService.getSystemInfo();
 
@@ -194,17 +196,17 @@ public class SystemController
     }
 
     @RequestMapping( value = "/ping", method = RequestMethod.GET, produces = "text/plain" )
-    public @ResponseBody String ping( Model model )
+    public @ResponseBody String ping()
     {
         return "pong";
     }
-    
+
     @RequestMapping( value = "/flags", method = RequestMethod.GET, produces = { "application/json" } )
     public @ResponseBody List<StyleObject> getFlags()
     {
         return systemSettingManager.getFlagObjects();
     }
-    
+
     @RequestMapping( value = "/styles", method = RequestMethod.GET, produces = { "application/json" } )
     public @ResponseBody List<StyleObject> getStyles()
     {
