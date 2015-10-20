@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.dxf2.events.event.Note;
@@ -565,7 +566,7 @@ public abstract class AbstractEnrollmentService
 
         if ( entityInstance == null )
         {
-            throw new IllegalArgumentException( "TrackedEntityInstance does not exist." );
+            throw new InvalidIdentifierReferenceException( "TrackedEntityInstance does not exist." );
         }
 
         return entityInstance;
