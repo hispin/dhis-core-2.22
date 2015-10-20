@@ -51,7 +51,7 @@ public class ExpressionUtils
     
     private static final Map<String, String> EL_SQL_MAP = new HashMap<>();
     private static final String IGNORED_KEYWORDS_REGEX = 
-        "SUM|sum|AVERAGE|average|COUNT|count|STDDEV|stddev|VARIANCE|variance|MIN|min|MAX|max|NONE|none";
+        "SUM|sum|AVG|avg|COUNT|count|STDDEV|stddev|VARIANCE|variance|MIN|min|MAX|max|NONE|none";
 
     private static final Pattern NUMERIC_PATTERN = Pattern.compile( "^(-?0|-?[1-9]\\d*)(\\.\\d+)?$" );
     
