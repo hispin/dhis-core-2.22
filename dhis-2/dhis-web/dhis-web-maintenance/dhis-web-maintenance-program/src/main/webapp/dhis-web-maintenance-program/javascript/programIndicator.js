@@ -2,7 +2,8 @@ dhis2.util.namespace( 'dhis2.pi' );
 
 dhis2.pi.aggregatableValueTypes = [
   'BOOLEAN', 'TRUE_ONLY', 'NUMBER', 'UNIT_INTERVAL', 'PERCENTAGE',
-  'INTEGER', 'INTEGER_POSITIVE', 'INTEGER_NEGATIVE', 'INTEGER_ZERO_OR_POSITIVE' ];  
+  'INTEGER', 'INTEGER_POSITIVE', 'INTEGER_NEGATIVE', 'INTEGER_ZERO_OR_POSITIVE',
+  'DATE', 'DATETIME' ];  
 
 $(function() {
   dhis2.contextmenu.makeContextMenu({
