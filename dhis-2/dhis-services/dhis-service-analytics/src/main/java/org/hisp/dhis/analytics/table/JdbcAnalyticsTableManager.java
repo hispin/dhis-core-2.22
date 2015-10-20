@@ -29,6 +29,8 @@ package org.hisp.dhis.analytics.table;
  */
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.AnalyticsTable;
@@ -175,11 +177,11 @@ public class JdbcAnalyticsTableManager
 
             populateTable( table, "cast(dv.value as " + dbl + ")", "null", ValueType.NUMERIC_TYPES, intClause, approvalClause );
 
-            populateTable( table, "1", "null", Lists.newArrayList( ValueType.BOOLEAN, ValueType.TRUE_ONLY ), "dv.value = 'true'", approvalClause );
+            populateTable( table, "1", "null", Sets.newHashSet( ValueType.BOOLEAN, ValueType.TRUE_ONLY ), "dv.value = 'true'", approvalClause );
 
-            populateTable( table, "0", "null", Lists.newArrayList( ValueType.BOOLEAN ), "dv.value = 'false'", approvalClause );
+            populateTable( table, "0", "null", Sets.newHashSet( ValueType.BOOLEAN ), "dv.value = 'false'", approvalClause );
 
-            populateTable( table, "1", "null", Lists.newArrayList( ValueType.TRUE_ONLY ), "dv.value = 'true'", approvalClause );
+            populateTable( table, "1", "null", Sets.newHashSet( ValueType.TRUE_ONLY ), "dv.value = 'true'", approvalClause );
 
             populateTable( table, "null", "dv.value", ValueType.TEXT_TYPES, null, approvalClause );
         }
@@ -197,7 +199,7 @@ public class JdbcAnalyticsTableManager
      * @param whereClause         where clause to constrain data query.
      */
     private void populateTable( AnalyticsTable table, String valueExpression,
-        String textValueExpression, List<ValueType> valueTypes, String whereClause, String approvalClause )
+        String textValueExpression, Set<ValueType> valueTypes, String whereClause, String approvalClause )
     {
         final String start = DateUtils.getMediumDateString( table.getPeriod().getStartDate() );
         final String end = DateUtils.getMediumDateString( table.getPeriod().getEndDate() );
