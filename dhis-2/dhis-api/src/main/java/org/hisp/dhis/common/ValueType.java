@@ -72,6 +72,9 @@ public enum ValueType
     public static final Set<ValueType> TEXT_TYPES = Sets.newHashSet( 
         TEXT, LONG_TEXT, LETTER, COORDINATE );
     
+    public static final Set<ValueType> DATE_TYPES = Sets.newHashSet(
+        DATE, DATETIME );
+    
     private final Class<?> javaClass;
 
     private ValueType()
@@ -91,22 +94,22 @@ public enum ValueType
 
     public boolean isInteger()
     {
-        return this == INTEGER || this == INTEGER_POSITIVE || this == INTEGER_NEGATIVE || this == INTEGER_ZERO_OR_POSITIVE;
+        return INTEGER_TYPES.contains( this );
     }
 
     public boolean isNumeric()
     {
-        return this.isInteger() || this == NUMBER || this == UNIT_INTERVAL || this == PERCENTAGE;
+        return NUMERIC_TYPES.contains( this );
     }
 
     public boolean isText()
     {
-        return this == TEXT || this == LONG_TEXT || this == COORDINATE;
+        return TEXT_TYPES.contains( this );
     }
 
     public boolean isDate()
     {
-        return this == DATE || this == DATETIME;
+        return DATE_TYPES.contains( this );
     }
 
     public boolean isFile()
