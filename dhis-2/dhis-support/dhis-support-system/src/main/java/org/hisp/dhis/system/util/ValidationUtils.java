@@ -467,9 +467,15 @@ public class ValidationUtils
         return value != null && HEX_COLOR_PATTERN.matcher( value ).matches();
     }
     
+    /**
+     * Returns a string useful for substitution.
+     * 
+     * @param valueType the value type.
+     * @return the string.
+     */
     public static String getSubstitutionValue( ValueType valueType )
     {
-        if ( valueType.isNumeric() )
+        if ( valueType.isNumeric() || valueType.isBoolean() )
         {
             return "1";
         }
@@ -479,7 +485,7 @@ public class ValidationUtils
         }
         else
         {
-            return "A";
+            return "'A'";
         }
     }
 }

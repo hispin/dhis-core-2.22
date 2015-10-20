@@ -53,6 +53,7 @@ import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.system.util.DateUtils;
+import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -427,7 +428,7 @@ public class DefaultProgramIndicatorService
 
         if ( !ExpressionUtils.isValid( expr, null ) )
         {
-            return ProgramIndicator.EXPRESSION_NOT_WELL_FORMED;
+            return ProgramIndicator.EXPRESSION_NOT_VALID;
         }
 
         return ProgramIndicator.VALID;
@@ -478,7 +479,7 @@ public class DefaultProgramIndicatorService
 
                 if ( programStage != null && dataElement != null )
                 {
-                    String sample = dataElement.isNumericType() ? String.valueOf( 1 ) : dataElement.getValueType().isDate() ? "'2000-01-01'" : "'A'";
+                    String sample = ValidationUtils.getSubstitutionValue( dataElement.getValueType() );
 
                     matcher.appendReplacement( expr, sample );
                 }
@@ -493,7 +494,7 @@ public class DefaultProgramIndicatorService
 
                 if ( attribute != null )
                 {
-                    String sample = attribute.isNumericType() ? String.valueOf( 1 ) : attribute.isDateType() ? "'2000-01-01'" : "'A'";
+                    String sample = ValidationUtils.getSubstitutionValue( attribute.getValueType() );
 
                     matcher.appendReplacement( expr, sample );
                 }
