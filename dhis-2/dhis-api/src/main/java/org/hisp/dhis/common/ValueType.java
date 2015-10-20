@@ -29,12 +29,12 @@ package org.hisp.dhis.common;
  */
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -63,13 +63,13 @@ public enum ValueType
     FILE_RESOURCE( String.class ),
     COORDINATE( String.class);
 
-    public static final List<ValueType> INTEGER_TYPES = Lists.newArrayList(
+    public static final Set<ValueType> INTEGER_TYPES = Sets.newHashSet(
         INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE );
 
-    public static final List<ValueType> NUMERIC_TYPES = Lists.newArrayList(
+    public static final Set<ValueType> NUMERIC_TYPES = Sets.newHashSet(
         INTEGER, INTEGER_POSITIVE, INTEGER_NEGATIVE, INTEGER_ZERO_OR_POSITIVE, NUMBER, UNIT_INTERVAL, PERCENTAGE );
 
-    public static final List<ValueType> TEXT_TYPES = Lists.newArrayList( 
+    public static final Set<ValueType> TEXT_TYPES = Sets.newHashSet( 
         TEXT, LONG_TEXT, LETTER, COORDINATE );
     
     private final Class<?> javaClass;

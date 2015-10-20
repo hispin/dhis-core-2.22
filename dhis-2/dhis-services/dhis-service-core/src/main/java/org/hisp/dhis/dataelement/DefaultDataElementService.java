@@ -205,7 +205,7 @@ public class DefaultDataElementService
     }
 
     @Override
-    public List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes )
+    public List<DataElement> getDataElementsByValueTypes( Collection<ValueType> valueTypes )
     {
         return i18n( i18nService, dataElementStore.getDataElementsByValueTypes( valueTypes ) );
     }

@@ -94,7 +94,7 @@ public class HibernateDataElementStore
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes )
+    public List<DataElement> getDataElementsByValueTypes( Collection<ValueType> valueTypes )
     {
         return getCriteria( Restrictions.in( "valueType", valueTypes ) ).list();
     }

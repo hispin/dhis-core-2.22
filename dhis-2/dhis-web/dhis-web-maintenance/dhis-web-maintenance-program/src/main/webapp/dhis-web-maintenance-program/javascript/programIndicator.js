@@ -140,14 +140,18 @@ function getExpressionDescription( type ) {
 	}
 	else
 	{
-		$.getJSON('../api/programIndicators/' + type + '/description', {
-			expression: expression
-		}, function( json ) {
-			if( 'OK' == json.status ){
-				setInnerHTML(type + '-description', json.description);
-			}
-			else {
-				setInnerHTML(type + '-description', json.message);
+		$.ajax({
+			url: '../api/programIndicators/' + type + '/description',
+			type: 'post',
+			data: expression,
+			contentType: 'text/plain',
+			success: function( json ) {
+				if ('OK' == json.status) {
+					setInnerHTML(type + '-description', json.description);
+				}
+				else {
+					setInnerHTML(type + '-description', json.message);
+				}
 			}
 		});
 	}

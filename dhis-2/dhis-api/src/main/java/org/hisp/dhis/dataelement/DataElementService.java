@@ -186,7 +186,7 @@ public interface DataElementService
      * @param valueTypes The value types.
      * @return all DataElements with the given value types.
      */
-    List<DataElement> getDataElementsByValueTypes( List<ValueType> valueTypes );
+    List<DataElement> getDataElementsByValueTypes( Collection<ValueType> valueTypes );
 
     /**
      * Returns all DataElements with the given type.

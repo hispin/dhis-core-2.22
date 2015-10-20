@@ -466,4 +466,20 @@ public class ValidationUtils
     {
         return value != null && HEX_COLOR_PATTERN.matcher( value ).matches();
     }
+    
+    public static String getSubstitutionValue( ValueType valueType )
+    {
+        if ( valueType.isNumeric() )
+        {
+            return "1";
+        }
+        else if ( valueType.isDate() )
+        {
+            return "'2000-01-01'";
+        }
+        else
+        {
+            return "A";
+        }
+    }
 }

@@ -193,7 +193,7 @@ public class ExpressionUtils
         {
             if ( ex.getMessage().contains( "divide error" ) )
             {
-                return true; //TODO Masking bug in Jexl, fix
+                return true; //TODO division by zero masking
             }
             
             return false;
