@@ -122,18 +122,11 @@ public class UserGroup
 
     public void updateUsers( Set<User> updates )
     {
-        for ( User user : new HashSet<>( members ) )
-        {
-            if ( !updates.contains( user ) )
-            {
-                removeUser( user );
-            }
-        }
+        new HashSet<>( members ).stream()
+            .filter( user -> !updates.contains( user ) )
+            .forEach( this::removeUser );
 
-        for ( User user : updates )
-        {
-            addUser( user );
-        }
+        updates.forEach( this::addUser );
     }
 
     public void addManagedGroup( UserGroup group )
@@ -150,18 +143,11 @@ public class UserGroup
 
     public void updateManagedGroups( Set<UserGroup> updates )
     {
-        for ( UserGroup group : new HashSet<>( managedGroups ) )
-        {
-            if ( !updates.contains( group ) )
-            {
-                removeManagedGroup( group );
-            }
-        }
+        new HashSet<>( managedGroups ).stream()
+            .filter( group -> !updates.contains( group ) )
+            .forEach( this::removeManagedGroup );
 
-        for ( UserGroup group : updates )
-        {
-            addManagedGroup( group );
-        }
+        updates.forEach( this::addManagedGroup );
     }
 
     // -------------------------------------------------------------------------
