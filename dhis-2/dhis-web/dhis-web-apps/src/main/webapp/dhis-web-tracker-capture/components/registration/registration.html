@@ -69,7 +69,7 @@
         <!--registration form ends -->
     </div>
 
-    <div ng-if="warningMessages.length > 0" ng-class="{true: 'bordered-div col-sm-4'} [registrationMode === 'REGISTRATION']">
+    <div ng-if="warningMessages.length > 0" style="margin-top:18px" ng-class="{true: 'col-sm-4'} [registrationMode === 'REGISTRATION']">
         <div ng-include="'views/warnings.html'"></div>
     </div>
 </div>
