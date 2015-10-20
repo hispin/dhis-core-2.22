@@ -29,7 +29,6 @@ package org.hisp.dhis.webapi.controller.legend;
  */
 
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.legend.Legend;
 import org.hisp.dhis.legend.LegendService;
@@ -64,12 +63,8 @@ public class LegendSetController
     @PreAuthorize( "hasRole('F_GIS_ADMIN') or hasRole('ALL')" )
     public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        LegendSet legendSet = JacksonUtils.fromJson( request.getInputStream(), LegendSet.class );
-
-        for ( Legend legend : legendSet.getLegends() )
-        {
-            legendService.addLegend( legend );
-        }
+        LegendSet legendSet = renderService.fromJson( request.getInputStream(), LegendSet.class );
+        legendSet.getLegends().forEach( legendService::addLegend );
 
         legendService.addLegendSet( legendSet );
 
@@ -98,12 +93,8 @@ public class LegendSetController
             legendService.deleteLegend( legend );
         }
 
-        LegendSet newLegendSet = JacksonUtils.fromJson( request.getInputStream(), LegendSet.class );
-
-        for ( Legend legend : newLegendSet.getLegends() )
-        {
-            legendService.addLegend( legend );
-        }
+        LegendSet newLegendSet = renderService.fromJson( request.getInputStream(), LegendSet.class );
+        newLegendSet.getLegends().forEach( legendService::addLegend );
 
         legendSet.mergeWith( newLegendSet, importOptions.getMergeStrategy() );
 

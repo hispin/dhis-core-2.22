@@ -28,20 +28,6 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataapproval.DataApproval;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
@@ -57,7 +43,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -78,6 +64,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * This controller uses both /dataApprovals and /dataAcceptances.
@@ -122,6 +121,9 @@ public class DataApprovalController
     @Autowired
     private DataElementCategoryService categoryService;
 
+    @Autowired
+    private RenderService renderService;
+
     // -------------------------------------------------------------------------
     // Get
     // -------------------------------------------------------------------------
@@ -162,7 +164,7 @@ public class DataApprovalController
         DataApprovalPermissions permissions = status.getPermissions();
         permissions.setState( status.getState().toString() );
 
-        JacksonUtils.toJson( response.getOutputStream(), status.getPermissions() );
+        renderService.toJson( response.getOutputStream(), status.getPermissions() );
     }
 
     @RequestMapping( value = STATUS_PATH, method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
@@ -218,7 +220,7 @@ public class DataApprovalController
             }
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), dataApprovalStateResponses );
+        renderService.toJson( response.getOutputStream(), dataApprovalStateResponses );
     }
 
     private DataApprovalStateResponse getDataApprovalStateResponse( DataSet dataSet,
@@ -287,7 +289,7 @@ public class DataApprovalController
             }
         }
 
-        JacksonUtils.toJson( response.getOutputStream(), list );
+        renderService.toJson( response.getOutputStream(), list );
     }
 
     // -------------------------------------------------------------------------

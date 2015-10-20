@@ -29,20 +29,19 @@ package org.hisp.dhis.webapi.controller.event;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.commons.util.TextUtils;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
-import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.event.EventStatus;
+import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
@@ -71,7 +70,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -102,6 +100,9 @@ public class TrackedEntityInstanceController
 
     @Autowired
     private WebMessageService webMessageService;
+
+    @Autowired
+    private RenderService renderService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -326,7 +327,7 @@ public class TrackedEntityInstanceController
         if ( importSummaries.getImportSummaries().size() > 1 )
         {
             response.setStatus( HttpServletResponse.SC_CREATED );
-            JacksonUtils.toXml( response.getOutputStream(), importSummaries );
+            renderService.toXml( response.getOutputStream(), importSummaries );
         }
         else
         {
@@ -363,7 +364,7 @@ public class TrackedEntityInstanceController
         if ( importSummaries.getImportSummaries().size() > 1 )
         {
             response.setStatus( HttpServletResponse.SC_CREATED );
-            JacksonUtils.toJson( response.getOutputStream(), importSummaries );
+            renderService.toJson( response.getOutputStream(), importSummaries );
         }
         else
         {

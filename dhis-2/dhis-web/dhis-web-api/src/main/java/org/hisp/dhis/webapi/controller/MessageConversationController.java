@@ -28,17 +28,9 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
@@ -72,7 +64,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -161,14 +158,14 @@ public class MessageConversationController
     @Override
     public void postXmlObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        MessageConversation messageConversation = JacksonUtils.fromXml( request.getInputStream(), MessageConversation.class );
+        MessageConversation messageConversation = renderService.fromXml( request.getInputStream(), MessageConversation.class );
         postObject( response, request, messageConversation );
     }
 
     @Override
     public void postJsonObject( ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws Exception
     {
-        MessageConversation messageConversation = JacksonUtils.fromJson( request.getInputStream(), MessageConversation.class );
+        MessageConversation messageConversation = renderService.fromJson( request.getInputStream(), MessageConversation.class );
         postObject( response, request, messageConversation );
     }
 
@@ -532,9 +529,9 @@ public class MessageConversationController
 
     /**
      * Determines whether the current user has permission to modify the given user in a MessageConversation.
-     * <p/>
+     * <p>
      * The modification is either marking a conversation read/unread for the user or removing the user from the MessageConversation.
-     * <p/>
+     * <p>
      * Since there are no per-conversation authorities provided the permission is given if the current user equals the user
      * or if the current user has update-permission to User objects.
      *
