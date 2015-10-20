@@ -78,6 +78,20 @@ public class UserGroupAccess
         return userGroup != null ? userGroup.getUid() : null;
     }
 
+    @JsonProperty( "id" )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getUid()
+    {
+        return userGroup != null ? userGroup.getUid() : null;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String displayName()
+    {
+        return userGroup != null ? userGroup.getDisplayName() : null;
+    }
+
     public UserGroup getUserGroup()
     {
         return userGroup;

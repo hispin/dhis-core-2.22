@@ -45,6 +45,9 @@ public class SharingObject
     private String name;
 
     @JsonProperty
+    private String displayName;
+
+    @JsonProperty
     private String publicAccess;
 
     @JsonProperty
@@ -78,6 +81,16 @@ public class SharingObject
     public void setName( String name )
     {
         this.name = name;
+    }
+
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    public void setDisplayName( String displayName )
+    {
+        this.displayName = displayName;
     }
 
     public String getPublicAccess()

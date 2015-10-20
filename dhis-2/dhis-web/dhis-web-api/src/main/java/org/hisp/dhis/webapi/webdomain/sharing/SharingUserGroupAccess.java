@@ -43,6 +43,9 @@ public class SharingUserGroupAccess
     private String name;
 
     @JsonProperty
+    private String displayName;
+
+    @JsonProperty
     private String access;
 
     public SharingUserGroupAccess()
@@ -69,6 +72,16 @@ public class SharingUserGroupAccess
         this.name = name;
     }
 
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    public void setDisplayName( String displayName )
+    {
+        this.displayName = displayName;
+    }
+
     public String getAccess()
     {
         return access;
@@ -78,7 +91,7 @@ public class SharingUserGroupAccess
     {
         this.access = access;
     }
-    
+
     public String toString()
     {
         return MoreObjects.toStringHelper( this ).

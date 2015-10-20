@@ -126,6 +126,7 @@ public class SharingController
 
         sharing.getObject().setId( object.getUid() );
         sharing.getObject().setName( object.getDisplayName() );
+        sharing.getObject().setDisplayName( object.getDisplayName() );
         sharing.getObject().setExternalAccess( object.getExternalAccess() );
 
         if ( object.getPublicAccess() == null )
@@ -159,6 +160,7 @@ public class SharingController
             SharingUserGroupAccess sharingUserGroupAccess = new SharingUserGroupAccess();
             sharingUserGroupAccess.setId( userGroupAccess.getUserGroup().getUid() );
             sharingUserGroupAccess.setName( userGroupAccess.getUserGroup().getDisplayName() );
+            sharingUserGroupAccess.setDisplayName( userGroupAccess.getUserGroup().getDisplayName() );
             sharingUserGroupAccess.setAccess( userGroupAccess.getAccess() );
 
             sharing.getObject().getUserGroupAccesses().add( sharingUserGroupAccess );
@@ -287,6 +289,7 @@ public class SharingController
 
             sharingUserGroupAccess.setId( userGroup.getUid() );
             sharingUserGroupAccess.setName( userGroup.getDisplayName() );
+            sharingUserGroupAccess.setDisplayName( userGroup.getDisplayName() );
 
             sharingUserGroups.getUserGroups().add( sharingUserGroupAccess );
         }
