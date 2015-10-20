@@ -45,6 +45,7 @@ import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.system.util.ReflectionUtils;
 
 /**
@@ -135,4 +136,30 @@ public class AnalyticsUtils
         return list;
     }
     
+    /**
+     * Returns a value. If the given parameters has skip rounding, the value is
+     * returned unchanged. If the given number of decimals is specified, the
+     * value is rounded to the given decimals. Otherwise, default rounding is
+     * used.
+     * 
+     * @param params the query parameters.
+     * @param decimals the number of decimals.
+     * @param value the value.
+     * @return a double.
+     */
+    public static Double getRoundedValue( DataQueryParams params, Integer decimals, Double value )
+    {
+        if ( params.isSkipRounding() )
+        {
+            return value;
+        }
+        else if ( decimals != null && decimals > 0 )
+        {
+            return MathUtils.getRounded( value, decimals );
+        }
+        else
+        {
+            return MathUtils.getRounded( value );
+        }
+    }    
 }

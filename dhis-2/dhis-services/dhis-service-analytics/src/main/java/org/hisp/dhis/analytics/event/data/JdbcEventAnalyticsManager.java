@@ -46,6 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.analytics.AnalyticsUtils;
 import org.hisp.dhis.analytics.EventOutputType;
 import org.hisp.dhis.analytics.event.EventAnalyticsManager;
 import org.hisp.dhis.analytics.event.EventQueryParams;
@@ -203,7 +204,7 @@ public class JdbcEventAnalyticsManager
             {
                 double value = rowSet.getDouble( "value" );
                 ProgramIndicator indicator = params.getProgramIndicator();
-                grid.addValue( indicator.hasDecimals() ? getRounded( value, indicator.getDecimals() ) : getRounded( value ) );
+                grid.addValue( AnalyticsUtils.getRoundedValue( params, indicator.getDecimals(), value ) );
             }
             else
             {
