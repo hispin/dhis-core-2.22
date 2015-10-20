@@ -52,6 +52,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -602,12 +603,12 @@ public class DefaultExpressionService
             
             if ( dataElement == null )
             {
-                throw new IllegalArgumentException( "Identifier does not reference a data element: " + de );
+                throw new InvalidIdentifierReferenceException( "Identifier does not reference a data element: " + de );
             }
 
             if ( !operandIsTotal( matcher ) && categoryOptionCombo == null )
             {
-                throw new IllegalArgumentException( "Identifier does not reference a category option combo: " + coc );
+                throw new InvalidIdentifierReferenceException( "Identifier does not reference a category option combo: " + coc );
             }
             
             matcher.appendReplacement( sb, Matcher.quoteReplacement( DataElementOperand.getPrettyName( dataElement, categoryOptionCombo ) ) );
@@ -630,7 +631,7 @@ public class DefaultExpressionService
             
             if ( constant == null )
             {
-                throw new IllegalArgumentException( "Identifier does not reference a constant: " + co );
+                throw new InvalidIdentifierReferenceException( "Identifier does not reference a constant: " + co );
             }
             
             matcher.appendReplacement( sb, Matcher.quoteReplacement( constant.getDisplayName() ) );
@@ -653,7 +654,7 @@ public class DefaultExpressionService
             
             if ( group == null )
             {
-                throw new IllegalArgumentException( "Identifier does not reference an organisation unit group: " + oug );
+                throw new InvalidIdentifierReferenceException( "Identifier does not reference an organisation unit group: " + oug );
             }
             
             matcher.appendReplacement( sb, Matcher.quoteReplacement( group.getDisplayName() ) );

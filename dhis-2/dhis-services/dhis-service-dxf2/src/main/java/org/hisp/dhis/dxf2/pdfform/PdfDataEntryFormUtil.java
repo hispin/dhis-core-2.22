@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
@@ -218,19 +219,19 @@ public class PdfDataEntryFormUtil
 
                 if ( periodId == null || periodId.isEmpty() )
                 {
-                    throw new IllegalArgumentException( ERROR_EMPTY_PERIOD );
+                    throw new InvalidIdentifierReferenceException( ERROR_EMPTY_PERIOD );
                 }
 
                 if ( orgUnitUid == null || orgUnitUid.isEmpty() )
                 {
-                    throw new IllegalArgumentException( ERROR_EMPTY_ORG_UNIT );
+                    throw new InvalidIdentifierReferenceException( ERROR_EMPTY_ORG_UNIT );
                 }
 
                 Period period = PeriodType.getPeriodFromIsoString( periodId );
                 
                 if ( period == null )
                 {
-                    throw new IllegalArgumentException( ERROR_INVALID_PERIOD + periodId );
+                    throw new InvalidIdentifierReferenceException( ERROR_INVALID_PERIOD + periodId );
                 }
                 
                 // Loop Through the Fields and get data.

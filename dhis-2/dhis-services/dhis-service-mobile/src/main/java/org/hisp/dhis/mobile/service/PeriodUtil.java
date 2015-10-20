@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
+import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.period.DailyPeriodType;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
@@ -46,7 +47,7 @@ import org.hisp.dhis.period.YearlyPeriodType;
 public class PeriodUtil
 {
     public static Period getPeriod( String periodName, PeriodType periodType )
-        throws IllegalArgumentException
+        throws InvalidIdentifierReferenceException
     {
 
         if ( periodType instanceof DailyPeriodType )
@@ -60,7 +61,7 @@ public class PeriodUtil
             }
             catch ( ParseException e )
             {
-                throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName()
+                throw new InvalidIdentifierReferenceException( "Couldn't make a period of type " + periodType.getName()
                     + " and name " + periodName, e );
             }
             return periodType.createPeriod( date );
@@ -78,7 +79,7 @@ public class PeriodUtil
             }
             catch ( ParseException e )
             {
-                throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName()
+                throw new InvalidIdentifierReferenceException( "Couldn't make a period of type " + periodType.getName()
                     + " and name " + periodName, e );
             }
             return periodType.createPeriod( date );
@@ -159,7 +160,7 @@ public class PeriodUtil
 
         }
 
-        throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName() + " and name "
+        throw new InvalidIdentifierReferenceException( "Couldn't make a period of type " + periodType.getName() + " and name "
             + periodName );
     }
 

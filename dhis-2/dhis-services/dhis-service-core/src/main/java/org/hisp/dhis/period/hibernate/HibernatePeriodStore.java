@@ -34,6 +34,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodStore;
@@ -241,7 +242,7 @@ public class HibernatePeriodStore
 
         if ( reloadedPeriodType == null )
         {
-            throw new IllegalArgumentException( "The PeriodType referenced by the Period is not in database: "
+            throw new InvalidIdentifierReferenceException( "The PeriodType referenced by the Period is not in database: "
                 + periodType.getName() );
         }
 

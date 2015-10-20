@@ -32,6 +32,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import org.hisp.dhis.common.DeleteNotAllowedException;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MaintenanceModeException;
+import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.dataapproval.exceptions.DataApprovalException;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
@@ -52,7 +53,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.beans.PropertyEditorSupport;
-import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -95,7 +95,7 @@ public class CrudControllerAdvice
         webMessageService.send( WebMessageUtils.unprocessableEntity( ex.getMessage() ), response, request );
     }
 
-    @ExceptionHandler( { IllegalQueryException.class, IllegalArgumentException.class, DeleteNotAllowedException.class } )
+    @ExceptionHandler( { IllegalQueryException.class, DeleteNotAllowedException.class, InvalidIdentifierReferenceException.class } )
     public void conflictsExceptionHandler( Exception ex, HttpServletResponse response, HttpServletRequest request )
     {
         webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
@@ -127,12 +127,6 @@ public class CrudControllerAdvice
 
     @ExceptionHandler( JsonParseException.class )
     public void jsonParseExceptionHandler( JsonParseException ex, HttpServletResponse response, HttpServletRequest request )
-    {
-        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
-    }
-
-    @ExceptionHandler( IOException.class )
-    public void ioExceptionHandler( IOException ex, HttpServletResponse response, HttpServletRequest request )
     {
         webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
     }
