@@ -816,8 +816,8 @@ trackerCapture.controller('DataEntryController',
         if ($scope.currentEvent.status === 'COMPLETED') {//activiate event
             modalOptions = {
                 closeButtonText: 'cancel',
-                actionButtonText: 'incomplete',
-                headerText: 'incomplete',
+                actionButtonText: 'edit',
+                headerText: 'edit',
                 bodyText: 'are_you_sure_to_incomplete_event'
             };
             dhis2Event.status = 'ACTIVE';
