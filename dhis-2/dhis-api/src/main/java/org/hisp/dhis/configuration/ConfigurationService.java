@@ -1,5 +1,7 @@
 package org.hisp.dhis.configuration;
 
+import java.util.Set;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -35,7 +37,24 @@ public interface ConfigurationService
 {
     String ID = ConfigurationService.class.getName();
     
+    /**
+     * Sets the configuration.
+     * 
+     * @param configuration the configuration.
+     */
     void setConfiguration( Configuration configuration );
     
+    /**
+     * Gets the configuration.
+     * 
+     * @return the configuration.
+     */
     Configuration getConfiguration();
+    
+    /**
+     * Gets the CORS white list inside a transaction.
+     * 
+     * @return the CORS white list.
+     */
+    Set<String> getCorsWhitelist();
 }
