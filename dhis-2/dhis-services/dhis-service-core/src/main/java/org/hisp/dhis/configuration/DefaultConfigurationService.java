@@ -29,6 +29,7 @@ package org.hisp.dhis.configuration;
  */
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.hisp.dhis.common.GenericStore;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,5 +71,11 @@ public class DefaultConfigurationService
         Iterator<Configuration> iterator = configurationStore.getAll().iterator();
         
         return iterator.hasNext() ? iterator.next() : new Configuration();
+    }
+
+    @Override
+    public Set<String> getCorsWhitelist()
+    {
+        return getConfiguration().getCorsWhitelist();
     }
 }
