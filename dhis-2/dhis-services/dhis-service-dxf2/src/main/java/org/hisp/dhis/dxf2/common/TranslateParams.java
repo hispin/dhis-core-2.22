@@ -37,7 +37,7 @@ import java.util.Locale;
  */
 public class TranslateParams
 {
-    private boolean translate;
+    private boolean translate = true;
 
     private String locale;
 
