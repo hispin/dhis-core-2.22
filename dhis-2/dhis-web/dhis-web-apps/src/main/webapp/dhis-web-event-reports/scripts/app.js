@@ -171,7 +171,9 @@ Ext.onReady( function() {
                     }
                 }
                 else if (record.filter) {
-                    this.rangeSetCmp.pendingValue = defaultRangeSetId;
+                    //this.rangeSetCmp.pendingValue = defaultRangeSetId;
+                    this.rangeSetCmp.setValue(defaultRangeSetId); //todo?
+                    this.onRangeSetSelect(defaultRangeSetId);
 
 					var a = record.filter.split(':');
 
@@ -179,7 +181,6 @@ Ext.onReady( function() {
                         this.operatorCmp.setValue(a[0]);
                         this.valueCmp.setValue(a[1]);
                     }
-                    else {}
 				}
 			},
             initComponent: function() {
@@ -419,8 +420,11 @@ Ext.onReady( function() {
                                 name: 'No range set'
                             });
 
-                            if (container.dataElement.legendSet) {
-                                var legendSet = ns.core.init.idLegendSetMap[container.dataElement.legendSet.id];
+                            var de = container.dataElement;
+
+                            if (de.legendSet || de.storageLegendSet) {
+                                var id = de.legendSet ? de.legendSet.id : (de.storageLegendSet ? de.storageLegendSet.id : null),
+                                    legendSet = ns.core.init.idLegendSetMap[id];
 
                                 if (Ext.isObject(legendSet)) {
                                     cb.store.add(legendSet);
@@ -4507,7 +4511,7 @@ Ext.onReady( function() {
             }
             else {
                 Ext.Ajax.request({
-                    url: ns.core.init.contextPath + '/api/programStages.json?filter=id:eq:' + stageId + '&fields=programStageDataElements[dataElement[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet[id,name]]]',
+                    url: ns.core.init.contextPath + '/api/programStages.json?filter=id:eq:' + stageId + '&fields=programStageDataElements[dataElement[id,' + ns.core.init.namePropertyUrl + ',valueType,optionSet[id,name],legendSet|rename(storageLegendSet)[id,name]]]',
                     success: function(r) {
                         var objects = Ext.decode(r.responseText).programStages,
                             dataElements;
