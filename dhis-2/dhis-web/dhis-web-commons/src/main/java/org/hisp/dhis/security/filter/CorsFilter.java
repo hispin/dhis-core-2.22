@@ -136,7 +136,7 @@ public class CorsFilter
 
         if ( StringUtils.isEmpty( forwardedProto ) )
         {
-            localUrl = ServletUriComponentsBuilder.fromContextPath( request ).replacePath("").build().toUriString();
+            localUrl = ServletUriComponentsBuilder.fromContextPath( request ).replacePath( "" ).build().toUriString();
         }
         else
         {
