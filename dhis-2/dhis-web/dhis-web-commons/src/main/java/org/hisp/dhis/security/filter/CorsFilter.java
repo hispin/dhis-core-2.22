@@ -136,7 +136,7 @@ public class CorsFilter
 
         if ( StringUtils.isEmpty( forwardedProto ) )
         {
-            localUrl = ServletUriComponentsBuilder.fromContextPath( request ).build().toUriString();
+            localUrl = ServletUriComponentsBuilder.fromContextPath( request ).replacePath("").build().toUriString();
         }
         else
         {
@@ -144,7 +144,7 @@ public class CorsFilter
                 .scheme( forwardedProto ).build().toUriString();
         }
 
-        return !StringUtils.isEmpty( origin ) && ( localUrl.equals( origin ) || 
+        return !StringUtils.isEmpty( origin ) && ( localUrl.equals( origin ) ||
             configurationService.getCorsWhitelist().contains( origin ) );
     }
 
