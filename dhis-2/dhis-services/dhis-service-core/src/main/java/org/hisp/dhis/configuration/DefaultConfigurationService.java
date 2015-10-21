@@ -29,7 +29,6 @@ package org.hisp.dhis.configuration;
  */
 
 import java.util.Iterator;
-import java.util.Set;
 
 import org.hisp.dhis.common.GenericStore;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,8 +73,8 @@ public class DefaultConfigurationService
     }
 
     @Override
-    public Set<String> getCorsWhitelist()
+    public boolean isCorsWhitelisted( String origin )
     {
-        return getConfiguration().getCorsWhitelist();
+        return getConfiguration().getCorsWhitelist().contains( origin );
     }
 }
