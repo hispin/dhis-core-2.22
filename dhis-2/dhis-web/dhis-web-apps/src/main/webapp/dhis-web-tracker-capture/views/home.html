@@ -31,8 +31,8 @@
 
 <div class="page" id="mainPage">
 
-    <div ng-if="!selectedOrgUnit && !treeLoaded">
-        <img src="../images/ajax-loader-bar.gif" alt="{{'in_progress'| translate}}" ng-if="!selectedOrgUnit"/><br>
+    <div ng-if="treeLoaded && !selectedOrgUnit">
+        <img src="../images/ajax-loader-bar.gif" alt="{{'in_progress'| translate}}"/><br>
         {{'loading_metadata'| translate}}
     </div> 
 
