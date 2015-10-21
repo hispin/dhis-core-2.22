@@ -46,6 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -131,18 +132,16 @@ public class CorsFilter
 
     private boolean isOriginWhitelisted( HttpServletRequest request, String origin )
     {
-        String forwardedProto = request.getHeader( "X-Forwarded-Proto" );
-        String localUrl;
+        UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromContextPath( request ).replacePath( "" );
 
-        if ( StringUtils.isEmpty( forwardedProto ) )
+        String forwardedProto = request.getHeader( "X-Forwarded-Proto" );
+
+        if ( !StringUtils.isEmpty( forwardedProto ) )
         {
-            localUrl = ServletUriComponentsBuilder.fromContextPath( request ).replacePath( "" ).build().toUriString();
+            uriBuilder.scheme( forwardedProto );
         }
-        else
-        {
-            localUrl = ServletUriComponentsBuilder.fromContextPath( request )
-                .scheme( forwardedProto ).build().toUriString();
-        }
+
+        String localUrl = uriBuilder.build().toString();
 
         return !StringUtils.isEmpty( origin ) && ( localUrl.equals( origin ) ||
             configurationService.getCorsWhitelist().contains( origin ) );
