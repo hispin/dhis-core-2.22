@@ -1,7 +1,5 @@
 package org.hisp.dhis.configuration;
 
-import java.util.Set;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -52,9 +50,10 @@ public interface ConfigurationService
     Configuration getConfiguration();
     
     /**
-     * Gets the CORS white list inside a transaction.
+     * Indicates whether the given origin is CORS white listed.
      * 
-     * @return the CORS white list.
+     * @param origin the origin.
+     * @return true if the given origin is CORS white listed.
      */
-    Set<String> getCorsWhitelist();
+    boolean isCorsWhitelisted( String origin );
 }
