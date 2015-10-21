@@ -145,7 +145,7 @@ public class CorsFilter
         }
 
         return !StringUtils.isEmpty( origin ) && ( localUrl.equals( origin ) || 
-            configurationService.getConfiguration().getCorsWhitelist().contains( origin ) );
+            configurationService.getCorsWhitelist().contains( origin ) );
     }
 
     @Override
