@@ -31,7 +31,6 @@ package org.hisp.dhis.i18n;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationService;
 import org.hisp.dhis.user.UserSettingService;
@@ -103,7 +102,7 @@ public class DefaultI18nService
 
     private void internationaliseObject( Object object, Locale locale )
     {
-        if ( locale == null || object == null || locale.equals( LocaleManager.DEFAULT_LOCALE ) )
+        if ( locale == null || object == null )
         {
             return;
         }
@@ -128,7 +127,7 @@ public class DefaultI18nService
 
     private void internationaliseCollection( Collection<?> objects, Locale locale )
     {
-        if ( locale == null || objects == null || locale.equals( LocaleManager.DEFAULT_LOCALE ) || objects.size() == 0 )
+        if ( locale == null || objects == null || objects.size() == 0 )
         {
             return;
         }
