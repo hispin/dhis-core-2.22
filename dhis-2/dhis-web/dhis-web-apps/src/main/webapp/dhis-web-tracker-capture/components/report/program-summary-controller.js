@@ -2,18 +2,15 @@
 
 trackerCapture.controller('ProgramSummaryController',
         function($scope,
-                $modal,
                 DateUtils,
                 EventUtils,
-                TEIService,
                 TEIGridService,
                 AttributesFactory,
                 ProgramFactory,
                 ProgramStageFactory,
                 CurrentSelection,
-                OptionSetService,
-                EventReportService,
-                DHIS2EventFactory) {    
+                MetaDataFactory,
+                EventReportService) {    
     $scope.today = DateUtils.getToday();
     
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
@@ -23,11 +20,10 @@ trackerCapture.controller('ProgramSummaryController',
     $scope.optionSets = CurrentSelection.getOptionSets();
     if(!$scope.optionSets){
         $scope.optionSets = [];
-        OptionSetService.getAll().then(function(optionSets){
-            angular.forEach(optionSets, function(optionSet){                        
+        MetaDataFactory.getAll('optionSets').then(function(optionSets){
+            angular.forEach(optionSets, function(optionSet){  
                 $scope.optionSets[optionSet.id] = optionSet;
             });
-
             CurrentSelection.setOptionSets($scope.optionSets);
         });
     }
