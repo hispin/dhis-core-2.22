@@ -148,9 +148,6 @@ trackerCapture.controller('DataEntryController',
                             $scope.warningMessages.push(message);
                         }
                     }
-                    else {
-                        $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
-                    }
                 } else if (effect.action === "HIDESECTION"){                    
                     if(effect.programStageSection){
                         if(effect.ineffect){
