@@ -364,6 +364,7 @@ trackerCapture.controller('DashboardController',
     
     $scope.back = function(){
         $location.path('/').search({program: $scope.selectedProgramId});
+        $route.reload();
     };
     
     $scope.displayEnrollment = false;
