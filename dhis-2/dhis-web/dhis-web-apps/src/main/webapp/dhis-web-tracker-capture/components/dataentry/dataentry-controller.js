@@ -18,6 +18,7 @@ trackerCapture.controller('DataEntryController',
                 ProgramStageFactory,
                 DHIS2EventFactory,
                 ModalService,
+                DialogService,
                 CurrentSelection,
                 TrackerRulesExecutionService,
                 CustomFormService,
@@ -122,23 +123,29 @@ trackerCapture.controller('DataEntryController',
                         $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
                     }
                 } else if (effect.action === "SHOWERROR") {
-                    if (effect.dataElement) {
+                    if (effect.ineffect) {
                         
-                        if(effect.ineffect) {
-                            $scope.errorMessages[effect.dataElement.id] = effect.content + (effect.data ? effect.data : "");
-                        } else {
-                            $scope.errorMessages[effect.dataElement.id] = false;
+                        if(effect.dataElement) {
+                            var message = effect.content + (effect.data ? effect.data : "");
+                            $scope.errorMessages[effect.dataElement.id] = message;
+                            $scope.errorMessages.push($translate.instant($scope.prStDes[effect.dataElement.id].dataElement.name) + ": " + message);
+                        }
+                        else
+                        {
+                            $scope.errorMessages.push(message);
                         }
                     }
                     else {
-                        $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
+                        
                     }
                 } else if (effect.action === "SHOWWARNING") {
-                    if (effect.dataElement) {
-                        if(effect.ineffect) {
-                            $scope.warningMessages[effect.dataElement.id] = effect.content + (effect.data ? effect.data : "");
+                    if (effect.ineffect) {
+                        if(effect.dataElement) {
+                            var message = effect.content + (effect.data ? effect.data : "");
+                            $scope.warningMessages[effect.dataElement.id] = effect.content + message;
+                            $scope.warningMessages.push($translate.instant($scope.prStDes[effect.dataElement.id].dataElement.name) + ": " + message);
                         } else {
-                            $scope.warningMessages[effect.dataElement.id] = false;
+                            $scope.warningMessages.push(message);
                         }
                     }
                     else {
@@ -819,17 +826,33 @@ trackerCapture.controller('DataEntryController',
             dhis2Event.status = 'ACTIVE';
         }
         else {//complete event
-            modalOptions = {
-                closeButtonText: 'cancel',
-                actionButtonText: 'complete',
-                headerText: 'complete',
-                bodyText: 'are_you_sure_to_complete_event'
-            };
-            dhis2Event.status = 'COMPLETED';
+            
+            if($scope.errorMessages && $scope.errorMessages.length > 0) {
+                //There is unresolved program rule errors - show error message.
+                var dialogOptions = {
+                    headerText: 'errors',
+                    bodyText: 'please_fix_errors_before_completing',
+                    bodyList: $scope.errorMessages
+                };
+
+                DialogService.showDialog({}, dialogOptions);
+                
+                return;
+            }
+            else
+            {
+                modalOptions = {
+                    closeButtonText: 'cancel',
+                    actionButtonText: 'complete',
+                    headerText: 'complete',
+                    bodyText: 'are_you_sure_to_complete_event'
+                };
+                dhis2Event.status = 'COMPLETED';
+            }
         }
 
         ModalService.showModal({}, modalOptions).then(function (result) {
-
+            
             DHIS2EventFactory.update(dhis2Event).then(function (data) {
 
                 if ($scope.currentEvent.status === 'COMPLETED') {//activiate event                    
