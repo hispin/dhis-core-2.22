@@ -67,7 +67,7 @@ var d2Directives = angular.module('d2Directives', [])
                         });
                     }
                     else{
-                        $(document).one("ouwtLoaded", function () {
+                    	 $( '#orgUnitTree' ).one( 'ouwtLoaded', function( event, ids, names ){
                             console.log('Finished loading orgunit tree');
                             //Disable ou selection until meta-data has downloaded
                             $("#orgUnitTree").addClass("disable-clicks");
