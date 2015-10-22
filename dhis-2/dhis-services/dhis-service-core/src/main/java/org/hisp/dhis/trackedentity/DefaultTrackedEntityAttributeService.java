@@ -205,7 +205,7 @@ public class DefaultTrackedEntityAttributeService
     {
         Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
 
-        if ( !trackedEntityAttribute.isUnique() )
+        if ( !trackedEntityAttribute.isUnique() || value == null )
         {
             return null;
         }
