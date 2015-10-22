@@ -82,9 +82,11 @@ public interface EnrollmentService
     // DELETE
     // -------------------------------------------------------------------------
 
-    void deleteEnrollment( Enrollment enrollment );
+    ImportSummary deleteEnrollment( String uid );
 
-    void cancelEnrollment( Enrollment enrollment );
+    ImportSummaries deleteEnrollments( List<String> uids );
 
-    void completeEnrollment( Enrollment enrollment );
+    void cancelEnrollment( String uid );
+
+    void completeEnrollment( String uid );
 }
