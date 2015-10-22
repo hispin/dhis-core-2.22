@@ -28,12 +28,6 @@ package org.hisp.dhis.dxf2.events;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.Date;
-import java.util.HashSet;
-
 import org.hamcrest.CoreMatchers;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.DhisSpringTest;
@@ -63,6 +57,12 @@ import org.hisp.dhis.user.UserService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
+import java.util.HashSet;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
@@ -86,13 +86,13 @@ public class RegistrationMultiEventsServiceTest
 
     @Autowired
     private SessionFactory sessionFactory;
-    
-    @Autowired 
+
+    @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
-    
+
     @Autowired
     private UserService _userService;
-    
+
     private org.hisp.dhis.trackedentity.TrackedEntityInstance maleA;
 
     private org.hisp.dhis.trackedentity.TrackedEntityInstance maleB;
@@ -199,7 +199,7 @@ public class RegistrationMultiEventsServiceTest
     {
         Event event = createEvent( programA.getUid(), null, organisationUnitA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance(),
             dataElementA.getUid() );
-        ImportSummary importSummary = eventService.addEvent( event );
+        ImportSummary importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.ERROR, importSummary.getStatus() );
         assertThat( importSummary.getDescription(),
             CoreMatchers.containsString( "Event.programStage does not point to a valid programStage" ) );
@@ -210,7 +210,7 @@ public class RegistrationMultiEventsServiceTest
     {
         Event event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
-        ImportSummary importSummary = eventService.addEvent( event );
+        ImportSummary importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.ERROR, importSummary.getStatus() );
         assertThat( importSummary.getDescription(), CoreMatchers.containsString( "is not enrolled in program" ) );
     }
@@ -224,17 +224,17 @@ public class RegistrationMultiEventsServiceTest
 
         Event event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         EventSearchParams params = new EventSearchParams();
@@ -242,7 +242,7 @@ public class RegistrationMultiEventsServiceTest
         params.setProgramStage( programStageA );
         params.setOrgUnit( organisationUnitA );
         params.setOrgUnitSelectionMode( OrganisationUnitSelectionMode.SELECTED );
-        
+
         assertEquals( 1, eventService.getEvents( params ).getEvents().size() );
     }
 
@@ -255,27 +255,27 @@ public class RegistrationMultiEventsServiceTest
 
         Event event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         event = createEvent( programA.getUid(), programStageB.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementB.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         sessionFactory.getCurrentSession().flush();
-        
+
         EventSearchParams params = new EventSearchParams();
         params.setProgram( programA );
         params.setOrgUnit( organisationUnitA );
         params.setOrgUnitSelectionMode( OrganisationUnitSelectionMode.SELECTED );
-        
+
         assertEquals( 2, eventService.getEvents( params ).getEvents().size() );
 
         event = createEvent( programA.getUid(), programStageB.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementB.getUid() );
-        
-        importSummary = eventService.addEvent( event );
+
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         assertEquals( 3, eventService.getEvents( params ).getEvents().size() );
@@ -290,12 +290,12 @@ public class RegistrationMultiEventsServiceTest
 
         Event event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         event = createEvent( programA.getUid(), programStageB.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementB.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         sessionFactory.getCurrentSession().flush();
@@ -304,20 +304,20 @@ public class RegistrationMultiEventsServiceTest
         params.setProgram( programA );
         params.setOrgUnit( organisationUnitA );
         params.setOrgUnitSelectionMode( OrganisationUnitSelectionMode.SELECTED );
-        
+
         assertEquals( 2, eventService.getEvents( params ).getEvents().size() );
 
         event = createEvent( programA.getUid(), programStageB.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementB.getUid() );
         event.setEvent( importSummary.getReference() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         assertEquals( 2, eventService.getEvents( params ).getEvents().size() );
 
         event = createEvent( programA.getUid(), programStageA.getUid(), organisationUnitA.getUid(),
             trackedEntityInstanceMaleA.getTrackedEntityInstance(), dataElementA.getUid() );
-        importSummary = eventService.addEvent( event );
+        importSummary = eventService.addEvent( event, null );
         assertEquals( ImportStatus.SUCCESS, importSummary.getStatus() );
 
         assertEquals( 2, eventService.getEvents( params ).getEvents().size() );

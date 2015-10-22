@@ -70,8 +70,6 @@ public interface EventService
     // CREATE
     // -------------------------------------------------------------------------
 
-    ImportSummary addEvent( Event event );
-
     ImportSummary addEvent( Event event, ImportOptions importOptions );
 
     ImportSummaries addEvents( List<Event> events, ImportOptions importOptions );
