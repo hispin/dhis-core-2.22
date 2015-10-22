@@ -9,43 +9,42 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
         restrict: 'A',
         link: function (scope, element, attrs) {
             //once ou tree is loaded, start meta-data download            
-            //$(function () {                
-                if( dhis2.tc && dhis2.tc.metaDataCached ){
-                    selection.load();
-                    $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {
-                        console.log('Finished loading orgunit tree');
+            
+            if( dhis2.tc && dhis2.tc.metaDataCached ){
+                $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {
+                    console.log('Finished loading orgunit tree');
 
-                        //Disable ou selection until meta-data has downloaded
-                        $("#orgUnitTree").addClass("disable-clicks");
+                    //Disable ou selection until meta-data has downloaded
+                    $("#orgUnitTree").addClass("disable-clicks");
 
-                        var ouId = SessionStorageService.get('ouSelected');
-                        OrgUnitService.get(ouId).then(function(ou){
-                            if(ou && ou.id && ou.name){                                    
-                                $timeout(function () {
-                                    scope.selectedOrgUnit = ou;
-                                    scope.treeLoaded = true;
-                                    scope.$apply();
-                                });
-                            }                                                       
-                        });
+                    var ouId = SessionStorageService.get('ouSelected');
+                    OrgUnitService.get(ouId).then(function(ou){
+                        if(ou && ou.id && ou.name){                                    
+                            $timeout(function () {
+                                scope.selectedOrgUnit = ou;
+                                scope.treeLoaded = true;
+                                scope.$apply();
+                            });
+                        }                                                       
                     });
-                }
-                else{
-                    $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {
-                        console.log('Finished loading orgunit tree');
+                });
+            }
+            else{
+                $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {
+                    console.log('Finished loading orgunit tree');
 
-                        //Disable ou selection until meta-data has downloaded
-                        $("#orgUnitTree").addClass("disable-clicks");
+                    //Disable ou selection until meta-data has downloaded
+                    $("#orgUnitTree").addClass("disable-clicks");
 
-                        $timeout(function () {
-                            scope.treeLoaded = true;
-                            scope.$apply();
-                        });
-
-                        downloadMetaData();
+                    $timeout(function () {
+                        scope.treeLoaded = true;
+                        scope.$apply();
                     });
-                }                
-            //});
+
+                    downloadMetaData();
+                });
+            }                
+            
 
             //listen to user selection, and inform angular         
             selection.setListenerFunction(setSelectedOu, true);

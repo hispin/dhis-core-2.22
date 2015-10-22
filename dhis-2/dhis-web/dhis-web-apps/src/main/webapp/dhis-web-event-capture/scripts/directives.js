@@ -8,21 +8,19 @@ var eventCaptureDirectives = angular.module('eventCaptureDirectives', [])
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            //once ou tree is loaded, start meta-data download
-            //$(function () {
-                $( '#orgUnitTree' ).one( 'ouwtLoaded', function( event, ids, names ){
-                    console.log('Finished loading orgunit tree');
-                    //Disable ou selection until meta-data has downloaded
-                    $("#orgUnitTree").addClass("disable-clicks");
+            //once ou tree is loaded, start meta-data download            
+            $( '#orgUnitTree' ).one( 'ouwtLoaded', function( event, ids, names ){
+                console.log('Finished loading orgunit tree');
+                //Disable ou selection until meta-data has downloaded
+                $("#orgUnitTree").addClass("disable-clicks");
 
-                    $timeout(function () {
-                        scope.treeLoaded = true;
-                        scope.$apply();
-                    });
-
-                    downloadMetaData();
+                $timeout(function () {
+                    scope.treeLoaded = true;
+                    scope.$apply();
                 });
-            //});
+
+                downloadMetaData();
+            });
 
             //listen to user selection, and inform angular         
             selection.setListenerFunction(setSelectedOu, true);
