@@ -152,8 +152,13 @@
 	
 			<tr>
 				<td><label for="irregular">$i18n.getString( "repeatable" )</label></td>
-				<td><input type="checkbox" id="irregular" name="irregular" value='true' #if( $programStage.irregular && $programStage.irregular == 'true' ) checked #end onchange='repeatableOnChange();' /></td>
-			</tr>			
+				#if( $programStage.irregular && $programStage.irregular == 'true' )
+					<td><input type="checkbox" value='true' checked disabled/></td>
+					<td><input type="hidden" id="irregular" name="irregular" value='true' checked/></td>
+				#else
+					<td><input type="checkbox" id="irregular" name="irregular" value='true' onchange='repeatableOnChange();' /></td>
+				#end
+			</tr>
 			
 			<tr>
 				<td><label for="periodTypeName">$i18n.getString( "period_type" )</label></td>
