@@ -482,6 +482,8 @@ public class DataApprovalServiceCategoryOptionGroupTest
         periodA = createPeriod( "201801" );
         periodService.addPeriod( periodA );
 
+        systemSettingManager.invalidateCache();
+        
         systemSettingManager.saveSystemSetting( Setting.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, true );
         systemSettingManager.saveSystemSetting( Setting.ACCEPTANCE_REQUIRED_FOR_APPROVAL, true );
     }
