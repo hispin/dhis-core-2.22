@@ -40,6 +40,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.importexport.ImportStrategy;
@@ -128,8 +129,7 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Integer page,
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean totalPages,
-        @RequestParam( required = false ) boolean skipPaging,
-        HttpServletResponse response ) throws Exception
+        @RequestParam( required = false ) boolean skipPaging ) throws Exception
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
 
@@ -210,7 +210,6 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
-        Model model,
         HttpServletResponse response ) throws Exception
     {
         Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
@@ -244,7 +243,6 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
-        Model model,
         HttpServletResponse response ) throws Exception
     {
         Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
@@ -278,7 +276,6 @@ public class TrackedEntityInstanceController
         @RequestParam( required = false ) Integer pageSize,
         @RequestParam( required = false ) boolean totalPages,
         @RequestParam( required = false ) boolean skipPaging,
-        Model model,
         HttpServletResponse response ) throws Exception
     {
         Set<String> orgUnits = TextUtils.splitToArray( ou, TextUtils.SEMICOLON );
@@ -419,11 +416,14 @@ public class TrackedEntityInstanceController
     @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_INSTANCE_ADD')" )
     @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void deleteTrackedEntityInstance( @PathVariable String id )
-        throws NotFoundException
+    public void deleteTrackedEntityInstance( @PathVariable String id ) throws WebMessageException
     {
-        TrackedEntityInstance trackedEntityInstance = getTrackedEntityInstance( id );
-        trackedEntityInstanceService.deleteTrackedEntityInstance( trackedEntityInstance );
+        if ( !instanceService.trackedEntityInstanceExists( id ) )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "Tracked entity instance not found for ID " + id ) );
+        }
+
+        trackedEntityInstanceService.deleteTrackedEntityInstance( id );
     }
 
     // -------------------------------------------------------------------------
