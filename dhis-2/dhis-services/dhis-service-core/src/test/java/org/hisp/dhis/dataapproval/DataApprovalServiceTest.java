@@ -58,6 +58,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
@@ -93,7 +94,10 @@ public class DataApprovalServiceTest
 
     @Autowired
     private DataSetService dataSetService;
-    
+
+    @Autowired
+    private SystemSettingManager systemSettingManager;
+
     @Autowired
     private OrganisationUnitService organisationUnitService;
    
@@ -296,6 +300,8 @@ public class DataApprovalServiceTest
         jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + orgD + ", 4, " + orgA + ", " + orgB + ", " + orgC + ", " + orgD + ");" );
         jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + orgE + ", 3, " + orgA + ", " + orgB + ", " + orgE + ", null);" );
         jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + orgF + ", 4, " + orgA + ", " + orgB + ", " + orgE + ", " + orgF + ");" );
+        
+        systemSettingManager.invalidateCache();
     }
 
     @Override
