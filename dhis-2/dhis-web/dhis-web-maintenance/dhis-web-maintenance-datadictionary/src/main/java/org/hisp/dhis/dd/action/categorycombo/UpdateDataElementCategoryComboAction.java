@@ -79,7 +79,7 @@ public class UpdateDataElementCategoryComboAction
     {
         this.code = code;
     }
-    
+
     private boolean skipTotal;
 
     public void setSkipTotal( boolean skipTotal )
@@ -120,7 +120,7 @@ public class UpdateDataElementCategoryComboAction
         dataElementCategoryService.updateDataElementCategoryCombo( categoryCombo );
 
         dataElementCategoryService.updateOptionCombos( categoryCombo );
-        
+
         return SUCCESS;
     }
 }
