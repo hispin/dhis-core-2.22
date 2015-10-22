@@ -161,7 +161,7 @@ public class SendScheduledMessageTask
         notifier.notify( taskId, "Start to prepare reminder messages for events" );
 
         Collection<SchedulingProgramObject> schedulingProgramObjects = programStageInstanceService
-            .getSendMesssageEvents();
+            .getSendMessageEvents();
 
         for ( SchedulingProgramObject schedulingProgramObject : schedulingProgramObjects )
         {
