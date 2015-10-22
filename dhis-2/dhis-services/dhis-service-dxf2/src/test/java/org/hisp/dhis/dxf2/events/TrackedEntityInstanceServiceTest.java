@@ -28,13 +28,7 @@ package org.hisp.dhis.dxf2.events;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.HashSet;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
@@ -49,6 +43,11 @@ import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -89,7 +88,7 @@ public class TrackedEntityInstanceServiceTest
         TrackedEntity trackedEntity = createTrackedEntity( 'A' );
         trackedEntityService.addTrackedEntity( trackedEntity );
 
-        maleA = createTrackedEntityInstance(  'A', organisationUnitA );
+        maleA = createTrackedEntityInstance( 'A', organisationUnitA );
         maleB = createTrackedEntityInstance( 'B', organisationUnitB );
         femaleA = createTrackedEntityInstance( 'C', organisationUnitA );
         femaleB = createTrackedEntityInstance( 'D', organisationUnitB );
@@ -160,10 +159,19 @@ public class TrackedEntityInstanceServiceTest
     @Test
     public void testDeletePerson()
     {
-        TrackedEntityInstance trackedEntityInstance = trackedEntityInstanceService.getTrackedEntityInstance( maleA.getUid() );
-        trackedEntityInstanceService.deleteTrackedEntityInstance( trackedEntityInstance.getTrackedEntityInstance() );
+        trackedEntityInstanceService.deleteTrackedEntityInstance( maleA.getUid() );
 
         assertNull( trackedEntityInstanceService.getTrackedEntityInstance( maleA.getUid() ) );
         assertNotNull( trackedEntityInstanceService.getTrackedEntityInstance( maleB.getUid() ) );
+    }
+
+    @Test
+    public void testDeleteTrackedEntityInstances()
+    {
+        List<String> uids = Lists.newArrayList( maleA.getUid(), maleB.getUid() );
+        trackedEntityInstanceService.deleteTrackedEntityInstances( uids );
+
+        assertNull( trackedEntityInstanceService.getTrackedEntityInstance( maleA.getUid() ) );
+        assertNull( trackedEntityInstanceService.getTrackedEntityInstance( maleB.getUid() ) );
     }
 }
