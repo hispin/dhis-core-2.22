@@ -61,6 +61,13 @@ public interface FileResourceContentStore
     void deleteFileResourceContent( String key );
 
     /**
+     * Check existence of a file.
+     * @param key key of the file.
+     * @return true if the file exists in the file store, false otherwise.
+     */
+    boolean fileResourceContentExists( String key );
+
+    /**
      * Create a signed GET request which gives access to the content.
      * @param key the key.
      * @return a URI containing the signed GET request or null if signed requests are not supported.

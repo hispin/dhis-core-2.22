@@ -29,11 +29,14 @@ package org.hisp.dhis.fileresource;
  */
 
 import com.google.common.io.ByteSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Hours;
+import org.joda.time.Minutes;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -50,12 +53,15 @@ import java.util.stream.Collectors;
 public class DefaultFileResourceService
     implements FileResourceService
 {
+    private static final Log log = LogFactory.getLog( DefaultFileResourceService.class );
+
     private static final String KEY_FILE_CLEANUP_TASK = "fileResourceCleanupTask";
+
+    private static final Duration IS_ORPHAN_TIME_DELTA = Hours.TWO.toStandardDuration();
+    private static final Duration LONG_STORAGE_DURATION_TIME_DELTA = Minutes.TWO.toStandardDuration();
 
     private static final Predicate<FileResource> IS_ORPHAN_PREDICATE =
         ( fr -> !fr.isAssigned() || fr.getStorageStatus() != FileResourceStorageStatus.STORED );
-
-    private static final Duration IS_ORPHAN_TIME_DELTA = Hours.TWO.toStandardDuration();
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -114,10 +120,12 @@ public class DefaultFileResourceService
     // FileResourceService implementation
     // -------------------------------------------------------------------------
 
+    @Transactional
     @Override
     public FileResource getFileResource( String uid )
     {
-        return fileResourceStore.getByUid( uid );
+        // TODO Consider need for ensureStorageStatus
+        return ensureStorageStatus( fileResourceStore.getByUid( uid ) );
     }
 
     @Override
@@ -200,5 +208,44 @@ public class DefaultFileResourceService
         }
 
         return fileResourceContentStore.getSignedGetContentUri( fileResource.getStorageKey() );
+    }
+
+    // -------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * Ensures that the storageStatus of the FileResource is correct.
+     * If it has been pending for more than two minutes existance of the content is
+     * 'double checked' in the file store.
+     * If the content is actually present the storageStatus is updated to reflect this.
+     *
+     * TODO Should not be necessary but needs to be in place as a fail-safe due to mysterious issues with saving.
+     */
+    private FileResource ensureStorageStatus( FileResource fileResource )
+    {
+        if ( FileResourceStorageStatus.PENDING == fileResource.getStorageStatus() )
+        {
+            Duration pendingDuration = new Duration( new DateTime( fileResource.getLastUpdated() ), DateTime.now() );
+
+            if ( pendingDuration.isLongerThan( LONG_STORAGE_DURATION_TIME_DELTA ) )
+            {
+                // Upload has been running for 2+ minutes and is still PENDING.
+                // Check if content has actually been stored and correct to STORED if this is the case.
+
+                boolean contentIsStored = fileResourceContentStore.fileResourceContentExists( fileResource.getStorageKey() );
+
+                if ( contentIsStored )
+                {
+                    // Status is PENDING but content is actually stored. Fix it.
+                    fileResource.setStorageStatus( FileResourceStorageStatus.STORED );
+                    fileResourceStore.update( fileResource );
+                    log.warn( "Corrected issue: File resource '" + fileResource.getUid() +
+                        "' had storageStatus PENDING but content was fully stored." );
+                }
+            }
+        }
+
+        return fileResource;
     }
 }
