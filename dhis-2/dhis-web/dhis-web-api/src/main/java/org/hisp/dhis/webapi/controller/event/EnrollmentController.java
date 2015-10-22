@@ -33,11 +33,11 @@ import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dxf2.events.enrollment.Enrollment;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentService;
-import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.node.NodeUtils;
@@ -233,23 +233,27 @@ public class EnrollmentController
     @RequestMapping( value = "/{id}/cancelled", method = RequestMethod.PUT )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
     @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void cancelEnrollment( @PathVariable String id ) throws NotFoundException
+    public void cancelEnrollment( @PathVariable String id ) throws NotFoundException, WebMessageException
     {
-        Enrollment enrollment = getEnrollment( id );
-        enrollment.setStatus( EnrollmentStatus.CANCELLED );
+        if ( !programInstanceService.programInstanceExists( id ) )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "Enrollment not found for ID " + id ) );
+        }
 
-        enrollmentService.cancelEnrollment( enrollment );
+        enrollmentService.cancelEnrollment( id );
     }
 
     @RequestMapping( value = "/{id}/completed", method = RequestMethod.PUT )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
     @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void completedEnrollment( @PathVariable String id ) throws NotFoundException
+    public void completedEnrollment( @PathVariable String id ) throws NotFoundException, WebMessageException
     {
-        Enrollment enrollment = getEnrollment( id );
-        enrollment.setStatus( EnrollmentStatus.COMPLETED );
+        if ( !programInstanceService.programInstanceExists( id ) )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "Enrollment not found for ID " + id ) );
+        }
 
-        enrollmentService.completeEnrollment( enrollment );
+        enrollmentService.completeEnrollment( id );
     }
 
     // -------------------------------------------------------------------------
@@ -259,10 +263,16 @@ public class EnrollmentController
     @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
     @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void deleteEnrollment( @PathVariable String id ) throws NotFoundException
+    public void deleteEnrollment( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws WebMessageException
     {
-        Enrollment enrollment = getEnrollment( id );
-        enrollmentService.deleteEnrollment( enrollment );
+        if ( !programInstanceService.programInstanceExists( id ) )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "Enrollment not found for ID " + id ) );
+        }
+
+        response.setStatus( HttpServletResponse.SC_OK );
+        ImportSummary importSummary = enrollmentService.deleteEnrollment( id );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     // -------------------------------------------------------------------------

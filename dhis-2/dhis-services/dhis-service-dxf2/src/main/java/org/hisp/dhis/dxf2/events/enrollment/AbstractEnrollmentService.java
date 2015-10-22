@@ -62,7 +62,6 @@ import org.hisp.dhis.trackedentitycomment.TrackedEntityCommentService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -409,30 +408,51 @@ public abstract class AbstractEnrollmentService
     // -------------------------------------------------------------------------
 
     @Override
-    public void deleteEnrollment( Enrollment enrollment )
+    public ImportSummary deleteEnrollment( String uid )
     {
-        ProgramInstance programInstance = programInstanceService.getProgramInstance( enrollment.getEnrollment() );
-        Assert.notNull( programInstance );
+        ProgramInstance programInstance = programInstanceService.getProgramInstance( uid );
 
-        programInstanceService.deleteProgramInstance( programInstance );
+        if ( programInstance != null )
+        {
+            programInstanceService.deleteProgramInstance( programInstance );
+            return new ImportSummary( ImportStatus.SUCCESS, "Deletion of enrollment " + uid + " was successful." );
+        }
+
+        return new ImportSummary( ImportStatus.ERROR, "ID " + uid + " does not point to a valid enrollment" );
     }
 
     @Override
-    public void cancelEnrollment( Enrollment enrollment )
+    public ImportSummaries deleteEnrollments( List<String> uids )
     {
-        ProgramInstance programInstance = programInstanceService.getProgramInstance( enrollment.getEnrollment() );
-        Assert.notNull( programInstance );
+        ImportSummaries importSummaries = new ImportSummaries();
+        int counter = 0;
 
+        for ( String uid : uids )
+        {
+            importSummaries.addImportSummary( deleteEnrollment( uid ) );
+
+            if ( counter % FLUSH_FREQUENCY == 0 )
+            {
+                dbmsManager.clearSession();
+            }
+
+            counter++;
+        }
+
+        return importSummaries;
+    }
+
+    @Override
+    public void cancelEnrollment( String uid )
+    {
+        ProgramInstance programInstance = programInstanceService.getProgramInstance( uid );
         programInstanceService.cancelProgramInstanceStatus( programInstance );
     }
 
     @Override
-    public void completeEnrollment( Enrollment enrollment )
+    public void completeEnrollment( String uid )
     {
-
-        ProgramInstance programInstance = programInstanceService.getProgramInstance( enrollment.getEnrollment() );
-        Assert.notNull( programInstance );
-
+        ProgramInstance programInstance = programInstanceService.getProgramInstance( uid );
         programInstanceService.completeProgramInstanceStatus( programInstance );
     }
 
