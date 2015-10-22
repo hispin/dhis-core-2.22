@@ -14,7 +14,7 @@ var optionSetsInPromise = [];
 var attributesInPromise = [];
 
 dhis2.tc.store = null;
-dhis2.tc.metaDataCached = false;
+dhis2.tc.metaDataCached = dhis2.tc.metaDataCached || false;
 dhis2.tc.memoryOnly = $('html').hasClass('ie7') || $('html').hasClass('ie8');
 var adapters = [];    
 if( dhis2.tc.memoryOnly ) {
