@@ -285,6 +285,12 @@ public class JCloudsFileResourceContentStore
     }
 
     @Override
+    public boolean fileResourceContentExists( String key )
+    {
+        return blobExists( key );
+    }
+
+    @Override
     public URI getSignedGetContentUri( String key )
     {
         BlobRequestSigner signer = blobStoreContext.getSigner();
@@ -317,6 +323,11 @@ public class JCloudsFileResourceContentStore
         return blobStore.getBlob( container, key );
     }
 
+    private boolean blobExists( String key )
+    {
+        return key != null && blobStore.blobExists( container, key );
+    }
+
     private void deleteBlob( String key )
     {
         blobStore.removeBlob( container, key );
@@ -336,9 +347,10 @@ public class JCloudsFileResourceContentStore
 
             if ( cause != null && cause instanceof UserPrincipalNotFoundException )
             {
-                //  Intentionally ignored exception which occurs with JClouds on non-English
-                //  Windows installations while trying to resolve the "Everyone" group.
-                log.debug( "Ignored UserPrincipalNotFoundException as a workaround for bug with JClouds filesystem provider on Windows" );
+                // Intentionally ignored exception which occurs with JClouds on localized
+                // Windows systems while trying to resolve the "Everyone" group.
+                // See https://issues.apache.org/jira/browse/JCLOUDS-1015
+                log.debug( "Ignored UserPrincipalNotFoundException. Workaround for JClouds bug 'JCLOUDS-1015'." );
             }
             else
             {

@@ -31,6 +31,9 @@ package org.hisp.dhis.fileresource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
@@ -48,38 +51,42 @@ public class FileResourceUploadCallbackProvider
     {
         return new ListenableFutureCallback<String>()
         {
+            DateTime startTime = DateTime.now();
+
             @Override
             public void onFailure( Throwable ex )
             {
-                log.error( "Saving file content failed", ex );
+                log.error( "Saving content for file resource '" + fileResourceUid + "' failed", ex );
 
-                FileResource fetchedFileResource = idObjectManager.get( FileResource.class, fileResourceUid );
+                FileResource fileResource = idObjectManager.get( FileResource.class, fileResourceUid );
 
-                if ( fetchedFileResource != null )
+                if ( fileResource != null )
                 {
-                    fetchedFileResource.setStorageStatus( FileResourceStorageStatus.FAILED );
-                    idObjectManager.update( fetchedFileResource );
+                    log.info( "File resource '" + fileResource.getUid() + "' storageStatus set to FAILED." );
+
+                    fileResource.setStorageStatus( FileResourceStorageStatus.FAILED );
+                    idObjectManager.update( fileResource );
                 }
             }
 
             @Override
             public void onSuccess( String result )
             {
-                log.info( "File content stored: " + result );
+                Period timeDiff = new Period( startTime, DateTime.now() );
 
-                FileResource fetchedFileResource = idObjectManager.get( FileResource.class, fileResourceUid );
+                log.info( "File stored with key: '" + result + "'. Upload finished in " + timeDiff.toString( PeriodFormat.getDefault() ) );
 
-                if ( result != null && fetchedFileResource != null )
+                FileResource fileResource = idObjectManager.get( FileResource.class, fileResourceUid );
+
+                if ( result != null && fileResource != null )
                 {
-                    fetchedFileResource.setStorageStatus( FileResourceStorageStatus.STORED );
+                    fileResource.setStorageStatus( FileResourceStorageStatus.STORED );
+                    idObjectManager.update( fileResource );
                 }
                 else
                 {
-                    log.error( "Conflict: content was stored but FileResource with uid: " + fileResourceUid + " could not be found." );
-                    return;
+                    log.error( "Conflict: content was stored but FileResource with uid '" + fileResourceUid + "' could not be found." );
                 }
-
-                idObjectManager.update( fetchedFileResource );
             }
         };
     }
