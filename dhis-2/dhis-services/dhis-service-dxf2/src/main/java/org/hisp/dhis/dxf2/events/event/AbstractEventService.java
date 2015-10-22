@@ -884,7 +884,7 @@ public abstract class AbstractEventService
         {
             Coordinate coordinate = null;
 
-            if ( programStageInstance.getLongitude() != null && programStageInstance.getLongitude() != null )
+            if ( programStageInstance.getLongitude() != null && programStageInstance.getLatitude() != null )
             {
                 coordinate = new Coordinate( programStageInstance.getLongitude(), programStageInstance.getLatitude() );
 
