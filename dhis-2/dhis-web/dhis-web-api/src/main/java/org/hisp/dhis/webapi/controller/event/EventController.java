@@ -446,9 +446,7 @@ public class EventController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
     public void putXmlEvent( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
-        Event event = eventService.getEvent( uid );
-
-        if ( event == null )
+        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
@@ -464,9 +462,7 @@ public class EventController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
     public void putJsonEvent( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
-        Event event = eventService.getEvent( uid );
-
-        if ( event == null )
+        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
@@ -482,9 +478,7 @@ public class EventController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
     public void putJsonEventSingleValue( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, @PathVariable( "dataElementUid" ) String dataElementUid ) throws IOException, WebMessageException
     {
-        Event event = eventService.getEvent( uid );
-
-        if ( event == null )
+        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
@@ -507,9 +501,7 @@ public class EventController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
     public void putJsonEventForNote( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
-        Event event = eventService.getEvent( uid );
-
-        if ( event == null )
+        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
