@@ -500,6 +500,9 @@ public class DataApprovalServiceCategoryOptionGroupTest
         setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
         setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
         setDependency( hibernateCategoryOptionGroupStore, "currentUserService", currentUserService, CurrentUserService.class );
+
+        systemSettingManager.saveSystemSetting( Setting.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, false );
+        systemSettingManager.saveSystemSetting( Setting.ACCEPTANCE_REQUIRED_FOR_APPROVAL, false );
     }
 
     // -------------------------------------------------------------------------
