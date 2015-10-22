@@ -5,7 +5,6 @@ trackerCapture.controller('DashboardController',
         function($rootScope,
                 $scope,
                 $location,
-                $route,
                 $modal,
                 $timeout,
                 $filter,
@@ -364,7 +363,7 @@ trackerCapture.controller('DashboardController',
     
     $scope.back = function(){
         $location.path('/').search({program: $scope.selectedProgramId});
-        $route.reload();
+        //$route.reload();
     };
     
     $scope.displayEnrollment = false;
