@@ -176,7 +176,7 @@ public class DefaultProgramStageInstanceService
     }
 
     @Override
-    public Collection<SchedulingProgramObject> getSendMesssageEvents()
+    public Collection<SchedulingProgramObject> getSendMessageEvents()
     {
         return programStageInstanceStore.getSendMessageEvents();
     }

@@ -131,7 +131,7 @@ public interface ProgramStageInstanceService
      *
      * @return A SchedulingProgramObject list
      */
-    Collection<SchedulingProgramObject> getSendMesssageEvents();
+    Collection<SchedulingProgramObject> getSendMessageEvents();
 
     /**
      * Complete an event. Besides, program template messages will be send if it
