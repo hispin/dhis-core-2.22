@@ -805,14 +805,38 @@ public abstract class AbstractEventService
     // -------------------------------------------------------------------------
 
     @Override
-    public void deleteEvent( Event event )
+    public ImportSummary deleteEvent( String uid )
     {
-        ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( event.getEvent() );
+        ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( uid );
 
         if ( programStageInstance != null )
         {
             programStageInstanceService.deleteProgramStageInstance( programStageInstance );
+            return new ImportSummary( ImportStatus.SUCCESS, "Deletion of event " + uid + " was successful." );
         }
+
+        return new ImportSummary( ImportStatus.ERROR, "ID " + uid + " does not point to a valid event" );
+    }
+
+    @Override
+    public ImportSummaries deleteEvents( List<String> uids )
+    {
+        ImportSummaries importSummaries = new ImportSummaries();
+        int counter = 0;
+
+        for ( String uid : uids )
+        {
+            importSummaries.addImportSummary( deleteEvent( uid ) );
+
+            if ( counter % FLUSH_FREQUENCY == 0 )
+            {
+                dbmsManager.clearSession();
+            }
+
+            counter++;
+        }
+
+        return importSummaries;
     }
 
     // -------------------------------------------------------------------------
