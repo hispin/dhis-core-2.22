@@ -237,12 +237,6 @@ public abstract class AbstractEventService
     }
 
     @Override
-    public ImportSummary addEvent( Event event )
-    {
-        return addEvent( event, null );
-    }
-
-    @Override
     public ImportSummary addEvent( Event event, ImportOptions importOptions )
     {
         return addEvent( event, currentUserService.getCurrentUser(), importOptions );
