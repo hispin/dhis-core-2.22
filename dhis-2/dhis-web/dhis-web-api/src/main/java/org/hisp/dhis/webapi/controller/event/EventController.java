@@ -517,9 +517,7 @@ public class EventController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
     public void putJsonEventForEventDate( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
-        Event event = eventService.getEvent( uid );
-
-        if ( event == null )
+        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
