@@ -84,5 +84,7 @@ public interface TrackedEntityInstanceService
     // DELETE
     // -------------------------------------------------------------------------
 
-    void deleteTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance );
+    ImportSummary deleteTrackedEntityInstance( String uid );
+
+    ImportSummaries deleteTrackedEntityInstances( List<String> uids );
 }

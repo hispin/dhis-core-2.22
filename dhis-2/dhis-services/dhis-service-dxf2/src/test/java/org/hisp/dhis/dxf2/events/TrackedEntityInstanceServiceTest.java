@@ -161,7 +161,7 @@ public class TrackedEntityInstanceServiceTest
     public void testDeletePerson()
     {
         TrackedEntityInstance trackedEntityInstance = trackedEntityInstanceService.getTrackedEntityInstance( maleA.getUid() );
-        trackedEntityInstanceService.deleteTrackedEntityInstance( trackedEntityInstance );
+        trackedEntityInstanceService.deleteTrackedEntityInstance( trackedEntityInstance.getTrackedEntityInstance() );
 
         assertNull( trackedEntityInstanceService.getTrackedEntityInstance( maleA.getUid() ) );
         assertNotNull( trackedEntityInstanceService.getTrackedEntityInstance( maleB.getUid() ) );
