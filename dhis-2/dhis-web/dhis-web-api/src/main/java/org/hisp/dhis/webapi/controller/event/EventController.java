@@ -53,6 +53,7 @@ import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
@@ -124,6 +125,9 @@ public class EventController
 
     @Autowired
     private RenderService renderService;
+
+    @Autowired
+    private ProgramStageInstanceService programStageInstanceService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -294,7 +298,7 @@ public class EventController
 
         if ( event == null )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
         if ( options.hasLinks() )
@@ -446,7 +450,7 @@ public class EventController
 
         if ( event == null )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
         Event updatedEvent = renderService.fromXml( request.getInputStream(), Event.class );
@@ -464,7 +468,7 @@ public class EventController
 
         if ( event == null )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
         Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
@@ -482,14 +486,14 @@ public class EventController
 
         if ( event == null )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
         DataElement dataElement = dataElementService.getDataElement( dataElementUid );
 
         if ( dataElement == null )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "DataElement not found for uid: " + dataElementUid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "DataElement not found for ID " + dataElementUid ) );
         }
 
         Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
@@ -507,7 +511,7 @@ public class EventController
 
         if ( event == null )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
         Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
@@ -525,14 +529,14 @@ public class EventController
 
         if ( event == null )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
         Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
         updatedEvent.setEvent( uid );
 
         eventService.updateEventForEventDate( updatedEvent );
-        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
+        webMessageService.send( WebMessageUtils.ok( "Event updated " + uid ), response, request );
     }
 
     // -------------------------------------------------------------------------
@@ -541,16 +545,15 @@ public class EventController
 
     @RequestMapping( value = "/{uid}", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_DELETE')" )
-    public void deleteEvent( HttpServletResponse response, @PathVariable( "uid" ) String uid ) throws WebMessageException
+    public void deleteEvent( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid ) throws WebMessageException
     {
-        Event event = eventService.getEvent( uid );
-
-        if ( event == null )
+        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
         {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for uid: " + uid ) );
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
-        response.setStatus( HttpServletResponse.SC_NO_CONTENT );
-        eventService.deleteEvent( event );
+        response.setStatus( HttpServletResponse.SC_OK );
+        ImportSummary importSummary = eventService.deleteEvent( uid );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 }
