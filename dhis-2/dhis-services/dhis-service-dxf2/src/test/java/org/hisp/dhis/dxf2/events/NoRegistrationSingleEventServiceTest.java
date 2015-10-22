@@ -199,7 +199,7 @@ public class NoRegistrationSingleEventServiceTest
 
         event = eventService.getEvent( importSummary.getReference() );
         assertNotNull( event );
-        eventService.deleteEvent( event );
+        eventService.deleteEvent( event.getEvent() );
         event = eventService.getEvent( importSummary.getReference() );
         assertNull( event );
     }
