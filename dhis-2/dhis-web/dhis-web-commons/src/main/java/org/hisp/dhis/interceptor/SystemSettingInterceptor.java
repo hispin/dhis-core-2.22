@@ -57,7 +57,8 @@ public class SystemSettingInterceptor
         Setting.APPLICATION_NOTIFICATION, Setting.APPLICATION_FOOTER, Setting.APPLICATION_RIGHT_FOOTER,
         Setting.FLAG, Setting.START_MODULE, Setting.MULTI_ORGANISATION_UNIT_FORMS, Setting.ACCOUNT_RECOVERY,
         Setting.APP_BASE_URL, Setting.INSTANCE_BASE_URL, Setting.GOOGLE_ANALYTICS_UA, Setting.OPENID_PROVIDER,
-        Setting.OPENID_PROVIDER_LABEL, Setting.HELP_PAGE_LINK, Setting.REQUIRE_ADD_TO_VIEW, Setting.ALLOW_OBJECT_ASSIGNMENT );
+        Setting.OPENID_PROVIDER_LABEL, Setting.HELP_PAGE_LINK, Setting.REQUIRE_ADD_TO_VIEW, Setting.ALLOW_OBJECT_ASSIGNMENT,
+        Setting.CALENDAR, Setting.DATE_FORMAT );
     
     // -------------------------------------------------------------------------
     // Dependencies
@@ -99,9 +100,7 @@ public class SystemSettingInterceptor
         throws Exception
     {
         Map<String, Object> map = new HashMap<>();
-
-        map.put( Setting.CALENDAR.getName(), calendarService.getSystemCalendarKey() );
-        map.put( Setting.DATE_FORMAT.getName(), calendarService.getSystemDateFormatKey() );        
+        
         map.put( DATE_FORMAT, calendarService.getSystemDateFormat() );
         map.put( Setting.CONFIGURATION.getName(), configurationService.getConfiguration() );
         map.put( Setting.FLAG_IMAGE.getName(), systemSettingManager.getFlagImage() );

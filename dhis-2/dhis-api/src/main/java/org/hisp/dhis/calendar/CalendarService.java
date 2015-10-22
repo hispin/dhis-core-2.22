@@ -61,28 +61,4 @@ public interface CalendarService
      * @see DateFormat
      */
     DateFormat getSystemDateFormat();
-    
-    /**
-     * Gets the system calendar key.
-     * @return the system calendar key
-     */
-    String getSystemCalendarKey();
-    
-    /**
-     * Sets the system calendar key.
-     * @param calendarKey the system calendar key
-     */
-    void setSystemCalendarKey( String calendarKey );
-    
-    /**
-     * Gets the system date format key.
-     * @return the system date format key
-     */
-    String getSystemDateFormatKey();
-    
-    /**
-     * Sets the system date format key.
-     * @param dateFormatKey the system date format key
-     */
-    void setSystemDateFormatKey( String dateFormatKey );
 }
