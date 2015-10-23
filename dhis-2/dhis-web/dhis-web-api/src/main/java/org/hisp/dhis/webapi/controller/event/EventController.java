@@ -347,7 +347,7 @@ public class EventController
             ImportSummaries importSummaries = eventService.addEventsXml( inputStream, importOptions );
 
             importSummaries.getImportSummaries().stream()
-                .filter( importSummary -> !importOptions.isDryRun() && !importSummary.getStatus().equals( ImportStatus.ERROR ) )
+                .filter( importSummary -> !importOptions.isDryRun() && !importSummary.getStatus().equals( ImportStatus.ERROR ) && !importOptions.getImportStrategy().isDelete() )
                 .forEach( importSummary -> importSummary.setHref( ContextUtils.getRootPath( request ) + RESOURCE_PATH + "/" + importSummary.getReference() ) );
 
             if ( importSummaries.getImportSummaries().size() == 1 )
@@ -386,7 +386,7 @@ public class EventController
             ImportSummaries importSummaries = eventService.addEventsJson( inputStream, importOptions );
 
             importSummaries.getImportSummaries().stream()
-                .filter( importSummary -> !importOptions.isDryRun() && !importSummary.getStatus().equals( ImportStatus.ERROR ) )
+                .filter( importSummary -> !importOptions.isDryRun() && !importSummary.getStatus().equals( ImportStatus.ERROR ) && !importOptions.getImportStrategy().isDelete() )
                 .forEach( importSummary -> importSummary.setHref( ContextUtils.getRootPath( request ) + RESOURCE_PATH + "/" + importSummary.getReference() ) );
 
             if ( importSummaries.getImportSummaries().size() == 1 )

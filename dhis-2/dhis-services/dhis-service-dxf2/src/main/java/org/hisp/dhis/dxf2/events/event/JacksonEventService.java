@@ -48,6 +48,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of EventService that uses Jackson for serialization and deserialization.
@@ -143,13 +144,14 @@ public class JacksonEventService extends AbstractEventService
 
     private ImportSummaries addEvents( List<Event> events, TaskId taskId, ImportOptions importOptions )
     {
-        ImportSummaries importSummaries;
+        ImportSummaries importSummaries = new ImportSummaries();
 
         notifier.clear( taskId ).notify( taskId, "Importing events" );
         Timer timer = new SystemTimer().start();
 
         List<Event> create = new ArrayList<>();
         List<Event> update = new ArrayList<>();
+        List<String> delete = new ArrayList<>();
 
         if ( importOptions.getImportStrategy().isCreate() )
         {
@@ -176,9 +178,14 @@ public class JacksonEventService extends AbstractEventService
                 }
             }
         }
+        else if ( importOptions.getImportStrategy().isDelete() )
+        {
+            delete.addAll( events.stream().map( Event::getEvent ).collect( Collectors.toList() ) );
+        }
 
-        importSummaries = addEvents( create, importOptions );
-        updateEvents( update, false );
+        importSummaries.addImportSummaries( addEvents( create, importOptions ) );
+        importSummaries.addImportSummaries( updateEvents( update, false ) );
+        importSummaries.addImportSummaries( deleteEvents( delete ) );
 
         if ( taskId != null )
         {
