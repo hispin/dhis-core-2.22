@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -142,6 +143,7 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
 
         List<Enrollment> create = new ArrayList<>();
         List<Enrollment> update = new ArrayList<>();
+        List<String> delete = new ArrayList<>();
 
         if ( importOptions.getImportStrategy().isCreate() )
         {
@@ -168,9 +170,14 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
                 }
             }
         }
+        else if ( importOptions.getImportStrategy().isDelete() )
+        {
+            delete.addAll( enrollments.stream().map( Enrollment::getEnrollment ).collect( Collectors.toList() ) );
+        }
 
         importSummaries.addImportSummaries( addEnrollments( create ) );
         importSummaries.addImportSummaries( updateEnrollments( update ) );
+        importSummaries.addImportSummaries( deleteEnrollments( delete ) );
 
         return importSummaries;
     }

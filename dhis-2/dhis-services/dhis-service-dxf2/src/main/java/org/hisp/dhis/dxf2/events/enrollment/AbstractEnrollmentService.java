@@ -241,7 +241,7 @@ public abstract class AbstractEnrollmentService
             importSummary.setStatus( ImportStatus.ERROR );
             importSummary.setDescription( "TrackedEntityInstance " + trackedEntityInstance.getTrackedEntityInstance()
                 + " already have an active enrollment in program " + program.getUid() );
-            importSummary.getImportCount().incrementIgnored();
+            importSummary.incrementIgnored();
 
             return importSummary;
         }
@@ -258,7 +258,7 @@ public abstract class AbstractEnrollmentService
                 importSummary.setDescription( "TrackedEntityInstance " + trackedEntityInstance.getTrackedEntityInstance()
                     + " already have a completed enrollment in program " + program.getUid() + ", and this program is" +
                     " configured to only allow enrolling one time." );
-                importSummary.getImportCount().incrementIgnored();
+                importSummary.incrementIgnored();
 
                 return importSummary;
             }
@@ -272,7 +272,7 @@ public abstract class AbstractEnrollmentService
         if ( !importConflicts.isEmpty() )
         {
             importSummary.setStatus( ImportStatus.ERROR );
-            importSummary.getImportCount().incrementIgnored();
+            importSummary.incrementIgnored();
 
             return importSummary;
         }
@@ -287,6 +287,7 @@ public abstract class AbstractEnrollmentService
             importSummary.setStatus( ImportStatus.ERROR );
             importSummary.setDescription( "Could not enroll TrackedEntityInstance "
                 + enrollment.getTrackedEntityInstance() + " into program " + enrollment.getProgram() );
+            importSummary.incrementIgnored();
 
             return importSummary;
         }
@@ -335,20 +336,14 @@ public abstract class AbstractEnrollmentService
 
         if ( enrollment == null || enrollment.getEnrollment() == null )
         {
-            importSummary = new ImportSummary( ImportStatus.ERROR, "No enrollment or enrollment ID was supplied" );
-            importSummary.getImportCount().incrementIgnored();
-
-            return importSummary;
+            return new ImportSummary( ImportStatus.ERROR, "No enrollment or enrollment ID was supplied" ).incrementIgnored();
         }
 
         ProgramInstance programInstance = programInstanceService.getProgramInstance( enrollment.getEnrollment() );
 
         if ( programInstance == null )
         {
-            importSummary = new ImportSummary( ImportStatus.ERROR, "Enrollment ID was not valid." );
-            importSummary.getImportCount().incrementIgnored();
-
-            return importSummary;
+            return new ImportSummary( ImportStatus.ERROR, "Enrollment ID was not valid." ).incrementIgnored();
         }
 
         Set<ImportConflict> importConflicts = new HashSet<>();
@@ -385,10 +380,7 @@ public abstract class AbstractEnrollmentService
             }
             else
             {
-                importSummary = new ImportSummary( ImportStatus.ERROR, "Re-enrollment is not allowed, please create a new enrollment." );
-                importSummary.getImportCount().incrementIgnored();
-
-                return importSummary;
+                return new ImportSummary( ImportStatus.ERROR, "Re-enrollment is not allowed, please create a new enrollment." ).incrementIgnored();
             }
         }
 
@@ -415,10 +407,10 @@ public abstract class AbstractEnrollmentService
         if ( programInstance != null )
         {
             programInstanceService.deleteProgramInstance( programInstance );
-            return new ImportSummary( ImportStatus.SUCCESS, "Deletion of enrollment " + uid + " was successful." );
+            return new ImportSummary( ImportStatus.SUCCESS, "Deletion of enrollment " + uid + " was successful." ).incrementDeleted();
         }
 
-        return new ImportSummary( ImportStatus.ERROR, "ID " + uid + " does not point to a valid enrollment" );
+        return new ImportSummary( ImportStatus.ERROR, "ID " + uid + " does not point to a valid enrollment" ).incrementIgnored();
     }
 
     @Override
