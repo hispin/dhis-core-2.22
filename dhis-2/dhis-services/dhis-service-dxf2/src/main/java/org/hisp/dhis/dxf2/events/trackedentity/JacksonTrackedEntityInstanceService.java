@@ -31,6 +31,7 @@ package org.hisp.dhis.dxf2.events.trackedentity;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.importexport.ImportStrategy;
@@ -43,6 +44,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -97,7 +99,7 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
     // -------------------------------------------------------------------------
 
     @Override
-    public ImportSummaries addTrackedEntityInstanceXml( InputStream inputStream, ImportStrategy strategy ) throws IOException
+    public ImportSummaries addTrackedEntityInstanceXml( InputStream inputStream, ImportOptions importOptions ) throws IOException
     {
         String input = StreamUtils.copyToString( inputStream, Charset.forName( "UTF-8" ) );
         List<TrackedEntityInstance> trackedEntityInstances = new ArrayList<>();
@@ -113,11 +115,11 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
             trackedEntityInstances.add( fromXml );
         }
 
-        return addTrackedEntityInstance( trackedEntityInstances, strategy );
+        return addTrackedEntityInstance( trackedEntityInstances, importOptions );
     }
 
     @Override
-    public ImportSummaries addTrackedEntityInstanceJson( InputStream inputStream, ImportStrategy strategy ) throws IOException
+    public ImportSummaries addTrackedEntityInstanceJson( InputStream inputStream, ImportOptions importOptions ) throws IOException
     {
         String input = StreamUtils.copyToString( inputStream, Charset.forName( "UTF-8" ) );
         List<TrackedEntityInstance> trackedEntityInstances = new ArrayList<>();
@@ -133,44 +135,50 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
             trackedEntityInstances.add( fromJson );
         }
 
-        return addTrackedEntityInstance( trackedEntityInstances, strategy );
+        return addTrackedEntityInstance( trackedEntityInstances, importOptions );
     }
 
-    private ImportSummaries addTrackedEntityInstance( List<TrackedEntityInstance> trackedEntityInstances, ImportStrategy strategy )
+    private ImportSummaries addTrackedEntityInstance( List<TrackedEntityInstance> trackedEntityInstances, ImportOptions importOptions )
     {
         ImportSummaries importSummaries = new ImportSummaries();
 
-        TrackedEntityInstances create = new TrackedEntityInstances();
-        TrackedEntityInstances update = new TrackedEntityInstances();
+        List<TrackedEntityInstance> create = new ArrayList<>();
+        List<TrackedEntityInstance> update = new ArrayList<>();
+        List<String> delete = new ArrayList<>();
 
-        if ( strategy.isCreate() )
+        if ( importOptions.getImportStrategy().isCreate() )
         {
-            create.getTrackedEntityInstances().addAll( trackedEntityInstances );
+            create.addAll( trackedEntityInstances );
         }
-        else if ( strategy.isCreateAndUpdate() )
+        else if ( importOptions.getImportStrategy().isCreateAndUpdate() )
         {
             for ( TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
             {
                 if ( StringUtils.isEmpty( trackedEntityInstance.getTrackedEntityInstance() ) )
                 {
-                    create.getTrackedEntityInstances().add( trackedEntityInstance );
+                    create.add( trackedEntityInstance );
                 }
                 else
                 {
                     if ( !teiService.trackedEntityInstanceExists( trackedEntityInstance.getTrackedEntityInstance() ) )
                     {
-                        create.getTrackedEntityInstances().add( trackedEntityInstance );
+                        create.add( trackedEntityInstance );
                     }
                     else
                     {
-                        update.getTrackedEntityInstances().add( trackedEntityInstance );
+                        update.add( trackedEntityInstance );
                     }
                 }
             }
         }
+        else if ( importOptions.getImportStrategy().isDelete() )
+        {
+            delete.addAll( trackedEntityInstances.stream().map( TrackedEntityInstance::getTrackedEntityInstance ).collect( Collectors.toList() ) );
+        }
 
-        importSummaries.addImportSummaries( addTrackedEntityInstances( create.getTrackedEntityInstances() ) );
-        importSummaries.addImportSummaries( updateTrackedEntityInstances( update.getTrackedEntityInstances() ) );
+        importSummaries.addImportSummaries( addTrackedEntityInstances( create ) );
+        importSummaries.addImportSummaries( updateTrackedEntityInstances( update ) );
+        importSummaries.addImportSummaries( deleteTrackedEntityInstances( delete ) );
 
         return importSummaries;
     }
