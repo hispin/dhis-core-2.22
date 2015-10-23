@@ -171,6 +171,30 @@ public class ImportSummary extends AbstractWebMessageResponse
         this.href = href;
     }
 
+    public ImportSummary incrementImported()
+    {
+        importCount.incrementImported();
+        return this;
+    }
+
+    public ImportSummary incrementUpdated()
+    {
+        importCount.incrementUpdated();
+        return this;
+    }
+
+    public ImportSummary incrementIgnored()
+    {
+        importCount.incrementIgnored();
+        return this;
+    }
+
+    public ImportSummary incrementDeleted()
+    {
+        importCount.incrementDeleted();
+        return this;
+    }
+
     @Override
     public String toString()
     {

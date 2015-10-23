@@ -48,6 +48,8 @@ public class ImportSummaries extends AbstractWebMessageResponse
 
     private int updated;
 
+    private int deleted;
+
     private int ignored;
 
     private List<ImportSummary> importSummaries = new ArrayList<>();
@@ -68,6 +70,7 @@ public class ImportSummaries extends AbstractWebMessageResponse
         {
             imported += importSummary.getImportCount().getImported();
             updated += importSummary.getImportCount().getUpdated();
+            deleted += importSummary.getImportCount().getDeleted();
             ignored += importSummary.getImportCount().getIgnored();
         }
 
@@ -101,6 +104,13 @@ public class ImportSummaries extends AbstractWebMessageResponse
     public int getUpdated()
     {
         return updated;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public int getDeleted()
+    {
+        return deleted;
     }
 
     @JsonProperty
