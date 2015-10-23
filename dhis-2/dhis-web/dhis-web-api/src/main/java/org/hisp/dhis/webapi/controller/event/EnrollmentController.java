@@ -31,6 +31,7 @@ package org.hisp.dhis.webapi.controller.event;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.commons.util.TextUtils;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.enrollment.Enrollment;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
@@ -160,9 +161,11 @@ public class EnrollmentController
 
     @RequestMapping( value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_ENROLLMENT')" )
-    public void postEnrollmentXml( @RequestParam( defaultValue = "CREATE" ) ImportStrategy strategy, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    public void postEnrollmentXml( @RequestParam( defaultValue = "CREATE" ) ImportStrategy strategy,
+        ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
-        ImportSummaries importSummaries = enrollmentService.addEnrollmentsXml( request.getInputStream(), strategy );
+        importOptions.setStrategy( strategy );
+        ImportSummaries importSummaries = enrollmentService.addEnrollmentsXml( request.getInputStream(), importOptions );
         response.setContentType( MediaType.APPLICATION_XML_VALUE );
 
         if ( importSummaries.getImportSummaries().size() > 1 )
@@ -186,9 +189,11 @@ public class EnrollmentController
 
     @RequestMapping( value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_ENROLLMENT')" )
-    public void postEnrollmentJson( @RequestParam( defaultValue = "CREATE" ) ImportStrategy strategy, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    public void postEnrollmentJson( @RequestParam( defaultValue = "CREATE" ) ImportStrategy strategy,
+        ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
-        ImportSummaries importSummaries = enrollmentService.addEnrollmentsJson( request.getInputStream(), strategy );
+        importOptions.setStrategy( strategy );
+        ImportSummaries importSummaries = enrollmentService.addEnrollmentsJson( request.getInputStream(), importOptions );
         response.setContentType( MediaType.APPLICATION_JSON_VALUE );
 
         if ( importSummaries.getImportSummaries().size() > 1 )

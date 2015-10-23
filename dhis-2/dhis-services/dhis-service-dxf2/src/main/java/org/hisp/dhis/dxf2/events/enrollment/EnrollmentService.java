@@ -28,9 +28,9 @@ package org.hisp.dhis.dxf2.events.enrollment;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.program.ProgramInstance;
 
 import java.io.IOException;
@@ -58,9 +58,9 @@ public interface EnrollmentService
     // CREATE
     // -------------------------------------------------------------------------
 
-    ImportSummaries addEnrollmentsJson( InputStream inputStream, ImportStrategy strategy ) throws IOException;
+    ImportSummaries addEnrollmentsJson( InputStream inputStream, ImportOptions importOptions ) throws IOException;
 
-    ImportSummaries addEnrollmentsXml( InputStream inputStream, ImportStrategy strategy ) throws IOException;
+    ImportSummaries addEnrollmentsXml( InputStream inputStream, ImportOptions importOptions ) throws IOException;
 
     ImportSummaries addEnrollments( List<Enrollment> enrollments );
 
