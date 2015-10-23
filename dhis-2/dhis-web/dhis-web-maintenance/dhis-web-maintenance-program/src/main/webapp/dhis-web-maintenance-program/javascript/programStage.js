@@ -56,8 +56,8 @@ function showProgramStageDetails( context )
 		setInnerHTML( 'scheduledDaysFromStartField', json.programStage.minDaysFromStart ); 
 		setInnerHTML( 'idField', json.programStage.uid ); 
 		
-		var irregular = (json.programStage.irregular=='true') ? i18n_yes : i18n_no;
-		setInnerHTML( 'irregularField', irregular );  
+		var repeatable = (json.programStage.repeatable=='true') ? i18n_yes : i18n_no;
+		setInnerHTML( 'repeatableField', repeatable );
 		
 		var autoGenerateEvent = (json.programStage.autoGenerateEvent=='true') ? i18n_yes : i18n_no;
 		setInnerHTML( 'autoGenerateEventField', autoGenerateEvent );  
@@ -262,7 +262,7 @@ function getKeyCode(e)
 
 function repeatableOnChange()
 {
-	var checked = byId('irregular').checked;
+	var checked = byId('repeatable').checked;
 	if( checked )
 	{
 		enable('standardInterval');

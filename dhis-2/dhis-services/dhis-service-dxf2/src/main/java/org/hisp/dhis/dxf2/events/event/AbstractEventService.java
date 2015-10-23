@@ -332,7 +332,7 @@ public abstract class AbstractEventService
             }
             else
             {
-                if ( !programStage.getIrregular() )
+                if ( !programStage.getRepeatable() )
                 {
                     programStageInstance = programStageInstanceService.getProgramStageInstance( programInstance,
                         programStage );

@@ -1223,14 +1223,14 @@ public abstract class DhisConvenienceTest
         return createProgramStage( uniqueCharacter, minDays, false );
     }
 
-    public static ProgramStage createProgramStage( char uniqueCharacter, int minDays, boolean irregular )
+    public static ProgramStage createProgramStage( char uniqueCharacter, int minDays, boolean repeatable )
     {
         ProgramStage programStage = new ProgramStage();
 
         programStage.setName( "ProgramStage" + uniqueCharacter );
         programStage.setDescription( "description" + uniqueCharacter );
         programStage.setMinDaysFromStart( minDays );
-        programStage.setIrregular( irregular );
+        programStage.setRepeatable( repeatable );
 
         return programStage;
     }

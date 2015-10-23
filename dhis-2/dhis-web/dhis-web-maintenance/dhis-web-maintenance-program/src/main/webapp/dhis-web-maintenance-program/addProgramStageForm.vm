@@ -124,8 +124,8 @@
 	<tr><th colspan="2">$i18n.getString( "repeatable_program_stage_details" )</th></tr>
 	
 	<tr>
-		<td><label for="irregular">$i18n.getString( "repeatable" )</label></td>
-		<td><input type="checkbox" id="irregular" name="irregular" value='true' onchange='repeatableOnChange();' /></td>
+		<td><label for="repeatable">$i18n.getString( "repeatable" )</label></td>
+		<td><input type="checkbox" id="repeatable" name="repeatable" value='true' onchange='repeatableOnChange();' /></td>
 	</tr>
 	
 	<tr>

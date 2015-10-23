@@ -214,7 +214,7 @@ public class ProgramStageInstanceStoreTest
         programStageService.saveProgramStage( stageC );
 
         stageD = new ProgramStage( "D", programB );
-        stageC.setIrregular( true );
+        stageC.setRepeatable( true );
         programStageService.saveProgramStage( stageD );
 
         programStages = new HashSet<>();

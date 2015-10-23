@@ -23,7 +23,7 @@
 	  }#if( $velocityCount < $programStage.reminders.size() ),#end
 	#end 
 	],
-	"irregular": "$!programStage.irregular",
+	"repeatable": "$!programStage.repeatable",
 	"autoGenerateEvent": "$!programStage.autoGenerateEvent",
 	"validCompleteOnly": "$!programStage.validCompleteOnly",
 	"displayGenerateEventBox": "$!programStage.displayGenerateEventBox",

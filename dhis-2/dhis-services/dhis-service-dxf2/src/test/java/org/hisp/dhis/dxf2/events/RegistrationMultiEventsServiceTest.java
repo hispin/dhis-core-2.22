@@ -158,7 +158,7 @@ public class RegistrationMultiEventsServiceTest
 
         programStageA = createProgramStage( 'A', 0 );
         programStageB = createProgramStage( 'B', 0 );
-        programStageB.setIrregular( true );
+        programStageB.setRepeatable( true );
 
         identifiableObjectManager.save( programStageA );
         identifiableObjectManager.save( programStageB );

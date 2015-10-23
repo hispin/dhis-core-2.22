@@ -49,7 +49,7 @@ public class InitTableAlteror
 
     @Autowired
     private StatementBuilder statementBuilder;
-    
+
     // -------------------------------------------------------------------------
     // Execute
     // -------------------------------------------------------------------------
@@ -79,6 +79,9 @@ public class InitTableAlteror
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
         executeSql( "update program set \"type\"='WITHOUT_REGISTRATION' where type='3'" );
+
+        executeSql( "alter table programstage rename column irregular to repeatable" );
+        executeSql( "update programstage set repeatable=false where repeatable is null" );
     }
 
     // -------------------------------------------------------------------------
@@ -186,7 +189,7 @@ public class InitTableAlteror
         executeSql( "update trackedentityattribute set valuetype='TRACKER_ASSOCIATE' where valuetype='trackerAssociate'" );
         executeSql( "update trackedentityattribute set valuetype='USERNAME' where valuetype='users'" );
         executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype is null" );
-        
+
         executeSql( "update optionset set valuetype='TEXT' where valuetype is null" );
     }
 

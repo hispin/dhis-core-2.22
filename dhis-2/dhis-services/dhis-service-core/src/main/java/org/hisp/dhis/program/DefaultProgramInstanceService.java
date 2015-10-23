@@ -521,7 +521,7 @@ public class DefaultProgramInstanceService
         for ( ProgramStageInstance stageInstance : stageInstances )
         {
             if ( (!stageInstance.isCompleted() && stageInstance.getStatus() != EventStatus.SKIPPED)
-                || stageInstance.getProgramStage().getIrregular() )
+                || stageInstance.getProgramStage().getRepeatable() )
             {
                 return false;
             }
