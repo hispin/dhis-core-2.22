@@ -480,7 +480,7 @@ var validationRules = {
             "rangelength" : [2,230]
         },
         "description" : {
-            "required" : true
+            "required" : false
         },
         "reportDateDescription" : {
             "required" : true,
