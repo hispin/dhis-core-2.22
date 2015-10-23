@@ -288,7 +288,7 @@ public class OrganisationUnitController
         generator.writeStringField( "id", organisationUnit.getUid() );
 
         generator.writeObjectFieldStart( "geometry" );
-        generator.writeObjectField( "featureType", featureType );
+        generator.writeObjectField( "featureType", featureType.toString() );
 
         generator.writeFieldName( "coordinates" );
         generator.writeRawValue( organisationUnit.getCoordinates() );
