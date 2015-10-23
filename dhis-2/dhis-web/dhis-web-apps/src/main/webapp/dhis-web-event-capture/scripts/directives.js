@@ -4,23 +4,19 @@
 
 var eventCaptureDirectives = angular.module('eventCaptureDirectives', [])
 
-.directive('selectedOrgUnit', function ($timeout, OrgUnitService, SessionStorageService) {
+.directive('selectedOrgUnit', function ($timeout) {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            //once ou tree is loaded, start meta-data download            
-            $( '#orgUnitTree' ).one( 'ouwtLoaded', function( event, ids, names ){
-                console.log('Finished loading orgunit tree');
-                //Disable ou selection until meta-data has downloaded
-                $("#orgUnitTree").addClass("disable-clicks");
-
+            $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {                                   
+                console.log('Finished loading orgunit tree');                        
+                $("#orgUnitTree").addClass("disable-clicks"); //Disable ou selection until meta-data has downloaded
                 $timeout(function () {
                     scope.treeLoaded = true;
                     scope.$apply();
                 });
-
-                downloadMetaData();
-            });
+                downloadMetaData();                
+            });            
 
             //listen to user selection, and inform angular         
             selection.setListenerFunction(setSelectedOu, true);
@@ -33,5 +29,4 @@ var eventCaptureDirectives = angular.module('eventCaptureDirectives', [])
             }
         }
     };
-})
-;
+});
