@@ -34,7 +34,6 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.importexport.ImportStrategy;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -170,6 +169,10 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
                     }
                 }
             }
+        }
+        else if ( importOptions.getImportStrategy().isUpdate() )
+        {
+            update.addAll( trackedEntityInstances );
         }
         else if ( importOptions.getImportStrategy().isDelete() )
         {
