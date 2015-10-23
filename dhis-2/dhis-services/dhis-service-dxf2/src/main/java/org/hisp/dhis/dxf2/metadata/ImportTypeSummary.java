@@ -123,24 +123,32 @@ public class ImportTypeSummary extends ImportSummary
     // Helpers
     //-------------------------------------------------------------------------
 
-    public void incrementImported()
+    @Override
+    public ImportTypeSummary incrementImported()
     {
         importCount.incrementImported();
+        return this;
     }
 
-    public void incrementUpdated()
+    @Override
+    public ImportTypeSummary incrementUpdated()
     {
         importCount.incrementUpdated();
+        return this;
     }
 
-    public void incrementIgnored()
+    @Override
+    public ImportTypeSummary incrementIgnored()
     {
         importCount.incrementIgnored();
+        return this;
     }
 
-    public void incrementDeleted()
+    @Override
+    public ImportTypeSummary incrementDeleted()
     {
         importCount.incrementDeleted();
+        return this;
     }
 
     @Override

@@ -28,9 +28,9 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams;
 
 import java.io.IOException;
@@ -60,9 +60,9 @@ public interface TrackedEntityInstanceService
     // CREATE
     // -------------------------------------------------------------------------
 
-    ImportSummaries addTrackedEntityInstanceXml( InputStream inputStream, ImportStrategy strategy ) throws IOException;
+    ImportSummaries addTrackedEntityInstanceXml( InputStream inputStream, ImportOptions importOptions ) throws IOException;
 
-    ImportSummaries addTrackedEntityInstanceJson( InputStream inputStream, ImportStrategy strategy ) throws IOException;
+    ImportSummaries addTrackedEntityInstanceJson( InputStream inputStream, ImportOptions importOptions ) throws IOException;
 
     ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances );
 
