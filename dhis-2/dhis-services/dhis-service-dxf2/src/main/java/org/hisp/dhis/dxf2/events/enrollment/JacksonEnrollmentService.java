@@ -170,6 +170,10 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
                 }
             }
         }
+        else if ( importOptions.getImportStrategy().isUpdate() )
+        {
+            update.addAll( enrollments );
+        }
         else if ( importOptions.getImportStrategy().isDelete() )
         {
             delete.addAll( enrollments.stream().map( Enrollment::getEnrollment ).collect( Collectors.toList() ) );

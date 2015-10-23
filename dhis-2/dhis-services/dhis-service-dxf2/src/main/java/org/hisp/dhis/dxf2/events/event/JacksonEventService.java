@@ -178,6 +178,10 @@ public class JacksonEventService extends AbstractEventService
                 }
             }
         }
+        else if ( importOptions.getImportStrategy().isUpdate() )
+        {
+            update.addAll( events );
+        }
         else if ( importOptions.getImportStrategy().isDelete() )
         {
             delete.addAll( events.stream().map( Event::getEvent ).collect( Collectors.toList() ) );
