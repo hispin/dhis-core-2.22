@@ -226,7 +226,7 @@ public class DefaultProgramService
 
             prStg.setName( programStage.getName() );
 
-            prStg.setRepeatable( programStage.getIrregular() );
+            prStg.setRepeatable( programStage.getRepeatable() );
 
             if ( programStage.getStandardInterval() == null )
             {

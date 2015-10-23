@@ -24,7 +24,7 @@
     <many-to-one name="program" class="org.hisp.dhis.program.Program" column="programid"
       foreign-key="fk_programstage_program" />
 
-    <property name="irregular" column="irregular" />
+    <property name="repeatable" column="repeatable" />
 
     <set name="programStageDataElements" order-by="sort_order" cascade="save-update">
       <key column="programstageid" />

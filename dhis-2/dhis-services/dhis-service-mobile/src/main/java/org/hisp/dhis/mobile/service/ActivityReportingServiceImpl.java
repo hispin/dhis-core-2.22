@@ -975,7 +975,7 @@ public class ActivityReportingServiceImpl
                 }
 
                 // is repeatable
-                mobileProgramStage.setRepeatable( programStage.getIrregular() );
+                mobileProgramStage.setRepeatable( programStage.getRepeatable() );
 
                 if ( programStage.getStandardInterval() == null )
                 {

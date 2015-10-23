@@ -167,11 +167,11 @@ public class AddProgramStageAction
         this.allowProvidedElsewhere = allowProvidedElsewhere;
     }
 
-    private Boolean irregular;
+    private Boolean repeatable;
 
-    public void setIrregular( Boolean irregular )
+    public void setRepeatable( Boolean repeatable )
     {
-        this.irregular = irregular;
+        this.repeatable = repeatable;
     }
 
     private Integer standardInterval;
@@ -351,7 +351,7 @@ public class AddProgramStageAction
         throws Exception
     {
         minDaysFromStart = (minDaysFromStart == null) ? 0 : minDaysFromStart;
-        irregular = (irregular == null) ? false : irregular;
+        repeatable = (repeatable == null) ? false : repeatable;
         autoGenerateEvent = (autoGenerateEvent == null) ? false : autoGenerateEvent;
         validCompleteOnly = (validCompleteOnly == null) ? false : validCompleteOnly;
         displayGenerateEventBox = (displayGenerateEventBox == null) ? false : displayGenerateEventBox;
@@ -372,7 +372,7 @@ public class AddProgramStageAction
         programStage.setProgram( program );
         programStage.setStandardInterval( standardInterval );
         programStage.setExcecutionDateLabel( StringUtils.trimToNull( excecutionDateLabel ) );
-        programStage.setIrregular( irregular );
+        programStage.setRepeatable( repeatable );
         programStage.setMinDaysFromStart( minDaysFromStart );
         programStage.setDisplayGenerateEventBox( displayGenerateEventBox );
         programStage.setValidCompleteOnly( validCompleteOnly );

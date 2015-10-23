@@ -250,7 +250,7 @@ public class ProgramStageInstanceServiceTest
 
         stageD = new ProgramStage( "D", programB );
         stageB.setSortOrder( 2 );
-        stageC.setIrregular( true );
+        stageC.setRepeatable( true );
         programStageService.saveProgramStage( stageD );
 
         programStages = new HashSet<>();
