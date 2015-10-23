@@ -77,7 +77,7 @@ public class FileResourceCleanUpTask
 
         StringBuilder sb = new StringBuilder( "[ " );
 
-        list.forEach( pair -> sb.append( pair.getLeft() ).append( " , uid: " ).append( pair.getRight() ).append( " ," ) );
+        list.forEach( pair -> sb.append( pair.getLeft() ).append( " , uid: " ).append( pair.getRight() ).append( ", " ) );
 
         sb.deleteCharAt( sb.lastIndexOf( "," ) ).append( "]" );
 
