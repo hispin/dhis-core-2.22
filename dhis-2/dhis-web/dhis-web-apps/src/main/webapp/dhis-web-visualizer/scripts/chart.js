@@ -684,7 +684,8 @@ Ext.onReady(function() {
                         line: 'line',
                         area: 'area',
                         pie: 'pie',
-                        radar: 'radar'
+                        radar: 'radar',
+                        gauge: 'gauge'
                     },
                     server: {
                         column: 'COLUMN',
@@ -3360,8 +3361,8 @@ Ext.onReady(function() {
                         text = '',
                         titleFont,
                         titleColor,
-                        isPie = xLayout.type === conf.finals.chart.pie,
-                        isGauge = xLayout.type === conf.finals.chart.gauge;
+                        isPie = xLayout.type === conf.finals.chart.client.pie,
+                        isGauge = xLayout.type === conf.finals.chart.client.gauge;
 
                     if (isPie) {
                         ids.push(columnIds[0]);
@@ -4532,7 +4533,7 @@ Ext.onReady(function() {
                     xResponse = service.response.getExtendedResponse(xLayout, response);
 
                     // legend set
-                    if (xLayout.type === 'gauge' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
+                    if (xLayout.type === 'GAUGE' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
                         Ext.Ajax.request({
                             url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[legends[id,name,startValue,endValue,color]]',
                             disableCaching: false,
