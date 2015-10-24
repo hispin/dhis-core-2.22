@@ -550,7 +550,7 @@ public class DataApprovalLevelServiceTest
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
 
-        assertEquals( "02", levelNames( levels ) );
+        assertEquals( "02 2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
     }
 
     @Test
@@ -580,7 +580,7 @@ public class DataApprovalLevelServiceTest
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
 
-        assertEquals( "03 04", levelNames( levels ) );
+        assertEquals( "2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
     }
 
     @Test
@@ -610,7 +610,7 @@ public class DataApprovalLevelServiceTest
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
 
-        assertEquals( "02 03 04", levelNames( levels ) );
+        assertEquals( "02 2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
     }
 
     @Test
@@ -640,7 +640,7 @@ public class DataApprovalLevelServiceTest
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
 
-        assertEquals( "03 04", levelNames( levels ) );
+        assertEquals( "2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
     }
 
     @Test
@@ -662,7 +662,7 @@ public class DataApprovalLevelServiceTest
         assertEquals( "04", levelNames( levels ) );
     }
 
-    private String levelNames(List<DataApprovalLevel> levels )
+    private String levelNames( List<DataApprovalLevel> levels )
     {
         String names = "";
 
