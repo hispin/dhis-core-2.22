@@ -7099,16 +7099,19 @@ Ext.onReady(function() {
         css += '.gis-container-default .x-window-body { padding: 5px; background: #fff; } \n';
         css += '.olControlPanel { position: absolute; top: 0; right: 0; border: 0 none; } \n';
         css += '.olControlButtonItemActive { background: #556; color: #fff; width: 24px; height: 24px; opacity: 0.75; filter: alpha(opacity=75); -ms-filter: "alpha(opacity=75)"; cursor: pointer; cursor: hand; text-align: center; font-size: 21px !important; text-shadow: 0 0 1px #ddd; } \n';
-        css += '.olControlPanel.zoomIn { right: 72px; } \n';
-        css += '.olControlPanel.zoomIn .olControlButtonItemActive { border-bottom-left-radius: 2px; } \n';
-        css += '.olControlPanel.zoomOut { right: 48px; } \n';
-        css += '.olControlPanel.zoomVisible { right: 24px; } \n';
-        css += '.olControlPanel.zoomIn-vertical { } \n';
-        css += '.olControlPanel.zoomOut-vertical { top: 24px; } \n';
-        css += '.olControlPanel.zoomVisible-vertical { top: 48px; } \n';
+        css += '.olControlPanel.zoomIn { right: 76px; top: 4px; } \n';
+        css += '.olControlPanel.zoomIn .olControlButtonItemActive { border-top-left-radius: 3px; border-bottom-left-radius: 3px; } \n';
+        css += '.olControlPanel.zoomOut { right: 52px; top: 4px; } \n';
+        css += '.olControlPanel.zoomVisible { right: 28px; top: 4px; } \n';
+        css += '.olControlPanel.legend { right: 4px; top: 4px; } \n';
+        css += '.olControlPanel.legend .olControlButtonItemActive { border-top-right-radius: 3px; border-bottom-right-radius: 3px; } \n';
+        css += '.olControlPanel.zoomIn-vertical { right: 4px; top: 4px; } \n';
+        css += '.olControlPanel.zoomIn-vertical .olControlButtonItemActive { border-top-left-radius: 3px; border-top-right-radius: 3px; } \n';
+        css += '.olControlPanel.zoomOut-vertical { right: 4px; top: 28px; } \n';
+        css += '.olControlPanel.zoomVisible-vertical { right: 4px; top: 52px; } \n';
         //css += '.olControlPanel.measure-vertical { top: 72px; right: 1px; } \n';
-        css += '.olControlPanel.legend-vertical { top: 72px; } \n';
-        css += '.olControlPanel.legend-vertical .olControlButtonItemActive { border-bottom-left-radius: 2px; } \n';
+        css += '.olControlPanel.legend-vertical { right: 4px; top: 76px; } \n';
+        css += '.olControlPanel.legend-vertical .olControlButtonItemActive { border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; } \n';
         css += '.olControlPermalink { display: none !important; } \n';
         css += '.olControlMousePosition { background: #fff !important; line-height: 14px; opacity: 0.8 !important; filter: alpha(opacity=80) !important; -ms-filter: "alpha(opacity=80)" !important; right: 0 !important; bottom: 0 !important; border-top-left-radius: 2px !important; padding: 2px 2px 1px 5px !important; color: #000 !important; -webkit-text-stroke-width: 0.1px; -webkit-text-stroke-color: #555; } \n';
         css += '.olControlMousePosition * { font-size: 10px !important; } \n';
@@ -7360,13 +7363,30 @@ Ext.onReady(function() {
         afterRender = function(vp) {
 
             // map buttons
-            var clsArray = ['zoomIn-verticalButton', 'zoomOut-verticalButton', 'zoomVisible-verticalButton', 'measure-verticalButton', 'legend-verticalButton'],
+            //var clsArray = ['zoomIn-verticalButton', 'zoomOut-verticalButton', 'zoomVisible-verticalButton', 'measure-verticalButton', 'legend-verticalButton'],
+            var clsArray = [
+                    'zoomInButton',
+                    'zoomIn-verticalButton',
+                    'zoomOutButton',
+                    'zoomOut-verticalButton',
+                    'zoomVisibleButton',
+                    'zoomVisible-verticalButton',
+                    'measureButton',
+                    'measure-verticalButton',
+                    'legendButton',
+                    'legend-verticalButton'
+                ],
                 map = {
                     'zoomIn-verticalButton': 'zoomin_24.png',
                     'zoomOut-verticalButton': 'zoomout_24.png',
                     'zoomVisible-verticalButton': 'zoomvisible_24.png',
                     'measure-verticalButton': 'measure_24.png',
-                    'legend-verticalButton': 'legend_24.png'
+                    'legend-verticalButton': 'legend_24.png',
+                    'zoomInButton': 'zoomin_24.png',
+                    'zoomOutButton': 'zoomout_24.png',
+                    'zoomVisibleButton': 'zoomvisible_24.png',
+                    'measureButton': 'measure_24.png',
+                    'legendButton': 'legend_24.png'
                 };
 
             for (var i = 0, cls, elArray; i < clsArray.length; i++) {
@@ -7387,10 +7407,12 @@ Ext.onReady(function() {
                 var base = Ext.isString(gis.map.baseLayer) ? gis.map.baseLayer.split(' ').join('').toLowerCase() : gis.map.baseLayer;
 
                 if (!base || base === 'none' || base === 'off') {
-                    gis.layer.googleStreets.setVisibility(false);
-                } else if (base === 'gh' || base === 'googlehybrid') {
+                    gis.layer.openStreetMap.setVisibility(false);
+                }
+                else if (base === 'gh' || base === 'googlehybrid') {
                     gis.olmap.setBaseLayer(gis.layer.googleHybrid);
-                } else if (base === 'osm' || base === 'openstreetmap') {
+                }
+                else if (base === 'osm' || base === 'openstreetmap') {
                     gis.olmap.setBaseLayer(gis.layer.openStreetMap);
                 }
             }
@@ -7454,7 +7476,16 @@ Ext.onReady(function() {
                 googleHybrid.id = 'googleHybrid';
 
                 gis.olmap.addLayers([googleStreets, googleHybrid]);
-                gis.olmap.setBaseLayer(googleStreets);
+
+                if (config.baseLayer === 'osm') {
+                    gis.olmap.setBaseLayer(gis.layer.openStreetMap);
+                }
+                else if (config.baseLayer === 'gh') {
+                    gis.olmap.setBaseLayer(googleHybrid);
+                }
+                else {
+                    gis.olmap.setBaseLayer(googleStreets);
+                }
             };
 
             if (GIS_GM.ready) {
@@ -7540,15 +7571,17 @@ Ext.onReady(function() {
                     }
                 };
 
-                Ext.Loader.injectScriptElement('//maps.googleapis.com/maps/api/js?callback=GIS_GM_fn',
-                    function() {
-                        console.log("GM available (online)");
-                    },
-                    function() {
-                        console.log("GM not available (offline)");
-                        GIS_GM.offline = true;
-                    }
-                );
+                if (!Ext.Array.contains(['osm', 'none'], config.baseLayer)) {
+                    Ext.Loader.injectScriptElement('//maps.googleapis.com/maps/api/js?callback=GIS_GM_fn',
+                        function() {
+                            console.log("GM available (online)");
+                        },
+                        function() {
+                            console.log("GM not available (offline)");
+                            GIS_GM.offline = true;
+                        }
+                    );
+                }
 
                 // plugin
                 getInit(config);

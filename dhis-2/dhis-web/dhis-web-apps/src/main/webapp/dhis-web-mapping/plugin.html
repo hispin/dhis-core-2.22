@@ -29,25 +29,26 @@
 		Ext.onReady(function() {
 			var url = "http://localhost:8080";
 
-			GIS.plugin.getMap({
-				url: url,
-				el: "map1",
-				id: "jzxTpTUdISq",
-                crossDomain: true,
-                username: "system",
-                password: "System123",
-                dashboard: true,
-                mapViews: [{
-                    userOrgUnit: ['fdc6uOvgoji']
-                }]
-			});
+			//GIS.plugin.getMap({
+				//url: url,
+				//el: "map1",
+				//id: "jzxTpTUdISq",
+                //crossDomain: true,
+                //username: "system",
+                //password: "System123",
+                //dashboard: true,
+                //mapViews: [{
+                    //userOrgUnit: ['fdc6uOvgoji']
+                //}]
+			//});
 
 			GIS.plugin.getMap({
 				url: url,
 				el: "map2",
                 crossDomain: false,
-				baseLayer: 'osm',
+                dashboard: true,
 				hideLegend: true,
+                baseLayer: 'none',
 				mapViews: [
 					{
 						layer: 'boundary',
