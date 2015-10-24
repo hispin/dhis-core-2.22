@@ -626,7 +626,8 @@ Ext.onReady( function() {
                         line: 'line',
                         area: 'area',
                         pie: 'pie',
-                        radar: 'radar'
+                        radar: 'radar',
+                        gauge: 'gauge'
                     },
                     server: {
                         column: 'COLUMN',
@@ -3302,8 +3303,8 @@ Ext.onReady( function() {
                         text = '',
                         titleFont,
                         titleColor,
-                        isPie = xLayout.type === conf.finals.chart.pie,
-                        isGauge = xLayout.type === conf.finals.chart.gauge;
+                        isPie = xLayout.type === conf.finals.chart.client.pie,
+                        isGauge = xLayout.type === conf.finals.chart.client.gauge;
 
                     if (isPie) {
                         ids.push(columnIds[0]);
