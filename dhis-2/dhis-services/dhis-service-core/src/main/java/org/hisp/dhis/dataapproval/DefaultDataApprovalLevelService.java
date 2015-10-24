@@ -256,72 +256,49 @@ public class DefaultDataApprovalLevelService
     @Override
     public List<DataApprovalLevel> getUserDataApprovalLevels()
     {
+        UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
+
+        boolean mayApprove = userCredentials.isAuthorized( DataApproval.AUTH_APPROVE );
+        boolean mayApproveAtLowerLevels = userCredentials.isAuthorized( DataApproval.AUTH_APPROVE_LOWER_LEVELS );
+        boolean mayAcceptAtLowerLevels = userCredentials.isAuthorized( DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
+
+        if ( !mayApprove && !mayApproveAtLowerLevels && ! mayAcceptAtLowerLevels )
+        {
+            return new ArrayList<>();
+        }
+
+        int lowestNumberOrgUnitLevel = getCurrentUsersLowestNumberOrgUnitLevel();
+
+        boolean canSeeAllDimensions = CollectionUtils.isEmpty( userService.getCoDimensionConstraints( userCredentials ) )
+            && CollectionUtils.isEmpty( userService.getCogDimensionConstraints( userCredentials ) );
+
+        List<DataApprovalLevel> approvalLevels = getAllDataApprovalLevels();
         List<DataApprovalLevel> userDataApprovalLevels = new ArrayList<>();
 
-        User user = currentUserService.getCurrentUser();
+        boolean addLevel = false;
 
-        boolean mayApprove = user.getUserCredentials().isAuthorized( DataApproval.AUTH_APPROVE );
-        boolean mayApproveAtLowerLevels = user.getUserCredentials().isAuthorized( DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        boolean mayAcceptAtLowerLevels = user.getUserCredentials().isAuthorized( DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-
-        if ( mayApprove || mayApproveAtLowerLevels || mayAcceptAtLowerLevels )
+        for ( DataApprovalLevel approvalLevel : approvalLevels )
         {
-            Set<Integer> userOrgUnitLevels = new HashSet<>();
+            boolean canAccessThisLevel = false;
 
-            int lowestNumberOrgUnitLevel = APPROVAL_LEVEL_UNAPPROVED;
-
-            for ( OrganisationUnit orgUnit : user.getOrganisationUnits() )
-            {
-                int orgUnitLevel = orgUnit.getLevel();
-
-                userOrgUnitLevels.add( orgUnitLevel );
-
-                if ( orgUnitLevel < lowestNumberOrgUnitLevel )
-                {
-                    lowestNumberOrgUnitLevel = orgUnitLevel;
-                }
-            }
-
-            boolean assignedAtLevel = false;
-            boolean approvableAtLevel = false;
-            boolean approvableAtAllLowerLevels = false;
-
-            boolean canSeeAllDimensions = CollectionUtils.isEmpty( userService.getCoDimensionConstraints( user.getUserCredentials() ) )
-                && CollectionUtils.isEmpty( userService.getCogDimensionConstraints( user.getUserCredentials() ) );
-
-            List<DataApprovalLevel> approvalLevels = getAllDataApprovalLevels();
-            
-            for ( DataApprovalLevel approvalLevel : approvalLevels )
+            if ( !addLevel && approvalLevel.getOrgUnitLevel() >= lowestNumberOrgUnitLevel )
             {
                 CategoryOptionGroupSet cogs = approvalLevel.getCategoryOptionGroupSet();
 
-                Boolean canReadThisLevel = ( securityService.canRead( approvalLevel ) && (
-                    ( cogs == null && canSeeAllDimensions ) ||
-                    ( cogs != null && securityService.canRead( cogs ) && !CollectionUtils.isEmpty( categoryService.getCategoryOptionGroups( cogs ) ) ) ) );
-                
-                // Test using assignedAtLevel and approvableAtLevel values from the previous (higher) level.
-                
-                Boolean addBecauseOfPreviousLevel = canReadThisLevel && ( approvableAtLevel // Approve at previous higher level implies unapprove at current level.
-                    || ( assignedAtLevel && mayAcceptAtLowerLevels ) ); // Assigned at previous level and mayAcceptAtLowerLevels means may accept here.
+                canAccessThisLevel = securityService.canRead( approvalLevel ) &&
+                    cogs == null ? canSeeAllDimensions :
+                    ( securityService.canRead( cogs ) && !CollectionUtils.isEmpty( categoryService.getCategoryOptionGroups( cogs ) ) );
 
-                if ( assignedAtLevel && mayApproveAtLowerLevels )
-                {
-                    approvableAtAllLowerLevels = true;
-                }
-                
-                // Get new values of assignedAtLevel and approvableAtLevel for the current approval level.
-                
-                assignedAtLevel = canReadThisLevel && ( ( mayApprove && userOrgUnitLevels.contains( approvalLevel.getOrgUnitLevel() ) )
-                        || ( ( mayApproveAtLowerLevels || mayAcceptAtLowerLevels ) && approvalLevel.getOrgUnitLevel() > lowestNumberOrgUnitLevel ) );
+                addLevel = canAccessThisLevel && ( mayApprove || approvalLevel.getOrgUnitLevel() > lowestNumberOrgUnitLevel );
+            }
 
-                approvableAtLevel = canReadThisLevel && ( assignedAtLevel || approvableAtAllLowerLevels );
-                
-                // Test using assignedAtLevel and approvableAtLevel values from the current level.
-                
-                if ( approvableAtLevel || addBecauseOfPreviousLevel )
-                {
-                    userDataApprovalLevels.add( approvalLevel );
-                }
+            if ( addLevel )
+            {
+                userDataApprovalLevels.add( approvalLevel );
+            }
+            else
+            {
+                addLevel = canAccessThisLevel;
             }
         }
 
@@ -604,6 +581,26 @@ public class DefaultDataApprovalLevelService
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
+
+    /**
+     * Finds the lowest number (highest level) organisaiton unit level
+     * from the organisations assigned to the current user.
+     */
+    private int getCurrentUsersLowestNumberOrgUnitLevel()
+    {
+        int level = APPROVAL_LEVEL_UNAPPROVED;
+
+        Set<OrganisationUnit> userOrgUnits = currentUserService.getCurrentUser().getOrganisationUnits();
+
+        for ( OrganisationUnit orgUnit : userOrgUnits )
+        {
+            if ( orgUnit.getLevel() < level )
+            {
+                level = orgUnit.getLevel();
+            }
+        }
+        return level;
+    }
 
     /**
      * Swaps a data approval level with the next higher level.
