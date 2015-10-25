@@ -580,7 +580,7 @@ public class DataApprovalLevelServiceTest
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
 
-        assertEquals( "2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
+        assertEquals( "02 2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
     }
 
     @Test
@@ -640,7 +640,7 @@ public class DataApprovalLevelServiceTest
 
         List<DataApprovalLevel> levels = dataApprovalLevelService.getUserDataApprovalLevels();
 
-        assertEquals( "2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
+        assertEquals( "02 2A 2B 03 3A 3B 04 4A 4B", levelNames( levels ) );
     }
 
     @Test

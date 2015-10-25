@@ -279,26 +279,18 @@ public class DefaultDataApprovalLevelService
 
         for ( DataApprovalLevel approvalLevel : approvalLevels )
         {
-            boolean canAccessThisLevel = false;
-
             if ( !addLevel && approvalLevel.getOrgUnitLevel() >= lowestNumberOrgUnitLevel )
             {
                 CategoryOptionGroupSet cogs = approvalLevel.getCategoryOptionGroupSet();
 
-                canAccessThisLevel = securityService.canRead( approvalLevel ) &&
+                addLevel = securityService.canRead( approvalLevel ) &&
                     cogs == null ? canSeeAllDimensions :
                     ( securityService.canRead( cogs ) && !CollectionUtils.isEmpty( categoryService.getCategoryOptionGroups( cogs ) ) );
-
-                addLevel = canAccessThisLevel && ( mayApprove || approvalLevel.getOrgUnitLevel() > lowestNumberOrgUnitLevel );
             }
 
             if ( addLevel )
             {
                 userDataApprovalLevels.add( approvalLevel );
-            }
-            else
-            {
-                addLevel = canAccessThisLevel;
             }
         }
 
