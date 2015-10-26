@@ -6510,6 +6510,7 @@ Ext.onReady( function() {
 			preventHeader: true,
 			collapsible: true,
 			collapseMode: 'mini',
+            border: false,
 			width: function() {
 				if (Ext.isWebKit) {
 					return ns.core.conf.layout.west_width + 8;
