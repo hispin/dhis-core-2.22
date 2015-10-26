@@ -37,11 +37,23 @@ import org.hisp.dhis.common.DxfNamespaces;
 @JacksonXmlRootElement( localName = "featureType", namespace = DxfNamespaces.DXF_2_0 )
 public enum FeatureType
 {
-    NONE,
-    MULTI_POLYGON,
-    POLYGON,
-    POINT,
-    SYMBOL;
+    NONE( "None" ),
+    MULTI_POLYGON( "MultiPolygon" ),
+    POLYGON( "Polygon" ),
+    POINT( "Point" ),
+    SYMBOL( "Symbol" );
+
+    String value;
+
+    FeatureType( String value )
+    {
+        this.value = value;
+    }
+
+    public String value()
+    {
+        return value;
+    }
 
     public boolean isPolygon()
     {
