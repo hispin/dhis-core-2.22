@@ -433,7 +433,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                         newInputField = '<textarea row ="3" ' +
                                                 ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
-                                                commonInputFieldProperty + ' >';
+                                                commonInputFieldProperty + '></textarea>';
                                     }
                                     else {
                                         newInputField = '<input type="text" ' +
