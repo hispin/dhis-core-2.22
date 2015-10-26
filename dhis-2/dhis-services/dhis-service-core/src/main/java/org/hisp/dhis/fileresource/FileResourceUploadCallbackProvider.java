@@ -35,6 +35,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 /**
@@ -53,6 +54,7 @@ public class FileResourceUploadCallbackProvider
         {
             DateTime startTime = DateTime.now();
 
+            @Transactional
             @Override
             public void onFailure( Throwable ex )
             {
@@ -69,6 +71,7 @@ public class FileResourceUploadCallbackProvider
                 }
             }
 
+            @Transactional
             @Override
             public void onSuccess( String result )
             {
