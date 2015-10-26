@@ -31,7 +31,6 @@ package org.hisp.dhis.fileresource;
 import com.google.common.io.ByteSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -66,10 +65,17 @@ public class DefaultFileResourceService
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
+//
+//    private GenericIdentifiableObjectStore<FileResource> fileResourceStore;
+//
+//    public void setFileResourceStore( GenericIdentifiableObjectStore<FileResource> fileResourceStore )
+//    {
+//        this.fileResourceStore = fileResourceStore;
+//    }
 
-    private GenericIdentifiableObjectStore<FileResource> fileResourceStore;
+    private FileResourceStore fileResourceStore;
 
-    public void setFileResourceStore( GenericIdentifiableObjectStore<FileResource> fileResourceStore )
+    public void setFileResourceStore( FileResourceStore fileResourceStore )
     {
         this.fileResourceStore = fileResourceStore;
     }
@@ -125,7 +131,8 @@ public class DefaultFileResourceService
     public FileResource getFileResource( String uid )
     {
         // TODO Consider need for ensureStorageStatus
-        return ensureStorageStatus( fileResourceStore.getByUid( uid ) );
+//        return ensureStorageStatus( fileResourceStore.getByUid( uid ) );
+        return fileResourceStore.getByUid( uid );
     }
 
     @Override
@@ -142,12 +149,11 @@ public class DefaultFileResourceService
             .stream().filter( IS_ORPHAN_PREDICATE ).collect( Collectors.toList() );
     }
 
-    @Transactional
     @Override
     public String saveFileResource( FileResource fileResource, File file )
     {
         fileResource.setStorageStatus( FileResourceStorageStatus.PENDING );
-        fileResourceStore.save( fileResource );
+        fileResourceStore.saveInTransaction( fileResource );
 
         ListenableFuture<String> saveContentTask =
             scheduler.executeTask( () -> fileResourceContentStore.saveFileResourceContent( fileResource, file ) );
@@ -158,6 +164,23 @@ public class DefaultFileResourceService
 
         return uid;
     }
+//
+//    @Transactional
+//    @Override
+//    public String saveFileResource( FileResource fileResource, File file )
+//    {
+//        fileResource.setStorageStatus( FileResourceStorageStatus.PENDING );
+//        fileResourceStore.save( fileResource );
+//
+//        ListenableFuture<String> saveContentTask =
+//            scheduler.executeTask( () -> fileResourceContentStore.saveFileResourceContent( fileResource, file ) );
+//
+//        String uid = fileResource.getUid();
+//
+//        saveContentTask.addCallback( uploadCallbackProvider.getCallback( uid ) );
+//
+//        return uid;
+//    }
 
     @Transactional
     @Override
