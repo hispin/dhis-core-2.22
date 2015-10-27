@@ -39,7 +39,7 @@ function viewReport( type )
 
     if ( MODE_REPORT == mode )
     {
-    	if ( TYPE_HTML == type )
+    	if ( TYPE_HTML == type.toLowerCase() )
     	{
     		window.location.href= "generateHtmlReport.action?uid=" + uid + "&" + getUrlParams();
     	}
