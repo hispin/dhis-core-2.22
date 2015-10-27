@@ -1,4 +1,4 @@
-package org.hisp.dhis.hibernate;
+package org.hisp.dhis.external.conf;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,62 +28,44 @@ package org.hisp.dhis.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.FactoryBean;
-
 /**
  * @author Lars Helge Overland
  */
-public class ConnectionPropertyFactoryBean
-    implements FactoryBean<String>
+public enum ConfigurationKey
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
+    KEY_LDAP_URL( "ldap.url", "ldaps://0:1" ),
+    KEY_LDAP_MANAGER_DN( "ldap.manager.dn" ),
+    KEY_LDAP_MANAGER_PASSWORD( "ldap.manager.password" ),
+    KEY_LDAP_DN_PATTERNS( "ldap.dn.patterns", "" ),    
+    KEY_FILESTORE_PROVIDER( "filestore.provider", "filesystem" ),
+    KEY_FILE_STORE_CONTAINER( "filestore.container" ),
+    KEY_FILE_STORE_LOCATION( "filestore.location" ),
+    KEY_FILE_STORE_IDENTITY( "filestore.identity" ),
+    KEY_FILE_STORE_SECRET( "filestore.secret" );
 
-    private HibernateConfigurationProvider hibernateConfigurationProvider;
+    private final String key;
     
-    public void setHibernateConfigurationProvider( HibernateConfigurationProvider hibernateConfigurationProvider )
+    private final String defaultValue;
+    
+    ConfigurationKey( String key )
     {
-        this.hibernateConfigurationProvider = hibernateConfigurationProvider;
+        this.key = key;
+        this.defaultValue = null;
     }
 
-    private String hibernateProperty;
-
-    public void setHibernateProperty( String hibernateProperty )
+    ConfigurationKey( String key, String defaultValue )
     {
-        this.hibernateProperty = hibernateProperty;
-    }
-    
-    private String defaultValue;
-
-    public void setDefaultValue( String defaultValue )
-    {
+        this.key = key;
         this.defaultValue = defaultValue;
     }
-
-    // -------------------------------------------------------------------------
-    // FactoryBean implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    public String getObject()
-        throws Exception
+    
+    public String getKey()
     {
-        String value = hibernateConfigurationProvider.getConfiguration().getProperty( hibernateProperty );
-        
-        return StringUtils.defaultIfEmpty( value, defaultValue );
+        return key;
     }
-
-    @Override
-    public Class<String> getObjectType()
+    
+    public String getDefaultValue()
     {
-        return String.class;
-    }
-
-    @Override
-    public boolean isSingleton()
-    {
-        return true;
+        return defaultValue;
     }
 }

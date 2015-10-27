@@ -1,4 +1,4 @@
-package org.hisp.dhis.hibernate;
+package org.hisp.dhis.security.ldap.authentication;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,62 +28,43 @@ package org.hisp.dhis.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.FactoryBean;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.support.BaseLdapPathContextSource;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.ldap.authentication.BindAuthenticator;
 
 /**
+ * Authenticator which checks whether LDAP authentication is configured. If not,
+ * the authentication will be aborted, otherwise authentication is delegated to
+ * Spring BindAuthenticator.
+ * 
  * @author Lars Helge Overland
  */
-public class ConnectionPropertyFactoryBean
-    implements FactoryBean<String>
+public class DhisBindAuthenticator
+    extends BindAuthenticator
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
-    private HibernateConfigurationProvider hibernateConfigurationProvider;
+    @Autowired
+    private DhisConfigurationProvider configurationProvider;
     
-    public void setHibernateConfigurationProvider( HibernateConfigurationProvider hibernateConfigurationProvider )
+    public DhisBindAuthenticator( BaseLdapPathContextSource contextSource )
     {
-        this.hibernateConfigurationProvider = hibernateConfigurationProvider;
+        super( contextSource );
     }
-
-    private String hibernateProperty;
-
-    public void setHibernateProperty( String hibernateProperty )
-    {
-        this.hibernateProperty = hibernateProperty;
-    }
-    
-    private String defaultValue;
-
-    public void setDefaultValue( String defaultValue )
-    {
-        this.defaultValue = defaultValue;
-    }
-
-    // -------------------------------------------------------------------------
-    // FactoryBean implementation
-    // -------------------------------------------------------------------------
 
     @Override
-    public String getObject()
-        throws Exception
+    public DirContextOperations authenticate( Authentication authentication )
     {
-        String value = hibernateConfigurationProvider.getConfiguration().getProperty( hibernateProperty );
+        boolean ldapConf = configurationProvider.isLdapConfigured();
         
-        return StringUtils.defaultIfEmpty( value, defaultValue );
-    }
-
-    @Override
-    public Class<String> getObjectType()
-    {
-        return String.class;
-    }
-
-    @Override
-    public boolean isSingleton()
-    {
-        return true;
+        System.out.println( "IS LDAP CONF " + ldapConf );
+        if ( !ldapConf )
+        {
+            throw new BadCredentialsException( "LDAP authentication is not configured" );
+        }
+        
+        return super.authenticate( authentication );
     }
 }

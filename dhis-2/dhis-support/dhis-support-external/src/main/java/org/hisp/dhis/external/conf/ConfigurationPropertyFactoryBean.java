@@ -1,4 +1,6 @@
-package org.hisp.dhis.hibernate;
+package org.hisp.dhis.external.conf;
+
+import java.util.List;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,38 +30,42 @@ package org.hisp.dhis.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
+
+import com.google.common.collect.Lists;
 
 /**
+ * Factory bean which allows for DHIS configuration property values to be 
+ * injected into target beans. 
+ * 
+ * @param key must reflect a {@link ConfigurationKey}.
+ * 
  * @author Lars Helge Overland
  */
-public class ConnectionPropertyFactoryBean
-    implements FactoryBean<String>
+public class ConfigurationPropertyFactoryBean
+    implements FactoryBean<Object>
 {
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private HibernateConfigurationProvider hibernateConfigurationProvider;
+    @Autowired
+    private DhisConfigurationProvider configurationProvider;
     
-    public void setHibernateConfigurationProvider( HibernateConfigurationProvider hibernateConfigurationProvider )
+    private ConfigurationKey key;
+    
+    public ConfigurationPropertyFactoryBean( ConfigurationKey key )
     {
-        this.hibernateConfigurationProvider = hibernateConfigurationProvider;
-    }
-
-    private String hibernateProperty;
-
-    public void setHibernateProperty( String hibernateProperty )
-    {
-        this.hibernateProperty = hibernateProperty;
+        this.key = key;
     }
     
-    private String defaultValue;
+    private boolean list;
 
-    public void setDefaultValue( String defaultValue )
+    public void setList( boolean list )
     {
-        this.defaultValue = defaultValue;
+        this.list = list;
     }
 
     // -------------------------------------------------------------------------
@@ -67,18 +73,27 @@ public class ConnectionPropertyFactoryBean
     // -------------------------------------------------------------------------
 
     @Override
-    public String getObject()
+    public Object getObject()
         throws Exception
     {
-        String value = hibernateConfigurationProvider.getConfiguration().getProperty( hibernateProperty );
+        Assert.notNull( key, "Configuration key must be specified" );
         
-        return StringUtils.defaultIfEmpty( value, defaultValue );
+        String value = configurationProvider.getProperty( key );
+        
+        if ( list )
+        {
+            return value != null ? Lists.newArrayList( value.split( ";" ) ) : value;
+        }
+        else
+        {
+            return value;
+        }
     }
 
     @Override
-    public Class<String> getObjectType()
+    public Class<?> getObjectType()
     {
-        return String.class;
+        return list ? List.class : String.class;
     }
 
     @Override
