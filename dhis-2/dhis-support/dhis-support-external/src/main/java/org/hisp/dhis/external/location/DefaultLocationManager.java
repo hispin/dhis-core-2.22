@@ -44,7 +44,6 @@ import static java.io.File.separator;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class DefaultLocationManager
     implements LocationManager

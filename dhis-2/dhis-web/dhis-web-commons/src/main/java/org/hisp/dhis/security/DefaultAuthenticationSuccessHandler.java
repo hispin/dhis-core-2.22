@@ -41,6 +41,7 @@ import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 /**
@@ -69,7 +70,16 @@ public class DefaultAuthenticationSuccessHandler
     {
         HttpSession session = request.getSession();
         
-        String username = ((User)authentication.getPrincipal()).getUsername();
+        String username = null;
+        
+        if ( User.class.isAssignableFrom( authentication.getClass() ) )
+        {
+            username = ((User)authentication.getPrincipal()).getUsername();
+        }
+        else if ( LdapUserDetailsImpl.class.isAssignableFrom( authentication.getClass() ) )
+        {
+            username = ((LdapUserDetailsImpl)authentication.getPrincipal()).getUsername();
+        }        
 
         session.setAttribute( "userIs", username);
         session.setAttribute( LoginInterceptor.JLI_SESSION_VARIABLE, Boolean.TRUE );

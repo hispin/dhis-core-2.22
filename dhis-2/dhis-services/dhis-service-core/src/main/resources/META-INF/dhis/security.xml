@@ -21,13 +21,49 @@
   </bean>
 
   <!-- Security : Authentication providers -->
+  
   <sec:authentication-manager alias="authenticationManager">
     <sec:authentication-provider user-service-ref="userDetailsService">
       <sec:password-encoder ref="bCryptPasswordEncoder" />
     </sec:authentication-provider>
+    <sec:authentication-provider ref="ldapAuthenticationProvider" />
   </sec:authentication-manager>
 
+  <!-- LDAP -->
+  
+  <bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+    <constructor-arg ref="ldapUrl" />
+    <property name="userDn" ref="ldapManagerDn" />
+    <property name="password" ref="ldapManagerPassword" />
+  </bean>
+  
+  <bean id="ldapAuthenticationProvider" class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+    <constructor-arg>
+      <bean class="org.hisp.dhis.security.ldap.authentication.DhisBindAuthenticator">
+        <constructor-arg ref="contextSource"/>
+        <property name="userDnPatterns" ref="ldapDnPatterns" />
+      </bean>
+    </constructor-arg>
+    <constructor-arg>
+      <bean class="org.springframework.security.ldap.authentication.UserDetailsServiceLdapAuthoritiesPopulator">
+        <constructor-arg ref="userDetailsService" />
+      </bean>
+    </constructor-arg>
+  </bean>
+  
+  <bean id="ldapUrl" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="KEY_LDAP_URL" /></bean>
+  
+  <bean id="ldapManagerDn" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="KEY_LDAP_MANAGER_DN" /></bean>
+  
+  <bean id="ldapManagerPassword" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="KEY_LDAP_MANAGER_PASSWORD" /></bean>
+    
+  <bean id="ldapDnPatterns" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean">
+    <constructor-arg value="KEY_LDAP_DN_PATTERNS" />
+    <property name="list" value="true" />
+  </bean>  
+    
   <!-- OAuth2 -->
+  
   <bean id="clientDetailsService" class="org.hisp.dhis.security.oauth2.DefaultClientDetailsService" />
 
   <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
@@ -50,6 +86,5 @@
   <sec:authentication-manager id="clientAuthenticationManager">
     <sec:authentication-provider user-service-ref="clientDetailsUserService" />
   </sec:authentication-manager>
-  <!-- End OAuth2 -->
 
 </beans>

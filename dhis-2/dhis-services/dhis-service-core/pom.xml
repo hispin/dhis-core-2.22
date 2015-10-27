@@ -93,8 +93,12 @@
       <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>aws-s3</artifactId>
     </dependency>
-
-     <!-- SMS -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-ldap</artifactId>
+    </dependency>
+    
+    <!-- SMS -->
 
     <dependency>
       <groupId>org.smslib</groupId>
