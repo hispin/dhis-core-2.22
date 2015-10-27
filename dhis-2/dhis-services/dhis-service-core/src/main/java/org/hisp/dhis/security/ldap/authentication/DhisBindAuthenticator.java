@@ -59,7 +59,6 @@ public class DhisBindAuthenticator
     {
         boolean ldapConf = configurationProvider.isLdapConfigured();
         
-        System.out.println( "IS LDAP CONF " + ldapConf );
         if ( !ldapConf )
         {
             throw new BadCredentialsException( "LDAP authentication is not configured" );
