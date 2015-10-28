@@ -630,21 +630,64 @@ $( function() {
                 return this;
             };
         })();
+
+        // Header
+        (function() {
+            var Header = NS.Api.Header = function(config) {
+                var t = this;
+
+                config = NS.isObject(config) ? config : {};
+
+                // constructor
+                $.extend(this, config);
+
+                // uninitialized
+                t.index;
+            };
+        };
+
+        // Reponse
+        (function() {
+            var Response = NS.Api.Response = function(config) {
+                var t = this;
+
+                config = NS.isObject(config) ? config : {};
+
+                t.headers = config.headers;
+                t.metaData = config.metaData;
+                t.rows = config.rows;
+
+                // transient
+                t.nameHeaderMap = function() {
+                    for (var i = 0, map = {}; i < t.headers.length; i++) {
+                        map[t.headers[i].name] = t.headers[i];
+                    }
+
+                    return map;
+                })();
+
+                // uninitialized
+                t.idValueMap = {};
+
+                // Header: index
+                (function() {
+                    for (var i = 0; i < t.headers.length; i++) {
+                        t.headers[i].index = i;
+                    }
+                })();
+            };
+
+            Response.prototype.getHeaderByName = function(name) {
+                return this.nameHeaderMap[name];
+            };
+
+            Response.prototype.getHeaderIndexByName = function(name) {
+                return this.nameHeaderMap[name].index;
+            };
+
+            Response.prototype.getNameById = function(id) {
+                return this.metaData.names[id];
+            };
+        })();
     })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 });
