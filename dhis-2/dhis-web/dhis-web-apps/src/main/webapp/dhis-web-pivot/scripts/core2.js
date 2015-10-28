@@ -1,50 +1,159 @@
 $( function() {
     var NS = PT = {};
 
-    // NS i18n
+    // convenience TODO import
     (function() {
-        var i18n = function(config) {
+        var isString,
+            isNumber,
+            isBoolean,
+            isArray,
+            isObject,
+            isEmpty,
+            isDefined,
+            arrayFrom,
+            arrayClean;
+
+        isString = function(param) {
+            return typeof param === 'string';
+        };
+
+        isNumber = function(param) {
+            return typeof param === 'number' && isFinite(param);
+        };
+
+        isArray = ('isArray' in Array) ? Array.isArray : function(param) {
+            return toString.call(param) === '[object Array]';
+        };
+
+        isObject = (toString.call(null) === '[object Object]') ? function(param) {
+            return param !== null && param !== undefined && toString.call(param) === '[object Object]' && param.ownerDocument === undefined;
+        } : function(param) {
+            return toString.call(param) === '[object Object]';
+        };
+
+        isBoolean = function(param) {
+            return typeof param === 'boolean';
+        };
+
+        isEmpty = function(array, allowEmptyString) {
+            return (array == null) || (!allowEmptyString ? array === '' : false) || (isArray(array) && array.length === 0);
+        };
+
+        isDefined = function(param) {
+            return typeof param !== 'undefined';
+        }
+
+        arrayFrom = function(param, isNewRef) {
+            if (param === undefined || param === null) {
+                return [];
+            }
+
+            if (Ext.isArray(param)) {
+                return (isNewRef) ? slice.call(param) : param;
+            }
+
+            var type = typeof param;
+            if (param && param.length !== undefined && type !== 'string' && (type !== 'function' || !param.apply)) {
+                return ExtArray.toArray(param);
+            }
+
+            return [param];
+        };
+
+        arrayClean = function(array) {
+            var results = [],
+                i = 0,
+                ln = array.length,
+                item;
+
+            for (; i < ln; i++) {
+                item = array[i];
+
+                if (!isEmpty(item)) {
+                    results.push(item);
+                }
+            }
+
+            return results;
+        };
+
+        NS.isString = isString;
+        NS.isNumber = isNumber;
+        NS.isBoolean = isBoolean;
+        NS.isArray = isArray;
+        NS.isObject = isObject;
+        NS.isEmpty = isEmpty;
+        NS.isDefined = isDefined;
+        NS.arrayFrom = arrayFrom;
+        NS.arrayClean = arrayClean;
+    })();
+
+    // date manager TODO import
+    (function() {
+        var DateManager = function() {};
+
+        DateManager.prototype.getYYYYMMDD = function(param) {
+            if (!(Object.prototype.toString.call(param) === '[object Date]' && param.toString() !== 'Invalid date')) {
+                return null;
+            }
+
+            var date = new Date(param),
+                month = '' + (1 + date.getMonth()),
+                day = '' + date.getDate();
+
+            month = month.length === 1 ? '0' + month : month;
+            day = day.length === 1 ? '0' + day : day;
+
+            return date.getFullYear() + '-' + month + '-' + day;
+        };
+
+        NS.DateManager = new DateManager();
+    })();
+
+    // NS I18n
+    (function() {
+        var I18n = function(config) {
             this.map = config || {};
         };
 
-        i18n.prototype.get = function(key) {
+        I18n.prototype.get = function(key) {
             return this.map[key];
         };
 
-        i18n.prototype.add = function(obj) {
+        I18n.prototype.add = function(obj) {
             $.extend(this.map, obj);
         };
 
-        NS.i18n = new i18n();
+        NS.I18n = new I18n();
     })();
 
     // NS conf
     (function() {
         var conf = function() {
-            var me = this;
+            var t = this;
 
             this.finals = {
 				dimension: {
 					data: {
 						value: 'data',
-						name: NS.i18n.data || 'Data',
+						name: NS.I18n.data || 'Data',
 						dimensionName: 'dx',
 						objectName: 'dx'
 					},
 					category: {
-						name: NS.i18n.assigned_categories || 'Assigned categories',
+						name: NS.I18n.assigned_categories || 'Assigned categories',
 						dimensionName: 'co',
 						objectName: 'co',
 					},
 					indicator: {
 						value: 'indicators',
-						name: NS.i18n.indicators || 'Indicators',
+						name: NS.I18n.indicators || 'Indicators',
 						dimensionName: 'dx',
 						objectName: 'in'
 					},
 					dataElement: {
 						value: 'dataElements',
-						name: NS.i18n.data_elements || 'Data elements',
+						name: NS.I18n.data_elements || 'Data elements',
 						dimensionName: 'dx',
 						objectName: 'de'
 					},
@@ -56,25 +165,25 @@ $( function() {
 					},
 					dataSet: {
 						value: 'dataSets',
-						name: NS.i18n.data_sets || 'Data sets',
+						name: NS.I18n.data_sets || 'Data sets',
 						dimensionName: 'dx',
 						objectName: 'ds'
 					},
 					eventDataItem: {
 						value: 'eventDataItem',
-						name: NS.i18n.event_data_items || 'Event data items',
+						name: NS.I18n.event_data_items || 'Event data items',
 						dimensionName: 'dx',
 						objectName: 'di'
 					},
 					programIndicator: {
 						value: 'programIndicator',
-						name: NS.i18n.program_indicators || 'Program indicators',
+						name: NS.I18n.program_indicators || 'Program indicators',
 						dimensionName: 'dx',
 						objectName: 'pi'
 					},
 					period: {
 						value: 'period',
-						name: NS.i18n.periods || 'Periods',
+						name: NS.I18n.periods || 'Periods',
 						dimensionName: 'pe',
 						objectName: 'pe'
 					},
@@ -86,7 +195,7 @@ $( function() {
 					},
 					organisationUnit: {
 						value: 'organisationUnits',
-						name: NS.i18n.organisation_units || 'Organisation units',
+						name: NS.I18n.organisation_units || 'Organisation units',
 						dimensionName: 'ou',
 						objectName: 'ou'
 					},
@@ -119,7 +228,7 @@ $( function() {
 			};
 
             (function() {
-                var dimConf = me.finals.dimension;
+                var dimConf = t.finals.dimension;
 
                 dimConf.objectNameMap = {};
                 dimConf.objectNameMap[dimConf.data.objectName] = dimConf.data;
@@ -135,17 +244,17 @@ $( function() {
 
             this.period = {
 				periodTypes: [
-					{id: 'Daily', name: NS.i18n.daily},
-					{id: 'Weekly', name: NS.i18n.weekly},
-					{id: 'Monthly', name: NS.i18n.monthly},
-					{id: 'BiMonthly', name: NS.i18n.bimonthly},
-					{id: 'Quarterly', name: NS.i18n.quarterly},
-					{id: 'SixMonthly', name: NS.i18n.sixmonthly},
-					{id: 'SixMonthlyApril', name: NS.i18n.sixmonthly_april},
-					{id: 'Yearly', name: NS.i18n.yearly},
-					{id: 'FinancialOct', name: NS.i18n.financial_oct},
-					{id: 'FinancialJuly', name: NS.i18n.financial_july},
-					{id: 'FinancialApril', name: NS.i18n.financial_april}
+					{id: 'Daily', name: NS.I18n.daily},
+					{id: 'Weekly', name: NS.I18n.weekly},
+					{id: 'Monthly', name: NS.I18n.monthly},
+					{id: 'BiMonthly', name: NS.I18n.bimonthly},
+					{id: 'Quarterly', name: NS.I18n.quarterly},
+					{id: 'SixMonthly', name: NS.I18n.sixmonthly},
+					{id: 'SixMonthlyApril', name: NS.I18n.sixmonthly_april},
+					{id: 'Yearly', name: NS.I18n.yearly},
+					{id: 'FinancialOct', name: NS.I18n.financial_oct},
+					{id: 'FinancialJuly', name: NS.I18n.financial_july},
+					{id: 'FinancialApril', name: NS.I18n.financial_april}
 				],
                 relativePeriods: []
 			};
@@ -210,10 +319,10 @@ $( function() {
             };
 
             (function() {
-                var map = me.finals.style,
-                    displayDensity = me.style.displayDensity,
-                    fontSize = me.style.fontSize,
-                    digitGroupSeparator = me.style.digitGroupSeparator;
+                var map = t.finals.style,
+                    displayDensity = t.style.displayDensity,
+                    fontSize = t.style.fontSize,
+                    digitGroupSeparator = t.style.digitGroupSeparator;
 
                 displayDensity[map.xcompact] = '2px';
                 displayDensity[map.compact] = '4px';
@@ -273,7 +382,266 @@ $( function() {
         NS.conf = new conf();
     })();
 
-    // api
+    // Api
+    (function() {
+        NS.Api = {};
+
+        // Record
+        (function() {
+            var Record = NS.Api.Record = function(config) {
+                var t = this;
+
+                config = NS.isObject(config) ? config : {};
+
+                // constructor
+                t.id = config.id;
+                t.name = config.name;
+            };
+
+            Record.prototype.val = function() {
+                if (!NS.isString(this.id)) {
+                    console.log('Record', 'Id is not a string', this);
+                    return;
+                }
+
+                return this;
+            };
+        })();
+
+        // Dimension
+        (function() {
+            var Dimension = NS.Api.Dimension = function(config) {
+                var t = this,
+                    items;
+
+                config = NS.isObject(config) ? config : {};
+                config.items = NS.arrayFrom(config.items);
+
+                // constructor
+                t.dimension = config.dimension;
+
+                (function() {
+                    for (var i = 0, record; i < t.items.length; i++) {
+                        items.push((new NS.Api.Record(t.items[i])).val());
+                    }
+                })();
+
+                t.items = items;
+            };
+
+            Dimension.prototype.val = function() {
+                if (!isString(this.dimension)) {
+                    console.log('Dimension', 'Dimension is not a string', this);
+                    return;
+                }
+
+                if (!this.items.length && this.dimension !== 'co') {
+                    console.log('Dimension', 'No items', this);
+                    return;
+                }
+
+                return this;
+            };
+        })();
+
+        // Axis
+        (function() {
+            var Axis = NS.Api.Axis = function(config) {
+                var t = [];
+
+                // constructor
+                config = NS.arrayFrom(config);
+
+                (function() {
+                    for (var i = 0; i < config.length; i++) {
+                        t.push((new NS.Api.Dimension(config[i])).val());
+                    }
+                })();
+
+                // prototype
+                t.val = function() {
+                    if (!this.length) {
+                        console.log('Axis', 'No dimensions', this);
+                        return;
+                    }
+
+                    return this;
+                };
+
+                t.has = function(dimensionName) {
+                    for (var i = 0; i < this.length; i++) {
+                        if (this[i].dimension === dimensionName) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                return t;
+            };
+        })();
+
+        // Layout
+        (function() {
+            var Layout = NS.Api.Layout = function(config, applyConfig, forceApplyConfig) {
+                var t = this;
+
+                config = NS.isObject(config) ? config : {};
+                $.extend(config, applyConfig);
+
+                // constructor
+                t.columns = (NS.Api.Axis(config.columns)).val();
+                t.rows = (NS.Api.Axis(config.rows)).val();
+                t.filters = (NS.Api.Axis(config.filters)).val();
+
+                t.showColTotals = NS.isBoolean(config.colTotals) ? config.colTotals : (NS.isBoolean(config.showColTotals) ? config.showColTotals : true);
+                t.showRowTotals = NS.isBoolean(config.rowTotals) ? config.rowTotals : (NS.isBoolean(config.showRowTotals) ? config.showRowTotals : true);
+                t.showColSubTotals = NS.isBoolean(config.colSubTotals) ? config.colSubTotals : (NS.isBoolean(config.showColSubTotals) ? config.showColSubTotals : true);
+                t.showRowSubTotals = NS.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (NS.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
+                t.showDimensionLabels = NS.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (NS.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
+                t.hideEmptyRows = NS.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
+                t.skipRounding = NS.isBoolean(config.skipRounding) ? config.skipRounding : false;
+                t.aggregationType = NS.isString(config.aggregationType) ? config.aggregationType : NS.conf.finals.style.default_;
+                t.dataApprovalLevel = NS.isObject(config.dataApprovalLevel) && NS.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
+                t.showHierarchy = NS.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
+                t.completedOnly = NS.isBoolean(config.completedOnly) ? config.completedOnly : false;
+                t.displayDensity = NS.isString(config.displayDensity) && !NS.isEmpty(config.displayDensity) ? config.displayDensity : NS.conf.finals.style.normal;
+                t.fontSize = NS.isString(config.fontSize) && !NS.isEmpty(config.fontSize) ? config.fontSize : NS.conf.finals.style.normal;
+                t.digitGroupSeparator = NS.isString(config.digitGroupSeparator) && !NS.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : NS.conf.finals.style.space;
+
+                t.legendSet = (new NS.Api.Record(config.legendSet)).val();
+
+                t.parentGraphMap = NS.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
+
+                if (Ext.isObject(config.program)) {
+                    t.program = config.program;
+                }
+
+                    // report table
+                t.reportingPeriod = NS.isObject(config.reportParams) && NS.isBoolean(config.reportParams.paramReportingPeriod) ? config.reportParams.paramReportingPeriod : (NS.isBoolean(config.reportingPeriod) ? config.reportingPeriod : false);
+                t.organisationUnit =  NS.isObject(config.reportParams) && NS.isBoolean(config.reportParams.paramOrganisationUnit) ? config.reportParams.paramOrganisationUnit : (NS.isBoolean(config.organisationUnit) ? config.organisationUnit : false);
+                t.parentOrganisationUnit = NS.isObject(config.reportParams) && NS.isBoolean(config.reportParams.paramParentOrganisationUnit) ? config.reportParams.paramParentOrganisationUnit : (NS.isBoolean(config.parentOrganisationUnit) ? config.parentOrganisationUnit : false);
+
+                t.regression = NS.isBoolean(config.regression) ? config.regression : false;
+                t.cumulative = NS.isBoolean(config.cumulative) ? config.cumulative : false;
+                t.sortOrder = NS.isNumber(config.sortOrder) ? config.sortOrder : 0;
+                t.topLimit = NS.isNumber(config.topLimit) ? config.topLimit : 0;
+
+                    // non model
+
+                    // id
+                if (NS.isString(config.id)) {
+                    t.id = config.id;
+                }
+
+                    // name
+                if (NS.isString(config.name)) {
+                    t.name = config.name;
+                }
+
+                    // sorting
+                if (NS.isObject(config.sorting) && NS.isDefined(config.sorting.id) && NS.isString(config.sorting.direction)) {
+                    t.sorting = config.sorting;
+                }
+
+                    // displayProperty
+                if (NS.isString(config.displayProperty)) {
+                    t.displayProperty = config.displayProperty;
+                }
+
+                    // userOrgUnit
+                if (NS.arrayFrom(config.userOrgUnit).length) {
+                    t.userOrgUnit = NS.arrayFrom(config.userOrgUnit);
+                }
+
+                    // relative period date
+                if (NS.DateManager.getYYYYMMDD(config.relativePeriodDate)) {
+                    t.relativePeriodDate = NS.DateManager.getYYYYMMDD(config.relativePeriodDate);
+                }
+
+                $.extend(t, forceApplyConfig);
+
+                // uninitialized
+                t.axes;
+                t.dimensions;
+                t.dimensionNames;
+            };
+
+            Layout.prototype.getAxes = function() {
+                if (this.axes) {
+                    return this.axes;
+                }
+
+                return this.axes = NS.arrayClean(this.columns, this.rows, this.filters);
+            };
+
+            Layout.prototype.getDimensions = function() {
+                if (this.dimensions) {
+                    return this.dimensions;
+                }
+
+                return this.dimensions = NS.arrayClean([].concat(this.columns, this.rows, this.filters));
+            };
+
+            // dep 1
+
+            Layout.prototype.hasDimension = function(dimensionName) {
+                var axes = this.getAxes();
+
+                for (var i = 0; i < axes.length; i++) {
+                    if (axes[i].has(dimensionName)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            Layout.prototype.getDimensionNames = function() {
+                if (this.dimensionNames) {
+                    return this.dimensionNames;
+                }
+
+                this.dimensionNames = [];
+
+                for (var i = 0, dimensions = this.getDimensions(); i < dimensions.length; i++) {
+                    this.dimensionNames.push(dimensions[i].dimension);
+                }
+
+                return this.dimensionNames;
+            };
+
+            // dep 2
+
+            Layout.prototype.val = function() {
+                var dimConf = NS.conf.finals.dimension;
+
+                if (!(this.columns || this.rows)) {
+                    alert(NS.I18n.get('at_least_one_dimension_must_be_specified_as_row_or_column')); //todo alert
+                    return;
+                }
+
+                if (!this.hasDimension(dimConf.period.dimensionName)) {
+                    alert(NS.I18n.get('at_least_one_period_must_be_specified_as_column_row_or_filter')); //todo alert
+                    return;
+                }
+
+                return this;
+            };
+        })();
+    })();
+
+
+
+
+
+
+
+
+
+
+
 
 
 
