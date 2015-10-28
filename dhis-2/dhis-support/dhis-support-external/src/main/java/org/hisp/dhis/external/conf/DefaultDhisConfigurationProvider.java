@@ -129,7 +129,7 @@ public class DefaultDhisConfigurationProvider
     {
         String ldapUrl = getProperty( ConfigurationKey.KEY_LDAP_URL );
         String dnPatterns = getProperty( ConfigurationKey.KEY_LDAP_DN_PATTERNS );
-        
+                
         return !( ConfigurationKey.KEY_LDAP_URL.getDefaultValue().equals( ldapUrl ) ||
             ConfigurationKey.KEY_LDAP_DN_PATTERNS.getDefaultValue().equals( dnPatterns ) );
     }
