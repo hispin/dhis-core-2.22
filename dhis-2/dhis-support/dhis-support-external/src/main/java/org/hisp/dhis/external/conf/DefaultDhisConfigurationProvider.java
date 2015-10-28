@@ -128,9 +128,11 @@ public class DefaultDhisConfigurationProvider
     public boolean isLdapConfigured()
     {
         String ldapUrl = getProperty( ConfigurationKey.KEY_LDAP_URL );
+        String managerDn = getProperty( ConfigurationKey.KEY_LDAP_MANAGER_DN );
         String dnPatterns = getProperty( ConfigurationKey.KEY_LDAP_DN_PATTERNS );
-                
+        
         return !( ConfigurationKey.KEY_LDAP_URL.getDefaultValue().equals( ldapUrl ) ||
+            ConfigurationKey.KEY_LDAP_MANAGER_DN.getDefaultValue().equals( managerDn ) ||
             ConfigurationKey.KEY_LDAP_DN_PATTERNS.getDefaultValue().equals( dnPatterns ) );
     }
 }
