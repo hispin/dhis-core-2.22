@@ -548,7 +548,7 @@ public class DefaultProgramInstanceService
         }
 
         outboundSms
-            .addAll( sendMessages( programInstance, TrackedEntityInstanceReminder.SEND_WHEN_TO_C0MPLETED_PROGRAM ) );
+            .addAll( sendMessages( programInstance, TrackedEntityInstanceReminder.SEND_WHEN_TO_COMPLETED_PROGRAM ) );
 
         // -----------------------------------------------------------------
         // Send DHIS message when to completed the program
@@ -562,7 +562,7 @@ public class DefaultProgramInstanceService
         }
 
         messageConversations.addAll( sendMessageConversations( programInstance,
-            TrackedEntityInstanceReminder.SEND_WHEN_TO_C0MPLETED_PROGRAM ) );
+            TrackedEntityInstanceReminder.SEND_WHEN_TO_COMPLETED_PROGRAM ) );
 
         // -----------------------------------------------------------------
         // Update program-instance
