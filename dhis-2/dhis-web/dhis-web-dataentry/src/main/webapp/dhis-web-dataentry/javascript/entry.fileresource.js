@@ -124,6 +124,22 @@
             $displayField.css( 'background-color', dhis2.de.cst.colorYellow );
             resetAndHideProgress();
 
+            function onFileResourceConfirmedStored() {
+                $fileinfoName.text( '' );
+
+                $( '<a>', {
+                    text: name,
+                    title: name,
+                    target: '_blank',
+                    href: '../api/dataValues/files?' + $.param( formData )
+                } ).appendTo( $fileinfoName );
+
+                $displayField.css( 'background-color', dhis2.de.cst.colorGreen );
+
+                setButtonDelete();
+                $button.button( 'enable' );
+            }
+
             function pollForFileResourceStored() {
                 $.ajax( {
                     url: '../api/fileResources/' + fileResource.id,
@@ -133,19 +149,7 @@
                     if ( data.storageStatus != 'STORED' ) {
                         setTimeout( pollForFileResourceStored, 4000 /* 4 sec polling time */ );
                     } else {
-                        $fileinfoName.text( '' );
-
-                        $( '<a>', {
-                            text: name,
-                            title: name,
-                            target: '_blank',
-                            href: '../api/dataValues/files?' + $.param( formData )
-                        } ).appendTo( $fileinfoName );
-
-                        $displayField.css( 'background-color', dhis2.de.cst.colorGreen );
-
-                        setButtonDelete();
-                        $button.button( 'enable' );
+                        onFileResourceConfirmedStored();
                     }
                 } ).fail( function( jqXHR, textStatus, errorThrown ) {
                     // Really shouldn't happen...
@@ -153,7 +157,12 @@
                     throw 'Checking storage status of file failed: ' + errorThrown;
                 } );
             }
-            setTimeout( pollForFileResourceStored, 1500 );
+
+            if ( fileResource.storageStatus == 'STORED' ) {
+                onFileResourceConfirmedStored();
+            } else {
+                setTimeout( pollForFileResourceStored, 1500 );
+            }
         };
 
         var updateProgress = function( loaded, total ) {
