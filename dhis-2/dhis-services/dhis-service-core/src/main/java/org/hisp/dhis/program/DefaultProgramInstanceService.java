@@ -516,18 +516,21 @@ public class DefaultProgramInstanceService
     @Override
     public boolean canAutoCompleteProgramInstanceStatus( ProgramInstance programInstance )
     {
-        Set<ProgramStageInstance> stageInstances = programInstance.getProgramStageInstances();
+        Set<ProgramStageInstance> programStageInstances = new HashSet<>( programInstance.getProgramStageInstances() );
+        Set<ProgramStage> programStages = new HashSet<>();
 
-        for ( ProgramStageInstance stageInstance : stageInstances )
+        for ( ProgramStageInstance programStageInstance : programStageInstances )
         {
-            if ( (!stageInstance.isCompleted() && stageInstance.getStatus() != EventStatus.SKIPPED)
-                || stageInstance.getProgramStage().getRepeatable() )
+            if ( (!programStageInstance.isCompleted() && programStageInstance.getStatus() != EventStatus.SKIPPED)
+                || programStageInstance.getProgramStage().getRepeatable() )
             {
                 return false;
             }
+
+            programStages.add( programStageInstance.getProgramStage() );
         }
 
-        return true;
+        return programStages.size() != programInstance.getProgram().getProgramStages().size();
     }
 
     @Override
