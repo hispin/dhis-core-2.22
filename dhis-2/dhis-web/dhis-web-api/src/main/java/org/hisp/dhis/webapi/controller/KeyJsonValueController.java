@@ -34,6 +34,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
 import org.hisp.dhis.dxf2.render.RenderService;
@@ -117,7 +118,8 @@ public class KeyJsonValueController
     }
 
     /**
-     * Retrieves the KeyJsonValue represented by the given key from the given namespace.
+     * Retrieves the value of the KeyJsonValue represented by the given key from 
+     * the given namespace.
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody String getKeyJsonValue(
@@ -139,6 +141,35 @@ public class KeyJsonValueController
         }
 
         return keyJsonValue.getValue();
+    }
+
+    /**
+     * Retrieves the KeyJsonValue represented by the given key from the given namespace.
+     */
+    @RequestMapping( value = "/{namespace}/{key}/metaData", method = RequestMethod.GET, produces = "application/json" )
+    public @ResponseBody KeyJsonValue getKeyJsonValueMetaData(
+        @PathVariable String namespace, @PathVariable String key, HttpServletResponse response )
+        throws Exception
+    {
+        if ( !hasAccess( namespace ) )
+        {
+            throw new WebMessageException( WebMessageUtils.forbidden( "The namespace '" + namespace +
+                "' is protected, and you don't have the right authority to access it." ) );
+        }
+
+        KeyJsonValue keyJsonValue = keyJsonValueService.getKeyJsonValue( namespace, key );
+
+        if ( keyJsonValue == null )
+        {
+            throw new WebMessageException( WebMessageUtils
+                .notFound( "The key '" + key + "' was not found in the namespace '" + namespace + "'." ) );
+        }
+
+        KeyJsonValue metaDataValue = new KeyJsonValue();
+        BeanUtils.copyProperties( metaDataValue, keyJsonValue );
+        metaDataValue.setValue( null );
+        
+        return metaDataValue;
     }
 
     /**
