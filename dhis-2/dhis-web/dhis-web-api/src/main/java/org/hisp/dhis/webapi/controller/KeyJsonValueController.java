@@ -37,10 +37,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
 import org.hisp.dhis.dxf2.render.RenderService;
-import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValue;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
+import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,6 +61,9 @@ public class KeyJsonValueController
 
     @Autowired
     private AppManager appManager;
+    
+    @Autowired
+    private WebMessageService messageService;
 
     /**
      * Returns a JSON array of strings representing the different namespaces used.
@@ -93,7 +96,7 @@ public class KeyJsonValueController
      * Deletes all keys with the given namespace.
      */
     @RequestMapping( value = "/{namespace}", method = RequestMethod.DELETE )
-    public @ResponseBody WebMessage deleteNamespace( @PathVariable String namespace, HttpServletResponse response )
+    public void deleteNamespace( @PathVariable String namespace, HttpServletResponse response )
         throws WebMessageException
     {
         if ( !hasAccess( namespace ) )
@@ -109,8 +112,8 @@ public class KeyJsonValueController
         }
 
         keyJsonValueService.deleteNamespace( namespace );
-
-        return WebMessageUtils.ok( "Namespace '" + namespace + "' deleted." );
+        
+        messageService.sendJson( WebMessageUtils.ok( "Namespace '" + namespace + "' deleted." ), response );
     }
 
     /**
@@ -142,7 +145,7 @@ public class KeyJsonValueController
      * Creates a new KeyJsonValue Object on the given namespace with the key and value supplied.
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.POST, produces = "application/json", consumes = "application/json" )
-    public @ResponseBody KeyJsonValue addKey(
+    public void addKeyJsonValue(
         @PathVariable String namespace, @PathVariable String key, @RequestBody String body, HttpServletResponse response )
         throws IOException, WebMessageException
     {
@@ -172,14 +175,14 @@ public class KeyJsonValueController
         keyJsonValueService.addKeyJsonValue( keyJsonValue );
 
         response.setStatus( HttpServletResponse.SC_CREATED );
-        return keyJsonValue;
+        messageService.sendJson( WebMessageUtils.created( "Key '" + key + "' created." ), response );
     }
 
     /**
      * Update a key in the given namespace.
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json" )
-    public @ResponseBody KeyJsonValue updateKeyJsonValue( @PathVariable String namespace, @PathVariable String key, @RequestBody String body,
+    public void updateKeyJsonValue( @PathVariable String namespace, @PathVariable String key, @RequestBody String body,
         HttpServletRequest request, HttpServletResponse response )
         throws WebMessageException, IOException
     {
@@ -205,15 +208,16 @@ public class KeyJsonValueController
         keyJsonValue.setValue( body );
 
         keyJsonValueService.updateKeyJsonValue( keyJsonValue );
-
-        return keyJsonValue;
+        
+        response.setStatus( HttpServletResponse.SC_OK );
+        messageService.sendJson( WebMessageUtils.ok( "Key '" + key + "' updated." ), response );
     }
 
     /**
      * Delete a key from the given namespace.
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.DELETE, produces = "application/json" )
-    public @ResponseBody WebMessage deleteKeyJsonValue(
+    public void deleteKeyJsonValue(
         @PathVariable String namespace, @PathVariable String key, HttpServletResponse response )
         throws WebMessageException
     {
@@ -233,7 +237,7 @@ public class KeyJsonValueController
 
         keyJsonValueService.deleteKeyJsonValue( keyJsonValue );
 
-        return WebMessageUtils.ok( "Key '" + key + "' deleted from namespace '" + namespace + "'." );
+        messageService.sendJson( WebMessageUtils.ok( "Key '" + key + "' deleted from namespace '" + namespace + "'." ), response );
     }
 
     private boolean hasAccess( String namespace )
