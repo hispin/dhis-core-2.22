@@ -120,7 +120,7 @@ public class KeyJsonValueController
      * Retrieves the KeyJsonValue represented by the given key from the given namespace.
      */
     @RequestMapping( value = "/{namespace}/{key}", method = RequestMethod.GET, produces = "application/json" )
-    public @ResponseBody KeyJsonValue getKeyJsonValue(
+    public @ResponseBody String getKeyJsonValue(
         @PathVariable String namespace, @PathVariable String key, HttpServletResponse response )
         throws IOException, WebMessageException
     {
@@ -138,7 +138,7 @@ public class KeyJsonValueController
                 .notFound( "The key '" + key + "' was not found in the namespace '" + namespace + "'." ) );
         }
 
-        return keyJsonValue;
+        return keyJsonValue.getValue();
     }
 
     /**
