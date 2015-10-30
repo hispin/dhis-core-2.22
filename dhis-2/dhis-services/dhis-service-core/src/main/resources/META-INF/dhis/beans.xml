@@ -532,12 +532,6 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="org.hisp.dhis.trackedentity.TrackedEntityAuditStore"
-    class="org.hisp.dhis.trackedentity.hibernate.HibernateTrackedEntityAuditStore">
-    <property name="clazz" value="org.hisp.dhis.trackedentity.TrackedEntityAudit" />
-    <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
-
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityStore"
     class="org.hisp.dhis.trackedentity.hibernate.HibernateTrackedEntityStore">
     <property name="clazz" value="org.hisp.dhis.trackedentity.TrackedEntity" />
@@ -1223,11 +1217,6 @@
     <property name="programStageDataElementStore" ref="org.hisp.dhis.program.ProgramStageDataElementStore" />
   </bean>
 
-  <bean id="org.hisp.dhis.trackedentity.TrackedEntityAuditService"
-    class="org.hisp.dhis.trackedentity.DefaultTrackedEntityAuditService">
-    <property name="auditStore" ref="org.hisp.dhis.trackedentity.TrackedEntityAuditStore" />
-  </bean>
-
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityService" class="org.hisp.dhis.trackedentity.DefaultTrackedEntityService">
     <property name="trackedEntityStore" ref="org.hisp.dhis.trackedentity.TrackedEntityStore" />
   </bean>
@@ -1700,11 +1689,6 @@
     class="org.hisp.dhis.program.ProgramStageSectionDeletionHandler">
   </bean>
 
-  <bean id="org.hisp.dhis.trackedentity.TrackedEntityAuditDeletionHandler"
-    class="org.hisp.dhis.trackedentity.TrackedEntityAuditDeletionHandler">
-    <property name="auditService" ref="org.hisp.dhis.trackedentity.TrackedEntityAuditService" />
-  </bean>
-
   <bean id="org.hisp.dhis.program.ProgramIndicatorDeletionHandler"
     class="org.hisp.dhis.program.ProgramIndicatorDeletionHandler" />
 
@@ -1766,7 +1750,6 @@
           <ref bean="org.hisp.dhis.mapping.MapViewDeletionHandler" />
           <ref bean="org.hisp.dhis.trackedentity.TrackedEntityInstanceDeletionHandler" />
           <ref bean="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueDeletionHandler" />
-          <ref bean="org.hisp.dhis.trackedentity.TrackedEntityAuditDeletionHandler" />
           <ref bean="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueDeletionHandler" />
           <ref bean="org.hisp.dhis.relationship.RelationshipDeletionHandler" />
           <ref bean="org.hisp.dhis.program.ProgramDeletionHandler" />
@@ -1822,7 +1805,6 @@
       <aop:before pointcut="execution( * org.hisp.dhis.trackedentity.TrackedEntityAttributeService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.relationship.RelationshipService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.relationship.RelationshipTypeService.delete*(..) )" method="intercept" />
-      <aop:before pointcut="execution( * org.hisp.dhis.trackedentity.TrackedEntityAuditService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.program.ProgramService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.program.ProgramStageSectionService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.program.ProgramInstanceService.delete*(..) )" method="intercept" />

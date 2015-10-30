@@ -270,8 +270,6 @@ public class TableAlteror
 
         updateAggregateQueryBuilder();
 
-        executeSql( "UPDATE trackedentityaudit SET accessedmodule='tracked_entity_instance_dashboard' WHERE accessedmodule='instance_dashboard' or accessedmodule='patient_dashboard'" );
-
         executeSql( "UPDATE programstageinstance SET status=1 WHERE completed=true" );
         executeSql( "ALTER TABLE programstageinstance DROP COLUMN completed" );
 
