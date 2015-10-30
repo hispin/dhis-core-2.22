@@ -34,7 +34,7 @@
                                d2-date-validator 
                                max-date="attribute.allowFutureDate ? '' : 0"
                                ng-model="selectedTei[attribute.id]"
-                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
+                               ng-model-options="{ updateOn: 'default blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
                                selected-program-id={{selectedProgram.id}}  
