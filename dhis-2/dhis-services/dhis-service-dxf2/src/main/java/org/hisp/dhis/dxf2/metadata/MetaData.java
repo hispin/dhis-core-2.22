@@ -84,6 +84,9 @@ import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.program.ProgramValidation;
+import org.hisp.dhis.programrule.ProgramRule;
+import org.hisp.dhis.programrule.ProgramRuleAction;
+import org.hisp.dhis.programrule.ProgramRuleVariable;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.report.Report;
 import org.hisp.dhis.reporttable.ReportTable;
@@ -229,6 +232,12 @@ public class MetaData
     private List<RelationshipType> relationshipTypes = new ArrayList<>();
 
     private List<ValidationCriteria> validationCriterias = new ArrayList<>();
+
+    private List<ProgramRule> programRules = new ArrayList<>();
+
+    private List<ProgramRuleAction> programRuleActions = new ArrayList<>();
+
+    private List<ProgramRuleVariable> programRuleVariables = new ArrayList<>();
 
     private List<TrackedEntity> trackedEntities = new ArrayList<>();
 
@@ -958,6 +967,45 @@ public class MetaData
     public void setValidationCriterias( List<ValidationCriteria> validationCriterias )
     {
         this.validationCriterias = validationCriterias;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "programRules", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programRule", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ProgramRule> getProgramRules()
+    {
+        return programRules;
+    }
+
+    public void setProgramRules( List<ProgramRule> programRules )
+    {
+        this.programRules = programRules;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "programRuleActions", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programRuleAction", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ProgramRuleAction> getProgramRuleActions()
+    {
+        return programRuleActions;
+    }
+
+    public void setProgramRuleActions( List<ProgramRuleAction> programRuleActions )
+    {
+        this.programRuleActions = programRuleActions;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "programRuleVariables", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programRuleVariable", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ProgramRuleVariable> getProgramRuleVariables()
+    {
+        return programRuleVariables;
+    }
+
+    public void setProgramRuleVariables( List<ProgramRuleVariable> programRuleVariables )
+    {
+        this.programRuleVariables = programRuleVariables;
     }
 
     @JsonProperty
