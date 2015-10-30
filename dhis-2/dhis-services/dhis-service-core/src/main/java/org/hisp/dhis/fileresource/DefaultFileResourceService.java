@@ -29,14 +29,14 @@ package org.hisp.dhis.fileresource;
  */
 
 import com.google.common.io.ByteSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Hours;
-import org.joda.time.Minutes;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.annotation.PostConstruct;
@@ -52,12 +52,9 @@ import java.util.stream.Collectors;
 public class DefaultFileResourceService
     implements FileResourceService
 {
-    private static final Log log = LogFactory.getLog( DefaultFileResourceService.class );
-
     private static final String KEY_FILE_CLEANUP_TASK = "fileResourceCleanupTask";
 
     private static final Duration IS_ORPHAN_TIME_DELTA = Hours.TWO.toStandardDuration();
-    private static final Duration LONG_STORAGE_DURATION_TIME_DELTA = Minutes.TWO.toStandardDuration();
 
     private static final Predicate<FileResource> IS_ORPHAN_PREDICATE =
         ( fr -> !fr.isAssigned() || fr.getStorageStatus() != FileResourceStorageStatus.STORED );
@@ -65,17 +62,10 @@ public class DefaultFileResourceService
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
-//
-//    private GenericIdentifiableObjectStore<FileResource> fileResourceStore;
-//
-//    public void setFileResourceStore( GenericIdentifiableObjectStore<FileResource> fileResourceStore )
-//    {
-//        this.fileResourceStore = fileResourceStore;
-//    }
 
-    private FileResourceStore fileResourceStore;
+    private GenericIdentifiableObjectStore<FileResource> fileResourceStore;
 
-    public void setFileResourceStore( FileResourceStore fileResourceStore )
+    public void setFileResourceStore( GenericIdentifiableObjectStore<FileResource> fileResourceStore )
     {
         this.fileResourceStore = fileResourceStore;
     }
@@ -94,11 +84,11 @@ public class DefaultFileResourceService
         this.scheduler = scheduler;
     }
 
-    private FileResourceUploadCallbackProvider uploadCallbackProvider;
+    private FileResourceUploadCallback uploadCallback;
 
-    public void setUploadCallbackProvider( FileResourceUploadCallbackProvider uploadCallbackProvider )
+    public void setUploadCallback( FileResourceUploadCallback uploadCallback )
     {
-        this.uploadCallbackProvider = uploadCallbackProvider;
+        this.uploadCallback = uploadCallback;
     }
 
     private FileResourceCleanUpTask fileResourceCleanUpTask;
@@ -126,12 +116,9 @@ public class DefaultFileResourceService
     // FileResourceService implementation
     // -------------------------------------------------------------------------
 
-    @Transactional
     @Override
     public FileResource getFileResource( String uid )
     {
-        // TODO Consider need for ensureStorageStatus
-//        return ensureStorageStatus( fileResourceStore.getByUid( uid ) );
         return fileResourceStore.getByUid( uid );
     }
 
@@ -141,7 +128,6 @@ public class DefaultFileResourceService
         return fileResourceStore.getByUid( uids );
     }
 
-    @Transactional
     @Override
     public List<FileResource> getOrphanedFileResources( )
     {
@@ -149,38 +135,39 @@ public class DefaultFileResourceService
             .stream().filter( IS_ORPHAN_PREDICATE ).collect( Collectors.toList() );
     }
 
+    @Transactional
     @Override
     public String saveFileResource( FileResource fileResource, File file )
     {
         fileResource.setStorageStatus( FileResourceStorageStatus.PENDING );
-        fileResourceStore.saveInTransaction( fileResource );
+        fileResourceStore.save( fileResource );
 
-        ListenableFuture<String> saveContentTask =
+        final ListenableFuture<String> saveContentTask =
             scheduler.executeTask( () -> fileResourceContentStore.saveFileResourceContent( fileResource, file ) );
 
-        String uid = fileResource.getUid();
+        final String uid = fileResource.getUid();
 
-        saveContentTask.addCallback( uploadCallbackProvider.getCallback( uid ) );
+        // Ensures callback is registered after this transaction is committed.
+        // Works as a safeguard against the unlikely race condition which
+        // could occur when the callback is executed before the FileResource
+        // object has been written to the db. We should consider exposing the
+        // locking mechanisms of Hibernate which would offer a cleaner solution
+        // to this very issue.
+
+        TransactionSynchronizationManager.registerSynchronization(
+            new TransactionSynchronizationAdapter()
+            {
+                @Override
+                public void afterCommit()
+                {
+                    super.afterCommit();
+                    saveContentTask.addCallback( uploadCallback.newInstance( uid ) );
+                }
+            }
+        );
 
         return uid;
     }
-//
-//    @Transactional
-//    @Override
-//    public String saveFileResource( FileResource fileResource, File file )
-//    {
-//        fileResource.setStorageStatus( FileResourceStorageStatus.PENDING );
-//        fileResourceStore.save( fileResource );
-//
-//        ListenableFuture<String> saveContentTask =
-//            scheduler.executeTask( () -> fileResourceContentStore.saveFileResourceContent( fileResource, file ) );
-//
-//        String uid = fileResource.getUid();
-//
-//        saveContentTask.addCallback( uploadCallbackProvider.getCallback( uid ) );
-//
-//        return uid;
-//    }
 
     @Transactional
     @Override
@@ -214,6 +201,7 @@ public class DefaultFileResourceService
         return fileResourceStore.getByUid( uid ) != null;
     }
 
+    @Transactional
     @Override
     public void updateFileResource( FileResource fileResource )
     {
@@ -231,44 +219,5 @@ public class DefaultFileResourceService
         }
 
         return fileResourceContentStore.getSignedGetContentUri( fileResource.getStorageKey() );
-    }
-
-    // -------------------------------------------------------------------------
-    // Supportive methods
-    // -------------------------------------------------------------------------
-
-    /**
-     * Ensures that the storageStatus of the FileResource is correct.
-     * If it has been pending for more than two minutes existance of the content is
-     * 'double checked' in the file store.
-     * If the content is actually present the storageStatus is updated to reflect this.
-     *
-     * TODO Should not be necessary but needs to be in place as a fail-safe due to mysterious issues with saving.
-     */
-    private FileResource ensureStorageStatus( FileResource fileResource )
-    {
-        if ( FileResourceStorageStatus.PENDING == fileResource.getStorageStatus() )
-        {
-            Duration pendingDuration = new Duration( new DateTime( fileResource.getLastUpdated() ), DateTime.now() );
-
-            if ( pendingDuration.isLongerThan( LONG_STORAGE_DURATION_TIME_DELTA ) )
-            {
-                // Upload has been running for 2+ minutes and is still PENDING.
-                // Check if content has actually been stored and correct to STORED if this is the case.
-
-                boolean contentIsStored = fileResourceContentStore.fileResourceContentExists( fileResource.getStorageKey() );
-
-                if ( contentIsStored )
-                {
-                    // Status is PENDING but content is actually stored. Fix it.
-                    fileResource.setStorageStatus( FileResourceStorageStatus.STORED );
-                    fileResourceStore.update( fileResource );
-                    log.warn( "Corrected issue: File resource '" + fileResource.getUid() +
-                        "' had storageStatus PENDING but content was fully stored." );
-                }
-            }
-        }
-
-        return fileResource;
     }
 }
