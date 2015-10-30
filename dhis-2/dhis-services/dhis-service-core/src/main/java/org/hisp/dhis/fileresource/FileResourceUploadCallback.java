@@ -35,26 +35,24 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 /**
  * @author Halvdan Hoem Grelland
  */
-public class FileResourceUploadCallbackProvider
+public class FileResourceUploadCallback
 {
-    Log log = LogFactory.getLog( FileResourceUploadCallbackProvider.class );
+    Log log = LogFactory.getLog( FileResourceUploadCallback.class );
 
     @Autowired
     private IdentifiableObjectManager idObjectManager;
 
-    public ListenableFutureCallback<String> getCallback( String fileResourceUid )
+    public ListenableFutureCallback<String> newInstance( String fileResourceUid )
     {
         return new ListenableFutureCallback<String>()
         {
             DateTime startTime = DateTime.now();
 
-            @Transactional
             @Override
             public void onFailure( Throwable ex )
             {
@@ -71,7 +69,6 @@ public class FileResourceUploadCallbackProvider
                 }
             }
 
-            @Transactional
             @Override
             public void onSuccess( String result )
             {
