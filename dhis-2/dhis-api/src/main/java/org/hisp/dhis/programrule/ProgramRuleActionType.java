@@ -36,9 +36,10 @@ public enum ProgramRuleActionType {
     DISPLAYKEYVALUEPAIR( "displaykeyvaluepair" ),
     HIDEFIELD( "hidefield" ),
     HIDESECTION( "hidesection" ),
-    ASSIGNVARIABLE( "assignvariable" ),
+    ASSIGN( "assign" ),
     SHOWWARNING( "showwarning" ),
-    SHOWERROR( "showerror" );
+    SHOWERROR( "showerror" ),
+    CREATEEVENT("createevent");
 
     final String value;
 

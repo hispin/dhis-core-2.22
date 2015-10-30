@@ -43,6 +43,7 @@ import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageSection;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
@@ -127,6 +128,11 @@ public class ProgramRuleAction
      * The program stage section that is affected by the rule action.
      */
     private ProgramStageSection programStageSection;
+    
+    /**
+     * The program stage  that is affected by the rule action.
+     */
+    private ProgramStage programStage;
 
     /**
      * Used to determine which widget to display data for the two action types:
@@ -158,13 +164,17 @@ public class ProgramRuleAction
     }
 
     public ProgramRuleAction( String name, ProgramRule programRule, ProgramRuleActionType programRuleActionType, 
-        DataElement dataElement, TrackedEntityAttribute attribute, ProgramIndicator programIndicator, String location, String content, String data )
+        DataElement dataElement, TrackedEntityAttribute attribute, 
+        ProgramStageSection programStageSection, ProgramStage programStage,
+        ProgramIndicator programIndicator, String location, String content, String data )
     {
         this.name = name;
         this.programRule = programRule;
         this.programRuleActionType = programRuleActionType;
         this.dataElement = dataElement;
         this.attribute = attribute;
+        this.programStageSection = programStageSection;
+        this.programStage = programStage;
         this.programIndicator = programIndicator;
         this.location = location;
         this.content = content;
@@ -246,6 +256,19 @@ public class ProgramRuleAction
     public ProgramStageSection getProgramStageSection()
     {
         return programStageSection;
+    }
+
+    public void setProgramStage( ProgramStage programStage )
+    {
+        this.programStage = programStage;
+    }
+ 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public ProgramStage getProgramStage()
+    {
+        return programStage;
     }
 
     public void setProgramStageSection( ProgramStageSection programStageSection )
