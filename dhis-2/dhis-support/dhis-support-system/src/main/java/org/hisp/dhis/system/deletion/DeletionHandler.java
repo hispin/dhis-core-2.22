@@ -93,7 +93,6 @@ import org.hisp.dhis.sqlview.SqlView;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeGroup;
-import org.hisp.dhis.trackedentity.TrackedEntityAudit;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
@@ -714,15 +713,6 @@ public abstract class DeletionHandler
 
     public void deleteLockException( LockException lockException )
     {
-    }
-
-    public void deleteTrackedEntityAudit( TrackedEntityAudit audit )
-    {
-    }
-
-    public String allowDeleteTrackedEntityAudit( TrackedEntityAudit audit )
-    {
-        return null;
     }
 
     public void deleteIntepretation( Interpretation interpretation )
