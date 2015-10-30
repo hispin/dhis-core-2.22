@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.controller;
+package org.hisp.dhis.webapi.controller.metadata;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo

@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.controller;
+package org.hisp.dhis.webapi.controller.metadata;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,6 +29,7 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.hisp.dhis.common.filter.MetaDataFilter;
+import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
