@@ -703,7 +703,7 @@ public class DefaultDataValueSetService
 
             if ( dataElement == null )
             {
-                summary.getConflicts().add( new ImportConflict( dataValue.getDataElement(), "Data element not found or not acccessible" ) );
+                summary.getConflicts().add( new ImportConflict( dataValue.getDataElement(), "Data element not found or not accessible" ) );
                 continue;
             }
 
@@ -715,7 +715,7 @@ public class DefaultDataValueSetService
             
             if ( orgUnit == null )
             {
-                summary.getConflicts().add( new ImportConflict( dataValue.getOrgUnit(), "Organisation unit not found or not acccessible" ) );
+                summary.getConflicts().add( new ImportConflict( dataValue.getOrgUnit(), "Organisation unit not found or not accessible" ) );
                 continue;
             }
 
