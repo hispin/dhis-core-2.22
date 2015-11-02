@@ -28,7 +28,6 @@ package org.hisp.dhis.jdbc.statementbuilder;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.period.Period;
 
@@ -40,9 +39,6 @@ import static org.hisp.dhis.system.util.DateUtils.getSqlDateString;
 public abstract class AbstractStatementBuilder
     implements StatementBuilder
 {
-    static final String AZaz = "'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'";
-    static final String AZaz09 = "'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'";
-
     @Override
     public String encode( String value )
     {
@@ -83,29 +79,6 @@ public abstract class AbstractStatementBuilder
     public String getLongVarBinaryType()
     {
         return "VARBINARY(1000000)";
-    }
-
-    @Override
-    public String concatenate( String... s )
-    {
-        return "CONCAT(" + StringUtils.join( s, ", " ) + ")";
-    }
-
-    @Override
-    public String getUid()
-    {
-        return concatenate(
-            getCharAt( AZaz, "1 + " + getRandom( AZaz.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
-            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ) );
     }
 
     @Override

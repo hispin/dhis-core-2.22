@@ -92,7 +92,7 @@ public class GetDataApprovalOptionsAction
         @Override
         public boolean retain( DataSet dataSet )
         {
-            return dataSet != null && dataSet.getWorkflow() != null;
+            return dataSet != null && dataSet.isApproveData();
         }        
     }
 }

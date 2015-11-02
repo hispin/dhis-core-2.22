@@ -75,8 +75,7 @@
 
     <property name="notifyCompletingUser" />
 
-    <many-to-one name="workflow" lazy="false" class="org.hisp.dhis.dataapproval.DataApprovalWorkflow" column="workflowid"
-      foreign-key="fk_dataset_workflowid" />
+    <property name="approveData" />
 
     <!-- Form properties -->
 

@@ -135,41 +135,7 @@ public interface StatementBuilder
      * Returns the regular expression marker for start of a word.
      */
     String getRegexpWordEnd();
-
-    /**
-     * Returns an expression to concatenate strings
-     *
-     * @param s the array of strings to concatenate
-     * @return the strings, concatenated
-     */
-    String concatenate( String... s );
-
-    /**
-     * Returns a function to get a random integer between 0 and n
-     *
-     * @param n the maximum random value
-     * @return the function to return the random integer
-     */
-    String getRandom( int n );
-
-    /**
-     * Returns a function to return 1 character from a string at position n
-     *
-     * @param str the string to return the character from
-     * @param n the position to find the character at
-     * @return the function to return the character
-     */
-    String getCharAt( String str, String n );
-
-    /**
-     * Generates a random 11-character UID where the first character is an
-     * upper/lower case letter and the remaining 10 characters are a digit
-     * or an upper/lower case letter.
-     *
-     * @return randomly-generated UID.
-     */
-    String getUid();
-
+    
     /**
      * Creates a SELECT statement returning the identifier of the given Period.
      * 
@@ -177,7 +143,7 @@ public interface StatementBuilder
      * @return a SELECT statement returning the identifier of the given Period.
      */
     String getPeriodIdentifierStatement( Period period );
-
+    
     /**
      * Returns the number of columns part of the primary key for the given table.
      */
@@ -188,7 +154,7 @@ public interface StatementBuilder
      * @return a delete datavalue statement.
      */
     String getDeleteZeroDataValues();
-
+    
     String getMoveDataValueToDestination( int sourceId, int destinationId );
 
     String getSummarizeDestinationAndSourceWhereMatching( int sourceId, int destinationId );

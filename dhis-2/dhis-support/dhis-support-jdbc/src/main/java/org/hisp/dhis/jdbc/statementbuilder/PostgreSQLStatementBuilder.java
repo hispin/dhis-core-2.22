@@ -101,19 +101,7 @@ public class PostgreSQLStatementBuilder
     {
         return "\\M";
     }
-
-    @Override
-    public String getRandom( int n )
-    {
-        return "cast(floor(" + n + "*random()) as int)";
-    }
-
-    @Override
-    public String getCharAt( String str, String n )
-    {
-        return "substring(" + str + " from " + n + " for 1)";
-    }
-
+    
     @Override
     public String getDeleteZeroDataValues()
     {
