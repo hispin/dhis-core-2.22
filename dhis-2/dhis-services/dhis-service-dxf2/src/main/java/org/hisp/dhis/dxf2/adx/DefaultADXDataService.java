@@ -28,8 +28,6 @@ package org.hisp.dhis.dxf2.adx;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,7 +45,6 @@ import java.util.concurrent.TimeoutException;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.amplecode.staxwax.factory.XMLFactory;
@@ -211,7 +208,7 @@ public class DefaultAdxDataService
 
         IdentifiableProperty dataElementIdScheme = importOptions.getDataElementIdScheme();
 
-        Map<String, String> groupAttributes = readAttributes( adxReader );
+        Map<String, String> groupAttributes = adxReader.readAttributes();
 
         if ( !groupAttributes.containsKey( AdxDataService.PERIOD ) )
         {
@@ -278,7 +275,7 @@ public class DefaultAdxDataService
     private void parseADXDataValueToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
         throws XMLStreamException, AdxException
     {
-        Map<String, String> dvAttributes = readAttributes( adxReader );
+        Map<String, String> dvAttributes = adxReader.readAttributes();
         
         log.debug( "Processing data value: " + dvAttributes );
         
@@ -353,8 +350,8 @@ public class DefaultAdxDataService
             
             if ( categoryCode == null || !XMLChar.isValidName( categoryCode ) )
             {
-                throw new AdxException( "Category code for " + category.getName() + " is missing or invalid: "
-                    + categoryCode );
+                throw new AdxException( "Category code for " + category.getName() + 
+                    " is missing or invalid: " + categoryCode );
             }
             
             categoryMap.put( category.getCode(), category );
@@ -377,7 +374,7 @@ public class DefaultAdxDataService
         }
         catch ( CategoryComboMapException ex )
         {
-            log.info( "Failed to create catcomboMap from " + catcombo );
+            log.info( "Failed to create category combo map from: " + catcombo );
             throw new AdxException( ex.getMessage() );
         }
 
@@ -396,7 +393,7 @@ public class DefaultAdxDataService
             
             if ( catAttribute == null )
             {
-                throw new AdxException( "Missing required attribute from catcombo: " + categoryCode );
+                throw new AdxException( "Missing required attribute from category combo: " + categoryCode );
             }
             
             compositeIdentifier += "\"" + catAttribute + "\"";
@@ -445,26 +442,5 @@ public class DefaultAdxDataService
         attributes.put( optionComboName, catOptCombo.getUid() );
             
         log.debug( "DXF attributes: " + attributes );
-    }
-
-    // TODO this should be part of staxwax library
-    protected Map<String, String> readAttributes( XMLReader staxWaxReader )
-    {
-        Map<String, String> attributes = new HashMap<>();
-
-        XMLStreamReader reader = staxWaxReader.getXmlStreamReader();
-
-        if ( reader.getEventType() != START_ELEMENT )
-        {
-            throw new IllegalArgumentException( "Trying to retrieve attributes from non START_ELEMENT node" );
-        }
-
-        // Read attributes
-        for ( int i = 0; i < reader.getAttributeCount(); i++ )
-        {
-            attributes.put( reader.getAttributeLocalName( i ), reader.getAttributeValue( i ) );
-        }
-
-        return attributes;
     }
 }
