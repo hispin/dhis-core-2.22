@@ -1087,6 +1087,11 @@ public abstract class AbstractEventService
             programStageInstance.setAutoFields();
             sessionFactory.getCurrentSession().save( programStageInstance );
         }
+        else
+        {
+            sessionFactory.getCurrentSession().update( programStageInstance );
+            sessionFactory.getCurrentSession().refresh( programStageInstance );
+        }
 
         if ( programStageInstance.isCompleted() )
         {
