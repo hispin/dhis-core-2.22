@@ -145,10 +145,6 @@
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.dataapproval.DataApprovalLevel" />
   </bean>
 
-  <bean id="dataApprovalWorkflowImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
-    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.dataapproval.DataApprovalWorkflow" />
-  </bean>
-
   <bean id="documentImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter" scope="prototype">
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.document.Document" />
   </bean>

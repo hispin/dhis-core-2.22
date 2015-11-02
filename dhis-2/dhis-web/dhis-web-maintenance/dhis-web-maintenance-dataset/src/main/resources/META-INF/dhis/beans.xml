@@ -103,7 +103,6 @@
     <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
     <property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="workflowService" ref="org.hisp.dhis.dataapproval.DataApprovalWorkflowService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
     <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
   </bean>
@@ -114,7 +113,6 @@
     <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
     <property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="workflowService" ref="org.hisp.dhis.dataapproval.DataApprovalWorkflowService" />
     <property name="userService" ref="org.hisp.dhis.user.UserService" />
     <property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
@@ -124,12 +122,11 @@
   <bean id="org.hisp.dhis.dataset.action.UpdateDataSetAction" class="org.hisp.dhis.dataset.action.UpdateDataSetAction"
     scope="prototype">
     <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
-    <property name="sectionService" ref="org.hisp.dhis.dataset.SectionService" />
+	<property name="sectionService" ref="org.hisp.dhis.dataset.SectionService" />
     <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
     <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
     <property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="workflowService" ref="org.hisp.dhis.dataapproval.DataApprovalWorkflowService" />
     <property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
     <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />

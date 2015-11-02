@@ -32,7 +32,6 @@ import com.opensymphony.xwork2.Action;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
-import org.hisp.dhis.dataapproval.DataApprovalWorkflowService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
@@ -79,9 +78,6 @@ public class UpdateProgramAction
     
     @Autowired
     private DataElementCategoryService categoryService;
-
-    @Autowired
-    private DataApprovalWorkflowService workflowService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -276,13 +272,6 @@ public class UpdateProgramAction
         this.categoryComboId = categoryComboId;
     }
 
-    private Integer workflowId;
-
-    public void setWorkflowId( Integer workflowId )
-    {
-        this.workflowId = workflowId;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -386,14 +375,6 @@ public class UpdateProgramAction
                 program.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
         }
 
-        if ( workflowId != null && workflowId > 0 )
-        {
-            program.setWorkflow( workflowService.getWorkflow( workflowId ) );
-        }
-        else
-        {
-            program.setWorkflow( null );
-        }
         programService.updateProgram( program );
 
         return SUCCESS;

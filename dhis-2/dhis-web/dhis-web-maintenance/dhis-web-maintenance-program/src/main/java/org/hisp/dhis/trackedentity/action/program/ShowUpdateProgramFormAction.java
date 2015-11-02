@@ -37,8 +37,6 @@ import java.util.Map;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.dataapproval.DataApprovalWorkflow;
-import org.hisp.dhis.dataapproval.DataApprovalWorkflowService;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -104,12 +102,9 @@ public class ShowUpdateProgramFormAction
 
     @Autowired
     private AttributeService attributeService;
-
+    
     @Autowired
     private DataElementCategoryService categoryService;
-
-    @Autowired
-    private DataApprovalWorkflowService workflowService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -228,13 +223,6 @@ public class ShowUpdateProgramFormAction
         return categoryCombos;
     }
 
-    private List<DataApprovalWorkflow> workflows = new ArrayList<>();
-
-    public List<DataApprovalWorkflow> getWorkflows()
-    {
-        return workflows;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -272,9 +260,6 @@ public class ShowUpdateProgramFormAction
         attributes = attributeService.getProgramAttributes();
         
         categoryCombos = new ArrayList<>( categoryService.getAttributeCategoryCombos() );
-
-        workflows = new ArrayList<>( workflowService.getAllWorkflows() );
-        Collections.sort( workflows, IdentifiableObjectNameComparator.INSTANCE );
 
         return SUCCESS;
     }

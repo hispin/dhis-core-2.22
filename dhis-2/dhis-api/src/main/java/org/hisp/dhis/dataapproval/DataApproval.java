@@ -70,9 +70,9 @@ public class DataApproval
     private DataApprovalLevel dataApprovalLevel;
 
     /**
-     * The workflow for the values being approved (required).
+     * The DataSet for the values being approved (required).
      */
-    private DataApprovalWorkflow workflow;
+    private DataSet dataSet;
 
     /**
      * The Period of the DataSet values being approved (required).
@@ -114,13 +114,13 @@ public class DataApproval
     {
     }
 
-    public DataApproval( DataApprovalLevel dataApprovalLevel, DataApprovalWorkflow workflow,
+    public DataApproval( DataApprovalLevel dataApprovalLevel, DataSet dataSet,
                          Period period, OrganisationUnit organisationUnit,
                          DataElementCategoryOptionCombo attributeOptionCombo,
                          boolean accepted, Date created, User creator )
     {
         this.dataApprovalLevel = dataApprovalLevel;
-        this.workflow = workflow;
+        this.dataSet = dataSet;
         this.period = period;
         this.organisationUnit = organisationUnit;
         this.attributeOptionCombo = attributeOptionCombo;
@@ -132,7 +132,7 @@ public class DataApproval
     public DataApproval( DataApproval da )
     {
         this.dataApprovalLevel = da.dataApprovalLevel;
-        this.workflow = da.workflow;
+        this.dataSet = da.dataSet;
         this.period = da.period;
         this.organisationUnit = da.organisationUnit;
         this.attributeOptionCombo = da.attributeOptionCombo;
@@ -168,14 +168,14 @@ public class DataApproval
         this.dataApprovalLevel = dataApprovalLevel;
     }
 
-    public DataApprovalWorkflow getWorkflow()
+    public DataSet getDataSet()
     {
-        return workflow;
+        return dataSet;
     }
 
-    public void setWorkflow( DataApprovalWorkflow workflow )
+    public void setDataSet( DataSet dataSet )
     {
-        this.workflow = workflow;
+        this.dataSet = dataSet;
     }
 
     public Period getPeriod()
@@ -250,7 +250,7 @@ public class DataApproval
         int result = 1;
 
         result = prime * result + ((dataApprovalLevel == null) ? 0 : dataApprovalLevel.hashCode());
-        result = prime * result + ((workflow == null) ? 0 : workflow.hashCode());
+        result = prime * result + ((dataSet == null) ? 0 : dataSet.hashCode());
         result = prime * result + ((period == null) ? 0 : period.hashCode());
         result = prime * result + ((organisationUnit == null) ? 0 : organisationUnit.hashCode());
         result = prime * result + ((attributeOptionCombo == null) ? 0 : attributeOptionCombo.hashCode());
@@ -264,7 +264,7 @@ public class DataApproval
         return "DataApproval{" +
                 "id=" + id +
                 ", dataApprovalLevel=" + ( dataApprovalLevel == null ? "(null)" : dataApprovalLevel.getLevel() ) +
-                ", workflow='" + ( workflow == null ? "(null)" : workflow.getName() ) + "'" +
+                ", dataSet='" + ( dataSet == null ? "(null)" : dataSet.getName() ) + "'" +
                 ", period=" + ( period == null ? "(null)" : period.getName() ) +
                 ", organisationUnit='" + ( organisationUnit == null ? "(null)" : organisationUnit.getName() ) + "'" +
                 ", attributeOptionCombo='" + ( attributeOptionCombo == null ? "(null)" : attributeOptionCombo.getName() ) + "'" +
@@ -301,14 +301,14 @@ public class DataApproval
             return false;
         }
 
-        if ( workflow != null )
+        if ( dataSet != null )
         {
-            if ( !workflow.equals( that.getWorkflow() ) )
+            if ( !dataSet.equals( that.getDataSet() ) )
             {
                 return false;
             }
         }
-        else if ( that.getWorkflow() != null )
+        else if ( that.getDataSet() != null )
         {
             return false;
         }
