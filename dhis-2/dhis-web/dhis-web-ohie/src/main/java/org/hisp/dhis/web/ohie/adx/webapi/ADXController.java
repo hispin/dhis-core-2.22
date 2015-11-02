@@ -68,7 +68,7 @@ public class AdxController
     public void postXMLDataValueSet( ImportOptions importOptions,
         HttpServletResponse response, InputStream in, Model model ) throws IOException
     {
-        ImportSummaries importSummaries = adxService.postData( in, importOptions );
+        ImportSummaries importSummaries = adxService.saveDataValueSet( in, importOptions, null );
         
         log.debug( "Data values set saved" );
 
