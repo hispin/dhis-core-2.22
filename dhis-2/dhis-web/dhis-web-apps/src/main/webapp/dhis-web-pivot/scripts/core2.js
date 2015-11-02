@@ -5,13 +5,23 @@ $( function() {
     (function() {
         var isString,
             isNumber,
+            isNumeric,
             isBoolean,
             isArray,
             isObject,
             isEmpty,
             isDefined,
             arrayFrom,
-            arrayClean;
+            arrayClean,
+            clone,
+            enumerables = ['valueOf', 'toLocaleString', 'toString', 'constructor'];
+
+        // enumerables
+        (function() {
+            for (i in { toString: 1 }) {
+                enumerables = null;
+            }
+        })();
 
         isString = function(param) {
             return typeof param === 'string';
@@ -19,6 +29,10 @@ $( function() {
 
         isNumber = function(param) {
             return typeof param === 'number' && isFinite(param);
+        };
+
+        isNumeric = function(param) {
+            return !isNaN(parseFloat(param)) && isFinite(param);
         };
 
         isArray = ('isArray' in Array) ? Array.isArray : function(param) {
@@ -41,7 +55,12 @@ $( function() {
 
         isDefined = function(param) {
             return typeof param !== 'undefined';
-        }
+        };
+
+        isPrimitive = function(param) {
+            var type = typeof param;
+            return type === 'string' || type === 'number' || type === 'boolean';
+        };
 
         arrayFrom = function(param, isNewRef) {
             if (param === undefined || param === null) {
@@ -77,8 +96,54 @@ $( function() {
             return results;
         };
 
+        clone = function(item) {
+            if (item === null || item === undefined) {
+                return item;
+            }
+
+            if (item.nodeType && item.cloneNode) {
+                return item.cloneNode(true);
+            }
+
+            var type = toString.call(item),
+                i, j, k, clone, key;
+
+            if (type === '[object Date]') {
+                return new Date(item.getTime());
+            }
+
+            if (type === '[object Array]') {
+                i = item.length;
+
+                clone = [];
+
+                while (i--) {
+                    clone[i] = Ext.clone(item[i]);
+                }
+            }
+            else if (type === '[object Object]' && item.constructor === Object) {
+                clone = {};
+
+                for (key in item) {
+                    clone[key] = Ext.clone(item[key]);
+                }
+
+                if (enumerables) {
+                    for (j = enumerables.length; j--;) {
+                        k = enumerables[j];
+                        if (item.hasOwnProperty(k)) {
+                            clone[k] = item[k];
+                        }
+                    }
+                }
+            }
+
+            return clone || item;
+        };
+
         NS.isString = isString;
         NS.isNumber = isNumber;
+        NS.isNumeric = isNumeric;
         NS.isBoolean = isBoolean;
         NS.isArray = isArray;
         NS.isObject = isObject;
@@ -86,6 +151,7 @@ $( function() {
         NS.isDefined = isDefined;
         NS.arrayFrom = arrayFrom;
         NS.arrayClean = arrayClean;
+        NS.clone = clone;
     })();
 
     // date manager TODO import
@@ -412,7 +478,7 @@ $( function() {
         (function() {
             var Dimension = NS.Api.Dimension = function(config) {
                 var t = this,
-                    items;
+                    items = [];
 
                 config = NS.isObject(config) ? config : {};
                 config.items = NS.arrayFrom(config.items);
@@ -421,8 +487,8 @@ $( function() {
                 t.dimension = config.dimension;
 
                 (function() {
-                    for (var i = 0, record; i < t.items.length; i++) {
-                        items.push((new NS.Api.Record(t.items[i])).val());
+                    for (var i = 0, record; i < config.items.length; i++) {
+                        items.push((new NS.Api.Record(config.items[i])).val());
                     }
                 })();
 
@@ -430,7 +496,7 @@ $( function() {
             };
 
             Dimension.prototype.val = function() {
-                if (!isString(this.dimension)) {
+                if (!NS.isString(this.dimension)) {
                     console.log('Dimension', 'Dimension is not a string', this);
                     return;
                 }
@@ -459,6 +525,12 @@ $( function() {
                 })();
 
                 // prototype
+                t.each = function(fn) {
+                    for (var i = 0, axis; i < this.length; i++) {
+                        fn.call(this, this[i]);
+                    }
+                };
+
                 t.val = function() {
                     if (!this.length) {
                         console.log('Axis', 'No dimensions', this);
@@ -561,35 +633,20 @@ $( function() {
                 }
 
                 $.extend(t, forceApplyConfig);
-
-                // uninitialized
-                t.axes;
-                t.dimensions;
-                t.dimensionNames;
             };
 
-            Layout.prototype.getAxes = function() {
-                if (this.axes) {
-                    return this.axes;
-                }
-
-                return this.axes = NS.arrayClean(this.columns, this.rows, this.filters);
+            Layout.prototype.getAxes = function(includeFilter) {
+                return NS.arrayClean(this.columns, this.rows, (includeFilter ? this.filters : null));
             };
 
-            Layout.prototype.getDimensions = function() {
-                if (this.dimensions) {
-                    return this.dimensions;
-                }
-
-                return this.dimensions = NS.arrayClean([].concat(this.columns, this.rows, this.filters));
+            Layout.prototype.getDimensions = function(includeFilter) {
+                return this.dimensions = NS.arrayClean([].concat(this.columns, this.rows, includeFilter ? this.filters : null));
             };
 
             // dep 1
 
-            Layout.prototype.hasDimension = function(dimensionName) {
-                var axes = this.getAxes();
-
-                for (var i = 0; i < axes.length; i++) {
+            Layout.prototype.hasDimension = function(dimensionName, includeFilter) {
+                for (var i = 0, axes = this.getAxes(includeFilter); i < axes.length; i++) {
                     if (axes[i].has(dimensionName)) {
                         return true;
                     }
@@ -598,14 +655,10 @@ $( function() {
                 return false;
             };
 
-            Layout.prototype.getDimensionNames = function() {
-                if (this.dimensionNames) {
-                    return this.dimensionNames;
-                }
-
+            Layout.prototype.getDimensionNames = function(includeFilter) {
                 this.dimensionNames = [];
 
-                for (var i = 0, dimensions = this.getDimensions(); i < dimensions.length; i++) {
+                for (var i = 0, dimensions = this.getDimensions(includeFilter); i < dimensions.length; i++) {
                     this.dimensionNames.push(dimensions[i].dimension);
                 }
 
@@ -629,6 +682,20 @@ $( function() {
 
                 return this;
             };
+
+            //Layout.prototype.url = function(sortParams) {
+
+
+
+            //Layout.prototype.data = function() {
+
+
+
+
+
+
+
+
         })();
 
         // Header
@@ -644,9 +711,15 @@ $( function() {
                 // uninitialized
                 t.index;
             };
-        };
 
-        // Reponse
+            Header.prototype.setIndex = function(index) {
+                if (NS.isNumeric(index)) {
+                    this.index = parseInt(index);
+                }
+            };
+        })();
+
+        // Response
         (function() {
             var Response = NS.Api.Response = function(config) {
                 var t = this;
@@ -664,15 +737,15 @@ $( function() {
                     }
 
                     return map;
-                })();
+                }();
 
                 // uninitialized
                 t.idValueMap = {};
 
                 // Header: index
                 (function() {
-                    for (var i = 0; i < t.headers.length; i++) {
-                        t.headers[i].index = i;
+                    for (var i = 0, header; i < t.headers.length; i++) {
+                        t.headers[i].setIndex(i);
                     }
                 })();
             };
@@ -690,4 +763,9 @@ $( function() {
             };
         })();
     })();
+
+
+
+
+
 });
