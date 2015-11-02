@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -205,7 +206,20 @@ public class DataValueSetController
             renderService.toXml( response.getOutputStream(), summary );
         }
     }
-    
+
+    // -------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * Starts an asynchronous import task.
+     * 
+     * @param importOptions the ImportOptions.
+     * @param format the resource representation format.
+     * @param request the HttpRequest.
+     * @param response the HttpResponse.
+     * @throws IOException
+     */
     private void startAsyncImport( ImportOptions importOptions, String format, HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {
@@ -218,6 +232,14 @@ public class DataValueSetController
         response.setStatus( HttpServletResponse.SC_ACCEPTED );
     }
     
+    /**
+     * Writes the input stream to a temporary file, and returns a new input
+     * stream connected to the file.
+     * 
+     * @param in the InputStream.
+     * @return an InputStream.
+     * @throws IOException
+     */
     private InputStream saveTmp( InputStream in )
         throws IOException
     {
@@ -230,6 +252,6 @@ public class DataValueSetController
             IOUtils.copy( in, out );
         }
         
-        return new FileInputStream( tmpFile );
+        return new BufferedInputStream( new FileInputStream( tmpFile ) );
     }
 }
