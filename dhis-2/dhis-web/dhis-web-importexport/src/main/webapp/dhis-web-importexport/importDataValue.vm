@@ -18,6 +18,7 @@
             <option value="json">JSON</option>
             <option value="csv">CSV</option>
             <option value="pdf">PDF</option>
+            <option value="adx">ADX</option>
         </select>
     </td>
 </tr>

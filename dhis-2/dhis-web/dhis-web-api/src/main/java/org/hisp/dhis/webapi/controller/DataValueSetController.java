@@ -1,5 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
+import org.hisp.dhis.dxf2.adx.AdxDataService;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -33,6 +35,7 @@ import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.datavalueset.tasks.ImportDataValueTask;
+import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.scheduling.TaskCategory;
@@ -74,6 +77,9 @@ public class DataValueSetController
 
     @Autowired
     private DataValueSetService dataValueSetService;
+
+    @Autowired
+    private AdxDataService adxDataService;
 
     @Autowired
     private RenderService renderService;
@@ -171,6 +177,24 @@ public class DataValueSetController
         }
     }
 
+    @RequestMapping( method = RequestMethod.POST, consumes = "application/xml+adx" )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
+    public void postAdxDataValueSet( ImportOptions importOptions,
+        HttpServletRequest request, HttpServletResponse response ) throws IOException
+    {
+        if ( importOptions.isAsync() )
+        {
+            startAsyncImport( importOptions, ImportDataValueTask.FORMAT_ADX, request, response );
+        }
+        else
+        {
+            ImportSummaries summaries = adxDataService.saveDataValueSet( request.getInputStream(), importOptions, null );
+    
+            response.setContentType( CONTENT_TYPE_XML );
+            renderService.toXml( response.getOutputStream(), summaries );
+        }
+    }
+
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
     public void postJsonDataValueSet( ImportOptions importOptions,
@@ -226,7 +250,7 @@ public class DataValueSetController
         InputStream inputStream = saveTmp( request.getInputStream() );
 
         TaskId taskId = new TaskId( TaskCategory.DATAVALUE_IMPORT, currentUserService.getCurrentUser() );
-        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, inputStream, importOptions, taskId, format ) );
+        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, adxDataService, inputStream, importOptions, taskId, format ) );
 
         response.setHeader( "Location", ContextUtils.getRootPath( request ) + "/system/tasks/" + TaskCategory.DATAVALUE_IMPORT );
         response.setStatus( HttpServletResponse.SC_ACCEPTED );

@@ -37,6 +37,7 @@ import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.hisp.dhis.scheduling.TaskId;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -56,14 +57,17 @@ public class PipedImporter
 
     private final ImportOptions importOptions;
 
+    private final TaskId id;
+    
     private final Authentication authentication;
 
     public PipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions,
-        PipedOutputStream pipeOut ) throws IOException
+        TaskId id, PipedOutputStream pipeOut ) throws IOException
     {
         this.dataValueSetService = dataValueSetService;
         this.pipeIn = new PipedInputStream( pipeOut, PIPE_BUFFER_SIZE );
         this.importOptions = importOptions;
+        this.id = id;
         this.authentication = SecurityContextHolder.getContext().getAuthentication();
     }
 
@@ -75,7 +79,7 @@ public class PipedImporter
 
         try
         {
-            result = dataValueSetService.saveDataValueSet( pipeIn, importOptions );
+            result = dataValueSetService.saveDataValueSet( pipeIn, importOptions, id );
         }
         catch ( Exception ex )
         {
