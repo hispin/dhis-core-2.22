@@ -51,14 +51,14 @@
     </constructor-arg>
   </bean>
   
-  <bean id="ldapUrl" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="KEY_LDAP_URL" /></bean>
+  <bean id="ldapUrl" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_URL" /></bean>
   
-  <bean id="ldapManagerDn" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="KEY_LDAP_MANAGER_DN" /></bean>
+  <bean id="ldapManagerDn" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_MANAGER_DN" /></bean>
   
-  <bean id="ldapManagerPassword" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="KEY_LDAP_MANAGER_PASSWORD" /></bean>
+  <bean id="ldapManagerPassword" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_MANAGER_PASSWORD" /></bean>
     
   <bean id="ldapDnPatterns" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean">
-    <constructor-arg value="KEY_LDAP_DN_PATTERNS" />
+    <constructor-arg value="LDAP_DN_PATTERNS" />
     <property name="list" value="true" />
   </bean>  
     

@@ -52,6 +52,6 @@ public class DhisConfigurationProviderTest
     @Test
     public void testGetProperty()
     {
-        assertEquals( ConfigurationKey.KEY_FILESTORE_PROVIDER.getDefaultValue(), provider.getProperty( ConfigurationKey.KEY_FILESTORE_PROVIDER ) );
+        assertEquals( ConfigurationKey.FILESTORE_PROVIDER.getDefaultValue(), provider.getProperty( ConfigurationKey.FILESTORE_PROVIDER ) );
     }
 }
