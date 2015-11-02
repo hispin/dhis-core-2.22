@@ -80,6 +80,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -368,7 +369,8 @@ public class EventController
         else
         {
             TaskId taskId = new TaskId( TaskCategory.EVENT_IMPORT, currentUserService.getCurrentUser() );
-            scheduler.executeTask( new ImportEventTask( inputStream, eventService, importOptions, taskId, false ) );
+            List<Event> events = eventService.getEventsXml( inputStream );
+            scheduler.executeTask( new ImportEventTask( events, eventService, importOptions, taskId ) );
             response.setHeader( "Location", ContextUtils.getRootPath( request ) + "/system/tasks/" + TaskCategory.EVENT_IMPORT );
             response.setStatus( HttpServletResponse.SC_NO_CONTENT );
         }
@@ -407,7 +409,8 @@ public class EventController
         else
         {
             TaskId taskId = new TaskId( TaskCategory.EVENT_IMPORT, currentUserService.getCurrentUser() );
-            scheduler.executeTask( new ImportEventTask( inputStream, eventService, importOptions, taskId, true ) );
+            List<Event> events = eventService.getEventsJson( inputStream );
+            scheduler.executeTask( new ImportEventTask( events, eventService, importOptions, taskId ) );
             response.setHeader( "Location", ContextUtils.getRootPath( request ) + "/system/tasks/" + TaskCategory.EVENT_IMPORT );
             response.setStatus( HttpServletResponse.SC_NO_CONTENT );
         }

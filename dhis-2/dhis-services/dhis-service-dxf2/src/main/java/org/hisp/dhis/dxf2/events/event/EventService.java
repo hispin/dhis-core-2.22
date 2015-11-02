@@ -66,6 +66,10 @@ public interface EventService
 
     Event getEvent( ProgramStageInstance programStageInstance );
 
+    List<Event> getEventsXml( InputStream inputStream ) throws IOException;
+
+    List<Event> getEventsJson( InputStream inputStream ) throws IOException;
+
     // -------------------------------------------------------------------------
     // CREATE
     // -------------------------------------------------------------------------

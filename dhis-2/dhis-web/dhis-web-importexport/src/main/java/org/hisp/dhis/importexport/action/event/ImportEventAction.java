@@ -28,13 +28,11 @@ package org.hisp.dhis.importexport.action.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.events.event.Event;
 import org.hisp.dhis.dxf2.events.event.EventService;
 import org.hisp.dhis.dxf2.events.event.Events;
 import org.hisp.dhis.dxf2.events.event.ImportEventTask;
@@ -47,12 +45,15 @@ import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class ImportEventAction 
+public class ImportEventAction
     implements Action
 {
     public static final String FORMAT_CSV = "csv";
@@ -144,8 +145,18 @@ public class ImportEventAction
         }
         else
         {
-            boolean jsonInput = FORMAT_JSON.equals( payloadFormat );
-            scheduler.executeTask( new ImportEventTask( in, eventService, importOptions, taskId, jsonInput ) );
+            List<Event> events;
+
+            if ( FORMAT_JSON.equals( payloadFormat ) )
+            {
+                events = eventService.getEventsJson( in );
+            }
+            else
+            {
+                events = eventService.getEventsXml( in );
+            }
+
+            scheduler.executeTask( new ImportEventTask( events, eventService, importOptions, taskId ) );
         }
 
         return SUCCESS;

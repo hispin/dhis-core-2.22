@@ -321,7 +321,7 @@ public class DefaultCsvImportService
                 object.setOpeningDate( getMediumDate( getSafe( values, 7, "1970-01-01", null ) ) );
                 object.setClosedDate( getMediumDate( getSafe( values, 8, null, null ) ) );
                 object.setComment( getSafe( values, 9, null, null ) );
-                object.setFeatureType( FeatureType.valueOf( getSafe( values, 10, null, 50 ) ) );
+                object.setFeatureType( FeatureType.valueOf( getSafe( values, 10, "NONE", 50 ) ) );
                 object.setCoordinates( getSafe( values, 11, null, null ) );
                 object.setUrl( getSafe( values, 12, null, 255 ) );
                 object.setContactPerson( getSafe( values, 13, null, 255 ) );

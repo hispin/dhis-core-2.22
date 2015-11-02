@@ -28,12 +28,11 @@ package org.hisp.dhis.dxf2.events.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.security.SecurityContextRunnable;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.security.SecurityContextRunnable;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -41,7 +40,7 @@ import java.io.InputStream;
 public class ImportEventTask
     extends SecurityContextRunnable
 {
-    private final InputStream inputStream;
+    private final List<Event> events;
 
     private final EventService eventService;
 
@@ -49,39 +48,17 @@ public class ImportEventTask
 
     private final TaskId taskId;
 
-    private final boolean jsonInput;
-
-    public ImportEventTask( InputStream inputStream, EventService eventService, ImportOptions importOptions, TaskId taskId, boolean jsonInput )
+    public ImportEventTask( List<Event> events, EventService eventService, ImportOptions importOptions, TaskId taskId )
     {
-        this.inputStream = inputStream;
+        this.events = events;
         this.eventService = eventService;
         this.importOptions = importOptions;
         this.taskId = taskId;
-        this.jsonInput = jsonInput;
     }
 
     @Override
     public void call()
     {
-        if ( jsonInput )
-        {
-            try
-            {
-                eventService.addEventsJson( inputStream, taskId, importOptions );
-            }
-            catch ( IOException ignored )
-            {
-            }
-        }
-        else
-        {
-            try
-            {
-                eventService.addEventsXml( inputStream, taskId, importOptions );
-            }
-            catch ( IOException ignored )
-            {
-            }
-        }
+        eventService.addEvents( events, importOptions, taskId );
     }
 }
