@@ -33,15 +33,15 @@ package org.hisp.dhis.external.conf;
  */
 public enum ConfigurationKey
 {
-    KEY_LDAP_URL( "ldap.url", "ldaps://0:1" ),
-    KEY_LDAP_MANAGER_DN( "ldap.manager.dn" ),
-    KEY_LDAP_MANAGER_PASSWORD( "ldap.manager.password" ),
-    KEY_LDAP_DN_PATTERNS( "ldap.dn.patterns", "" ),    
-    KEY_FILESTORE_PROVIDER( "filestore.provider", "filesystem" ),
-    KEY_FILE_STORE_CONTAINER( "filestore.container" ),
-    KEY_FILE_STORE_LOCATION( "filestore.location" ),
-    KEY_FILE_STORE_IDENTITY( "filestore.identity" ),
-    KEY_FILE_STORE_SECRET( "filestore.secret" );
+    LDAP_URL( "ldap.url", "ldaps://0:1" ),
+    LDAP_MANAGER_DN( "ldap.manager.dn" ),
+    LDAP_MANAGER_PASSWORD( "ldap.manager.password" ),
+    LDAP_DN_PATTERNS( "ldap.dn.patterns", "" ),    
+    FILESTORE_PROVIDER( "filestore.provider", "filesystem" ),
+    FILE_STORE_CONTAINER( "filestore.container" ),
+    FILE_STORE_LOCATION( "filestore.location" ),
+    FILE_STORE_IDENTITY( "filestore.identity" ),
+    FILE_STORE_SECRET( "filestore.secret" );
 
     private final String key;
     

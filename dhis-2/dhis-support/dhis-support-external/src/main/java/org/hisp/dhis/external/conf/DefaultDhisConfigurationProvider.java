@@ -127,12 +127,12 @@ public class DefaultDhisConfigurationProvider
     @Override
     public boolean isLdapConfigured()
     {
-        String ldapUrl = getProperty( ConfigurationKey.KEY_LDAP_URL );
-        String managerDn = getProperty( ConfigurationKey.KEY_LDAP_MANAGER_DN );
-        String dnPatterns = getProperty( ConfigurationKey.KEY_LDAP_DN_PATTERNS );
+        String ldapUrl = getProperty( ConfigurationKey.LDAP_URL );
+        String managerDn = getProperty( ConfigurationKey.LDAP_MANAGER_DN );
+        String dnPatterns = getProperty( ConfigurationKey.LDAP_DN_PATTERNS );
         
-        return !( ConfigurationKey.KEY_LDAP_URL.getDefaultValue().equals( ldapUrl ) ||
-            ConfigurationKey.KEY_LDAP_MANAGER_DN.getDefaultValue().equals( managerDn ) ||
-            ConfigurationKey.KEY_LDAP_DN_PATTERNS.getDefaultValue().equals( dnPatterns ) );
+        return !( ConfigurationKey.LDAP_URL.getDefaultValue().equals( ldapUrl ) ||
+            ConfigurationKey.LDAP_MANAGER_DN.getDefaultValue().equals( managerDn ) ||
+            ConfigurationKey.LDAP_DN_PATTERNS.getDefaultValue().equals( dnPatterns ) );
     }
 }
