@@ -112,6 +112,15 @@ public interface DataElementService
     DataElement getDataElementByName( String name );
 
     /**
+     * Indicates whether this data element allows for data entry for future periods
+     * through its data set assignments.
+     * 
+     * @param id the data element id.
+     * @return true or false.
+     */
+    boolean isOpenFuturePeriods( int id );
+
+    /**
      * Returns List of DataElements with a given key.
      *
      * @param key the name of the DataElement to return.
@@ -127,7 +136,7 @@ public interface DataElementService
      * @return the DataElement with the given short name, or null if no match.
      */
     DataElement getDataElementByShortName( String shortName );
-
+    
     /**
      * Returns all DataElements.
      *
