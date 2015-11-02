@@ -77,6 +77,8 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.system.notification.Notifier;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -111,20 +113,25 @@ public class DefaultAdxDataService
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
+    
+    @Autowired
+    private Notifier notifier;
 
     // -------------------------------------------------------------------------
     // Public methods
     // -------------------------------------------------------------------------
 
     @Override
-    public void getData( DataExportParams params, OutputStream out )
+    public void writeDataValueSet( DataExportParams params, OutputStream out )
     {
         throw new UnsupportedOperationException( "ADX export not supported yet." );
     }
 
     @Override
-    public ImportSummaries postData( InputStream in, ImportOptions importOptions )
+    public ImportSummaries saveDataValueSet( InputStream in, ImportOptions importOptions, TaskId id )
     {
+        notifier.clear( id ).notify( id, "ADX parsing process started" );
+        
         XMLReader adxReader = XMLFactory.getXMLReader( in );
 
         ImportSummaries importSummaries = new ImportSummaries();
@@ -146,7 +153,7 @@ public class DefaultAdxDataService
                 XMLStreamWriter dxfWriter = factory.createXMLStreamWriter( pipeOut );
                 
                 // note this returns conflicts which are detected at ADX level
-                List<ImportConflict> adxConflicts = parseADXGroupToDxf( adxReader, dxfWriter, importOptions );
+                List<ImportConflict> adxConflicts = parseAdxGroupToDxf( adxReader, dxfWriter, importOptions );
                 
                 pipeOut.flush();
                 
@@ -177,10 +184,13 @@ public class DefaultAdxDataService
                 importSummaries.addImportSummary( importSummary );
                 log.warn( "Import failed: " + ex );
             }
+            
             count++;
         }
 
         executor.shutdown();
+        
+        notifier.notify( id, "ADX parsing done" );
 
         return importSummaries;
     }
@@ -189,7 +199,7 @@ public class DefaultAdxDataService
     // Utility methods
     // -------------------------------------------------------------------------
 
-    private List<ImportConflict> parseADXGroupToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
+    private List<ImportConflict> parseAdxGroupToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
         throws XMLStreamException, AdxException
     {
         List<ImportConflict> adxConflicts = new LinkedList<>();
@@ -234,7 +244,7 @@ public class DefaultAdxDataService
             
             groupAttributes.put( AdxDataService.DATASET, dataSet.getUid() );
             DataElementCategoryCombo attributeCombo = dataSet.getCategoryCombo();
-            attributesToDXF( AdxDataService.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme );
+            attributesToDxf( AdxDataService.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme );
         }
 
         // write the remaining attributes through to DXF stream
@@ -295,7 +305,7 @@ public class DefaultAdxDataService
             log.debug( "No categoryOptionCombo present." );
             DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
 
-            attributesToDXF( AdxDataService.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
+            attributesToDxf( AdxDataService.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
         }
         
         // if data element type is string we need to pick out the 'annotation' element
@@ -397,7 +407,7 @@ public class DefaultAdxDataService
         return catoptcombo;
     }
 
-    private void attributesToDXF( String optionComboName, DataElementCategoryCombo catCombo,
+    private void attributesToDxf( String optionComboName, DataElementCategoryCombo catCombo,
         Map<String, String> attributes, IdentifiableProperty scheme )
         throws AdxException
     {

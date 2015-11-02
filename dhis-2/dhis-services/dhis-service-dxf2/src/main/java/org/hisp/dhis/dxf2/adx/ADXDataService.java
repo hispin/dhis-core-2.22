@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
+import org.hisp.dhis.scheduling.TaskId;
 
 /**
  * @author bobj
@@ -70,9 +71,11 @@ public interface AdxDataService
      * 
      * @param in the InputStream.
      * @param importOptions the importOptions.
+     * @param id the task id.
+     * 
      * @return an ImportSummaries collection of ImportSummary for each DataValueSet.
      */
-    ImportSummaries postData( InputStream in, ImportOptions importOptions );
+    ImportSummaries saveDataValueSet( InputStream in, ImportOptions importOptions, TaskId id );
 
-    void getData( DataExportParams params, OutputStream out );
+    void writeDataValueSet( DataExportParams params, OutputStream out );
 }
