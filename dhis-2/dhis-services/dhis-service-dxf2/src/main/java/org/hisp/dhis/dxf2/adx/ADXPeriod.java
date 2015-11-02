@@ -54,9 +54,8 @@ import org.hisp.dhis.period.YearlyPeriodType;
  *
  * @author bobj
  */
-public class ADXPeriod
+public class AdxPeriod
 {
-
     public static enum Duration
     {
         P1D, // daily
@@ -70,13 +69,14 @@ public class ADXPeriod
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
 
-    public static Period parse( String periodString ) throws ADXException
+    public static Period parse( String periodString ) 
+        throws AdxException
     {
         String[] tokens = periodString.split( "/" );
         
         if ( tokens.length != 2 )
         {
-            throw new ADXException( periodString + " not in valid <date>/<duration> format" );
+            throw new AdxException( periodString + " not in valid <date>/<duration> format" );
         }
 
         try
@@ -115,7 +115,7 @@ public class ADXPeriod
                             periodType = new SixMonthlyAprilPeriodType();
                             break;
                         default:
-                            throw new ADXException( periodString + "is invalid sixmonthly type" );
+                            throw new AdxException( periodString + "is invalid sixmonthly type" );
                     }
                 case P1Y:
                     switch ( cal.get( Calendar.MONTH ) )
@@ -133,7 +133,7 @@ public class ADXPeriod
                             periodType = new FinancialOctoberPeriodType();
                             break;
                         default:
-                            throw new ADXException( periodString + "is invalid yearly type" );
+                            throw new AdxException( periodString + "is invalid yearly type" );
                     }
             }
 
@@ -143,7 +143,7 @@ public class ADXPeriod
             } 
             else
             {
-                throw new ADXException( "Failed to create period type from " + duration );
+                throw new AdxException( "Failed to create period type from " + duration );
             }
 
             return period;
@@ -151,11 +151,11 @@ public class ADXPeriod
         } 
         catch ( ParseException ex )
         {
-            throw new ADXException( tokens[0] + "is not a valid date in YYYY-MM-dd format" );
+            throw new AdxException( tokens[0] + "is not a valid date in YYYY-MM-dd format" );
         } 
         catch ( IllegalArgumentException ex )
         {
-            throw new ADXException( tokens[1] + " is not a supported duration type" );
+            throw new AdxException( tokens[1] + " is not a supported duration type" );
         }
     }
 
