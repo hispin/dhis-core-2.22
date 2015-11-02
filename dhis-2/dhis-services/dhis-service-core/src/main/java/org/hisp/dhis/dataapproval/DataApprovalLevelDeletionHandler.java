@@ -1,4 +1,4 @@
-package org.hisp.dhis.reporting.dataapproval.action;
+package org.hisp.dhis.dataapproval;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,71 +28,51 @@ package org.hisp.dhis.reporting.dataapproval.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.period.PeriodType.getAvailablePeriodTypes;
+import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
+import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.period.PeriodType;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.Action;
-
-public class GetDataApprovalOptionsAction
-    implements Action
+/**
+ * @author Jim Grace
+ */
+public class DataApprovalLevelDeletionHandler
+    extends DeletionHandler
 {
-    @Autowired
-    private DataSetService dataSetService;
-    
     // -------------------------------------------------------------------------
-    // Output
+    // Dependencies
     // -------------------------------------------------------------------------
 
-    private List<DataSet> dataSets;
+    private JdbcTemplate jdbcTemplate;
 
-    public List<DataSet> getDataSets()
+    public void setJdbcTemplate( JdbcTemplate jdbcTemplate )
     {
-        return dataSets;
-    }
-
-    private List<PeriodType> periodTypes;
-
-    public List<PeriodType> getPeriodTypes()
-    {
-        return periodTypes;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     // -------------------------------------------------------------------------
-    // Action implementation
+    // DeletionHandler implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
-        throws Exception
+    public String getClassName()
     {
-        dataSets = new ArrayList<>( dataSetService.getAllDataSets() );
-        periodTypes = getAvailablePeriodTypes();
-
-        FilterUtils.filter( dataSets, new DataSetApproveDataFilter() );
-        
-        Collections.sort( dataSets, IdentifiableObjectNameComparator.INSTANCE );
-        
-        return SUCCESS;
+        return DataApproval.class.getSimpleName();
     }
 
-    class DataSetApproveDataFilter
-        implements Filter<DataSet>
+    @Override
+    public String allowDeleteCategoryOptionGroupSet( CategoryOptionGroupSet categoryOptionGroupSet )
     {
-        @Override
-        public boolean retain( DataSet dataSet )
-        {
-            return dataSet != null && dataSet.getWorkflow() != null;
-        }        
+        String sql = "select count(*) from dataapprovallevel where categoryoptiongroupsetid=" + categoryOptionGroupSet.getId();
+
+        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+    }
+
+    @Override
+    public String allowDeleteDataApprovalWorkflow( DataApprovalWorkflow workflow )
+    {
+        String sql = "select count(*) from dataapprovalworkflowmembers where workflowid=" + workflow.getId();
+        
+        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
     }
 }

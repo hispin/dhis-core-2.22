@@ -83,7 +83,19 @@ public class MySQLStatementBuilder
     {
         return "[[:>:]]";
     }
-    
+
+    @Override
+    public String getRandom( int n )
+    {
+        return "cast(floor(" + n + "*rand()) as integer)";
+    }
+
+    @Override
+    public String getCharAt( String str, String n )
+    {
+        return "substring(" + str + "," + n + ",1)";
+    }
+
     @Override
     public String getDeleteZeroDataValues()
     {

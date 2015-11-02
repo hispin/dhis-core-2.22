@@ -94,6 +94,12 @@
     <property name="cacheable" value="true" />
   </bean>
 
+  <bean id="org.hisp.dhis.dataapproval.DataApprovalWorkflowStore" class="org.hisp.dhis.dataapproval.hibernate.HibernateDataApprovalWorkflowStore">
+    <property name="clazz" value="org.hisp.dhis.dataapproval.DataApprovalWorkflow" />
+    <property name="sessionFactory" ref="sessionFactory" />
+    <property name="cacheable" value="true" />
+  </bean>
+
   <bean id="org.hisp.dhis.filter.MetaDataFilterStore" class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
     <property name="clazz" value="org.hisp.dhis.common.filter.MetaDataFilter" />
     <property name="sessionFactory" ref="sessionFactory" />
@@ -633,6 +639,10 @@
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
     <property name="userService" ref="org.hisp.dhis.user.UserService" />
     <property name="securityService" ref="org.hisp.dhis.security.SecurityService" />
+  </bean>
+
+  <bean id="org.hisp.dhis.dataapproval.DataApprovalWorkflowService" class="org.hisp.dhis.dataapproval.DefaultDataApprovalWorkflowService">
+    <property name="workflowStore" ref="org.hisp.dhis.dataapproval.DataApprovalWorkflowStore" />
   </bean>
 
   <bean id="org.hisp.dhis.dataelement.DataElementService" class="org.hisp.dhis.dataelement.DefaultDataElementService">
@@ -1773,6 +1783,7 @@
     <aop:aspect ref="deletionInterceptor">
       <aop:before pointcut="execution( * org.hisp.dhis.common.IdentifiableObjectManager.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.dataapproval.DataApprovalLevelService.delete*(..) )" method="intercept" />
+      <aop:before pointcut="execution( * org.hisp.dhis.dataapproval.DataApprovalWorkflowService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.dataelement.DataElementService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.dataelement.DataElementCategoryService.delete*(..) )" method="intercept" />
       <aop:before pointcut="execution( * org.hisp.dhis.dataset.DataSetService.deleteDataSet(..) )" method="intercept" />

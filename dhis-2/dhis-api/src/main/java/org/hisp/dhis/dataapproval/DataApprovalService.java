@@ -31,6 +31,7 @@ package org.hisp.dhis.dataapproval;
 import java.util.List;
 import java.util.Set;
 
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -78,13 +79,13 @@ public interface DataApprovalService
      * If attributeOptionCombo is null, the default option combo will be used.
      * If data is approved at multiple levels, the lowest level is returned.
      *
-     * @param dataSet DataSet to check for approval.
+     * @param workflow workflow to check for approval.
      * @param period Period to check for approval.
      * @param organisationUnit OrganisationUnit to check for approval.
      * @param attributeOptionCombo CategoryOptionCombo (if any) for approval.
      * @return the data approval status.
      */
-    DataApprovalStatus getDataApprovalStatus( DataSet dataSet, Period period,
+    DataApprovalStatus getDataApprovalStatus( DataApprovalWorkflow workflow, Period period,
         OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo );
 
     /**
@@ -93,23 +94,25 @@ public interface DataApprovalService
      * If attributeOptionCombo is null, the default option combo will be used.
      * If data is approved at multiple levels, the lowest level is returned.
      *
-     * @param dataSet DataSet to check for approval.
+     * @param workflow workflow to check for approval.
      * @param period Period to check for approval.
      * @param organisationUnit OrganisationUnit to check for approval.
      * @param attributeOptionCombo CategoryOptionCombo (if any) for approval.
      * @return the data approval status.
      */
-    DataApprovalStatus getDataApprovalStatusAndPermissions( DataSet dataSet, Period period,
+    DataApprovalStatus getDataApprovalStatusAndPermissions( DataApprovalWorkflow workflow, Period period,
         OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo );
 
     /**
      * Returns a list of approval status and permissions for all of the
      * category option combos that the user is allowed to see.
      *
-     * @param dataSets DataSets that we are getting the status for
+     * @param workflow workflow to check for approval.
      * @param period Period we are getting the status for
      * @param orgUnit Organisation unit we are getting the status for
+     * @param attributeCombo attribute category combo to search within
      * @return list of statuses and permissions
      */
-    List<DataApprovalStatus> getUserDataApprovalsAndPermissions( Set<DataSet> dataSets, Period period, OrganisationUnit orgUnit );
+    List<DataApprovalStatus> getUserDataApprovalsAndPermissions( DataApprovalWorkflow workflow,
+        Period period, OrganisationUnit orgUnit, DataElementCategoryCombo attributeCombo );
 }

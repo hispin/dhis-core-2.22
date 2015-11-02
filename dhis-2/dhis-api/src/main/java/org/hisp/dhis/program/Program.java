@@ -44,6 +44,7 @@ import org.hisp.dhis.common.VersionedObject;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflow;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataentryform.DataEntryForm;
@@ -132,6 +133,11 @@ public class Program
      * The CategoryCombo used for data attributes.
      */
     private DataElementCategoryCombo categoryCombo;
+
+    /**
+     * The approval workflow (if any) for this program.
+     */
+    private DataApprovalWorkflow workflow;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -668,6 +674,19 @@ public class Program
     public void setCategoryCombo( DataElementCategoryCombo categoryCombo )
     {
         this.categoryCombo = categoryCombo;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public DataApprovalWorkflow getWorkflow()
+    {
+        return workflow;
+    }
+
+    public void setWorkflow( DataApprovalWorkflow workflow )
+    {
+        this.workflow = workflow;
     }
 
     /**

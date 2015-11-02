@@ -36,14 +36,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.dataapproval.exceptions.DataMayNotBeAcceptedException;
 import org.hisp.dhis.dataapproval.exceptions.DataMayNotBeApprovedException;
 import org.hisp.dhis.dataapproval.exceptions.DataMayNotBeUnacceptedException;
 import org.hisp.dhis.dataapproval.exceptions.DataMayNotBeUnapprovedException;
+import org.hisp.dhis.dataapproval.exceptions.DataSetNotMarkedForApprovalException;
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -122,13 +126,13 @@ public class DefaultDataApprovalService
 
         List<DataApproval> expandedList = expandPeriods( dataApprovalList );
 
-        Map<DataApproval, DataApprovalStatus> statusMap = getStatusMap( expandedList );
+        Map<String, DataApprovalStatus> statusMap = getStatusMap( expandedList );
 
         List<DataApproval> checkedList = new ArrayList<>();
 
         for ( DataApproval da : expandedList )
         {
-            DataApprovalStatus status = getStatus( da, statusMap );
+            DataApprovalStatus status = statusMap.get( daKey( da ) );
 
             if ( da.getDataApprovalLevel() == null ) // Determine the approval level
             {
@@ -186,13 +190,13 @@ public class DefaultDataApprovalService
 
         List<DataApproval> expandedList = expandPeriods( dataApprovalList );
 
-        Map<DataApproval, DataApprovalStatus> statusMap = getStatusMap( expandedList );
+        Map<String, DataApprovalStatus> statusMap = getStatusMap( expandedList );
 
         List<DataApproval> checkedList = new ArrayList<>();
 
         for ( DataApproval da : expandedList )
         {
-            DataApprovalStatus status = getStatus( da, statusMap );
+            DataApprovalStatus status = statusMap.get( daKey( da ) );
 
             if ( da.getDataApprovalLevel() == null )
             {
@@ -219,8 +223,7 @@ public class DefaultDataApprovalService
         {
             log.debug( "unapproving " + da );
 
-            DataApproval d = dataApprovalStore.getDataApproval( da.getDataApprovalLevel(), da.getDataSet(),
-                da.getPeriod(), da.getOrganisationUnit(), da.getAttributeOptionCombo() );
+            DataApproval d = dataApprovalStore.getDataApproval( da );
 
             if ( d == null )
             {
@@ -242,13 +245,13 @@ public class DefaultDataApprovalService
 
         List<DataApproval> expandedList = expandPeriods( dataApprovalList );
 
-        Map<DataApproval, DataApprovalStatus> statusMap = getStatusMap( expandedList );
+        Map<String, DataApprovalStatus> statusMap = getStatusMap( expandedList );
 
         List<DataApproval> checkedList = new ArrayList<>();
 
         for ( DataApproval da : expandedList )
         {
-            DataApprovalStatus status = getStatus( da, statusMap );
+            DataApprovalStatus status = statusMap.get( daKey( da ) );
 
             if ( da.getDataApprovalLevel() == null )
             {
@@ -278,8 +281,7 @@ public class DefaultDataApprovalService
 
             log.debug( "accepting " + da );
 
-            DataApproval d = dataApprovalStore.getDataApproval( da.getDataApprovalLevel(), da.getDataSet(), 
-                da.getPeriod(), da.getOrganisationUnit(), da.getAttributeOptionCombo() );
+            DataApproval d = dataApprovalStore.getDataApproval( da );
 
             if ( d == null )
             {
@@ -303,13 +305,13 @@ public class DefaultDataApprovalService
 
         List<DataApproval> expandedList = expandPeriods( dataApprovalList );
 
-        Map<DataApproval, DataApprovalStatus> statusMap = getStatusMap( expandedList );
+        Map<String, DataApprovalStatus> statusMap = getStatusMap( expandedList );
 
         List<DataApproval> checkedList = new ArrayList<>();
 
         for ( DataApproval da : expandedList )
         {
-            DataApprovalStatus status = getStatus( da, statusMap );
+            DataApprovalStatus status = statusMap.get( daKey( da ) );
 
             if ( da.getDataApprovalLevel() == null )
             {
@@ -336,8 +338,7 @@ public class DefaultDataApprovalService
         {
             log.debug( "unaccepting " + da );
 
-            DataApproval d = dataApprovalStore.getDataApproval( da.getDataApprovalLevel(), da.getDataSet(),
-                da.getPeriod(), da.getOrganisationUnit(), da.getAttributeOptionCombo() );
+            DataApproval d = dataApprovalStore.getDataApproval( da );
 
             if ( d == null )
             {
@@ -355,16 +356,17 @@ public class DefaultDataApprovalService
     }
 
     @Override
-    public DataApprovalStatus getDataApprovalStatus( DataSet dataSet, Period period, OrganisationUnit organisationUnit,
-        DataElementCategoryOptionCombo attributeOptionCombo )
+    public DataApprovalStatus getDataApprovalStatus( DataApprovalWorkflow workflow, Period period,
+        OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo )
     {
-        log.debug( "getDataApprovalStatus( " + dataSet.getName() + ", "
+        log.debug( "getDataApprovalStatus( " + workflow.getName() + ", "
             + period.getPeriodType().getName() + " " + period.getName() + " " + period + ", "
             + organisationUnit.getName() + ", "
             + ( attributeOptionCombo == null ? "(null)" : attributeOptionCombo.getName() ) + " )" );
 
-        List<DataApprovalStatus> statuses = dataApprovalStore.getDataApprovals( Sets.newHashSet( dataSet ),
-            periodService.reloadPeriod( period ), organisationUnit, attributeOptionCombo );
+        List<DataApprovalStatus> statuses = dataApprovalStore.getDataApprovals( workflow,
+            periodService.reloadPeriod( period ), organisationUnit, null,
+            attributeOptionCombo == null ? null : Sets.newHashSet( attributeOptionCombo ) );
 
         if ( statuses != null && !statuses.isEmpty() )
         {
@@ -372,8 +374,7 @@ public class DefaultDataApprovalService
 
             DataApproval da = status.getDataApproval();
 
-            da = dataApprovalStore.getDataApproval( da.getDataApprovalLevel(), da.getDataSet(), 
-                da.getPeriod(), da.getOrganisationUnit(), da.getAttributeOptionCombo() );
+            da = dataApprovalStore.getDataApproval( da );
 
             if ( da != null )
             {
@@ -387,26 +388,27 @@ public class DefaultDataApprovalService
     }
 
     @Override
-    public DataApprovalStatus getDataApprovalStatusAndPermissions( DataSet dataSet, Period period, OrganisationUnit organisationUnit,
-        DataElementCategoryOptionCombo attributeOptionCombo )
+    public DataApprovalStatus getDataApprovalStatusAndPermissions( DataApprovalWorkflow workflow,
+        Period period, OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo )
     {
-        DataApprovalStatus status = getDataApprovalStatus( dataSet, period, organisationUnit, attributeOptionCombo );
+        DataApprovalStatus status = getDataApprovalStatus( workflow, period, organisationUnit, attributeOptionCombo );
 
-        status.setPermissions( makePermissionsEvaluator().getPermissions( status, organisationUnit ) );
+        status.setPermissions( makePermissionsEvaluator().getPermissions( status, organisationUnit, workflow ) );
 
         return status;
     }
 
     @Override
-    public List<DataApprovalStatus> getUserDataApprovalsAndPermissions( Set<DataSet> dataSets, Period period, OrganisationUnit orgUnit )
+    public List<DataApprovalStatus> getUserDataApprovalsAndPermissions( DataApprovalWorkflow workflow,
+        Period period, OrganisationUnit orgUnit, DataElementCategoryCombo attributeCombo )
     {
+        List<DataApprovalStatus> statusList = dataApprovalStore.getDataApprovals( workflow, period, orgUnit, attributeCombo, null );
+
         DataApprovalPermissionsEvaluator permissionsEvaluator = makePermissionsEvaluator();
 
-        List<DataApprovalStatus> statusList = dataApprovalStore.getDataApprovals( dataSets, period, orgUnit, null );
-        
         for ( DataApprovalStatus status : statusList )
         {
-            status.setPermissions( permissionsEvaluator.getPermissions( status, orgUnit ) );
+            status.setPermissions( permissionsEvaluator.getPermissions( status, orgUnit, workflow ) );
         }
 
         return statusList;
@@ -429,14 +431,14 @@ public class DefaultDataApprovalService
 
         for ( DataApproval da : approvalList )
         {
-            if ( da.getPeriod().getPeriodType().getFrequencyOrder() > da.getDataSet().getPeriodType().getFrequencyOrder() )
+            if ( da.getPeriod().getPeriodType().getFrequencyOrder() > da.getWorkflow().getPeriodType().getFrequencyOrder() )
             {
-                Collection<Period> periods = periodService.getPeriodsBetweenDates( da.getDataSet().getPeriodType(), 
+                Collection<Period> periods = periodService.getPeriodsBetweenDates( da.getWorkflow().getPeriodType(),
                     da.getPeriod().getStartDate(), da.getPeriod().getEndDate() );
 
                 for ( Period period : periods )
                 {
-                    expandedList.add( new DataApproval( da.getDataApprovalLevel(), da.getDataSet(),
+                    expandedList.add( new DataApproval( da.getDataApprovalLevel(), da.getWorkflow(),
                         period, da.getOrganisationUnit(), da.getAttributeOptionCombo(), da.isAccepted(),
                         da.getCreated(), da.getCreator() ) );
                 }
@@ -451,22 +453,12 @@ public class DefaultDataApprovalService
     }
 
     /**
-     * Returns the data approval status of the given data approval based on the
-     * given status map.
-     */
-    private DataApprovalStatus getStatus( DataApproval da, Map<DataApproval, DataApprovalStatus> statusMap )
-    {
-        return statusMap.get( new DataApproval( null, da.getDataSet(), da.getPeriod(),
-            da.getOrganisationUnit(), da.getAttributeOptionCombo(), false, null, null ) );
-    }
-
-    /**
-     * Returns a mapping from data approval to data approval status for the given
+     * Returns a mapping from data approval key to data approval status for the given
      * list of data approvals.
      */
-    private Map<DataApproval, DataApprovalStatus> getStatusMap( List<DataApproval> dataApprovalList )
+    private Map<String, DataApprovalStatus> getStatusMap( List<DataApproval> dataApprovalList )
     {
-        Map<DataApproval, DataApprovalStatus> statusMap = new HashMap<>();
+        Map<String, DataApprovalStatus> statusMap = new HashMap<>();
 
         DataApprovalPermissionsEvaluator evaluator = makePermissionsEvaluator();
 
@@ -476,29 +468,16 @@ public class DefaultDataApprovalService
         {
             List<DataApproval> dataApprovals = listMap.get( key );
             
-            Set<DataSet> dataSets = new HashSet<>();
-
-            for ( DataApproval da : dataApprovals )
-            {
-                dataSets.add( da.getDataSet() );
-            }
-
             DataApproval da0 = dataApprovals.get( 0 );
 
-            List<DataApprovalStatus> statuses = dataApprovalStore.getDataApprovals( dataSets,
-                da0.getPeriod(), da0.getOrganisationUnit(), da0.getAttributeOptionCombo() );
+            List<DataApprovalStatus> statuses = dataApprovalStore.getDataApprovals( da0.getWorkflow(),
+                da0.getPeriod(), da0.getOrganisationUnit(), null, getCategoryOptionCombos( dataApprovals ) );
 
             for ( DataApprovalStatus status : statuses )
             {
-                status.setPermissions( evaluator.getPermissions( status, da0.getOrganisationUnit() ) );
+                status.setPermissions( evaluator.getPermissions( status, da0.getOrganisationUnit(), da0.getWorkflow() ) );
 
-                DataApproval da = status.getDataApproval();
-
-                for ( DataSet ds : dataSets )
-                {
-                    statusMap.put( new DataApproval( null, ds, da.getPeriod(), da.getOrganisationUnit(),
-                        da.getAttributeOptionCombo(), false, null, null ), status );
-                }
+                statusMap.put( daKey( status.getDataApproval() ), status );
             }
         }
 
@@ -507,8 +486,11 @@ public class DefaultDataApprovalService
 
     /**
      * Returns an indexed map where the key is based on each distinct
-     * combination of organisation unit, period, and attributeOptionCombo.
-     * (attributeOptionCombo may be null.)
+     * combination of organisation unit, period, and workflow.
+     *
+     * If multiple attributeOptionCombo values are needed for the same
+     * combination of organisation unit, period, and workflow, then
+     * these are fetched at the same time time, for better performance.
      */
     private ListMap<String, DataApproval> getIndexedListMap( List<DataApproval> dataApprovalList )
     {
@@ -516,16 +498,53 @@ public class DefaultDataApprovalService
 
         for ( DataApproval approval : dataApprovalList )
         {
-            String key = approval == null ? null : approval.getOrganisationUnit().getId() + 
-                IdentifiableObjectUtils.SEPARATOR + approval.getPeriod().getId() + 
-                IdentifiableObjectUtils.SEPARATOR + ( approval.getAttributeOptionCombo() == null ? "null" : approval.getAttributeOptionCombo().getId() );
-            
-            map.putValue( key, approval );
+            map.putValue( statusKey( approval ), approval );
         }
 
         return map;
     }
 
+    /**
+     * Returns a key consisting of organisation unit, period, and workflow.
+     * Approval status with these three values in common can be fetched in
+     * one call for many values of attributeOptionCombo.
+     */
+    private String statusKey ( DataApproval approval )
+    {
+        return approval == null ? null : approval.getOrganisationUnit().getId() +
+            IdentifiableObjectUtils.SEPARATOR + approval.getPeriod().getId() +
+            IdentifiableObjectUtils.SEPARATOR + approval.getWorkflow().getId();
+    }
+
+    /**
+     * Returns a key consisting of statusKey + attributeOptionCombo.
+     * This can identify a particular DataApproval object in the return
+     * set of statuses.
+     */
+    private String daKey ( DataApproval approval )
+    {
+        return statusKey( approval ) + IdentifiableObjectUtils.SEPARATOR +
+            ( approval.getAttributeOptionCombo() == null ? "null" : approval.getAttributeOptionCombo().getId() );
+    }
+
+    /**
+     * Returns a set of CategoryOptionCombos from a list of DataApprovals.
+     */
+    private Set<DataElementCategoryOptionCombo> getCategoryOptionCombos( List<DataApproval> dataApprovals )
+    {
+        Set<DataElementCategoryOptionCombo> combos = new HashSet<>();
+
+        for ( DataApproval da : dataApprovals )
+        {
+            combos.add( da.getAttributeOptionCombo() );
+        }
+
+        return combos;
+    }
+
+    /**
+     * Makes a DataApprovalPermissionsEvaluator object for the current user.
+     */
     private DataApprovalPermissionsEvaluator makePermissionsEvaluator()
     {
         return DataApprovalPermissionsEvaluator.makePermissionsEvaluator(
