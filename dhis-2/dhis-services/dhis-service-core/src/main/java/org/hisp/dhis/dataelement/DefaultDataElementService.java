@@ -131,6 +131,14 @@ public class DefaultDataElementService
     }
 
     @Override
+    public boolean isOpenFuturePeriods( int id )
+    {
+        DataElement dataElement = getDataElement( id );
+        
+        return dataElement != null && dataElement.getOpenFuturePeriods() >= 0;
+    }
+    
+    @Override
     public List<DataElement> getAllDataElements()
     {
         return i18n( i18nService, dataElementStore.getAll() );

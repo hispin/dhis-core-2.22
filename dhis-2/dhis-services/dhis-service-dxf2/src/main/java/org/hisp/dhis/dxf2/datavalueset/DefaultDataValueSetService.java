@@ -60,6 +60,7 @@ import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
+import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.CompleteDataSetRegistration;
 import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
@@ -112,6 +113,9 @@ public class DefaultDataValueSetService
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
+    
+    @Autowired
+    private DataElementService dataElementService;
 
     @Autowired
     private DataElementCategoryService categoryService;
@@ -581,7 +585,7 @@ public class DefaultDataValueSetService
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementCategoryOptionComboMap = new CachingMap<>();
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementAttrOptionComboMap = new CachingMap<>();
         CachingMap<String, Boolean> dataElementOrgUnitMap = new CachingMap<>();
-        CachingMap<String, Integer> dataElementOpenFuturePeriodsMap = new CachingMap<>();
+        CachingMap<String, Boolean> dataElementOpenFuturePeriodsMap = new CachingMap<>();
         CachingMap<String, Boolean> orgUnitInHierarchyMap = new CachingMap<>();
 
         //----------------------------------------------------------------------
@@ -741,7 +745,7 @@ public class DefaultDataValueSetService
             }
             
             boolean invalidFuturePeriod = period.isFuture() && dataElementOpenFuturePeriodsMap.get( dataElement.getUid(),
-                () -> dataElement.getOpenFuturePeriods()  ) <= 0;
+                () -> dataElementService.isOpenFuturePeriods( dataElement.getId() ) );
             
             if ( invalidFuturePeriod )
             {
