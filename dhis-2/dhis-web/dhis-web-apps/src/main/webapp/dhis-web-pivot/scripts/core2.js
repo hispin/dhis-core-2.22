@@ -13,6 +13,10 @@ $( function() {
             isDefined,
             arrayFrom,
             arrayClean,
+            arrayPluck,
+            arrayIndexOf,
+            arrayUnique,
+            arrayContains,
             clone,
             enumerables = ['valueOf', 'toLocaleString', 'toString', 'constructor'];
 
@@ -96,6 +100,66 @@ $( function() {
             return results;
         };
 
+        arrayPluck = function(array, propertyName) {
+            var newArray = [],
+                i, len, item;
+
+            for (i = 0, len = array.length; i < len; i++) {
+                item = array[i];
+
+                newArray.push(item[propertyName]);
+            }
+
+            return newArray;
+        };
+
+        arrayIndexOf = ('indexOf' in Array.prototype) ? function(array, item, from) {
+            return Array.prototype.indexOf.call(array, item, from);
+         } : function(array, item, from) {
+            var i, len = array.length;
+
+            for (i = (from < 0) ? Math.max(0, len + from) : from || 0; i < len; i++) {
+                if (array[i] === item) {
+                    return i;
+                }
+            }
+
+            return -1;
+        };
+
+        // dep: arrayIndexOf
+        arrayUnique = function(array) {
+            var newArray = [],
+                i = 0,
+                len = array.length,
+                item;
+
+            for (; i < len; i++) {
+                item = array[i];
+
+                if (arrayIndexOf(newArray, item) === -1) {
+                    newArray.push(item);
+                }
+            }
+
+            return newArray;
+        };
+
+        // dep: arrayIndexOf
+        arrayContains = ('indexOf' in Array.prototype) ? function(array, item) {
+            return arrayPrototype.indexOf.call(array, item) !== -1;
+        } : function(array, item) {
+            var i, len;
+
+            for (i = 0, len = array.length; i < len; i++) {
+                if (array[i] === item) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
         clone = function(item) {
             if (item === null || item === undefined) {
                 return item;
@@ -151,6 +215,10 @@ $( function() {
         NS.isDefined = isDefined;
         NS.arrayFrom = arrayFrom;
         NS.arrayClean = arrayClean;
+        NS.arrayPluck = arrayPluck;
+        NS.arrayIndexOf = arrayIndexOf;
+        NS.arrayUnique = arrayUnique;
+        NS.arrayContains = arrayContains;
         NS.clone = clone;
     })();
 
@@ -466,7 +534,7 @@ $( function() {
 
             Record.prototype.val = function() {
                 if (!NS.isString(this.id)) {
-                    console.log('Record', 'Id is not a string', this);
+                    console.log('(Record)', 'Id is not a string', this);
                     return;
                 }
 
@@ -497,16 +565,27 @@ $( function() {
 
             Dimension.prototype.val = function() {
                 if (!NS.isString(this.dimension)) {
-                    console.log('Dimension', 'Dimension is not a string', this);
+                    console.log('(Dimension)', 'Dimension is not a string', this);
                     return;
                 }
 
                 if (!this.items.length && this.dimension !== 'co') {
-                    console.log('Dimension', 'No items', this);
+                    console.log('(Dimension)', 'No items', this);
                     return;
                 }
 
                 return this;
+            };
+
+            Dimension.prototype.getRecordIds = function(isSorted) {
+                var ids = NS.arrayPluck(this.items, 'id');
+                return isSorted ? ids.sort() : ids;
+            };
+
+            // dep 1
+
+            Dimension.prototype.url = function() {
+                return 'dimension=' + this.dimension + ':' + NS.arrayUnique(this.getRecordIds()).join(';');
             };
         })();
 
@@ -525,29 +604,37 @@ $( function() {
                 })();
 
                 // prototype
-                t.each = function(fn) {
-                    for (var i = 0, axis; i < this.length; i++) {
-                        fn.call(this, this[i]);
-                    }
-                };
-
                 t.val = function() {
                     if (!this.length) {
-                        console.log('Axis', 'No dimensions', this);
+                        console.log('(Axis)', 'No dimensions', this);
                         return;
                     }
 
                     return this;
                 };
 
+                t.each = function(fn) {
+                    for (var i = 0, dimension; i < this.length; i++) {
+                        dimension = this[i];
+                        fn.call(this, dimension);
+                    }
+                };
+
                 t.has = function(dimensionName) {
-                    for (var i = 0; i < this.length; i++) {
-                        if (this[i].dimension === dimensionName) {
+                    for (var i = 0, dimension; i < this.length; i++) {
+                        dimension = this[i];
+                        if (dimension.dimension === dimensionName) {
                             return true;
                         }
                     }
 
                     return false;
+                };
+
+                t.sorted = function() {
+                    return NS.clone(this).sort(function(a, b) {
+                        return a.dimension - b.dimension;
+                    });
                 };
 
                 return t;
@@ -633,14 +720,24 @@ $( function() {
                 }
 
                 $.extend(t, forceApplyConfig);
+
+                // uninitialized
+                t.dimensionNameIdsMap;
             };
 
             Layout.prototype.getAxes = function(includeFilter) {
                 return NS.arrayClean(this.columns, this.rows, (includeFilter ? this.filters : null));
             };
 
-            Layout.prototype.getDimensions = function(includeFilter) {
-                return this.dimensions = NS.arrayClean([].concat(this.columns, this.rows, includeFilter ? this.filters : null));
+            Layout.prototype.getDimensions = function(includeFilter, isSorted) {
+                var dimensions = NS.arrayClean([].concat(this.columns, this.rows, (includeFilter ? this.filters : null)));
+                return isSorted ? dimensions.sort(function(a, b) {return a.dimension - b.dimension;}) : dimensions;
+            };
+
+            Layout.prototype.getUserOrgUnitUrl = function() {
+                if (NS.isArray(this.userOrgUnit) && this.userOrgUnit.length) {
+                    return 'userOrgUnit=' + this.userOrgUnit.join(';');
+                }
             };
 
             // dep 1
@@ -655,7 +752,7 @@ $( function() {
                 return false;
             };
 
-            Layout.prototype.getDimensionNames = function(includeFilter) {
+            Layout.prototype.getDimensionNames = function(includeFilter, isSorted) {
                 this.dimensionNames = [];
 
                 for (var i = 0, dimensions = this.getDimensions(includeFilter); i < dimensions.length; i++) {
@@ -663,6 +760,23 @@ $( function() {
                 }
 
                 return this.dimensionNames;
+            };
+
+            Layout.prototype.getDimensionNameIdsMap = function() {
+                if (this.dimensionNameIdsMap) {
+                    return this.dimensionNameIdsMap;
+                }
+
+                var dimensions = this.getDimensions(true),
+                    map = {};
+
+                for (var i = 0, dimension; i < dimensions.length; i++) {
+                    dimension = dimensions[i];
+
+                    map[dimension.dimension] = dimensions.getRecordIds();
+                }
+
+                return this.dimensionNameIdsMap = map;
             };
 
             // dep 2
@@ -683,7 +797,78 @@ $( function() {
                 return this;
             };
 
-            //Layout.prototype.url = function(sortParams) {
+            Layout.prototype.url = function(isSorted) {
+                var axisDimensions = this.getDimensions(false, isSorted),
+                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                    request = new NS.Api.Request(),
+                    i;
+
+                // dimensions
+                for (i = 0, dimension; i < axisDimensions.length; i++) {
+                    dimension = axisDimensions.length;
+
+                    request.add(dimension.url(isSorted));
+                }
+
+                // filters
+                if (this.filters) {
+                    this.filters.each(function(dimension) {
+                        request.add(dimension.url(isSorted));
+                    });
+                }
+
+                // hierarchy
+                if (this.showHierarchy) {
+                    request.add('hierarchyMeta=true');
+                }
+
+                // completed only
+                if (this.completedOnly) {
+                    request.add('completedOnly=true');
+                }
+
+                // aggregation type
+                if (NS.arrayContains(aggTypes, this.aggregationType)) {
+                    request.add('aggregationType=' + this.aggregationType);
+                }
+
+                // user org unit
+                if (NS.isArray(this.userOrgUnit) && this.userOrgUnit.length) {
+                    request.add(this.getUserOrgUnitUrl());
+                }
+
+                // data approval level
+                if (NS.isObject(this.dataApprovalLevel) && NS.isString(this.dataApprovalLevel.id) && this.dataApprovalLevel.id !== 'DEFAULT') {
+                    request.add('approvalLevel=' + this.dataApprovalLevel.id);
+                }
+
+                // TODO program
+                if (NS.isObject(this.program) && NS.isString(this.program.id)) {
+                    request.add('program=' + this.program.id);
+                }
+
+                // relative period date
+                if (this.relativePeriodDate) {
+                    request.add('relativePeriodDate=' + this.relativePeriodDate);
+                }
+
+                // skip rounding
+                if (this.skipRounding) {
+                    request.add('skipRounding=true');
+                }
+
+                // display property
+                request.add('displayProperty=' + ((this.displayProperty || '').toUpperCase()));
+
+                return request.url();
+            };
+
+
+
+
+
+
+
 
 
 
@@ -696,6 +881,32 @@ $( function() {
 
 
 
+        })();
+
+        // Request
+        (function() {
+            var Request = NS.Api.Request = function(config) {
+                var t = this;
+
+                // constructor
+                t.params = [];
+
+                (function() {
+                    if (NS.isArray(config) && config.length) {
+                        t.params = config;
+                    }
+                })();
+            };
+
+            Request.prototype.add = function(param) {
+                if (NS.isString(param)) {
+                    this.params.push(param);
+                }
+            };
+
+            Request.prototype.url = function() {
+                return '?' + this.params.join('&').replace(/#/g, '.');
+            };
         })();
 
         // Header
