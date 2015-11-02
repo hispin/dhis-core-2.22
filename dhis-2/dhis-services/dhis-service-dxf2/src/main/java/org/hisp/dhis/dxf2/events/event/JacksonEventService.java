@@ -91,6 +91,46 @@ public class JacksonEventService extends AbstractEventService
     }
 
     @Override
+    public List<Event> getEventsXml( InputStream inputStream ) throws IOException
+    {
+        String input = StreamUtils.copyToString( inputStream, Charset.forName( "UTF-8" ) );
+        List<Event> events = new ArrayList<>();
+
+        try
+        {
+            Events fromXml = fromXml( input, Events.class );
+            events.addAll( fromXml.getEvents() );
+        }
+        catch ( Exception ex )
+        {
+            Event fromXml = fromXml( input, Event.class );
+            events.add( fromXml );
+        }
+
+        return events;
+    }
+
+    @Override
+    public List<Event> getEventsJson( InputStream inputStream ) throws IOException
+    {
+        String input = StreamUtils.copyToString( inputStream, Charset.forName( "UTF-8" ) );
+        List<Event> events = new ArrayList<>();
+
+        try
+        {
+            Events fromXml = fromJson( input, Events.class );
+            events.addAll( fromXml.getEvents() );
+        }
+        catch ( Exception ex )
+        {
+            Event fromXml = fromJson( input, Event.class );
+            events.add( fromXml );
+        }
+
+        return events;
+    }
+
+    @Override
     public ImportSummaries addEventsXml( InputStream inputStream, ImportOptions importOptions ) throws IOException
     {
         return addEventsXml( inputStream, null, importOptions );
