@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.datavalueset.tasks;
  */
 
 import org.hisp.dhis.security.SecurityContextRunnable;
+import org.hisp.dhis.dxf2.adx.AdxDataService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.scheduling.TaskId;
@@ -45,22 +46,27 @@ public class ImportDataValueTask
     public static final String FORMAT_JSON = "json";
     public static final String FORMAT_CSV = "csv";
     public static final String FORMAT_PDF = "pdf";
+    public static final String FORMAT_ADX = "adx";
 
     private DataValueSetService dataValueSetService;
 
+    private AdxDataService adxDataService;
+    
     private InputStream inputStream;
 
-    private final ImportOptions options;
+    private final ImportOptions importOptions;
 
     private final TaskId taskId;
 
     private final String format;
 
-    public ImportDataValueTask( DataValueSetService dataValueSetService, InputStream inputStream, ImportOptions options, TaskId taskId, String format )
+    public ImportDataValueTask( DataValueSetService dataValueSetService, AdxDataService adxDataService,
+        InputStream inputStream, ImportOptions importOptions, TaskId taskId, String format )
     {
         this.dataValueSetService = dataValueSetService;
+        this.adxDataService = adxDataService;
         this.inputStream = inputStream;
-        this.options = options;
+        this.importOptions = importOptions;
         this.taskId = taskId;
         this.format = format;
     }
@@ -70,19 +76,23 @@ public class ImportDataValueTask
     {
         if ( FORMAT_JSON.equals( format ) )
         {
-            dataValueSetService.saveDataValueSetJson( inputStream, options, taskId );
+            dataValueSetService.saveDataValueSetJson( inputStream, importOptions, taskId );
         }
         else if ( FORMAT_CSV.equals( format ) )
         {
-            dataValueSetService.saveDataValueSetCsv( inputStream, options, taskId );
+            dataValueSetService.saveDataValueSetCsv( inputStream, importOptions, taskId );
         }
         else if ( FORMAT_PDF.equals( format ) )
         {
-            dataValueSetService.saveDataValueSetPdf( inputStream, options, taskId );
+            dataValueSetService.saveDataValueSetPdf( inputStream, importOptions, taskId );
+        }
+        else if ( FORMAT_ADX.equals( format ) )
+        {
+            adxDataService.saveDataValueSet( inputStream, importOptions, taskId );
         }
         else // FORMAT_XML
         {
-            dataValueSetService.saveDataValueSet( inputStream, options, taskId );
+            dataValueSetService.saveDataValueSet( inputStream, importOptions, taskId );
         }
     }
 }

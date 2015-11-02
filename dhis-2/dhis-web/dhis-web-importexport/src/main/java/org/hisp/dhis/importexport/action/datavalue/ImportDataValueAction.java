@@ -36,6 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.commons.util.StreamUtils;
+import org.hisp.dhis.dxf2.adx.AdxDataService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.datavalueset.tasks.ImportDataValueTask;
@@ -59,6 +60,9 @@ public class ImportDataValueAction
 
     @Autowired
     private DataValueSetService dataValueSetService;
+    
+    @Autowired
+    private AdxDataService adxDataService;
 
     @Autowired
     private CurrentUserService currentUserService;
@@ -160,7 +164,7 @@ public class ImportDataValueAction
         
         log.info( options );
 
-        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, in, options, taskId, importFormat ) );
+        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, adxDataService, in, options, taskId, importFormat ) );
 
         return SUCCESS;
     }
