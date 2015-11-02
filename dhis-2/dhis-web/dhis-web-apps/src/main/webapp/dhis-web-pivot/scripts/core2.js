@@ -798,13 +798,14 @@ $( function() {
             };
 
             Layout.prototype.url = function(isSorted) {
-                var axisDimensions = this.getDimensions(false, isSorted),
-                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                var aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                    //todo displayProperty = this.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name',
+                    displayProperty = this.displayProperty || 'name',
                     request = new NS.Api.Request(),
                     i;
 
                 // dimensions
-                for (i = 0, dimension; i < axisDimensions.length; i++) {
+                for (i = 0, axisDimensions = this.getDimensions(false, isSorted), dimension; i < axisDimensions.length; i++) {
                     dimension = axisDimensions.length;
 
                     request.add(dimension.url(isSorted));
