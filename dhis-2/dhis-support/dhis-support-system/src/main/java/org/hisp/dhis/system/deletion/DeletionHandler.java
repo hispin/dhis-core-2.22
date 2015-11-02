@@ -36,6 +36,7 @@ import org.hisp.dhis.common.filter.MetaDataFilter;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflow;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
@@ -162,6 +163,15 @@ public abstract class DeletionHandler
     }
 
     public String allowDeleteDataApprovalLevel( DataApprovalLevel dataApprovalLevel )
+    {
+        return null;
+    }
+
+    public void deleteDataApprovalWorkflow( DataApprovalWorkflow workflow )
+    {
+    }
+
+    public String allowDeleteDataApprovalWorkflow( DataApprovalWorkflow workflow )
     {
         return null;
     }

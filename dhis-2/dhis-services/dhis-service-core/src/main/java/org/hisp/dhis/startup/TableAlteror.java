@@ -273,7 +273,6 @@ public class TableAlteror
         executeSql( "ALTER TABLE programruleaction ALTER content TYPE text" );
         executeSql( "ALTER TABLE programruleaction ALTER data TYPE text" );
 
-
         executeSql( "ALTER TABLE minmaxdataelement RENAME minvalue TO minimumvalue" );
         executeSql( "ALTER TABLE minmaxdataelement RENAME maxvalue TO maximumvalue" );
 
@@ -876,6 +875,7 @@ public class TableAlteror
         upgradeCompleteDataSetRegistrationsWithAttributeOptionCombo();
         upgradeMapViewsToAnalyticalObject();
         upgradeTranslations();
+        upgradeToDataApprovalWorkflows();
 
         updateOptions();
 
@@ -1125,6 +1125,48 @@ public class TableAlteror
         executeSql( statementBuilder.getDropNotNullConstraint( "translation", "objectid", "integer" ) );
     }
 
+    /**
+     * Convert from older releases where dataApproval referenced dataset
+     * instead of workflow:
+     *
+     * For every dataset that has either ("approve data" == true) *or*
+     * (existing data approval database records referencing it), a workflow will
+     * be created with the same name as the data set. This workflow will be
+     * associated with all approval levels in the system and have a period type
+     * equal to the data set's period type. If the data set's approvedata ==
+     * true, then the data set will be associated with this workflow.
+     * If there are existing data approval records that reference this data set,
+     * then they will be changed to reference the associated workflow instead.
+     */
+    private void upgradeToDataApprovalWorkflows()
+    {
+        if ( executeSql( "update dataset set approvedata = approvedata where datasetid < 0" ) < 0 )
+        {
+            return; // Already converted because dataset.approvedata no longer exists.
+        }
+
+        executeSql( "insert into dataapprovalworkflow ( workflowid, uid, created, lastupdated, name, periodtypeid, userid, publicaccess ) "
+            + "select nextval('hibernate_sequence'::regclass), " + statementBuilder.getUid() + ", now(), now(), ds.name, ds.periodtypeid, ds.userid, ds.publicaccess "
+            + "from (select datasetid from dataset where approvedata = true union select distinct datasetid from dataapproval) as a "
+            + "join dataset ds on ds.datasetid = a.datasetid" );
+
+        executeSql( "insert into dataapprovalworkflowlevels (workflowid, dataapprovallevelid) "
+            + "select w.workflowid, l.dataapprovallevelid from dataapprovalworkflow w "
+            + "cross join dataapprovallevel l" );
+
+        executeSql( "update dataset set workflowid = ( select w.workflowid from dataapprovalworkflow w where w.name = dataset.name)" );
+        executeSql( "alter table dataset drop column approvedata cascade" ); // Cascade to SQL Views, if any.
+
+        executeSql( "alter table dataapproval add column workflowid integer" );
+        executeSql( "update dataapproval set workflowid = ( select workflowid from dataset ds where ds.datasetid = dataapproval.datasetid)" );
+        executeSql( "alter table dataapproval alter column workflowid set not null" );
+        executeSql( "alter table dataapproval drop constraint dataapproval_unique_key" );
+        executeSql( "alter table dataapproval add constraint dataapproval_unique_key unique (dataapprovallevelid,workflowid,periodid,organisationunitid,attributeoptioncomboid)" );
+        executeSql( "alter table dataapproval drop column datasetid cascade" ); // Cascade to SQL Views, if any.
+
+        log.info( "Added any workflows needed for approvble datasets and/or approved data." );
+    }
+
     private List<Integer> getDistinctIdList( String table, String col1 )
     {
         StatementHolder holder = statementManager.getHolder();
@@ -1257,7 +1299,7 @@ public class TableAlteror
         }
         catch ( Exception ex )
         {
-            log.debug( ex );
+            log.error( ex );
 
             return -1;
         }

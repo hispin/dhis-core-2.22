@@ -361,7 +361,12 @@ public class DefaultDataSetService
             return true;
         }
 
-        DataApprovalStatus dataApprovalStatus = dataApprovalService.getDataApprovalStatus( dataSet, period, organisationUnit, attributeOptionCombo );
+        if ( dataSet.getWorkflow() == null )
+        {
+            return false;
+        }
+
+        DataApprovalStatus dataApprovalStatus = dataApprovalService.getDataApprovalStatus( dataSet.getWorkflow(), period, organisationUnit, attributeOptionCombo );
         
         return dataApprovalStatus.getState().isApproved();
     }

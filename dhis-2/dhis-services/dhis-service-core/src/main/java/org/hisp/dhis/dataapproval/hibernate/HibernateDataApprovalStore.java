@@ -59,6 +59,7 @@ import org.hisp.dhis.dataapproval.DataApprovalLevelService;
 import org.hisp.dhis.dataapproval.DataApprovalState;
 import org.hisp.dhis.dataapproval.DataApprovalStatus;
 import org.hisp.dhis.dataapproval.DataApprovalStore;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflow;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -152,7 +153,7 @@ public class HibernateDataApprovalStore
     {
         dataApproval.setPeriod( periodService.reloadPeriod( dataApproval.getPeriod() ) );
 
-        update ( dataApproval );
+        update( dataApproval );
     }
 
     @Override
@@ -164,14 +165,21 @@ public class HibernateDataApprovalStore
     }
 
     @Override
-    public DataApproval getDataApproval( DataApprovalLevel dataApprovalLevel, DataSet dataSet, Period period,
+    public DataApproval getDataApproval( DataApproval dataApproval )
+    {
+        return getDataApproval( dataApproval.getDataApprovalLevel(), dataApproval.getWorkflow(),
+            dataApproval.getPeriod(), dataApproval.getOrganisationUnit(), dataApproval.getAttributeOptionCombo() );
+    }
+
+    @Override
+    public DataApproval getDataApproval( DataApprovalLevel dataApprovalLevel, DataApprovalWorkflow workflow, Period period,
         OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo )
     {
         Period storedPeriod = periodService.reloadPeriod( period );
 
         Criteria criteria = getCriteria();
         criteria.add( Restrictions.eq( "dataApprovalLevel", dataApprovalLevel ) );
-        criteria.add( Restrictions.eq( "dataSet", dataSet ) );
+        criteria.add( Restrictions.eq( "workflow", workflow ) );
         criteria.add( Restrictions.eq( "period", storedPeriod ) );
         criteria.add( Restrictions.eq( "organisationUnit", organisationUnit ) );
         criteria.add( Restrictions.eq( "attributeOptionCombo", attributeOptionCombo ) );
@@ -180,50 +188,30 @@ public class HibernateDataApprovalStore
     }
 
     @Override
-    public List<DataApprovalStatus> getDataApprovals( Set<DataSet> dataSets, Period period,
-        OrganisationUnit orgUnit, DataElementCategoryOptionCombo attributeOptionCombo )
+    public List<DataApprovalStatus> getDataApprovals( DataApprovalWorkflow workflow,
+        Period period, OrganisationUnit orgUnit, DataElementCategoryCombo attributeCombo,
+        Set<DataElementCategoryOptionCombo> attributeOptionCombos )
     {
         final CachingMap<Integer, DataElementCategoryOptionCombo> optionComboCache = new CachingMap<>();
         final CachingMap<Integer, OrganisationUnit> orgUnitCache = new CachingMap<>();
         
         final User user = currentUserService.getCurrentUser();
 
-        Set<DataSet> validDataSets = new HashSet<>();
-        
-        for ( DataSet set : dataSets )
-        {
-            if ( set.isApproveData() )
-            {
-                validDataSets.add( set );
-            }
-        }
+        List<Period> periods;
 
-        if ( CollectionUtils.isEmpty( validDataSets ) )
-        {
-            log.debug( " No valid data sets specified for getting approvals, period " + period.getName()
-                + " user " + ( user == null ? "(null)" : user.getUsername() ) );
-
-            return new ArrayList<>();
-        }
-
-        PeriodType dataSetPeriodType = validDataSets.iterator().next().getPeriodType();
-
-        List<Period> periods = Lists.newArrayList();
-
-        if ( period.getPeriodType().equals( dataSetPeriodType ) )
+        if ( period.getPeriodType().equals( workflow.getPeriodType() ) )
         {
             periods = Lists.newArrayList( period );
         }
-        else if ( period.getPeriodType().getFrequencyOrder() > dataSetPeriodType.getFrequencyOrder() )
+        else if ( period.getPeriodType().getFrequencyOrder() > workflow.getPeriodType().getFrequencyOrder() )
         {
-            periods = new ArrayList<>( periodService.getPeriodsBetweenDates( dataSetPeriodType,
+            periods = new ArrayList<>( periodService.getPeriodsBetweenDates( workflow.getPeriodType(),
                 period.getStartDate(), period.getEndDate() ) );
         }
         else
         {
-            log.warn( "Selected period type " + period.getPeriodType().getName() + " is incompatible with data set '"
-                + validDataSets.iterator().next().getName() + "' period type " + dataSetPeriodType.getName()
-                + " user " + ( user == null ? "(null)" : user.getUsername() ) );
+            log.warn( "Selected period type " + period.getPeriodType().getName()
+                + " is incompatible with workflow period type " + workflow.getPeriodType().getName() );
 
             return new ArrayList<>();
         }
@@ -235,45 +223,21 @@ public class HibernateDataApprovalStore
             ( CollectionUtils.isEmpty( user.getUserCredentials().getCogsDimensionConstraints() )
             && CollectionUtils.isEmpty( user.getUserCredentials().getCatDimensionConstraints() ) );
 
-        DataElementCategoryCombo defaultCategoryCombo = categoryService.getDefaultDataElementCategoryCombo();
+        boolean isDefaultCombo = attributeOptionCombos != null && attributeOptionCombos.size() == 1
+            && categoryService.getDefaultDataElementCategoryOptionCombo().equals( attributeOptionCombos.toArray()[0] );
 
-        final String dataSetIds = getCommaDelimitedString( getIdentifiers( validDataSets ) );
-
-        boolean isDefaultCombo = categoryService.getDefaultDataElementCategoryOptionCombo().equals( attributeOptionCombo );
-
-        String categoryComboIds = null;
-
-        if ( isDefaultCombo )
+        if ( isDefaultCombo && !maySeeDefaultCategoryCombo )
         {
-            categoryComboIds = Integer.toString( categoryService.getDefaultDataElementCategoryCombo().getId() );
-        }
-        else
-        {
-            Set<Integer> catComboIds = new HashSet<>();
+            log.warn( "DefaultCategoryCombo selected but user " + user.getUsername() + " lacks permission to see it." );
 
-            for ( DataSet ds : validDataSets )
-            {
-                if ( ds.isApproveData() && ( maySeeDefaultCategoryCombo || ds.getCategoryCombo() != defaultCategoryCombo ) )
-                {
-                    catComboIds.add( ds.getCategoryCombo().getId() );
-                }
-            }
-
-            if ( catComboIds.isEmpty() )
-            {
-                log.info( "No dataset categorycombos to check for approval, user " + ( user == null ? "(null)" : user.getUsername() ) + " datasetIds " + dataSetIds );
-
-                return new ArrayList<>();
-            }
-
-            categoryComboIds = TextUtils.getCommaDelimitedString( catComboIds );
+            return new ArrayList<>(); // Unapprovable.
         }
 
-        List<DataApprovalLevel> approvalLevels = dataApprovalLevelService.getAllDataApprovalLevels();
+        List<DataApprovalLevel> approvalLevels = workflow.getSortedLevels();
 
         if ( CollectionUtils.isEmpty( approvalLevels ) )
         {
-            log.info( "No approval levels configured" );
+            log.info( "No approval levels configured for workflow " + workflow.getName() );
 
             return new ArrayList<>(); // Unapprovable.
         }
@@ -367,7 +331,7 @@ public class HibernateDataApprovalStore
                     "where not exists (select 1 from dataapproval da " +
                         "where da.organisationunitid = ous.organisationunitid " +
                         "and da.dataapprovallevelid = " + dal.getId() + " and da.periodid in (" + periodIds + ") " +
-                        "and da.datasetid in (" + dataSetIds + ") " +
+                        "and da.workflowid = " + workflow.getId() +
                         "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
                         ( acceptanceRequiredForApproval ? "and da.accepted " : "" ) +
                     ") " +
@@ -390,13 +354,13 @@ public class HibernateDataApprovalStore
             approvedAboveSubquery = "exists(select 1 from dataapproval da " +
                 "join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
                 "join _orgunitstructure ou on ou.organisationunitid = o.organisationunitid and ou.idlevel" + orgUnitLevelAbove + " = da.organisationunitid " +
-                "where da.periodid in (" + periodIds + ") and da.datasetid in (" + dataSetIds + ") and da.attributeoptioncomboid = cocco.categoryoptioncomboid)";
+                "where da.periodid in (" + periodIds + ") and da.workflowid = " + workflow.getId() + " and da.attributeoptioncomboid = cocco.categoryoptioncomboid)";
         }
 
         final String sql =
             "select cocco.categoryoptioncomboid, o.organisationunitid, " +
             "(select min(coalesce(dal.level + case when da.accepted then .0 else .1 end, 0)) from period p " +
-                "left join dataapproval da on da.datasetid in (" + dataSetIds + ") and da.periodid = p.periodid " +
+                "left join dataapproval da on da.workflowid = " + workflow.getId() + " and da.periodid = p.periodid " +
                 "left join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
                 "where p.periodid in (" + periodIds + ") " +
                 "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and " + highestApprovedOrgUnitCompare +
@@ -404,7 +368,8 @@ public class HibernateDataApprovalStore
             readyBelowSubquery + " as ready_below, " +
             approvedAboveSubquery + " as approved_above " +
             "from categoryoptioncombos_categoryoptions cocco " +
-                "join categorycombos_optioncombos ccoc on ccoc.categoryoptioncomboid = cocco.categoryoptioncomboid and ccoc.categorycomboid in (" + categoryComboIds + ") " +
+                ( attributeCombo == null ? "" : "join categorycombos_optioncombos ccoc on ccoc.categoryoptioncomboid = cocco.categoryoptioncomboid " +
+                    " and ccoc.categorycomboid = " + attributeCombo.getId() + " " ) +
                 "join dataelementcategoryoption co on co.categoryoptionid = cocco.categoryoptionid " +
                     "and (co.startdate is null or co.startdate <= '" + maxDate + "') and (co.enddate is null or co.enddate >= '" + minDate + "') " +
                 "join _orgunitstructure o on " + orgUnitJoinOn + " " +
@@ -412,7 +377,8 @@ public class HibernateDataApprovalStore
                 "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
                 joinAncestors +
                 "where ( coo.categoryoptionid is null or ous.organisationunitid is not null " + testAncestors + ")" +
-                ( attributeOptionCombo == null ? "" : " and cocco.categoryoptioncomboid = " + attributeOptionCombo.getId() ) +
+                ( attributeOptionCombos == null || attributeOptionCombos.isEmpty() ? "" : " and cocco.categoryoptioncomboid in (" +
+                    StringUtils.join( IdentifiableObjectUtils.getIdentifiers( attributeOptionCombos ), "," ) + ") " ) +
                 ( isSuperUser || user == null ? "" :
                     " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid is null or co.userid = " + user.getId() + " or exists ( " +
                     "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
@@ -427,8 +393,6 @@ public class HibernateDataApprovalStore
         Map<Integer, DataApprovalLevel> levelMap = dataApprovalLevelService.getDataApprovalLevelMap();
         
         List<DataApprovalStatus> statusList = new ArrayList<>();
-
-        DataSet dataSet = ( validDataSets.size() == 1 ? validDataSets.iterator().next() : null );
 
         while ( rowSet.next() )
         {
@@ -450,7 +414,7 @@ public class HibernateDataApprovalStore
 
             if ( ou != null )
             {
-                DataApproval da = new DataApproval( daLevel, dataSet, period, ou, optionCombo, accepted, null, null );
+                DataApproval da = new DataApproval( daLevel, workflow, period, ou, optionCombo, accepted, null, null );
 
                 DataApprovalState state = (
                     approvedAbove ?

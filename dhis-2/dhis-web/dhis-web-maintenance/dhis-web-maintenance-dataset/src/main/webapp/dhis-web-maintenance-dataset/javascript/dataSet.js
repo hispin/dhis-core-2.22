@@ -56,3 +56,8 @@ function viewSectionList( context ) {
   location.href = 'section.action?dataSetId=' + context.id;
 }
 
+function frequencyChanged() {
+  $('#workflowId option').each(function() {
+    this.disabled = this.value > 0 && !this.text.endsWith(" (" + $('#frequencySelect').val() + ")");
+  })
+}
