@@ -37,11 +37,11 @@ import static org.junit.Assert.*;
  *
  * @author bobj
  */
-public class ADXPeriodTest
+public class AdxPeriodTest
 {
     private Period period;
 
-    public ADXPeriodTest()
+    public AdxPeriodTest()
     {
     }
 
@@ -50,22 +50,22 @@ public class ADXPeriodTest
     {
         try 
         {
-            period = ADXPeriod.parse( "2015-01-01/P1Y" );
+            period = AdxPeriod.parse( "2015-01-01/P1Y" );
             assertEquals( "2015", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-01-01/P1M" );
+            period = AdxPeriod.parse( "2015-01-01/P1M" );
             assertEquals( "201501", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-01-01/P1D" );
+            period = AdxPeriod.parse( "2015-01-01/P1D" );
             assertEquals( "20150101", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-01-01/P1Q" );
+            period = AdxPeriod.parse( "2015-01-01/P1Q" );
             assertEquals( "2015Q1", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-04-01/P1Q" );
+            period = AdxPeriod.parse( "2015-04-01/P1Q" );
             assertEquals( "2015Q2", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-01-01/P7D" );
+            period = AdxPeriod.parse( "2015-01-01/P7D" );
             assertEquals( "2015W1", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-01-05/P7D" );
+            period = AdxPeriod.parse( "2015-01-05/P7D" );
             assertEquals( "2015W2", period.getIsoDate() );
         }
-        catch (ADXException ex)
+        catch ( AdxException ex)
         {
             fail(ex.getMessage());
         }
@@ -76,12 +76,12 @@ public class ADXPeriodTest
     {
         try
         {
-            period = ADXPeriod.parse( "2014-01-01/P1" );
+            period = AdxPeriod.parse( "2014-01-01/P1" );
             fail( "Should have thrown exception parsing 2015-01-01/P1" );
         } 
         catch ( Exception ex )
         {
-            assertEquals( ADXException.class, ex.getClass() );
+            assertEquals( AdxException.class, ex.getClass() );
         }
     }
 
@@ -90,16 +90,16 @@ public class ADXPeriodTest
     {
         try
         {
-            period = ADXPeriod.parse( "2015-01-01/P1Y" );
+            period = AdxPeriod.parse( "2015-01-01/P1Y" );
             assertEquals( "2015", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-04-01/P1Y" );
+            period = AdxPeriod.parse( "2015-04-01/P1Y" );
             assertEquals( "2015April", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-07-01/P1Y" );
+            period = AdxPeriod.parse( "2015-07-01/P1Y" );
             assertEquals( "2015July", period.getIsoDate() );
-            period = ADXPeriod.parse( "2015-10-01/P1Y" );
+            period = AdxPeriod.parse( "2015-10-01/P1Y" );
             assertEquals( "2015Oct", period.getIsoDate() );
         }
-        catch (ADXException ex)
+        catch ( AdxException ex)
         {
             fail(ex.getMessage());
         }
@@ -110,12 +110,12 @@ public class ADXPeriodTest
     {
         try
         {
-            period = ADXPeriod.parse( "2014-02-01/P1Y" );
+            period = AdxPeriod.parse( "2014-02-01/P1Y" );
             fail( "Should have thrown exception parsing 2014-02-01/P1Y" );
         } 
         catch ( Exception ex )
         {
-            assertEquals( ADXException.class, ex.getClass() );
+            assertEquals( AdxException.class, ex.getClass() );
         }
     }
 
@@ -123,18 +123,18 @@ public class ADXPeriodTest
     public void testSerialize()
     {
         period = PeriodType.getPeriodFromIsoString( "2015" );
-        assertEquals( "2015-01-01/P1Y", ADXPeriod.serialize( period ) );
+        assertEquals( "2015-01-01/P1Y", AdxPeriod.serialize( period ) );
         period = PeriodType.getPeriodFromIsoString( "201503" );
-        assertEquals( "2015-03-01/P1M", ADXPeriod.serialize( period ) );
+        assertEquals( "2015-03-01/P1M", AdxPeriod.serialize( period ) );
         period = PeriodType.getPeriodFromIsoString( "2015W1" );
-        assertEquals( "2014-12-29/P7D", ADXPeriod.serialize( period ) );
+        assertEquals( "2014-12-29/P7D", AdxPeriod.serialize( period ) );
         period = PeriodType.getPeriodFromIsoString( "2015Q2" );
-        assertEquals( "2015-04-01/P1Q", ADXPeriod.serialize( period ) );
+        assertEquals( "2015-04-01/P1Q", AdxPeriod.serialize( period ) );
         period = PeriodType.getPeriodFromIsoString( "2015April" );
-        assertEquals( "2015-04-01/P1Y", ADXPeriod.serialize( period ) );
+        assertEquals( "2015-04-01/P1Y", AdxPeriod.serialize( period ) );
         period = PeriodType.getPeriodFromIsoString( "2015S2" );
-        assertEquals( "2015-07-01/P6M", ADXPeriod.serialize( period ) );
+        assertEquals( "2015-07-01/P6M", AdxPeriod.serialize( period ) );
         period = PeriodType.getPeriodFromIsoString( "2015AprilS2" );
-        assertEquals( "2015-10-01/P6M", ADXPeriod.serialize( period ) );
+        assertEquals( "2015-10-01/P6M", AdxPeriod.serialize( period ) );
     }
 }

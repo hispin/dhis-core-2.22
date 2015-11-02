@@ -326,9 +326,6 @@
 
   <bean id="inputUtils" class="org.hisp.dhis.dxf2.utils.InputUtils" />
   
-  <!-- ADX Service -->
-
-  <bean id="org.hisp.dhis.dxf2.ADXDataService"
-    class="org.hisp.dhis.dxf2.adx.DefaultADXDataService" />    
+  <bean id="org.hisp.dhis.dxf2.AdxDataService" class="org.hisp.dhis.dxf2.adx.DefaultAdxDataService" />    
 
 </beans>

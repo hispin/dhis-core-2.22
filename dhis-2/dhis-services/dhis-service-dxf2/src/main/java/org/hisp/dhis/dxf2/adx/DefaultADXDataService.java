@@ -82,10 +82,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author bobj
  */
-public class DefaultADXDataService
-    implements ADXDataService
+public class DefaultAdxDataService
+    implements AdxDataService
 {
-    private static final Log log = LogFactory.getLog( DefaultADXDataService.class );
+    private static final Log log = LogFactory.getLog( DefaultAdxDataService.class );
 
     // -------------------------------------------------------------------------
     // Constants
@@ -129,14 +129,14 @@ public class DefaultADXDataService
 
         ImportSummaries importSummaries = new ImportSummaries();
 
-        adxReader.moveToStartElement( ADXDataService.ROOT, ADXDataService.NAMESPACE );
+        adxReader.moveToStartElement( AdxDataService.ROOT, AdxDataService.NAMESPACE );
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         int count = 0;
         
         // submit each ADX group to DXF importer as a datavalueSet
-        while ( adxReader.moveToStartElement( ADXDataService.GROUP, ADXDataService.NAMESPACE ) )
+        while ( adxReader.moveToStartElement( AdxDataService.GROUP, AdxDataService.NAMESPACE ) )
         {
             try ( PipedOutputStream pipeOut = new PipedOutputStream() )
             {
@@ -160,7 +160,7 @@ public class DefaultADXDataService
                 }
                 importSummaries.addImportSummary( summary );
             }
-            catch ( ADXException ex)
+            catch ( AdxException ex)
             {
                 ImportSummary importSummary = new ImportSummary();
                 importSummary.setStatus( ImportStatus.ERROR );
@@ -190,7 +190,7 @@ public class DefaultADXDataService
     // -------------------------------------------------------------------------
 
     private List<ImportConflict> parseADXGroupToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
-        throws XMLStreamException, ADXException
+        throws XMLStreamException, AdxException
     {
         List<ImportConflict> adxConflicts = new LinkedList<>();
         
@@ -202,38 +202,39 @@ public class DefaultADXDataService
 
         Map<String, String> groupAttributes = readAttributes( adxReader );
 
-        if ( !groupAttributes.containsKey( ADXDataService.PERIOD ) )
+        if ( !groupAttributes.containsKey( AdxDataService.PERIOD ) )
         {
-            throw new ADXException( ADXDataService.PERIOD + " attribute is required on 'group'" );
+            throw new AdxException( AdxDataService.PERIOD + " attribute is required on 'group'" );
         }
 
-        if ( !groupAttributes.containsKey( ADXDataService.ORGUNIT ) )
+        if ( !groupAttributes.containsKey( AdxDataService.ORGUNIT ) )
         {
-            throw new ADXException( ADXDataService.ORGUNIT + " attribute is required on 'group'" );
+            throw new AdxException( AdxDataService.ORGUNIT + " attribute is required on 'group'" );
         }
 
         // translate ADX period to dxf2
-        String periodStr = groupAttributes.get( ADXDataService.PERIOD );
-        groupAttributes.remove( ADXDataService.PERIOD );
-        Period period = ADXPeriod.parse( periodStr );
-        groupAttributes.put( ADXDataService.PERIOD, period.getIsoDate());
+        String periodStr = groupAttributes.get( AdxDataService.PERIOD );
+        groupAttributes.remove( AdxDataService.PERIOD );
+        Period period = AdxPeriod.parse( periodStr );
+        groupAttributes.put( AdxDataService.PERIOD, period.getIsoDate());
 
         // process ADX group attributes
-        if ( !groupAttributes.containsKey( ADXDataService.ATTOPTCOMBO )
-            && groupAttributes.containsKey( ADXDataService.DATASET ) )
+        if ( !groupAttributes.containsKey( AdxDataService.ATTOPTCOMBO )
+            && groupAttributes.containsKey( AdxDataService.DATASET ) )
         {
             log.debug( "No attributeOptionCombo present.  Check dataSet for attribute categorycombo" );
 
             DataSet dataSet = identifiableObjectManager.getObject( DataSet.class, dataElementIdScheme,
-                groupAttributes.get( ADXDataService.DATASET ) );
+                groupAttributes.get( AdxDataService.DATASET ) );
             
             if (dataSet == null)
             {
-                throw new ADXException("No dataSet matching identifier: " + groupAttributes.get( ADXDataService.DATASET ));
+                throw new AdxException("No dataSet matching identifier: " + groupAttributes.get( AdxDataService.DATASET ));
             }
-            groupAttributes.put( ADXDataService.DATASET, dataSet.getUid() );
+            
+            groupAttributes.put( AdxDataService.DATASET, dataSet.getUid() );
             DataElementCategoryCombo attributeCombo = dataSet.getCategoryCombo();
-            attributesToDXF( ADXDataService.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme );
+            attributesToDXF( AdxDataService.ATTOPTCOMBO, attributeCombo, groupAttributes, dataElementIdScheme );
         }
 
         // write the remaining attributes through to DXF stream
@@ -243,13 +244,13 @@ public class DefaultADXDataService
         }
 
         // process the dataValues
-        while ( adxReader.moveToStartElement( ADXDataService.DATAVALUE, ADXDataService.GROUP ) )
+        while ( adxReader.moveToStartElement( AdxDataService.DATAVALUE, AdxDataService.GROUP ) )
         {
             try 
             {
                 parseADXDataValueToDxf( adxReader, dxfWriter, importOptions );
             }
-            catch (ADXException ex)
+            catch (AdxException ex)
             {
                 adxConflicts.add( ex.getImportConflict() );
                 log.info("ADX datavalue conflict: " + ex.getImportConflict());
@@ -263,52 +264,52 @@ public class DefaultADXDataService
     }
 
     private void parseADXDataValueToDxf( XMLReader adxReader, XMLStreamWriter dxfWriter, ImportOptions importOptions )
-        throws XMLStreamException, ADXException
+        throws XMLStreamException, AdxException
     {
         Map<String, String> dvAttributes = readAttributes( adxReader );
         
         log.debug("Processing datavalue: " + dvAttributes );
         
-        if ( !dvAttributes.containsKey( ADXDataService.DATAELEMENT ) )
+        if ( !dvAttributes.containsKey( AdxDataService.DATAELEMENT ) )
         {
-            throw new ADXException( ADXDataService.DATAELEMENT + " attribute is required on 'dataValue'" );
+            throw new AdxException( AdxDataService.DATAELEMENT + " attribute is required on 'dataValue'" );
         }
 
-        if ( !dvAttributes.containsKey( ADXDataService.VALUE ) )
+        if ( !dvAttributes.containsKey( AdxDataService.VALUE ) )
         {
-            throw new ADXException( ADXDataService.VALUE + " attribute is required on 'dataValue'" );
+            throw new AdxException( AdxDataService.VALUE + " attribute is required on 'dataValue'" );
         }
 
         IdentifiableProperty dataElementIdScheme = importOptions.getDataElementIdScheme();
 
-        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( ADXDataService.DATAELEMENT));
+        DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme,dvAttributes.get( AdxDataService.DATAELEMENT));
         
         if ( dataElement == null )
         {
-            throw new ADXException(dvAttributes.get( ADXDataService.DATAELEMENT), "No matching dataelement");
+            throw new AdxException(dvAttributes.get( AdxDataService.DATAELEMENT), "No matching dataelement");
         }
         
         // process ADX data value attributes
-        if ( !dvAttributes.containsKey( ADXDataService.CATOPTCOMBO ) )
+        if ( !dvAttributes.containsKey( AdxDataService.CATOPTCOMBO ) )
         {
             log.debug( "No categoryOptionCombo present." );
             DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
 
-            attributesToDXF( ADXDataService.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
+            attributesToDXF( AdxDataService.CATOPTCOMBO, categoryCombo, dvAttributes, dataElementIdScheme );
         }
         
         // if data element type is string we need to pick out the 'annotation' element
         if ( dataElement.getValueType().isText() )
         {
-            adxReader.moveToStartElement( ADXDataService.ANNOTATION, ADXDataService.DATAVALUE );
-            if ( adxReader.isStartElement( ADXDataService.ANNOTATION ) )
+            adxReader.moveToStartElement( AdxDataService.ANNOTATION, AdxDataService.DATAVALUE );
+            if ( adxReader.isStartElement( AdxDataService.ANNOTATION ) )
             {
                 String textValue = adxReader.getElementValue();
-                dvAttributes.put( ADXDataService.VALUE, textValue );
+                dvAttributes.put( AdxDataService.VALUE, textValue );
             }
             else
             {
-                throw new ADXException( dvAttributes.get( ADXDataService.DATAELEMENT),"Dataelement expects text annotation" );
+                throw new AdxException( dvAttributes.get( AdxDataService.DATAELEMENT),"Dataelement expects text annotation" );
             }
         }
         
@@ -325,7 +326,7 @@ public class DefaultADXDataService
     }
 
     private Map<String, DataElementCategory> createCategoryMap( DataElementCategoryCombo catcombo )
-        throws ADXException
+        throws AdxException
     {
         Map<String, DataElementCategory> categoryMap = new HashMap<>();
 
@@ -337,7 +338,7 @@ public class DefaultADXDataService
             
             if ( categoryCode == null || !XMLChar.isValidName( categoryCode ) )
             {
-                throw new ADXException( "Category code for " + category.getName() + " is missing or invalid: "
+                throw new AdxException( "Category code for " + category.getName() + " is missing or invalid: "
                     + categoryCode );
             }
             
@@ -349,7 +350,7 @@ public class DefaultADXDataService
 
     private DataElementCategoryOptionCombo getCatOptComboFromAttributes( Map<String, String> attributes,
         DataElementCategoryCombo catcombo, IdentifiableProperty scheme )
-        throws ADXException
+        throws AdxException
     {
         CategoryComboMap catcomboMap;
         
@@ -362,7 +363,7 @@ public class DefaultADXDataService
         catch ( CategoryComboMapException ex )
         {
             log.info( "Failed to create catcomboMap from " + catcombo );
-            throw new ADXException( ex.getMessage() );
+            throw new AdxException( ex.getMessage() );
         }
 
         String compositeIdentifier = StringUtils.EMPTY;
@@ -373,14 +374,14 @@ public class DefaultADXDataService
             
             if ( catCode == null )
             {
-                throw new ADXException( "No category matching " + catCode );
+                throw new AdxException( "No category matching " + catCode );
             }
             
             String catAttribute = attributes.get( catCode );
             
             if ( catAttribute == null )
             {
-                throw new ADXException( "Missing required attribute from catcombo: " + catCode );
+                throw new AdxException( "Missing required attribute from catcombo: " + catCode );
             }
             
             compositeIdentifier += "\"" + catAttribute + "\"";
@@ -390,7 +391,7 @@ public class DefaultADXDataService
 
         if ( catoptcombo == null )
         {
-            throw new ADXException( "Invalid attributes:" + attributes );
+            throw new AdxException( "Invalid attributes:" + attributes );
         }
         
         return catoptcombo;
@@ -398,7 +399,7 @@ public class DefaultADXDataService
 
     private void attributesToDXF( String optionComboName, DataElementCategoryCombo catCombo,
         Map<String, String> attributes, IdentifiableProperty scheme )
-        throws ADXException
+        throws AdxException
     {
         log.debug( "adx attributes: " + attributes );
 
@@ -420,7 +421,7 @@ public class DefaultADXDataService
             }
             else
             {
-                throw new ADXException( "catcombo " + catCombo.getName() + " must have " + categoryMap.get( category ).getName() );
+                throw new AdxException( "catcombo " + catCombo.getName() + " must have " + categoryMap.get( category ).getName() );
             }
         }
 

@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import org.hisp.dhis.dxf2.adx.ADXDataService;
+import org.hisp.dhis.dxf2.adx.AdxDataService;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 
@@ -53,15 +53,15 @@ import static org.hisp.dhis.webapi.utils.ContextUtils.*;
  */
 
 @Controller
-@RequestMapping( value = ADXController.RESOURCE_PATH )
-public class ADXController
+@RequestMapping( value = AdxController.RESOURCE_PATH )
+public class AdxController
 {
     public static final String RESOURCE_PATH = "/dataValueSets";
 
-    private static final Log log = LogFactory.getLog( ADXController.class );
+    private static final Log log = LogFactory.getLog( AdxController.class );
 
     @Autowired
-    private ADXDataService adxService;
+    private AdxDataService adxService;
 
     @RequestMapping( method = RequestMethod.POST, consumes = "application/xml" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
