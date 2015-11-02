@@ -32,21 +32,33 @@ import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
+import org.hisp.dhis.dxf2.datavalueset.tasks.ImportDataValueTask;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.scheduling.TaskCategory;
+import org.hisp.dhis.scheduling.TaskId;
+import org.hisp.dhis.system.scheduling.Scheduler;
+import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
 
 import static org.hisp.dhis.webapi.utils.ContextUtils.*;
 
@@ -64,6 +76,12 @@ public class DataValueSetController
 
     @Autowired
     private RenderService renderService;
+    
+    @Autowired
+    private CurrentUserService currentUserService;
+    
+    @Autowired
+    private Scheduler scheduler;
 
     // -------------------------------------------------------------------------
     // Get
@@ -137,33 +155,81 @@ public class DataValueSetController
     @RequestMapping( method = RequestMethod.POST, consumes = "application/xml" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
     public void postDxf2DataValueSet( ImportOptions importOptions,
-        HttpServletResponse response, InputStream in, Model model ) throws IOException
+        HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
-        ImportSummary summary = dataValueSetService.saveDataValueSet( in, importOptions );
-
-        response.setContentType( CONTENT_TYPE_XML );
-        renderService.toXml( response.getOutputStream(), summary );
+        if ( importOptions.isAsync() )
+        {
+            startAsyncImport( importOptions, ImportDataValueTask.FORMAT_XML, request, response );
+        }
+        else
+        {
+            ImportSummary summary = dataValueSetService.saveDataValueSet( request.getInputStream(), importOptions );
+    
+            response.setContentType( CONTENT_TYPE_XML );
+            renderService.toXml( response.getOutputStream(), summary );
+        }
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
     public void postJsonDataValueSet( ImportOptions importOptions,
-        HttpServletResponse response, InputStream in, Model model ) throws IOException
+        HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
-        ImportSummary summary = dataValueSetService.saveDataValueSetJson( in, importOptions );
-
-        response.setContentType( CONTENT_TYPE_JSON );
-        renderService.toJson( response.getOutputStream(), summary );
+        if ( importOptions.isAsync() )
+        {
+            startAsyncImport( importOptions, ImportDataValueTask.FORMAT_JSON, request, response );
+        }
+        else
+        {
+            ImportSummary summary = dataValueSetService.saveDataValueSetJson( request.getInputStream(), importOptions );
+    
+            response.setContentType( CONTENT_TYPE_JSON );
+            renderService.toJson( response.getOutputStream(), summary );
+        }
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = "application/csv" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
     public void postCsvDataValueSet( ImportOptions importOptions,
-        HttpServletResponse response, InputStream in, Model model ) throws IOException
+        HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
-        ImportSummary summary = dataValueSetService.saveDataValueSetCsv( in, importOptions );
+        if ( importOptions.isAsync() )
+        {
+            startAsyncImport( importOptions, ImportDataValueTask.FORMAT_CSV, request, response );
+        }
+        else
+        {
+            ImportSummary summary = dataValueSetService.saveDataValueSetCsv( request.getInputStream(), importOptions );
+    
+            response.setContentType( CONTENT_TYPE_XML );
+            renderService.toXml( response.getOutputStream(), summary );
+        }
+    }
+    
+    private void startAsyncImport( ImportOptions importOptions, String format, HttpServletRequest request, HttpServletResponse response )
+        throws IOException
+    {
+        InputStream inputStream = saveTmp( request.getInputStream() );
 
-        response.setContentType( CONTENT_TYPE_XML );
-        renderService.toXml( response.getOutputStream(), summary );
+        TaskId taskId = new TaskId( TaskCategory.DATAVALUE_IMPORT, currentUserService.getCurrentUser() );
+        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, inputStream, importOptions, taskId, format ) );
+
+        response.setHeader( "Location", ContextUtils.getRootPath( request ) + "/system/tasks/" + TaskCategory.DATAVALUE_IMPORT );
+        response.setStatus( HttpServletResponse.SC_ACCEPTED );
+    }
+    
+    private InputStream saveTmp( InputStream in )
+        throws IOException
+    {
+        File tmpFile = File.createTempFile( "dvs", null );
+        
+        tmpFile.deleteOnExit();
+        
+        try ( FileOutputStream out = new FileOutputStream( tmpFile ) )
+        {
+            IOUtils.copy( in, out );
+        }
+        
+        return new FileInputStream( tmpFile );
     }
 }
