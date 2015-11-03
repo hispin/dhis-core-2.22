@@ -147,7 +147,7 @@ $( function() {
 
         // dep: arrayIndexOf
         arrayContains = ('indexOf' in Array.prototype) ? function(array, item) {
-            return arrayPrototype.indexOf.call(array, item) !== -1;
+            return Array.prototype.indexOf.call(array, item) !== -1;
         } : function(array, item) {
             var i, len;
 
@@ -601,6 +601,8 @@ $( function() {
                 return NS.arrayPluck(this.getRecords(isSorted ? 'name' : null), 'name');
             };
 
+            // dep 2
+
             Dimension.prototype.url = function() {
                 return 'dimension=' + this.dimension + ':' + NS.arrayUnique(this.getRecordIds()).join(';');
             };
@@ -611,14 +613,12 @@ $( function() {
             var Axis = NS.Api.Axis = function(config) {
                 var t = [];
 
-                // constructor
                 config = NS.arrayFrom(config);
 
-                (function() {
-                    for (var i = 0; i < config.length; i++) {
-                        t.push((new NS.Api.Dimension(config[i])).val());
-                    }
-                })();
+                // constructor
+                config.forEach(function(dimension) {
+                    t.push((new NS.Api.Dimension(dimension)).val());
+                });
 
                 // prototype
                 t.log = function(text, noError) {
@@ -643,9 +643,7 @@ $( function() {
                 };
 
                 t.sorted = function() {
-                    return NS.clone(this).sort(function(a, b) {
-                        return a.dimension - b.dimension;
-                    });
+                    return NS.clone(this).sort(function(a, b) { return a.dimension > b.dimension;});
                 };
 
                 return t;
@@ -761,18 +759,15 @@ $( function() {
             // dep 1
 
             Layout.prototype.hasDimension = function(dimensionName, includeFilter) {
-                var axes = this.getAxes(includeFilter);
-
-                return axes.some(function(axis) {
+                return this.getAxes(includeFilter).some(function(axis) {
                     return axis.has(dimensionName);
                 });
             };
 
             Layout.prototype.getDimensions = function(includeFilter, isSorted) {
-                var axes = this.getAxes(includeFilter),
-                    dimensions = [];
+                var dimensions = [];
 
-                axes.forEach(function(axis) {
+                this.getAxes(includeFilter).forEach(function(axis) {
                     dimensions = dimensions.concat(axis);
                 });
 
@@ -784,10 +779,9 @@ $( function() {
                     return this.dimensionNameIdsMap;
                 }
 
-                var dimensions = this.getDimensions(true),
-                    map = {};
+                var map = {};
 
-                dimensions.forEach(function(dimension) {
+                this.getDimensions(true).forEach(function(dimension) {
                     map[dimension.dimension] = dimension.getRecordIds();
                 });
 
@@ -820,20 +814,19 @@ $( function() {
 
             Layout.prototype.url = function(isSorted) {
                 var aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                    //displayProperty = this.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name',
                     displayProperty = this.displayProperty || 'name',
                     request = new NS.Api.Request(),
                     i;
 
                 // dimensions
-                for (i = 0, axisDimensions = this.getDimensions(false, isSorted), dimension; i < axisDimensions.length; i++) {
-                    dimension = axisDimensions.length;
-
+                this.getDimensions(false, isSorted).forEach(function(dimension) {
                     request.add(dimension.url(isSorted));
-                }
+                });
 
                 // filters
                 if (this.filters) {
-                    this.filters.each(function(dimension) {
+                    this.filters.forEach(function(dimension) {
                         request.add(dimension.url(isSorted));
                     });
                 }
@@ -879,7 +872,7 @@ $( function() {
                 }
 
                 // display property
-                request.add('displayProperty=' + ((this.displayProperty || '').toUpperCase()));
+                request.add('displayProperty=' + displayProperty.toUpperCase());
 
                 return request.url();
             };
