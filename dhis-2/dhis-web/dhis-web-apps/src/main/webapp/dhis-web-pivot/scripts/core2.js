@@ -560,13 +560,9 @@ $( function() {
                 // constructor
                 t.dimension = config.dimension;
 
-                (function() {
-                    for (var i = 0, record; i < config.items.length; i++) {
-                        items.push((new NS.Api.Record(config.items[i])).val());
-                    }
-                })();
-
-                t.items = items;
+                t.items = config.items.map(function(record) {
+                    return (new NS.Api.Record(record)).val();
+                });
             };
 
             Dimension.prototype.log = function(text, noError) {
@@ -589,12 +585,21 @@ $( function() {
                 return this;
             };
 
-            Dimension.prototype.getRecordIds = function(isSorted) {
-                var ids = NS.arrayPluck(this.items, 'id');
-                return isSorted ? ids.sort() : ids;
+            Dimension.prototype.getRecords = function(sortProperty) {
+                sortProperty = NS.arrayContains(['id', 'name'], sortProperty) ? sortProperty : null;
+
+                return sortProperty ? this.items.sort(function(a, b) { return a[sortProperty] > b[sortProperty];}) : this.items;
             };
 
             // dep 1
+
+            Dimension.prototype.getRecordIds = function(isSorted) {
+                return NS.arrayPluck(this.getRecords(isSorted ? 'id' : null), 'id');
+            };
+
+            Dimension.prototype.getRecordNames = function(isSorted) {
+                return NS.arrayPluck(this.getRecords(isSorted ? 'name' : null), 'name');
+            };
 
             Dimension.prototype.url = function() {
                 return 'dimension=' + this.dimension + ':' + NS.arrayUnique(this.getRecordIds()).join(';');
@@ -631,22 +636,10 @@ $( function() {
                     return this;
                 };
 
-                t.each = function(fn) {
-                    for (var i = 0, dimension; i < this.length; i++) {
-                        dimension = this[i];
-                        fn.call(this, dimension);
-                    }
-                };
-
                 t.has = function(dimensionName) {
-                    for (var i = 0, dimension; i < this.length; i++) {
-                        dimension = this[i];
-                        if (dimension.dimension === dimensionName) {
-                            return true;
-                        }
-                    }
-
-                    return false;
+                    return this.some(function(dimension) {
+                        return dimension.dimension === dimensionName;
+                    });
                 };
 
                 t.sorted = function() {
@@ -756,16 +749,7 @@ $( function() {
             };
 
             Layout.prototype.getAxes = function(includeFilter) {
-                var axes = NS.arrayClean([this.columns, this.rows, (includeFilter ? this.filters : null)]);
-
-                axes.each = function(fn) {
-                    for (var i = 0, axis; i < axes.length; i++) {
-                        axis = axes[i];
-                        fn.call(this, axis);
-                    }
-                };
-
-                return axes;
+                return NS.arrayClean([this.columns, this.rows, (includeFilter ? this.filters : null)]);
             };
 
             Layout.prototype.getUserOrgUnitUrl = function() {
@@ -777,46 +761,23 @@ $( function() {
             // dep 1
 
             Layout.prototype.hasDimension = function(dimensionName, includeFilter) {
-                var axisCollection = this.getAxes(includeFilter),
-                    hasDimension = false;
+                var axes = this.getAxes(includeFilter);
 
-                axisCollection.each(function(axis) {
-                    if (axis.has(dimensionName)) {
-                        hasDimension = true;
-                    }
+                return axes.some(function(axis) {
+                    return axis.has(dimensionName);
                 });
-
-                return hasDimension;
             };
 
             Layout.prototype.getDimensions = function(includeFilter, isSorted) {
-                var axisCollection = this.getAxes(includeFilter),
+                var axes = this.getAxes(includeFilter),
                     dimensions = [];
 
-                axisCollection.each(function(axis) {
-                    axis.each(function(dimension) {
-                        dimensions.push(dimension);
-                    });
+                axes.forEach(function(axis) {
+                    dimensions = dimensions.concat(axis);
                 });
 
-                return isSorted ? dimensions.sort(function(a, b) {return a.dimension - b.dimension;}) : dimensions;
+                return isSorted ? dimensions.sort(function(a, b) {return a.dimension > b.dimension;}) : dimensions;
             };
-
-            Layout.prototype.getDimensionNames = function(includeFilter, isSorted) {
-                this.dimensionNames = [];
-
-                for (var i = 0, dimensions = this.getDimensions(includeFilter); i < dimensions.length; i++) {
-                    this.dimensionNames.push(dimensions[i].dimension);
-                }
-
-                return this.dimensionNames;
-            };
-
-            //Layout.prototype.forEachDimension = function(fn, includeFilter) {
-                //var dimensions = this.getDimensions(includeFilter);
-
-                //for (var i = 0; i < dimensions.length; i++) {
-
 
             Layout.prototype.getDimensionNameIdsMap = function() {
                 if (this.dimensionNameIdsMap) {
@@ -826,16 +787,20 @@ $( function() {
                 var dimensions = this.getDimensions(true),
                     map = {};
 
-                for (var i = 0, dimension; i < dimensions.length; i++) {
-                    dimension = dimensions[i];
-
-                    map[dimension.dimension] = dimensions.getRecordIds();
-                }
+                dimensions.forEach(function(dimension) {
+                    map[dimension.dimension] = dimension.getRecordIds();
+                });
 
                 return this.dimensionNameIdsMap = map;
             };
 
             // dep 2
+
+            Layout.prototype.getDimensionNames = function(includeFilter, isSorted) {
+                var names = NS.arrayPluck(this.getDimensions(includeFilter), 'dimension');
+
+                return isSorted ? names.sort() : names;
+            };
 
             Layout.prototype.val = function(noError) {
                 var dimConf = NS.conf.finals.dimension;
