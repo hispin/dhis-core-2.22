@@ -569,7 +569,7 @@ $( function() {
                 t.items = items;
             };
 
-            Record.prototype.log = function(text, noError) {
+            Dimension.prototype.log = function(text, noError) {
                 if (!noError) {
                     console.log(text, this);
                 }
@@ -616,7 +616,7 @@ $( function() {
                 })();
 
                 // prototype
-                t.prototype.log = function(text, noError) {
+                t.log = function(text, noError) {
                     if (!noError) {
                         console.log(text, this);
                     }
@@ -687,7 +687,7 @@ $( function() {
                 t.fontSize = NS.isString(config.fontSize) && !NS.isEmpty(config.fontSize) ? config.fontSize : NS.conf.finals.style.normal;
                 t.digitGroupSeparator = NS.isString(config.digitGroupSeparator) && !NS.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : NS.conf.finals.style.space;
 
-                t.legendSet = (new NS.Api.Record(config.legendSet)).val();
+                t.legendSet = (new NS.Api.Record(config.legendSet)).val(true);
 
                 t.parentGraphMap = NS.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
 
@@ -756,12 +756,16 @@ $( function() {
             };
 
             Layout.prototype.getAxes = function(includeFilter) {
-                return NS.arrayClean(this.columns, this.rows, (includeFilter ? this.filters : null));
-            };
+                var axes = NS.arrayClean([this.columns, this.rows, (includeFilter ? this.filters : null)]);
 
-            Layout.prototype.getDimensions = function(includeFilter, isSorted) {
-                var dimensions = NS.arrayClean([].concat(this.columns, this.rows, (includeFilter ? this.filters : null)));
-                return isSorted ? dimensions.sort(function(a, b) {return a.dimension - b.dimension;}) : dimensions;
+                axes.each = function(fn) {
+                    for (var i = 0, axis; i < axes.length; i++) {
+                        axis = axes[i];
+                        fn.call(this, axis);
+                    }
+                };
+
+                return axes;
             };
 
             Layout.prototype.getUserOrgUnitUrl = function() {
@@ -773,13 +777,29 @@ $( function() {
             // dep 1
 
             Layout.prototype.hasDimension = function(dimensionName, includeFilter) {
-                for (var i = 0, axes = this.getAxes(includeFilter); i < axes.length; i++) {
-                    if (axes[i].has(dimensionName)) {
-                        return true;
-                    }
-                }
+                var axisCollection = this.getAxes(includeFilter),
+                    hasDimension = false;
 
-                return false;
+                axisCollection.each(function(axis) {
+                    if (axis.has(dimensionName)) {
+                        hasDimension = true;
+                    }
+                });
+
+                return hasDimension;
+            };
+
+            Layout.prototype.getDimensions = function(includeFilter, isSorted) {
+                var axisCollection = this.getAxes(includeFilter),
+                    dimensions = [];
+
+                axisCollection.each(function(axis) {
+                    axis.each(function(dimension) {
+                        dimensions.push(dimension);
+                    });
+                });
+
+                return isSorted ? dimensions.sort(function(a, b) {return a.dimension - b.dimension;}) : dimensions;
             };
 
             Layout.prototype.getDimensionNames = function(includeFilter, isSorted) {
@@ -791,6 +811,12 @@ $( function() {
 
                 return this.dimensionNames;
             };
+
+            //Layout.prototype.forEachDimension = function(fn, includeFilter) {
+                //var dimensions = this.getDimensions(includeFilter);
+
+                //for (var i = 0; i < dimensions.length; i++) {
+
 
             Layout.prototype.getDimensionNameIdsMap = function() {
                 if (this.dimensionNameIdsMap) {
