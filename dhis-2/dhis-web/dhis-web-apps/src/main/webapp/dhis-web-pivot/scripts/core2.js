@@ -877,9 +877,11 @@ $( function() {
                 return request.url();
             };
 
+            // dep 3
 
-            //Layout.prototype.data = function() {
-
+            Layout.prototype.data = function() {
+                return $.getJSON('/api/analytics.json' + this.url());
+            };
 
         })();
 
@@ -888,14 +890,13 @@ $( function() {
             var Request = NS.Api.Request = function(config) {
                 var t = this;
 
-                // constructor
-                t.params = [];
+                config = NS.isObject(config) ? config : {};
+                config.baseUrl = NS.isString(config.baseUrl) ? config.baseUrl : '';
+                config.params = NS.arrayFrom(config.params);
 
-                (function() {
-                    if (NS.isArray(config) && config.length) {
-                        t.params = config;
-                    }
-                })();
+                // constructor
+                t.baseUrl = config.baseUrl;
+                t.params = config.params;
             };
 
             Request.prototype.add = function(param) {
@@ -905,13 +906,13 @@ $( function() {
             };
 
             Request.prototype.url = function() {
-                return '?' + this.params.join('&').replace(/#/g, '.');
+                return this.baseUrl + '?' + this.params.join('&');
             };
         })();
 
         // Header
         (function() {
-            var Header = NS.Api.Header = function(config) {
+            var ResponseHeader = NS.Api.ResponseHeader = function(config) {
                 var t = this;
 
                 config = NS.isObject(config) ? config : {};
@@ -923,7 +924,7 @@ $( function() {
                 t.index;
             };
 
-            Header.prototype.setIndex = function(index) {
+            ResponseHeader.prototype.setIndex = function(index) {
                 if (NS.isNumeric(index)) {
                     this.index = parseInt(index);
                 }
@@ -937,15 +938,20 @@ $( function() {
 
                 config = NS.isObject(config) ? config : {};
 
-                t.headers = config.headers;
+                // constructor
+                t.headers = (config.headers || []).map(function(header, index) {
+                    return new NS.Api.ResponseHeader(header);
+                });
                 t.metaData = config.metaData;
                 t.rows = config.rows;
 
                 // transient
                 t.nameHeaderMap = function() {
-                    for (var i = 0, map = {}; i < t.headers.length; i++) {
-                        map[t.headers[i].name] = t.headers[i];
-                    }
+                    var map = {};
+
+                    t.headers.forEach(function(header) {
+                        map[header.name] = header;
+                    });
 
                     return map;
                 }();
@@ -953,12 +959,10 @@ $( function() {
                 // uninitialized
                 t.idValueMap = {};
 
-                // Header: index
-                (function() {
-                    for (var i = 0, header; i < t.headers.length; i++) {
-                        t.headers[i].setIndex(i);
-                    }
-                })();
+                // ResponseHeader: index
+                t.headers.forEach(function(header, index) {
+                    header.setIndex(index);
+                });
             };
 
             Response.prototype.getHeaderByName = function(name) {
