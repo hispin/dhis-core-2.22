@@ -532,10 +532,16 @@ $( function() {
                 t.name = config.name;
             };
 
-            Record.prototype.val = function() {
+            Record.prototype.log = function(text, noError) {
+                if (!noError) {
+                    console.log(text, this);
+                }
+            };
+
+            Record.prototype.val = function(noError) {
                 if (!NS.isString(this.id)) {
-                    console.log('(Record)', 'Id is not a string', this);
-                    return;
+                    this.log('(Record) Id is not a string', noError);
+                    return null;
                 }
 
                 return this;
@@ -563,15 +569,21 @@ $( function() {
                 t.items = items;
             };
 
-            Dimension.prototype.val = function() {
+            Record.prototype.log = function(text, noError) {
+                if (!noError) {
+                    console.log(text, this);
+                }
+            };
+
+            Dimension.prototype.val = function(noError) {
                 if (!NS.isString(this.dimension)) {
-                    console.log('(Dimension)', 'Dimension is not a string', this);
-                    return;
+                    this.log('(Dimension) Dimension is not a string', noError);
+                    return null;
                 }
 
                 if (!this.items.length && this.dimension !== 'co') {
-                    console.log('(Dimension)', 'No items', this);
-                    return;
+                    this.log('(Dimension) No items', noError);
+                    return null;
                 }
 
                 return this;
@@ -604,10 +616,16 @@ $( function() {
                 })();
 
                 // prototype
-                t.val = function() {
+                t.prototype.log = function(text, noError) {
+                    if (!noError) {
+                        console.log(text, this);
+                    }
+                };
+
+                t.val = function(noError) {
                     if (!this.length) {
-                        console.log('(Axis)', 'No dimensions', this);
-                        return;
+                        this.log('(Axis) No dimensions', noError);
+                        return null;
                     }
 
                     return this;
@@ -725,6 +743,18 @@ $( function() {
                 t.dimensionNameIdsMap;
             };
 
+            Layout.prototype.log = function(text, noError) {
+                if (!noError) {
+                    console.log(text, this);
+                }
+            };
+
+            Layout.prototype.alert = function(text, noError) {
+                if (!noError) {
+                    alert(text);
+                }
+            };
+
             Layout.prototype.getAxes = function(includeFilter) {
                 return NS.arrayClean(this.columns, this.rows, (includeFilter ? this.filters : null));
             };
@@ -781,17 +811,17 @@ $( function() {
 
             // dep 2
 
-            Layout.prototype.val = function() {
+            Layout.prototype.val = function(noError) {
                 var dimConf = NS.conf.finals.dimension;
 
                 if (!(this.columns || this.rows)) {
-                    alert(NS.I18n.get('at_least_one_dimension_must_be_specified_as_row_or_column')); //todo alert
-                    return;
+                    this.alert(NS.I18n.get('at_least_one_dimension_must_be_specified_as_row_or_column'), noError); //todo alert
+                    return null;
                 }
 
                 if (!this.hasDimension(dimConf.period.dimensionName)) {
-                    alert(NS.I18n.get('at_least_one_period_must_be_specified_as_column_row_or_filter')); //todo alert
-                    return;
+                    this.alert(NS.I18n.get('at_least_one_period_must_be_specified_as_column_row_or_filter'), noError); //todo alert
+                    return null;
                 }
 
                 return this;
@@ -799,7 +829,6 @@ $( function() {
 
             Layout.prototype.url = function(isSorted) {
                 var aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
-                    //todo displayProperty = this.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name',
                     displayProperty = this.displayProperty || 'name',
                     request = new NS.Api.Request(),
                     i;
@@ -865,21 +894,7 @@ $( function() {
             };
 
 
-
-
-
-
-
-
-
-
             //Layout.prototype.data = function() {
-
-
-
-
-
-
 
 
         })();
