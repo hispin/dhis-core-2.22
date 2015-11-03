@@ -927,6 +927,7 @@ public class DefaultAnalyticsService
             params.setMeasureCriteria( DataQueryParams.getMeasureCriteriaFromParam( measureCriteria ) );
         }
 
+        params.setAggregationType( aggregationType );
         params.setSkipMeta( skipMeta );
         params.setSkipData( skipData );
         params.setSkipRounding( skipRounding );
