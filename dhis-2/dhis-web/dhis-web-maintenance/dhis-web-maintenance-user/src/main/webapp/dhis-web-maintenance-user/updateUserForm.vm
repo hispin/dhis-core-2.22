@@ -126,6 +126,11 @@
     </tr>
 
     <tr>
+      <td><label for="ldapId">$i18n.getString( "ldap_id" )</label></td>
+      <td colspan="3"><input type="text" id="ldapId" name="ldapId" value="$!encoder.htmlEncode( $userCredentials.ldapId )"></td>
+    </tr>
+
+    <tr>
       <td><label for="phoneNumber">$i18n.getString( "phone_number" )</label></td>
       <td colspan="3"><input type="text" id="phoneNumber" name="phoneNumber" value="$!encoder.htmlEncode( $userCredentials.userInfo.phoneNumber )"></td>
     </tr>

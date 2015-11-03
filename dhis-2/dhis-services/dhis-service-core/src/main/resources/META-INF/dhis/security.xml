@@ -41,7 +41,7 @@
     <constructor-arg>
       <bean class="org.hisp.dhis.security.ldap.authentication.DhisBindAuthenticator">
         <constructor-arg ref="contextSource"/>
-        <property name="userDnPatterns" ref="ldapDnPatterns" />
+        <property name="userSearch" ref="userSearch" />
       </bean>
     </constructor-arg>
     <constructor-arg>
@@ -51,17 +51,18 @@
     </constructor-arg>
   </bean>
   
-  <bean id="ldapUrl" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_URL" /></bean>
+  <bean id="userSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+    <constructor-arg index="0" ref="ldapSearchBase" />
+    <constructor-arg index="1" ref="ldapSearchFilter" />
+    <constructor-arg index="2" ref="contextSource" />
+  </bean>
+
+  <bean id="ldapUrl" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_URL" /></bean>  
+  <bean id="ldapManagerDn" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_MANAGER_DN" /></bean>  
+  <bean id="ldapManagerPassword" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_MANAGER_PASSWORD" /></bean>  
+  <bean id="ldapSearchBase" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_SEARCH_BASE" /></bean>  
+  <bean id="ldapSearchFilter" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_SEARCH_FILTER" /></bean>
   
-  <bean id="ldapManagerDn" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_MANAGER_DN" /></bean>
-  
-  <bean id="ldapManagerPassword" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean"><constructor-arg value="LDAP_MANAGER_PASSWORD" /></bean>
-    
-  <bean id="ldapDnPatterns" class="org.hisp.dhis.external.conf.ConfigurationPropertyFactoryBean">
-    <constructor-arg value="LDAP_DN_PATTERNS" />
-    <property name="list" value="true" />
-  </bean>  
-    
   <!-- OAuth2 -->
   
   <bean id="clientDetailsService" class="org.hisp.dhis.security.oauth2.DefaultClientDetailsService" />

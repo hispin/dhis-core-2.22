@@ -5,6 +5,7 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
   <!-- OAuth2 -->
+  
   <bean id="oauthAuthenticationEntryPoint"
     class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
     <property name="realmName" value="dhis2/oauth2" />
@@ -37,7 +38,6 @@
       login-processing-url="/dhis-web-commons-security/login.action" />
 
   </sec:http>
-  <!-- End OAuth2 -->
 
   <bean id="mappedRedirectStrategy" class="org.hisp.dhis.security.MappedRedirectStrategy">
     <property name="redirectMap">

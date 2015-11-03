@@ -160,6 +160,13 @@ public class UpdateUserAction
         this.openId = openId;
     }
 
+    private String ldapId;
+
+    public void setLdapId( String ldapId )
+    {
+        this.ldapId = ldapId;
+    }
+
     private String phoneNumber;
 
     public void setPhoneNumber( String phoneNumber )
@@ -247,14 +254,8 @@ public class UpdateUserAction
 
         UserCredentials userCredentials = userService.getUserCredentials( user );
 
-        if ( StringUtils.isNotEmpty( openId ) )
-        {
-            userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
-        }
-        else
-        {
-            userCredentials.setOpenId( null );
-        }
+        userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
+        userCredentials.setLdapId( StringUtils.trimToNull( ldapId ) );
 
         if ( jsonAttributeValues != null )
         {

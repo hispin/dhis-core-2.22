@@ -78,6 +78,11 @@ public class UserCredentials
      * Unique OpenID.
      */
     private String openId;
+    
+    /**
+     * Unique LDAP distinguished name.
+     */
+    private String ldapId;
 
     /**
      * Required. Will be stored as a hash.
@@ -435,6 +440,14 @@ public class UserCredentials
         return constraints != null && !constraints.isEmpty();
     }
 
+    /**
+     * Indicates whether the LDAP identifier is present.
+     */
+    public boolean hasLdapId()
+    {
+        return ldapId != null && !ldapId.isEmpty();
+    }
+    
     // -------------------------------------------------------------------------
     // hashCode and equals
     // -------------------------------------------------------------------------
@@ -588,6 +601,19 @@ public class UserCredentials
     public void setOpenId( String openId )
     {
         this.openId = openId;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getLdapId()
+    {
+        return ldapId;
+    }
+
+    public void setLdapId( String ldapId )
+    {
+        this.ldapId = ldapId;
     }
 
     @JsonProperty

@@ -183,6 +183,13 @@ public class AddUserAction
     {
         this.openId = openId;
     }
+    
+    private String ldapId;
+
+    public void setLdapId( String ldapId )
+    {
+        this.ldapId = ldapId;
+    }
 
     private String inviteEmail;
 
@@ -289,11 +296,8 @@ public class AddUserAction
         user.setUserCredentials( userCredentials );
 
         userCredentials.setUsername( StringUtils.trimToNull( username ) );
-
-        if ( !StringUtils.isEmpty( openId ) )
-        {
-            userCredentials.setOpenId( openId );
-        }
+        userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
+        userCredentials.setLdapId( StringUtils.trimToNull( ldapId ) );
 
         if ( ACCOUNT_ACTION_INVITE.equals( accountAction ) )
         {

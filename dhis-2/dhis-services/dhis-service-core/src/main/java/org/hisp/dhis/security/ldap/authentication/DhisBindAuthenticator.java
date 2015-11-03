@@ -29,10 +29,13 @@ package org.hisp.dhis.security.ldap.authentication;
  */
 
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
+import org.hisp.dhis.user.UserCredentials;
+import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 
@@ -49,6 +52,9 @@ public class DhisBindAuthenticator
     @Autowired
     private DhisConfigurationProvider configurationProvider;
     
+    @Autowired
+    private UserService userService;
+    
     public DhisBindAuthenticator( BaseLdapPathContextSource contextSource )
     {
         super( contextSource );
@@ -62,6 +68,18 @@ public class DhisBindAuthenticator
         if ( !ldapConf )
         {
             throw new BadCredentialsException( "LDAP authentication is not configured" );
+        }
+
+        UserCredentials userCredentials = userService.getUserCredentialsByUsername( authentication.getName() );
+                
+        if ( userCredentials == null )
+        {
+            throw new BadCredentialsException( "Incorrect user credentials" );
+        }
+        
+        if ( userCredentials.hasLdapId() )
+        {
+            authentication = new UsernamePasswordAuthenticationToken( userCredentials.getLdapId(), authentication.getCredentials() );
         }
         
         return super.authenticate( authentication );
