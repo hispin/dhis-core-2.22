@@ -94,11 +94,11 @@ public class ProgramStageController
 
             query.setFirstResult( pager.getOffset() );
             query.setMaxResults( pager.getPageSize() );
-            entityList = (List<ProgramStage>) queryService.query( query ).getItems();
+            entityList = (List<ProgramStage>) queryService.query( query );
         }
         else
         {
-            entityList = (List<ProgramStage>) queryService.query( query ).getItems();
+            entityList = (List<ProgramStage>) queryService.query( query );
         }
 
         return entityList;

@@ -888,11 +888,11 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
             query.setFirstResult( pager.getOffset() );
             query.setMaxResults( pager.getPageSize() );
-            entityList = (List<T>) queryService.query( query ).getItems();
+            entityList = (List<T>) queryService.query( query );
         }
         else
         {
-            entityList = (List<T>) queryService.query( query ).getItems();
+            entityList = (List<T>) queryService.query( query );
         }
 
         return entityList;

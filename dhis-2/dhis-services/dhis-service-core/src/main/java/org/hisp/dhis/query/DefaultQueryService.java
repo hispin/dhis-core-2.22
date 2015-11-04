@@ -46,32 +46,33 @@ import java.util.stream.Collectors;
  *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class DefaultQueryService<T extends IdentifiableObject> implements QueryService
+public class DefaultQueryService implements QueryService
 {
     @Autowired
-    private QueryEngine<T> queryEngine;
+    private QueryEngine<? extends IdentifiableObject> queryEngine;
 
     @Autowired
     private SchemaService schemaService;
 
     @Override
-    public Result query( Query query )
+    @SuppressWarnings( "unchecked" )
+    public List<? extends IdentifiableObject> query( Query query )
     {
-        List<T> objects = queryEngine.query( query );
-        return new Result( objects );
+        return queryEngine.query( query );
     }
 
     @Override
-    public Result query( Query query, ResultTransformer transformer )
+    @SuppressWarnings( "unchecked" )
+    public List<? extends IdentifiableObject> query( Query query, ResultTransformer transformer )
     {
-        List<T> objects = queryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         if ( transformer != null )
         {
-            return transformer.transform( new MutableResult( objects ) );
+            return transformer.transform( objects );
         }
 
-        return new Result( objects );
+        return objects;
     }
 
     @Override

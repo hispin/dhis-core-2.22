@@ -45,9 +45,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Implementation of QueryEngine that uses Hibernate Criteria and
+ * supports idObjects only.
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class CriteriaQueryEngine<T> implements QueryEngine<T>
+public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryEngine
 {
     @Autowired
     private final List<HibernateGenericStore<T>> hibernateGenericStores = new ArrayList<>();
@@ -289,7 +292,7 @@ public class CriteriaQueryEngine<T> implements QueryEngine<T>
             return null;
         }
 
-        org.hibernate.criterion.Order criteriaOrder = null;
+        org.hibernate.criterion.Order criteriaOrder;
 
         if ( order.isAscending() )
         {

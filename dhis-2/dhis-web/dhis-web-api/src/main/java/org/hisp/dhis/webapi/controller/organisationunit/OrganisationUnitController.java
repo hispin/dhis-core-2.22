@@ -134,11 +134,11 @@ public class OrganisationUnitController
 
             query.setFirstResult( pager.getOffset() );
             query.setMaxResults( pager.getPageSize() );
-            entityList = (List<OrganisationUnit>) queryService.query( query ).getItems();
+            entityList = (List<OrganisationUnit>) queryService.query( query );
         }
         else
         {
-            entityList = (List<OrganisationUnit>) queryService.query( query ).getItems();
+            entityList = (List<OrganisationUnit>) queryService.query( query );
         }
 
         return entityList;

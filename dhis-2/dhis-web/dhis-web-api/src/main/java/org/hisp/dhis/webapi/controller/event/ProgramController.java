@@ -101,11 +101,11 @@ public class ProgramController
 
             query.setFirstResult( pager.getOffset() );
             query.setMaxResults( pager.getPageSize() );
-            entityList = (List<Program>) queryService.query( query ).getItems();
+            entityList = (List<Program>) queryService.query( query );
         }
         else
         {
-            entityList = (List<Program>) queryService.query( query ).getItems();
+            entityList = (List<Program>) queryService.query( query );
         }
 
         if ( userFilter )
