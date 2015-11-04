@@ -41,6 +41,7 @@ import org.hisp.dhis.query.operators.NotNull;
 import org.hisp.dhis.query.operators.Null;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -56,12 +57,36 @@ public class OperatorTest
     @Test
     public void testBetweenValidTypes()
     {
-        Between operator = new Between( "operator" );
+        Between operator = new Between( "10", "20" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
         assertTrue( operator.isValid( Date.class ) );
         assertFalse( operator.isValid( Collection.class ) );
+    }
+
+    @Test
+    public void testBetweenInt()
+    {
+        Between operator = new Between( "10", "20" );
+
+        assertTrue( operator.test( 10 ) );
+        assertTrue( operator.test( 15 ) );
+        assertTrue( operator.test( 20 ) );
+        assertFalse( operator.test( 9 ) );
+        assertFalse( operator.test( 21 ) );
+    }
+
+    @Test
+    public void testBetweenCollection()
+    {
+        Between operator = new Between( "2", "4" );
+
+        assertFalse( operator.test( Collections.singletonList( 1 ) ) );
+        assertTrue( operator.test( Arrays.asList( 1, 2 ) ) );
+        assertTrue( operator.test( Arrays.asList( 1, 2, 3 ) ) );
+        assertTrue( operator.test( Arrays.asList( 1, 2, 3, 4 ) ) );
+        assertFalse( operator.test( Arrays.asList( 1, 2, 3, 4, 5 ) ) );
     }
 
     @Test
