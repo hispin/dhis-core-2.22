@@ -28,10 +28,13 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.util.List;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface ResultTransformer
+@FunctionalInterface
+public interface ResultTransformer<T>
 {
-    Result transform( MutableResult result );
+    List<T> transform( List<T> result );
 }
