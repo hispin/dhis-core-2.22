@@ -38,9 +38,9 @@ import java.util.Date;
  */
 public class In extends Operator
 {
-    public In( String propertyValue )
+    public In( String arg )
     {
-        super( propertyValue, Typed.from( Collection.class ) );
+        super( Typed.from( Collection.class ), arg );
     }
 
     @Override

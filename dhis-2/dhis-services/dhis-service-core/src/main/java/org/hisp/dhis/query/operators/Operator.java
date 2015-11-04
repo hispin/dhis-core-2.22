@@ -31,24 +31,44 @@ package org.hisp.dhis.query.operators;
 import org.hisp.dhis.query.QueryUtils;
 import org.hisp.dhis.query.Typed;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public abstract class Operator
 {
-    protected final String propertyValue;
+    protected final List<String> args = new ArrayList<>();
 
     protected final Typed typed;
 
-    public Operator( String propertyValue, Typed typed )
+    public Operator( Typed typed )
     {
-        this.propertyValue = propertyValue;
         this.typed = typed;
+    }
+
+    public Operator( Typed typed, String arg )
+    {
+        this.typed = typed;
+        this.args.add( arg );
+    }
+
+    public Operator( Typed typed, String... args )
+    {
+        this.typed = typed;
+        Collections.addAll( this.args, args );
+    }
+
+    protected <T> T getValue( Class<T> klass, int idx )
+    {
+        return QueryUtils.getValue( klass, args.get( idx ) );
     }
 
     protected <T> T getValue( Class<T> klass )
     {
-        return QueryUtils.getValue( klass, propertyValue );
+        return getValue( klass, 0 );
     }
 
     protected <T> T getValue( Class<T> klass, Object value )

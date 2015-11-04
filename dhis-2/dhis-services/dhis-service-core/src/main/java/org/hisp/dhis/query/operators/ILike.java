@@ -35,15 +35,15 @@ import org.hisp.dhis.query.Typed;
  */
 public class ILike extends Operator
 {
-    public ILike( String propertyValue )
+    public ILike( String arg )
     {
-        super( propertyValue, Typed.from( String.class ) );
+        super( Typed.from( String.class ), arg );
     }
 
     @Override
     public boolean test( Object value )
     {
-        if ( propertyValue == null || value == null )
+        if ( args.isEmpty() || value == null )
         {
             return false;
         }

@@ -38,15 +38,15 @@ import java.util.Date;
  */
 public class LessEqual extends Operator
 {
-    public LessEqual( String propertyValue )
+    public LessEqual( String arg )
     {
-        super( propertyValue, Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
+        super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
     }
 
     @Override
     public boolean test( Object value )
     {
-        if ( propertyValue == null || value == null )
+        if ( args.isEmpty() || value == null )
         {
             return false;
         }

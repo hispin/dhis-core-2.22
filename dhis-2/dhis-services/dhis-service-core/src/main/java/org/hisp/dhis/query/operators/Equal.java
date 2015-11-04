@@ -38,15 +38,15 @@ import java.util.Date;
  */
 public class Equal extends Operator
 {
-    public Equal( String propertyValue )
+    public Equal( String arg )
     {
-        super( propertyValue, Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
+        super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
     }
 
     @Override
     public boolean test( Object value )
     {
-        if ( propertyValue == null || value == null )
+        if ( args.isEmpty() || value == null )
         {
             return false;
         }
@@ -95,7 +95,7 @@ public class Equal extends Operator
         }
         else if ( Enum.class.isInstance( value ) )
         {
-            String s1 = propertyValue;
+            String s1 = args.get( 0 );
             String s2 = String.valueOf( value );
 
             return s2.equals( s1 );
