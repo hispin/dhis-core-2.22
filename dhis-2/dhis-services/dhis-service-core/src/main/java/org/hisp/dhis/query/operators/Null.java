@@ -39,7 +39,7 @@ public class Null extends Operator
 {
     public Null()
     {
-        super( null, Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
+        super( Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
     }
 
     @Override

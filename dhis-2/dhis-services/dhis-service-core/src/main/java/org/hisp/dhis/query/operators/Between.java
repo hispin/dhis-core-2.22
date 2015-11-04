@@ -37,9 +37,9 @@ import java.util.Date;
  */
 public class Between extends Operator
 {
-    public Between( String propertyValue )
+    public Between( String arg )
     {
-        super( propertyValue, Typed.from( String.class, Number.class, Date.class ) );
+        super( Typed.from( String.class, Number.class, Date.class ), arg );
     }
 
     @Override
