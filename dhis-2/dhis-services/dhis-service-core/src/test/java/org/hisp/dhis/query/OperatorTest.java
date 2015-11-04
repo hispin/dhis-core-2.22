@@ -55,6 +55,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class OperatorTest
 {
+    enum TestEnum
+    {
+        A, B, C
+    }
+
     @Test
     public void testBetweenValidTypes()
     {
@@ -99,6 +104,7 @@ public class OperatorTest
         assertTrue( operator.isValid( Number.class ) );
         assertTrue( operator.isValid( Date.class ) );
         assertTrue( operator.isValid( Boolean.class ) );
+        assertTrue( operator.isValid( Enum.class ) );
         assertFalse( operator.isValid( Collection.class ) );
     }
 
@@ -111,6 +117,17 @@ public class OperatorTest
         assertFalse( operator.test( Boolean.TRUE ) );
         assertFalse( operator.test( new Float( 0 ) ) );
         assertFalse( operator.test( Collections.emptyList() ) );
+    }
+
+    @Test
+    public void testEqualEnum()
+    {
+        assertTrue( new EqualOperator( "A" ).test( TestEnum.A ) );
+        assertTrue( new EqualOperator( "B" ).test( TestEnum.B ) );
+        assertTrue( new EqualOperator( "C" ).test( TestEnum.C ) );
+
+        assertFalse( new EqualOperator( "A" ).test( 123 ) );
+        assertFalse( new EqualOperator( "A" ).test( "abc" ) );
     }
 
     @Test
@@ -364,11 +381,6 @@ public class OperatorTest
         assertTrue( operator.test( "c" ) );
         assertTrue( operator.test( "d" ) );
         assertFalse( operator.test( "e" ) );
-    }
-
-    enum TestEnum
-    {
-        A, B, C
     }
 
     @Test

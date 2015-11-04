@@ -40,7 +40,7 @@ public class EqualOperator extends Operator
 {
     public EqualOperator( String arg )
     {
-        super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
+        super( Typed.from( String.class, Boolean.class, Number.class, Date.class, Enum.class ), arg );
     }
 
     @Override
