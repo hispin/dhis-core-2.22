@@ -812,7 +812,7 @@ $( function() {
                 return this;
             };
 
-            Layout.prototype.url = function(isSorted) {
+            Layout.prototype.req = function(isSorted) {
                 var aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     //displayProperty = this.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name',
                     displayProperty = this.displayProperty || 'name',
@@ -874,13 +874,15 @@ $( function() {
                 // display property
                 request.add('displayProperty=' + displayProperty.toUpperCase());
 
-                return request.url();
+                return request;
             };
 
             // dep 3
 
-            Layout.prototype.data = function() {
-                return $.getJSON('/api/analytics.json' + this.url());
+            Layout.prototype.data = function(request) {
+                request = request || this.req();
+
+                return $.getJSON('/api/analytics.json' + request.url());
             };
 
         })();
@@ -899,10 +901,45 @@ $( function() {
                 t.params = config.params;
             };
 
+            Request.prototype.log = function(text, noError) {
+                if (!noError) {
+                    console.log(text, this);
+                }
+            };
+
+            Request.prototype.alert = function(text, noError) {
+                if (!noError) {
+                    alert(text);
+                }
+            };
+
+            Request.prototype.handle = function(statusCode, noError) {
+                var url = this.url(),
+                    text;
+
+                if (NS.arrayContains([413, 414], statusCode)) {
+                    if (NS.isIE) {
+                        text = 'Too many items selected (url has ' + url.length + ' characters). Internet Explorer accepts maximum 2048 characters.';
+                    }
+                    else {
+                        var len = url.length > 8000 ? '8000' : (url.length > 4000 ? '4000' : '2000');
+                        text = 'Too many items selected (url has ' + url.length + ' characters). Please reduce to less than ' + len + ' characters.';
+                    }
+                }
+
+                if (text) {
+                    text += '\n\n' + 'Hint: A good way to reduce the number of items is to use relative periods and level/group organisation unit selection modes.';
+
+                    this.alert(text);
+                }
+            };
+
             Request.prototype.add = function(param) {
                 if (NS.isString(param)) {
                     this.params.push(param);
                 }
+
+                return this;
             };
 
             Request.prototype.url = function() {
@@ -910,7 +947,7 @@ $( function() {
             };
         })();
 
-        // Header
+        // ResponseHeader
         (function() {
             var ResponseHeader = NS.Api.ResponseHeader = function(config) {
                 var t = this;
@@ -929,6 +966,19 @@ $( function() {
                     this.index = parseInt(index);
                 }
             };
+
+            ResponseHeader.prototype.getIndex = function(index) {
+                return this.index;
+            };
+        })();
+
+        // ResponseRow
+        (function() {
+            var ResponseRow = NS.Api.ResponseRow = function(row) {
+                var t = NS.arrayFrom(row);
+
+                return t;
+            };
         })();
 
         // Response
@@ -939,11 +989,15 @@ $( function() {
                 config = NS.isObject(config) ? config : {};
 
                 // constructor
-                t.headers = (config.headers || []).map(function(header, index) {
+                t.headers = (config.headers || []).map(function(header) {
                     return new NS.Api.ResponseHeader(header);
                 });
+
                 t.metaData = config.metaData;
-                t.rows = config.rows;
+
+                t.rows = (config.rows || []).map(function(row) {
+                    return NS.Api.ResponseRow(row);
+                });
 
                 // transient
                 t.nameHeaderMap = function() {
@@ -975,6 +1029,18 @@ $( function() {
 
             Response.prototype.getNameById = function(id) {
                 return this.metaData.names[id];
+            };
+
+            // dep 1
+
+            Response.prototype.getValueHeader = function() {
+                return this.getHeaderByName('value');
+            };
+
+            // dep 2
+
+            Response.prototype.getValueIndex = function() {
+                return this.getValueHeader().getIndex();
             };
         })();
     })();
