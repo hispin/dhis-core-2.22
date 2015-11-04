@@ -36,11 +36,11 @@ import java.util.Date;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class GreaterEqual extends Operator
+public class BetweenOperator extends Operator
 {
-    public GreaterEqual( String arg )
+    public BetweenOperator( String arg0, String arg1 )
     {
-        super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
+        super( Typed.from( String.class, Number.class, Date.class ), arg0, arg1 );
     }
 
     @Override
@@ -53,31 +53,27 @@ public class GreaterEqual extends Operator
 
         if ( Integer.class.isInstance( value ) )
         {
-            Integer s1 = getValue( Integer.class );
-            Integer s2 = (Integer) value;
+            Integer s1 = getValue( Integer.class, value );
+            Integer min = getValue( Integer.class, 0 );
+            Integer max = getValue( Integer.class, 1 );
 
-            return s1 != null && s2 >= s1;
+            return s1 >= min && s1 <= max;
         }
         else if ( Float.class.isInstance( value ) )
         {
-            Float s1 = getValue( Float.class );
-            Float s2 = (Float) value;
+            Float s1 = getValue( Float.class, value );
+            Integer min = getValue( Integer.class, 0 );
+            Integer max = getValue( Integer.class, 1 );
 
-            return s1 != null && s2 >= s1;
+            return s1 >= min && s1 <= max;
         }
         else if ( Collection.class.isInstance( value ) )
         {
             Collection<?> collection = (Collection<?>) value;
-            Integer size = getValue( Integer.class );
+            Integer min = getValue( Integer.class, 0 );
+            Integer max = getValue( Integer.class, 1 );
 
-            return size != null && collection.size() >= size;
-        }
-        else if ( Date.class.isInstance( value ) )
-        {
-            Date s1 = getValue( Date.class );
-            Date s2 = (Date) value;
-
-            return s1 != null && (s2.after( s1 ) || s2.equals( s1 ));
+            return collection.size() >= min && collection.size() <= max;
         }
 
         return false;

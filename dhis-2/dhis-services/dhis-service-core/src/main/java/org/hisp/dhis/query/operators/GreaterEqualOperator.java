@@ -36,9 +36,9 @@ import java.util.Date;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class Equal extends Operator
+public class GreaterEqualOperator extends Operator
 {
-    public Equal( String arg )
+    public GreaterEqualOperator( String arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
     }
@@ -51,54 +51,33 @@ public class Equal extends Operator
             return false;
         }
 
-        if ( String.class.isInstance( value ) )
-        {
-            String s1 = getValue( String.class );
-            String s2 = (String) value;
-
-            return s1 != null && s2.equals( s1 );
-        }
-        else if ( Boolean.class.isInstance( value ) )
-        {
-            Boolean s1 = getValue( Boolean.class );
-            Boolean s2 = (Boolean) value;
-
-            return s1 != null && s2.equals( s1 );
-        }
-        else if ( Integer.class.isInstance( value ) )
+        if ( Integer.class.isInstance( value ) )
         {
             Integer s1 = getValue( Integer.class );
             Integer s2 = (Integer) value;
 
-            return s1 != null && s2.equals( s1 );
+            return s1 != null && s2 >= s1;
         }
         else if ( Float.class.isInstance( value ) )
         {
             Float s1 = getValue( Float.class );
             Float s2 = (Float) value;
 
-            return s1 != null && s2.equals( s1 );
+            return s1 != null && s2 >= s1;
         }
         else if ( Collection.class.isInstance( value ) )
         {
             Collection<?> collection = (Collection<?>) value;
             Integer size = getValue( Integer.class );
 
-            return size != null && collection.size() == size;
+            return size != null && collection.size() >= size;
         }
         else if ( Date.class.isInstance( value ) )
         {
             Date s1 = getValue( Date.class );
             Date s2 = (Date) value;
 
-            return s1 != null && s2.equals( s1 );
-        }
-        else if ( Enum.class.isInstance( value ) )
-        {
-            String s1 = args.get( 0 );
-            String s2 = String.valueOf( value );
-
-            return s2.equals( s1 );
+            return s1 != null && (s2.after( s1 ) || s2.equals( s1 ));
         }
 
         return false;
