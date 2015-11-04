@@ -40,7 +40,7 @@ public class In extends Operator
 {
     public In( String arg )
     {
-        super( Typed.from( Collection.class ), arg );
+        super( Typed.from( String.class, Boolean.class, Number.class, Date.class, Enum.class ), arg );
     }
 
     @Override

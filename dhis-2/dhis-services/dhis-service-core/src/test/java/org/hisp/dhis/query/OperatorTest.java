@@ -33,6 +33,7 @@ import org.hisp.dhis.query.operators.Equal;
 import org.hisp.dhis.query.operators.GreaterEqual;
 import org.hisp.dhis.query.operators.GreaterThan;
 import org.hisp.dhis.query.operators.ILike;
+import org.hisp.dhis.query.operators.In;
 import org.hisp.dhis.query.operators.LessEqual;
 import org.hisp.dhis.query.operators.LessThan;
 import org.hisp.dhis.query.operators.Like;
@@ -327,5 +328,41 @@ public class OperatorTest
 
         assertFalse( operator.test( null ) );
         assertTrue( operator.test( "test" ) );
+    }
+
+    @Test
+    public void testInValidTypes()
+    {
+        In operator = new In( "[1,2,3]" );
+
+        assertTrue( operator.isValid( String.class ) );
+        assertTrue( operator.isValid( Number.class ) );
+        assertTrue( operator.isValid( Date.class ) );
+        assertTrue( operator.isValid( Boolean.class ) );
+        assertTrue( operator.isValid( Enum.class ) );
+    }
+
+    @Test
+    public void testInInt()
+    {
+        In operator = new In( "[1,2,3]" );
+
+        assertFalse( operator.test( 0 ) );
+        assertTrue( operator.test( 1 ) );
+        assertTrue( operator.test( 2 ) );
+        assertTrue( operator.test( 3 ) );
+        assertFalse( operator.test( 4 ) );
+    }
+
+    @Test
+    public void testInString()
+    {
+        In operator = new In( "[b,c,d]" );
+
+        assertFalse( operator.test( "a" ) );
+        assertTrue( operator.test( "b" ) );
+        assertTrue( operator.test( "c" ) );
+        assertTrue( operator.test( "d" ) );
+        assertFalse( operator.test( "e" ) );
     }
 }
