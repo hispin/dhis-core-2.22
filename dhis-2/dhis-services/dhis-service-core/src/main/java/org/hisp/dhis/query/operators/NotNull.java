@@ -37,9 +37,9 @@ import java.util.Date;
  */
 public class NotNull extends Operator
 {
-    public NotNull( String propertyValue )
+    public NotNull()
     {
-        super( propertyValue, Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
+        super( null, Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
     }
 
     @Override

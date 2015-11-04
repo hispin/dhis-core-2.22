@@ -100,6 +100,17 @@ public class OperatorTest
     }
 
     @Test
+    public void testNotEqual()
+    {
+        NotEqual operator = new NotEqual( "operator" );
+
+        assertFalse( operator.test( "operator" ) );
+        assertTrue( operator.test( Boolean.TRUE ) );
+        assertTrue( operator.test( new Float( 0 ) ) );
+        assertTrue( operator.test( Collections.emptyList() ) );
+    }
+
+    @Test
     public void testGreaterEqualValidTypes()
     {
         GreaterEqual operator = new GreaterEqual( "operator" );
@@ -112,6 +123,21 @@ public class OperatorTest
     }
 
     @Test
+    public void testGreaterEqual()
+    {
+        GreaterEqual operator = new GreaterEqual( "10" );
+
+        assertFalse( operator.test( 6 ) );
+        assertFalse( operator.test( 7 ) );
+        assertFalse( operator.test( 8 ) );
+        assertFalse( operator.test( 9 ) );
+        assertTrue( operator.test( 10 ) );
+        assertTrue( operator.test( 11 ) );
+        assertTrue( operator.test( 12 ) );
+        assertTrue( operator.test( 13 ) );
+    }
+
+    @Test
     public void testGreaterThanValidTypes()
     {
         GreaterThan operator = new GreaterThan( "operator" );
@@ -121,6 +147,21 @@ public class OperatorTest
         assertTrue( operator.isValid( Date.class ) );
         assertTrue( operator.isValid( Boolean.class ) );
         assertFalse( operator.isValid( Collection.class ) );
+    }
+
+    @Test
+    public void testGreaterThan()
+    {
+        GreaterThan operator = new GreaterThan( "10" );
+
+        assertFalse( operator.test( 6 ) );
+        assertFalse( operator.test( 7 ) );
+        assertFalse( operator.test( 8 ) );
+        assertFalse( operator.test( 9 ) );
+        assertFalse( operator.test( 10 ) );
+        assertTrue( operator.test( 11 ) );
+        assertTrue( operator.test( 12 ) );
+        assertTrue( operator.test( 13 ) );
     }
 
     @Test
@@ -160,6 +201,21 @@ public class OperatorTest
     }
 
     @Test
+    public void testLessEqual()
+    {
+        LessEqual operator = new LessEqual( "10" );
+
+        assertTrue( operator.test( 6 ) );
+        assertTrue( operator.test( 7 ) );
+        assertTrue( operator.test( 8 ) );
+        assertTrue( operator.test( 9 ) );
+        assertTrue( operator.test( 10 ) );
+        assertFalse( operator.test( 11 ) );
+        assertFalse( operator.test( 12 ) );
+        assertFalse( operator.test( 13 ) );
+    }
+
+    @Test
     public void testLessThanValidTypes()
     {
         LessThan operator = new LessThan( "operator" );
@@ -172,9 +228,24 @@ public class OperatorTest
     }
 
     @Test
+    public void testLessThan()
+    {
+        LessThan operator = new LessThan( "10" );
+
+        assertTrue( operator.test( 6 ) );
+        assertTrue( operator.test( 7 ) );
+        assertTrue( operator.test( 8 ) );
+        assertTrue( operator.test( 9 ) );
+        assertFalse( operator.test( 10 ) );
+        assertFalse( operator.test( 11 ) );
+        assertFalse( operator.test( 12 ) );
+        assertFalse( operator.test( 13 ) );
+    }
+
+    @Test
     public void testNullValidTypes()
     {
-        Null operator = new Null( "operator" );
+        Null operator = new Null();
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -184,14 +255,32 @@ public class OperatorTest
     }
 
     @Test
+    public void testNull()
+    {
+        Null operator = new Null();
+
+        assertFalse( operator.test( null ) );
+        assertTrue( operator.test( "test" ) );
+    }
+
+    @Test
     public void testNotNullValidTypes()
     {
-        NotNull operator = new NotNull( "operator" );
+        NotNull operator = new NotNull();
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
         assertTrue( operator.isValid( Date.class ) );
         assertTrue( operator.isValid( Boolean.class ) );
         assertFalse( operator.isValid( Collection.class ) );
+    }
+
+    @Test
+    public void testNotNull()
+    {
+        NotNull operator = new NotNull();
+
+        assertTrue( operator.test( null ) );
+        assertFalse( operator.test( "test" ) );
     }
 }
