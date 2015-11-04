@@ -177,6 +177,16 @@ public class OperatorTest
     }
 
     @Test
+    public void testILike()
+    {
+        ILike operator = new ILike( "operator" );
+
+        assertTrue( operator.test( "operator" ) );
+        assertTrue( operator.test( "OPERATOR" ) );
+        assertFalse( operator.test( "abc" ) );
+    }
+
+    @Test
     public void testLikeValidTypes()
     {
         Like operator = new Like( "operator" );
@@ -186,6 +196,16 @@ public class OperatorTest
         assertFalse( operator.isValid( Date.class ) );
         assertFalse( operator.isValid( Boolean.class ) );
         assertFalse( operator.isValid( Collection.class ) );
+    }
+
+    @Test
+    public void testLike()
+    {
+        Like operator = new Like( "operator" );
+
+        assertTrue( operator.test( "operator" ) );
+        assertFalse( operator.test( "OPERATOR" ) );
+        assertFalse( operator.test( "abc" ) );
     }
 
     @Test
@@ -259,8 +279,8 @@ public class OperatorTest
     {
         Null operator = new Null();
 
-        assertFalse( operator.test( null ) );
-        assertTrue( operator.test( "test" ) );
+        assertTrue( operator.test( null ) );
+        assertFalse( operator.test( "test" ) );
     }
 
     @Test
@@ -280,7 +300,7 @@ public class OperatorTest
     {
         NotNull operator = new NotNull();
 
-        assertTrue( operator.test( null ) );
-        assertFalse( operator.test( "test" ) );
+        assertFalse( operator.test( null ) );
+        assertTrue( operator.test( "test" ) );
     }
 }
