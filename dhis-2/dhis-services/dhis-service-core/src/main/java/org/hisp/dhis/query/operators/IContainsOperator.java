@@ -28,16 +28,25 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.query.Typed;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class ILikeOperator extends Operator
+public class IContainsOperator extends Operator
 {
-    public ILikeOperator( String arg )
+    public IContainsOperator( String arg )
     {
         super( Typed.from( String.class ), arg );
+    }
+
+    @Override
+    public Criterion getHibernateCriterion( String propertyName )
+    {
+        return Restrictions.ilike( propertyName, args.get( 0 ), MatchMode.ANYWHERE );
     }
 
     @Override

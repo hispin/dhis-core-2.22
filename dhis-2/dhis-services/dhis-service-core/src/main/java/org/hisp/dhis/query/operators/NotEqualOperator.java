@@ -28,6 +28,9 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
@@ -36,6 +39,12 @@ public class NotEqualOperator extends EqualOperator
     public NotEqualOperator( String propertyValue )
     {
         super( propertyValue );
+    }
+
+    @Override
+    public Criterion getHibernateCriterion( String propertyName )
+    {
+        return Restrictions.not( super.getHibernateCriterion( propertyName ) );
     }
 
     @Override
