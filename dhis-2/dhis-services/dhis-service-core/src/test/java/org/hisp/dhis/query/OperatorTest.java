@@ -365,4 +365,21 @@ public class OperatorTest
         assertTrue( operator.test( "d" ) );
         assertFalse( operator.test( "e" ) );
     }
+
+    enum TestEnum
+    {
+        A, B, C
+    }
+
+    @Test
+    public void testInEnum()
+    {
+        In operator = new In( "[A,B]" );
+
+        assertTrue( operator.test( TestEnum.A ) );
+        assertTrue( operator.test( TestEnum.B ) );
+        assertFalse( operator.test( TestEnum.C ) );
+        assertFalse( operator.test( 123 ) );
+        assertFalse( operator.test( "abc" ) );
+    }
 }
