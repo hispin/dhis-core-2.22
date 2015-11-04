@@ -36,9 +36,9 @@ import java.util.Date;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class LessThan extends Operator
+public class LessEqualOperator extends Operator
 {
-    public LessThan( String arg )
+    public LessEqualOperator( String arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
     }
@@ -56,28 +56,28 @@ public class LessThan extends Operator
             Integer s1 = getValue( Integer.class );
             Integer s2 = (Integer) value;
 
-            return s1 != null && s2 < s1;
+            return s1 != null && s2 <= s1;
         }
         else if ( Float.class.isInstance( value ) )
         {
             Float s1 = getValue( Float.class );
             Float s2 = (Float) value;
 
-            return s1 != null && s2 < s1;
+            return s1 != null && s2 <= s1;
         }
         else if ( Collection.class.isInstance( value ) )
         {
             Collection<?> collection = (Collection<?>) value;
             Integer size = getValue( Integer.class );
 
-            return size != null && collection.size() < size;
+            return size != null && collection.size() <= size;
         }
         else if ( Date.class.isInstance( value ) )
         {
             Date s1 = getValue( Date.class );
             Date s2 = (Date) value;
 
-            return s1 != null && (s2.before( s1 ));
+            return s1 != null && (s2.before( s1 ) || s2.equals( s1 ));
         }
 
         return false;

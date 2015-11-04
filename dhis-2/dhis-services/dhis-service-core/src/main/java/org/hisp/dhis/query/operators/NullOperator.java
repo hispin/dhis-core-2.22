@@ -28,19 +28,23 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.query.Typed;
+
+import java.util.Date;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class NotEqual extends Equal
+public class NullOperator extends Operator
 {
-    public NotEqual( String propertyValue )
+    public NullOperator()
     {
-        super( propertyValue );
+        super( Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
     }
 
     @Override
     public boolean test( Object value )
     {
-        return !super.test( value );
+        return value == null;
     }
 }

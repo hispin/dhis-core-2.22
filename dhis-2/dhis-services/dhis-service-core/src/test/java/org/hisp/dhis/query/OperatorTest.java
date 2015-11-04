@@ -28,18 +28,18 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.query.operators.Between;
-import org.hisp.dhis.query.operators.Equal;
-import org.hisp.dhis.query.operators.GreaterEqual;
-import org.hisp.dhis.query.operators.GreaterThan;
-import org.hisp.dhis.query.operators.ILike;
-import org.hisp.dhis.query.operators.In;
-import org.hisp.dhis.query.operators.LessEqual;
-import org.hisp.dhis.query.operators.LessThan;
-import org.hisp.dhis.query.operators.Like;
-import org.hisp.dhis.query.operators.NotEqual;
-import org.hisp.dhis.query.operators.NotNull;
-import org.hisp.dhis.query.operators.Null;
+import org.hisp.dhis.query.operators.BetweenOperator;
+import org.hisp.dhis.query.operators.EqualOperator;
+import org.hisp.dhis.query.operators.GreaterEqualOperator;
+import org.hisp.dhis.query.operators.GreaterThanOperator;
+import org.hisp.dhis.query.operators.ILikeOperator;
+import org.hisp.dhis.query.operators.InOperator;
+import org.hisp.dhis.query.operators.LessEqualOperator;
+import org.hisp.dhis.query.operators.LessThanOperator;
+import org.hisp.dhis.query.operators.LikeOperator;
+import org.hisp.dhis.query.operators.NotEqualOperator;
+import org.hisp.dhis.query.operators.NotNullOperator;
+import org.hisp.dhis.query.operators.NullOperator;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -58,7 +58,7 @@ public class OperatorTest
     @Test
     public void testBetweenValidTypes()
     {
-        Between operator = new Between( "10", "20" );
+        BetweenOperator operator = new BetweenOperator( "10", "20" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -69,7 +69,7 @@ public class OperatorTest
     @Test
     public void testBetweenInt()
     {
-        Between operator = new Between( "10", "20" );
+        BetweenOperator operator = new BetweenOperator( "10", "20" );
 
         assertTrue( operator.test( 10 ) );
         assertTrue( operator.test( 15 ) );
@@ -81,7 +81,7 @@ public class OperatorTest
     @Test
     public void testBetweenCollection()
     {
-        Between operator = new Between( "2", "4" );
+        BetweenOperator operator = new BetweenOperator( "2", "4" );
 
         assertFalse( operator.test( Collections.singletonList( 1 ) ) );
         assertTrue( operator.test( Arrays.asList( 1, 2 ) ) );
@@ -93,7 +93,7 @@ public class OperatorTest
     @Test
     public void testEqualValidTypes()
     {
-        Equal operator = new Equal( "operator" );
+        EqualOperator operator = new EqualOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -105,7 +105,7 @@ public class OperatorTest
     @Test
     public void testEqual()
     {
-        Equal operator = new Equal( "operator" );
+        EqualOperator operator = new EqualOperator( "operator" );
 
         assertTrue( operator.test( "operator" ) );
         assertFalse( operator.test( Boolean.TRUE ) );
@@ -116,7 +116,7 @@ public class OperatorTest
     @Test
     public void testNotEqualValidTypes()
     {
-        NotEqual operator = new NotEqual( "operator" );
+        NotEqualOperator operator = new NotEqualOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -128,7 +128,7 @@ public class OperatorTest
     @Test
     public void testNotEqual()
     {
-        NotEqual operator = new NotEqual( "operator" );
+        NotEqualOperator operator = new NotEqualOperator( "operator" );
 
         assertFalse( operator.test( "operator" ) );
         assertTrue( operator.test( Boolean.TRUE ) );
@@ -139,7 +139,7 @@ public class OperatorTest
     @Test
     public void testGreaterEqualValidTypes()
     {
-        GreaterEqual operator = new GreaterEqual( "operator" );
+        GreaterEqualOperator operator = new GreaterEqualOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -151,7 +151,7 @@ public class OperatorTest
     @Test
     public void testGreaterEqual()
     {
-        GreaterEqual operator = new GreaterEqual( "10" );
+        GreaterEqualOperator operator = new GreaterEqualOperator( "10" );
 
         assertFalse( operator.test( 6 ) );
         assertFalse( operator.test( 7 ) );
@@ -166,7 +166,7 @@ public class OperatorTest
     @Test
     public void testGreaterThanValidTypes()
     {
-        GreaterThan operator = new GreaterThan( "operator" );
+        GreaterThanOperator operator = new GreaterThanOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -178,7 +178,7 @@ public class OperatorTest
     @Test
     public void testGreaterThan()
     {
-        GreaterThan operator = new GreaterThan( "10" );
+        GreaterThanOperator operator = new GreaterThanOperator( "10" );
 
         assertFalse( operator.test( 6 ) );
         assertFalse( operator.test( 7 ) );
@@ -193,7 +193,7 @@ public class OperatorTest
     @Test
     public void testILikeValidTypes()
     {
-        ILike operator = new ILike( "operator" );
+        ILikeOperator operator = new ILikeOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertFalse( operator.isValid( Number.class ) );
@@ -205,7 +205,7 @@ public class OperatorTest
     @Test
     public void testILike()
     {
-        ILike operator = new ILike( "operator" );
+        ILikeOperator operator = new ILikeOperator( "operator" );
 
         assertTrue( operator.test( "operator" ) );
         assertTrue( operator.test( "OPERATOR" ) );
@@ -215,7 +215,7 @@ public class OperatorTest
     @Test
     public void testLikeValidTypes()
     {
-        Like operator = new Like( "operator" );
+        LikeOperator operator = new LikeOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertFalse( operator.isValid( Number.class ) );
@@ -227,7 +227,7 @@ public class OperatorTest
     @Test
     public void testLike()
     {
-        Like operator = new Like( "operator" );
+        LikeOperator operator = new LikeOperator( "operator" );
 
         assertTrue( operator.test( "operator" ) );
         assertFalse( operator.test( "OPERATOR" ) );
@@ -237,7 +237,7 @@ public class OperatorTest
     @Test
     public void testLessEqualValidTypes()
     {
-        LessEqual operator = new LessEqual( "operator" );
+        LessEqualOperator operator = new LessEqualOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -249,7 +249,7 @@ public class OperatorTest
     @Test
     public void testLessEqual()
     {
-        LessEqual operator = new LessEqual( "10" );
+        LessEqualOperator operator = new LessEqualOperator( "10" );
 
         assertTrue( operator.test( 6 ) );
         assertTrue( operator.test( 7 ) );
@@ -264,7 +264,7 @@ public class OperatorTest
     @Test
     public void testLessThanValidTypes()
     {
-        LessThan operator = new LessThan( "operator" );
+        LessThanOperator operator = new LessThanOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -276,7 +276,7 @@ public class OperatorTest
     @Test
     public void testLessThan()
     {
-        LessThan operator = new LessThan( "10" );
+        LessThanOperator operator = new LessThanOperator( "10" );
 
         assertTrue( operator.test( 6 ) );
         assertTrue( operator.test( 7 ) );
@@ -291,7 +291,7 @@ public class OperatorTest
     @Test
     public void testNullValidTypes()
     {
-        Null operator = new Null();
+        NullOperator operator = new NullOperator();
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -303,7 +303,7 @@ public class OperatorTest
     @Test
     public void testNull()
     {
-        Null operator = new Null();
+        NullOperator operator = new NullOperator();
 
         assertTrue( operator.test( null ) );
         assertFalse( operator.test( "test" ) );
@@ -312,7 +312,7 @@ public class OperatorTest
     @Test
     public void testNotNullValidTypes()
     {
-        NotNull operator = new NotNull();
+        NotNullOperator operator = new NotNullOperator();
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -324,7 +324,7 @@ public class OperatorTest
     @Test
     public void testNotNull()
     {
-        NotNull operator = new NotNull();
+        NotNullOperator operator = new NotNullOperator();
 
         assertFalse( operator.test( null ) );
         assertTrue( operator.test( "test" ) );
@@ -333,7 +333,7 @@ public class OperatorTest
     @Test
     public void testInValidTypes()
     {
-        In operator = new In( "[1,2,3]" );
+        InOperator operator = new InOperator( "[1,2,3]" );
 
         assertTrue( operator.isValid( String.class ) );
         assertTrue( operator.isValid( Number.class ) );
@@ -345,7 +345,7 @@ public class OperatorTest
     @Test
     public void testInInt()
     {
-        In operator = new In( "[1,2,3]" );
+        InOperator operator = new InOperator( "[1,2,3]" );
 
         assertFalse( operator.test( 0 ) );
         assertTrue( operator.test( 1 ) );
@@ -357,7 +357,7 @@ public class OperatorTest
     @Test
     public void testInString()
     {
-        In operator = new In( "[b,c,d]" );
+        InOperator operator = new InOperator( "[b,c,d]" );
 
         assertFalse( operator.test( "a" ) );
         assertTrue( operator.test( "b" ) );
@@ -374,7 +374,7 @@ public class OperatorTest
     @Test
     public void testInEnum()
     {
-        In operator = new In( "[A,B]" );
+        InOperator operator = new InOperator( "[A,B]" );
 
         assertTrue( operator.test( TestEnum.A ) );
         assertTrue( operator.test( TestEnum.B ) );

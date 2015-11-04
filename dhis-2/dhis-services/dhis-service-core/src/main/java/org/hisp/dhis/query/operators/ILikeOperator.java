@@ -30,17 +30,14 @@ package org.hisp.dhis.query.operators;
 
 import org.hisp.dhis.query.Typed;
 
-import java.util.Collection;
-import java.util.Date;
-
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class Between extends Operator
+public class ILikeOperator extends Operator
 {
-    public Between( String arg0, String arg1 )
+    public ILikeOperator( String arg )
     {
-        super( Typed.from( String.class, Number.class, Date.class ), arg0, arg1 );
+        super( Typed.from( String.class ), arg );
     }
 
     @Override
@@ -51,29 +48,12 @@ public class Between extends Operator
             return false;
         }
 
-        if ( Integer.class.isInstance( value ) )
+        if ( String.class.isInstance( value ) )
         {
-            Integer s1 = getValue( Integer.class, value );
-            Integer min = getValue( Integer.class, 0 );
-            Integer max = getValue( Integer.class, 1 );
+            String s1 = getValue( String.class );
+            String s2 = (String) value;
 
-            return s1 >= min && s1 <= max;
-        }
-        else if ( Float.class.isInstance( value ) )
-        {
-            Float s1 = getValue( Float.class, value );
-            Integer min = getValue( Integer.class, 0 );
-            Integer max = getValue( Integer.class, 1 );
-
-            return s1 >= min && s1 <= max;
-        }
-        else if ( Collection.class.isInstance( value ) )
-        {
-            Collection<?> collection = (Collection<?>) value;
-            Integer min = getValue( Integer.class, 0 );
-            Integer max = getValue( Integer.class, 1 );
-
-            return collection.size() >= min && collection.size() <= max;
+            return s1 != null && s2.toLowerCase().contains( s1.toLowerCase() );
         }
 
         return false;

@@ -36,9 +36,9 @@ import java.util.Date;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class In extends Operator
+public class InOperator extends Operator
 {
-    public In( String arg )
+    public InOperator( String arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class, Enum.class ), arg );
     }

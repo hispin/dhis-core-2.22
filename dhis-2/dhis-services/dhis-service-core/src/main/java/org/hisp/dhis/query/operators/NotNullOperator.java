@@ -35,9 +35,9 @@ import java.util.Date;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class Null extends Operator
+public class NotNullOperator extends Operator
 {
-    public Null()
+    public NotNullOperator()
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
     }
@@ -45,6 +45,6 @@ public class Null extends Operator
     @Override
     public boolean test( Object value )
     {
-        return value == null;
+        return value != null;
     }
 }
