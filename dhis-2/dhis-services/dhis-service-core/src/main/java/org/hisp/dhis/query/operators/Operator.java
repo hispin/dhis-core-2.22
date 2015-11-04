@@ -28,6 +28,7 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Criterion;
 import org.hisp.dhis.query.QueryUtils;
 import org.hisp.dhis.query.Typed;
 
@@ -80,6 +81,8 @@ public abstract class Operator
     {
         return typed.isValid( klass );
     }
+
+    public abstract Criterion getHibernateCriterion( String propertyName );
 
     public abstract boolean test( Object value );
 }

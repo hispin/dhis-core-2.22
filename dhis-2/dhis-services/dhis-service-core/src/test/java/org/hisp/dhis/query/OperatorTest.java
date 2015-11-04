@@ -32,11 +32,11 @@ import org.hisp.dhis.query.operators.BetweenOperator;
 import org.hisp.dhis.query.operators.EqualOperator;
 import org.hisp.dhis.query.operators.GreaterEqualOperator;
 import org.hisp.dhis.query.operators.GreaterThanOperator;
-import org.hisp.dhis.query.operators.ILikeOperator;
+import org.hisp.dhis.query.operators.IContainsOperator;
 import org.hisp.dhis.query.operators.InOperator;
 import org.hisp.dhis.query.operators.LessEqualOperator;
 import org.hisp.dhis.query.operators.LessThanOperator;
-import org.hisp.dhis.query.operators.LikeOperator;
+import org.hisp.dhis.query.operators.ContainsOperator;
 import org.hisp.dhis.query.operators.NotEqualOperator;
 import org.hisp.dhis.query.operators.NotNullOperator;
 import org.hisp.dhis.query.operators.NullOperator;
@@ -210,7 +210,7 @@ public class OperatorTest
     @Test
     public void testILikeValidTypes()
     {
-        ILikeOperator operator = new ILikeOperator( "operator" );
+        IContainsOperator operator = new IContainsOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertFalse( operator.isValid( Number.class ) );
@@ -222,7 +222,7 @@ public class OperatorTest
     @Test
     public void testILike()
     {
-        ILikeOperator operator = new ILikeOperator( "operator" );
+        IContainsOperator operator = new IContainsOperator( "operator" );
 
         assertTrue( operator.test( "operator" ) );
         assertTrue( operator.test( "OPERATOR" ) );
@@ -232,7 +232,7 @@ public class OperatorTest
     @Test
     public void testLikeValidTypes()
     {
-        LikeOperator operator = new LikeOperator( "operator" );
+        ContainsOperator operator = new ContainsOperator( "operator" );
 
         assertTrue( operator.isValid( String.class ) );
         assertFalse( operator.isValid( Number.class ) );
@@ -244,7 +244,7 @@ public class OperatorTest
     @Test
     public void testLike()
     {
-        LikeOperator operator = new LikeOperator( "operator" );
+        ContainsOperator operator = new ContainsOperator( "operator" );
 
         assertTrue( operator.test( "operator" ) );
         assertFalse( operator.test( "OPERATOR" ) );

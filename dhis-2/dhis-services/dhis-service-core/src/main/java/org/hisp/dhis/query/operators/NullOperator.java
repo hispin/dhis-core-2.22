@@ -28,6 +28,8 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.query.Typed;
 
 import java.util.Date;
@@ -40,6 +42,12 @@ public class NullOperator extends Operator
     public NullOperator()
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ) );
+    }
+
+    @Override
+    public Criterion getHibernateCriterion( String propertyName )
+    {
+        return Restrictions.isNull( propertyName );
     }
 
     @Override

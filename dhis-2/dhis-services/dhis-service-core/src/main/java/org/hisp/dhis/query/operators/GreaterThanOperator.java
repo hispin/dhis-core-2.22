@@ -28,6 +28,8 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.query.Typed;
 
 import java.util.Collection;
@@ -41,6 +43,12 @@ public class GreaterThanOperator extends Operator
     public GreaterThanOperator( String arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
+    }
+
+    @Override
+    public Criterion getHibernateCriterion( String propertyName )
+    {
+        return Restrictions.gt( propertyName, args.get( 0 ) );
     }
 
     @Override

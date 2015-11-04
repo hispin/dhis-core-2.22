@@ -28,6 +28,8 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.query.Typed;
 
 import java.util.Collection;
@@ -41,6 +43,12 @@ public class BetweenOperator extends Operator
     public BetweenOperator( String arg0, String arg1 )
     {
         super( Typed.from( String.class, Number.class, Date.class ), arg0, arg1 );
+    }
+
+    @Override
+    public Criterion getHibernateCriterion( String propertyName )
+    {
+        return Restrictions.between( propertyName, args.get( 0 ), args.get( 1 ) );
     }
 
     @Override
