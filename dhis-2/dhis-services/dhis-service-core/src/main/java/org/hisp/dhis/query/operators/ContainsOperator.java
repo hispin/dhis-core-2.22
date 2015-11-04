@@ -38,15 +38,25 @@ import org.hisp.dhis.query.Typed;
  */
 public class ContainsOperator extends Operator
 {
-    public ContainsOperator( String arg )
+    private final boolean caseSensitive;
+
+    public ContainsOperator( String arg, boolean caseSensitive )
     {
         super( Typed.from( String.class ), arg );
+        this.caseSensitive = caseSensitive;
     }
 
     @Override
     public Criterion getHibernateCriterion( String propertyName )
     {
-        return Restrictions.like( propertyName, args.get( 0 ), MatchMode.ANYWHERE );
+        if ( caseSensitive )
+        {
+            return Restrictions.like( propertyName, args.get( 0 ), MatchMode.ANYWHERE );
+        }
+        else
+        {
+            return Restrictions.ilike( propertyName, args.get( 0 ), MatchMode.ANYWHERE );
+        }
     }
 
     @Override
@@ -62,7 +72,14 @@ public class ContainsOperator extends Operator
             String s1 = getValue( String.class );
             String s2 = (String) value;
 
-            return s1 != null && s2.contains( s1 );
+            if ( caseSensitive )
+            {
+                return s1 != null && s2.contains( s1 );
+            }
+            else
+            {
+                return s1 != null && s2.toLowerCase().contains( s1.toLowerCase() );
+            }
         }
 
         return false;
