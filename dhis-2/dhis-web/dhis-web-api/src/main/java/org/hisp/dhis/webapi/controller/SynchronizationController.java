@@ -36,9 +36,9 @@ import org.hisp.dhis.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -78,7 +78,7 @@ public class SynchronizationController
 
     @PreAuthorize( "hasRole('ALL')" )
     @RequestMapping( value = "/metadataPull", method = RequestMethod.POST )
-    public void importMetaData( @RequestParam String url, HttpServletResponse response )
+    public void importMetaData( @RequestBody String url, HttpServletResponse response )
         throws IOException
     {
         org.hisp.dhis.dxf2.metadata.ImportSummary summary = synchronizationManager.executeMetadataPull( url );
