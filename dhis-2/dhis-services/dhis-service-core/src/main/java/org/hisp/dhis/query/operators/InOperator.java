@@ -40,9 +40,9 @@ import java.util.Date;
  */
 public class InOperator extends Operator
 {
-    public InOperator( Object arg )
+    public InOperator( Collection<?> arg )
     {
-        super( Typed.from( String.class, Boolean.class, Number.class, Date.class, Enum.class ), arg );
+        super( Typed.from( Collection.class ), arg );
     }
 
     @Override
@@ -55,14 +55,14 @@ public class InOperator extends Operator
     @SuppressWarnings( "unchecked" )
     public boolean test( Object value )
     {
-        Collection<String> items = getValue( Collection.class );
+        Collection<?> items = getValue( Collection.class );
 
         if ( items == null || value == null )
         {
             return false;
         }
 
-        for ( String item : items )
+        for ( Object item : items )
         {
             if ( compare( item, value ) )
             {
@@ -73,7 +73,7 @@ public class InOperator extends Operator
         return false;
     }
 
-    private boolean compare( String item, Object object )
+    private boolean compare( Object item, Object object )
     {
         if ( String.class.isInstance( object ) )
         {

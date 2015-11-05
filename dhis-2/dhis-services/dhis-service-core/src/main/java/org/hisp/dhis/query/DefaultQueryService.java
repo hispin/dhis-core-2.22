@@ -30,6 +30,7 @@ package org.hisp.dhis.query;
 
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
@@ -210,11 +211,11 @@ public class DefaultQueryService implements QueryService
             }
             case "like":
             {
-                return Restrictions.like( split[0], value );
+                return Restrictions.ilike( split[0], value, MatchMode.ANYWHERE );
             }
             case "ilike":
             {
-                return Restrictions.ilike( split[0], value );
+                return Restrictions.ilike( split[0], value, MatchMode.ANYWHERE );
             }
             case "in":
             {

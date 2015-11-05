@@ -29,13 +29,14 @@ package org.hisp.dhis.query;
  */
 
 import org.hisp.dhis.query.operators.BetweenOperator;
-import org.hisp.dhis.query.operators.ContainsOperator;
 import org.hisp.dhis.query.operators.EqualOperator;
 import org.hisp.dhis.query.operators.GreaterEqualOperator;
 import org.hisp.dhis.query.operators.GreaterThanOperator;
 import org.hisp.dhis.query.operators.InOperator;
 import org.hisp.dhis.query.operators.LessEqualOperator;
 import org.hisp.dhis.query.operators.LessThanOperator;
+import org.hisp.dhis.query.operators.LikeOperator;
+import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.query.operators.NotEqualOperator;
 import org.hisp.dhis.query.operators.NotNullOperator;
 import org.hisp.dhis.query.operators.NullOperator;
@@ -82,15 +83,14 @@ public final class Restrictions
         return new Restriction( path, new BetweenOperator( lside, rside ) );
     }
 
-    // Map like to ilike for the moment, since like in the web-api is actually ilike..
-    public static Restriction like( String path, Object value )
+    public static Restriction like( String path, String value, MatchMode matchMode )
     {
-        return new Restriction( path, new ContainsOperator( value, false ) );
+        return new Restriction( path, new LikeOperator( value, true, matchMode ) );
     }
 
-    public static Restriction ilike( String path, Object value )
+    public static Restriction ilike( String path, String value, MatchMode matchMode )
     {
-        return new Restriction( path, new ContainsOperator( value, false ) );
+        return new Restriction( path, new LikeOperator( value, false, matchMode ) );
     }
 
     public static Restriction in( String path, Collection<?> values )
