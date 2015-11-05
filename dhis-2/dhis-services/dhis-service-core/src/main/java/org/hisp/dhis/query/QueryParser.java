@@ -1,4 +1,4 @@
-package org.hisp.dhis.query.operators;
+package org.hisp.dhis.query;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,66 +28,14 @@ package org.hisp.dhis.query.operators;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hibernate.criterion.Criterion;
-import org.hisp.dhis.query.QueryUtils;
-import org.hisp.dhis.query.Typed;
+import org.hisp.dhis.schema.Schema;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public abstract class Operator
+public interface QueryParser
 {
-    protected final List<Object> args = new ArrayList<>();
-
-    protected final Typed typed;
-
-    public Operator( Typed typed )
-    {
-        this.typed = typed;
-    }
-
-    public Operator( Typed typed, Object arg )
-    {
-        this.typed = typed;
-        this.args.add( arg );
-    }
-
-    public Operator( Typed typed, Object... args )
-    {
-        this.typed = typed;
-        Collections.addAll( this.args, args );
-    }
-
-    public List<Object> getArgs()
-    {
-        return args;
-    }
-
-    protected <T> T getValue( Class<T> klass, int idx )
-    {
-        return QueryUtils.getValue( klass, args.get( idx ) );
-    }
-
-    protected <T> T getValue( Class<T> klass )
-    {
-        return getValue( klass, 0 );
-    }
-
-    protected <T> T getValue( Class<T> klass, Object value )
-    {
-        return QueryUtils.getValue( klass, value );
-    }
-
-    public boolean isValid( Class<?> klass )
-    {
-        return typed.isValid( klass );
-    }
-
-    public abstract Criterion getHibernateCriterion( String propertyName );
-
-    public abstract boolean test( Object value );
+    Query parse( Schema schema, List<String> filters ) throws QueryParserException;
 }
