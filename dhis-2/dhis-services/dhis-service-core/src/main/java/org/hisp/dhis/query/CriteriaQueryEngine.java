@@ -39,7 +39,6 @@ import org.hisp.dhis.schema.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,7 +211,6 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
         }
     }
 
-    // TODO verify parameters length
     private Criterion getHibernateCriterion( Schema schema, Restriction restriction )
     {
         if ( restriction == null || restriction.getOperator() == null )
@@ -222,67 +220,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
 
         Property property = schema.getProperty( restriction.getPath() );
 
-        List<Object> parameters = new ArrayList<>();
-
-        for ( Object parameter : restriction.getParameters() )
-        {
-            parameters.add( QueryUtils.getValue( property.getKlass(), parameter ) );
-        }
-
-        switch ( restriction.getOperator() )
-        {
-            case EQ:
-            {
-                return Restrictions.eq( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case NE:
-            {
-                return Restrictions.ne( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case GT:
-            {
-                return Restrictions.gt( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case LT:
-            {
-                return Restrictions.lt( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case GE:
-            {
-                return Restrictions.ge( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case LE:
-            {
-                return Restrictions.le( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case BETWEEN:
-            {
-                return Restrictions.between( property.getFieldName(), parameters.get( 0 ), parameters.get( 1 ) );
-            }
-            case LIKE:
-            {
-                return Restrictions.like( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case ILIKE:
-            {
-                return Restrictions.ilike( property.getFieldName(), parameters.get( 0 ) );
-            }
-            case IN:
-            {
-                if ( !Collection.class.isInstance( parameters.get( 0 ) ) || ((Collection<?>) parameters.get( 0 )).isEmpty() )
-                {
-                    return null;
-                }
-
-                return Restrictions.in( property.getFieldName(), (Collection<?>) parameters.get( 0 ) );
-            }
-            case NULL:
-            {
-                return Restrictions.isNull( property.getFieldName() );
-            }
-        }
-
-        return null;
+        return restriction.getOperator().getHibernateCriterion( property.getFieldName() );
     }
 
     public org.hibernate.criterion.Order getHibernateOrder( Order order )

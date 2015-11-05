@@ -48,7 +48,7 @@ public class InOperator extends Operator
     @Override
     public Criterion getHibernateCriterion( String propertyName )
     {
-        return Restrictions.in( propertyName, getValue( Collection.class, args ) );
+        return Restrictions.in( propertyName, getValue( Collection.class, args.get( 0 ) ) );
     }
 
     @Override

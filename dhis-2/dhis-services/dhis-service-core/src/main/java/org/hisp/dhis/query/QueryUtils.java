@@ -33,10 +33,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.system.util.DateUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>

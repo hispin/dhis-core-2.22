@@ -210,11 +210,11 @@ public class DefaultQueryService implements QueryService
             }
             case "like":
             {
-                return Restrictions.like( split[0], "%" + value + "%" );
+                return Restrictions.like( split[0], value );
             }
             case "ilike":
             {
-                return Restrictions.ilike( split[0], "%" + value + "%" );
+                return Restrictions.ilike( split[0], value );
             }
             case "in":
             {

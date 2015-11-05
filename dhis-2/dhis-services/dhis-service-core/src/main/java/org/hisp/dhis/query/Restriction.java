@@ -29,9 +29,7 @@ package org.hisp.dhis.query;
  */
 
 import com.google.common.base.MoreObjects;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.hisp.dhis.query.operators.Operator;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -48,20 +46,10 @@ public class Restriction implements Criterion
      */
     private Operator operator;
 
-    /**
-     * 0..* parameters as required by operator.
-     */
-    private List<Object> parameters = new ArrayList<>();
-
-    public Restriction( String path, Operator operator, Object... parameters )
+    public Restriction( String path, Operator operator )
     {
         this.path = path;
         this.operator = operator;
-
-        for ( Object object : parameters )
-        {
-            addParameter( object );
-        }
     }
 
     public String getPath()
@@ -69,46 +57,9 @@ public class Restriction implements Criterion
         return path;
     }
 
-    public void setPath( String path )
-    {
-        this.path = path;
-    }
-
     public Operator getOperator()
     {
         return operator;
-    }
-
-    public void setOperator( Operator operator )
-    {
-        this.operator = operator;
-    }
-
-    public List<Object> getParameters()
-    {
-        return parameters;
-    }
-
-    public Object getParameter( int idx )
-    {
-        if ( parameters.size() < idx )
-        {
-            return null;
-        }
-
-        return parameters.get( idx );
-    }
-
-    public void setParameters( List<Object> parameters )
-    {
-        this.parameters = parameters;
-    }
-
-    // Builder
-    public Restriction addParameter( Object parameter )
-    {
-        this.parameters.add( ( parameter ) );
-        return this;
     }
 
     @Override
@@ -117,7 +68,6 @@ public class Restriction implements Criterion
         return MoreObjects.toStringHelper( this )
             .add( "path", path )
             .add( "operator", operator )
-            .add( "parameters", parameters )
             .toString();
     }
 }
