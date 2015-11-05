@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 public class DefaultQueryService implements QueryService
 {
     @Autowired
-    private CriteriaQueryEngine criteriaQueryEngine;
+    private CriteriaQueryEngine<? extends IdentifiableObject> criteriaQueryEngine;
 
     @Autowired
     private SchemaService schemaService;
