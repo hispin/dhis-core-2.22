@@ -28,6 +28,18 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.query.operators.BetweenOperator;
+import org.hisp.dhis.query.operators.ContainsOperator;
+import org.hisp.dhis.query.operators.EqualOperator;
+import org.hisp.dhis.query.operators.GreaterEqualOperator;
+import org.hisp.dhis.query.operators.GreaterThanOperator;
+import org.hisp.dhis.query.operators.InOperator;
+import org.hisp.dhis.query.operators.LessEqualOperator;
+import org.hisp.dhis.query.operators.LessThanOperator;
+import org.hisp.dhis.query.operators.NotEqualOperator;
+import org.hisp.dhis.query.operators.NotNullOperator;
+import org.hisp.dhis.query.operators.NullOperator;
+
 import java.util.Collection;
 
 /**
@@ -37,63 +49,63 @@ public final class Restrictions
 {
     public static Restriction eq( String path, Object value )
     {
-        return new Restriction( path, Operator.EQ, value );
+        return new Restriction( path, new EqualOperator( value ) );
     }
 
     public static Restriction ne( String path, Object value )
     {
-        return new Restriction( path, Operator.NE, value );
+        return new Restriction( path, new NotEqualOperator( value ) );
     }
 
     public static Restriction gt( String path, Object value )
     {
-        return new Restriction( path, Operator.GT, value );
+        return new Restriction( path, new GreaterThanOperator( value ) );
     }
 
     public static Restriction lt( String path, Object value )
     {
-        return new Restriction( path, Operator.LT, value );
+        return new Restriction( path, new LessThanOperator( value ) );
     }
 
     public static Restriction ge( String path, Object value )
     {
-        return new Restriction( path, Operator.GE, value );
+        return new Restriction( path, new GreaterEqualOperator( value ) );
     }
 
     public static Restriction le( String path, Object value )
     {
-        return new Restriction( path, Operator.LE, value );
+        return new Restriction( path, new LessEqualOperator( value ) );
     }
 
     public static Restriction between( String path, Object lside, Object rside )
     {
-        return new Restriction( path, Operator.BETWEEN, lside, rside );
+        return new Restriction( path, new BetweenOperator( lside, rside ) );
     }
 
     // Map like to ilike for the moment, since like in the web-api is actually ilike..
     public static Restriction like( String path, Object value )
     {
-        return new Restriction( path, Operator.ILIKE, value );
+        return new Restriction( path, new ContainsOperator( value, false ) );
     }
 
     public static Restriction ilike( String path, Object value )
     {
-        return new Restriction( path, Operator.ILIKE, value );
-    }
-
-    public static Restriction in( String path, Object... values )
-    {
-        return new Restriction( path, Operator.IN, values );
+        return new Restriction( path, new ContainsOperator( value, false ) );
     }
 
     public static Restriction in( String path, Collection<?> values )
     {
-        return new Restriction( path, Operator.IN, values );
+        return new Restriction( path, new InOperator( values ) );
     }
 
     public static Restriction isNull( String path )
     {
-        return new Restriction( path, Operator.NULL );
+        return new Restriction( path, new NullOperator() );
+    }
+
+    public static Restriction isNotNull( String path )
+    {
+        return new Restriction( path, new NotNullOperator() );
     }
 
     private Restrictions()

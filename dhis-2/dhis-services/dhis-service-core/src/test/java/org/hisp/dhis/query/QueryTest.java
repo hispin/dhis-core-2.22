@@ -35,7 +35,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -79,42 +79,5 @@ public class QueryTest
         query.add( Restrictions.eq( "code", "anc" ) );
 
         assertEquals( 3, query.getCriterions().size() );
-    }
-
-    @Test
-    public void invalidRestrictionParameters()
-    {
-        Query query = Query.from( createSchema() );
-        query.add( new Restriction( "id", Operator.EQ ) );
-        query.add( new Restriction( "id", Operator.EQ, 1, 2 ) );
-        query.add( new Restriction( "name", Operator.EQ ) );
-        query.add( new Restriction( "name", Operator.EQ, 1, 2 ) );
-        query.add( new Restriction( "code", Operator.EQ ) );
-        query.add( new Restriction( "code", Operator.EQ, 1, 2, 3, 4, 5 ) );
-        query.add( new Restriction( "lastUpdated", Operator.BETWEEN, new Date() ) );
-        query.add( new Restriction( "lastUpdated", Operator.BETWEEN, new Date(), 1, 2, 3, 4 ) );
-
-        assertEquals( 0, query.getCriterions().size() );
-    }
-
-    @Test
-    public void operatorValid()
-    {
-        Schema schema = createSchema();
-
-        assertTrue( Operator.EQ.isValid( schema.getProperty( "id" ) ) );
-        assertTrue( Operator.GE.isValid( schema.getProperty( "id" ) ) );
-        assertTrue( Operator.LT.isValid( schema.getProperty( "id" ) ) );
-        assertTrue( Operator.GE.isValid( schema.getProperty( "id" ) ) );
-        assertTrue( Operator.LE.isValid( schema.getProperty( "id" ) ) );
-        assertTrue( Operator.BETWEEN.isValid( schema.getProperty( "id" ) ) );
-        assertTrue( Operator.LIKE.isValid( schema.getProperty( "id" ) ) );
-
-        assertTrue( Operator.EQ.isValid( schema.getProperty( "int" ) ) );
-        assertTrue( Operator.EQ.isValid( schema.getProperty( "long" ) ) );
-        assertTrue( Operator.EQ.isValid( schema.getProperty( "float" ) ) );
-        assertTrue( Operator.EQ.isValid( schema.getProperty( "double" ) ) );
-
-        assertFalse( Operator.LIKE.isValid( schema.getProperty( "lastUpdated" ) ) );
     }
 }
