@@ -28,7 +28,6 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Property;
@@ -219,7 +218,7 @@ public class DefaultQueryService implements QueryService
             }
             case "in":
             {
-                return Restrictions.in( split[0], parseInOperator( value ) );
+                return Restrictions.in( split[0], QueryUtils.getValue( Collection.class, value ) );
             }
             case "null":
             {
@@ -228,17 +227,5 @@ public class DefaultQueryService implements QueryService
         }
 
         return null;
-    }
-
-    private Collection<String> parseInOperator( String value )
-    {
-        if ( value == null || !value.startsWith( "[" ) || !value.endsWith( "]" ) )
-        {
-            return Lists.newArrayList();
-        }
-
-        String[] split = value.substring( 1, value.length() - 1 ).split( "," );
-
-        return Lists.newArrayList( split );
     }
 }

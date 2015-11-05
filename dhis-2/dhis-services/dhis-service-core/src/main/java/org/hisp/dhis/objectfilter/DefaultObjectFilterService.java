@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -65,13 +66,9 @@ public class DefaultObjectFilterService implements ObjectFilterService
 
         List<T> list = Lists.newArrayList();
 
-        for ( T object : objects )
-        {
-            if ( evaluateWithFilters( object, parsed ) )
-            {
-                list.add( object );
-            }
-        }
+        list.addAll( objects.stream()
+            .filter( object -> evaluateWithFilters( object, parsed ) )
+            .collect( Collectors.toList() ) );
 
         return list;
     }
