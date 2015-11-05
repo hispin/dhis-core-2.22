@@ -40,7 +40,7 @@ import java.util.Date;
  */
 public class GreaterThanOperator extends Operator
 {
-    public GreaterThanOperator( String arg )
+    public GreaterThanOperator( Object arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
     }

@@ -40,7 +40,7 @@ public class ContainsOperator extends Operator
 {
     private final boolean caseSensitive;
 
-    public ContainsOperator( String arg, boolean caseSensitive )
+    public ContainsOperator( Object arg, boolean caseSensitive )
     {
         super( Typed.from( String.class ), arg );
         this.caseSensitive = caseSensitive;
@@ -51,11 +51,11 @@ public class ContainsOperator extends Operator
     {
         if ( caseSensitive )
         {
-            return Restrictions.like( propertyName, args.get( 0 ), MatchMode.ANYWHERE );
+            return Restrictions.like( propertyName, String.valueOf( args.get( 0 ) ), MatchMode.ANYWHERE );
         }
         else
         {
-            return Restrictions.ilike( propertyName, args.get( 0 ), MatchMode.ANYWHERE );
+            return Restrictions.ilike( propertyName, String.valueOf( args.get( 0 ) ), MatchMode.ANYWHERE );
         }
     }
 

@@ -40,7 +40,7 @@ import java.util.Date;
  */
 public class InOperator extends Operator
 {
-    public InOperator( String arg )
+    public InOperator( Object arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class, Enum.class ), arg );
     }

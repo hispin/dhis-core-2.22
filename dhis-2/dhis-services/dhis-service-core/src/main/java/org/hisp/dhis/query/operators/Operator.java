@@ -41,7 +41,7 @@ import java.util.List;
  */
 public abstract class Operator
 {
-    protected final List<String> args = new ArrayList<>();
+    protected final List<Object> args = new ArrayList<>();
 
     protected final Typed typed;
 
@@ -50,13 +50,13 @@ public abstract class Operator
         this.typed = typed;
     }
 
-    public Operator( Typed typed, String arg )
+    public Operator( Typed typed, Object arg )
     {
         this.typed = typed;
         this.args.add( arg );
     }
 
-    public Operator( Typed typed, String... args )
+    public Operator( Typed typed, Object... args )
     {
         this.typed = typed;
         Collections.addAll( this.args, args );

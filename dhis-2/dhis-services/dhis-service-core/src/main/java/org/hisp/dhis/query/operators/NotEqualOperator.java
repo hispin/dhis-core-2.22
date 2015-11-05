@@ -36,9 +36,9 @@ import org.hibernate.criterion.Restrictions;
  */
 public class NotEqualOperator extends EqualOperator
 {
-    public NotEqualOperator( String propertyValue )
+    public NotEqualOperator( Object arg )
     {
-        super( propertyValue );
+        super( arg );
     }
 
     @Override

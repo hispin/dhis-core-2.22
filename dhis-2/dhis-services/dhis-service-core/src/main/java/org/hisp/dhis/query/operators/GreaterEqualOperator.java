@@ -40,7 +40,7 @@ import java.util.Date;
  */
 public class GreaterEqualOperator extends Operator
 {
-    public GreaterEqualOperator( String arg )
+    public GreaterEqualOperator( Object arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
     }

@@ -40,7 +40,7 @@ import java.util.Date;
  */
 public class LessEqualOperator extends Operator
 {
-    public LessEqualOperator( String arg )
+    public LessEqualOperator( Object arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class ), arg );
     }
