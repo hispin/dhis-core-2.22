@@ -40,7 +40,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AnalyticsService;
-import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.mapping.Map;
@@ -316,9 +315,7 @@ public class GeoToolsMapGenerationService
      */
     private List<MapValue> getAggregatedMapValues( MapView mapView )
     {
-        DataQueryParams params = analyticsService.getFromAnalyticalObject( mapView, null );
-        
-        Grid grid = analyticsService.getAggregatedDataValues( params );
+        Grid grid = analyticsService.getAggregatedDataValues( mapView, null );
 
         return getMapValues( grid );
     }

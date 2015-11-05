@@ -34,35 +34,17 @@ import static org.hisp.dhis.analytics.AnalyticsTableManager.COMPLETENESS_TARGET_
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ORGUNIT_TARGET_TABLE_NAME;
 import static org.hisp.dhis.analytics.DataQueryParams.COMPLETENESS_DIMENSION_TYPES;
 import static org.hisp.dhis.analytics.DataQueryParams.CO_INDEX;
-import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_ATTRIBUTEOPTIONCOMBO;
-import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_CATEGORYOPTIONCOMBO;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_DATA_X;
-import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_LATITUDE;
-import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_LONGITUDE;
-import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_ORGUNIT;
-import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_PERIOD;
 import static org.hisp.dhis.analytics.DataQueryParams.DX_INDEX;
-import static org.hisp.dhis.analytics.DataQueryParams.KEY_DE_GROUP;
-import static org.hisp.dhis.common.DimensionalObject.ATTRIBUTEOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DATA_X_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
-import static org.hisp.dhis.common.DimensionalObject.LATITUDE_DIM_ID;
-import static org.hisp.dhis.common.DimensionalObject.LONGITUDE_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifier;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifiers;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.common.NameableObjectUtils.asList;
 import static org.hisp.dhis.common.NameableObjectUtils.asTypedList;
-import static org.hisp.dhis.commons.collection.ListUtils.sort;
-import static org.hisp.dhis.commons.util.TextUtils.splitSafe;
-import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_LEVEL;
-import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_ORGUNIT_GROUP;
-import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT;
-import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT_CHILDREN;
-import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT_GRANDCHILDREN;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentGraphMap;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentNameGraphMap;
 import static org.hisp.dhis.period.PeriodType.getPeriodTypeFromIsoString;
@@ -71,15 +53,12 @@ import static org.hisp.dhis.reporttable.ReportTable.addIfEmpty;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -91,6 +70,7 @@ import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.AnalyticsUtils;
 import org.hisp.dhis.analytics.DataQueryGroups;
 import org.hisp.dhis.analytics.DataQueryParams;
+import org.hisp.dhis.analytics.DataQueryService;
 import org.hisp.dhis.analytics.DimensionItem;
 import org.hisp.dhis.analytics.QueryPlanner;
 import org.hisp.dhis.analytics.event.EventAnalyticsService;
@@ -99,52 +79,36 @@ import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.common.AnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
-import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.CombinationGenerator;
-import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.DataDimensionItemType;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
-import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
-import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.common.IdentifiableProperty;
-import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.MapMap;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
-import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementOperand;
-import org.hisp.dhis.dataelement.DataElementOperandService;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.period.RelativePeriodEnum;
-import org.hisp.dhis.period.RelativePeriods;
-import org.hisp.dhis.period.comparator.AscendingPeriodEndDateComparator;
-import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.grid.ListGrid;
 import org.hisp.dhis.system.util.MathUtils;
-import org.hisp.dhis.system.util.ReflectionUtils;
 import org.hisp.dhis.system.util.SystemUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -177,19 +141,10 @@ public class DefaultAnalyticsService
     private QueryPlanner queryPlanner;
 
     @Autowired
-    private IdentifiableObjectManager idObjectManager;
-    
-    @Autowired
-    private OrganisationUnitService organisationUnitService;
-
-    @Autowired
     private ExpressionService expressionService;
 
     @Autowired
     private ConstantService constantService;
-
-    @Autowired
-    private DataElementOperandService operandService;
 
     @Autowired
     private SystemSettingManager systemSettingManager;
@@ -198,18 +153,10 @@ public class DefaultAnalyticsService
     private EventAnalyticsService eventAnalyticsService;    
     
     @Autowired
-    private ProgramService programService;
-    
-    @Autowired
-    private ProgramStageService programStageService;
+    private DataQueryService dataQueryService;
     
     @Autowired
     private CurrentUserService currentUserService;
-
-    public void setCurrentUserService( CurrentUserService currentUserService )
-    {
-        this.currentUserService = currentUserService; // Testing purposes
-    }
 
     // -------------------------------------------------------------------------
     // Methods for retrieving aggregated data
@@ -693,6 +640,14 @@ public class DefaultAnalyticsService
     }
 
     @Override
+    public Grid getAggregatedDataValues( AnalyticalObject object, I18nFormat format )
+    {
+        DataQueryParams params = dataQueryService.getFromAnalyticalObject( object, format );
+        
+        return getAggregatedDataValues( params );
+    }
+    
+    @Override
     public Map<String, Object> getAggregatedDataValueMapping( DataQueryParams params )
     {
         Grid grid = getAggregatedDataValues( params );
@@ -703,7 +658,7 @@ public class DefaultAnalyticsService
     @Override
     public Map<String, Object> getAggregatedDataValueMapping( AnalyticalObject object, I18nFormat format )
     {
-        DataQueryParams params = getFromAnalyticalObject( object, format );
+        DataQueryParams params = dataQueryService.getFromAnalyticalObject( object, format );
 
         return getAggregatedDataValueMapping( params );
     }
@@ -896,418 +851,6 @@ public class DefaultAnalyticsService
         timer.getTime( "Got analytics values" );
 
         return map;
-    }
-
-    // -------------------------------------------------------------------------
-    // Methods for assembling DataQueryParams
-    // -------------------------------------------------------------------------
-
-    @Override
-    public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType,
-        String measureCriteria, boolean skipMeta, boolean skipData, boolean skipRounding, boolean completedOnly, boolean hierarchyMeta, boolean ignoreLimit,
-        boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, 
-        String approvalLevel, Date relativePeriodDate, String userOrgUnit, String program, String stage, I18nFormat format )
-    {
-        DataQueryParams params = new DataQueryParams();
-        
-        params.setIgnoreLimit( ignoreLimit );
-
-        if ( dimensionParams != null && !dimensionParams.isEmpty() )
-        {
-            params.addDimensions( getDimensionalObjects( dimensionParams, relativePeriodDate, userOrgUnit, format ) );
-        }
-
-        if ( filterParams != null && !filterParams.isEmpty() )
-        {
-            params.getFilters().addAll( getDimensionalObjects( filterParams, relativePeriodDate, userOrgUnit, format ) );
-        }
-
-        if ( measureCriteria != null && !measureCriteria.isEmpty() )
-        {
-            params.setMeasureCriteria( DataQueryParams.getMeasureCriteriaFromParam( measureCriteria ) );
-        }
-
-        params.setAggregationType( aggregationType );
-        params.setSkipMeta( skipMeta );
-        params.setSkipData( skipData );
-        params.setSkipRounding( skipRounding );
-        params.setCompletedOnly( completedOnly );
-        params.setHierarchyMeta( hierarchyMeta );
-        params.setHideEmptyRows( hideEmptyRows );
-        params.setShowHierarchy( showHierarchy );
-        params.setDisplayProperty( displayProperty );
-        params.setOutputIdScheme( outputIdScheme );
-        params.setApprovalLevel( approvalLevel );
-        
-        if ( program != null )
-        {
-            params.setProgram( programService.getProgram( program ) );
-        }
-
-        if ( stage != null )
-        {
-            params.setProgramStage( programStageService.getProgramStage( stage ) );
-        }
-
-        return params;
-    }
-
-    @Override
-    public DataQueryParams getFromAnalyticalObject( AnalyticalObject object, I18nFormat format )
-    {
-        DataQueryParams params = new DataQueryParams();
-        
-        if ( object != null )
-        {
-            params.setProgram( object.getProgram() );
-            
-            List<OrganisationUnit> userOrgUnits = getUserOrgUnits( null );
-            
-            Date date = object.getRelativePeriodDate();
-
-            object.populateAnalyticalProperties();
-
-            for ( DimensionalObject column : object.getColumns() )
-            {
-                params.addDimension( getDimension( column.getDimension(), getUids( column.getItems() ), date, userOrgUnits, format, false ) );
-            }
-
-            for ( DimensionalObject row : object.getRows() )
-            {
-                params.addDimension( getDimension( row.getDimension(), getUids( row.getItems() ), date, userOrgUnits, format, false ) );
-            }
-
-            for ( DimensionalObject filter : object.getFilters() )
-            {
-                params.getFilters().add( getDimension( filter.getDimension(), getUids( filter.getItems() ), date, userOrgUnits, format, false ) );
-            }
-        }
-
-        return params;
-    }
-
-    @Override
-    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, Date relativePeriodDate, String userOrgUnit, I18nFormat format )
-    {
-        List<DimensionalObject> list = new ArrayList<>();
-        
-        List<OrganisationUnit> userOrgUnits = getUserOrgUnits( userOrgUnit );
-
-        if ( dimensionParams != null )
-        {
-            for ( String param : dimensionParams )
-            {
-                String dimension = DimensionalObjectUtils.getDimensionFromParam( param );
-                List<String> items = DimensionalObjectUtils.getDimensionItemsFromParam( param );
-
-                if ( dimension != null && items != null )
-                {
-                    list.add( getDimension( dimension, items, relativePeriodDate, userOrgUnits, format, false ) );
-                }
-            }
-        }
-
-        return list;
-    }
-
-    // TODO verify that current user can read each dimension and dimension item
-    // TODO optimize so that org unit levels + boundary are used in query instead of fetching all org units one by one
-
-    @Override
-    public DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate, 
-        List<OrganisationUnit> userOrgUnits, I18nFormat format, boolean allowNull )
-    {
-        final boolean allItems = items.isEmpty();
-        
-        if ( DATA_X_DIM_ID.equals( dimension ) )
-        {
-            List<NameableObject> dataDimensionItems = new ArrayList<>();
-
-            for ( String uid : items )
-            {
-                if ( uid.startsWith( KEY_DE_GROUP ) )
-                {
-                    String groupUid = DimensionalObjectUtils.getUidFromGroupParam( uid );
-                    
-                    DataElementGroup group = idObjectManager.get( DataElementGroup.class, groupUid );
-                    
-                    if ( group != null )
-                    {
-                        dataDimensionItems.addAll( group.getMembers() );
-                    }
-                }
-                else if ( DimensionalObjectUtils.isValidDimensionalOperand( uid ) )
-                {
-                    DataElementOperand operand = operandService.getDataElementOperand( 
-                        splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 0 ), splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 1 ) );
-                    
-                    if ( operand != null )
-                    {
-                        dataDimensionItems.add( operand );
-                    }
-                }
-                else if ( CodeGenerator.isValidCode( uid ) )
-                {
-                    NameableObject item = idObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, uid );
-                    
-                    if ( item != null )
-                    {
-                        dataDimensionItems.add( item );
-                    }
-                }
-            }
-            
-            if ( dataDimensionItems.isEmpty() )
-            {
-                throw new IllegalQueryException( "Dimension dx is present in query without any valid dimension options" );
-            }
-
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.DATA_X, null, DISPLAY_NAME_DATA_X, dataDimensionItems );
-            
-            return object;
-            
-            //TODO proper handling of operands and option combinations
-        }
-
-        if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
-        {
-            List<NameableObject> cocs = new ArrayList<NameableObject>();
-            
-            for ( String uid : items )
-            {
-                DataElementCategoryOptionCombo coc = idObjectManager.get( DataElementCategoryOptionCombo.class, uid );
-                
-                if ( coc != null )
-                {
-                    cocs.add( coc );
-                }
-            }
-            
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.CATEGORY_OPTION_COMBO, null, DISPLAY_NAME_CATEGORYOPTIONCOMBO, cocs );
-
-            return object;
-        }
-
-        if ( ATTRIBUTEOPTIONCOMBO_DIM_ID.equals( dimension ) )
-        {
-            List<NameableObject> aocs = new ArrayList<NameableObject>();
-            
-            for ( String uid : items )
-            {
-                DataElementCategoryOptionCombo aoc = idObjectManager.get( DataElementCategoryOptionCombo.class, uid );
-                
-                if ( aoc != null )
-                {
-                    aocs.add( aoc );
-                }
-            }
-            
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ATTRIBUTE_OPTION_COMBO, null, DISPLAY_NAME_ATTRIBUTEOPTIONCOMBO, aocs );
-
-            return object;
-        }
-        
-        if ( PERIOD_DIM_ID.equals( dimension ) )
-        {
-            Calendar calendar = PeriodType.getCalendar();
-
-            Set<Period> periods = new HashSet<>();
-
-            for ( String isoPeriod : items )
-            {
-                if ( RelativePeriodEnum.contains( isoPeriod ) )
-                {
-                    RelativePeriodEnum relativePeriod = RelativePeriodEnum.valueOf( isoPeriod );
-                    List<Period> relativePeriods = RelativePeriods.getRelativePeriodsFromEnum( relativePeriod, relativePeriodDate, format, true );
-                    periods.addAll( relativePeriods );
-                }
-                else
-                {
-                    Period period = PeriodType.getPeriodFromIsoString( isoPeriod );
-
-                    if ( period != null )
-                    {
-                        periods.add( period );
-                    }
-                }
-            }
-
-            if ( periods.isEmpty() )
-            {
-                throw new IllegalQueryException( "Dimension pe is present in query without any valid dimension options" );
-            }
-
-            for ( Period period : periods )
-            {
-                String name = format != null ? format.formatPeriod( period ) : null;
-                period.setName( name );
-                period.setShortName( name );
-
-                if ( !calendar.isIso8601() )
-                {
-                    period.setUid( getLocalPeriodIdentifier( period, calendar ) );
-                }
-            }
-
-            List<Period> periodList = new ArrayList<>( periods );
-            Collections.sort( periodList, AscendingPeriodEndDateComparator.INSTANCE );
-
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.PERIOD, null, DISPLAY_NAME_PERIOD, asList( periodList ) );
-
-            return object;
-        }
-
-        if ( ORGUNIT_DIM_ID.equals( dimension ) )
-        {
-            List<NameableObject> ous = new ArrayList<>();
-            List<Integer> levels = new ArrayList<>();
-            List<OrganisationUnitGroup> groups = new ArrayList<>();
-
-            for ( String ou : items )
-            {
-                if ( KEY_USER_ORGUNIT.equals( ou ) && userOrgUnits != null && !userOrgUnits.isEmpty() )
-                {
-                    ous.addAll( userOrgUnits );
-                }
-                else if ( KEY_USER_ORGUNIT_CHILDREN.equals( ou ) && userOrgUnits != null && !userOrgUnits.isEmpty() )
-                {
-                    ous.addAll( OrganisationUnit.getSortedChildren( userOrgUnits ) );
-                }
-                else if ( KEY_USER_ORGUNIT_GRANDCHILDREN.equals( ou ) && userOrgUnits != null && !userOrgUnits.isEmpty() )
-                {
-                    ous.addAll( OrganisationUnit.getSortedGrandChildren( userOrgUnits ) );
-                }
-                else if ( ou != null && ou.startsWith( KEY_LEVEL ) )
-                {
-                    int level = DimensionalObjectUtils.getLevelFromLevelParam( ou );
-
-                    if ( level > 0 )
-                    {
-                        levels.add( level );
-                    }
-                }
-                else if ( ou != null && ou.startsWith( KEY_ORGUNIT_GROUP ) )
-                {
-                    String uid = DimensionalObjectUtils.getUidFromGroupParam( ou );
-
-                    OrganisationUnitGroup group = idObjectManager.get( OrganisationUnitGroup.class, uid );
-
-                    if ( group != null )
-                    {
-                        groups.add( group );
-                    }
-                }
-                else if ( CodeGenerator.isValidCode( ou ) )
-                {
-                    OrganisationUnit unit = organisationUnitService.getOrganisationUnit( ou );
-
-                    if ( unit != null )
-                    {
-                        ous.add( unit );
-                    }
-                }
-            }
-
-            ous = ous.stream().distinct().collect( Collectors.toList() ); // Remove duplicates
-            
-            List<NameableObject> orgUnits = new ArrayList<>();
-            List<OrganisationUnit> ousList = NameableObjectUtils.asTypedList( ous );
-
-            if ( !levels.isEmpty() )
-            {
-                orgUnits.addAll( sort( organisationUnitService.getOrganisationUnitsAtLevels( levels, ousList ), IdentifiableObjectNameComparator.INSTANCE ) );
-            }
-
-            if ( !groups.isEmpty() )
-            {
-                orgUnits.addAll( sort( organisationUnitService.getOrganisationUnits( groups, ousList ), IdentifiableObjectNameComparator.INSTANCE ) );
-            }
-
-            // -----------------------------------------------------------------
-            // When levels / groups are present, OUs are considered boundaries
-            // -----------------------------------------------------------------
-
-            if ( levels.isEmpty() && groups.isEmpty() )
-            {
-                orgUnits.addAll( ous );
-            }
-
-            if ( orgUnits.isEmpty() )
-            {
-                throw new IllegalQueryException( "Dimension ou is present in query without any valid dimension options" );
-            }
-
-            orgUnits = orgUnits.stream().distinct().collect( Collectors.toList() ); // Remove duplicates
-            
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.ORGANISATIONUNIT, null, DISPLAY_NAME_ORGUNIT, orgUnits );
-
-            return object;
-        }
-
-        if ( LONGITUDE_DIM_ID.contains( dimension ) )
-        {
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.STATIC, null, DISPLAY_NAME_LONGITUDE, new ArrayList<NameableObject>() );
-
-            return object;
-        }
-
-        if ( LATITUDE_DIM_ID.contains( dimension ) )
-        {
-            DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.STATIC, null, DISPLAY_NAME_LATITUDE, new ArrayList<NameableObject>() );
-
-            return object;
-        }
-
-        DimensionalObject dimObject = idObjectManager.get( DataQueryParams.DYNAMIC_DIM_CLASSES, dimension );
-
-        if ( dimObject != null && dimObject.isDataDimension() )
-        {
-            Class<?> dimClass = ReflectionUtils.getRealClass( dimObject.getClass() );
-            
-            Class<? extends NameableObject> itemClass = DimensionalObject.DIMENSION_CLASS_ITEM_CLASS_MAP.get( dimClass );
-            
-            List<NameableObject> dimItems = !allItems ? asList( idObjectManager.getByUidOrdered( itemClass, items ) ) : dimObject.getItems();
-                        
-            DimensionalObject object = new BaseDimensionalObject( dimension, dimObject.getDimensionType(), null, dimObject.getName(), dimItems, allItems );
-            
-            return object;
-        }
-
-        if ( allowNull )
-        {
-            return null;
-        }
-
-        throw new IllegalQueryException( "Dimension identifier does not reference any dimension: " + dimension );
-    }
-
-    @Override
-    public List<OrganisationUnit> getUserOrgUnits( String userOrgUnit )
-    {
-        List<OrganisationUnit> units = new ArrayList<>();
-        
-        User currentUser = currentUserService.getCurrentUser();
-        
-        if ( userOrgUnit != null )
-        {
-            List<String> ous = DimensionalObjectUtils.getItemsFromParam( userOrgUnit );
-            
-            for ( String ou : ous )
-            {
-                OrganisationUnit unit = idObjectManager.get( OrganisationUnit.class, ou );
-                
-                if ( unit != null )
-                {
-                    units.add( unit );
-                }
-            }
-        }
-        else if ( currentUser != null && currentUser.hasOrganisationUnit() )
-        {
-            units = currentUser.getSortedOrganisationUnits();
-        }
-        
-        return units;
     }
 
     // -------------------------------------------------------------------------
