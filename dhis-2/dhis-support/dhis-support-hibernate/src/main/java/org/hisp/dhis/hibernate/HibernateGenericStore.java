@@ -39,12 +39,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.hisp.dhis.security.acl.AccessStringHelper;
-import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.common.AuditLogUtil;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.GenericStore;
@@ -55,7 +54,8 @@ import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.interpretation.Interpretation;
-import org.hisp.dhis.query.Order;
+import org.hisp.dhis.security.acl.AccessStringHelper;
+import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,6 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -181,7 +180,7 @@ public class HibernateGenericStore<T>
 
     /**
      * Creates a Criteria for the implementation Class type.
-     * <p/>
+     * <p>
      * Please note that sharing is not considered.
      *
      * @return a Criteria instance.
@@ -196,7 +195,7 @@ public class HibernateGenericStore<T>
         return getSharingCriteria( "r%" );
     }
 
-    private final Criteria getSharingCriteria( String access )
+    private Criteria getSharingCriteria( String access )
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( getClazz(), "c" ).setCacheable( cacheable );
 
@@ -338,7 +337,7 @@ public class HibernateGenericStore<T>
             if ( clearSharing )
             {
                 identifiableObject.setPublicAccess( AccessStringHelper.DEFAULT );
-                
+
                 if ( identifiableObject.getUserGroupAccesses() != null )
                 {
                     identifiableObject.getUserGroupAccesses().clear();
@@ -478,55 +477,10 @@ public class HibernateGenericStore<T>
     }
 
     @Override
-    public final List<T> getAll( Order order )
-    {
-        return getAll( Lists.newArrayList( order ) );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<T> getAll( List<Order> order )
-    {
-        Criteria criteria = getSharingCriteria();
-        List<org.hibernate.criterion.Order> hibernateOrders = getHibernateOrders( order );
-
-        for ( org.hibernate.criterion.Order ho : hibernateOrders )
-        {
-            criteria.addOrder( ho );
-        }
-
-        return criteria.list();
-    }
-
-    @Override
     @SuppressWarnings( "unchecked" )
     public final List<T> getAll( int first, int max )
     {
         return getSharingCriteria()
-            .setFirstResult( first )
-            .setMaxResults( max )
-            .list();
-    }
-
-    @Override
-    public List<T> getAll( int first, int max, Order order )
-    {
-        return getAll( first, max, Lists.newArrayList( order ) );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<T> getAll( int first, int max, List<Order> order )
-    {
-        Criteria criteria = getSharingCriteria();
-        List<org.hibernate.criterion.Order> hibernateOrders = getHibernateOrders( order );
-
-        for ( org.hibernate.criterion.Order ho : hibernateOrders )
-        {
-            criteria.addOrder( ho );
-        }
-
-        return criteria
             .setFirstResult( first )
             .setMaxResults( max )
             .list();
@@ -641,48 +595,5 @@ public class HibernateGenericStore<T>
         }
 
         return true;
-    }
-
-    protected List<org.hibernate.criterion.Order> getHibernateOrders( List<Order> order )
-    {
-        List<org.hibernate.criterion.Order> orders = new ArrayList<>();
-
-        for ( Order o : order )
-        {
-            org.hibernate.criterion.Order hibernateOrder = getHibernateOrder( o );
-
-            if ( hibernateOrder != null )
-            {
-                orders.add( hibernateOrder );
-            }
-        }
-
-        return orders;
-    }
-
-    protected org.hibernate.criterion.Order getHibernateOrder( Order order )
-    {
-        if ( order.getProperty() == null || !order.getProperty().isPersisted() || !order.getProperty().isSimple() )
-        {
-            return null;
-        }
-
-        org.hibernate.criterion.Order criteriaOrder;
-
-        if ( order.isAscending() )
-        {
-            criteriaOrder = org.hibernate.criterion.Order.asc( order.getProperty().getFieldName() );
-        }
-        else
-        {
-            criteriaOrder = org.hibernate.criterion.Order.desc( order.getProperty().getFieldName() );
-        }
-
-        if ( order.isIgnoreCase() )
-        {
-            criteriaOrder.ignoreCase();
-        }
-
-        return criteriaOrder;
     }
 }

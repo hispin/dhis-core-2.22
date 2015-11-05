@@ -33,8 +33,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.system.util.DateUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -121,6 +123,49 @@ public final class QueryUtils
         }
 
         return null;
+    }
+
+    public static List<org.hibernate.criterion.Order> getHibernateOrders( List<Order> order )
+    {
+        List<org.hibernate.criterion.Order> orders = new ArrayList<>();
+
+        for ( Order o : order )
+        {
+            org.hibernate.criterion.Order hibernateOrder = getHibernateOrder( o );
+
+            if ( hibernateOrder != null )
+            {
+                orders.add( hibernateOrder );
+            }
+        }
+
+        return orders;
+    }
+
+    public static org.hibernate.criterion.Order getHibernateOrder( Order order )
+    {
+        if ( order.getProperty() == null || !order.getProperty().isPersisted() || !order.getProperty().isSimple() )
+        {
+            return null;
+        }
+
+        org.hibernate.criterion.Order criteriaOrder;
+
+        if ( order.isAscending() )
+        {
+            criteriaOrder = org.hibernate.criterion.Order.asc( order.getProperty().getFieldName() );
+        }
+        else
+        {
+            criteriaOrder = org.hibernate.criterion.Order.desc( order.getProperty().getFieldName() );
+        }
+
+        if ( order.isIgnoreCase() )
+        {
+            criteriaOrder.ignoreCase();
+        }
+
+        return criteriaOrder;
     }
 
     private QueryUtils()
