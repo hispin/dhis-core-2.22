@@ -40,7 +40,7 @@ import java.util.Date;
  */
 public class BetweenOperator extends Operator
 {
-    public BetweenOperator( String arg0, String arg1 )
+    public BetweenOperator( Object arg0, Object arg1 )
     {
         super( Typed.from( String.class, Number.class, Date.class ), arg0, arg1 );
     }

@@ -40,7 +40,7 @@ import java.util.Date;
  */
 public class EqualOperator extends Operator
 {
-    public EqualOperator( String arg )
+    public EqualOperator( Object arg )
     {
         super( Typed.from( String.class, Boolean.class, Number.class, Date.class, Enum.class ), arg );
     }
@@ -103,7 +103,7 @@ public class EqualOperator extends Operator
         }
         else if ( Enum.class.isInstance( value ) )
         {
-            String s1 = args.get( 0 );
+            String s1 = String.valueOf( args.get( 0 ) );
             String s2 = String.valueOf( value );
 
             return s2.equals( s1 );
