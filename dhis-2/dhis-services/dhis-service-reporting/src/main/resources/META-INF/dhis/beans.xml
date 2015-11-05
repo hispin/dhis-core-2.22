@@ -103,9 +103,7 @@
     <property name="dataSetReportStore" ref="org.hisp.dhis.datasetreport.DataSetReportStore" />
   </bean>
 
-  <bean id="org.hisp.dhis.datasetreport.DataSetReportStore" class="org.hisp.dhis.datasetreport.jdbc.AnalyticsDataSetReportStore">
-    <property name="analyticsService" ref="org.hisp.dhis.analytics.AnalyticsService" />
-  </bean>
+  <bean id="org.hisp.dhis.datasetreport.DataSetReportStore" class="org.hisp.dhis.datasetreport.jdbc.AnalyticsDataSetReportStore" />
 
   <!-- Dashboard -->
 

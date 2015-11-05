@@ -28,22 +28,15 @@ package org.hisp.dhis.analytics.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.common.AnalyticalObject;
-import org.hisp.dhis.common.DimensionalObject;
-import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.i18n.I18nFormat;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 /**
  * Configurable mock implementation of AnalyticsService for testing purposes.
@@ -71,6 +64,12 @@ public class MockAnalyticsService
     }
 
     @Override
+    public Grid getAggregatedDataValues( AnalyticalObject object, I18nFormat format )
+    {
+        throw new NotImplementedException( "" );
+    }
+
+    @Override
     public Map<String, Object> getAggregatedDataValueMapping( DataQueryParams params )
     {
         return valueMap;
@@ -80,39 +79,5 @@ public class MockAnalyticsService
     public Map<String, Object> getAggregatedDataValueMapping( AnalyticalObject object, I18nFormat format )
     {
         return valueMap;
-    }
-
-    @Override
-    public DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, 
-        String measureCriteria, boolean skipMeta, boolean skipData, boolean skipRounding, boolean completedOnly, boolean hierarchyMeta, boolean ignoreLimit, boolean hideEmptyRows, 
-        boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty idScheme, String approvalLevel, Date relativePeriodDate, String userOrgUnit, 
-        String program, String stage, I18nFormat format )
-    {
-        throw new NotImplementedException( "" );
-    }
-
-    @Override
-    public DataQueryParams getFromAnalyticalObject( AnalyticalObject object, I18nFormat format )
-    {
-        throw new NotImplementedException( "" );
-    }
-    
-    @Override
-    public List<DimensionalObject> getDimensionalObjects( Set<String> dimensionParams, Date relateivePeriodDate, String userOrgUnit, I18nFormat format )
-    {
-        throw new NotImplementedException( "" );
-    }
-
-    @Override
-    public DimensionalObject getDimension( String dimension, List<String> items, Date relativePeriodDate,
-        List<OrganisationUnit> userOrgUnits, I18nFormat format, boolean allowNull )
-    {
-        throw new NotImplementedException( "" );
-    }
-
-    @Override
-    public List<OrganisationUnit> getUserOrgUnits( String userOrgUnit )
-    {
-        return null;
     }
 }

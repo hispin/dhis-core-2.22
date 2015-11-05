@@ -30,8 +30,8 @@ package org.hisp.dhis.webapi.controller.mapping;
 
 import com.google.common.collect.ImmutableMap;
 import org.hisp.dhis.analytics.AggregationType;
-import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
+import org.hisp.dhis.analytics.DataQueryService;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.NameableObjectUtils;
@@ -81,7 +81,7 @@ public class GeoFeatureController
         put( FeatureType.POLYGON, GeoFeature.TYPE_POLYGON ).build();
 
     @Autowired
-    private AnalyticsService analyticsService;
+    private DataQueryService dataQueryService;
 
     @Autowired
     private OrganisationUnitGroupService organisationUnitGroupService;
@@ -168,7 +168,7 @@ public class GeoFeatureController
         Set<String> set = new HashSet<>();
         set.add( ou );
 
-        DataQueryParams params = analyticsService.getFromUrl( set, null, AggregationType.SUM, null,
+        DataQueryParams params = dataQueryService.getFromUrl( set, null, AggregationType.SUM, null,
             false, false, false, false, false, false, false, false, displayProperty, null, null, relativePeriodDate, userOrgUnit, null, null, null );
 
         DimensionalObject dim = params.getDimension( DimensionalObject.ORGUNIT_DIM_ID );

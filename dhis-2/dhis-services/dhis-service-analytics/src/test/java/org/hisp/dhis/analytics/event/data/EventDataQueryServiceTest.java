@@ -31,7 +31,7 @@ package org.hisp.dhis.analytics.event.data;
 import com.google.common.collect.Sets;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AggregationType;
-import org.hisp.dhis.analytics.event.EventAnalyticsService;
+import org.hisp.dhis.analytics.event.EventDataQueryService;
 import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.common.AnalyticsType;
 import org.hisp.dhis.common.DimensionType;
@@ -74,7 +74,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Lars Helge Overland
  */
-public class EventAnalyticsServiceTest
+public class EventDataQueryServiceTest
     extends DhisSpringTest
 {
     private Program prA;
@@ -98,7 +98,7 @@ public class EventAnalyticsServiceTest
     private Legend legendB;
 
     @Autowired
-    private EventAnalyticsService analyticsService;
+    private EventDataQueryService dataQueryService;
 
     @Autowired
     private ProgramService programService;
@@ -180,7 +180,7 @@ public class EventAnalyticsServiceTest
         Set<String> filterParams = new HashSet<>();
         filterParams.add( "pe:201401;201402" );
 
-        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
+        EventQueryParams params = dataQueryService.getFromUrl( prA.getUid(), null,
             null, null, dimensionParams, filterParams, null, null, false, false, 
             false, false, false, false, null, null, null, false, false, null, null, null );
 
@@ -200,7 +200,7 @@ public class EventAnalyticsServiceTest
         Set<String> filterParams = new HashSet<>();
         filterParams.add( "pe:201401" );
 
-        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
+        EventQueryParams params = dataQueryService.getFromUrl( prA.getUid(), null,
             null, null, dimensionParams, filterParams, deA.getUid(), AggregationType.AVERAGE, 
             false, false, false, false, false, false, null, null, null, false, false, null, null, null );
 
@@ -229,7 +229,7 @@ public class EventAnalyticsServiceTest
         eventChart.getOrganisationUnits().add( ouA );
         eventChart.getOrganisationUnits().add( ouB );
 
-        EventQueryParams params = analyticsService.getFromAnalyticalObject( eventChart, null );
+        EventQueryParams params = dataQueryService.getFromAnalyticalObject( eventChart, null );
 
         assertNotNull( params );
         assertEquals( 1, params.getItems().size() );
@@ -256,7 +256,7 @@ public class EventAnalyticsServiceTest
         eventChart.getOrganisationUnits().add( ouA );
         eventChart.getOrganisationUnits().add( ouB );
 
-        EventQueryParams params = analyticsService.getFromAnalyticalObject( eventChart, null );
+        EventQueryParams params = dataQueryService.getFromAnalyticalObject( eventChart, null );
 
         assertNotNull( params );
         assertEquals( 2, params.getItems().size() );
@@ -282,7 +282,7 @@ public class EventAnalyticsServiceTest
         eventChart.getPeriods().add( peB );
         eventChart.getOrganisationUnits().add( ouA );
 
-        EventQueryParams params = analyticsService.getFromAnalyticalObject( eventChart, null );
+        EventQueryParams params = dataQueryService.getFromAnalyticalObject( eventChart, null );
 
         assertNotNull( params );
         assertEquals( 2, params.getItems().size() );
@@ -340,7 +340,7 @@ public class EventAnalyticsServiceTest
         filterParams.add( "pe:201401;201402" );
         filterParams.add( atA.getUid() + ":LE:5" );
 
-        EventQueryParams params = analyticsService.getFromUrl( prA.getUid(), null,
+        EventQueryParams params = dataQueryService.getFromUrl( prA.getUid(), null,
             null, null, dimensionParams, filterParams, null, null, false, false, 
             false, false, false, false, null, null, null, false, false, null, null, null );
 

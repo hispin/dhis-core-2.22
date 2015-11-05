@@ -39,6 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.analytics.DataQueryParams;
+import org.hisp.dhis.analytics.DataQueryService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataset.DataSet;
@@ -48,6 +49,7 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.commons.filter.FilterUtils;
 
@@ -59,13 +61,12 @@ public class AnalyticsDataSetReportStore
 {
     private static final Log log = LogFactory.getLog( AnalyticsDataSetReportStore.class );
     
+    @Autowired
+    private DataQueryService dataQueryService;
+    
+    @Autowired
     private AnalyticsService analyticsService;
-    
-    public void setAnalyticsService( AnalyticsService analyticsService )
-    {
-        this.analyticsService = analyticsService;
-    }
-    
+        
     // -------------------------------------------------------------------------
     // DataSetReportStore implementation
     // -------------------------------------------------------------------------
@@ -92,7 +93,7 @@ public class AnalyticsDataSetReportStore
         
         if ( dimensions != null )
         {
-            params.setFilters( analyticsService.getDimensionalObjects( dimensions, null, null, null ) );
+            params.setFilters( dataQueryService.getDimensionalObjects( dimensions, null, null, null ) );
         }
         
         Map<String, Object> map = analyticsService.getAggregatedDataValueMapping( params );
@@ -147,7 +148,7 @@ public class AnalyticsDataSetReportStore
 
                 if ( dimensions != null )
                 {
-                    params.setFilters( analyticsService.getDimensionalObjects( dimensions, null, null, null ) );
+                    params.setFilters( dataQueryService.getDimensionalObjects( dimensions, null, null, null ) );
                 }
                 
                 Map<String, Object> map = analyticsService.getAggregatedDataValueMapping( params );
@@ -183,7 +184,7 @@ public class AnalyticsDataSetReportStore
 
         if ( dimensions != null )
         {
-            params.setFilters( analyticsService.getDimensionalObjects( dimensions, null, null, null ) );
+            params.setFilters( dataQueryService.getDimensionalObjects( dimensions, null, null, null ) );
         }
         
         Map<String, Object> map = analyticsService.getAggregatedDataValueMapping( params );
@@ -217,7 +218,7 @@ public class AnalyticsDataSetReportStore
 
         if ( dimensions != null )
         {
-            params.setFilters( analyticsService.getDimensionalObjects( dimensions, null, null, null ) );
+            params.setFilters( dataQueryService.getDimensionalObjects( dimensions, null, null, null ) );
         }
         
         Map<String, Object> map = analyticsService.getAggregatedDataValueMapping( params );
