@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 public class DefaultQueryService implements QueryService
 {
     @Autowired
-    private QueryEngine<? extends IdentifiableObject> queryEngine;
+    private CriteriaQueryEngine criteriaQueryEngine;
 
     @Autowired
     private SchemaService schemaService;
@@ -59,14 +59,14 @@ public class DefaultQueryService implements QueryService
     @SuppressWarnings( "unchecked" )
     public List<? extends IdentifiableObject> query( Query query )
     {
-        return queryEngine.query( query );
+        return criteriaQueryEngine.query( query );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends IdentifiableObject> query( Query query, ResultTransformer transformer )
     {
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
 
         if ( transformer != null )
         {
@@ -79,7 +79,7 @@ public class DefaultQueryService implements QueryService
     @Override
     public int count( Query query )
     {
-        return queryEngine.count( query );
+        return criteriaQueryEngine.count( query );
     }
 
     @Override
