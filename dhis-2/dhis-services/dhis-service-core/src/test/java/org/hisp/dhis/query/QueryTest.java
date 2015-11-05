@@ -29,6 +29,7 @@ package org.hisp.dhis.query;
  */
 
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.junit.Test;
@@ -75,7 +76,7 @@ public class QueryTest
     {
         Query query = Query.from( createSchema() );
         query.add( Restrictions.eq( "id", "anc" ) );
-        query.add( Restrictions.like( "name", "anc" ) );
+        query.add( Restrictions.like( "name", "anc", MatchMode.ANYWHERE ) );
         query.add( Restrictions.eq( "code", "anc" ) );
 
         assertEquals( 3, query.getCriterions().size() );

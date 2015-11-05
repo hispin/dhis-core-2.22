@@ -34,6 +34,7 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.jfree.data.time.Year;
@@ -205,7 +206,7 @@ public class QueryServiceTest
     {
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        query.add( Restrictions.like( "name", "%F" ) );
+        query.add( Restrictions.like( "name", "F", MatchMode.ANYWHERE ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
         assertEquals( 1, objects.size() );

@@ -36,14 +36,17 @@ import org.hisp.dhis.query.Typed;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class ContainsOperator extends Operator
+public class LikeOperator extends Operator
 {
     private final boolean caseSensitive;
 
-    public ContainsOperator( Object arg, boolean caseSensitive )
+    private final MatchMode matchMode;
+
+    public LikeOperator( String arg, boolean caseSensitive, org.hisp.dhis.query.operators.MatchMode matchMode )
     {
         super( Typed.from( String.class ), arg );
         this.caseSensitive = caseSensitive;
+        this.matchMode = getMatchMode( matchMode );
     }
 
     @Override
@@ -51,11 +54,11 @@ public class ContainsOperator extends Operator
     {
         if ( caseSensitive )
         {
-            return Restrictions.like( propertyName, String.valueOf( args.get( 0 ) ), MatchMode.ANYWHERE );
+            return Restrictions.like( propertyName, String.valueOf( args.get( 0 ) ), matchMode );
         }
         else
         {
-            return Restrictions.ilike( propertyName, String.valueOf( args.get( 0 ) ), MatchMode.ANYWHERE );
+            return Restrictions.ilike( propertyName, String.valueOf( args.get( 0 ) ), matchMode );
         }
     }
 
@@ -69,19 +72,39 @@ public class ContainsOperator extends Operator
 
         if ( String.class.isInstance( value ) )
         {
-            String s1 = getValue( String.class );
-            String s2 = (String) value;
+            String s1 = caseSensitive ? getValue( String.class ) : getValue( String.class ).toLowerCase();
+            String s2 = caseSensitive ? (String) value : ((String) value).toLowerCase();
 
-            if ( caseSensitive )
+            switch ( matchMode )
             {
-                return s1 != null && s2.contains( s1 );
-            }
-            else
-            {
-                return s1 != null && s2.toLowerCase().contains( s1.toLowerCase() );
+                case EXACT:
+                    return s1.equals( s2 );
+                case START:
+                    return s1.startsWith( s2 );
+                case END:
+                    return s1.endsWith( s2 );
+                case ANYWHERE:
+                    return s1.contains( s2 );
             }
         }
 
         return false;
+    }
+
+    private MatchMode getMatchMode( org.hisp.dhis.query.operators.MatchMode matchMode )
+    {
+        switch ( matchMode )
+        {
+            case EXACT:
+                return MatchMode.EXACT;
+            case START:
+                return MatchMode.START;
+            case END:
+                return MatchMode.END;
+            case ANYWHERE:
+                return MatchMode.ANYWHERE;
+        }
+
+        return null;
     }
 }

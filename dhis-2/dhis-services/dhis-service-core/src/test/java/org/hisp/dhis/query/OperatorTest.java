@@ -29,13 +29,14 @@ package org.hisp.dhis.query;
  */
 
 import org.hisp.dhis.query.operators.BetweenOperator;
-import org.hisp.dhis.query.operators.ContainsOperator;
 import org.hisp.dhis.query.operators.EqualOperator;
 import org.hisp.dhis.query.operators.GreaterEqualOperator;
 import org.hisp.dhis.query.operators.GreaterThanOperator;
 import org.hisp.dhis.query.operators.InOperator;
 import org.hisp.dhis.query.operators.LessEqualOperator;
 import org.hisp.dhis.query.operators.LessThanOperator;
+import org.hisp.dhis.query.operators.LikeOperator;
+import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.query.operators.NotEqualOperator;
 import org.hisp.dhis.query.operators.NotNullOperator;
 import org.hisp.dhis.query.operators.NullOperator;
@@ -207,31 +208,9 @@ public class OperatorTest
     }
 
     @Test
-    public void testILikeValidTypes()
-    {
-        ContainsOperator operator = new ContainsOperator( "operator", false );
-
-        assertTrue( operator.isValid( String.class ) );
-        assertFalse( operator.isValid( Number.class ) );
-        assertFalse( operator.isValid( Date.class ) );
-        assertFalse( operator.isValid( Boolean.class ) );
-        assertFalse( operator.isValid( Collection.class ) );
-    }
-
-    @Test
-    public void testILike()
-    {
-        ContainsOperator operator = new ContainsOperator( "operator", false );
-
-        assertTrue( operator.test( "operator" ) );
-        assertTrue( operator.test( "OPERATOR" ) );
-        assertFalse( operator.test( "abc" ) );
-    }
-
-    @Test
     public void testLikeValidTypes()
     {
-        ContainsOperator operator = new ContainsOperator( "operator", true );
+        LikeOperator operator = new LikeOperator( "operator", true, MatchMode.ANYWHERE );
 
         assertTrue( operator.isValid( String.class ) );
         assertFalse( operator.isValid( Number.class ) );
@@ -241,13 +220,63 @@ public class OperatorTest
     }
 
     @Test
-    public void testLike()
+    public void testLikeAnywhere()
     {
-        ContainsOperator operator = new ContainsOperator( "operator", true );
+        LikeOperator operator = new LikeOperator( "operator", true, MatchMode.ANYWHERE );
 
-        assertTrue( operator.test( "operator" ) );
-        assertFalse( operator.test( "OPERATOR" ) );
+        assertTrue( operator.test( "pera" ) );
+        assertFalse( operator.test( "PERA" ) );
         assertFalse( operator.test( "abc" ) );
+    }
+
+    @Test
+    public void testLikeStart()
+    {
+        LikeOperator operator = new LikeOperator( "operator", true, MatchMode.START );
+
+        assertTrue( operator.test( "ope" ) );
+        assertFalse( operator.test( "OPE" ) );
+        assertFalse( operator.test( "abc" ) );
+    }
+
+    @Test
+    public void testLikeEnd()
+    {
+        LikeOperator operator = new LikeOperator( "operator", true, MatchMode.END );
+
+        assertTrue( operator.test( "or" ) );
+        assertFalse( operator.test( "OPERA" ) );
+        assertFalse( operator.test( "opera" ) );
+    }
+
+    @Test
+    public void testILikeAnywhere()
+    {
+        LikeOperator operator = new LikeOperator( "operator", false, MatchMode.ANYWHERE );
+
+        assertTrue( operator.test( "pera" ) );
+        assertTrue( operator.test( "PERA" ) );
+        assertFalse( operator.test( "abc" ) );
+    }
+
+    @Test
+    public void testILikeStart()
+    {
+        LikeOperator operator = new LikeOperator( "operator", false, MatchMode.START );
+
+        assertTrue( operator.test( "ope" ) );
+        assertTrue( operator.test( "OPE" ) );
+        assertFalse( operator.test( "ator" ) );
+    }
+
+    @Test
+    public void testILikeEnd()
+    {
+        LikeOperator operator = new LikeOperator( "operator", false, MatchMode.END );
+
+        assertTrue( operator.test( "ator" ) );
+        assertTrue( operator.test( "ATOR" ) );
+        assertFalse( operator.test( "opera" ) );
     }
 
     @Test
@@ -349,19 +378,14 @@ public class OperatorTest
     @Test
     public void testInValidTypes()
     {
-        InOperator operator = new InOperator( "[1,2,3]" );
-
-        assertTrue( operator.isValid( String.class ) );
-        assertTrue( operator.isValid( Number.class ) );
-        assertTrue( operator.isValid( Date.class ) );
-        assertTrue( operator.isValid( Boolean.class ) );
-        assertTrue( operator.isValid( Enum.class ) );
+        InOperator operator = new InOperator( Arrays.asList( 1, 2, 3 ) );
+        assertTrue( operator.isValid( Collection.class ) );
     }
 
     @Test
     public void testInInt()
     {
-        InOperator operator = new InOperator( "[1,2,3]" );
+        InOperator operator = new InOperator( Arrays.asList( 1, 2, 3 ) );
 
         assertFalse( operator.test( 0 ) );
         assertTrue( operator.test( 1 ) );
@@ -373,7 +397,7 @@ public class OperatorTest
     @Test
     public void testInString()
     {
-        InOperator operator = new InOperator( "[b,c,d]" );
+        InOperator operator = new InOperator( Arrays.asList( "b", "c", "d" ) );
 
         assertFalse( operator.test( "a" ) );
         assertTrue( operator.test( "b" ) );
@@ -385,7 +409,7 @@ public class OperatorTest
     @Test
     public void testInEnum()
     {
-        InOperator operator = new InOperator( "[A,B]" );
+        InOperator operator = new InOperator( Arrays.asList( "A", "B" ) );
 
         assertTrue( operator.test( TestEnum.A ) );
         assertTrue( operator.test( TestEnum.B ) );
