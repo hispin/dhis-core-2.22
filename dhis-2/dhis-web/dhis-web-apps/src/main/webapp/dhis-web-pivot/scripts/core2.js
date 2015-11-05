@@ -1442,6 +1442,9 @@ $( function() {
         //todo Table
         (function() {
             var Table = NS.Api.Table = function(layout, response, colAxis, rowAxis) {
+                var t = this;
+
+                // init
 				var getRoundedHtmlValue,
 					getTdHtml,
 					doSubTotals,
@@ -1479,9 +1482,11 @@ $( function() {
 					//isLegendSet = NS.isObject(xLayout.legendSet) && NS.isArray(xLayout.legendSet.legends) && xLayout.legendSet.legends.length,
 					isLegendSet = false,
                     tdCount = 0,
-                    htmlArray;
+                    htmlArray,
+                    dimConf = NS.conf.finals.dimension,
+                    styleConf = NS.conf.finals.style;
 
-				xResponse.sortableIdObjects = [];
+				response.sortableIdObjects = []; //todo
 
 				getRoundedHtmlValue = function(value, dec) {
 					dec = dec || 2;
@@ -1552,7 +1557,7 @@ $( function() {
 					colSpan = config.colSpan ? 'colspan="' + config.colSpan + '" ' : '';
 					rowSpan = config.rowSpan ? 'rowspan="' + config.rowSpan + '" ' : '';
                     htmlValue = getHtmlValue(config);
-					htmlValue = config.type !== 'dimension' ? support.prototype.number.prettyPrint(htmlValue, layout.digitGroupSeparator) : htmlValue;
+					htmlValue = config.type !== 'dimension' ? t.prettyPrint(htmlValue, layout.digitGroupSeparator) : htmlValue;
 
 					cls += config.hidden ? ' td-hidden' : '';
 					cls += config.collapsed ? ' td-collapsed' : '';
@@ -1564,7 +1569,7 @@ $( function() {
 					if (NS.isString(metaDataId)) {
 						cls += ' td-sortable';
 
-						xResponse.sortableIdObjects.push({
+						response.sortableIdObjects.push({
 							id: metaDataId,
 							uuid: config.uuid
 						});
@@ -2245,17 +2250,26 @@ $( function() {
 				};
 
 				// get html
-				return function() {
-					htmlArray = NS.arrayClean([].concat(getColAxisHtmlArray() || [], getRowHtmlArray() || [], getTotalHtmlArray() || []));
+                htmlArray = NS.arrayClean([].concat(getColAxisHtmlArray() || [], getRowHtmlArray() || [], getTotalHtmlArray() || []));
 
-					return {
-						html: getHtml(htmlArray),
-						uuidDimUuidsMap: uuidDimUuidsMap,
-						colAxis: colAxis,
-						rowAxis: rowAxis,
-                        tdCount: tdCount
-					};
-				}();
+                // constructor
+                t.html = getHtml(htmlArray);
+                t.uuidDimUuidsMap = uuidDimUuidsMap;
+                t.colAxis = colAxis;
+                t.rowAxis = rowAxis;
+                t.tdCount = tdCount;
+			};
+
+            Table.prototype.prettyPrint = function(number, separator) {
+                var styleConf = NS.conf.finals.style;
+
+				separator = separator || styleConf.space;
+
+				if (separator === styleConf.none) {
+					return number;
+				}
+
+				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, NS.conf.style.digitGroupSeparator[separator]);
 			};
         })();
     })();

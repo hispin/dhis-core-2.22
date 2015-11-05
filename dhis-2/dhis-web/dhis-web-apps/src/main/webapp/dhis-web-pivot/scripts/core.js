@@ -862,7 +862,7 @@ Ext.onReady( function() {
 			support.prototype.number.prettyPrint = function(number, separator) {
 				separator = separator || conf.finals.style.space;
 
-				if (separator === conf.finals.style.space.none) {
+				if (separator === conf.finals.style.none) {
 					return number;
 				}
 
