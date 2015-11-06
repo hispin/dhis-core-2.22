@@ -1043,8 +1043,8 @@ $( function() {
 
         // ResponseRow (array)
         (function() {
-            var ResponseRow = NS.Api.ResponseRow = function(row) {
-                var t = NS.arrayFrom(row);
+            var ResponseRow = NS.Api.ResponseRow = function(config) {
+                var t = NS.arrayFrom(config);
 
                 t.getAt = function(index) {
                     return this[index];
@@ -1186,16 +1186,16 @@ $( function() {
                     idValueMap = {},
                     idCombination;
 
-                this.rows.forEach(function(row) {
+                this.rows.forEach(function(responseRow) {
                     idCombination = new NS.Api.ResponseRowIdCombination();
 
                     headerIndexOrder.forEach(function(index) {
-                        idCombination.add(row.getAt(index));
+                        idCombination.add(responseRow.getAt(index));
                     });
 
-                    row.setIdCombination(idCombination);
+                    responseRow.setIdCombination(idCombination);
 
-                    idValueMap[idCombination.get()] = row.getAt(t.getValueHeaderIndex());
+                    idValueMap[idCombination.get()] = responseRow.getAt(t.getValueHeaderIndex());
                 });
 
                 return this.idValueMap = idValueMap;
@@ -1577,7 +1577,11 @@ $( function() {
                     tdCount = 0,
                     htmlArray,
                     dimConf = NS.conf.finals.dimension,
-                    styleConf = NS.conf.finals.style;
+                    styleConf = NS.conf.finals.style,
+
+                    //todo
+                    idValueMap = response.getIdValueMap(layout),
+                    conf = NS.conf;
 
 				response.sortableIdObjects = []; //todo
 
@@ -1908,7 +1912,7 @@ $( function() {
 	//				     [ dim, dim ] ];
 
 					// value
-					for (var i = 0, valueItemsRow, valueObjectsRow, idValueMap = xResponse.idValueMap; i < rowAxisSize; i++) {
+					for (var i = 0, valueItemsRow, valueObjectsRow; i < rowAxisSize; i++) {
 						valueItemsRow = [];
 						valueObjectsRow = [];
 
@@ -1986,7 +1990,7 @@ $( function() {
 								var totalId = 'total_' + rowAxis.ids[i],
 									isEmpty = !NS.arrayContains(empty, false);
 
-								xResponse.idValueMap[totalId] = isEmpty ? null : total;
+								idValueMap[totalId] = isEmpty ? null : total;
 							}
 
 							empty = [];
