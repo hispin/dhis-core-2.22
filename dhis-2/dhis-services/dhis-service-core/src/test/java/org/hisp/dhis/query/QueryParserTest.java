@@ -32,8 +32,6 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.query.operators.EqualOperator;
 import org.hisp.dhis.query.operators.NullOperator;
-import org.hisp.dhis.schema.Schema;
-import org.hisp.dhis.schema.SchemaService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,21 +49,16 @@ public class QueryParserTest
     @Autowired
     private QueryParser queryParser;
 
-    @Autowired
-    private SchemaService schemaService;
-
     @Test( expected = QueryParserException.class )
     public void failedFilters() throws QueryParserException
     {
-        Schema schema = schemaService.getSchema( DataElement.class );
-        queryParser.parse( schema, Arrays.asList( "id", "name" ) );
+        queryParser.parse( DataElement.class, Arrays.asList( "id", "name" ) );
     }
 
     @Test
     public void eqOperator() throws QueryParserException
     {
-        Schema schema = schemaService.getSchema( DataElement.class );
-        Query query = queryParser.parse( schema, Arrays.asList( "id:eq:1", "id:eq:2" ) );
+        Query query = queryParser.parse( DataElement.class, Arrays.asList( "id:eq:1", "id:eq:2" ) );
         assertEquals( 2, query.getCriterions().size() );
 
         Restriction restriction = (Restriction) query.getCriterions().get( 0 );
@@ -80,10 +73,38 @@ public class QueryParserTest
     }
 
     @Test
+    public void eqOperatorDeepPath1() throws QueryParserException
+    {
+        Query query = queryParser.parse( DataElement.class, Arrays.asList( "dataElementGroups.id:eq:1", "dataElementGroups.id:eq:2" ) );
+        assertEquals( 2, query.getCriterions().size() );
+
+        Restriction restriction = (Restriction) query.getCriterions().get( 0 );
+        assertEquals( "dataElementGroups.id", restriction.getPath() );
+        assertEquals( "1", restriction.getOperator().getArgs().get( 0 ) );
+        assertTrue( restriction.getOperator() instanceof EqualOperator );
+
+        restriction = (Restriction) query.getCriterions().get( 1 );
+        assertEquals( "dataElementGroups.id", restriction.getPath() );
+        assertEquals( "2", restriction.getOperator().getArgs().get( 0 ) );
+        assertTrue( restriction.getOperator() instanceof EqualOperator );
+    }
+
+    @Test( expected = QueryParserException.class )
+    public void eqOperatorDeepPathFail() throws QueryParserException
+    {
+        queryParser.parse( DataElement.class, Arrays.asList( "dataElementGroups.id.name:eq:1", "dataElementGroups.id.abc:eq:2" ) );
+    }
+
+    @Test( expected = QueryParserException.class )
+    public void eqOperatorDeepPathFailNotSimpleType() throws QueryParserException
+    {
+        queryParser.parse( DataElement.class, Arrays.asList( "dataElementGroups:eq:1", "dataElementGroups:eq:2" ) );
+    }
+
+    @Test
     public void nullOperator() throws QueryParserException
     {
-        Schema schema = schemaService.getSchema( DataElement.class );
-        Query query = queryParser.parse( schema, Arrays.asList( "id:null", "name:null" ) );
+        Query query = queryParser.parse( DataElement.class, Arrays.asList( "id:null", "name:null" ) );
         assertEquals( 2, query.getCriterions().size() );
 
         Restriction restriction = (Restriction) query.getCriterions().get( 0 );

@@ -28,8 +28,6 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.schema.Schema;
-
 import java.util.List;
 
 /**
@@ -37,5 +35,5 @@ import java.util.List;
  */
 public interface QueryParser
 {
-    Query parse( Schema schema, List<String> filters ) throws QueryParserException;
+    Query parse( Class<?> klass, List<String> filters ) throws QueryParserException;
 }
