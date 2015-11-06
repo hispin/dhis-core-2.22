@@ -667,7 +667,7 @@ $( function() {
             };
         })();
 
-        // Axis
+        // Axis (array)
         (function() {
             var Axis = NS.Api.Axis = function(config) {
                 var t = [];
@@ -1041,12 +1041,43 @@ $( function() {
             };
         })();
 
-        // ResponseRow
+        // ResponseRow (array)
         (function() {
             var ResponseRow = NS.Api.ResponseRow = function(row) {
                 var t = NS.arrayFrom(row);
 
+                t.getAt = function(index) {
+                    return this[index];
+                };
+
+                t.setIdCombination = function(idCombination) {
+                    this.idCombination = idCombination;
+                };
+
+                // uninitialized
+                t.idCombination;
+
                 return t;
+            };
+        })();
+
+        // ResponseRowIdCombination
+        (function() {
+            var ResponseRowIdCombination = NS.Api.ResponseRowIdCombination = function(config) {
+                var t = this;
+
+                config = NS.isArray(config) ? config : (NS.isString(config) ? config.split('-') : null);
+
+                // constructor
+                t.ids = config || [];
+            };
+
+            ResponseRowIdCombination.prototype.add = function(id) {
+                this.ids.push(id);
+            };
+
+            ResponseRowIdCombination.prototype.get = function() {
+                return this.ids.join('-');
             };
         })();
 
@@ -1080,7 +1111,7 @@ $( function() {
                 }();
 
                 // uninitialized
-                t.idValueMap = {};
+                t.idValueMap;
 
                 // ResponseHeader: index
                 t.headers.forEach(function(header, index) {
@@ -1118,6 +1149,17 @@ $( function() {
 
             // dep 1
 
+            Response.prototype.getHeaderIndexOrder = function(dimensionNames) {
+                var t = this,
+                    headerIndexOrder = [];
+
+                dimensionNames.forEach(function(name) {
+                    headerIndexOrder.push(t.getHeaderIndexByName(name));
+                });
+
+                return headerIndexOrder;
+            };
+
             Response.prototype.getItemName = function(id, isHierarchy, isHtml) {
                 return this.getHierarchyNameById(id, isHierarchy) + this.getNameById(id);
             };
@@ -1128,8 +1170,59 @@ $( function() {
 
             // dep 2
 
-            Response.prototype.getValueIndex = function() {
+            Response.prototype.getValueHeaderIndex = function() {
                 return this.getValueHeader().getIndex();
+            };
+
+            // dep 3
+
+            Response.prototype.getIdValueMap = function(layout) {
+                if (this.idValueMap) {
+                    return this.idValueMap;
+                }
+
+                var t = this,
+                    headerIndexOrder = response.getHeaderIndexOrder(layout.getDimensionNames(true)),
+                    idValueMap = {},
+                    idCombination;
+
+                this.rows.forEach(function(row) {
+                    idCombination = new NS.Api.ResponseRowIdCombination();
+
+                    headerIndexOrder.forEach(function(index) {
+                        idCombination.add(row.getAt(index));
+                    });
+
+                    row.setIdCombination(idCombination);
+
+                    idValueMap[idCombination.get()] = row.getAt(t.getValueHeaderIndex());
+                });
+
+                return this.idValueMap = idValueMap;
+            };
+
+            // dep 4
+
+            Response.prototype.getValue = function(param, layout) {
+                var id = param instanceof NS.Api.ResponseRowIdCombination ? param.get() : param;
+
+                return this.getIdValueMap(layout)[param];
+            };
+
+            // dep 5
+
+            Response.prototype.getValues = function(paramArray, layout) {
+                var t = this,
+                    values = [],
+                    id;
+
+                paramArray = NS.arrayFrom(paramArray);
+
+                paramArray.forEach(function(param) {
+                    values.push(t.getValue(param, layout));
+                });
+
+                return values;
             };
         })();
 
