@@ -31,6 +31,8 @@ package org.hisp.dhis.query;
 import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,9 +42,13 @@ import java.util.List;
  */
 public class DefaultQueryParser implements QueryParser
 {
+    @Autowired
+    private SchemaService schemaService;
+
     @Override
-    public Query parse( Schema schema, List<String> filters ) throws QueryParserException
+    public Query parse( Class<?> klass, List<String> filters ) throws QueryParserException
     {
+        Schema schema = schemaService.getDynamicSchema( klass );
         Query query = Query.from( schema );
 
         for ( String filter : filters )
@@ -68,9 +74,14 @@ public class DefaultQueryParser implements QueryParser
         return query;
     }
 
-    private Restriction getRestriction( Schema schema, String path, String operator, Object arg )
+    private Restriction getRestriction( Schema schema, String path, String operator, Object arg ) throws QueryParserException
     {
-        Property property = schema.getProperty( path );
+        Property property = getProperty( schema, path );
+
+        if ( property == null )
+        {
+            throw new QueryParserException( "Unknown path property: " + path );
+        }
 
         switch ( operator )
         {
@@ -125,6 +136,48 @@ public class DefaultQueryParser implements QueryParser
             case "null":
             {
                 return Restrictions.isNull( path );
+            }
+        }
+
+        return null;
+    }
+
+    private Property getProperty( Schema schema, String path ) throws QueryParserException
+    {
+        String[] paths = path.split( "\\." );
+        Schema currentSchema = schema;
+
+        for ( int i = 0; i < paths.length; i++ )
+        {
+            if ( !currentSchema.haveProperty( paths[i] ) )
+            {
+                return null;
+            }
+
+            Property property = currentSchema.getProperty( paths[i] );
+
+            if ( property == null )
+            {
+                throw new QueryParserException( "Unknown path property: " + paths[i] + " (" + path + ")" );
+            }
+
+            if ( property.isSimple() )
+            {
+                if ( i != (paths.length - 1) )
+                {
+                    throw new QueryParserException( "Simple type was found before finished parsing path expression, please check your path string." );
+                }
+
+                return property;
+            }
+
+            if ( property.isCollection() )
+            {
+                currentSchema = schemaService.getDynamicSchema( property.getItemKlass() );
+            }
+            else
+            {
+                currentSchema = schemaService.getDynamicSchema( property.getKlass() );
             }
         }
 
