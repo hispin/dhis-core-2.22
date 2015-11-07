@@ -28,6 +28,7 @@
 
     checkValueIsExist("username", "validateUser.action");
     checkValueIsExist("openId", "validateUser.action");
+    checkValueIsExist("ldapId", "validateUser.action");
     checkValueIsExist("inviteUsername", "validateUser.action");
 
     ouwtSelected = selection.getSelected();

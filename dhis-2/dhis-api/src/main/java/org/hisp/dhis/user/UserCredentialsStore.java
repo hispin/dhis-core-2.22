@@ -54,5 +54,14 @@ public interface UserCredentialsStore
      * @param openId open ID.
      * @return the UserCredentials.
      */
-    UserCredentials getUserCredentialsByOpenID( String openId );
+    UserCredentials getUserCredentialsByOpenId( String openId );
+
+    /**
+     * Retrieves the UserCredentials associated with the User with the given
+     * LDAP ID.
+     *
+     * @param ldapId LDAP ID.
+     * @return the UserCredentials.
+     */
+    UserCredentials getUserCredentialsByLdapId( String ldapId );
 }

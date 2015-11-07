@@ -219,7 +219,16 @@ public interface UserService
      * @param openId the openId of the User.
      * @return the UserCredentials.
      */
-    UserCredentials getUserCredentialsByOpenID( String openId );
+    UserCredentials getUserCredentialsByOpenId( String openId );
+
+    /**
+     * Retrieves the UserCredentials associated with the User with the given
+     * LDAP ID.
+     *
+     * @param ldapId the ldapId of the User.
+     * @return the UserCredentials.
+     */
+    UserCredentials getUserCredentialsByLdapId( String ldapId );
 
     /**
      * Retrieves all UserCredentials.

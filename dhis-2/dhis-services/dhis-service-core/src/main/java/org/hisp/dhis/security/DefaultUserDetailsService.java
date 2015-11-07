@@ -1,5 +1,6 @@
 package org.hisp.dhis.security;
 
+import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.system.util.SecurityUtils;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
@@ -46,7 +47,7 @@ public class DefaultUserDetailsService
 
         if ( credentials == null )
         {
-            credentials = userService.getUserCredentialsByOpenID( username );
+            credentials = userService.getUserCredentialsByOpenId( username );
 
             if ( credentials == null )
             {
@@ -55,12 +56,20 @@ public class DefaultUserDetailsService
         }
 
         // ---------------------------------------------------------------------
-        // UserDetails
+        // If password is null, assume external authentication (OpenID, LDAP)
+        // and set not encoded, random password to satisfy Spring Security
         // ---------------------------------------------------------------------
 
+        String password = credentials.getPassword();
+        
+        if ( !credentials.hasPassword() )
+        {
+            password = CodeGenerator.generateCode( 60 );
+        }
+        
         boolean credentialsExpired = userService.credentialsNonExpired( credentials );
 
-        return new User( credentials.getUsername(), credentials.getPassword(),
+        return new User( credentials.getUsername(), password,
             !credentials.isDisabled(), true, credentialsExpired, true, SecurityUtils.getGrantedAuthorities( credentials ) );
     }
 }

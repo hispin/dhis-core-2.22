@@ -83,6 +83,13 @@ public class ValidateUserAction
         this.openId = openId;
     }
     
+    private String ldapId;
+        
+    public void setLdapId( String ldapId )
+    {
+        this.ldapId = ldapId;
+    }
+
     private String inviteUsername;
 
     public void setInviteUsername( String inviteUsername )
@@ -123,7 +130,7 @@ public class ValidateUserAction
 
         if ( openId != null )
         {
-            UserCredentials match = userService.getUserCredentialsByOpenID( openId );
+            UserCredentials match = userService.getUserCredentialsByOpenId( openId );
 
             if ( match != null && (id == null || match.getId() != id) )
             {
@@ -133,6 +140,18 @@ public class ValidateUserAction
             }
         }
 
+        if ( ldapId != null )
+        {
+            UserCredentials match = userService.getUserCredentialsByLdapId( ldapId );
+
+            if ( match != null && (id == null || match.getId() != id) )
+            {
+                message = i18n.getString( "ldap_in_use" );
+
+                return ERROR;
+            }
+        }
+        
         if ( inviteUsername != null )
         {
             UserCredentials match = userService.getUserCredentialsByUsername( inviteUsername );
