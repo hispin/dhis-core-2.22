@@ -49,10 +49,17 @@ public class HibernateUserCredentialsStore
     }
 
     @Override
-    public UserCredentials getUserCredentialsByOpenID( String openId )
+    public UserCredentials getUserCredentialsByOpenId( String openId )
     {
         Query query = getQuery( "from UserCredentials uc where uc.openId = :openId" );
         query.setString( "openId", openId );
+        return (UserCredentials) query.uniqueResult();
+    }
+    
+    public UserCredentials getUserCredentialsByLdapId( String ldapId )
+    {
+        Query query = getQuery( "from UserCredentials uc where uc.ldapId = :ldapId" );
+        query.setString( "ldapId", ldapId );
         return (UserCredentials) query.uniqueResult();
     }
 }

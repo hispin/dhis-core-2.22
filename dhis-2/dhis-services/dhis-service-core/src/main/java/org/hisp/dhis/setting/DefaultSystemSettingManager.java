@@ -370,6 +370,12 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    public boolean isOpenIdConfigured()
+    {
+        return getSystemSetting( Setting.OPENID_PROVIDER ) != null && getSystemSetting( Setting.OPENID_PROVIDER_LABEL ) != null;
+    }
+
+    @Override
     public String googleAnalyticsUA()
     {
         return StringUtils.trimToNull( (String) getSystemSetting( Setting.GOOGLE_ANALYTICS_UA ) );

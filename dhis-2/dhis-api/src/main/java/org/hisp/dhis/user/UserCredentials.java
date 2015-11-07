@@ -441,13 +441,13 @@ public class UserCredentials
     }
 
     /**
-     * Indicates whether the LDAP identifier is present.
+     * Indicates whether a password is set.
      */
-    public boolean hasLdapId()
+    public boolean hasPassword()
     {
-        return ldapId != null && !ldapId.isEmpty();
+        return password != null;
     }
-    
+        
     // -------------------------------------------------------------------------
     // hashCode and equals
     // -------------------------------------------------------------------------

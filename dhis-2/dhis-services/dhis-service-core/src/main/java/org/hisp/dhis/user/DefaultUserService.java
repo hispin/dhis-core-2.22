@@ -583,9 +583,15 @@ public class DefaultUserService
     }
 
     @Override
-    public UserCredentials getUserCredentialsByOpenID( String openId )
+    public UserCredentials getUserCredentialsByOpenId( String openId )
     {
-        return userCredentialsStore.getUserCredentialsByOpenID( openId );
+        return userCredentialsStore.getUserCredentialsByOpenId( openId );
+    }
+
+    @Override
+    public UserCredentials getUserCredentialsByLdapId( String ldapId )
+    {
+        return userCredentialsStore.getUserCredentialsByLdapId( ldapId );
     }
 
     @Override
