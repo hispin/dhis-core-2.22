@@ -19,6 +19,7 @@
   <filter>
     <filter-name>RedirectFilter</filter-name>
     <filter-class>org.hisp.dhis.servlet.filter.HttpRedirectFilter</filter-class>
+    <async-supported>true</async-supported>
     <init-param>
       <param-name>redirectPath</param-name>
       <param-value>dhis-web-commons-about/redirect.action</param-value>
@@ -27,6 +28,7 @@
   <filter>
     <filter-name>shallowEtagHeaderFilter</filter-name>
     <filter-class>org.hisp.dhis.servlet.filter.ExcludableShallowEtagHeaderFilter</filter-class>
+    <async-supported>true</async-supported>
     <init-param>
       <param-name>excludeUriRegex</param-name>
       <param-value>/api/dataValueSets|/api/dataValues|/api/dataValues/files|/api/fileResources</param-value>
@@ -35,22 +37,27 @@
   <filter>
     <filter-name>hiddenHttpMethodFilter</filter-name>
     <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    <async-supported>true</async-supported>
   </filter>
   <filter>
     <filter-name>OpenSessionInViewFilter</filter-name>
     <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+    <async-supported>true</async-supported>
   </filter>
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <async-supported>true</async-supported>
   </filter>
   <filter>
     <filter-name>Struts</filter-name>
     <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+    <async-supported>true</async-supported>
   </filter>
   <filter>
     <filter-name>encoding-filter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <async-supported>true</async-supported>
     <init-param>
       <param-name>encoding</param-name>
       <param-value>UTF-8</param-value>
@@ -63,6 +70,7 @@
   <filter>
     <filter-name>appCacheFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <async-supported>true</async-supported>
   </filter>
 
   <filter-mapping>
@@ -139,6 +147,7 @@
       <param-value>classpath*:/META-INF/dhis/servlet.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
   </servlet>
   <servlet>
     <servlet-name>mobile</servlet-name>
@@ -148,6 +157,7 @@
       <param-value>classpath*:/META-INF/dhis/mobile.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
   </servlet>
 
   <servlet>
@@ -158,6 +168,7 @@
       <param-value>classpath*:/META-INF/dhis/webapi-ohie.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
   </servlet>
 
   <servlet>
@@ -168,6 +179,7 @@
       <param-value>classpath*:/META-INF/dhis/webapi-uaa.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
   </servlet>
 
   <servlet-mapping>
