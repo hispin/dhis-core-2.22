@@ -644,26 +644,28 @@ $( function() {
                 return this;
             };
 
-            Dimension.prototype.getRecords = function(sortProperty) {
+            Dimension.prototype.getRecords = function(sortProperty, response) {
+                var records = response ? response.getRecordsByDimensionName(this.dimension) : this.items;
+
                 sortProperty = NS.arrayContains(['id', 'name'], sortProperty) ? sortProperty : null;
 
-                return sortProperty ? this.items.sort(function(a, b) { return a[sortProperty] > b[sortProperty];}) : this.items;
+                return sortProperty ? records.sort(function(a, b) { return a[sortProperty] > b[sortProperty];}) : records;
             };
 
             // dep 1
 
-            Dimension.prototype.getRecordIds = function(isSorted) {
-                return NS.arrayPluck(this.getRecords(isSorted ? 'id' : null), 'id');
+            Dimension.prototype.getRecordIds = function(isSorted, response) {
+                return NS.arrayPluck(this.getRecords((isSorted ? 'id' : null), response), 'id');
             };
 
-            Dimension.prototype.getRecordNames = function(isSorted) {
-                return NS.arrayPluck(this.getRecords(isSorted ? 'name' : null), 'name');
+            Dimension.prototype.getRecordNames = function(isSorted, response) {
+                return NS.arrayPluck(this.getRecords((isSorted ? 'name' : null), response), 'name');
             };
 
             // dep 2
 
-            Dimension.prototype.url = function() {
-                return 'dimension=' + this.dimension + ':' + NS.arrayUnique(this.getRecordIds()).join(';');
+            Dimension.prototype.url = function(response) {
+                return 'dimension=' + this.dimension + ':' + NS.arrayUnique(this.getRecordIds(false, response)).join(';');
             };
         })();
 
@@ -843,15 +845,15 @@ $( function() {
                 return isSorted ? dimensions.sort(function(a, b) {return a.dimension > b.dimension;}) : dimensions;
             };
 
-            Layout.prototype.getDimensionNameRecordIdsMap = function() {
-                if (this.dimensionNameRecordIdsMap) {
-                    return this.dimensionNameRecordIdsMap;
-                }
+            Layout.prototype.getDimensionNameRecordIdsMap = function(response) {
+                //if (this.dimensionNameRecordIdsMap) {
+                    //return this.dimensionNameRecordIdsMap;
+                //}
 
                 var map = {};
 
                 this.getDimensions(true).forEach(function(dimension) {
-                    map[dimension.dimension] = dimension.getRecordIds();
+                    map[dimension.dimension] = dimension.getRecordIds(false, response);
                 });
 
                 return this.dimensionNameRecordIdsMap = map;
@@ -953,6 +955,9 @@ $( function() {
 
                 return $.getJSON('/api/analytics.json' + request.url());
             };
+
+            //Layout.prototype.sync = function(response) {
+
 
         })();
 
@@ -1147,6 +1152,10 @@ $( function() {
                 return name;
             };
 
+            Response.prototype.getIdsByDimensionName = function(dimensionName) {
+                return this.metaData[dimensionName] || [];
+            };
+
             // dep 1
 
             Response.prototype.getHeaderIndexOrder = function(dimensionNames) {
@@ -1162,6 +1171,21 @@ $( function() {
 
             Response.prototype.getItemName = function(id, isHierarchy, isHtml) {
                 return this.getHierarchyNameById(id, isHierarchy) + this.getNameById(id);
+            };
+
+            Response.prototype.getRecordsByDimensionName = function(dimensionName) {
+                var metaData = this.metaData,
+                    ids = metaData[dimensionName],
+                    records = [];
+
+                ids.forEach(function(id) {
+                    records.push((new NS.Api.Record({
+                        id: id,
+                        name: metaData.names[id]
+                    })).val());
+                });
+
+                return records;
             };
 
             Response.prototype.getValueHeader = function() {
@@ -1182,7 +1206,7 @@ $( function() {
                 }
 
                 var t = this,
-                    headerIndexOrder = response.getHeaderIndexOrder(layout.getDimensionNames(true)),
+                    headerIndexOrder = response.getHeaderIndexOrder(layout.getDimensionNames()),
                     idValueMap = {},
                     idCombination;
 
@@ -1228,7 +1252,7 @@ $( function() {
 
         //todo TableAxis
         (function() {
-            var TableAxis = NS.Api.TableAxis = function(layout, type) {
+            var TableAxis = NS.Api.TableAxis = function(layout, response, type) {
 				var dimensionNames,
 					spanType,
 					aDimensions = [],
@@ -1245,11 +1269,11 @@ $( function() {
 					uuidObjectMap = {};
 
 				if (type === 'col') {
-					dimensionNames = layout.columns.getDimensionNames();
+					dimensionNames = layout.columns.getDimensionNames(response);
 					spanType = 'colSpan';
 				}
 				else if (type === 'row') {
-					dimensionNames = layout.rows.getDimensionNames();
+					dimensionNames = layout.rows.getDimensionNames(response);
 					spanType = 'rowSpan';
 				}
 
@@ -1273,7 +1297,7 @@ $( function() {
 					var a = [];
 
                     aDimensions.forEach(function(dimension) {
-                        a.push(layout.getDimensionNameRecordIdsMap()[dimension.dimensionName]);
+                        a.push(layout.getDimensionNameRecordIdsMap(response)[dimension.dimensionName]);
                     });
 
                     return a;
@@ -1364,15 +1388,15 @@ $( function() {
 	//		  	  	  ]
 
 				// aCondoId
-				for (var i = 0, id; i < nAxisWidth; i++) {
-					id = '';
+				for (var i = 0, ids; i < nAxisWidth; i++) {
+					ids = [];
 
 					for (var j = 0; j < nAxisHeight; j++) {
-						id += aaAllFloorIds[j][i];
+						ids.push(aaAllFloorIds[j][i]);
 					}
 
-					if (id) {
-						aCondoId.push(id);
+					if (ids.length) {
+						aCondoId.push(ids.join('-'));
 					}
 				}
 	//aCondoId = [ id11+id21+id31, id12+id22+id32, ... ]
@@ -1713,8 +1737,8 @@ $( function() {
 
 				getColAxisHtmlArray = function() {
 					var a = [],
-                        columnDimensionNames = colAxis ? layout.columns.getDimensionNames() : [],
-                        rowDimensionNames = rowAxis ? layout.rows.getDimensionNames() : [],
+                        columnDimensionNames = colAxis ? layout.columns.getDimensionNames(response) : [],
+                        rowDimensionNames = rowAxis ? layout.rows.getDimensionNames(response) : [],
 						getEmptyHtmlArray;
 
                     getEmptyNameTdConfig = function(config) {
@@ -1921,7 +1945,8 @@ $( function() {
 							uuids = [];
 
 							// meta data uid
-							id = ((colAxis ? colAxis.ids[j] : '') + (rowAxis ? rowAxis.ids[i] : ''));
+							id = [(colAxis ? colAxis.ids[j] : ''), (rowAxis ? rowAxis.ids[i] : '')].join('-');
+
 
                             // value html element id
 							uuid = NS.uuid();
@@ -2334,8 +2359,8 @@ $( function() {
                     var cls = 'pivot',
                         table;
 
-                    cls += layout.displayDensity && layout.displayDensity !== conf.finals.style.normal ? ' displaydensity-' + layout.displayDensity : '';
-                    cls += layout.fontSize && layout.fontSize !== conf.finals.style.normal ? ' fontsize-' + layout.fontSize : '';
+                    cls += layout.displayDensity && layout.displayDensity !== styleConf.normal ? ' displaydensity-' + layout.displayDensity : '';
+                    cls += layout.fontSize && layout.fontSize !== styleConf.normal ? ' fontsize-' + layout.fontSize : '';
 
 					table = '<table class="' + cls + '">';
 
