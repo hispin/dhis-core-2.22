@@ -2687,7 +2687,7 @@ Ext.onReady( function() {
 				}
 
 				table = getHtml(xLayout, xResponse);
-
+console.log(table);
                 // timing
                 ns.app.dateRender = new Date();
 
