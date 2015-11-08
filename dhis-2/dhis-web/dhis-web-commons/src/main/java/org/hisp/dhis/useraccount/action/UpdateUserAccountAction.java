@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.security.PasswordManager;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
 
 import com.opensymphony.xwork2.Action;
@@ -147,9 +148,15 @@ public class UpdateUserAccountAction
         rawPassword = StringUtils.trimToNull( rawPassword );
 
         User user = userService.getUser( id );
-        String currentPassword = userService.getUserCredentials( user ).getPassword();
+        UserCredentials credentials = user.getUserCredentials();
         
-        if ( !passwordManager.matches( oldPassword, currentPassword ) )
+        String currentPassword = userService.getUserCredentials( user ).getPassword();
+
+        // ---------------------------------------------------------------------
+        // Deny update if user has local authentication and password is wrong
+        // ---------------------------------------------------------------------
+
+        if ( !credentials.isExternalAuth() && !passwordManager.matches( oldPassword, currentPassword ) )
         {
             message = i18n.getString( "wrong_password" );
             return INPUT;
@@ -166,7 +173,7 @@ public class UpdateUserAccountAction
         
         userService.encodeAndSetPassword( user, rawPassword );
         
-        userService.updateUserCredentials( user.getUserCredentials() );
+        userService.updateUserCredentials( credentials );
         userService.updateUser( user );
 
         message = i18n.getString( "update_user_success" );

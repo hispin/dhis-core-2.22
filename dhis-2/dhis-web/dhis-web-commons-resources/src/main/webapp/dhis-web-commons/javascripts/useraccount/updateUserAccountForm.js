@@ -14,10 +14,6 @@ jQuery( document ).ready( function()
 	validation2( 'updateUserinforForm', updateUser, {
 		'rules' : rules
 	} );
-
-	var oldPassword = byId( 'oldPassword' );
-	oldPassword.select();
-	oldPassword.focus();
 } );
 
 function updateUser()
