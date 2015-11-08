@@ -43,7 +43,7 @@ import org.hisp.dhis.dataset.DataSet;
 public interface UserService
 {
     String ID = UserService.class.getName();
-    String PW_NO_INTERNAL_LOGIN = "--[#no_internal_login#]--";
+    String PW_NO_INTERNAL_LOGIN = "--[##no_internal_login##]--";
 
     // -------------------------------------------------------------------------
     // User

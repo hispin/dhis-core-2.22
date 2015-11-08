@@ -1,13 +1,3 @@
-// -----------------------------------------------------------------------------
-// Export to PDF file
-// -----------------------------------------------------------------------------
-
-function exportPDF( type ) {
-  var params = "type=" + type;
-  params += "&months=" + jQuery('#months').val();
-
-  exportPdfByType(type, params);
-}
 
 // -----------------------------------------------------------------------------
 // Search users
@@ -154,6 +144,17 @@ function validateInvite() {
 	
 	return def.promise();
 }
+
+function externalAuthChanged() {
+	var extAuth = $('#externalAuth').is(':checked');
+	
+	if ( extAuth ) {
+		$('#rawPassword, #retypePassword').val('').prop('disabled', true);
+	}
+	else {
+		$('#rawPassword, #retypePassword').prop('disabled', false);
+	}
+}		
 
 // -----------------------------------------------------------------------------
 // Remove user

@@ -112,7 +112,7 @@ div#orgUnitTree
 
     <tr class="account">
 		<td><label for="externalAuth">$i18n.getString( "external_authentication_only" ) (OpenID or LDAP)</label></td>
-		<td colspan="3"><input type="checkbox" id="externalAuth" name="externalAuth" value="true"></td>
+		<td colspan="3"><input type="checkbox" id="externalAuth" name="externalAuth" value="true" onchange="javascript:externalAuthChanged()"></td>
 	</tr>
 
     <tr class="account">
