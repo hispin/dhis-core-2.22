@@ -75,6 +75,12 @@ public class UserCredentials
     private String username;
 
     /**
+     * Indicates whether this credentials can only be authenticated externally,
+     * such as through OpenID or LDAP.
+     */
+    private boolean externalAuth;
+    
+    /**
      * Unique OpenID.
      */
     private String openId;
@@ -525,6 +531,19 @@ public class UserCredentials
     public void setPassword( String password )
     {
         this.password = password;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isExternalAuth()
+    {
+        return externalAuth;
+    }
+
+    public void setExternalAuth( boolean externalAuth )
+    {
+        this.externalAuth = externalAuth;
     }
 
     @JsonProperty

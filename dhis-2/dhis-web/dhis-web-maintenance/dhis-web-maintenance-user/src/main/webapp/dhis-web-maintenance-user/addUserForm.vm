@@ -81,7 +81,7 @@ div#orgUnitTree
 
     #if ( $allowInvite )
     <tr>
-        <td><label>$i18n.getString( "action" )</label></td>
+        <td style="width:140px"><label>$i18n.getString( "action" )</label></td>
         <td>
             <select id="accountAction" name="accountAction" onchange="changeAccountAction()">
                 <option value="create" selected="selected">$i18n.getString( "create_account_with_user_details" )</option>
@@ -96,7 +96,7 @@ div#orgUnitTree
 	</tr>
 
     <tr class="invite" style="display:none">
-        <td><label for="inviteEmail">$i18n.getString( "email" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td style="width:140px"><label for="inviteEmail">$i18n.getString( "email" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
         <td colspan="3"><input type="text" id="inviteEmail" name="inviteEmail" value="validEmail@domain.com" autocomplete="off"></td>
     </tr>
 
@@ -108,6 +108,11 @@ div#orgUnitTree
     <tr class="account">
 		<td><label for="username">$i18n.getString( "username" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
 		<td colspan="3"><input type="text" id="username" name="username" autocomplete="off"></td>
+	</tr>
+
+    <tr class="account">
+		<td><label for="externalAuth">$i18n.getString( "external_authentication_only" ) (OpenID or LDAP)</label></td>
+		<td colspan="3"><input type="checkbox" id="externalAuth" name="externalAuth" value="true"></td>
 	</tr>
 
     <tr class="account">

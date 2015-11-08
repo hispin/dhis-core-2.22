@@ -125,6 +125,13 @@ public class UpdateUserAction
         this.id = id;
     }
 
+    private boolean externalAuth;
+
+    public void setExternalAuth( boolean externalAuth )
+    {
+        this.externalAuth = externalAuth;
+    }
+
     private String rawPassword;
 
     public void setRawPassword( String rawPassword )
@@ -254,6 +261,7 @@ public class UpdateUserAction
 
         UserCredentials userCredentials = userService.getUserCredentials( user );
 
+        userCredentials.setExternalAuth( externalAuth );
         userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
         userCredentials.setLdapId( StringUtils.trimToNull( ldapId ) );
 

@@ -148,6 +148,13 @@ public class AddUserAction
     {
         this.inviteUsername = inviteUsername;
     }
+    
+    private boolean externalAuth;
+
+    public void setExternalAuth( boolean externalAuth )
+    {
+        this.externalAuth = externalAuth;
+    }
 
     private String rawPassword;
 
@@ -296,9 +303,10 @@ public class AddUserAction
         user.setUserCredentials( userCredentials );
 
         userCredentials.setUsername( StringUtils.trimToNull( username ) );
+        userCredentials.setExternalAuth( externalAuth );
         userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
         userCredentials.setLdapId( StringUtils.trimToNull( ldapId ) );
-
+        
         if ( ACCOUNT_ACTION_INVITE.equals( accountAction ) )
         {
             userCredentials.setUsername( StringUtils.trimToNull( inviteUsername ) );
