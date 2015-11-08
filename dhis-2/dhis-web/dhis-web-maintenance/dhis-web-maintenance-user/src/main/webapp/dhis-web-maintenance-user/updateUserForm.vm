@@ -42,6 +42,8 @@
 
     selectionTreeSelection.setMultipleSelectionAllowed(true);
     selectionTree.buildSelectionTree();
+    
+    externalAuthChanged();
 
     $('#urAvailable').selected({
       url: '../api/userRoles.json?canIssue=true',
@@ -97,7 +99,7 @@
 
     <tr class="account">
 		<td><label for="externalAuth">$i18n.getString( "external_authentication_only" ) (OpenID or LDAP)</label></td>
-		<td colspan="3"><input type="checkbox" id="externalAuth" name="externalAuth" value="true"#if( $userCredentials.externalAuth ) checked="checked"#end></td>
+		<td colspan="3"><input type="checkbox" id="externalAuth" name="externalAuth" value="true" onchange="javascript:externalAuthChanged()"#if( $!userCredentials.externalAuth ) checked="checked"#end></td>
 	</tr>
 
     <tr>

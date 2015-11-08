@@ -331,14 +331,11 @@ public class UpdateUserAction
         }
 
         // ---------------------------------------------------------------------
-        // Update User
+        // Set password and update user
         // ---------------------------------------------------------------------
 
-        if ( StringUtils.isNotEmpty( rawPassword ) )
-        {
-            userService.encodeAndSetPassword( userCredentials, rawPassword );
-        }
-
+        userService.encodeAndSetPassword( userCredentials, rawPassword );
+        
         userService.updateUserCredentials( userCredentials );
         userService.updateUser( user );
 

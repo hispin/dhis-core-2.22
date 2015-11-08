@@ -554,6 +554,18 @@ public class DefaultUserService
     @Override
     public void encodeAndSetPassword( UserCredentials userCredentials, String rawPassword )
     {
+        if ( StringUtils.isEmpty( rawPassword ) && !userCredentials.isExternalAuth() )
+        {
+            return; // Leave unchanged if internal authentication and no password supplied
+        }
+        
+        if ( userCredentials.isExternalAuth() )
+        {
+            userCredentials.setPassword( UserService.PW_NO_INTERNAL_LOGIN );
+            
+            return; // Set unusable, not-encoded password if external authentication
+        }
+        
         boolean isNewPassword = StringUtils.isBlank( userCredentials.getPassword() ) ||
             !passwordManager.matches( rawPassword, userCredentials.getPassword() );
 
@@ -562,6 +574,8 @@ public class DefaultUserService
             userCredentials.setPasswordLastUpdated( new Date() );
         }
 
+        // Encode and set password
+        
         userCredentials.setPassword( passwordManager.encode( rawPassword ) );
     }
 
