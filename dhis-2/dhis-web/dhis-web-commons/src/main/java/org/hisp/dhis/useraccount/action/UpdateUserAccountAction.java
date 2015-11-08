@@ -163,12 +163,9 @@ public class UpdateUserAccountAction
         user.setFirstName( firstName );
         user.setEmail( email );
         user.setPhoneNumber( phoneNumber );
-
-        if ( rawPassword != null )
-        {
-            userService.encodeAndSetPassword( user, rawPassword );
-        }
-
+        
+        userService.encodeAndSetPassword( user, rawPassword );
+        
         userService.updateUserCredentials( user.getUserCredentials() );
         userService.updateUser( user );
 
