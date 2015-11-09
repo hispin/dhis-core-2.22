@@ -25,6 +25,8 @@
 
   <bean id="org.hisp.dhis.query.CriteriaQueryEngine" class="org.hisp.dhis.query.CriteriaQueryEngine" />
 
+  <bean id="org.hisp.dhis.query.InMemoryQueryEngine" class="org.hisp.dhis.query.InMemoryQueryEngine" />
+
   <bean id="org.hisp.dhis.schema.PropertyIntrospectorService" class="org.hisp.dhis.schema.Jackson2PropertyIntrospectorService" />
 
   <bean id="org.hisp.dhis.security.acl.AclService" class="org.hisp.dhis.security.acl.DefaultAclService" />
