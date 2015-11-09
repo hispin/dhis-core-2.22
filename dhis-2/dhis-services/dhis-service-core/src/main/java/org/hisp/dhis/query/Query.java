@@ -44,9 +44,11 @@ public class Query extends Criteria
 {
     private List<Order> orders = new ArrayList<>();
 
-    private Integer firstResult;
+    private Integer firstResult = 0;
 
-    private Integer maxResults;
+    private Integer maxResults = Integer.MAX_VALUE;
+
+    private Collection<?> objects;
 
     public static Query from( Schema schema )
     {
@@ -88,6 +90,16 @@ public class Query extends Criteria
     {
         this.maxResults = maxResults;
         return this;
+    }
+
+    public Collection<?> getObjects()
+    {
+        return objects;
+    }
+
+    public void setObjects( Collection<?> objects )
+    {
+        this.objects = objects;
     }
 
     public Query addOrder( Order... orders )
