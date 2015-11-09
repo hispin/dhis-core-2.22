@@ -10,7 +10,7 @@
       <generator class="native" />
     </id>
 
-    <property name="commentText" column="commenttext"/>
+    <property name="commentText" column="commenttext" type="text"/>
 
     <property name="createdDate" column="createddate"/>
 	

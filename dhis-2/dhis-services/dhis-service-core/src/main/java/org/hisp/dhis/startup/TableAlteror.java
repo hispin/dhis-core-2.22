@@ -272,6 +272,7 @@ public class TableAlteror
         executeSql( "ALTER TABLE programrule ALTER condition TYPE text" );
         executeSql( "ALTER TABLE programruleaction ALTER content TYPE text" );
         executeSql( "ALTER TABLE programruleaction ALTER data TYPE text" );
+        executeSql( "ALTER TABLE trackedentitycomment ALTER commenttext TYPE text" );
 
 
         executeSql( "ALTER TABLE minmaxdataelement RENAME minvalue TO minimumvalue" );
