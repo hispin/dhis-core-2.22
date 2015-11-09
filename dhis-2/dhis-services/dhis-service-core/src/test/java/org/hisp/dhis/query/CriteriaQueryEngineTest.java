@@ -56,7 +56,7 @@ public class CriteriaQueryEngineTest
     private SchemaService schemaService;
 
     @Autowired
-    private CriteriaQueryEngine<? extends IdentifiableObject> criteriaQueryEngine;
+    private CriteriaQueryEngine<? extends IdentifiableObject> queryEngine;
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
@@ -114,7 +114,7 @@ public class CriteriaQueryEngineTest
     {
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        assertEquals( 6, criteriaQueryEngine.query( query ).size() );
+        assertEquals( 6, queryEngine.query( query ).size() );
     }
 
     @Test
@@ -125,13 +125,13 @@ public class CriteriaQueryEngineTest
         query.setFirstResult( 2 );
         query.setMaxResults( 10 );
 
-        assertEquals( 4, criteriaQueryEngine.query( query ).size() );
+        assertEquals( 4, queryEngine.query( query ).size() );
 
         query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.setFirstResult( 2 );
         query.setMaxResults( 2 );
 
-        assertEquals( 2, criteriaQueryEngine.query( query ).size() );
+        assertEquals( 2, queryEngine.query( query ).size() );
     }
 
     @Test
@@ -140,7 +140,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.eq( "id", "deabcdefghA" ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 1, objects.size() );
         assertEquals( "deabcdefghA", objects.get( 0 ).getUid() );
@@ -152,7 +152,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.ne( "id", "deabcdefghA" ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 5, objects.size() );
 
@@ -170,7 +170,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.like( "name", "F", MatchMode.ANYWHERE ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 1, objects.size() );
         assertEquals( "deabcdefghF", objects.get( 0 ).getUid() );
@@ -182,7 +182,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.gt( "created", Year.parseYear( "2003" ).getStart() ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 3, objects.size() );
 
@@ -197,7 +197,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.lt( "created", Year.parseYear( "2003" ).getStart() ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 2, objects.size() );
 
@@ -211,7 +211,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.ge( "created", Year.parseYear( "2003" ).getStart() ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 4, objects.size() );
 
@@ -227,7 +227,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.le( "created", Year.parseYear( "2003" ).getStart() ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 3, objects.size() );
 
@@ -242,7 +242,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.between( "created", Year.parseYear( "2003" ).getStart(), Year.parseYear( "2005" ).getStart() ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 3, objects.size() );
 
@@ -257,7 +257,7 @@ public class CriteriaQueryEngineTest
         createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.in( "id", Lists.newArrayList( "deabcdefghD", "deabcdefghF" ) ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 2, objects.size() );
 
@@ -273,7 +273,7 @@ public class CriteriaQueryEngineTest
 
         Query query = Query.from( schema );
         query.addOrder( new Order( schema.getProperty( "name" ), false ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
 
@@ -293,7 +293,7 @@ public class CriteriaQueryEngineTest
 
         Query query = Query.from( schema );
         query.addOrder( new Order( schema.getProperty( "name" ), true ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
 
@@ -313,7 +313,7 @@ public class CriteriaQueryEngineTest
 
         Query query = Query.from( schema );
         query.addOrder( new Order( schema.getProperty( "created" ), false ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
 
@@ -333,7 +333,7 @@ public class CriteriaQueryEngineTest
 
         Query query = Query.from( schema );
         query.addOrder( new Order( schema.getProperty( "created" ), true ) );
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
 
@@ -356,7 +356,7 @@ public class CriteriaQueryEngineTest
         conjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
         query.add( conjunction );
 
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 0, objects.size() );
     }
@@ -372,7 +372,7 @@ public class CriteriaQueryEngineTest
         disjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
         query.add( disjunction );
 
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 2, objects.size() );
 
@@ -389,7 +389,7 @@ public class CriteriaQueryEngineTest
         query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
         query.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
 
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 3, objects.size() );
 
@@ -409,7 +409,7 @@ public class CriteriaQueryEngineTest
         conjunction.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
         query.add( conjunction );
 
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 3, objects.size() );
 
@@ -425,7 +425,7 @@ public class CriteriaQueryEngineTest
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.isNull( "categoryCombo" ) );
 
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
 

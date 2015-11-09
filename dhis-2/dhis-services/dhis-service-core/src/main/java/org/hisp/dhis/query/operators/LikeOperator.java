@@ -78,13 +78,13 @@ public class LikeOperator extends Operator
             switch ( matchMode )
             {
                 case EXACT:
-                    return s1.equals( s2 );
+                    return s2.equals( s1 );
                 case START:
-                    return s1.startsWith( s2 );
+                    return s2.startsWith( s1 );
                 case END:
-                    return s1.endsWith( s2 );
+                    return s2.endsWith( s1 );
                 case ANYWHERE:
-                    return s1.contains( s2 );
+                    return s2.contains( s1 );
             }
         }
 
