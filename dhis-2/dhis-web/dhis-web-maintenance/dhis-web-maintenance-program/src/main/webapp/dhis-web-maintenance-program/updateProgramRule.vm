@@ -41,7 +41,7 @@
 
         var attributeList = new Array();
 	#foreach( $programAttribute in $program.programAttributes )
-            attributeList['$programAttribute.attribute.uid'] = '$programAttribute.attribute.displayName';
+            attributeList['$programAttribute.attribute.uid'] = '$encoder.jsEscape($programAttribute.attribute.displayName, "'" )';
 	#end
 	
 	var sectionSelector = "<select class='actionSections' >";
