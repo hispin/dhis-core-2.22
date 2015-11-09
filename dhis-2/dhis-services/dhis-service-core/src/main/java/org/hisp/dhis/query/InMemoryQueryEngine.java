@@ -31,9 +31,9 @@ package org.hisp.dhis.query;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.schema.Property;
-import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.system.util.ReflectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +47,7 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
     {
         validateQuery( query );
         List<T> list = runQuery( query );
+        list = runSorter( query, list );
 
         return PagerUtils.pageCollection( list, query.getFirstResult(), query.getMaxResults() );
     }
@@ -77,17 +78,34 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
     private List<T> runQuery( Query query )
     {
         return query.getObjects().stream()
-            .filter( object -> test( query.getSchema(), (T) object, query.getCriterions() ) )
+            .filter( object -> test( query, (T) object ) )
             .map( object -> (T) object )
             .collect( Collectors.toList() );
     }
 
-    private boolean test( Schema schema, T object, List<Criterion> criterions )
+    private List<T> runSorter( Query query, List<T> objects )
     {
-        for ( Criterion criterion : criterions )
+        List<T> sorted = new ArrayList<>( objects );
+
+        sorted.sort( ( o1, o2 ) -> {
+            for ( Order order : query.getOrders() )
+            {
+                int result = order.compare( o1, o2 );
+                if ( result != 0 ) return result;
+            }
+
+            return 0;
+        } );
+
+        return sorted;
+    }
+
+    private boolean test( Query query, T object )
+    {
+        for ( Criterion criterion : query.getCriterions() )
         {
             Restriction restriction = (Restriction) criterion;
-            Object value = getValue( schema, object, restriction.getPath() );
+            Object value = getValue( query, object, restriction.getPath() );
 
             if ( !restriction.getOperator().test( value ) )
             {
@@ -98,10 +116,9 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
         return true;
     }
 
-    private Object getValue( Schema schema, Object object, String path )
+    private Object getValue( Query query, Object object, String path )
     {
-        Property property = schema.getProperty( path );
-
+        Property property = query.getSchema().getProperty( path );
         return ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
     }
 }

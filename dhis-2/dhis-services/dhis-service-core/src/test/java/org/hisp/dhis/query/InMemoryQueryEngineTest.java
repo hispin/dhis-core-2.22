@@ -406,7 +406,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void sortNameDesc()
     {
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
@@ -427,7 +426,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void sortNameAsc()
     {
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
@@ -448,7 +446,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void sortCreatedDesc()
     {
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
@@ -469,7 +466,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void sortCreatedAsc()
     {
         Schema schema = schemaService.getDynamicSchema( DataElement.class );

@@ -30,7 +30,9 @@ package org.hisp.dhis.query;
 
 import com.google.common.base.MoreObjects;
 import org.hisp.dhis.schema.Property;
+import org.hisp.dhis.system.util.ReflectionUtils;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -69,6 +71,35 @@ public class Order
     public Property getProperty()
     {
         return property;
+    }
+
+    public int compare( Object lside, Object rside )
+    {
+        Object o1 = ReflectionUtils.invokeMethod( lside, property.getGetterMethod() );
+        Object o2 = ReflectionUtils.invokeMethod( rside, property.getGetterMethod() );
+
+        if ( String.class.isInstance( o1 ) && String.class.isInstance( o2 ) )
+        {
+            return ascending ? ((String) o1).compareTo( (String) o2 ) : ((String) o2).compareTo( (String) o1 );
+        }
+        else if ( Integer.class.isInstance( o1 ) && Integer.class.isInstance( o2 ) )
+        {
+            return ascending ? ((Integer) o1).compareTo( (Integer) o2 ) : ((Integer) o2).compareTo( (Integer) o1 );
+        }
+        else if ( Float.class.isInstance( o1 ) && Float.class.isInstance( o2 ) )
+        {
+            return ascending ? ((Float) o1).compareTo( (Float) o2 ) : ((Float) o2).compareTo( (Float) o1 );
+        }
+        else if ( Double.class.isInstance( o1 ) && Double.class.isInstance( o2 ) )
+        {
+            return ascending ? ((Double) o1).compareTo( (Double) o2 ) : ((Double) o2).compareTo( (Double) o1 );
+        }
+        else if ( Date.class.isInstance( o1 ) && Date.class.isInstance( o2 ) )
+        {
+            return ascending ? ((Date) o1).compareTo( (Date) o2 ) : ((Date) o2).compareTo( (Date) o1 );
+        }
+
+        return 0;
     }
 
     public static Order asc( Property property )
