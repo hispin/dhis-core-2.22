@@ -270,7 +270,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void getBetweenQuery()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );

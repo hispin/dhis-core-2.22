@@ -75,6 +75,14 @@ public class BetweenOperator extends Operator
 
             return s1 >= min && s1 <= max;
         }
+        else if ( Date.class.isInstance( value ) )
+        {
+            Date min = getValue( Date.class, 0 );
+            Date max = getValue( Date.class, 1 );
+            Date s2 = (Date) value;
+
+            return (s2.equals( min ) || s2.after( min )) && (s2.before( max ) || s2.equals( max ));
+        }
         else if ( Collection.class.isInstance( value ) )
         {
             Collection<?> collection = (Collection<?>) value;
