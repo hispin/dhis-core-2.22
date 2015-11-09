@@ -394,86 +394,362 @@ $( function() {
         NS.I18n = new I18n();
     })();
 
-    // NS conf
+    // NS DimensionConfig
     (function() {
-        var conf = function() {
+        var DimensionConfig = function() {
             var t = this;
 
+            // private
+            var dimensions = {
+                data: {
+                    value: 'data',
+                    name: NS.I18n.get('data') || 'Data',
+                    dimensionName: 'dx',
+                    objectName: 'dx'
+                },
+                category: {
+                    name: NS.I18n.get('assigned_categories') || 'Assigned categories',
+                    dimensionName: 'co',
+                    objectName: 'co',
+                },
+                indicator: {
+                    value: 'indicators',
+                    name: NS.I18n.get('indicators') || 'Indicators',
+                    dimensionName: 'dx',
+                    objectName: 'in'
+                },
+                dataElement: {
+                    value: 'dataElements',
+                    name: NS.I18n.get('data_elements') || 'Data elements',
+                    dimensionName: 'dx',
+                    objectName: 'de'
+                },
+                operand: {
+                    value: 'operand',
+                    name: NS.I18n.get('operand') || 'Operand',
+                    dimensionName: 'dx',
+                    objectName: 'dc'
+                },
+                dataSet: {
+                    value: 'dataSets',
+                    name: NS.I18n.get('data_sets') || 'Data sets',
+                    dimensionName: 'dx',
+                    objectName: 'ds'
+                },
+                eventDataItem: {
+                    value: 'eventDataItem',
+                    name: NS.I18n.get('event_data_items') || 'Event data items',
+                    dimensionName: 'dx',
+                    objectName: 'di'
+                },
+                programIndicator: {
+                    value: 'programIndicator',
+                    name: NS.I18n.get('program_indicators') || 'Program indicators',
+                    dimensionName: 'dx',
+                    objectName: 'pi'
+                },
+                period: {
+                    value: 'period',
+                    name: NS.I18n.get('periods') || 'Periods',
+                    dimensionName: 'pe',
+                    objectName: 'pe'
+                },
+                fixedPeriod: {
+                    value: 'periods'
+                },
+                relativePeriod: {
+                    value: 'relativePeriods'
+                },
+                organisationUnit: {
+                    value: 'organisationUnits',
+                    name: NS.I18n.get('NS.i18n.organisation_units') || 'Organisation units',
+                    dimensionName: 'ou',
+                    objectName: 'ou'
+                },
+                dimension: {
+                    value: 'dimension'
+                    //objectName: 'di'
+                },
+                value: {
+                    value: 'value'
+                }
+            };
+
+            // prototype
+            t.add = function(param) {
+                NS.arrayFrom(param).forEach(function(dimension) {
+                    dimension.dimensionName = dimension.id;
+                    dimension.objectName = dimension.id;
+
+                    dimensions[dimension.id] = dimension;
+                });
+            };
+
+            t.get = function(dimensionName) {
+                return dimensions[dimensionName];
+            };
+
+            t.getDimensionNameMap = function() {
+                var map = {};
+
+                for (var dimension in dimensions) {
+                    if (dimensions.hasOwnProperty(dimension)) {
+                        map[dimension.dimensionName] = dimension;
+                    }
+                }
+
+                return map;
+            };
+        };
+
+        NS.dimConf = new DimensionConfig();
+    })();
+
+    // NS DimensionConfig
+    (function() {
+        var PeriodConfig = function() {
+            var t = this;
+
+            // private
+            var periodTypes = {
+                'Daily': NS.I18n.get('daily') || 'Daily',
+                'Weekly': NS.I18n.get('weekly') || 'Weekly',
+                'Monthly': NS.I18n.get('monthly') || 'Monthly',
+                'BiMonthly': NS.I18n.get('bimonthly') || 'BiMonthly',
+                'Quarterly': NS.I18n.get('quarterly') || 'Quarterly',
+                'SixMonthly': NS.I18n.get('sixmonthly') || 'SixMonthly',
+                'SixMonthlyApril': NS.I18n.get('sixmonthly_april') || 'SixMonthly April',
+                'Yearly': NS.I18n.get('yearly') || 'Yearly',
+                'FinancialOct': NS.I18n.get('financial_oct') || 'Financial October',
+                'FinancialJuly': NS.I18n.get('financial_july') || 'Financial July',
+                'FinancialApril': NS.I18n.get('financial_april') || 'Financial April'
+            };
+
+            // uninitialized
+            var periodTypeRecords;
+
+            // prototype
+            t.getPeriodTypeRecords = function() {
+                if (periodTypeRecords) {
+                    return periodTypeRecords;
+                }
+
+                var records = [];
+
+                for (var type in periodTypes) {
+                    if (periodTypes.hasOwnProperty(type)) {
+                        records.push({
+                            id: type,
+                            name: periodTypes[type]
+                        });
+                    }
+                }
+
+                return periodTypeRecords = records;
+            };
+        };
+
+        NS.periodConf = new PeriodConfig();
+    })();
+
+    // NS DimensionConfig
+    (function() {
+        var OptionConfig = function() {
+            var t = this;
+
+            // private
+            var displayDensity = {
+                'comfortable': {
+                    index: 1,
+                    id: 'COMFORTABLE',
+                    name: NS.I18n.get('comfortable') || 'Comfortable'
+                },
+                'normal': {
+                    index: 2,
+                    id: 'NORMAL',
+                    name: NS.I18n.get('normal') || 'Normal'
+                },
+                'compact': {
+                    index: 3,
+                    id: 'COMPACT',
+                    name: NS.I18n.get('compact') || 'Compact'
+                }
+            };
+
+            var fontSize = {
+                'large': {
+                    index: 1,
+                    id: 'LARGE',
+                    name: NS.I18n.get('large') || 'Large'
+                },
+                'normal': {
+                    index: 2,
+                    id: 'NORMAL',
+                    name: NS.I18n.get('normal') || 'Normal'
+                },
+                'small': {
+                    index: 3,
+                    id: 'SMALL',
+                    name: NS.I18n.get('small') || 'Small'
+                }
+            };
+
+            var digitGroupSeparator = {
+                'none': {
+                    index: 1,
+                    id: 'NONE',
+                    name: NS.I18n.get('none') || 'None'
+                },
+                'space': {
+                    index: 2,
+                    id: 'SPACE',
+                    name: NS.I18n.get('space') || 'Space'
+                },
+                'comma': {
+                    index: 3,
+                    id: 'COMMA',
+                    name: NS.I18n.get('comma') || 'Comma'
+                }
+            };
+
+            var aggregationType = {
+                'def': {
+                    index: 1,
+                    id: 'DEFAULT',
+                    name: NS.I18n.get('by_data_element') || 'By data element'
+                },
+                'count': {
+                    index: 2,
+                    id: 'COUNT',
+                    name: NS.I18n.get('count') || 'Count'
+                },
+                'sum': {
+                    index: 3,
+                    id: 'SUM',
+                    name: NS.I18n.get('sum') || 'Sum'
+                },
+                'stddev': {
+                    index: 4,
+                    id: 'STDDEV',
+                    name: NS.I18n.get('stddev') || 'Standard deviation'
+                },
+                'variance': {
+                    index: 5,
+                    id: 'VARIANCE',
+                    name: NS.I18n.get('variance') || 'Variance'
+                },
+                'min': {
+                    index: 6,
+                    id: 'MIN',
+                    name: NS.I18n.get('min') || 'Min'
+                },
+                'max': {
+                    index: 7,
+                    id: 'MAX',
+                    name: NS.I18n.get('max') || 'Max'
+                }
+            };
+
+            // uninitialized
+            var displayDensityRecords;
+            var fontSizeRecords;
+            var digitGroupSeparatorRecords;
+            var aggregationTypeRecords;
+
+            // prototype
+            t.getDisplayDensity = function(key) {
+                return displayDensity[key];
+            };
+
+            t.getFontSize = function(key) {
+                return fontSize[key];
+            };
+
+            t.getDigitGroupSeparator = function(key) {
+                return digitGroupSeparator[key];
+            };
+
+            t.getAggregationType = function(key) {
+                return aggregationType[key];
+            };
+
+            t.getDisplayDensityRecords = function() {
+                if (displayDensityRecords) {
+                    return displayDensityRecords;
+                }
+
+                var records = [];
+
+                for (var option in displayDensity) {
+                    if (displayDensity.hasOwnProperty(option)) {
+                        records.push(displayDensity[option]);
+                    }
+                }
+
+                NS.arraySort(records, 'ASC', 'index');
+
+                return displayDensityRecords = records;
+            };
+
+            t.getFontSizeRecords = function() {
+                if (fontSizeRecords) {
+                    return fontSizeRecords;
+                }
+
+                var records = [];
+
+                for (var option in fontSize) {
+                    if (fontSize.hasOwnProperty(option)) {
+                        records.push(fontSize[option]);
+                    }
+                }
+
+                NS.arraySort(records, 'ASC', 'index');
+
+                return fontSizeRecords = records;
+            };
+
+            t.getDigitGroupSeparatorRecords = function() {
+                if (digitGroupSeparatorRecords) {
+                    return digitGroupSeparatorRecords;
+                }
+
+                var records = [];
+
+                for (var option in digitGroupSeparator) {
+                    if (digitGroupSeparator.hasOwnProperty(option)) {
+                        records.push(digitGroupSeparator[option]);
+                    }
+                }
+
+                NS.arraySort(records, 'ASC', 'index');
+
+                return digitGroupSeparatorRecords = records;
+            };
+
+            t.getAggregationTypeRecords = function() {
+                if (aggregationTypeRecords) {
+                    return aggregationTypeRecords;
+                }
+
+                var records = [];
+
+                for (var option in aggregationType) {
+                    if (aggregationType.hasOwnProperty(option)) {
+                        records.push(aggregationType[option]);
+                    }
+                }
+
+                NS.arraySort(records, 'ASC', 'index');
+
+                return aggregationTypeRecords = records;
+            };
+        };
+
+        NS.optionConf = new OptionConfig();
+    })();
+
             this.finals = {
-				dimension: {
-					data: {
-						value: 'data',
-						name: NS.I18n.data || 'Data',
-						dimensionName: 'dx',
-						objectName: 'dx'
-					},
-					category: {
-						name: NS.I18n.assigned_categories || 'Assigned categories',
-						dimensionName: 'co',
-						objectName: 'co',
-					},
-					indicator: {
-						value: 'indicators',
-						name: NS.I18n.indicators || 'Indicators',
-						dimensionName: 'dx',
-						objectName: 'in'
-					},
-					dataElement: {
-						value: 'dataElements',
-						name: NS.I18n.data_elements || 'Data elements',
-						dimensionName: 'dx',
-						objectName: 'de'
-					},
-					operand: {
-						value: 'operand',
-						name: 'Operand',
-						dimensionName: 'dx',
-						objectName: 'dc'
-					},
-					dataSet: {
-						value: 'dataSets',
-						name: NS.I18n.data_sets || 'Data sets',
-						dimensionName: 'dx',
-						objectName: 'ds'
-					},
-					eventDataItem: {
-						value: 'eventDataItem',
-						name: NS.I18n.event_data_items || 'Event data items',
-						dimensionName: 'dx',
-						objectName: 'di'
-					},
-					programIndicator: {
-						value: 'programIndicator',
-						name: NS.I18n.program_indicators || 'Program indicators',
-						dimensionName: 'dx',
-						objectName: 'pi'
-					},
-					period: {
-						value: 'period',
-						name: NS.I18n.periods || 'Periods',
-						dimensionName: 'pe',
-						objectName: 'pe'
-					},
-					fixedPeriod: {
-						value: 'periods'
-					},
-					relativePeriod: {
-						value: 'relativePeriods'
-					},
-					organisationUnit: {
-						value: 'organisationUnits',
-						name: NS.I18n.organisation_units || 'Organisation units',
-						dimensionName: 'ou',
-						objectName: 'ou'
-					},
-					dimension: {
-						value: 'dimension'
-						//objectName: 'di'
-					},
-					value: {
-						value: 'value'
-					}
-				},
 				root: {
 					id: 'root'
 				},
@@ -494,37 +770,37 @@ $( function() {
                 }
 			};
 
-            (function() {
-                var dimConf = t.finals.dimension;
+            //(function() {
+                //var dimConf = t.finals.dimension;
 
-                dimConf.objectNameMap = {};
-                dimConf.objectNameMap[dimConf.data.objectName] = dimConf.data;
-                dimConf.objectNameMap[dimConf.indicator.objectName] = dimConf.indicator;
-                dimConf.objectNameMap[dimConf.dataElement.objectName] = dimConf.dataElement;
-                dimConf.objectNameMap[dimConf.operand.objectName] = dimConf.operand;
-                dimConf.objectNameMap[dimConf.dataSet.objectName] = dimConf.dataSet;
-                dimConf.objectNameMap[dimConf.category.objectName] = dimConf.category;
-                dimConf.objectNameMap[dimConf.period.objectName] = dimConf.period;
-                dimConf.objectNameMap[dimConf.organisationUnit.objectName] = dimConf.organisationUnit;
-                dimConf.objectNameMap[dimConf.dimension.objectName] = dimConf.dimension;
-            })();
+                //dimConf.objectNameMap = {};
+                //dimConf.objectNameMap[dimConf.data.objectName] = dimConf.data;
+                //dimConf.objectNameMap[dimConf.indicator.objectName] = dimConf.indicator;
+                //dimConf.objectNameMap[dimConf.dataElement.objectName] = dimConf.dataElement;
+                //dimConf.objectNameMap[dimConf.operand.objectName] = dimConf.operand;
+                //dimConf.objectNameMap[dimConf.dataSet.objectName] = dimConf.dataSet;
+                //dimConf.objectNameMap[dimConf.category.objectName] = dimConf.category;
+                //dimConf.objectNameMap[dimConf.period.objectName] = dimConf.period;
+                //dimConf.objectNameMap[dimConf.organisationUnit.objectName] = dimConf.organisationUnit;
+                //dimConf.objectNameMap[dimConf.dimension.objectName] = dimConf.dimension;
+            //})();
 
-            this.period = {
-				periodTypes: [
-					{id: 'Daily', name: NS.I18n.daily},
-					{id: 'Weekly', name: NS.I18n.weekly},
-					{id: 'Monthly', name: NS.I18n.monthly},
-					{id: 'BiMonthly', name: NS.I18n.bimonthly},
-					{id: 'Quarterly', name: NS.I18n.quarterly},
-					{id: 'SixMonthly', name: NS.I18n.sixmonthly},
-					{id: 'SixMonthlyApril', name: NS.I18n.sixmonthly_april},
-					{id: 'Yearly', name: NS.I18n.yearly},
-					{id: 'FinancialOct', name: NS.I18n.financial_oct},
-					{id: 'FinancialJuly', name: NS.I18n.financial_july},
-					{id: 'FinancialApril', name: NS.I18n.financial_april}
-				],
-                relativePeriods: []
-			};
+            //this.period = {
+				//periodTypes: [
+					//{id: 'Daily', name: NS.I18n.daily},
+					//{id: 'Weekly', name: NS.I18n.weekly},
+					//{id: 'Monthly', name: NS.I18n.monthly},
+					//{id: 'BiMonthly', name: NS.I18n.bimonthly},
+					//{id: 'Quarterly', name: NS.I18n.quarterly},
+					//{id: 'SixMonthly', name: NS.I18n.sixmonthly},
+					//{id: 'SixMonthlyApril', name: NS.I18n.sixmonthly_april},
+					//{id: 'Yearly', name: NS.I18n.yearly},
+					//{id: 'FinancialOct', name: NS.I18n.financial_oct},
+					//{id: 'FinancialJuly', name: NS.I18n.financial_july},
+					//{id: 'FinancialApril', name: NS.I18n.financial_april}
+				//],
+                //relativePeriods: []
+			//};
 
             this.valueType = {
             	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
@@ -646,7 +922,7 @@ $( function() {
             };
         };
 
-        NS.conf = new conf();
+
     })();
 
     // Api
@@ -1897,7 +2173,7 @@ $( function() {
                                 for (var j = 0; j < rowAxis.dims - 1; j++) {
                                     a.push(getEmptyNameTdConfig({
                                         cls: 'pivot-dim-label',
-                                        htmlValue: dimConf.objectNameMap[rowDimensionNames[j]].name
+                                        htmlValue: (dimConf.objectNameMap[rowDimensionNames[j]] || {}).name
                                     }));
                                 }
                             }
