@@ -377,7 +377,7 @@ $( function() {
         NS.DateManager = new DateManager();
     })();
 
-    // NS I18n
+    // I18n
     (function() {
         var I18n = function(config) {
             this.map = config || {};
@@ -394,7 +394,7 @@ $( function() {
         NS.I18n = new I18n();
     })();
 
-    // NS DimensionConfig
+    // DimensionConfig
     (function() {
         var DimensionConfig = function() {
             var t = this;
@@ -485,8 +485,8 @@ $( function() {
                 });
             };
 
-            t.get = function(dimensionName) {
-                return dimensions[dimensionName];
+            t.get = function(name) {
+                return dimensions[name];
             };
 
             t.getDimensionNameMap = function() {
@@ -500,12 +500,14 @@ $( function() {
 
                 return map;
             };
+
+            t.getObjectNameMap = t.getDimensionNameMap;
         };
 
-        NS.dimConf = new DimensionConfig();
+        NS.DimConf = new DimensionConfig();
     })();
 
-    // NS DimensionConfig
+    // PeriodConfig
     (function() {
         var PeriodConfig = function() {
             var t = this;
@@ -549,10 +551,10 @@ $( function() {
             };
         };
 
-        NS.periodConf = new PeriodConfig();
+        NS.PeriodConf = new PeriodConfig();
     })();
 
-    // NS DimensionConfig
+    // OptionConfig
     (function() {
         var OptionConfig = function() {
             var t = this;
@@ -598,17 +600,20 @@ $( function() {
                 'none': {
                     index: 1,
                     id: 'NONE',
-                    name: NS.I18n.get('none') || 'None'
+                    name: NS.I18n.get('none') || 'None',
+                    value: ''
                 },
                 'space': {
                     index: 2,
                     id: 'SPACE',
-                    name: NS.I18n.get('space') || 'Space'
+                    name: NS.I18n.get('space') || 'Space',
+                    value: '&nbsp;'
                 },
                 'comma': {
                     index: 3,
                     id: 'COMMA',
-                    name: NS.I18n.get('comma') || 'Comma'
+                    name: NS.I18n.get('comma') || 'Comma',
+                    value: ','
                 }
             };
 
@@ -650,11 +655,21 @@ $( function() {
                 }
             };
 
+            var valueType = {
+                'numeric': ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+                'text': ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	'boolean': ['BOOLEAN','TRUE_ONLY'],
+            	'date': ['DATE','DATETIME'],
+            	'aggregate': ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            };
+
             // uninitialized
             var displayDensityRecords;
             var fontSizeRecords;
             var digitGroupSeparatorRecords;
             var aggregationTypeRecords;
+
+            var digitGroupSeparatorIdMap;
 
             // prototype
             t.getDisplayDensity = function(key) {
@@ -744,73 +759,43 @@ $( function() {
 
                 return aggregationTypeRecords = records;
             };
-        };
 
-        NS.optionConf = new OptionConfig();
-    })();
-
-            this.finals = {
-				root: {
-					id: 'root'
-				},
-                style: {
-                    'normal': 'NORMAL',
-                    'compact': 'COMPACT',
-                    'xcompact': 'XCOMPACT',
-                    'comfortable': 'COMFORTABLE',
-                    'xcomfortable': 'XCOMFORTABLE',
-                    'small': 'SMALL',
-                    'xsmall': 'XSMALL',
-                    'large': 'LARGE',
-                    'xlarge': 'XLARGE',
-                    'space': 'SPACE',
-                    'comma': 'COMMA',
-                    'none': 'NONE',
-                    'default_': 'DEFAULT'
-                }
-			};
-
-            //(function() {
-                //var dimConf = t.finals.dimension;
-
-                //dimConf.objectNameMap = {};
-                //dimConf.objectNameMap[dimConf.data.objectName] = dimConf.data;
-                //dimConf.objectNameMap[dimConf.indicator.objectName] = dimConf.indicator;
-                //dimConf.objectNameMap[dimConf.dataElement.objectName] = dimConf.dataElement;
-                //dimConf.objectNameMap[dimConf.operand.objectName] = dimConf.operand;
-                //dimConf.objectNameMap[dimConf.dataSet.objectName] = dimConf.dataSet;
-                //dimConf.objectNameMap[dimConf.category.objectName] = dimConf.category;
-                //dimConf.objectNameMap[dimConf.period.objectName] = dimConf.period;
-                //dimConf.objectNameMap[dimConf.organisationUnit.objectName] = dimConf.organisationUnit;
-                //dimConf.objectNameMap[dimConf.dimension.objectName] = dimConf.dimension;
-            //})();
-
-            //this.period = {
-				//periodTypes: [
-					//{id: 'Daily', name: NS.I18n.daily},
-					//{id: 'Weekly', name: NS.I18n.weekly},
-					//{id: 'Monthly', name: NS.I18n.monthly},
-					//{id: 'BiMonthly', name: NS.I18n.bimonthly},
-					//{id: 'Quarterly', name: NS.I18n.quarterly},
-					//{id: 'SixMonthly', name: NS.I18n.sixmonthly},
-					//{id: 'SixMonthlyApril', name: NS.I18n.sixmonthly_april},
-					//{id: 'Yearly', name: NS.I18n.yearly},
-					//{id: 'FinancialOct', name: NS.I18n.financial_oct},
-					//{id: 'FinancialJuly', name: NS.I18n.financial_july},
-					//{id: 'FinancialApril', name: NS.I18n.financial_april}
-				//],
-                //relativePeriods: []
-			//};
-
-            this.valueType = {
-            	numericTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
-            	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
-            	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
-            	dateTypes: ['DATE','DATETIME'],
-            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            t.getValueTypeOptions = function(type) {
+                return valueType[type];
             };
 
-			this.layout = {
+            t.getDigitGroupSeparatorIdMap = function() {
+                if (digitGroupSeparatorIdMap) {
+                    return digitGroupSeparatorIdMap;
+                }
+
+                var map = {};
+
+                for (var separator in digitGroupSeparator) {
+                    if (digitGroupSeparator.hasOwnProperty(separator)) {
+                        map[digitGroupSeparator[separator].id] = digitGroupSeparator[separator];
+                    }
+                }
+
+                return digitGroupSeparatorIdMap = map;
+            };
+
+            // dep 1
+
+            t.getDigitGroupSeparatorValueById = function(id) {
+                return t.getDigitGroupSeparatorIdMap()[id].value;
+            };
+        };
+
+        NS.OptionConf = new OptionConfig();
+    })();
+
+    // UiConfig
+    (function() {
+        var UiConfig = function() {
+            var t = this;
+
+            $.extend(t, {
 				west_width: 424,
 				west_fieldset_width: 420,
 				west_width_padding: 2,
@@ -853,76 +838,54 @@ $( function() {
 				multiselect_maxheight: 250,
 				multiselect_fill_default: 345,
 				multiselect_fill_reportingrates: 315
-			};
-
-			this.style = {
-				displayDensity: {},
-				fontSize: {},
-				digitGroupSeparator: {}
-            };
-
-            (function() {
-                var map = t.finals.style,
-                    displayDensity = t.style.displayDensity,
-                    fontSize = t.style.fontSize,
-                    digitGroupSeparator = t.style.digitGroupSeparator;
-
-                displayDensity[map.xcompact] = '2px';
-                displayDensity[map.compact] = '4px';
-                displayDensity[map.normal] = '6px';
-                displayDensity[map.comfortable] = '8px';
-                displayDensity[map.xcomfortable] = '10px';
-
-                fontSize[map.xsmall] = '9px';
-                fontSize[map.small] = '10px';
-                fontSize[map.normal] = '11px';
-                fontSize[map.large] = '12px';
-                fontSize[map.xlarge] = '14px';
-
-                digitGroupSeparator[map.space] = '&nbsp;';
-                digitGroupSeparator[map.comma] = ',';
-                digitGroupSeparator[map.none] = '';
-            })();
-
-            this.url = {
-                analysisFields: [
-                    '*',
-                    'program[id,name]',
-                    'programStage[id,name]',
-                    'columns[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'rows[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'filters[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    '!lastUpdated',
-                    '!href',
-                    '!created',
-                    '!publicAccess',
-                    '!rewindRelativePeriods',
-                    '!userOrganisationUnit',
-                    '!userOrganisationUnitChildren',
-                    '!userOrganisationUnitGrandChildren',
-                    '!externalAccess',
-                    '!access',
-                    '!relativePeriods',
-                    '!columnDimensions',
-                    '!rowDimensions',
-                    '!filterDimensions',
-                    '!user',
-                    '!organisationUnitGroups',
-                    '!itemOrganisationUnitGroups',
-                    '!userGroupAccesses',
-                    '!indicators',
-                    '!dataElements',
-                    '!dataElementOperands',
-                    '!dataElementGroups',
-                    '!dataSets',
-                    '!periods',
-                    '!organisationUnitLevels',
-                    '!organisationUnits'
-                ]
-            };
+			});
         };
 
+        NS.UiConf = new UiConfig();
+    })();
 
+    // UrlConfig
+    (function() {
+        var UrlConfig = function() {
+            var t = this;
+
+            t.analysisFields = [
+                '*',
+                'program[id,name]',
+                'programStage[id,name]',
+                'columns[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
+                'rows[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
+                'filters[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
+                '!lastUpdated',
+                '!href',
+                '!created',
+                '!publicAccess',
+                '!rewindRelativePeriods',
+                '!userOrganisationUnit',
+                '!userOrganisationUnitChildren',
+                '!userOrganisationUnitGrandChildren',
+                '!externalAccess',
+                '!access',
+                '!relativePeriods',
+                '!columnDimensions',
+                '!rowDimensions',
+                '!filterDimensions',
+                '!user',
+                '!organisationUnitGroups',
+                '!itemOrganisationUnitGroups',
+                '!userGroupAccesses',
+                '!indicators',
+                '!dataElements',
+                '!dataElementOperands',
+                '!dataElementGroups',
+                '!dataSets',
+                '!periods',
+                '!organisationUnitLevels',
+                '!organisationUnits'
+            ];
+        };
+
+        NS.UrlConf = new UrlConfig();
     })();
 
     // Api
@@ -1091,13 +1054,13 @@ $( function() {
                 t.showDimensionLabels = NS.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (NS.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
                 t.hideEmptyRows = NS.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
                 t.skipRounding = NS.isBoolean(config.skipRounding) ? config.skipRounding : false;
-                t.aggregationType = NS.isString(config.aggregationType) ? config.aggregationType : NS.conf.finals.style.default_;
+                t.aggregationType = NS.isString(config.aggregationType) ? config.aggregationType : NS.OptionConf.getAggregationType('def').id;
                 t.dataApprovalLevel = NS.isObject(config.dataApprovalLevel) && NS.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
                 t.showHierarchy = NS.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
                 t.completedOnly = NS.isBoolean(config.completedOnly) ? config.completedOnly : false;
-                t.displayDensity = NS.isString(config.displayDensity) && !NS.isEmpty(config.displayDensity) ? config.displayDensity : NS.conf.finals.style.normal;
-                t.fontSize = NS.isString(config.fontSize) && !NS.isEmpty(config.fontSize) ? config.fontSize : NS.conf.finals.style.normal;
-                t.digitGroupSeparator = NS.isString(config.digitGroupSeparator) && !NS.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : NS.conf.finals.style.space;
+                t.displayDensity = NS.isString(config.displayDensity) && !NS.isEmpty(config.displayDensity) ? config.displayDensity : NS.OptionConf.getDisplayDensity('normal').id;
+                t.fontSize = NS.isString(config.fontSize) && !NS.isEmpty(config.fontSize) ? config.fontSize : NS.OptionConf.getFontSize('normal').id;
+                t.digitGroupSeparator = NS.isString(config.digitGroupSeparator) && !NS.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : NS.OptionConf.getDigitGroupSeparator('space').id;
 
                 t.legendSet = (new NS.Api.Record(config.legendSet)).val(true);
 
@@ -1218,14 +1181,13 @@ $( function() {
             };
 
             Layout.prototype.val = function(noError) {
-                var dimConf = NS.conf.finals.dimension;
 
                 if (!(this.columns || this.rows)) {
                     this.alert(NS.I18n.get('at_least_one_dimension_must_be_specified_as_row_or_column'), noError); //todo alert
                     return null;
                 }
 
-                if (!this.hasDimension(dimConf.period.dimensionName)) {
+                if (!this.hasDimension(NS.DimConf.get('period').dimensionName)) {
                     this.alert(NS.I18n.get('at_least_one_period_must_be_specified_as_column_row_or_filter'), noError); //todo alert
                     return null;
                 }
@@ -1950,12 +1912,9 @@ $( function() {
 					isLegendSet = false,
                     tdCount = 0,
                     htmlArray,
-                    dimConf = NS.conf.finals.dimension,
-                    styleConf = NS.conf.finals.style,
-
-                    //todo
-                    idValueMap = response.getIdValueMap(layout),
-                    conf = NS.conf;
+                    dimensionNameMap = NS.DimConf.getDimensionNameMap(),
+                    objectNameMap = NS.DimConf.getObjectNameMap(),
+                    idValueMap = response.getIdValueMap(layout);
 
 				response.sortableIdObjects = []; //todo
 
@@ -2102,15 +2061,17 @@ $( function() {
                 };
 
                 prettyPrint = function(number, separator) {
-                    var styleConf = NS.conf.finals.style;
+                    var oc = NS.OptionConf,
+                        spaceId = oc.getDigitGroupSeparator('space').id,
+                        noneId = oc.getDigitGroupSeparator('none').id;
+console.log(separator);
+                    separator = separator || spaceId;
 
-                    separator = separator || styleConf.space;
-
-                    if (separator === styleConf.none) {
+                    if (separator === noneId) {
                         return number;
                     }
 
-                    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, NS.conf.style.digitGroupSeparator[separator]);
+                    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, oc.getDigitGroupSeparatorValueById(separator));
                 };
 
                 doColTotals = function() {
@@ -2165,7 +2126,7 @@ $( function() {
 
                             a.push(getEmptyNameTdConfig({
                                 cls: 'pivot-dim-label',
-                                htmlValue: dimConf.objectNameMap[columnDimensionNames[i]].name
+                                htmlValue: objectNameMap[columnDimensionNames[i]].name
                             }));
                         }
                         else {
@@ -2173,14 +2134,14 @@ $( function() {
                                 for (var j = 0; j < rowAxis.dims - 1; j++) {
                                     a.push(getEmptyNameTdConfig({
                                         cls: 'pivot-dim-label',
-                                        htmlValue: (dimConf.objectNameMap[rowDimensionNames[j]] || {}).name
+                                        htmlValue: (objectNameMap[rowDimensionNames[j]] || {}).name
                                     }));
                                 }
                             }
 
                             a.push(getEmptyNameTdConfig({
                                 cls: 'pivot-dim-label',
-                                htmlValue: (rowAxis ? (dimConf.objectNameMap[rowDimensionNames[j]] || {}).name : '') + (colAxis && rowAxis ? '&nbsp;/&nbsp;' : '') + (colAxis ? (dimConf.objectNameMap[columnDimensionNames[i]] || {}).name : '')
+                                htmlValue: (rowAxis ? (objectNameMap[rowDimensionNames[j]] || {}).name : '') + (colAxis && rowAxis ? '&nbsp;/&nbsp;' : '') + (colAxis ? (objectNameMap[columnDimensionNames[i]] || {}).name : '')
                             }));
                         }
 
@@ -2197,7 +2158,7 @@ $( function() {
                             for (var i = 0; i < rowDimensionNames.length; i++) {
                                 dimLabelHtml.push(getEmptyNameTdConfig({
                                     cls: 'pivot-dim-label',
-                                    htmlValue: dimConf.objectNameMap[rowDimensionNames[i]].name
+                                    htmlValue: objectNameMap[rowDimensionNames[i]].name
                                 }));
                             }
 
@@ -2757,8 +2718,8 @@ $( function() {
                     var cls = 'pivot',
                         table;
 
-                    cls += layout.displayDensity && layout.displayDensity !== styleConf.normal ? ' displaydensity-' + layout.displayDensity : '';
-                    cls += layout.fontSize && layout.fontSize !== styleConf.normal ? ' fontsize-' + layout.fontSize : '';
+                    cls += layout.displayDensity && layout.displayDensity !== NS.OptionConf.getDisplayDensity('normal').id ? ' displaydensity-' + layout.displayDensity : '';
+                    cls += layout.fontSize && layout.fontSize !== NS.OptionConf.getFontSize('normal').id ? ' fontsize-' + layout.fontSize : '';
 
 					table = '<table class="' + cls + '">';
 
