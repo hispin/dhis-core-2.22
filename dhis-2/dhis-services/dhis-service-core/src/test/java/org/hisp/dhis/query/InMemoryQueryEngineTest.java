@@ -299,6 +299,113 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
+    public void testDateRange()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+
+        query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
+        query.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
+
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 3, objects.size() );
+
+        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
+    }
+
+    @Test
+    public void testIsNull()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+        query.add( Restrictions.isNull( "categoryCombo" ) );
+
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 6, objects.size() );
+
+        assertTrue( collectionContainsUid( objects, "deabcdefghA" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghE" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghF" ) );
+    }
+
+    @Test
+    public void testIsNotNull()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+        query.add( Restrictions.isNotNull( "categoryCombo" ) );
+
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 0, objects.size() );
+    }
+
+    @Test
+    @Ignore
+    public void testDateRangeWithConjunction()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+
+        Conjunction conjunction = query.conjunction();
+        conjunction.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
+        conjunction.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
+        query.add( conjunction );
+
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 3, objects.size() );
+
+        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
+    }
+
+    @Test
+    @Ignore
+    public void testDoubleEqConjunction()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+
+        Conjunction conjunction = query.conjunction();
+        conjunction.add( Restrictions.eq( "id", "deabcdefghD" ) );
+        conjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
+        query.add( conjunction );
+
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 0, objects.size() );
+    }
+
+    @Test
+    @Ignore
+    public void testDoubleEqDisjunction()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+
+        Disjunction disjunction = query.disjunction();
+        disjunction.add( Restrictions.eq( "id", "deabcdefghD" ) );
+        disjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
+        query.add( disjunction );
+
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 2, objects.size() );
+
+        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghF" ) );
+    }
+
+    @Test
     @Ignore
     public void sortNameDesc()
     {
@@ -380,112 +487,5 @@ public class InMemoryQueryEngineTest
         assertEquals( "deabcdefghD", objects.get( 3 ).getUid() );
         assertEquals( "deabcdefghE", objects.get( 4 ).getUid() );
         assertEquals( "deabcdefghF", objects.get( 5 ).getUid() );
-    }
-
-    @Test
-    @Ignore
-    public void testDoubleEqConjunction()
-    {
-        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        query.setObjects( dataElements );
-
-        Conjunction conjunction = query.conjunction();
-        conjunction.add( Restrictions.eq( "id", "deabcdefghD" ) );
-        conjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
-        query.add( conjunction );
-
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
-
-        assertEquals( 0, objects.size() );
-    }
-
-    @Test
-    @Ignore
-    public void testDoubleEqDisjunction()
-    {
-        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        query.setObjects( dataElements );
-
-        Disjunction disjunction = query.disjunction();
-        disjunction.add( Restrictions.eq( "id", "deabcdefghD" ) );
-        disjunction.add( Restrictions.eq( "id", "deabcdefghF" ) );
-        query.add( disjunction );
-
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
-
-        assertEquals( 2, objects.size() );
-
-        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghF" ) );
-    }
-
-    @Test
-    public void testDateRange()
-    {
-        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        query.setObjects( dataElements );
-
-        query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
-        query.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
-
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
-
-        assertEquals( 3, objects.size() );
-
-        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
-    }
-
-    @Test
-    @Ignore
-    public void testDateRangeWithConjunction()
-    {
-        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        query.setObjects( dataElements );
-
-        Conjunction conjunction = query.conjunction();
-        conjunction.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
-        conjunction.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
-        query.add( conjunction );
-
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
-
-        assertEquals( 3, objects.size() );
-
-        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
-    }
-
-    @Test
-    public void testIsNull()
-    {
-        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        query.setObjects( dataElements );
-        query.add( Restrictions.isNull( "categoryCombo" ) );
-
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
-
-        assertEquals( 6, objects.size() );
-
-        assertTrue( collectionContainsUid( objects, "deabcdefghA" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghE" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghF" ) );
-    }
-
-    @Test
-    public void testIsNotNull()
-    {
-        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-        query.setObjects( dataElements );
-        query.add( Restrictions.isNotNull( "categoryCombo" ) );
-
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
-
-        assertEquals( 0, objects.size() );
     }
 }
