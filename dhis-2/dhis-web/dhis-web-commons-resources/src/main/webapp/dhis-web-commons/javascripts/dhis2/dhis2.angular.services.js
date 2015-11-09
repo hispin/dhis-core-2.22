@@ -1182,6 +1182,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         //Called from "runExpression". Only proceed with this logic in case there seems to be dhis function calls: "d2:" is present.
         if(angular.isDefined(expression) && expression.indexOf("d2:") !== -1){   
             var dhisFunctions = [{name:"d2:daysBetween",parameters:2},
+                                {name:"d2:weeksBetween",parameters:2},
+                                {name:"d2:monthsBetween",parameters:2},
                                 {name:"d2:yearsBetween",parameters:2},
                                 {name:"d2:floor",parameters:1},
                                 {name:"d2:modulus",parameters:2},
@@ -1236,6 +1238,24 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'days'));
                             successfulExecution = true;
                         } 
+                        else if(dhisFunction.name === "d2:weeksBetween") {
+                            var firstdate = $filter('trimquotes')(parameters[0]);
+                            var seconddate = $filter('trimquotes')(parameters[1]);
+                            firstdate = moment(firstdate);
+                            seconddate = moment(seconddate);
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'weeks'));
+                            successfulExecution = true;
+                        }
+                        else if(dhisFunction.name === "d2:monthsBetween") {
+                            var firstdate = $filter('trimquotes')(parameters[0]);
+                            var seconddate = $filter('trimquotes')(parameters[1]);
+                            firstdate = moment(firstdate);
+                            seconddate = moment(seconddate);
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'months'));
+                            successfulExecution = true;
+                        }
                         else if(dhisFunction.name === "d2:yearsBetween") {
                             var firstdate = $filter('trimquotes')(parameters[0]);
                             var seconddate = $filter('trimquotes')(parameters[1]);
@@ -1244,7 +1264,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             //Replace the end evaluation of the dhis function:
                             expression = expression.replace(callToThisFunction, seconddate.diff(firstdate,'years'));
                             successfulExecution = true;
-                        } 
+                        }
                         else if(dhisFunction.name === "d2:floor") {
                             var floored = Math.floor(parameters[0]);
                             //Replace the end evaluation of the dhis function:
