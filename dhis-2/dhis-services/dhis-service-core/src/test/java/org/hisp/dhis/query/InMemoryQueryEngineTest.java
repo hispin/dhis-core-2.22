@@ -150,6 +150,19 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
+    public void getEqQueryEnum()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+        query.add( Restrictions.eq( "valueType", ValueType.INTEGER ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 2, objects.size() );
+        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghF" ) );
+    }
+
+    @Test
     public void getNeQuery()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
