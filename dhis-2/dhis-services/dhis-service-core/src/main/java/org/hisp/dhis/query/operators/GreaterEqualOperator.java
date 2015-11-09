@@ -73,19 +73,19 @@ public class GreaterEqualOperator extends Operator
 
             return s1 != null && s2 >= s1;
         }
-        else if ( Collection.class.isInstance( value ) )
-        {
-            Collection<?> collection = (Collection<?>) value;
-            Integer size = getValue( Integer.class );
-
-            return size != null && collection.size() >= size;
-        }
         else if ( Date.class.isInstance( value ) )
         {
             Date s1 = getValue( Date.class );
             Date s2 = (Date) value;
 
             return s1 != null && (s2.after( s1 ) || s2.equals( s1 ));
+        }
+        else if ( Collection.class.isInstance( value ) )
+        {
+            Collection<?> collection = (Collection<?>) value;
+            Integer size = getValue( Integer.class );
+
+            return size != null && collection.size() >= size;
         }
 
         return false;
