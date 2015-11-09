@@ -13,11 +13,13 @@ $( function() {
             isDefined,
             isIE,
             numberConstrain,
+            numberToFixed,
             arrayFrom,
             arrayClean,
             arrayPluck,
             arrayUnique,
             arrayContains,
+            arraySort,
             clone,
             uuid,
             enumerables = function() {
@@ -42,15 +44,19 @@ $( function() {
             return !isNaN(parseFloat(param)) && isFinite(param);
         };
 
-        isArray = ('isArray' in Array) ? Array.isArray : function(param) {
-            return toString.call(param) === '[object Array]';
-        };
+        isArray = (function() {
+            return  ('isArray' in Array) ? Array.isArray : function(param) {
+                return toString.call(param) === '[object Array]';
+            };
+        })();
 
-        isObject = (toString.call(null) === '[object Object]') ? function(param) {
-            return param !== null && param !== undefined && toString.call(param) === '[object Object]' && param.ownerDocument === undefined;
-        } : function(param) {
-            return toString.call(param) === '[object Object]';
-        };
+        isObject = (function() {
+            return (toString.call(null) === '[object Object]') ? function(param) {
+                return param !== null && param !== undefined && toString.call(param) === '[object Object]' && param.ownerDocument === undefined;
+            } : function(param) {
+                return toString.call(param) === '[object Object]';
+            };
+        })();
 
         isBoolean = function(param) {
             return typeof param === 'boolean';
@@ -112,6 +118,16 @@ $( function() {
             }
             return number;
         };
+
+        numberToFixed = function() {
+            return ((0.9).toFixed() !== '1') ? function(value, precision) {
+                precision = precision || 0;
+                var pow = math.pow(10, precision);
+                return (math.round(value * pow) / pow).toFixed(precision);
+            } : function(value, precision) {
+                return value.toFixed(precision);
+            };
+        }();
 
         // dep: isArray
         arrayFrom = function(param, isNewRef) {
@@ -209,6 +225,62 @@ $( function() {
             return Array.prototype.indexOf.call(array, item) !== -1;
         };
 
+        // dep: isArray, isObject
+        arraySort = function(array, direction, key, emptyFirst) {
+            // supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
+
+            if (!(NS.isArray(array) && array.length)) {
+                return;
+            }
+
+            key = !!key || NS.isNumber(key) ? key : 'name';
+
+            array.sort( function(a, b) {
+
+                // if object, get the property values
+                if (NS.isObject(a) && NS.isObject(b)) {
+                    a = a[key];
+                    b = b[key];
+                }
+
+                // if array, get from the right index
+                if (NS.isArray(a) && NS.isArray(b)) {
+                    a = a[key];
+                    b = b[key];
+                }
+
+                // string
+                if (NS.isString(a) && NS.isString(b)) {
+                    a = a.toLowerCase();
+                    b = b.toLowerCase();
+
+                    if (direction === 'DESC') {
+                        return a < b ? 1 : (a > b ? -1 : 0);
+                    }
+                    else {
+                        return a < b ? -1 : (a > b ? 1 : 0);
+                    }
+                }
+
+                // number
+                else if (NS.isNumber(a) && NS.isNumber(b)) {
+                    return direction === 'DESC' ? b - a : a - b;
+                }
+
+                else if (a === undefined || a === null) {
+                    return emptyFirst ? -1 : 1;
+                }
+
+                else if (b === undefined || b === null) {
+                    return emptyFirst ? 1 : -1;
+                }
+
+                return -1;
+            });
+
+            return array;
+        };
+
         clone = function(item) {
             if (item === null || item === undefined) {
                 return item;
@@ -231,14 +303,14 @@ $( function() {
                 clone = [];
 
                 while (i--) {
-                    clone[i] = clone(item[i]);
+                    clone[i] = NS.clone(item[i]);
                 }
             }
             else if (type === '[object Object]' && item.constructor === Object) {
                 clone = {};
 
                 for (key in item) {
-                    clone[key] = clone(item[key]);
+                    clone[key] = NS.clone(item[key]);
                 }
 
                 if (enumerables) {
@@ -254,7 +326,7 @@ $( function() {
             return clone || item;
         };
 
-        uuid = function () {
+        uuid = function() {
             var s4 = function() {
                 return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
             };
@@ -272,11 +344,13 @@ $( function() {
         NS.isDefined = isDefined;
         NS.isIE = isIE;
         NS.numberConstrain = numberConstrain;
+        NS.numberToFixed = numberToFixed;
         NS.arrayFrom = arrayFrom;
         NS.arrayClean = arrayClean;
         NS.arrayPluck = arrayPluck;
         NS.arrayUnique = arrayUnique;
         NS.arrayContains = arrayContains;
+        NS.arraySort = arraySort;
         NS.clone = clone;
         NS.uuid = uuid;
     })();
@@ -955,10 +1029,6 @@ $( function() {
 
                 return $.getJSON('/api/analytics.json' + request.url());
             };
-
-            //Layout.prototype.sync = function(response) {
-
-
         })();
 
         // Request
@@ -1497,7 +1567,7 @@ $( function() {
 				if (aaAllFloorObjects.length) {
 
 					// set span to second lowest span number: if aFloorSpan == [15,3,15,1], set span to 3
-					var nSpan = nAxisHeight > 1 ? support.prototype.array.sort(NS.clone(aFloorSpan))[1] : nAxisWidth,
+					var nSpan = nAxisHeight > 1 ? NS.arraySort(NS.clone(aFloorSpan))[1] : nAxisWidth,
 						aAllFloorObjectsLast = aaAllFloorObjects[aaAllFloorObjects.length - 1];
 
 					for (var i = 0, leaf, parentUuids, obj, leafUuids = []; i < aAllFloorObjectsLast.length; i++) {
@@ -1564,6 +1634,10 @@ $( function() {
                 // init
 				var getRoundedHtmlValue,
 					getTdHtml,
+                    getValue,
+                    roundIf,
+                    getNumberOfDecimals,
+                    prettyPrint,
 					doSubTotals,
 					doRowTotals,
                     doColTotals,
@@ -1611,7 +1685,7 @@ $( function() {
 
 				getRoundedHtmlValue = function(value, dec) {
 					dec = dec || 2;
-					return parseFloat(support.prototype.number.roundIf(value, 2)).toString();
+					return parseFloat(roundIf(value, 2)).toString();
 				};
 
 				getTdHtml = function(config, metaDataId) {
@@ -1678,7 +1752,7 @@ $( function() {
 					colSpan = config.colSpan ? 'colspan="' + config.colSpan + '" ' : '';
 					rowSpan = config.rowSpan ? 'rowspan="' + config.rowSpan + '" ' : '';
                     htmlValue = getHtmlValue(config);
-					htmlValue = config.type !== 'dimension' ? t.prettyPrint(htmlValue, layout.digitGroupSeparator) : htmlValue;
+					htmlValue = config.type !== 'dimension' ? prettyPrint(htmlValue, layout.digitGroupSeparator) : htmlValue;
 
 					cls += config.hidden ? ' td-hidden' : '';
 					cls += config.collapsed ? ' td-collapsed' : '';
@@ -1714,6 +1788,54 @@ $( function() {
 
 					return html;
 				};
+
+                getValue = function(str) {
+                    var n = parseFloat(str);
+
+                    if (NS.isBoolean(str)) {
+                        return 1;
+                    }
+
+                    // return string if
+                    // - parsefloat(string) is not a number
+                    // - string is just starting with a number
+                    // - string is a valid date
+                    //if (!NS.isNumber(n) || n != str || new Date(str).toString() !== 'Invalid Date') {
+                    if (!NS.isNumber(n) || n != str) {
+                        return 0;
+                    }
+
+                    return n;
+                };
+
+                roundIf = function(number, precision) {
+                    number = parseFloat(number);
+                    precision = parseFloat(precision);
+
+                    if (NS.isNumber(number) && NS.isNumber(precision)) {
+                        var numberOfDecimals = getNumberOfDecimals(number);
+                        return numberOfDecimals > precision ? NS.numberToFixed(number, precision) : number;
+                    }
+
+                    return number;
+                };
+
+                getNumberOfDecimals = function(number) {
+                    var str = new String(number);
+                    return (str.indexOf('.') > -1) ? (str.length - str.indexOf('.') - 1) : 0;
+                };
+
+                prettyPrint = function(number, separator) {
+                    var styleConf = NS.conf.finals.style;
+
+                    separator = separator || styleConf.space;
+
+                    if (separator === styleConf.none) {
+                        return number;
+                    }
+
+                    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, NS.conf.style.digitGroupSeparator[separator]);
+                };
 
                 doColTotals = function() {
 					return !!layout.showColTotals;
@@ -1782,7 +1904,7 @@ $( function() {
 
                             a.push(getEmptyNameTdConfig({
                                 cls: 'pivot-dim-label',
-                                htmlValue: (rowAxis ? dimConf.objectNameMap[rowDimensionNames[j]].name : '') + (colAxis && rowAxis ? '&nbsp;/&nbsp;' : '') + (colAxis ? dimConf.objectNameMap[columnDimensionNames[i]].name : '')
+                                htmlValue: (rowAxis ? (dimConf.objectNameMap[rowDimensionNames[j]] || {}).name : '') + (colAxis && rowAxis ? '&nbsp;/&nbsp;' : '') + (colAxis ? (dimConf.objectNameMap[columnDimensionNames[i]] || {}).name : '')
                             }));
                         }
 
@@ -1963,7 +2085,7 @@ $( function() {
                             responseValue = idValueMap[id];
 
 							if (NS.isDefined(responseValue)) {
-                                value = service.response.getValue(responseValue);
+                                value = getValue(responseValue);
                                 htmlValue = responseValue;
 							}
 							else {
@@ -2380,18 +2502,6 @@ $( function() {
                 t.colAxis = colAxis;
                 t.rowAxis = rowAxis;
                 t.tdCount = tdCount;
-			};
-
-            Table.prototype.prettyPrint = function(number, separator) {
-                var styleConf = NS.conf.finals.style;
-
-				separator = separator || styleConf.space;
-
-				if (separator === styleConf.none) {
-					return number;
-				}
-
-				return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, NS.conf.style.digitGroupSeparator[separator]);
 			};
         })();
     })();
