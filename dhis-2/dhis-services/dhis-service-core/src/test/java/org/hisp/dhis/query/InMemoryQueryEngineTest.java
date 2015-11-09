@@ -38,7 +38,6 @@ import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.jfree.data.time.Year;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -348,7 +347,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void testDateRangeWithConjunction()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
@@ -369,7 +367,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void testDoubleEqConjunction()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
@@ -386,7 +383,6 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
     public void testDoubleEqDisjunction()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );

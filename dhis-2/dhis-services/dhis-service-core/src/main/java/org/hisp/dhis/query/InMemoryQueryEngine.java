@@ -104,16 +104,76 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
     {
         for ( Criterion criterion : query.getCriterions() )
         {
-            Restriction restriction = (Restriction) criterion;
-            Object value = getValue( query, object, restriction.getPath() );
-
-            if ( !restriction.getOperator().test( value ) )
+            // normal Restriction, just assume Conjunction
+            if ( Restriction.class.isInstance( criterion ) )
             {
-                return false;
+                Restriction restriction = (Restriction) criterion;
+                Object value = getValue( query, object, restriction.getPath() );
+
+                if ( !restriction.getOperator().test( value ) )
+                {
+                    return false;
+                }
+            }
+            else if ( Conjunction.class.isInstance( criterion ) )
+            {
+                Conjunction conjunction = (Conjunction) criterion;
+
+                if ( !testAnd( query, object, conjunction.getCriterions() ) )
+                {
+                    return false;
+                }
+            }
+            else if ( Disjunction.class.isInstance( criterion ) )
+            {
+                Disjunction disjunction = (Disjunction) criterion;
+
+                if ( !testOr( query, object, disjunction.getCriterions() ) )
+                {
+                    return false;
+                }
             }
         }
 
         return true;
+    }
+
+    private boolean testAnd( Query query, T object, List<Criterion> criterions )
+    {
+        for ( Criterion criterion : criterions )
+        {
+            if ( Restriction.class.isInstance( criterion ) )
+            {
+                Restriction restriction = (Restriction) criterion;
+                Object value = getValue( query, object, restriction.getPath() );
+
+                if ( !restriction.getOperator().test( value ) )
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean testOr( Query query, T object, List<Criterion> criterions )
+    {
+        for ( Criterion criterion : criterions )
+        {
+            if ( Restriction.class.isInstance( criterion ) )
+            {
+                Restriction restriction = (Restriction) criterion;
+                Object value = getValue( query, object, restriction.getPath() );
+
+                if ( restriction.getOperator().test( value ) )
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private Object getValue( Query query, Object object, String path )
