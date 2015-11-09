@@ -82,6 +82,10 @@ public class Order
         {
             return ascending ? ((String) o1).compareTo( (String) o2 ) : ((String) o2).compareTo( (String) o1 );
         }
+        if ( Boolean.class.isInstance( o1 ) && Boolean.class.isInstance( o2 ) )
+        {
+            return ascending ? ((Boolean) o1).compareTo( (Boolean) o2 ) : ((Boolean) o2).compareTo( (Boolean) o1 );
+        }
         else if ( Integer.class.isInstance( o1 ) && Integer.class.isInstance( o2 ) )
         {
             return ascending ? ((Integer) o1).compareTo( (Integer) o2 ) : ((Integer) o2).compareTo( (Integer) o1 );
@@ -97,6 +101,10 @@ public class Order
         else if ( Date.class.isInstance( o1 ) && Date.class.isInstance( o2 ) )
         {
             return ascending ? ((Date) o1).compareTo( (Date) o2 ) : ((Date) o2).compareTo( (Date) o1 );
+        }
+        else if ( Enum.class.isInstance( o1 ) && Enum.class.isInstance( o2 ) )
+        {
+            return ascending ? String.valueOf( o1 ).compareTo( String.valueOf( o2 ) ) : String.valueOf( o2 ).compareTo( String.valueOf( o1 ) );
         }
 
         return 0;
