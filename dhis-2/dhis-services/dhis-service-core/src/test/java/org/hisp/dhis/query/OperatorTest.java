@@ -222,61 +222,61 @@ public class OperatorTest
     @Test
     public void testLikeAnywhere()
     {
-        LikeOperator operator = new LikeOperator( "operator", true, MatchMode.ANYWHERE );
+        LikeOperator operator = new LikeOperator( "oper", true, MatchMode.ANYWHERE );
 
-        assertTrue( operator.test( "pera" ) );
-        assertFalse( operator.test( "PERA" ) );
+        assertTrue( operator.test( "operator" ) );
+        assertFalse( operator.test( "OPERATOR" ) );
         assertFalse( operator.test( "abc" ) );
     }
 
     @Test
     public void testLikeStart()
     {
-        LikeOperator operator = new LikeOperator( "operator", true, MatchMode.START );
+        LikeOperator operator = new LikeOperator( "oper", true, MatchMode.START );
 
-        assertTrue( operator.test( "ope" ) );
-        assertFalse( operator.test( "OPE" ) );
+        assertTrue( operator.test( "operator" ) );
+        assertFalse( operator.test( "OPERATOR" ) );
         assertFalse( operator.test( "abc" ) );
     }
 
     @Test
     public void testLikeEnd()
     {
-        LikeOperator operator = new LikeOperator( "operator", true, MatchMode.END );
+        LikeOperator operator = new LikeOperator( "ator", true, MatchMode.END );
 
-        assertTrue( operator.test( "or" ) );
-        assertFalse( operator.test( "OPERA" ) );
-        assertFalse( operator.test( "opera" ) );
+        assertTrue( operator.test( "operator" ) );
+        assertFalse( operator.test( "OPERATOR" ) );
+        assertFalse( operator.test( "abc" ) );
     }
 
     @Test
     public void testILikeAnywhere()
     {
-        LikeOperator operator = new LikeOperator( "operator", false, MatchMode.ANYWHERE );
+        LikeOperator operator = new LikeOperator( "erat", false, MatchMode.ANYWHERE );
 
-        assertTrue( operator.test( "pera" ) );
-        assertTrue( operator.test( "PERA" ) );
+        assertTrue( operator.test( "operator" ) );
+        assertTrue( operator.test( "OPERATOR" ) );
         assertFalse( operator.test( "abc" ) );
     }
 
     @Test
     public void testILikeStart()
     {
-        LikeOperator operator = new LikeOperator( "operator", false, MatchMode.START );
+        LikeOperator operator = new LikeOperator( "oper", false, MatchMode.START );
 
-        assertTrue( operator.test( "ope" ) );
-        assertTrue( operator.test( "OPE" ) );
-        assertFalse( operator.test( "ator" ) );
+        assertTrue( operator.test( "operator" ) );
+        assertTrue( operator.test( "OPERATOR" ) );
+        assertFalse( operator.test( "abc" ) );
     }
 
     @Test
     public void testILikeEnd()
     {
-        LikeOperator operator = new LikeOperator( "operator", false, MatchMode.END );
+        LikeOperator operator = new LikeOperator( "ator", false, MatchMode.END );
 
-        assertTrue( operator.test( "ator" ) );
-        assertTrue( operator.test( "ATOR" ) );
-        assertFalse( operator.test( "opera" ) );
+        assertTrue( operator.test( "operator" ) );
+        assertTrue( operator.test( "OPERATOR" ) );
+        assertFalse( operator.test( "abc" ) );
     }
 
     @Test
