@@ -169,7 +169,7 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    public void getLikeQuery()
+    public void getLikeQueryAnywhere()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.setObjects( dataElements );
@@ -178,6 +178,35 @@ public class InMemoryQueryEngineTest
 
         assertEquals( 1, objects.size() );
         assertEquals( "deabcdefghF", objects.get( 0 ).getUid() );
+    }
+
+    @Test
+    public void getLikeQueryStart()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+        query.add( Restrictions.like( "name", "Data", MatchMode.START ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 6, objects.size() );
+        assertEquals( "deabcdefghA", objects.get( 0 ).getUid() );
+        assertEquals( "deabcdefghB", objects.get( 1 ).getUid() );
+        assertEquals( "deabcdefghC", objects.get( 2 ).getUid() );
+        assertEquals( "deabcdefghD", objects.get( 3 ).getUid() );
+        assertEquals( "deabcdefghE", objects.get( 4 ).getUid() );
+        assertEquals( "deabcdefghF", objects.get( 5 ).getUid() );
+    }
+
+    @Test
+    public void getLikeQueryEnd()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+        query.setObjects( dataElements );
+        query.add( Restrictions.like( "name", "ElementE", MatchMode.END ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 1, objects.size() );
+        assertEquals( "deabcdefghE", objects.get( 0 ).getUid() );
     }
 
     @Test
