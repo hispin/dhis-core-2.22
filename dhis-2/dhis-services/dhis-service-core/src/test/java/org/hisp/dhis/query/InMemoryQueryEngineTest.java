@@ -39,7 +39,6 @@ import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.jfree.data.time.Year;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -521,8 +520,7 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    @Ignore
-    public void testEqDeepPath()
+    public void testEqIdDeepPath()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
         query.setObjects( dataElementGroups );
@@ -531,5 +529,44 @@ public class InMemoryQueryEngineTest
 
         assertEquals( 1, objects.size() );
         assertEquals( "abcdefghijA", objects.get( 0 ).getUid() );
+    }
+
+    @Test
+    public void testLikeNameDeepPath()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.setObjects( dataElementGroups );
+        query.add( Restrictions.like( "dataElements.name", "ElementD", MatchMode.END ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 1, objects.size() );
+        assertEquals( "abcdefghijB", objects.get( 0 ).getUid() );
+    }
+
+    @Test
+    public void testLikeNamesDeepPath()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.setObjects( dataElementGroups );
+
+        Disjunction disjunction = query.disjunction();
+        disjunction.add( Restrictions.like( "dataElements.name", "ElementD", MatchMode.END ) );
+        disjunction.add( Restrictions.like( "dataElements.name", "ElementA", MatchMode.END ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 2, objects.size() );
+        assertTrue( collectionContainsUid( objects, "abcdefghijA" ) );
+        assertTrue( collectionContainsUid( objects, "abcdefghijB" ) );
+    }
+
+    @Test
+    public void testCollectionSize()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.setObjects( dataElementGroups );
+        query.add( Restrictions.eq( "dataElements", 3 ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 2, objects.size() );
     }
 }
