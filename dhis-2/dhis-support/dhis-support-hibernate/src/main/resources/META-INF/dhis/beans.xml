@@ -27,7 +27,7 @@
   </bean>
 
   <bean id="hibernateConfigurationProvider" class="org.hisp.dhis.hibernate.DefaultHibernateConfigurationProvider">
-    <property name="locationManager" ref="locationManager" />
+    <property name="configurationProvider" ref="dhisConfigurationProvider" />
   </bean>
 
   <bean id="hibernateMappingDirectoryLocations" class="org.hisp.dhis.hibernate.HibernateMappingDirectoryLocationsFactoryBean">
