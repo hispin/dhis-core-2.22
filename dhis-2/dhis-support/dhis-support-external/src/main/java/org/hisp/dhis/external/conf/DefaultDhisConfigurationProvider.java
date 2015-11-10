@@ -111,7 +111,7 @@ public class DefaultDhisConfigurationProvider
     {
         return properties;
     }
-
+    
     @Override
     public String getProperty( ConfigurationKey key  )
     {
