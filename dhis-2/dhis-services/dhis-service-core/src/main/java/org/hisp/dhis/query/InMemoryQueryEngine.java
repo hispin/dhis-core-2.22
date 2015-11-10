@@ -179,6 +179,12 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
     private Object getValue( Query query, Object object, String path )
     {
         Property property = query.getSchema().getProperty( path );
+
+        if ( property == null )
+        {
+            throw new QueryException( "No property found for path " + path );
+        }
+
         return ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
     }
 }

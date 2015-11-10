@@ -33,11 +33,13 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.jfree.data.time.Year;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -60,6 +62,8 @@ public class InMemoryQueryEngineTest
     private InMemoryQueryEngine<? extends IdentifiableObject> queryEngine;
 
     private Collection<DataElement> dataElements = new ArrayList<>();
+
+    private Collection<DataElementGroup> dataElementGroups = new ArrayList<>();
 
     @Before
     public void createDataElements()
@@ -96,6 +100,19 @@ public class InMemoryQueryEngineTest
         dataElements.add( dataElementD );
         dataElements.add( dataElementE );
         dataElements.add( dataElementF );
+
+        DataElementGroup dataElementGroupA = createDataElementGroup( 'A' );
+        dataElementGroupA.addDataElement( dataElementA );
+        dataElementGroupA.addDataElement( dataElementB );
+        dataElementGroupA.addDataElement( dataElementC );
+
+        DataElementGroup dataElementGroupB = createDataElementGroup( 'B' );
+        dataElementGroupB.addDataElement( dataElementD );
+        dataElementGroupB.addDataElement( dataElementE );
+        dataElementGroupB.addDataElement( dataElementF );
+
+        dataElementGroups.add( dataElementGroupA );
+        dataElementGroups.add( dataElementGroupB );
     }
 
     private boolean collectionContainsUid( Collection<? extends IdentifiableObject> collection, String uid )
@@ -492,5 +509,27 @@ public class InMemoryQueryEngineTest
         assertEquals( "deabcdefghD", objects.get( 3 ).getUid() );
         assertEquals( "deabcdefghE", objects.get( 4 ).getUid() );
         assertEquals( "deabcdefghF", objects.get( 5 ).getUid() );
+    }
+
+    @Test( expected = QueryException.class )
+    public void testInvalidDeepPath()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.setObjects( dataElementGroups );
+        query.add( Restrictions.eq( "dataElements.id", "deabcdefghA" ) );
+        queryEngine.query( query );
+    }
+
+    @Test
+    @Ignore
+    public void testEqDeepPath()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.setObjects( dataElementGroups );
+        query.add( Restrictions.eq( "dataElements.id", "deabcdefghA" ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 1, objects.size() );
+        assertEquals( "abcdefghijA", objects.get( 0 ).getUid() );
     }
 }
