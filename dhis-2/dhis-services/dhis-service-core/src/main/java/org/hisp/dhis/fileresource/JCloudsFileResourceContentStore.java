@@ -34,8 +34,8 @@ import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.external.location.LocationManager;
-import org.hisp.dhis.hibernate.HibernateConfigurationProvider;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
@@ -62,7 +62,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Halvdan Hoem Grelland
@@ -124,9 +123,9 @@ public class JCloudsFileResourceContentStore
         this.locationManager = locationManager;
     }
 
-    private HibernateConfigurationProvider configurationProvider;
+    private DhisConfigurationProvider configurationProvider;
 
-    public void setConfigurationProvider( HibernateConfigurationProvider configurationProvider )
+    public void setConfigurationProvider( DhisConfigurationProvider configurationProvider )
     {
         this.configurationProvider = configurationProvider;
     }
@@ -141,7 +140,7 @@ public class JCloudsFileResourceContentStore
         // Parse properties
         // ---------------------------------------------------------------------
 
-        Map<String, String> fileStoreConfiguration = getFileStorePropertiesMap();
+        Map<String, String> fileStoreConfiguration = configurationProvider.getProperties( FILE_STORE_CONFIG_NAMESPACE );
 
         String provider = fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_PROVIDER, JCLOUDS_PROVIDER_KEY_FILESYSTEM );
         provider = validateAndSelectProvider( provider );
@@ -370,16 +369,6 @@ public class JCloudsFileResourceContentStore
             .contentType( fileResource.getContentType() )
             .contentDisposition( "filename=" + fileResource.getName() )
             .build();
-    }
-
-    private Map<String, String> getFileStorePropertiesMap()
-    {
-        return  configurationProvider.getConfiguration().getProperties().entrySet().stream()
-            .filter( p -> ((String) p.getKey()).startsWith( FILE_STORE_CONFIG_NAMESPACE ) )
-            .collect( Collectors.toMap(
-                p -> StringUtils.strip( (String) p.getKey() ),
-                p -> StringUtils.strip( (String) p.getValue() )
-            ) );
     }
 
     private String validateAndSelectProvider( String provider )
