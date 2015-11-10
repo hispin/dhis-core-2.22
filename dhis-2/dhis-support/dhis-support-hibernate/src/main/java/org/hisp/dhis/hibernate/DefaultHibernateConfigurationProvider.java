@@ -67,8 +67,7 @@ public class DefaultHibernateConfigurationProvider
     // -------------------------------------------------------------------------
 
     private String defaultPropertiesFile = "hibernate-default.properties";
-    private String regularPropertiesFile = "hibernate.properties";
-    private String testPropertiesFile = "hibernate-test.properties";
+    private String propertiesFile = "hibernate.properties";
     
     private List<Resource> jarResources = new ArrayList<>();
     private List<Resource> dirResources = new ArrayList<>();
@@ -85,7 +84,7 @@ public class DefaultHibernateConfigurationProvider
     }
 
     // -------------------------------------------------------------------------
-    // Initialise
+    // Initialize
     // -------------------------------------------------------------------------
 
     @PostConstruct
@@ -131,31 +130,12 @@ public class DefaultHibernateConfigurationProvider
         }
 
         // ---------------------------------------------------------------------
-        // Add default properties
+        // Add default properties from class path
         // ---------------------------------------------------------------------
 
         Properties defaultProperties = getProperties( defaultPropertiesFile );
 
         configuration.addProperties( defaultProperties );
-
-        // ---------------------------------------------------------------------
-        // Choose which properties file to look for
-        // ---------------------------------------------------------------------
-
-        boolean testing = "true".equals( System.getProperty( "org.hisp.dhis.test", "false" ) );
-
-        String propertiesFile = testing ? testPropertiesFile : regularPropertiesFile;
-
-        // ---------------------------------------------------------------------
-        // Add custom properties from classpath
-        // ---------------------------------------------------------------------
-
-        Properties customProperties = getProperties( propertiesFile );
-
-        if ( customProperties != null )
-        {
-            configuration.addProperties( customProperties );
-        }
 
         // ---------------------------------------------------------------------
         // Add custom properties from file system
@@ -173,7 +153,9 @@ public class DefaultHibernateConfigurationProvider
         // ---------------------------------------------------------------------
         // Disable second-level cache during testing
         // ---------------------------------------------------------------------
-        
+
+        boolean testing = "true".equals( System.getProperty( "org.hisp.dhis.test", "false" ) );
+
         if ( testing )
         {
             configuration.setProperty( "hibernate.cache.use_second_level_cache", "false" );
