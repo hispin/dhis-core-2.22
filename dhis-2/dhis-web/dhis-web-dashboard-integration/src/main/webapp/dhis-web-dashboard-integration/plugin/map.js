@@ -2786,28 +2786,16 @@ Ext.onReady(function() {
                 getOptionSets();
             };
 
-			if (Ext.isObject(GIS.app)) {
-				Ext.Ajax.request({
-					url: gis.init.contextPath + '/api/analytics/events/query/' + view.program.id + '.json' + paramString,
-					disableCaching: false,
-					failure: function(r) {
-                        gis.alert(r);
-					},
-					success: function(r) {
-						success(Ext.decode(r.responseText));
-					}
-				});
-			}
-			else if (Ext.isObject(GIS.plugin)) {
-				Ext.data.JsonP.request({
-					url: gis.init.contextPath + '/api/analytics/events/query/' + view.program.id + '.jsonp' + paramString,
-					disableCaching: false,
-					scope: this,
-					success: function(r) {
-						success(r);
-					}
-				});
-			}
+            gis.ajax({
+                url: gis.init.contextPath + '/api/analytics/events/query/' + view.program.id + '.json' + paramString,
+                disableCaching: false,
+                failure: function(r) {
+                    gis.alert(r);
+                },
+                success: function(r) {
+                    success(Ext.decode(r.responseText));
+                }
+            });
 		};
 
 		loadLegend = function(view) {
@@ -2972,7 +2960,6 @@ Ext.onReady(function() {
 
 		loadOrganisationUnits = function(view) {
             var items = view.rows[0].items,
-                isPlugin = GIS.plugin && !GIS.app,
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -2991,7 +2978,7 @@ Ext.onReady(function() {
                         }
                     }
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params + '&includeGroupSets=true';
+                    return gis.init.contextPath + '/api/geoFeatures.json' + params + '&includeGroupSets=true';
                 }(),
                 success,
                 failure;
@@ -3023,24 +3010,13 @@ Ext.onReady(function() {
                 gis.alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
-            if (GIS.plugin && !GIS.app) {
-                Ext.data.JsonP.request({
-                    url: url,
-                    disableCaching: false,
-                    success: function(r) {
-                        success(r);
-                    }
-                });
-            }
-            else {
-                Ext.Ajax.request({
-                    url: url,
-                    disableCaching: false,
-                    success: function(r) {
-                        success(Ext.decode(r.responseText));
-                    }
-                });
-            }
+            gis.ajax({
+                url: url,
+                disableCaching: false,
+                success: function(r) {
+                    success(r);
+                }
+            });
         };
 
 		loadData = function(view, features) {
@@ -3059,7 +3035,7 @@ Ext.onReady(function() {
 
 		loadLegend = function(view) {
             var isPlugin = GIS.plugin && !GIS.app,
-                type = isPlugin ? 'jsonp' : 'json',
+                type = 'json',
                 url = gis.init.contextPath + '/api/organisationUnitGroupSets/' + view.organisationUnitGroupSet.id + '.' + type + '?fields=organisationUnitGroups[id,name,symbol]',
                 success;
 
@@ -3092,22 +3068,12 @@ Ext.onReady(function() {
                 afterLoad(view);
             };
 
-            if (isPlugin) {
-                Ext.data.JsonP.request({
-                    url: url,
-                    success: function(r) {
-                        success(r);
-                    }
-                });
-            }
-            else {
-                Ext.Ajax.request({
-                    url: url,
-                    success: function(r) {
-                        success(Ext.decode(r.responseText));
-                    }
-                });
-            }
+            gis.ajax({
+                url: url,
+                success: function(r) {
+                    success(r);
+                }
+            });
 		};
 
 		addCircles = function(view) {
@@ -3257,7 +3223,6 @@ Ext.onReady(function() {
 
 		loadOrganisationUnits = function(view) {
 			var items = view.rows[0].items,
-                isPlugin = GIS.plugin && !GIS.app,
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -3276,13 +3241,13 @@ Ext.onReady(function() {
                         }
                     }
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params;
+                    return gis.init.contextPath + '/api/geoFeatures.json' + params;
                 }(),
                 success,
                 failure;
 
             success = function(r) {
-                var geojson = gis.util.geojson.decode(r, 'DESC'),
+                var geojson = gis.util.geojson.decode(Ext.decode(r.responseText), 'DESC'),
                     format = new OpenLayers.Format.GeoJSON(),
                     features = gis.util.map.getTransformedFeatureArray(format.read(geojson)),
                     colors = ['black', 'blue', 'red', 'green', 'yellow'],
@@ -3340,27 +3305,13 @@ Ext.onReady(function() {
                 gis.alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
-            if (isPlugin) {
-                Ext.data.JsonP.request({
-                    url: url,
-                    disableCaching: false,
-                    success: function(r) {
-                        success(r);
-                    }
-                });
-            }
-            else {
-                Ext.Ajax.request({
-                    url: url,
-                    disableCaching: false,
-                    success: function(r) {
-                        success(Ext.decode(r.responseText));
-                    },
-                    failure: function() {
-                        failure();
-                    }
-                });
-            }
+            gis.ajax({
+                url: url,
+                disableCaching: false,
+                success: function(r) {
+                    success(r);
+                }
+            });
 		};
 
 		loadData = function(view, features) {
@@ -3620,7 +3571,6 @@ Ext.onReady(function() {
 
 		loadOrganisationUnits = function(view) {
 			var items = view.rows[0].items,
-                isPlugin = GIS.plugin && !GIS.app,
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -3639,13 +3589,13 @@ Ext.onReady(function() {
                         }
                     }
 
-                    return gis.init.contextPath + '/api/geoFeatures.' + (isPlugin ? 'jsonp' : 'json') + params;
+                    return gis.init.contextPath + '/api/geoFeatures.json' + params;
                 }(),
                 success,
                 failure;
 
             success = function(r) {
-                var geojson = gis.util.geojson.decode(r),
+                var geojson = gis.util.geojson.decode(Ext.decode(r.responseText)),
                     format = new OpenLayers.Format.GeoJSON(),
                     features = gis.util.map.getTransformedFeatureArray(format.read(geojson));
 
@@ -3671,27 +3621,16 @@ Ext.onReady(function() {
                 gis.alert(GIS.i18n.coordinates_could_not_be_loaded);
             };
 
-            if (isPlugin) {
-                Ext.data.JsonP.request({
-                    url: url,
-                    disableCaching: false,
-                    success: function(r) {
-                        success(r);
-                    }
-                });
-            }
-            else {
-                Ext.Ajax.request({
-                    url: url,
-                    disableCaching: false,
-                    success: function(r) {
-                        success(Ext.decode(r.responseText));
-                    },
-                    failure: function() {
-                        failure();
-                    }
-                });
-            }
+            gis.ajax({
+                url: url,
+                disableCaching: false,
+                success: function(r) {
+                    success(r);
+                },
+                failure: function() {
+                    failure();
+                }
+            });
 		};
 
 		loadData = function(view, features) {
@@ -3814,28 +3753,16 @@ Ext.onReady(function() {
 				loadLegend(view);
 			};
 
-			if (Ext.isObject(GIS.app)) {
-				Ext.Ajax.request({
-					url: gis.init.contextPath + '/api/analytics.json' + paramString,
-					disableCaching: false,
-					failure: function(r) {
-                        gis.alert(r);
-					},
-					success: function(r) {
-						success(Ext.decode(r.responseText));
-					}
-				});
-			}
-			else if (Ext.isObject(GIS.plugin)) {
-				Ext.data.JsonP.request({
-					url: gis.init.contextPath + '/api/analytics.jsonp' + paramString,
-					disableCaching: false,
-					scope: this,
-					success: function(r) {
-						success(r);
-					}
-				});
-			}
+            gis.ajax({
+                url: gis.init.contextPath + '/api/analytics.json' + paramString,
+                disableCaching: false,
+                failure: function(r) {
+                    gis.alert(r);
+                },
+                success: function(r) {
+                    success(Ext.decode(r.responseText));
+                }
+            });
 		};
 
 		loadLegend = function(view) {
@@ -3906,7 +3833,7 @@ Ext.onReady(function() {
             };
 
             loadLegendSet = function(view) {
-                Ext.Ajax.request({
+                gis.ajax({
 					url: gis.init.contextPath + '/api/legendSets/' + view.legendSet.id + '.json?fields=' + gis.conf.url.legendSetFields.join(','),
 					scope: this,
                     disableCaching: false,
@@ -3958,7 +3885,7 @@ Ext.onReady(function() {
                     return;
                 }
 
-                Ext.Ajax.request({
+                gis.ajax({
                     url: gis.init.contextPath + '/api/' + elementUrl + '.json?fields=legendSet[id,name]&paging=false&filter=id:eq:' + id,
                     success: function(r) {
                         var elements = Ext.decode(r.responseText)[elementUrl],
@@ -4440,7 +4367,7 @@ Ext.onReady(function() {
 
 			util.geojson = {};
 
-			util.geojson.decode = function(organisationUnits, levelOrder) {
+			util.geojson.decode = function(geoFeatures, levelOrder) {
 				var geojson = {
                     type: 'FeatureCollection',
                     crs: {
@@ -4451,14 +4378,14 @@ Ext.onReady(function() {
                     },
                     features: []
 				};
-
+                
                 levelOrder = levelOrder || 'ASC';
 
                 // sort
-                util.array.sort(organisationUnits, levelOrder, 'le');
+                util.array.sort(geoFeatures, levelOrder, 'le');
 
-				for (var i = 0, ou, gpid = '', gppg = ''; i < organisationUnits.length; i++) {
-                    ou = organisationUnits[i];
+				for (var i = 0, ou, gpid = '', gppg = ''; i < geoFeatures.length; i++) {
+                    ou = geoFeatures[i];
 
                     // grand parent
                     if (Ext.isString(ou.pg) && ou.pg.length) {
@@ -7197,8 +7124,7 @@ Ext.onReady(function() {
 				util = gis.util,
                 type = 'json',
                 headerMap = {
-                    json: 'application/json',
-                    jsonp: 'application/javascript'
+                    json: 'application/json'
                 },
                 headers = {
                     'Content-Type': headerMap[type],

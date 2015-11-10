@@ -684,7 +684,8 @@ Ext.onReady(function() {
                         line: 'line',
                         area: 'area',
                         pie: 'pie',
-                        radar: 'radar'
+                        radar: 'radar',
+                        gauge: 'gauge'
                     },
                     server: {
                         column: 'COLUMN',
@@ -3360,8 +3361,8 @@ Ext.onReady(function() {
                         text = '',
                         titleFont,
                         titleColor,
-                        isPie = xLayout.type === conf.finals.chart.pie,
-                        isGauge = xLayout.type === conf.finals.chart.gauge;
+                        isPie = xLayout.type === conf.finals.chart.client.pie,
+                        isGauge = xLayout.type === conf.finals.chart.client.gauge;
 
                     if (isPie) {
                         ids.push(columnIds[0]);
@@ -4267,8 +4268,7 @@ Ext.onReady(function() {
 				web = ns.core.web,
                 type = 'json',
                 headerMap = {
-                    json: 'application/json',
-                    jsonp: 'application/javascript'
+                    json: 'application/json'
                 },
                 headers = {
                     'Content-Type': headerMap[type],
@@ -4330,12 +4330,7 @@ Ext.onReady(function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.chart.getData = function(layout, isUpdateGui) {
@@ -4412,45 +4407,6 @@ Ext.onReady(function() {
                         }, ns);
 					}
 				}, ns);
-
-
-
-
-
-                //success = function(r) {
-                    //var response = api.response.Response((r.responseText ? Ext.decode(r.responseText) : r));
-
-                    //if (!response) {
-                        //web.mask.hide(ns.app.centerRegion);
-                        //return;
-                    //}
-
-                    //// sync xLayout with response
-                    //xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
-
-                    //if (!xLayout) {
-                        //web.mask.hide(ns.app.centerRegion);
-                        //return;
-                    //}
-
-                    //ns.app.paramString = paramString;
-
-                    //web.chart.getChart(layout, xLayout, response, isUpdateGui);
-                //};
-
-                //config.url = init.contextPath + '/api/analytics.' + type + paramString;
-                //config.disableCaching = false;
-                //config.timeout = 60000;
-                //config.headers = headers;
-                //config.success = success;
-                //config.failure = failure;
-
-                //if (type === 'jsonp') {
-                    //Ext.data.JsonP.request(config);
-                //}
-                //else {
-                    //Ext.Ajax.request(config);
-                //}
 			};
 
 			web.chart.getChart = function(layout, xLayout, response, isUpdateGui) {
@@ -4532,7 +4488,7 @@ Ext.onReady(function() {
                     xResponse = service.response.getExtendedResponse(xLayout, response);
 
                     // legend set
-                    if (xLayout.type === 'gauge' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
+                    if (xLayout.type === 'GAUGE' && Ext.Array.contains(xLayout.axisObjectNames, ind) && xLayout.objectNameIdsMap[ind].length) {
                         Ext.Ajax.request({
                             url: ns.core.init.contextPath + '/api/indicators/' + xLayout.objectNameIdsMap[ind][0] + '.json?fields=legendSet[legends[id,name,startValue,endValue,color]]',
                             disableCaching: false,

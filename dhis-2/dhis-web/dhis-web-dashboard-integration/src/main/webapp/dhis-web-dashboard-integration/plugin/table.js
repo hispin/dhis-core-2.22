@@ -862,9 +862,9 @@ Ext.onReady( function() {
 			};
 
 			support.prototype.number.prettyPrint = function(number, separator) {
-				separator = separator || conf.finals.style.space;
+				separator = conf.style.digitGroupSeparator[separator] ? separator : conf.finals.style.space;
 
-				if (separator === conf.finals.style.space.none) {
+				if (separator === conf.finals.style.none) {
 					return number;
 				}
 
@@ -3349,8 +3349,7 @@ Ext.onReady( function() {
 				web = ns.core.web,
                 type = 'json',
                 headerMap = {
-                    json: 'application/json',
-                    jsonp: 'application/javascript'
+                    json: 'application/json'
                 },
                 headers = {
                     'Content-Type': headerMap[type],
@@ -3517,7 +3516,7 @@ Ext.onReady( function() {
 					success: function(r) {
                         var metaData = Ext.decode(r.responseText).metaData;
 
-                        Ext.Ajax.request({
+                        ns.ajax({
                             url: init.contextPath + '/api/analytics.json' + sortedParamString,
                             timeout: 60000,
                             headers: {

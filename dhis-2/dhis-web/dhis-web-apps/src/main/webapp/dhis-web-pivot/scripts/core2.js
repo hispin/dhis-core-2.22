@@ -793,7 +793,8 @@ $( function() {
             // dep 1
 
             t.getDigitGroupSeparatorValueById = function(id) {
-                return t.getDigitGroupSeparatorIdMap()[id].value;
+                var separator = t.getDigitGroupSeparatorIdMap()[id];
+                return separator ? separator.value : '';
             };
         };
 
@@ -2090,7 +2091,7 @@ $( function() {
                         return number;
                     }
 
-                    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, oc.getDigitGroupSeparatorValueById(separator));
+                    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, oc.getDigitGroupSeparatorValueById(separator) || '');
                 };
 
                 doColTotals = function() {
