@@ -73,7 +73,7 @@ public class DefaultDhisConfigurationProvider
         }
         catch ( LocationManagerException ex1 )
         {
-            log.debug( "Could not load dhis.conf" );
+            log.debug( "Could not load dhis.conf, looking for hibernate.properties" );
                         
             try // Deprecated
             {

@@ -43,7 +43,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.cfg.Configuration;
-import org.hisp.dhis.external.location.LocationManager;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.external.location.LocationManagerException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -67,7 +67,6 @@ public class DefaultHibernateConfigurationProvider
     // -------------------------------------------------------------------------
 
     private String defaultPropertiesFile = "hibernate-default.properties";
-    private String propertiesFile = "hibernate.properties";
     
     private List<Resource> jarResources = new ArrayList<>();
     private List<Resource> dirResources = new ArrayList<>();
@@ -76,11 +75,11 @@ public class DefaultHibernateConfigurationProvider
     // Dependencies
     // -------------------------------------------------------------------------
 
-    private LocationManager locationManager;
+    private DhisConfigurationProvider configurationProvider;
 
-    public void setLocationManager( LocationManager locationManager )
+    public void setConfigurationProvider( DhisConfigurationProvider configurationProvider )
     {
-        this.locationManager = locationManager;
+        this.configurationProvider = configurationProvider;
     }
 
     // -------------------------------------------------------------------------
@@ -143,7 +142,9 @@ public class DefaultHibernateConfigurationProvider
         
         try
         {
-            configuration.addProperties( getProperties( locationManager.getInputStream( propertiesFile ) ) );   
+            Properties fileProperties = configurationProvider.getProperties();
+            
+            configuration.addProperties( fileProperties );   
         }
         catch ( LocationManagerException ex )
         {

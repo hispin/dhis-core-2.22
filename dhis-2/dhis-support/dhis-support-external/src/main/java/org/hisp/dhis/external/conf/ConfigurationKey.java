@@ -34,6 +34,12 @@ package org.hisp.dhis.external.conf;
 public enum ConfigurationKey
 {
     SYSTEM_NAME( "system.name" ),
+    CONNECTION_DIALECT( "connection.dialect" ),
+    CONNECTION_DRIVER_CLASS( "connection.driver_class" ),
+    CONNECTION_URL( "connection.url" ),
+    CONNECTION_USERNAME( "connection.username" ),
+    CONNECTION_PASSWORD( "connection.password" ),
+    CONNECTION_SCHEMA( "connection.schema" ),
     LDAP_URL( "ldap.url", "ldaps://0:1" ),
     LDAP_MANAGER_DN( "ldap.manager.dn" ),
     LDAP_MANAGER_PASSWORD( "ldap.manager.password" ),
