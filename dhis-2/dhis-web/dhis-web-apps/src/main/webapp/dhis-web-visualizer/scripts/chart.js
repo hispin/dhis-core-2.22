@@ -4268,8 +4268,7 @@ Ext.onReady(function() {
 				web = ns.core.web,
                 type = 'json',
                 headerMap = {
-                    json: 'application/json',
-                    jsonp: 'application/javascript'
+                    json: 'application/json'
                 },
                 headers = {
                     'Content-Type': headerMap[type],
@@ -4331,12 +4330,7 @@ Ext.onReady(function() {
                 config.success = success;
                 config.failure = failure;
 
-                if (type === 'jsonp') {
-                    Ext.data.JsonP.request(config);
-                }
-                else {
-                    Ext.Ajax.request(config);
-                }
+                ns.ajax(config, ns);
 			};
 
 			web.chart.getData = function(layout, isUpdateGui) {
@@ -4413,45 +4407,6 @@ Ext.onReady(function() {
                         }, ns);
 					}
 				}, ns);
-
-
-
-
-
-                //success = function(r) {
-                    //var response = api.response.Response((r.responseText ? Ext.decode(r.responseText) : r));
-
-                    //if (!response) {
-                        //web.mask.hide(ns.app.centerRegion);
-                        //return;
-                    //}
-
-                    //// sync xLayout with response
-                    //xLayout = service.layout.getSyncronizedXLayout(xLayout, response);
-
-                    //if (!xLayout) {
-                        //web.mask.hide(ns.app.centerRegion);
-                        //return;
-                    //}
-
-                    //ns.app.paramString = paramString;
-
-                    //web.chart.getChart(layout, xLayout, response, isUpdateGui);
-                //};
-
-                //config.url = init.contextPath + '/api/analytics.' + type + paramString;
-                //config.disableCaching = false;
-                //config.timeout = 60000;
-                //config.headers = headers;
-                //config.success = success;
-                //config.failure = failure;
-
-                //if (type === 'jsonp') {
-                    //Ext.data.JsonP.request(config);
-                //}
-                //else {
-                    //Ext.Ajax.request(config);
-                //}
 			};
 
 			web.chart.getChart = function(layout, xLayout, response, isUpdateGui) {
