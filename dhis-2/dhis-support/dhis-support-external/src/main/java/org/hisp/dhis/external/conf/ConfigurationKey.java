@@ -33,6 +33,7 @@ package org.hisp.dhis.external.conf;
  */
 public enum ConfigurationKey
 {
+    SYSTEM_NAME( "system.name", "DHIS 2" ),
     LDAP_URL( "ldap.url", "ldaps://0:1" ),
     LDAP_MANAGER_DN( "ldap.manager.dn" ),
     LDAP_MANAGER_PASSWORD( "ldap.manager.password" ),
