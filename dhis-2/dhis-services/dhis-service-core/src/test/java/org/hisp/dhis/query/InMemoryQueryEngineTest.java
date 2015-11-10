@@ -521,6 +521,7 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
+    @Ignore
     public void testEqDeepPath()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
