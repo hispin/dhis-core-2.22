@@ -220,7 +220,7 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
 
         Property property = schema.getProperty( restriction.getPath() );
 
-        return restriction.getOperator().getHibernateCriterion( property.getFieldName() );
+        return restriction.getOperator().getHibernateCriterion( property );
     }
 
     public org.hibernate.criterion.Order getHibernateOrder( Order order )

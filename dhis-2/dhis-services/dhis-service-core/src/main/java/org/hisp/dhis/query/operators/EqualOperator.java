@@ -30,8 +30,11 @@ package org.hisp.dhis.query.operators;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.query.QueryException;
+import org.hisp.dhis.query.QueryUtils;
 import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
+import org.hisp.dhis.schema.Property;
 
 import java.util.Collection;
 import java.util.Date;
@@ -47,9 +50,21 @@ public class EqualOperator extends Operator
     }
 
     @Override
-    public Criterion getHibernateCriterion( String propertyName )
+    public Criterion getHibernateCriterion( Property property )
     {
-        return Restrictions.eq( propertyName, args.get( 0 ) );
+        if ( property.isCollection() )
+        {
+            Integer value = QueryUtils.getValue( Integer.class, args.get( 0 ) );
+
+            if ( value == null )
+            {
+                throw new QueryException( "Left-side is collection, and right-side is not a valid integer, so can't compare by size." );
+            }
+
+            return Restrictions.sizeEq( property.getFieldName(), value );
+        }
+
+        return Restrictions.eq( property.getFieldName(), args.get( 0 ) );
     }
 
     @Override

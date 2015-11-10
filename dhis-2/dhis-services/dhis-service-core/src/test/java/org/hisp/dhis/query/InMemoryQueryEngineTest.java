@@ -560,7 +560,7 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
-    public void testCollectionSize()
+    public void testCollectionEqSize()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
         query.setObjects( dataElementGroups );

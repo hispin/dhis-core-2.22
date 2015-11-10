@@ -68,8 +68,11 @@ public class Type
 
     private boolean isSet;
 
+    private boolean isNull;
+
     public Type( Object object )
     {
+        isNull = object == null;
         isString = String.class.isInstance( object );
         isChar = Character.class.isInstance( object );
         isByte = Byte.class.isInstance( object );
@@ -83,6 +86,11 @@ public class Type
         isCollection = Collection.class.isInstance( object );
         isList = List.class.isInstance( object );
         isSet = Set.class.isInstance( object );
+    }
+
+    public boolean isNull()
+    {
+        return isNull;
     }
 
     public boolean isString()
@@ -167,6 +175,7 @@ public class Type
             .add( "isCollection", isCollection )
             .add( "isList", isList )
             .add( "isSet", isSet )
+            .add( "isNull", isNull )
             .toString();
     }
 }

@@ -32,6 +32,7 @@ import org.hibernate.criterion.Criterion;
 import org.hisp.dhis.query.QueryUtils;
 import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
+import org.hisp.dhis.schema.Property;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,7 +93,7 @@ public abstract class Operator
         return typed.isValid( klass );
     }
 
-    public abstract Criterion getHibernateCriterion( String propertyName );
+    public abstract Criterion getHibernateCriterion( Property property );
 
     public abstract boolean test( Object value );
 }
