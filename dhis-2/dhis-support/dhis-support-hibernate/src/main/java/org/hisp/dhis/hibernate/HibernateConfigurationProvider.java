@@ -36,7 +36,6 @@ import org.springframework.core.io.Resource;
 
 /**
  * @author Torgeir Lorange Ostby
- * @version $Id: HibernateConfigurationProvider.java 3217 2007-04-02 08:54:21Z torgeilo $
  */
 public interface HibernateConfigurationProvider
 {

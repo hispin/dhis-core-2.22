@@ -43,6 +43,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.cfg.Configuration;
+import org.hisp.dhis.external.conf.ConfigurationKey;
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.external.location.LocationManagerException;
 import org.springframework.core.io.ClassPathResource;
@@ -144,7 +145,9 @@ public class DefaultHibernateConfigurationProvider
         {
             Properties fileProperties = configurationProvider.getProperties();
             
-            configuration.addProperties( fileProperties );   
+            mapDhisToHibernateProperties( fileProperties );
+            
+            configuration.addProperties( fileProperties );
         }
         catch ( LocationManagerException ex )
         {
@@ -194,6 +197,26 @@ public class DefaultHibernateConfigurationProvider
     // Supportive methods
     // -------------------------------------------------------------------------
 
+    private void mapDhisToHibernateProperties( Properties properties )
+    {
+        putIfExists( properties, ConfigurationKey.CONNECTION_DIALECT.getKey(), "hibernate.dialect" );
+        putIfExists( properties, ConfigurationKey.CONNECTION_DRIVER_CLASS.getKey(), "hibernate.connection.driver_class" );
+        putIfExists( properties, ConfigurationKey.CONNECTION_URL.getKey(), "hibernate.connection.url" );
+        putIfExists( properties, ConfigurationKey.CONNECTION_USERNAME.getKey(), "hibernate.connection.username" );
+        putIfExists( properties, ConfigurationKey.CONNECTION_PASSWORD.getKey(), "hibernate.connection.password" );
+        putIfExists( properties, ConfigurationKey.CONNECTION_SCHEMA.getKey(), "hibernate.hbm2ddl.auto" );
+    }
+    
+    private void putIfExists( Properties properties, String from, String to )
+    {
+        String value = properties.getProperty( from );
+        
+        if ( value != null && !value.isEmpty() )
+        {
+            properties.put( to, value );
+        }
+    }
+    
     private Properties getProperties( String path )
         throws IOException
     {
