@@ -34,6 +34,7 @@ import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.external.conf.ConfigurationKey;
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.external.location.LocationManager;
 import org.jclouds.ContextBuilder;
@@ -58,7 +59,6 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -95,18 +95,6 @@ public class JCloudsFileResourceContentStore
     }};
 
     // -------------------------------------------------------------------------
-    // Property keys
-    // -------------------------------------------------------------------------
-
-    private static final String FILE_STORE_CONFIG_NAMESPACE = "filestore";
-
-    private static final String KEY_FILE_STORE_PROVIDER  = FILE_STORE_CONFIG_NAMESPACE + ".provider";
-    private static final String KEY_FILE_STORE_CONTAINER = FILE_STORE_CONFIG_NAMESPACE + ".container";
-    private static final String KEY_FILE_STORE_LOCATION  = FILE_STORE_CONFIG_NAMESPACE + ".location";
-    private static final String KEY_FILE_STORE_IDENTITY  = FILE_STORE_CONFIG_NAMESPACE + ".identity";
-    private static final String KEY_FILE_STORE_SECRET    = FILE_STORE_CONFIG_NAMESPACE + ".secret";
-
-    // -------------------------------------------------------------------------
     // Defaults
     // -------------------------------------------------------------------------
 
@@ -140,12 +128,10 @@ public class JCloudsFileResourceContentStore
         // Parse properties
         // ---------------------------------------------------------------------
 
-        Map<String, String> fileStoreConfiguration = configurationProvider.getProperties( FILE_STORE_CONFIG_NAMESPACE );
-
-        String provider = fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_PROVIDER, JCLOUDS_PROVIDER_KEY_FILESYSTEM );
+        String provider = configurationProvider.getProperty( ConfigurationKey.FILESTORE_PROVIDER );
         provider = validateAndSelectProvider( provider );
 
-        container = fileStoreConfiguration.get( KEY_FILE_STORE_CONTAINER );
+        container = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_CONTAINER );
 
         if ( !isValidContainerName( container ) )
         {
@@ -159,7 +145,9 @@ public class JCloudsFileResourceContentStore
             container = DEFAULT_CONTAINER;
         }
 
-        String location = fileStoreConfiguration.get( KEY_FILE_STORE_LOCATION );
+        String location = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_LOCATION );
+        String identity = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_IDENTITY );
+        String secret = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_SECRET );
 
         Properties overrides = new Properties();
 
@@ -175,8 +163,7 @@ public class JCloudsFileResourceContentStore
         }
         else if ( provider.equals( JCLOUDS_PROVIDER_KEY_AWS_S3 ) )
         {
-            credentials = new Credentials( fileStoreConfiguration.getOrDefault(
-                KEY_FILE_STORE_IDENTITY, StringUtils.EMPTY ), fileStoreConfiguration.getOrDefault( KEY_FILE_STORE_SECRET, StringUtils.EMPTY ) );
+            credentials = new Credentials( identity, secret );
 
             if ( credentials.identity.isEmpty() || credentials.credential.isEmpty() )
             {

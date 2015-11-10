@@ -1,5 +1,7 @@
 package org.hisp.dhis.external.conf;
 
+import org.apache.commons.lang3.StringUtils;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -48,8 +50,8 @@ public enum ConfigurationKey
     FILESTORE_PROVIDER( "filestore.provider", "filesystem" ),
     FILE_STORE_CONTAINER( "filestore.container" ),
     FILE_STORE_LOCATION( "filestore.location" ),
-    FILE_STORE_IDENTITY( "filestore.identity" ),
-    FILE_STORE_SECRET( "filestore.secret" );
+    FILE_STORE_IDENTITY( "filestore.identity", StringUtils.EMPTY ),
+    FILE_STORE_SECRET( "filestore.secret", StringUtils.EMPTY );
 
     private final String key;
     
