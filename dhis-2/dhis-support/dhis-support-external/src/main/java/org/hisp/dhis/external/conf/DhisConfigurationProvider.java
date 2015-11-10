@@ -1,7 +1,5 @@
 package org.hisp.dhis.external.conf;
 
-import java.util.Map;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -46,15 +44,6 @@ public interface DhisConfigurationProvider
      * @return a Properties instance.
      */
     Properties getProperties();
-    
-    /**
-     * Get configuration as an immutable map. The maps contains only properties 
-     * which keys are starting with the given key base.
-     * 
-     * @param keyBase the base for properties to include.
-     * @return an immutable map of the properties.
-     */
-    Map<String, String> getProperties( String keyBase );
     
     /**
      * Get the property value for the given key, or the default value for the
