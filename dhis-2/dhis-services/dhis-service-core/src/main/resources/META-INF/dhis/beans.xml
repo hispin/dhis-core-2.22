@@ -19,13 +19,9 @@
 
   <bean id="org.hisp.dhis.schema.SchemaService" class="org.hisp.dhis.schema.DefaultSchemaService" />
 
-  <bean id="org.hisp.dhis.query.QueryParser" class="org.hisp.dhis.query.DefaultQueryParser" />
-
-  <bean id="org.hisp.dhis.query.QueryService" class="org.hisp.dhis.query.DefaultQueryService" />
-
   <bean id="org.hisp.dhis.query.CriteriaQueryEngine" class="org.hisp.dhis.query.CriteriaQueryEngine" />
 
-  <bean id="org.hisp.dhis.query.InMemoryQueryEngine" class="org.hisp.dhis.query.InMemoryQueryEngine" />
+  <bean id="org.hisp.dhis.query.QueryService" class="org.hisp.dhis.query.DefaultQueryService" />
 
   <bean id="org.hisp.dhis.schema.PropertyIntrospectorService" class="org.hisp.dhis.schema.Jackson2PropertyIntrospectorService" />
 
@@ -581,7 +577,7 @@
 
   <bean id="org.hisp.dhis.fileresource.FileResourceContentStore" class="org.hisp.dhis.fileresource.JCloudsFileResourceContentStore"
     init-method="init" destroy-method="cleanUp">
-    <property name="configurationProvider" ref="hibernateConfigurationProvider" />
+    <property name="configurationProvider" ref="dhisConfigurationProvider" />
     <property name="locationManager" ref="locationManager" />
   </bean>
 
