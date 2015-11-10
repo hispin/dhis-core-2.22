@@ -28,13 +28,17 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.system.util.ReflectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +47,9 @@ import java.util.stream.Collectors;
  */
 public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryEngine
 {
+    @Autowired
+    private SchemaService schemaService;
+
     @Override
     public List<T> query( Query query )
     {
@@ -103,40 +110,50 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
 
     private boolean test( Query query, T object )
     {
+        List<Boolean> testResults = new ArrayList<>();
+
         for ( Criterion criterion : query.getCriterions() )
         {
+            Boolean testResult = false;
+
             // normal Restriction, just assume Conjunction
             if ( Restriction.class.isInstance( criterion ) )
             {
                 Restriction restriction = (Restriction) criterion;
                 Object value = getValue( query, object, restriction.getPath() );
 
-                if ( !restriction.getOperator().test( value ) )
+                if ( !Collection.class.isInstance( value ) )
                 {
-                    return false;
+                    testResult = restriction.getOperator().test( value );
+                }
+                else
+                {
+                    Collection<?> collection = (Collection<?>) value;
+
+                    for ( Object item : collection )
+                    {
+                        if ( restriction.getOperator().test( item ) )
+                        {
+                            testResult = true;
+                        }
+                    }
                 }
             }
             else if ( Conjunction.class.isInstance( criterion ) )
             {
                 Conjunction conjunction = (Conjunction) criterion;
-
-                if ( !testAnd( query, object, conjunction.getCriterions() ) )
-                {
-                    return false;
-                }
+                testResult = testAnd( query, object, conjunction.getCriterions() );
             }
             else if ( Disjunction.class.isInstance( criterion ) )
             {
                 Disjunction disjunction = (Disjunction) criterion;
-
-                if ( !testOr( query, object, disjunction.getCriterions() ) )
-                {
-                    return false;
-                }
+                testResult = testOr( query, object, disjunction.getCriterions() );
             }
+
+            testResults.add( testResult );
         }
 
-        return true;
+        return !testResults.contains( Boolean.FALSE );
     }
 
     private boolean testAnd( Query query, T object, List<Criterion> criterions )
@@ -148,8 +165,25 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
                 Restriction restriction = (Restriction) criterion;
                 Object value = getValue( query, object, restriction.getPath() );
 
-                if ( !restriction.getOperator().test( value ) )
+                if ( !Collection.class.isInstance( value ) )
                 {
+                    if ( !restriction.getOperator().test( value ) )
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    Collection<?> collection = (Collection<?>) value;
+
+                    for ( Object item : collection )
+                    {
+                        if ( restriction.getOperator().test( item ) )
+                        {
+                            return true;
+                        }
+                    }
+
                     return false;
                 }
             }
@@ -167,9 +201,24 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
                 Restriction restriction = (Restriction) criterion;
                 Object value = getValue( query, object, restriction.getPath() );
 
-                if ( restriction.getOperator().test( value ) )
+                if ( !Collection.class.isInstance( value ) )
                 {
-                    return true;
+                    if ( restriction.getOperator().test( value ) )
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    Collection<?> collection = (Collection<?>) value;
+
+                    for ( Object item : collection )
+                    {
+                        if ( restriction.getOperator().test( item ) )
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
         }
@@ -193,17 +242,46 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
 
             object = ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
 
-            if ( property.isSimple() )
+            if ( i == (paths.length - 1) )
             {
-                if ( i != (paths.length - 1) )
+                if ( property.isCollection() )
                 {
-                    throw new QueryException( "Simple property was found before finished parsing path expression, please check your path string." );
+                    return Lists.newArrayList( object );
                 }
 
                 return object;
             }
+
+            if ( property.isCollection() )
+            {
+                currentSchema = schemaService.getDynamicSchema( property.getItemKlass() );
+            }
+            else
+            {
+                currentSchema = schemaService.getDynamicSchema( property.getKlass() );
+            }
+
+            if ( property.isCollection() && i == (paths.length - 2) )
+            {
+                property = currentSchema.getProperty( paths[paths.length - 1] );
+
+                if ( property == null )
+                {
+                    throw new QueryException( "No property found for path " + path );
+                }
+
+                Collection<?> collection = (Collection<?>) object;
+                List<Object> items = new ArrayList<>();
+
+                for ( Object item : collection )
+                {
+                    items.add( ReflectionUtils.invokeMethod( item, property.getGetterMethod() ) );
+                }
+
+                return items;
+            }
         }
 
-        return null;
+        throw new QueryException( "No values found for path " + path );
     }
 }
