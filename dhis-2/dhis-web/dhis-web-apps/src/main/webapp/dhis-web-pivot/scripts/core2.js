@@ -492,16 +492,26 @@ $( function() {
             t.getDimensionNameMap = function() {
                 var map = {};
 
-                for (var dimension in dimensions) {
-                    if (dimensions.hasOwnProperty(dimension)) {
-                        map[dimension.dimensionName] = dimension;
+                for (var name in dimensions) {
+                    if (dimensions.hasOwnProperty(name)) {
+                        map[dimensions[name].dimensionName] = dimensions[name];
                     }
                 }
 
                 return map;
             };
 
-            t.getObjectNameMap = t.getDimensionNameMap;
+            t.getObjectNameMap = function() {
+                var map = {};
+
+                for (var name in dimensions) {
+                    if (dimensions.hasOwnProperty(name)) {
+                        map[dimensions[name].objectName] = dimensions[name];
+                    }
+                }
+
+                return map;
+            };
         };
 
         NS.DimConf = new DimensionConfig();
@@ -1317,8 +1327,17 @@ $( function() {
             };
 
             Request.prototype.add = function(param) {
+                var t = this;
+
                 if (NS.isString(param)) {
-                    this.params.push(param);
+                    t.params.push(param);
+                }
+                else if (NS.isObject(param)) {
+                    for (var key in param) {
+                        if (param.hasOwnProperty(key)) {
+                            t.params.push(key + '=' + param[key]);
+                        }
+                    }
                 }
 
                 return this;
@@ -1441,7 +1460,7 @@ $( function() {
             };
 
             Response.prototype.getNameById = function(id) {
-                return this.metaData.names[id];
+                return this.metaData.names[id] || '';
             };
 
             Response.prototype.getHierarchyNameById = function(id, isHierarchy, isHtml) {
@@ -2064,7 +2083,7 @@ $( function() {
                     var oc = NS.OptionConf,
                         spaceId = oc.getDigitGroupSeparator('space').id,
                         noneId = oc.getDigitGroupSeparator('none').id;
-console.log(separator);
+
                     separator = separator || spaceId;
 
                     if (separator === noneId) {
@@ -2126,7 +2145,7 @@ console.log(separator);
 
                             a.push(getEmptyNameTdConfig({
                                 cls: 'pivot-dim-label',
-                                htmlValue: objectNameMap[columnDimensionNames[i]].name
+                                htmlValue: response.getNameById(columnDimensionNames[i]) // objectNameMap[columnDimensionNames[i]].name
                             }));
                         }
                         else {
@@ -2134,14 +2153,14 @@ console.log(separator);
                                 for (var j = 0; j < rowAxis.dims - 1; j++) {
                                     a.push(getEmptyNameTdConfig({
                                         cls: 'pivot-dim-label',
-                                        htmlValue: (objectNameMap[rowDimensionNames[j]] || {}).name
+                                        htmlValue: response.getNameById(rowDimensionNames[j]) //(objectNameMap[rowDimensionNames[j]] || {}).name
                                     }));
                                 }
                             }
 
                             a.push(getEmptyNameTdConfig({
                                 cls: 'pivot-dim-label',
-                                htmlValue: (rowAxis ? (objectNameMap[rowDimensionNames[j]] || {}).name : '') + (colAxis && rowAxis ? '&nbsp;/&nbsp;' : '') + (colAxis ? (objectNameMap[columnDimensionNames[i]] || {}).name : '')
+                                htmlValue: response.getNameById(rowDimensionNames[j]) + (colAxis && rowAxis ? '&nbsp;/&nbsp;' : '') + response.getNameById(columnDimensionNames[i])
                             }));
                         }
 
@@ -2158,7 +2177,7 @@ console.log(separator);
                             for (var i = 0; i < rowDimensionNames.length; i++) {
                                 dimLabelHtml.push(getEmptyNameTdConfig({
                                     cls: 'pivot-dim-label',
-                                    htmlValue: objectNameMap[rowDimensionNames[i]].name
+                                    htmlValue: response.getNameById(rowDimensionNames[i])
                                 }));
                             }
 
