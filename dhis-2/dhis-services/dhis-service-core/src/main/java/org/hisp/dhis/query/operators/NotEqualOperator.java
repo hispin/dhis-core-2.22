@@ -30,6 +30,7 @@ package org.hisp.dhis.query.operators;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.schema.Property;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -42,9 +43,9 @@ public class NotEqualOperator extends EqualOperator
     }
 
     @Override
-    public Criterion getHibernateCriterion( String propertyName )
+    public Criterion getHibernateCriterion( Property property )
     {
-        return Restrictions.not( super.getHibernateCriterion( propertyName ) );
+        return Restrictions.not( super.getHibernateCriterion( property ) );
     }
 
     @Override

@@ -34,10 +34,13 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.jfree.data.time.Year;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -61,7 +64,8 @@ public class CriteriaQueryEngineTest
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
 
-    private void createDataElements()
+    @Before
+    public void createDataElements()
     {
         DataElement dataElementA = createDataElement( 'A' );
         dataElementA.setValueType( ValueType.NUMBER );
@@ -94,6 +98,19 @@ public class CriteriaQueryEngineTest
         identifiableObjectManager.save( dataElementC );
         identifiableObjectManager.save( dataElementF );
         identifiableObjectManager.save( dataElementD );
+
+        DataElementGroup dataElementGroupA = createDataElementGroup( 'A' );
+        dataElementGroupA.addDataElement( dataElementA );
+        dataElementGroupA.addDataElement( dataElementB );
+        dataElementGroupA.addDataElement( dataElementC );
+        dataElementGroupA.addDataElement( dataElementD );
+
+        DataElementGroup dataElementGroupB = createDataElementGroup( 'B' );
+        dataElementGroupB.addDataElement( dataElementE );
+        dataElementGroupB.addDataElement( dataElementF );
+
+        identifiableObjectManager.save( dataElementGroupA );
+        identifiableObjectManager.save( dataElementGroupB );
     }
 
     private boolean collectionContainsUid( Collection<? extends IdentifiableObject> collection, String uid )
@@ -112,7 +129,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getAllQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         assertEquals( 6, queryEngine.query( query ).size() );
     }
@@ -120,7 +136,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getMinMaxQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.setFirstResult( 2 );
         query.setMaxResults( 10 );
@@ -137,7 +152,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getEqQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.eq( "id", "deabcdefghA" ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -149,7 +163,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getNeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.ne( "id", "deabcdefghA" ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -167,7 +180,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getLikeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.like( "name", "F", MatchMode.ANYWHERE ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -179,7 +191,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getGtQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.gt( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -194,7 +205,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getLtQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.lt( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -208,7 +218,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getGeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.ge( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -224,7 +233,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getLeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.le( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -239,7 +247,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getBetweenQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.between( "created", Year.parseYear( "2003" ).getStart(), Year.parseYear( "2005" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -254,7 +261,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void getInQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.in( "id", Lists.newArrayList( "deabcdefghD", "deabcdefghF" ) ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
@@ -268,7 +274,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void sortNameDesc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -288,7 +293,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void sortNameAsc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -308,7 +312,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void sortCreatedDesc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -328,7 +331,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void sortCreatedAsc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -348,7 +350,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void testDoubleEqConjunction()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         Conjunction conjunction = query.conjunction();
@@ -364,7 +365,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void testDoubleEqDisjunction()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         Disjunction disjunction = query.disjunction();
@@ -383,7 +383,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void testDateRange()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
@@ -401,7 +400,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void testDateRangeWithConjunction()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         Conjunction conjunction = query.conjunction();
@@ -421,7 +419,6 @@ public class CriteriaQueryEngineTest
     @Test
     public void testIsNull()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.isNull( "categoryCombo" ) );
 
@@ -435,5 +432,29 @@ public class CriteriaQueryEngineTest
         assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
         assertTrue( collectionContainsUid( objects, "deabcdefghE" ) );
         assertTrue( collectionContainsUid( objects, "deabcdefghF" ) );
+    }
+
+    @Test
+    @Ignore
+    public void testCollectionEqSize4()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.add( Restrictions.eq( "dataElements", 4 ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 1, objects.size() );
+        assertEquals( "abcdefghijA", objects.get( 0 ).getUid() );
+    }
+
+    @Test
+    @Ignore
+    public void testCollectionEqSize2()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.add( Restrictions.eq( "dataElements", 2 ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 1, objects.size() );
+        assertEquals( "abcdefghijB", objects.get( 0 ).getUid() );
     }
 }

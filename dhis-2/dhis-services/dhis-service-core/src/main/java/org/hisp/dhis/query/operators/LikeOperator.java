@@ -33,6 +33,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
+import org.hisp.dhis.schema.Property;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -51,15 +52,15 @@ public class LikeOperator extends Operator
     }
 
     @Override
-    public Criterion getHibernateCriterion( String propertyName )
+    public Criterion getHibernateCriterion( Property property )
     {
         if ( caseSensitive )
         {
-            return Restrictions.like( propertyName, String.valueOf( args.get( 0 ) ), matchMode );
+            return Restrictions.like( property.getFieldName(), String.valueOf( args.get( 0 ) ), matchMode );
         }
         else
         {
-            return Restrictions.ilike( propertyName, String.valueOf( args.get( 0 ) ), matchMode );
+            return Restrictions.ilike( property.getFieldName(), String.valueOf( args.get( 0 ) ), matchMode );
         }
     }
 
