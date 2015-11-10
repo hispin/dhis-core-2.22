@@ -31,6 +31,7 @@ package org.hisp.dhis.query;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.schema.Property;
+import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.system.util.ReflectionUtils;
 
 import java.util.ArrayList;
@@ -178,13 +179,31 @@ public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryE
 
     private Object getValue( Query query, Object object, String path )
     {
-        Property property = query.getSchema().getProperty( path );
+        String[] paths = path.split( "\\." );
+        Schema currentSchema = query.getSchema();
 
-        if ( property == null )
+        for ( int i = 0; i < paths.length; i++ )
         {
-            throw new QueryException( "No property found for path " + path );
+            Property property = currentSchema.getProperty( paths[i] );
+
+            if ( property == null )
+            {
+                throw new QueryException( "No property found for path " + path );
+            }
+
+            object = ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
+
+            if ( property.isSimple() )
+            {
+                if ( i != (paths.length - 1) )
+                {
+                    throw new QueryException( "Simple property was found before finished parsing path expression, please check your path string." );
+                }
+
+                return object;
+            }
         }
 
-        return ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
+        return null;
     }
 }
