@@ -30,6 +30,7 @@ package org.hisp.dhis.query.operators;
 
 import org.hibernate.criterion.Criterion;
 import org.hisp.dhis.query.QueryUtils;
+import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public abstract class Operator
 
     protected final Typed typed;
 
+    protected Type argumentType;
+
     public Operator( Typed typed )
     {
         this.typed = typed;
@@ -52,13 +55,15 @@ public abstract class Operator
 
     public Operator( Typed typed, Object arg )
     {
-        this.typed = typed;
+        this( typed );
+        this.argumentType = new Type( arg );
         this.args.add( arg );
     }
 
     public Operator( Typed typed, Object... args )
     {
-        this.typed = typed;
+        this( typed );
+        this.argumentType = new Type( args[0] );
         Collections.addAll( this.args, args );
     }
 

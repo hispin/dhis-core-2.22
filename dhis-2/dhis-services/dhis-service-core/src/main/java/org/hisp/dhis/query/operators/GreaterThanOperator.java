@@ -30,6 +30,7 @@ package org.hisp.dhis.query.operators;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
 
 import java.util.Collection;
@@ -59,33 +60,35 @@ public class GreaterThanOperator extends Operator
             return false;
         }
 
-        if ( Integer.class.isInstance( value ) )
+        Type type = new Type( value );
+
+        if ( type.isInteger() )
         {
             Integer s1 = getValue( Integer.class );
             Integer s2 = (Integer) value;
 
             return s1 != null && s2 > s1;
         }
-        else if ( Float.class.isInstance( value ) )
+        else if ( type.isFloat() )
         {
             Float s1 = getValue( Float.class );
             Float s2 = (Float) value;
 
             return s1 != null && s2 > s1;
         }
-        else if ( Collection.class.isInstance( value ) )
-        {
-            Collection<?> collection = (Collection<?>) value;
-            Integer size = getValue( Integer.class );
-
-            return size != null && collection.size() > size;
-        }
-        else if ( Date.class.isInstance( value ) )
+        else if ( type.isDate() )
         {
             Date s1 = getValue( Date.class );
             Date s2 = (Date) value;
 
             return s1 != null && s2.after( s1 );
+        }
+        else if ( type.isCollection() )
+        {
+            Collection<?> collection = (Collection<?>) value;
+            Integer size = getValue( Integer.class );
+
+            return size != null && collection.size() > size;
         }
 
         return false;
