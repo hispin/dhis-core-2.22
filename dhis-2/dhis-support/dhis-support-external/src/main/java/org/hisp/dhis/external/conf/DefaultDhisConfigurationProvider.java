@@ -30,12 +30,16 @@ package org.hisp.dhis.external.conf;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.external.location.LocationManagerException;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * @author Lars Helge Overland
@@ -110,6 +114,24 @@ public class DefaultDhisConfigurationProvider
     public Properties getProperties()
     {
         return properties;
+    }
+
+    @Override
+    public Map<String, String> getProperties( String keyBase )
+    {
+        Properties properties = getProperties();
+        
+        Map<String, String> map = new HashMap<>();
+        
+        for ( String key : properties.stringPropertyNames() )
+        {
+            if ( key != null && key.startsWith( keyBase ) )
+            {
+                map.put( key, properties.getProperty( key ) );
+            }
+        }
+        
+        return ImmutableMap.copyOf( map );
     }
     
     @Override
