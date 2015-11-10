@@ -78,6 +78,11 @@ public class Order
         Object o1 = ReflectionUtils.invokeMethod( lside, property.getGetterMethod() );
         Object o2 = ReflectionUtils.invokeMethod( rside, property.getGetterMethod() );
 
+        if ( o1 == null || o2 == null )
+        {
+            return 0;
+        }
+
         if ( String.class.isInstance( o1 ) && String.class.isInstance( o2 ) )
         {
             return ascending ? ((String) o1).compareTo( (String) o2 ) : ((String) o2).compareTo( (String) o1 );
