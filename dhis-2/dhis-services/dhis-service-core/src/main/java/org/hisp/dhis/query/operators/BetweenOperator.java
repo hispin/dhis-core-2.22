@@ -30,6 +30,7 @@ package org.hisp.dhis.query.operators;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
 
 import java.util.Collection;
@@ -59,7 +60,9 @@ public class BetweenOperator extends Operator
             return false;
         }
 
-        if ( Integer.class.isInstance( value ) )
+        Type type = new Type( value );
+
+        if ( type.isInteger() )
         {
             Integer s1 = getValue( Integer.class, value );
             Integer min = getValue( Integer.class, 0 );
@@ -67,7 +70,7 @@ public class BetweenOperator extends Operator
 
             return s1 >= min && s1 <= max;
         }
-        else if ( Float.class.isInstance( value ) )
+        else if ( type.isFloat() )
         {
             Float s1 = getValue( Float.class, value );
             Integer min = getValue( Integer.class, 0 );
@@ -75,7 +78,7 @@ public class BetweenOperator extends Operator
 
             return s1 >= min && s1 <= max;
         }
-        else if ( Date.class.isInstance( value ) )
+        else if ( type.isDate() )
         {
             Date min = getValue( Date.class, 0 );
             Date max = getValue( Date.class, 1 );
@@ -83,7 +86,7 @@ public class BetweenOperator extends Operator
 
             return (s2.equals( min ) || s2.after( min )) && (s2.before( max ) || s2.equals( max ));
         }
-        else if ( Collection.class.isInstance( value ) )
+        else if ( type.isCollection() )
         {
             Collection<?> collection = (Collection<?>) value;
             Integer min = getValue( Integer.class, 0 );

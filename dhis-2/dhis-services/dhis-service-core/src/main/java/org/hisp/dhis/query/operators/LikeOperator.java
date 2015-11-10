@@ -31,6 +31,7 @@ package org.hisp.dhis.query.operators;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
 
 /**
@@ -70,7 +71,9 @@ public class LikeOperator extends Operator
             return false;
         }
 
-        if ( String.class.isInstance( value ) )
+        Type type = new Type( value );
+
+        if ( type.isString() )
         {
             String s1 = caseSensitive ? getValue( String.class ) : getValue( String.class ).toLowerCase();
             String s2 = caseSensitive ? (String) value : ((String) value).toLowerCase();

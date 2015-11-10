@@ -30,6 +30,7 @@ package org.hisp.dhis.query.operators;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.query.Type;
 import org.hisp.dhis.query.Typed;
 
 import java.util.Collection;
@@ -62,9 +63,11 @@ public class InOperator extends Operator
             return false;
         }
 
+        Type type = new Type( value );
+
         for ( Object item : items )
         {
-            if ( compare( item, value ) )
+            if ( compare( type, item, value ) )
             {
                 return true;
             }
@@ -73,44 +76,44 @@ public class InOperator extends Operator
         return false;
     }
 
-    private boolean compare( Object item, Object object )
+    private boolean compare( Type type, Object item, Object object )
     {
-        if ( String.class.isInstance( object ) )
+        if ( type.isString() )
         {
             String s1 = getValue( String.class, item );
             String s2 = (String) object;
 
             return s1 != null && s2.equals( s1 );
         }
-        else if ( Boolean.class.isInstance( object ) )
+        else if ( type.isBoolean() )
         {
             Boolean s1 = getValue( Boolean.class, item );
             Boolean s2 = (Boolean) object;
 
             return s1 != null && s2.equals( s1 );
         }
-        else if ( Integer.class.isInstance( object ) )
+        else if ( type.isInteger() )
         {
             Integer s1 = getValue( Integer.class, item );
             Integer s2 = (Integer) object;
 
             return s1 != null && s2.equals( s1 );
         }
-        else if ( Float.class.isInstance( object ) )
+        else if ( type.isFloat() )
         {
             Float s1 = getValue( Float.class, item );
             Float s2 = (Float) object;
 
             return s1 != null && s2.equals( s1 );
         }
-        else if ( Date.class.isInstance( object ) )
+        else if ( type.isDate() )
         {
             Date s1 = getValue( Date.class, item );
             Date s2 = (Date) object;
 
             return s1 != null && s2.equals( s1 );
         }
-        else if ( Enum.class.isInstance( object ) )
+        else if ( type.isEnum() )
         {
             String s2 = String.valueOf( object );
 
