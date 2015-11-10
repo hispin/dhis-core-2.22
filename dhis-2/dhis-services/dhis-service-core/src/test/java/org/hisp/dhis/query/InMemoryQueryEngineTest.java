@@ -516,12 +516,11 @@ public class InMemoryQueryEngineTest
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
         query.setObjects( dataElementGroups );
-        query.add( Restrictions.eq( "dataElements.id", "deabcdefghA" ) );
+        query.add( Restrictions.eq( "dataElements.abc", "deabcdefghA" ) );
         queryEngine.query( query );
     }
 
     @Test
-    @Ignore
     public void testEqDeepPath()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
