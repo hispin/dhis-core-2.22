@@ -35,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum ConfigurationKey
 {
-    SYSTEM_NAME( "system.name" ),
+    SYSTEM_ID( "system.id" ),
     CONNECTION_DIALECT( "connection.dialect" ),
     CONNECTION_DRIVER_CLASS( "connection.driver_class" ),
     CONNECTION_URL( "connection.url" ),
