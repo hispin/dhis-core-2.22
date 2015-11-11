@@ -95,6 +95,8 @@ public class DefaultHibernateConfigurationProvider
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
+        boolean testing = "true".equals( System.getProperty( "org.hisp.dhis.test", "false" ) );
+
         // ---------------------------------------------------------------------
         // Add mapping resources
         // ---------------------------------------------------------------------
@@ -141,24 +143,25 @@ public class DefaultHibernateConfigurationProvider
         // Add custom properties from file system
         // ---------------------------------------------------------------------
         
-        try
+        if ( !testing )
         {
-            Properties fileProperties = configurationProvider.getProperties();
-            
-            mapDhisToHibernateProperties( fileProperties );
-            
-            configuration.addProperties( fileProperties );
-        }
-        catch ( LocationManagerException ex )
-        {
-            log.info( "Could not read external configuration from file system" );
+            try
+            {
+                Properties fileProperties = configurationProvider.getProperties();
+                
+                mapToHibernateProperties( fileProperties );
+                
+                configuration.addProperties( fileProperties );
+            }
+            catch ( LocationManagerException ex )
+            {
+                log.info( "Could not read external configuration from file system" );
+            }
         }
 
         // ---------------------------------------------------------------------
         // Disable second-level cache during testing
         // ---------------------------------------------------------------------
-
-        boolean testing = "true".equals( System.getProperty( "org.hisp.dhis.test", "false" ) );
 
         if ( testing )
         {
@@ -197,7 +200,7 @@ public class DefaultHibernateConfigurationProvider
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void mapDhisToHibernateProperties( Properties properties )
+    private void mapToHibernateProperties( Properties properties )
     {
         putIfExists( properties, ConfigurationKey.CONNECTION_DIALECT.getKey(), "hibernate.dialect" );
         putIfExists( properties, ConfigurationKey.CONNECTION_DRIVER_CLASS.getKey(), "hibernate.connection.driver_class" );
