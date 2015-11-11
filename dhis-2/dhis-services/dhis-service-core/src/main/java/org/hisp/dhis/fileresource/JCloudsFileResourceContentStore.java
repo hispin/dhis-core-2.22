@@ -56,7 +56,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +74,8 @@ public class JCloudsFileResourceContentStore
 
     private static final long FIVE_MINUTES_IN_SECONDS = Minutes.minutes( 5 ).toStandardDuration().getStandardSeconds();
 
+    private static final String DEFAULT_CONTAINER = "files";
+
     private BlobStore blobStore;
     private BlobStoreContext blobStoreContext;
     private String container;
@@ -87,18 +88,7 @@ public class JCloudsFileResourceContentStore
     private static final String JCLOUDS_PROVIDER_KEY_AWS_S3 = "aws-s3";
     private static final String JCLOUDS_PROVIDER_KEY_TRANSIENT = "transient";
 
-    private static final List<String> SUPPORTED_PROVIDERS = new ArrayList<String>() {{
-        addAll( Arrays.asList(
-            JCLOUDS_PROVIDER_KEY_FILESYSTEM,
-            JCLOUDS_PROVIDER_KEY_AWS_S3
-        ) );
-    }};
-
-    // -------------------------------------------------------------------------
-    // Defaults
-    // -------------------------------------------------------------------------
-
-    private static final String DEFAULT_CONTAINER = "files";
+    private static final List<String> SUPPORTED_PROVIDERS = Arrays.asList( JCLOUDS_PROVIDER_KEY_FILESYSTEM, JCLOUDS_PROVIDER_KEY_AWS_S3 );
 
     // -------------------------------------------------------------------------
     // Dependencies
@@ -124,11 +114,11 @@ public class JCloudsFileResourceContentStore
 
     public void init()
     {
-        // ---------------------------------------------------------------------
-        // Parse properties
-        // ---------------------------------------------------------------------
-
         String provider = configurationProvider.getProperty( ConfigurationKey.FILESTORE_PROVIDER );
+        String location = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_LOCATION );
+        String identity = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_IDENTITY );
+        String secret = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_SECRET );
+
         provider = validateAndSelectProvider( provider );
 
         container = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_CONTAINER );
@@ -144,10 +134,6 @@ public class JCloudsFileResourceContentStore
 
             container = DEFAULT_CONTAINER;
         }
-
-        String location = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_LOCATION );
-        String identity = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_IDENTITY );
-        String secret = configurationProvider.getProperty( ConfigurationKey.FILE_STORE_SECRET );
 
         Properties overrides = new Properties();
 
