@@ -1,43 +1,38 @@
 Ext.onReady( function() {
 	var N = PT;
 
-    //NS.Viewport
-
-    // RequestManager
+    // initialize
     (function() {
-        var RequestManager = N.Api.RequestManager = function(config) {
-            var t = this;
+        var I = new N.Api.Instance(),
+            requestManager = new N.Api.RequestManager(),
+            manifestReq = $.getJSON('manifest.webapp'),
+            systemInfoReq = $.getJSON('/api/system/info.json'),
+            systemSettingsReq = $.getJSON('/api/systemSettings.json?key=keyCalendar&key=keyDateFormat&key=keyAnalysisRelativePeriod&key=keyHideUnapprovedDataInAnalytics'),
+            userAccountReq = $.getJSON('/api/me/user-account.json');
 
-            config = NS.isObject(config) ? config : {};
+        manifestReq.done(function(manifest) {
+            I.manifest = manifest;
 
-            // constructor
-            t.requests = NS.isArray(config.requests) ? config.requests : [];
+        systemInfoReq.done(function(systemInfo) {
+            I.systemInfo = systemInfo;
+            I.path = systemInfo.contextPath;
 
-            t.responses = [];
+        systemSettingsReq.done(function(systemSettings) {
+            I.systemSettings = systemSettings;
 
-            t.fn = NS.isFunction(config.fn) ? config.fn : null;
-        };
+        userAccountReq.done(function(userAccount) {
+            I.userAccount = userAccount;
 
-        RequestManager.prototype.add = function(request) {
-            this.requests.push(request);
-        };
+        // calendar
+        (function() {
+            N.CalendarManager.setBaseUrl(I.getPath());
+            N.CalendarManager.setDateFormat(I.getDateFormat());
+            N.CalendarManager.generate(I.systemSettings.keyCalendar);
+        })();
 
-        RequestManager.prototype.set = function(fn) {
-            this.fn = fn;
-        };
-
-        RequestManager.prototype.ok = function(xhr, suppress) {
-            this.responses.push(xhr);
-
-            if (!suppress) {
-                this.resolve();
-            }
-        };
-
-        RequestManager.prototype.resolve = function() {
-            if (this.responses.length === this.requests.length) {
-                this.fn();
-            }
-        };
+        });
+        });
+        });
+        });
     })();
 });

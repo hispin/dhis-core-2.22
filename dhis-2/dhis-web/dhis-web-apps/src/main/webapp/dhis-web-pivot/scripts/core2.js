@@ -365,7 +365,7 @@ $( function() {
         N.uuid = uuid;
     })();
 
-    // date manager TODO import
+    // DateManager TODO import
     (function() {
         var DateManager = function() {};
 
@@ -385,6 +385,92 @@ $( function() {
         };
 
         N.DateManager = new DateManager();
+    })();
+
+    // CalendarManager
+    (function() {
+        var CalendarManager = function(config) {
+            var t = this;
+
+            config = N.isObject(config) ? config : {};
+
+            // constructor
+            t.baseUrl = config.baseUrl || '..';
+            t.dateFormat = config.dateFormat || null;
+            t.defaultCalendarId = 'gregorian';
+            t.defaultCalendarIsoId = 'iso8601';
+            t.calendarIds = ['coptic', 'ethiopian', 'islamic', 'julian', 'nepali', 'thai'];
+
+            // uninitialized
+            t.calendar;
+            t.periodGenerator;
+        };
+
+        CalendarManager.prototype.setBaseUrl = function(baseUrl) {
+            this.baseUrl = baseUrl;
+        };
+
+        CalendarManager.prototype.setDateFormat = function(baseUrl) {
+            this.dateFormat = dateFormat;
+        };
+
+        CalendarManager.prototype.getPeriodScriptUrl = function() {
+            return this.baseUrl + '/dhis-web-commons/javascripts/dhis2/dhis2.period.js';
+        };
+
+        CalendarManager.prototype.getCalendarScriptUrl = function(calendarId) {
+            return this.baseUrl + '/dhis-web-commons/javascripts/jQuery/calendars/jquery.calendars.' + calendarId + '.min.js';
+        };
+
+        CalendarManager.prototype.getCalendarIdMap = function() {
+            var idMap = {};
+            idMap[t.defaultCalendarIsoId] = t.defaultCalendarId;
+
+            return idMap;
+        };
+
+        CalendarManager.prototype.createCalendar = function(calendarId) {
+            this.calendar = $.calendars.instance(calendarId);
+        };
+
+        CalendarManager.prototype.createPeriodGenerator = function(calendarId) {
+            this.periodGenerator = new dhis2.period.PeriodGenerator(this.calendar, this.dateFormat);
+
+        };
+
+        // dep 1
+
+        CalendarManager.prototype.generate = function(calendarId, dateFormat) {
+            calendarId = t.getCalendarIdMap()[calendarId] || calendarId || this.defaultCalendarId;
+
+            if (this.calendar && this.periodGenerator) {
+                return;
+            }
+
+            var t = this,
+                periodUrl = t.getPeriodScriptUrl(),
+                success = function() {
+                    t.createCalendar(calendarId);
+                    t.createPeriodGenerator(calendarId);
+                };
+
+            if (N.arrayContains(t.calendarIds, calendarId)) {
+                var calendarUrl = t.getCalendarScriptUrl(calendarId);
+
+                $.getScript(calendarUrl, function() {
+                    $.getScript(periodUrl, function() {
+                        success();
+                    });
+                });
+            }
+            else {
+                $.getScript(periodUrl, function() {
+                    success();
+                });
+            }
+        };
+
+        N.CalendarManager = new CalendarManager();
     })();
 
     // I18n
@@ -1321,7 +1407,17 @@ $( function() {
                 // constructor
                 t.baseUrl = N.isString(config.baseUrl) ? config.baseUrl : '';
                 t.params = N.arrayFrom(config.params);
-                t.fn = N.isFunction(config.fn) ? config.fn : null;
+                t.manager = config.manager || null;
+                t.fn = N.isFunction(config.fn) ? config.fn : function() { t.defaultFn(); };
+
+                // default fn
+                t.defaultFn = function() {
+                    var t = this;
+
+                    if (t.manager) {
+                        t.manager.ok(t);
+                    }
+                };
             };
 
             Request.prototype.log = function(text, noError) {
@@ -1393,6 +1489,10 @@ $( function() {
                 }
             };
 
+            Request.prototype.setManager = function(manager) {
+                this.manager = manager;
+            };
+
             Request.prototype.url = function(extraParams) {
                 extraParams = N.arrayFrom(extraParams);
 
@@ -1402,9 +1502,54 @@ $( function() {
             // dep 1
 
             Request.prototype.run = function(fn) {
+                var t = this;
                 this.setFn(fn);
 
-                return $.getJSON(this.url(), fn);
+                return $.getJSON(this.url(), t.fn);
+            };
+        })();
+
+        // RequestManager
+        (function() {
+            var RequestManager = N.Api.RequestManager = function(config) {
+                var t = this;
+
+                config = N.isObject(config) ? config : {};
+
+                // constructor
+                t.requests = N.isArray(config.requests) ? config.requests : [];
+
+                t.responses = [];
+
+                t.fn = N.isFunction(config.fn) ? config.fn : function() { console.log("request manager is done"); };
+            };
+
+            RequestManager.prototype.add = function(param) {
+                this.requests = [].concat(this.requests, N.arrayFrom(param));
+            };
+
+            RequestManager.prototype.set = function(fn) {
+                this.fn = fn;
+            };
+
+            RequestManager.prototype.ok = function(xhr, suppress) {
+                this.responses.push(xhr);
+
+                if (!suppress) {
+                    this.resolve();
+                }
+            };
+
+            RequestManager.prototype.run = function() {
+                this.requests.forEach(function(request) {
+                    request.run();
+                });
+            };
+
+            RequestManager.prototype.resolve = function() {
+                if (this.responses.length === this.requests.length) {
+                    this.fn();
+                }
             };
         })();
 
@@ -2821,41 +2966,50 @@ $( function() {
 			};
         })();
 
-        // AsyncManager
-        (function() {
-            var AsyncManager = N.Api.AsyncManager = function(config) {
+        // Instance
+        (function() {
+            var Instance = N.Api.Instance = function() {
                 var t = this;
 
-                config = N.isObject(config) ? config : {};
+                // uninitialized
+                t.manifest;
+                t.systemInfo;
+                t.systemSettings;
+                t.userAccount;
+                t.calendar;
+                t.periodGenerator;
 
-                // constructor
-                t.requests = N.isArray(config.requests) ? config.requests : [];
-
-                t.responses = [];
-
-                t.fn = N.isFunction(config.fn) ? config.fn : null;
+                // transient
+                t.path;
+                t.dateFormat;
+                t.relativePeriod;
+                t.uiLocale;
+                t.displayProperty;
             };
 
-            AsyncManager.prototype.add = function(request) {
-                this.requests.push(request);
+            Instance.prototype.getPath = function() {
+                return t.path ? t.path : (t.path = t.manifest.activities.dhis.href);
             };
 
-            AsyncManager.prototype.set = function(fn) {
-                this.fn = fn;
+            Instance.prototype.getDateFormat = function() {
+                return t.dateFormat ? t.dateFormat : (t.dateFormat = N.isString(t.systemSettings.keyDateFormat) ? systemSettings.keyDateFormat.toLowerCase() : 'yyyy-mm-dd');
             };
 
-            AsyncManager.prototype.ok = function(xhr, suppress) {
-                this.responses.push(xhr);
+            Instance.prototype.getRelativePeriod = function() {
+                return t.relativePeriod ? t.relativePeriod : (t.relativePeriod = t.systemSettings.keyAnalysisRelativePeriod || 'LAST_12_MONTHS');
+            };
 
-                if (!suppress) {
-                    this.resolve();
+            Instance.prototype.getUiLocale = function() {
+                return t.uiLocale ? t.uiLocale : (t.uiLocale = t.userAccount.settings.keyUiLocale || 'en');
+            };
+
+            Instance.prototype.getDisplayProperty = function() {
+                if (t.displayProperty) {
+                    return t.displayProperty;
                 }
-            };
 
-            AsyncManager.prototype.resolve = function() {
-                if (this.responses.length === this.requests.length) {
-                    this.fn();
-                }
+                var key = t.userAccount.settings.keyAnalysisDisplayProperty;
+                return t.displayProperty = (key === 'name') ? key : (key + '|rename(name)');
             };
         })();
     })();
