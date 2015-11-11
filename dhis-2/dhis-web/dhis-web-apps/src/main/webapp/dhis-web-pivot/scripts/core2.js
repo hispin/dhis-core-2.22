@@ -1,5 +1,5 @@
 $( function() {
-    var NS = PT = {};
+    var N = PT = {};
 
     // convenience TODO import
     (function() {
@@ -9,6 +9,7 @@ $( function() {
             isBoolean,
             isArray,
             isObject,
+            isFunction,
             isEmpty,
             isDefined,
             isIE,
@@ -55,6 +56,14 @@ $( function() {
                 return param !== null && param !== undefined && toString.call(param) === '[object Object]' && param.ownerDocument === undefined;
             } : function(param) {
                 return toString.call(param) === '[object Object]';
+            };
+        })();
+
+        isFunction = (function() {
+            return (typeof document !== 'undefined' && typeof document.getElementsByTagName('body') === 'function') ? function(value) {
+                return !!value && toString.call(value) === '[object Function]';
+            } : function(value) {
+                return !!value && typeof value === 'function';
             };
         })();
 
@@ -229,28 +238,28 @@ $( function() {
         arraySort = function(array, direction, key, emptyFirst) {
             // supports [number], [string], [{key: number}], [{key: string}], [[string]], [[number]]
 
-            if (!(NS.isArray(array) && array.length)) {
+            if (!(N.isArray(array) && array.length)) {
                 return;
             }
 
-            key = !!key || NS.isNumber(key) ? key : 'name';
+            key = !!key || N.isNumber(key) ? key : 'name';
 
             array.sort( function(a, b) {
 
                 // if object, get the property values
-                if (NS.isObject(a) && NS.isObject(b)) {
+                if (N.isObject(a) && N.isObject(b)) {
                     a = a[key];
                     b = b[key];
                 }
 
                 // if array, get from the right index
-                if (NS.isArray(a) && NS.isArray(b)) {
+                if (N.isArray(a) && N.isArray(b)) {
                     a = a[key];
                     b = b[key];
                 }
 
                 // string
-                if (NS.isString(a) && NS.isString(b)) {
+                if (N.isString(a) && N.isString(b)) {
                     a = a.toLowerCase();
                     b = b.toLowerCase();
 
@@ -263,7 +272,7 @@ $( function() {
                 }
 
                 // number
-                else if (NS.isNumber(a) && NS.isNumber(b)) {
+                else if (N.isNumber(a) && N.isNumber(b)) {
                     return direction === 'DESC' ? b - a : a - b;
                 }
 
@@ -303,14 +312,14 @@ $( function() {
                 clone = [];
 
                 while (i--) {
-                    clone[i] = NS.clone(item[i]);
+                    clone[i] = N.clone(item[i]);
                 }
             }
             else if (type === '[object Object]' && item.constructor === Object) {
                 clone = {};
 
                 for (key in item) {
-                    clone[key] = NS.clone(item[key]);
+                    clone[key] = N.clone(item[key]);
                 }
 
                 if (enumerables) {
@@ -334,25 +343,26 @@ $( function() {
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
         };
 
-        NS.isString = isString;
-        NS.isNumber = isNumber;
-        NS.isNumeric = isNumeric;
-        NS.isBoolean = isBoolean;
-        NS.isArray = isArray;
-        NS.isObject = isObject;
-        NS.isEmpty = isEmpty;
-        NS.isDefined = isDefined;
-        NS.isIE = isIE;
-        NS.numberConstrain = numberConstrain;
-        NS.numberToFixed = numberToFixed;
-        NS.arrayFrom = arrayFrom;
-        NS.arrayClean = arrayClean;
-        NS.arrayPluck = arrayPluck;
-        NS.arrayUnique = arrayUnique;
-        NS.arrayContains = arrayContains;
-        NS.arraySort = arraySort;
-        NS.clone = clone;
-        NS.uuid = uuid;
+        N.isString = isString;
+        N.isNumber = isNumber;
+        N.isNumeric = isNumeric;
+        N.isBoolean = isBoolean;
+        N.isArray = isArray;
+        N.isObject = isObject;
+        N.isFunction = isFunction;
+        N.isEmpty = isEmpty;
+        N.isDefined = isDefined;
+        N.isIE = isIE;
+        N.numberConstrain = numberConstrain;
+        N.numberToFixed = numberToFixed;
+        N.arrayFrom = arrayFrom;
+        N.arrayClean = arrayClean;
+        N.arrayPluck = arrayPluck;
+        N.arrayUnique = arrayUnique;
+        N.arrayContains = arrayContains;
+        N.arraySort = arraySort;
+        N.clone = clone;
+        N.uuid = uuid;
     })();
 
     // date manager TODO import
@@ -374,7 +384,7 @@ $( function() {
             return date.getFullYear() + '-' + month + '-' + day;
         };
 
-        NS.DateManager = new DateManager();
+        N.DateManager = new DateManager();
     })();
 
     // I18n
@@ -391,7 +401,7 @@ $( function() {
             $.extend(this.map, obj);
         };
 
-        NS.I18n = new I18n();
+        N.I18n = new I18n();
     })();
 
     // DimensionConfig
@@ -403,54 +413,54 @@ $( function() {
             var dimensions = {
                 data: {
                     value: 'data',
-                    name: NS.I18n.get('data') || 'Data',
+                    name: N.I18n.get('data') || 'Data',
                     dimensionName: 'dx',
                     objectName: 'dx'
                 },
                 category: {
-                    name: NS.I18n.get('assigned_categories') || 'Assigned categories',
+                    name: N.I18n.get('assigned_categories') || 'Assigned categories',
                     dimensionName: 'co',
                     objectName: 'co',
                 },
                 indicator: {
                     value: 'indicators',
-                    name: NS.I18n.get('indicators') || 'Indicators',
+                    name: N.I18n.get('indicators') || 'Indicators',
                     dimensionName: 'dx',
                     objectName: 'in'
                 },
                 dataElement: {
                     value: 'dataElements',
-                    name: NS.I18n.get('data_elements') || 'Data elements',
+                    name: N.I18n.get('data_elements') || 'Data elements',
                     dimensionName: 'dx',
                     objectName: 'de'
                 },
                 operand: {
                     value: 'operand',
-                    name: NS.I18n.get('operand') || 'Operand',
+                    name: N.I18n.get('operand') || 'Operand',
                     dimensionName: 'dx',
                     objectName: 'dc'
                 },
                 dataSet: {
                     value: 'dataSets',
-                    name: NS.I18n.get('data_sets') || 'Data sets',
+                    name: N.I18n.get('data_sets') || 'Data sets',
                     dimensionName: 'dx',
                     objectName: 'ds'
                 },
                 eventDataItem: {
                     value: 'eventDataItem',
-                    name: NS.I18n.get('event_data_items') || 'Event data items',
+                    name: N.I18n.get('event_data_items') || 'Event data items',
                     dimensionName: 'dx',
                     objectName: 'di'
                 },
                 programIndicator: {
                     value: 'programIndicator',
-                    name: NS.I18n.get('program_indicators') || 'Program indicators',
+                    name: N.I18n.get('program_indicators') || 'Program indicators',
                     dimensionName: 'dx',
                     objectName: 'pi'
                 },
                 period: {
                     value: 'period',
-                    name: NS.I18n.get('periods') || 'Periods',
+                    name: N.I18n.get('periods') || 'Periods',
                     dimensionName: 'pe',
                     objectName: 'pe'
                 },
@@ -462,7 +472,7 @@ $( function() {
                 },
                 organisationUnit: {
                     value: 'organisationUnits',
-                    name: NS.I18n.get('NS.i18n.organisation_units') || 'Organisation units',
+                    name: N.I18n.get('N.i18n.organisation_units') || 'Organisation units',
                     dimensionName: 'ou',
                     objectName: 'ou'
                 },
@@ -477,7 +487,7 @@ $( function() {
 
             // prototype
             t.add = function(param) {
-                NS.arrayFrom(param).forEach(function(dimension) {
+                N.arrayFrom(param).forEach(function(dimension) {
                     dimension.dimensionName = dimension.id;
                     dimension.objectName = dimension.id;
 
@@ -514,7 +524,7 @@ $( function() {
             };
         };
 
-        NS.DimConf = new DimensionConfig();
+        N.DimConf = new DimensionConfig();
     })();
 
     // PeriodConfig
@@ -524,17 +534,17 @@ $( function() {
 
             // private
             var periodTypes = {
-                'Daily': NS.I18n.get('daily') || 'Daily',
-                'Weekly': NS.I18n.get('weekly') || 'Weekly',
-                'Monthly': NS.I18n.get('monthly') || 'Monthly',
-                'BiMonthly': NS.I18n.get('bimonthly') || 'BiMonthly',
-                'Quarterly': NS.I18n.get('quarterly') || 'Quarterly',
-                'SixMonthly': NS.I18n.get('sixmonthly') || 'SixMonthly',
-                'SixMonthlyApril': NS.I18n.get('sixmonthly_april') || 'SixMonthly April',
-                'Yearly': NS.I18n.get('yearly') || 'Yearly',
-                'FinancialOct': NS.I18n.get('financial_oct') || 'Financial October',
-                'FinancialJuly': NS.I18n.get('financial_july') || 'Financial July',
-                'FinancialApril': NS.I18n.get('financial_april') || 'Financial April'
+                'Daily': N.I18n.get('daily') || 'Daily',
+                'Weekly': N.I18n.get('weekly') || 'Weekly',
+                'Monthly': N.I18n.get('monthly') || 'Monthly',
+                'BiMonthly': N.I18n.get('bimonthly') || 'BiMonthly',
+                'Quarterly': N.I18n.get('quarterly') || 'Quarterly',
+                'SixMonthly': N.I18n.get('sixmonthly') || 'SixMonthly',
+                'SixMonthlyApril': N.I18n.get('sixmonthly_april') || 'SixMonthly April',
+                'Yearly': N.I18n.get('yearly') || 'Yearly',
+                'FinancialOct': N.I18n.get('financial_oct') || 'Financial October',
+                'FinancialJuly': N.I18n.get('financial_july') || 'Financial July',
+                'FinancialApril': N.I18n.get('financial_april') || 'Financial April'
             };
 
             // uninitialized
@@ -561,7 +571,7 @@ $( function() {
             };
         };
 
-        NS.PeriodConf = new PeriodConfig();
+        N.PeriodConf = new PeriodConfig();
     })();
 
     // OptionConfig
@@ -574,17 +584,17 @@ $( function() {
                 'comfortable': {
                     index: 1,
                     id: 'COMFORTABLE',
-                    name: NS.I18n.get('comfortable') || 'Comfortable'
+                    name: N.I18n.get('comfortable') || 'Comfortable'
                 },
                 'normal': {
                     index: 2,
                     id: 'NORMAL',
-                    name: NS.I18n.get('normal') || 'Normal'
+                    name: N.I18n.get('normal') || 'Normal'
                 },
                 'compact': {
                     index: 3,
                     id: 'COMPACT',
-                    name: NS.I18n.get('compact') || 'Compact'
+                    name: N.I18n.get('compact') || 'Compact'
                 }
             };
 
@@ -592,17 +602,17 @@ $( function() {
                 'large': {
                     index: 1,
                     id: 'LARGE',
-                    name: NS.I18n.get('large') || 'Large'
+                    name: N.I18n.get('large') || 'Large'
                 },
                 'normal': {
                     index: 2,
                     id: 'NORMAL',
-                    name: NS.I18n.get('normal') || 'Normal'
+                    name: N.I18n.get('normal') || 'Normal'
                 },
                 'small': {
                     index: 3,
                     id: 'SMALL',
-                    name: NS.I18n.get('small') || 'Small'
+                    name: N.I18n.get('small') || 'Small'
                 }
             };
 
@@ -610,19 +620,19 @@ $( function() {
                 'none': {
                     index: 1,
                     id: 'NONE',
-                    name: NS.I18n.get('none') || 'None',
+                    name: N.I18n.get('none') || 'None',
                     value: ''
                 },
                 'space': {
                     index: 2,
                     id: 'SPACE',
-                    name: NS.I18n.get('space') || 'Space',
+                    name: N.I18n.get('space') || 'Space',
                     value: '&nbsp;'
                 },
                 'comma': {
                     index: 3,
                     id: 'COMMA',
-                    name: NS.I18n.get('comma') || 'Comma',
+                    name: N.I18n.get('comma') || 'Comma',
                     value: ','
                 }
             };
@@ -631,37 +641,37 @@ $( function() {
                 'def': {
                     index: 1,
                     id: 'DEFAULT',
-                    name: NS.I18n.get('by_data_element') || 'By data element'
+                    name: N.I18n.get('by_data_element') || 'By data element'
                 },
                 'count': {
                     index: 2,
                     id: 'COUNT',
-                    name: NS.I18n.get('count') || 'Count'
+                    name: N.I18n.get('count') || 'Count'
                 },
                 'sum': {
                     index: 3,
                     id: 'SUM',
-                    name: NS.I18n.get('sum') || 'Sum'
+                    name: N.I18n.get('sum') || 'Sum'
                 },
                 'stddev': {
                     index: 4,
                     id: 'STDDEV',
-                    name: NS.I18n.get('stddev') || 'Standard deviation'
+                    name: N.I18n.get('stddev') || 'Standard deviation'
                 },
                 'variance': {
                     index: 5,
                     id: 'VARIANCE',
-                    name: NS.I18n.get('variance') || 'Variance'
+                    name: N.I18n.get('variance') || 'Variance'
                 },
                 'min': {
                     index: 6,
                     id: 'MIN',
-                    name: NS.I18n.get('min') || 'Min'
+                    name: N.I18n.get('min') || 'Min'
                 },
                 'max': {
                     index: 7,
                     id: 'MAX',
-                    name: NS.I18n.get('max') || 'Max'
+                    name: N.I18n.get('max') || 'Max'
                 }
             };
 
@@ -711,7 +721,7 @@ $( function() {
                     }
                 }
 
-                NS.arraySort(records, 'ASC', 'index');
+                N.arraySort(records, 'ASC', 'index');
 
                 return displayDensityRecords = records;
             };
@@ -729,7 +739,7 @@ $( function() {
                     }
                 }
 
-                NS.arraySort(records, 'ASC', 'index');
+                N.arraySort(records, 'ASC', 'index');
 
                 return fontSizeRecords = records;
             };
@@ -747,7 +757,7 @@ $( function() {
                     }
                 }
 
-                NS.arraySort(records, 'ASC', 'index');
+                N.arraySort(records, 'ASC', 'index');
 
                 return digitGroupSeparatorRecords = records;
             };
@@ -765,7 +775,7 @@ $( function() {
                     }
                 }
 
-                NS.arraySort(records, 'ASC', 'index');
+                N.arraySort(records, 'ASC', 'index');
 
                 return aggregationTypeRecords = records;
             };
@@ -798,7 +808,7 @@ $( function() {
             };
         };
 
-        NS.OptionConf = new OptionConfig();
+        N.OptionConf = new OptionConfig();
     })();
 
     // UiConfig
@@ -852,7 +862,7 @@ $( function() {
 			});
         };
 
-        NS.UiConf = new UiConfig();
+        N.UiConf = new UiConfig();
     })();
 
     // UrlConfig
@@ -896,19 +906,19 @@ $( function() {
             ];
         };
 
-        NS.UrlConf = new UrlConfig();
+        N.UrlConf = new UrlConfig();
     })();
 
     // Api
     (function() {
-        NS.Api = {};
+        N.Api = {};
 
         // Record
         (function() {
-            var Record = NS.Api.Record = function(config) {
+            var Record = N.Api.Record = function(config) {
                 var t = this;
 
-                config = NS.isObject(config) ? config : {};
+                config = N.isObject(config) ? config : {};
 
                 // constructor
                 t.id = config.id;
@@ -922,7 +932,7 @@ $( function() {
             };
 
             Record.prototype.val = function(noError) {
-                if (!NS.isString(this.id)) {
+                if (!N.isString(this.id)) {
                     this.log('(Record) Id is not a string', noError);
                     return null;
                 }
@@ -933,18 +943,18 @@ $( function() {
 
         // Dimension
         (function() {
-            var Dimension = NS.Api.Dimension = function(config) {
+            var Dimension = N.Api.Dimension = function(config) {
                 var t = this,
                     items = [];
 
-                config = NS.isObject(config) ? config : {};
-                config.items = NS.arrayFrom(config.items);
+                config = N.isObject(config) ? config : {};
+                config.items = N.arrayFrom(config.items);
 
                 // constructor
                 t.dimension = config.dimension;
 
                 t.items = config.items.map(function(record) {
-                    return (new NS.Api.Record(record)).val();
+                    return (new N.Api.Record(record)).val();
                 });
             };
 
@@ -955,7 +965,7 @@ $( function() {
             };
 
             Dimension.prototype.val = function(noError) {
-                if (!NS.isString(this.dimension)) {
+                if (!N.isString(this.dimension)) {
                     this.log('(Dimension) Dimension is not a string', noError);
                     return null;
                 }
@@ -971,7 +981,7 @@ $( function() {
             Dimension.prototype.getRecords = function(sortProperty, response) {
                 var records = response ? response.getRecordsByDimensionName(this.dimension) : this.items;
 
-                sortProperty = NS.arrayContains(['id', 'name'], sortProperty) ? sortProperty : null;
+                sortProperty = N.arrayContains(['id', 'name'], sortProperty) ? sortProperty : null;
 
                 return sortProperty ? records.sort(function(a, b) { return a[sortProperty] > b[sortProperty];}) : records;
             };
@@ -979,30 +989,30 @@ $( function() {
             // dep 1
 
             Dimension.prototype.getRecordIds = function(isSorted, response) {
-                return NS.arrayPluck(this.getRecords((isSorted ? 'id' : null), response), 'id');
+                return N.arrayPluck(this.getRecords((isSorted ? 'id' : null), response), 'id');
             };
 
             Dimension.prototype.getRecordNames = function(isSorted, response) {
-                return NS.arrayPluck(this.getRecords((isSorted ? 'name' : null), response), 'name');
+                return N.arrayPluck(this.getRecords((isSorted ? 'name' : null), response), 'name');
             };
 
             // dep 2
 
-            Dimension.prototype.url = function(response) {
-                return 'dimension=' + this.dimension + ':' + NS.arrayUnique(this.getRecordIds(false, response)).join(';');
+            Dimension.prototype.url = function(isSorted, response) {
+                return 'dimension=' + this.dimension + ':' + N.arrayUnique(this.getRecordIds(false, response)).join(';');
             };
         })();
 
         // Axis (array)
         (function() {
-            var Axis = NS.Api.Axis = function(config) {
+            var Axis = N.Api.Axis = function(config) {
                 var t = [];
 
-                config = NS.arrayFrom(config);
+                config = N.arrayFrom(config);
 
                 // constructor
                 config.forEach(function(dimension) {
-                    t.push((new NS.Api.Dimension(dimension)).val());
+                    t.push((new N.Api.Dimension(dimension)).val());
                 });
 
                 // prototype
@@ -1038,7 +1048,7 @@ $( function() {
                 };
 
                 t.sorted = function() {
-                    return NS.clone(this).sort(function(a, b) { return a.dimension > b.dimension;});
+                    return N.clone(this).sort(function(a, b) { return a.dimension > b.dimension;});
                 };
 
                 return t;
@@ -1047,80 +1057,80 @@ $( function() {
 
         // Layout
         (function() {
-            var Layout = NS.Api.Layout = function(config, applyConfig, forceApplyConfig) {
+            var Layout = N.Api.Layout = function(config, applyConfig, forceApplyConfig) {
                 var t = this;
 
-                config = NS.isObject(config) ? config : {};
+                config = N.isObject(config) ? config : {};
                 $.extend(config, applyConfig);
 
                 // constructor
-                t.columns = (NS.Api.Axis(config.columns)).val();
-                t.rows = (NS.Api.Axis(config.rows)).val();
-                t.filters = (NS.Api.Axis(config.filters)).val();
+                t.columns = (N.Api.Axis(config.columns)).val();
+                t.rows = (N.Api.Axis(config.rows)).val();
+                t.filters = (N.Api.Axis(config.filters)).val();
 
-                t.showColTotals = NS.isBoolean(config.colTotals) ? config.colTotals : (NS.isBoolean(config.showColTotals) ? config.showColTotals : true);
-                t.showRowTotals = NS.isBoolean(config.rowTotals) ? config.rowTotals : (NS.isBoolean(config.showRowTotals) ? config.showRowTotals : true);
-                t.showColSubTotals = NS.isBoolean(config.colSubTotals) ? config.colSubTotals : (NS.isBoolean(config.showColSubTotals) ? config.showColSubTotals : true);
-                t.showRowSubTotals = NS.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (NS.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
-                t.showDimensionLabels = NS.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (NS.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
-                t.hideEmptyRows = NS.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
-                t.skipRounding = NS.isBoolean(config.skipRounding) ? config.skipRounding : false;
-                t.aggregationType = NS.isString(config.aggregationType) ? config.aggregationType : NS.OptionConf.getAggregationType('def').id;
-                t.dataApprovalLevel = NS.isObject(config.dataApprovalLevel) && NS.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
-                t.showHierarchy = NS.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
-                t.completedOnly = NS.isBoolean(config.completedOnly) ? config.completedOnly : false;
-                t.displayDensity = NS.isString(config.displayDensity) && !NS.isEmpty(config.displayDensity) ? config.displayDensity : NS.OptionConf.getDisplayDensity('normal').id;
-                t.fontSize = NS.isString(config.fontSize) && !NS.isEmpty(config.fontSize) ? config.fontSize : NS.OptionConf.getFontSize('normal').id;
-                t.digitGroupSeparator = NS.isString(config.digitGroupSeparator) && !NS.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : NS.OptionConf.getDigitGroupSeparator('space').id;
+                t.showColTotals = N.isBoolean(config.colTotals) ? config.colTotals : (N.isBoolean(config.showColTotals) ? config.showColTotals : true);
+                t.showRowTotals = N.isBoolean(config.rowTotals) ? config.rowTotals : (N.isBoolean(config.showRowTotals) ? config.showRowTotals : true);
+                t.showColSubTotals = N.isBoolean(config.colSubTotals) ? config.colSubTotals : (N.isBoolean(config.showColSubTotals) ? config.showColSubTotals : true);
+                t.showRowSubTotals = N.isBoolean(config.rowSubTotals) ? config.rowSubTotals : (N.isBoolean(config.showRowSubTotals) ? config.showRowSubTotals : true);
+                t.showDimensionLabels = N.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : (N.isBoolean(config.showDimensionLabels) ? config.showDimensionLabels : true);
+                t.hideEmptyRows = N.isBoolean(config.hideEmptyRows) ? config.hideEmptyRows : false;
+                t.skipRounding = N.isBoolean(config.skipRounding) ? config.skipRounding : false;
+                t.aggregationType = N.isString(config.aggregationType) ? config.aggregationType : N.OptionConf.getAggregationType('def').id;
+                t.dataApprovalLevel = N.isObject(config.dataApprovalLevel) && N.isString(config.dataApprovalLevel.id) ? config.dataApprovalLevel : null;
+                t.showHierarchy = N.isBoolean(config.showHierarchy) ? config.showHierarchy : false;
+                t.completedOnly = N.isBoolean(config.completedOnly) ? config.completedOnly : false;
+                t.displayDensity = N.isString(config.displayDensity) && !N.isEmpty(config.displayDensity) ? config.displayDensity : N.OptionConf.getDisplayDensity('normal').id;
+                t.fontSize = N.isString(config.fontSize) && !N.isEmpty(config.fontSize) ? config.fontSize : N.OptionConf.getFontSize('normal').id;
+                t.digitGroupSeparator = N.isString(config.digitGroupSeparator) && !N.isEmpty(config.digitGroupSeparator) ? config.digitGroupSeparator : N.OptionConf.getDigitGroupSeparator('space').id;
 
-                t.legendSet = (new NS.Api.Record(config.legendSet)).val(true);
+                t.legendSet = (new N.Api.Record(config.legendSet)).val(true);
 
-                t.parentGraphMap = NS.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
+                t.parentGraphMap = N.isObject(config.parentGraphMap) ? config.parentGraphMap : null;
 
-                if (NS.isObject(config.program)) {
+                if (N.isObject(config.program)) {
                     t.program = config.program;
                 }
 
                     // report table
-                t.reportingPeriod = NS.isObject(config.reportParams) && NS.isBoolean(config.reportParams.paramReportingPeriod) ? config.reportParams.paramReportingPeriod : (NS.isBoolean(config.reportingPeriod) ? config.reportingPeriod : false);
-                t.organisationUnit =  NS.isObject(config.reportParams) && NS.isBoolean(config.reportParams.paramOrganisationUnit) ? config.reportParams.paramOrganisationUnit : (NS.isBoolean(config.organisationUnit) ? config.organisationUnit : false);
-                t.parentOrganisationUnit = NS.isObject(config.reportParams) && NS.isBoolean(config.reportParams.paramParentOrganisationUnit) ? config.reportParams.paramParentOrganisationUnit : (NS.isBoolean(config.parentOrganisationUnit) ? config.parentOrganisationUnit : false);
+                t.reportingPeriod = N.isObject(config.reportParams) && N.isBoolean(config.reportParams.paramReportingPeriod) ? config.reportParams.paramReportingPeriod : (N.isBoolean(config.reportingPeriod) ? config.reportingPeriod : false);
+                t.organisationUnit =  N.isObject(config.reportParams) && N.isBoolean(config.reportParams.paramOrganisationUnit) ? config.reportParams.paramOrganisationUnit : (N.isBoolean(config.organisationUnit) ? config.organisationUnit : false);
+                t.parentOrganisationUnit = N.isObject(config.reportParams) && N.isBoolean(config.reportParams.paramParentOrganisationUnit) ? config.reportParams.paramParentOrganisationUnit : (N.isBoolean(config.parentOrganisationUnit) ? config.parentOrganisationUnit : false);
 
-                t.regression = NS.isBoolean(config.regression) ? config.regression : false;
-                t.cumulative = NS.isBoolean(config.cumulative) ? config.cumulative : false;
-                t.sortOrder = NS.isNumber(config.sortOrder) ? config.sortOrder : 0;
-                t.topLimit = NS.isNumber(config.topLimit) ? config.topLimit : 0;
+                t.regression = N.isBoolean(config.regression) ? config.regression : false;
+                t.cumulative = N.isBoolean(config.cumulative) ? config.cumulative : false;
+                t.sortOrder = N.isNumber(config.sortOrder) ? config.sortOrder : 0;
+                t.topLimit = N.isNumber(config.topLimit) ? config.topLimit : 0;
 
                     // non model
 
                     // id
-                if (NS.isString(config.id)) {
+                if (N.isString(config.id)) {
                     t.id = config.id;
                 }
 
                     // name
-                if (NS.isString(config.name)) {
+                if (N.isString(config.name)) {
                     t.name = config.name;
                 }
 
                     // sorting
-                if (NS.isObject(config.sorting) && NS.isDefined(config.sorting.id) && NS.isString(config.sorting.direction)) {
+                if (N.isObject(config.sorting) && N.isDefined(config.sorting.id) && N.isString(config.sorting.direction)) {
                     t.sorting = config.sorting;
                 }
 
                     // displayProperty
-                if (NS.isString(config.displayProperty)) {
+                if (N.isString(config.displayProperty)) {
                     t.displayProperty = config.displayProperty;
                 }
 
                     // userOrgUnit
-                if (NS.arrayFrom(config.userOrgUnit).length) {
-                    t.userOrgUnit = NS.arrayFrom(config.userOrgUnit);
+                if (N.arrayFrom(config.userOrgUnit).length) {
+                    t.userOrgUnit = N.arrayFrom(config.userOrgUnit);
                 }
 
                     // relative period date
-                if (NS.DateManager.getYYYYMMDD(config.relativePeriodDate)) {
-                    t.relativePeriodDate = NS.DateManager.getYYYYMMDD(config.relativePeriodDate);
+                if (N.DateManager.getYYYYMMDD(config.relativePeriodDate)) {
+                    t.relativePeriodDate = N.DateManager.getYYYYMMDD(config.relativePeriodDate);
                 }
 
                 $.extend(t, forceApplyConfig);
@@ -1142,11 +1152,11 @@ $( function() {
             };
 
             Layout.prototype.getAxes = function(includeFilter) {
-                return NS.arrayClean([this.columns, this.rows, (includeFilter ? this.filters : null)]);
+                return N.arrayClean([this.columns, this.rows, (includeFilter ? this.filters : null)]);
             };
 
             Layout.prototype.getUserOrgUnitUrl = function() {
-                if (NS.isArray(this.userOrgUnit) && this.userOrgUnit.length) {
+                if (N.isArray(this.userOrgUnit) && this.userOrgUnit.length) {
                     return 'userOrgUnit=' + this.userOrgUnit.join(';');
                 }
             };
@@ -1186,7 +1196,7 @@ $( function() {
             // dep 2
 
             Layout.prototype.getDimensionNames = function(includeFilter, isSorted) {
-                var names = NS.arrayPluck(this.getDimensions(includeFilter), 'dimension');
+                var names = N.arrayPluck(this.getDimensions(includeFilter), 'dimension');
 
                 return isSorted ? names.sort() : names;
             };
@@ -1194,23 +1204,23 @@ $( function() {
             Layout.prototype.val = function(noError) {
 
                 if (!(this.columns || this.rows)) {
-                    this.alert(NS.I18n.get('at_least_one_dimension_must_be_specified_as_row_or_column'), noError); //todo alert
+                    this.alert(N.I18n.get('at_least_one_dimension_must_be_specified_as_row_or_column'), noError); //todo alert
                     return null;
                 }
 
-                if (!this.hasDimension(NS.DimConf.get('period').dimensionName)) {
-                    this.alert(NS.I18n.get('at_least_one_period_must_be_specified_as_column_row_or_filter'), noError); //todo alert
+                if (!this.hasDimension(N.DimConf.get('period').dimensionName)) {
+                    this.alert(N.I18n.get('at_least_one_period_must_be_specified_as_column_row_or_filter'), noError); //todo alert
                     return null;
                 }
 
                 return this;
             };
 
-            Layout.prototype.req = function(isSorted) {
+            Layout.prototype.req = function(baseUrl, isSorted) {
                 var aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     //displayProperty = this.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name',
                     displayProperty = this.displayProperty || 'name',
-                    request = new NS.Api.Request(),
+                    request = new N.Api.Request(),
                     i;
 
                 // dimensions
@@ -1236,22 +1246,22 @@ $( function() {
                 }
 
                 // aggregation type
-                if (NS.arrayContains(aggTypes, this.aggregationType)) {
+                if (N.arrayContains(aggTypes, this.aggregationType)) {
                     request.add('aggregationType=' + this.aggregationType);
                 }
 
                 // user org unit
-                if (NS.isArray(this.userOrgUnit) && this.userOrgUnit.length) {
+                if (N.isArray(this.userOrgUnit) && this.userOrgUnit.length) {
                     request.add(this.getUserOrgUnitUrl());
                 }
 
                 // data approval level
-                if (NS.isObject(this.dataApprovalLevel) && NS.isString(this.dataApprovalLevel.id) && this.dataApprovalLevel.id !== 'DEFAULT') {
+                if (N.isObject(this.dataApprovalLevel) && N.isString(this.dataApprovalLevel.id) && this.dataApprovalLevel.id !== 'DEFAULT') {
                     request.add('approvalLevel=' + this.dataApprovalLevel.id);
                 }
 
                 // TODO program
-                if (NS.isObject(this.program) && NS.isString(this.program.id)) {
+                if (N.isObject(this.program) && N.isString(this.program.id)) {
                     request.add('program=' + this.program.id);
                 }
 
@@ -1268,30 +1278,50 @@ $( function() {
                 // display property
                 request.add('displayProperty=' + displayProperty.toUpperCase());
 
+                // base url
+                if (baseUrl) {
+                    request.setBaseUrl(baseUrl);
+                }
+
                 return request;
             };
 
             // dep 3
 
             Layout.prototype.data = function(request) {
-                request = request || this.req();
+                if (request) {
+                    return $.getJSON('/api/analytics.json' + request.url());
+                }
 
-                return $.getJSON('/api/analytics.json' + request.url());
+                var baseUrl = '/api/analytics.json',
+                    metaDataRequest = this.req(baseUrl, true),
+                    dataRequest = this.req(baseUrl);
+
+                return {
+                    metaData: $.getJSON(metaDataRequest.url('skipData=true')),
+                    data: $.getJSON(dataRequest.url('skipMeta=true'))
+                };
+
+                //return $.getJSON(metaDataRequest.url(), function(metaData) {
+                    //return $.getJSON(dataRequest.url());
+                //});
+
+
+                //$.getJSON('/api/analytics.json' + request.url());
             };
         })();
 
         // Request
         (function() {
-            var Request = NS.Api.Request = function(config) {
+            var Request = N.Api.Request = function(config) {
                 var t = this;
 
-                config = NS.isObject(config) ? config : {};
-                config.baseUrl = NS.isString(config.baseUrl) ? config.baseUrl : '';
-                config.params = NS.arrayFrom(config.params);
+                config = N.isObject(config) ? config : {};
 
                 // constructor
-                t.baseUrl = config.baseUrl;
-                t.params = config.params;
+                t.baseUrl = N.isString(config.baseUrl) ? config.baseUrl : '';
+                t.params = N.arrayFrom(config.params);
+                t.fn = N.isFunction(config.fn) ? config.fn : null;
             };
 
             Request.prototype.log = function(text, noError) {
@@ -1310,8 +1340,8 @@ $( function() {
                 var url = this.url(),
                     text;
 
-                if (NS.arrayContains([413, 414], statusCode)) {
-                    if (NS.isIE()) {
+                if (N.arrayContains([413, 414], statusCode)) {
+                    if (N.isIE()) {
                         text = 'Too many items selected (url has ' + url.length + ' characters). Internet Explorer accepts maximum 2048 characters.';
                     }
                     else {
@@ -1330,10 +1360,17 @@ $( function() {
             Request.prototype.add = function(param) {
                 var t = this;
 
-                if (NS.isString(param)) {
+                if (N.isString(param)) {
                     t.params.push(param);
                 }
-                else if (NS.isObject(param)) {
+                else if (N.isArray(param)) {
+                    param.forEach(function(item) {
+                        if (N.isString(item)) {
+                            t.params.push(item);
+                        }
+                    });
+                }
+                else if (N.isObject(param)) {
                     for (var key in param) {
                         if (param.hasOwnProperty(key)) {
                             t.params.push(key + '=' + param[key]);
@@ -1344,17 +1381,39 @@ $( function() {
                 return this;
             };
 
-            Request.prototype.url = function() {
-                return this.baseUrl + '?' + this.params.join('&');
+            Request.prototype.setBaseUrl = function(baseUrl) {
+                if (N.isString(baseUrl)) {
+                    this.baseUrl = baseUrl;
+                }
+            };
+
+            Request.prototype.setFn = function(fn) {
+                if (N.isFunction(fn)) {
+                    this.fn = fn;
+                }
+            };
+
+            Request.prototype.url = function(extraParams) {
+                extraParams = N.arrayFrom(extraParams);
+
+                return this.baseUrl + '?' + ([].concat(this.params, N.arrayFrom(extraParams))).join('&');
+            };
+
+            // dep 1
+
+            Request.prototype.run = function(fn) {
+                this.setFn(fn);
+
+                return $.getJSON(this.url(), fn);
             };
         })();
 
         // ResponseHeader
         (function() {
-            var ResponseHeader = NS.Api.ResponseHeader = function(config) {
+            var ResponseHeader = N.Api.ResponseHeader = function(config) {
                 var t = this;
 
-                config = NS.isObject(config) ? config : {};
+                config = N.isObject(config) ? config : {};
 
                 // constructor
                 $.extend(this, config);
@@ -1364,7 +1423,7 @@ $( function() {
             };
 
             ResponseHeader.prototype.setIndex = function(index) {
-                if (NS.isNumeric(index)) {
+                if (N.isNumeric(index)) {
                     this.index = parseInt(index);
                 }
             };
@@ -1376,8 +1435,8 @@ $( function() {
 
         // ResponseRow (array)
         (function() {
-            var ResponseRow = NS.Api.ResponseRow = function(config) {
-                var t = NS.arrayFrom(config);
+            var ResponseRow = N.Api.ResponseRow = function(config) {
+                var t = N.arrayFrom(config);
 
                 t.getAt = function(index) {
                     return this[index];
@@ -1396,10 +1455,10 @@ $( function() {
 
         // ResponseRowIdCombination
         (function() {
-            var ResponseRowIdCombination = NS.Api.ResponseRowIdCombination = function(config) {
+            var ResponseRowIdCombination = N.Api.ResponseRowIdCombination = function(config) {
                 var t = this;
 
-                config = NS.isArray(config) ? config : (NS.isString(config) ? config.split('-') : null);
+                config = N.isArray(config) ? config : (N.isString(config) ? config.split('-') : null);
 
                 // constructor
                 t.ids = config || [];
@@ -1416,20 +1475,20 @@ $( function() {
 
         // Response
         (function() {
-            var Response = NS.Api.Response = function(config) {
+            var Response = N.Api.Response = function(config) {
                 var t = this;
 
-                config = NS.isObject(config) ? config : {};
+                config = N.isObject(config) ? config : {};
 
                 // constructor
                 t.headers = (config.headers || []).map(function(header) {
-                    return new NS.Api.ResponseHeader(header);
+                    return new N.Api.ResponseHeader(header);
                 });
 
                 t.metaData = config.metaData;
 
                 t.rows = (config.rows || []).map(function(row) {
-                    return NS.Api.ResponseRow(row);
+                    return N.Api.ResponseRow(row);
                 });
 
                 // transient
@@ -1469,7 +1528,7 @@ $( function() {
 					name = '';
 
 				if (isHierarchy) {
-					var a = NS.arrayClean(metaData.ouHierarchy[id].split('/'));
+					var a = N.arrayClean(metaData.ouHierarchy[id].split('/'));
 					a.shift();
 
 					for (var i = 0; i < a.length; i++) {
@@ -1507,7 +1566,7 @@ $( function() {
                     records = [];
 
                 ids.forEach(function(id) {
-                    records.push((new NS.Api.Record({
+                    records.push((new N.Api.Record({
                         id: id,
                         name: metaData.names[id]
                     })).val());
@@ -1539,7 +1598,7 @@ $( function() {
                     idCombination;
 
                 this.rows.forEach(function(responseRow) {
-                    idCombination = new NS.Api.ResponseRowIdCombination();
+                    idCombination = new N.Api.ResponseRowIdCombination();
 
                     headerIndexOrder.forEach(function(index) {
                         idCombination.add(responseRow.getAt(index));
@@ -1556,7 +1615,7 @@ $( function() {
             // dep 4
 
             Response.prototype.getValue = function(param, layout) {
-                var id = param instanceof NS.Api.ResponseRowIdCombination ? param.get() : param;
+                var id = param instanceof N.Api.ResponseRowIdCombination ? param.get() : param;
 
                 return this.getIdValueMap(layout)[param];
             };
@@ -1568,7 +1627,7 @@ $( function() {
                     values = [],
                     id;
 
-                paramArray = NS.arrayFrom(paramArray);
+                paramArray = N.arrayFrom(paramArray);
 
                 paramArray.forEach(function(param) {
                     values.push(t.getValue(param, layout));
@@ -1580,7 +1639,7 @@ $( function() {
 
         //todo TableAxis
         (function() {
-            var TableAxis = NS.Api.TableAxis = function(layout, response, type) {
+            var TableAxis = N.Api.TableAxis = function(layout, response, type) {
 				var dimensionNames,
 					spanType,
 					aDimensions = [],
@@ -1605,7 +1664,7 @@ $( function() {
 					spanType = 'rowSpan';
 				}
 
-				if (!(NS.isArray(dimensionNames) && dimensionNames.length)) {
+				if (!(N.isArray(dimensionNames) && dimensionNames.length)) {
 					return;
 				}
 	//dimensionNames = ['pe', 'ou'];
@@ -1737,7 +1796,7 @@ $( function() {
 					for (var j = 0, obj; j < aaAllFloorIds[i].length; j++) {
 						obj = {
 							id: aaAllFloorIds[i][j],
-							uuid: NS.uuid(),
+							uuid: N.uuid(),
 							dim: i,
 							axis: type
 						};
@@ -1794,7 +1853,7 @@ $( function() {
                     // set above floor door children to number of unique door ids on this floor
                     if (i > 0) {
                         aAboveFloorObjects = aaAllFloorObjects[i-1];
-                        uniqueDoorIds = NS.arrayUnique(doorIds);
+                        uniqueDoorIds = N.arrayUnique(doorIds);
 
                         for (var j = 0; j < aAboveFloorObjects.length; j++) {
                             aAboveFloorObjects[j].children = uniqueDoorIds.length;
@@ -1825,7 +1884,7 @@ $( function() {
 				if (aaAllFloorObjects.length) {
 
 					// set span to second lowest span number: if aFloorSpan == [15,3,15,1], set span to 3
-					var nSpan = nAxisHeight > 1 ? NS.arraySort(NS.clone(aFloorSpan))[1] : nAxisWidth,
+					var nSpan = nAxisHeight > 1 ? N.arraySort(N.clone(aFloorSpan))[1] : nAxisWidth,
 						aAllFloorObjectsLast = aaAllFloorObjects[aaAllFloorObjects.length - 1];
 
 					for (var i = 0, leaf, parentUuids, obj, leafUuids = []; i < aAllFloorObjectsLast.length; i++) {
@@ -1841,7 +1900,7 @@ $( function() {
 						}
 
 						// add parent uuids to leaf
-						leaf.uuids = NS.clone(parentUuids);
+						leaf.uuids = N.clone(parentUuids);
 
 						// add uuid for all leaves
 						if (leafUuids.length === nSpan) {
@@ -1886,7 +1945,7 @@ $( function() {
 
         //todo Table
         (function() {
-            var Table = NS.Api.Table = function(layout, response, colAxis, rowAxis) {
+            var Table = N.Api.Table = function(layout, response, colAxis, rowAxis) {
                 var t = this;
 
                 // init
@@ -1928,12 +1987,12 @@ $( function() {
 					valueObjects = [],
 					totalColObjects = [],
 					uuidDimUuidsMap = {},
-					//isLegendSet = NS.isObject(xLayout.legendSet) && NS.isArray(xLayout.legendSet.legends) && xLayout.legendSet.legends.length,
+					//isLegendSet = N.isObject(xLayout.legendSet) && N.isArray(xLayout.legendSet.legends) && xLayout.legendSet.legends.length,
 					isLegendSet = false,
                     tdCount = 0,
                     htmlArray,
-                    dimensionNameMap = NS.DimConf.getDimensionNameMap(),
-                    objectNameMap = NS.DimConf.getObjectNameMap(),
+                    dimensionNameMap = N.DimConf.getDimensionNameMap(),
+                    objectNameMap = N.DimConf.getObjectNameMap(),
                     idValueMap = response.getIdValueMap(layout);
 
 				response.sortableIdObjects = []; //todo
@@ -1951,7 +2010,7 @@ $( function() {
 						htmlValue,
 						displayDensity,
 						fontSize,
-						isNumeric = NS.isObject(config) && NS.isString(config.type) && config.type.substr(0,5) === 'value' && !config.empty,
+						isNumeric = N.isObject(config) && N.isString(config.type) && config.type.substr(0,5) === 'value' && !config.empty,
 						isValue = isNumeric && config.type === 'value',
 						cls = '',
 						html = '',
@@ -1966,12 +2025,12 @@ $( function() {
                         }
 
                         if (isValue) {
-                            if (NS.isBoolean(str)) {
+                            if (N.isBoolean(str)) {
                                 return str;
                             }
 
-                            //if (!NS.isNumber(n) || n != str || new Date(str).toString() !== 'Invalid Date') {
-                            if (!NS.isNumber(n) || n != str) {
+                            //if (!N.isNumber(n) || n != str || new Date(str).toString() !== 'Invalid Date') {
+                            if (!N.isNumber(n) || n != str) {
                                 return str;
                             }
 
@@ -1981,7 +2040,7 @@ $( function() {
                         return str || '';
                     }
 
-					if (!NS.isObject(config)) {
+					if (!N.isObject(config)) {
 						return '';
 					}
 
@@ -1998,7 +2057,7 @@ $( function() {
 						legends = layout.legendSet.legends;
 
 						for (var i = 0; i < legends.length; i++) {
-							if (NS.numberConstrain(value, legends[i].startValue, legends[i].endValue) === value) {
+							if (N.numberConstrain(value, legends[i].startValue, legends[i].endValue) === value) {
 								bgColor = legends[i].color;
 							}
 						}
@@ -2016,7 +2075,7 @@ $( function() {
                     cls += config.cls ? ' ' + config.cls : '';
 
 					// if sorting
-					if (NS.isString(metaDataId)) {
+					if (N.isString(metaDataId)) {
 						cls += ' td-sortable';
 
 						response.sortableIdObjects.push({
@@ -2047,7 +2106,7 @@ $( function() {
                 getValue = function(str) {
                     var n = parseFloat(str);
 
-                    if (NS.isBoolean(str)) {
+                    if (N.isBoolean(str)) {
                         return 1;
                     }
 
@@ -2055,8 +2114,8 @@ $( function() {
                     // - parsefloat(string) is not a number
                     // - string is just starting with a number
                     // - string is a valid date
-                    //if (!NS.isNumber(n) || n != str || new Date(str).toString() !== 'Invalid Date') {
-                    if (!NS.isNumber(n) || n != str) {
+                    //if (!N.isNumber(n) || n != str || new Date(str).toString() !== 'Invalid Date') {
+                    if (!N.isNumber(n) || n != str) {
                         return 0;
                     }
 
@@ -2067,9 +2126,9 @@ $( function() {
                     number = parseFloat(number);
                     precision = parseFloat(precision);
 
-                    if (NS.isNumber(number) && NS.isNumber(precision)) {
+                    if (N.isNumber(number) && N.isNumber(precision)) {
                         var numberOfDecimals = getNumberOfDecimals(number);
-                        return numberOfDecimals > precision ? NS.numberToFixed(number, precision) : number;
+                        return numberOfDecimals > precision ? N.numberToFixed(number, precision) : number;
                     }
 
                     return number;
@@ -2081,7 +2140,7 @@ $( function() {
                 };
 
                 prettyPrint = function(number, separator) {
-                    var oc = NS.OptionConf,
+                    var oc = N.OptionConf,
                         spaceId = oc.getDigitGroupSeparator('space').id,
                         noneId = oc.getDigitGroupSeparator('none').id;
 
@@ -2240,7 +2299,7 @@ $( function() {
 								totalId = doSortableColumnHeaders() ? 'total_' : null;
 
 								dimHtml.push(getTdHtml({
-									uuid: NS.uuid(),
+									uuid: N.uuid(),
 									type: 'dimensionTotal',
 									cls: 'pivot-dim-total',
 									rowSpan: colAxis.dims,
@@ -2328,7 +2387,7 @@ $( function() {
 
 
                             // value html element id
-							uuid = NS.uuid();
+							uuid = N.uuid();
 
 							// get uuids array from colaxis/rowaxis leaf
 							if (colAxis) {
@@ -2341,7 +2400,7 @@ $( function() {
                             // value, htmlValue
                             responseValue = idValueMap[id];
 
-							if (NS.isDefined(responseValue)) {
+							if (N.isDefined(responseValue)) {
                                 value = getValue(responseValue);
                                 htmlValue = responseValue;
 							}
@@ -2385,14 +2444,14 @@ $( function() {
 								type: 'valueTotal',
 								cls: 'pivot-value-total',
 								value: total,
-								htmlValue: NS.arrayContains(empty, false) ? getRoundedHtmlValue(total) : '',
-								empty: !NS.arrayContains(empty, false)
+								htmlValue: N.arrayContains(empty, false) ? getRoundedHtmlValue(total) : '',
+								empty: !N.arrayContains(empty, false)
 							});
 
 							// add row totals to idValueMap to make sorting on totals possible
 							if (doSortableColumnHeaders()) {
 								var totalId = 'total_' + rowAxis.ids[i],
-									isEmpty = !NS.arrayContains(empty, false);
+									isEmpty = !N.arrayContains(empty, false);
 
 								idValueMap[totalId] = isEmpty ? null : total;
 							}
@@ -2407,7 +2466,7 @@ $( function() {
 						if (layout.hideEmptyRows) {
 							for (var i = 0, valueRow, isValueRowEmpty, dimLeaf; i < valueObjects.length; i++) {
 								valueRow = valueObjects[i];
-								isValueRowEmpty = !NS.arrayContains(NS.arrayPluck(valueRow, 'empty'), false);
+								isValueRowEmpty = !N.arrayContains(N.arrayPluck(valueRow, 'empty'), false);
 
 								// if value row is empty
 								if (isValueRowEmpty) {
@@ -2451,14 +2510,14 @@ $( function() {
 								row.push(item);
 
 								if (colCount === colUniqueFactor) {
-									var isEmpty = !NS.arrayContains(empty, false);
+									var isEmpty = !N.arrayContains(empty, false);
 									row.push({
 										type: 'valueSubtotal',
 										cls: 'pivot-value-subtotal' + (isEmpty ? ' cursor-default' : ''),
 										value: rowSubTotal,
 										htmlValue: isEmpty ? '&nbsp;' : getRoundedHtmlValue(rowSubTotal),
 										empty: isEmpty,
-										collapsed: !NS.arrayContains(collapsed, false)
+										collapsed: !N.arrayContains(collapsed, false)
 									});
 
 									colCount = 0;
@@ -2488,7 +2547,7 @@ $( function() {
 								obj = {};
 								obj.type = 'dimensionSubtotal';
 								obj.cls = 'pivot-dim-subtotal cursor-default';
-								obj.collapsed = NS.arrayContains(collapsed, true);
+								obj.collapsed = N.arrayContains(collapsed, true);
 
 								if (i === 0) {
 									obj.htmlValue = '&nbsp;';
@@ -2510,7 +2569,7 @@ $( function() {
 							collapsed.push(!!axisAllObjects[i][0].collapsed);
 
 							// insert subtotal after last objects
-							if (!NS.isArray(axisAllObjects[i+1]) || !!axisAllObjects[i+1][0].root) {
+							if (!N.isArray(axisAllObjects[i+1]) || !!axisAllObjects[i+1][0].root) {
 								tmpAxisAllObjects.push(getAxisSubTotalRow(collapsed));
 
 								collapsed = [];
@@ -2534,8 +2593,8 @@ $( function() {
 									collapsed = !!axisAllObjects[j][0].collapsed;
 								}
 
-								if (!NS.isArray(axisAllObjects[j+1]) || axisAllObjects[j+1][0].root) {
-									var isEmpty = !NS.arrayContains(empty, false);
+								if (!N.isArray(axisAllObjects[j+1]) || axisAllObjects[j+1][0].root) {
+									var isEmpty = !N.arrayContains(empty, false);
 
 									tmpValueObjects[tmpCount++].push({
 										type: item.type === 'value' ? 'valueSubtotal' : 'valueSubtotalTotal',
@@ -2562,7 +2621,7 @@ $( function() {
 							count++;
 
 							if (count === rowAxis.span[0]) {
-								var isEmpty = !NS.arrayContains(empty, false);
+								var isEmpty = !N.arrayContains(empty, false);
 
 								tmpTotalValueObjects.push({
 									type: 'valueTotalSubgrandtotal',
@@ -2570,7 +2629,7 @@ $( function() {
 									value: subTotal,
 									htmlValue: isEmpty ? '&nbsp;' : getRoundedHtmlValue(subTotal),
 									empty: isEmpty,
-									collapsed: !NS.arrayContains(collapsed, false)
+									collapsed: !N.arrayContains(collapsed, false)
 								});
 
 								collapsed = [];
@@ -2635,8 +2694,8 @@ $( function() {
 							totalColObjects.push({
 								type: 'valueTotal',
 								value: total,
-								htmlValue: NS.arrayContains(empty, false) ? getRoundedHtmlValue(total) : '',
-								empty: !NS.arrayContains(empty, false),
+								htmlValue: N.arrayContains(empty, false) ? getRoundedHtmlValue(total) : '',
+								empty: !N.arrayContains(empty, false),
 								cls: 'pivot-value-total'
 							});
 
@@ -2660,8 +2719,8 @@ $( function() {
 									tmp.push({
 										type: 'valueTotalSubgrandtotal',
 										value: subTotal,
-										htmlValue: NS.arrayContains(empty, false) ? getRoundedHtmlValue(subTotal) : '',
-										empty: !NS.arrayContains(empty, false),
+										htmlValue: N.arrayContains(empty, false) ? getRoundedHtmlValue(subTotal) : '',
+										empty: !N.arrayContains(empty, false),
 										cls: 'pivot-value-total-subgrandtotal'
 									});
 
@@ -2700,8 +2759,8 @@ $( function() {
 								type: 'valueGrandTotal',
 								cls: 'pivot-value-grandtotal',
 								value: total,
-								htmlValue: NS.arrayContains(empty, false) ? getRoundedHtmlValue(total) : '',
-								empty: !NS.arrayContains(empty, false)
+								htmlValue: N.arrayContains(empty, false) ? getRoundedHtmlValue(total) : '',
+								empty: !N.arrayContains(empty, false)
 							}));
 						}
 					}
@@ -2738,8 +2797,8 @@ $( function() {
                     var cls = 'pivot',
                         table;
 
-                    cls += layout.displayDensity && layout.displayDensity !== NS.OptionConf.getDisplayDensity('normal').id ? ' displaydensity-' + layout.displayDensity : '';
-                    cls += layout.fontSize && layout.fontSize !== NS.OptionConf.getFontSize('normal').id ? ' fontsize-' + layout.fontSize : '';
+                    cls += layout.displayDensity && layout.displayDensity !== N.OptionConf.getDisplayDensity('normal').id ? ' displaydensity-' + layout.displayDensity : '';
+                    cls += layout.fontSize && layout.fontSize !== N.OptionConf.getFontSize('normal').id ? ' fontsize-' + layout.fontSize : '';
 
 					table = '<table class="' + cls + '">';
 
@@ -2751,7 +2810,7 @@ $( function() {
 				};
 
 				// get html
-                htmlArray = NS.arrayClean([].concat(getColAxisHtmlArray() || [], getRowHtmlArray() || [], getTotalHtmlArray() || []));
+                htmlArray = N.arrayClean([].concat(getColAxisHtmlArray() || [], getRowHtmlArray() || [], getTotalHtmlArray() || []));
 
                 // constructor
                 t.html = getHtml(htmlArray);
@@ -2760,6 +2819,44 @@ $( function() {
                 t.rowAxis = rowAxis;
                 t.tdCount = tdCount;
 			};
+        })();
+
+        // AsyncManager
+        (function() {
+            var AsyncManager = N.Api.AsyncManager = function(config) {
+                var t = this;
+
+                config = N.isObject(config) ? config : {};
+
+                // constructor
+                t.requests = N.isArray(config.requests) ? config.requests : [];
+
+                t.responses = [];
+
+                t.fn = N.isFunction(config.fn) ? config.fn : null;
+            };
+
+            AsyncManager.prototype.add = function(request) {
+                this.requests.push(request);
+            };
+
+            AsyncManager.prototype.set = function(fn) {
+                this.fn = fn;
+            };
+
+            AsyncManager.prototype.ok = function(xhr, suppress) {
+                this.responses.push(xhr);
+
+                if (!suppress) {
+                    this.resolve();
+                }
+            };
+
+            AsyncManager.prototype.resolve = function() {
+                if (this.responses.length === this.requests.length) {
+                    this.fn();
+                }
+            };
         })();
     })();
 });
