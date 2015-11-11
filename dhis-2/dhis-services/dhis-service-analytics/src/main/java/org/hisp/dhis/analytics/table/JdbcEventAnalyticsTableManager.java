@@ -407,7 +407,7 @@ public class JdbcEventAnalyticsTableManager
         }
         else
         {
-            return "character varying(255)";
+            return "character varying(50000)";
         }
     }
     
