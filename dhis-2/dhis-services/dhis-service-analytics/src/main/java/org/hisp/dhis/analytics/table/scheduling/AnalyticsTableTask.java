@@ -35,11 +35,12 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsTableService;
 import org.hisp.dhis.commons.util.DebugUtils;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.security.NoSecurityContextRunnable;
@@ -82,6 +83,9 @@ public class AnalyticsTableTask
 
     @Autowired
     private SystemSettingManager systemSettingManager;
+    
+    @Autowired
+    private DhisConfigurationProvider config;
 
     private Integer lastYears;
 
@@ -164,14 +168,14 @@ public class AnalyticsTableTask
         }
         catch ( RuntimeException ex )
         {
-            String appTitle = StringUtils.trimToEmpty( (String) systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE ) );
+            String systemId = config.getProperty( ConfigurationKey.SYSTEM_ID );
 
             notifier.notify( taskId, ERROR, "Process failed: " + ex.getMessage(), true );
 
             messageService.sendSystemNotification(
                 "Analytics table process failed",
                 "Analytics table process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
-                    "Application title: " + appTitle + " " +
+                    "System: " + systemId + " " +
                     "Message: " + ex.getMessage() + " " +
                     "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
 
