@@ -1180,3 +1180,8 @@ input, button, select, textarea {
     cursor: default;
     width: 100%;
 }
+
+/* this is because bootstrap adds min-height of 1px for smaller sized columns to prevent them from collapsing when empty*/
+.remove-one-pix {
+    margin-top: -1px;
+}

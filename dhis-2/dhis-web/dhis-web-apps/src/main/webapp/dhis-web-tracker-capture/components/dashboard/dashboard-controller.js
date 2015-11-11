@@ -128,7 +128,7 @@ trackerCapture.controller('DashboardController',
     
     var setWidgetsSize = function(){        
         
-        $scope.widgetSize = {smaller: "col-sm-6 col-md-4", bigger: "col-sm-6 col-md-8"};
+        $scope.widgetSize = {smaller: "col-sm-6 col-md-4 remove-one-pix", bigger: "col-sm-6 col-md-8"};
         
         if(!$scope.hasSmaller){
             $scope.widgetSize = {smaller: "col-sm-1", bigger: "col-sm-11"};
