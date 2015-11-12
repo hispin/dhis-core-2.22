@@ -1,4 +1,4 @@
-$( function() {
+$(function() {
     var N = PT = {};
 
     // convenience TODO import
@@ -13,6 +13,7 @@ $( function() {
             isEmpty,
             isDefined,
             isIE,
+            stringReplace,
             numberConstrain,
             numberToFixed,
             arrayFrom,
@@ -343,6 +344,11 @@ $( function() {
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
         };
 
+        // prototype
+        String.prototype.replaceAll = function(str1, str2, ignore) {
+            return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+        };
+
         N.isString = isString;
         N.isNumber = isNumber;
         N.isNumeric = isNumeric;
@@ -387,6 +393,118 @@ $( function() {
         N.DateManager = new DateManager();
     })();
 
+    // MetaDataManager
+    (function() {
+        var MetaDataManager = function() {
+            var t = this;
+
+            // constants
+            t.defaultUiLocale = 'en';
+            t.defaultDisplayProperty = 'displayName';
+
+            t.valueTypes = {
+                'numeric': ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
+                'text': ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
+            	'boolean': ['BOOLEAN','TRUE_ONLY'],
+            	'date': ['DATE','DATETIME'],
+            	'aggregate': ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            };
+
+            t.defaultAnalysisFields = [
+                '*',
+                'program[id,name]',
+                'programStage[id,name]',
+                'columns[dimension,filter,items[id,$]]',
+                'rows[dimension,filter,items[id,$]]',
+                'filters[dimension,filter,items[id,$]]',
+                '!lastUpdated',
+                '!href',
+                '!created',
+                '!publicAccess',
+                '!rewindRelativePeriods',
+                '!userOrganisationUnit',
+                '!userOrganisationUnitChildren',
+                '!userOrganisationUnitGrandChildren',
+                '!externalAccess',
+                '!access',
+                '!relativePeriods',
+                '!columnDimensions',
+                '!rowDimensions',
+                '!filterDimensions',
+                '!user',
+                '!organisationUnitGroups',
+                '!itemOrganisationUnitGroups',
+                '!userGroupAccesses',
+                '!indicators',
+                '!dataElements',
+                '!dataElementOperands',
+                '!dataElementGroups',
+                '!dataSets',
+                '!periods',
+                '!organisationUnitLevels',
+                '!organisationUnits'
+            ];
+
+            // uninitialized
+            t.manifest;
+            t.systemInfo;
+            t.systemSettings;
+            t.userAccount;
+            t.calendar;
+            t.periodGenerator;
+            t.viewUnapprovedData;
+
+            // transient
+            t.path;
+            t.dateFormat;
+            t.relativePeriod;
+            t.uiLocale;
+            t.displayProperty;
+            t.analysisFields;
+        };
+
+        MetaDataManager.prototype.getPath = function() {
+            return this.path ? this.path : (this.path = this.manifest.activities.dhis.href);
+        };
+
+        MetaDataManager.prototype.getDateFormat = function() {
+            return this.dateFormat ? this.dateFormat : (this.dateFormat = N.isString(this.systemSettings.keyDateFormat) ? this.systemSettings.keyDateFormat.toLowerCase() : 'yyyy-mm-dd');
+        };
+
+        MetaDataManager.prototype.getRelativePeriod = function() {
+            return this.relativePeriod ? this.relativePeriod : (this.relativePeriod = this.systemSettings.keyAnalysisRelativePeriod || 'LAST_12_MONTHS');
+        };
+
+        MetaDataManager.prototype.getUiLocale = function() {
+            return this.uiLocale ? this.uiLocale : (this.uiLocale = this.userAccount.settings.keyUiLocale || this.defaultUiLocale);
+        };
+
+        MetaDataManager.prototype.getDisplayProperty = function() {
+            if (this.displayProperty) {
+                return this.displayProperty;
+            }
+
+            var key = this.userAccount.settings.keyAnalysisDisplayProperty;
+            return this.displayProperty = (key === 'name') ? key : (key + '|rename(name)');
+        };
+
+        MetaDataManager.prototype.getValueTypesByType = function(type) {
+            return this.valueTypes[type];
+        };
+
+        // dep 1
+
+        MetaDataManager.prototype.isUiLocaleDefault = function() {
+            return this.getUiLocale() === this.defaultUiLocale;
+        };
+
+        MetaDataManager.prototype.getAnalysisFields = function() {
+            return this.analysisFields = this.analysisFields : (this.analysisFields = (this.defaultAnalysisFields.join(',').replaceAll('$', this.getDisplayProperty())));
+        };
+
+        N.MetaDataManager = new MetaDataManager();
+    })();
+
     // CalendarManager
     (function() {
         var CalendarManager = function(config) {
@@ -404,13 +522,16 @@ $( function() {
             // uninitialized
             t.calendar;
             t.periodGenerator;
+
+            // transient
+            t.calendarIdMap;
         };
 
         CalendarManager.prototype.setBaseUrl = function(baseUrl) {
             this.baseUrl = baseUrl;
         };
 
-        CalendarManager.prototype.setDateFormat = function(baseUrl) {
+        CalendarManager.prototype.setDateFormat = function(dateFormat) {
             this.dateFormat = dateFormat;
         };
 
@@ -423,10 +544,14 @@ $( function() {
         };
 
         CalendarManager.prototype.getCalendarIdMap = function() {
-            var idMap = {};
-            idMap[t.defaultCalendarIsoId] = t.defaultCalendarId;
+            if (this.calendarIdMap) {
+                return this.calendarIdMap;
+            }
 
-            return idMap;
+            this.calendarIdMap = {};
+            this.calendarIdMap[this.defaultCalendarIsoId] = this.defaultCalendarId;
+
+            return this.calendarIdMap;
         };
 
         CalendarManager.prototype.createCalendar = function(calendarId) {
@@ -441,7 +566,7 @@ $( function() {
         // dep 1
 
         CalendarManager.prototype.generate = function(calendarId, dateFormat) {
-            calendarId = t.getCalendarIdMap()[calendarId] || calendarId || this.defaultCalendarId;
+            calendarId = this.getCalendarIdMap()[calendarId] || calendarId || this.defaultCalendarId;
 
             if (this.calendar && this.periodGenerator) {
                 return;
@@ -473,21 +598,21 @@ $( function() {
         N.CalendarManager = new CalendarManager();
     })();
 
-    // I18n
+    // I18nManager
     (function() {
-        var I18n = function(config) {
+        var I18nManager = function(config) {
             this.map = config || {};
         };
 
-        I18n.prototype.get = function(key) {
+        I18nManager.prototype.get = function(key) {
             return this.map[key];
         };
 
-        I18n.prototype.add = function(obj) {
+        I18nManager.prototype.add = function(obj) {
             $.extend(this.map, obj);
         };
 
-        N.I18n = new I18n();
+        N.I18nManager = new I18nManager();
     })();
 
     // DimensionConfig
@@ -499,54 +624,54 @@ $( function() {
             var dimensions = {
                 data: {
                     value: 'data',
-                    name: N.I18n.get('data') || 'Data',
+                    name: N.I18nManager.get('data') || 'Data',
                     dimensionName: 'dx',
                     objectName: 'dx'
                 },
                 category: {
-                    name: N.I18n.get('assigned_categories') || 'Assigned categories',
+                    name: N.I18nManager.get('assigned_categories') || 'Assigned categories',
                     dimensionName: 'co',
                     objectName: 'co',
                 },
                 indicator: {
                     value: 'indicators',
-                    name: N.I18n.get('indicators') || 'Indicators',
+                    name: N.I18nManager.get('indicators') || 'Indicators',
                     dimensionName: 'dx',
                     objectName: 'in'
                 },
                 dataElement: {
                     value: 'dataElements',
-                    name: N.I18n.get('data_elements') || 'Data elements',
+                    name: N.I18nManager.get('data_elements') || 'Data elements',
                     dimensionName: 'dx',
                     objectName: 'de'
                 },
                 operand: {
                     value: 'operand',
-                    name: N.I18n.get('operand') || 'Operand',
+                    name: N.I18nManager.get('operand') || 'Operand',
                     dimensionName: 'dx',
                     objectName: 'dc'
                 },
                 dataSet: {
                     value: 'dataSets',
-                    name: N.I18n.get('data_sets') || 'Data sets',
+                    name: N.I18nManager.get('data_sets') || 'Data sets',
                     dimensionName: 'dx',
                     objectName: 'ds'
                 },
                 eventDataItem: {
                     value: 'eventDataItem',
-                    name: N.I18n.get('event_data_items') || 'Event data items',
+                    name: N.I18nManager.get('event_data_items') || 'Event data items',
                     dimensionName: 'dx',
                     objectName: 'di'
                 },
                 programIndicator: {
                     value: 'programIndicator',
-                    name: N.I18n.get('program_indicators') || 'Program indicators',
+                    name: N.I18nManager.get('program_indicators') || 'Program indicators',
                     dimensionName: 'dx',
                     objectName: 'pi'
                 },
                 period: {
                     value: 'period',
-                    name: N.I18n.get('periods') || 'Periods',
+                    name: N.I18nManager.get('periods') || 'Periods',
                     dimensionName: 'pe',
                     objectName: 'pe'
                 },
@@ -558,7 +683,7 @@ $( function() {
                 },
                 organisationUnit: {
                     value: 'organisationUnits',
-                    name: N.I18n.get('N.i18n.organisation_units') || 'Organisation units',
+                    name: N.I18nManager.get('N.i18n.organisation_units') || 'Organisation units',
                     dimensionName: 'ou',
                     objectName: 'ou'
                 },
@@ -620,17 +745,17 @@ $( function() {
 
             // private
             var periodTypes = {
-                'Daily': N.I18n.get('daily') || 'Daily',
-                'Weekly': N.I18n.get('weekly') || 'Weekly',
-                'Monthly': N.I18n.get('monthly') || 'Monthly',
-                'BiMonthly': N.I18n.get('bimonthly') || 'BiMonthly',
-                'Quarterly': N.I18n.get('quarterly') || 'Quarterly',
-                'SixMonthly': N.I18n.get('sixmonthly') || 'SixMonthly',
-                'SixMonthlyApril': N.I18n.get('sixmonthly_april') || 'SixMonthly April',
-                'Yearly': N.I18n.get('yearly') || 'Yearly',
-                'FinancialOct': N.I18n.get('financial_oct') || 'Financial October',
-                'FinancialJuly': N.I18n.get('financial_july') || 'Financial July',
-                'FinancialApril': N.I18n.get('financial_april') || 'Financial April'
+                'Daily': N.I18nManager.get('daily') || 'Daily',
+                'Weekly': N.I18nManager.get('weekly') || 'Weekly',
+                'Monthly': N.I18nManager.get('monthly') || 'Monthly',
+                'BiMonthly': N.I18nManager.get('bimonthly') || 'BiMonthly',
+                'Quarterly': N.I18nManager.get('quarterly') || 'Quarterly',
+                'SixMonthly': N.I18nManager.get('sixmonthly') || 'SixMonthly',
+                'SixMonthlyApril': N.I18nManager.get('sixmonthly_april') || 'SixMonthly April',
+                'Yearly': N.I18nManager.get('yearly') || 'Yearly',
+                'FinancialOct': N.I18nManager.get('financial_oct') || 'Financial October',
+                'FinancialJuly': N.I18nManager.get('financial_july') || 'Financial July',
+                'FinancialApril': N.I18nManager.get('financial_april') || 'Financial April'
             };
 
             // uninitialized
@@ -670,17 +795,17 @@ $( function() {
                 'comfortable': {
                     index: 1,
                     id: 'COMFORTABLE',
-                    name: N.I18n.get('comfortable') || 'Comfortable'
+                    name: N.I18nManager.get('comfortable') || 'Comfortable'
                 },
                 'normal': {
                     index: 2,
                     id: 'NORMAL',
-                    name: N.I18n.get('normal') || 'Normal'
+                    name: N.I18nManager.get('normal') || 'Normal'
                 },
                 'compact': {
                     index: 3,
                     id: 'COMPACT',
-                    name: N.I18n.get('compact') || 'Compact'
+                    name: N.I18nManager.get('compact') || 'Compact'
                 }
             };
 
@@ -688,17 +813,17 @@ $( function() {
                 'large': {
                     index: 1,
                     id: 'LARGE',
-                    name: N.I18n.get('large') || 'Large'
+                    name: N.I18nManager.get('large') || 'Large'
                 },
                 'normal': {
                     index: 2,
                     id: 'NORMAL',
-                    name: N.I18n.get('normal') || 'Normal'
+                    name: N.I18nManager.get('normal') || 'Normal'
                 },
                 'small': {
                     index: 3,
                     id: 'SMALL',
-                    name: N.I18n.get('small') || 'Small'
+                    name: N.I18nManager.get('small') || 'Small'
                 }
             };
 
@@ -706,19 +831,19 @@ $( function() {
                 'none': {
                     index: 1,
                     id: 'NONE',
-                    name: N.I18n.get('none') || 'None',
+                    name: N.I18nManager.get('none') || 'None',
                     value: ''
                 },
                 'space': {
                     index: 2,
                     id: 'SPACE',
-                    name: N.I18n.get('space') || 'Space',
+                    name: N.I18nManager.get('space') || 'Space',
                     value: '&nbsp;'
                 },
                 'comma': {
                     index: 3,
                     id: 'COMMA',
-                    name: N.I18n.get('comma') || 'Comma',
+                    name: N.I18nManager.get('comma') || 'Comma',
                     value: ','
                 }
             };
@@ -727,46 +852,38 @@ $( function() {
                 'def': {
                     index: 1,
                     id: 'DEFAULT',
-                    name: N.I18n.get('by_data_element') || 'By data element'
+                    name: N.I18nManager.get('by_data_element') || 'By data element'
                 },
                 'count': {
                     index: 2,
                     id: 'COUNT',
-                    name: N.I18n.get('count') || 'Count'
+                    name: N.I18nManager.get('count') || 'Count'
                 },
                 'sum': {
                     index: 3,
                     id: 'SUM',
-                    name: N.I18n.get('sum') || 'Sum'
+                    name: N.I18nManager.get('sum') || 'Sum'
                 },
                 'stddev': {
                     index: 4,
                     id: 'STDDEV',
-                    name: N.I18n.get('stddev') || 'Standard deviation'
+                    name: N.I18nManager.get('stddev') || 'Standard deviation'
                 },
                 'variance': {
                     index: 5,
                     id: 'VARIANCE',
-                    name: N.I18n.get('variance') || 'Variance'
+                    name: N.I18nManager.get('variance') || 'Variance'
                 },
                 'min': {
                     index: 6,
                     id: 'MIN',
-                    name: N.I18n.get('min') || 'Min'
+                    name: N.I18nManager.get('min') || 'Min'
                 },
                 'max': {
                     index: 7,
                     id: 'MAX',
-                    name: N.I18n.get('max') || 'Max'
+                    name: N.I18nManager.get('max') || 'Max'
                 }
-            };
-
-            var valueType = {
-                'numeric': ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
-                'text': ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
-            	'boolean': ['BOOLEAN','TRUE_ONLY'],
-            	'date': ['DATE','DATETIME'],
-            	'aggregate': ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
             };
 
             // uninitialized
@@ -864,10 +981,6 @@ $( function() {
                 N.arraySort(records, 'ASC', 'index');
 
                 return aggregationTypeRecords = records;
-            };
-
-            t.getValueTypeOptions = function(type) {
-                return valueType[type];
             };
 
             t.getDigitGroupSeparatorIdMap = function() {
@@ -1290,12 +1403,12 @@ $( function() {
             Layout.prototype.val = function(noError) {
 
                 if (!(this.columns || this.rows)) {
-                    this.alert(N.I18n.get('at_least_one_dimension_must_be_specified_as_row_or_column'), noError); //todo alert
+                    this.alert(N.I18nManager.get('at_least_one_dimension_must_be_specified_as_row_or_column'), noError); //todo alert
                     return null;
                 }
 
                 if (!this.hasDimension(N.DimConf.get('period').dimensionName)) {
-                    this.alert(N.I18n.get('at_least_one_period_must_be_specified_as_column_row_or_filter'), noError); //todo alert
+                    this.alert(N.I18nManager.get('at_least_one_period_must_be_specified_as_column_row_or_filter'), noError); //todo alert
                     return null;
                 }
 
@@ -1408,6 +1521,7 @@ $( function() {
                 t.baseUrl = N.isString(config.baseUrl) ? config.baseUrl : '';
                 t.params = N.arrayFrom(config.params);
                 t.manager = config.manager || null;
+                t.type = N.isString(config.type) ? config.type : 'json';
                 t.fn = N.isFunction(config.fn) ? config.fn : function() { t.defaultFn(); };
 
                 // default fn
@@ -1489,6 +1603,12 @@ $( function() {
                 }
             };
 
+            Request.prototype.setType = function(type) {
+                if (N.isString(type)) {
+                    this.type = type;
+                }
+            };
+
             Request.prototype.setManager = function(manager) {
                 this.manager = manager;
             };
@@ -1505,7 +1625,12 @@ $( function() {
                 var t = this;
                 this.setFn(fn);
 
-                return $.getJSON(this.url(), t.fn);
+                if (this.type === 'ajax') {
+                    return $.ajax({url: this.url(), success: t.fn});
+                }
+                else {
+                    return $.getJSON(this.url(), t.fn);
+                }
             };
         })();
 
@@ -1521,7 +1646,7 @@ $( function() {
 
                 t.responses = [];
 
-                t.fn = N.isFunction(config.fn) ? config.fn : function() { console.log("request manager is done"); };
+                t.fn = N.isFunction(config.fn) ? config.fn : function() { console.log("Request manager is done"); };
             };
 
             RequestManager.prototype.add = function(param) {
@@ -2964,53 +3089,6 @@ $( function() {
                 t.rowAxis = rowAxis;
                 t.tdCount = tdCount;
 			};
-        })();
-
-        // Instance
-        (function() {
-            var Instance = N.Api.Instance = function() {
-                var t = this;
-
-                // uninitialized
-                t.manifest;
-                t.systemInfo;
-                t.systemSettings;
-                t.userAccount;
-                t.calendar;
-                t.periodGenerator;
-
-                // transient
-                t.path;
-                t.dateFormat;
-                t.relativePeriod;
-                t.uiLocale;
-                t.displayProperty;
-            };
-
-            Instance.prototype.getPath = function() {
-                return t.path ? t.path : (t.path = t.manifest.activities.dhis.href);
-            };
-
-            Instance.prototype.getDateFormat = function() {
-                return t.dateFormat ? t.dateFormat : (t.dateFormat = N.isString(t.systemSettings.keyDateFormat) ? systemSettings.keyDateFormat.toLowerCase() : 'yyyy-mm-dd');
-            };
-
-            Instance.prototype.getRelativePeriod = function() {
-                return t.relativePeriod ? t.relativePeriod : (t.relativePeriod = t.systemSettings.keyAnalysisRelativePeriod || 'LAST_12_MONTHS');
-            };
-
-            Instance.prototype.getUiLocale = function() {
-                return t.uiLocale ? t.uiLocale : (t.uiLocale = t.userAccount.settings.keyUiLocale || 'en');
-            };
-
-            Instance.prototype.getDisplayProperty = function() {
-                if (t.displayProperty) {
-                    return t.displayProperty;
-                }
-
-                var key = t.userAccount.settings.keyAnalysisDisplayProperty;
-                return t.displayProperty = (key === 'name') ? key : (key + '|rename(name)');
-            };
         })();
     })();
 });
