@@ -431,8 +431,6 @@ public interface OrganisationUnitService
 
     int getNumberOfOrganisationUnits();
 
-    int getMaxOfOrganisationUnitLevels();
-
     /**
      * Return the number of organisation unit levels to cache offline, e.g. for
      * organisation unit tree. Looks for level to return in the following order:

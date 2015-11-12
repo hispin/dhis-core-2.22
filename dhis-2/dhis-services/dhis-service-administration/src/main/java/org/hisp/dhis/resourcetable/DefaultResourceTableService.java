@@ -134,7 +134,7 @@ public class DefaultResourceTableService
     {
         resourceTableStore.generateResourceTable( new OrganisationUnitStructureResourceTable( 
             null, statementBuilder.getColumnQuote(), 
-            organisationUnitService, organisationUnitService.getMaxOfOrganisationUnitLevels() ) );
+            organisationUnitService, organisationUnitService.getNumberOfOrganisationalLevels() ) );
     }
     
     @Override

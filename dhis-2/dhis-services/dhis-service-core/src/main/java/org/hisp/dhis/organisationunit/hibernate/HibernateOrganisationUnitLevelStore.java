@@ -53,14 +53,4 @@ public class HibernateOrganisationUnitLevelStore
     {
         return (OrganisationUnitLevel) getCriteria( Restrictions.eq( "level", level ) ).uniqueResult();
     }
-
-    @Override
-    public int getMaxLevels()
-    {
-        final String sql = "SELECT MAX(level) FROM orgunitlevel";
-
-        Integer level = jdbcTemplate.queryForObject( sql, Integer.class );
-        
-        return level != null ? level : 0;
-    }
 }
