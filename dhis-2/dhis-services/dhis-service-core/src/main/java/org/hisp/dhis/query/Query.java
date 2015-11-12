@@ -30,6 +30,7 @@ package org.hisp.dhis.query;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
+import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 
@@ -48,7 +49,7 @@ public class Query extends Criteria
 
     private Integer maxResults = Integer.MAX_VALUE;
 
-    private Collection<?> objects;
+    private List<? extends IdentifiableObject> objects;
 
     public static Query from( Schema schema )
     {
@@ -92,12 +93,12 @@ public class Query extends Criteria
         return this;
     }
 
-    public Collection<?> getObjects()
+    public List<? extends IdentifiableObject> getObjects()
     {
         return objects;
     }
 
-    public void setObjects( Collection<?> objects )
+    public void setObjects( List<? extends IdentifiableObject> objects )
     {
         this.objects = objects;
     }

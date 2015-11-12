@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.hisp.dhis.common.PresetProvider;
-import org.hisp.dhis.parser.ParserService;
 import org.hisp.dhis.node.AbstractNode;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodePropertyConverter;
@@ -65,7 +64,7 @@ public class DefaultFieldFilterService implements FieldFilterService
     private final Pattern MUTATOR_PATTERN = Pattern.compile( "(\\w+)(?:::(\\w+))?(?:\\|rename\\((\\w+)\\))?" );
 
     @Autowired
-    private ParserService parserService;
+    private FieldParser fieldParser;
 
     @Autowired
     private SchemaService schemaService;
@@ -158,7 +157,7 @@ public class DefaultFieldFilterService implements FieldFilterService
         }
         else
         {
-            fieldMap = parserService.parseFieldFilter( fields );
+            fieldMap = fieldParser.parse( fields );
         }
 
         for ( Object object : objects )

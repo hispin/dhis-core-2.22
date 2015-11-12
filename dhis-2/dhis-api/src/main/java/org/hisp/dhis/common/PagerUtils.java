@@ -46,6 +46,11 @@ public final class PagerUtils
     {
         List<T> objects = new ArrayList<>( col );
 
+        if ( offset == 0 && objects.size() <= limit )
+        {
+            return objects;
+        }
+
         if ( offset >= objects.size() )
         {
             offset = objects.isEmpty() ? objects.size() : objects.size() - 1;

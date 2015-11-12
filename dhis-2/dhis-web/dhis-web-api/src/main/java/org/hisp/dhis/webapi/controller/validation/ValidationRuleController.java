@@ -28,11 +28,11 @@ package org.hisp.dhis.webapi.controller.validation;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.schema.descriptors.ValidationRuleSchemaDescriptor;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -55,25 +55,25 @@ public class ValidationRuleController
 {
     @Autowired
     private DataSetService dataSetService;
-    
+
     @Autowired
     private ValidationRuleService validationRuleService;
-    
+
     @Override
-    protected List<ValidationRule> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    protected List<ValidationRule> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
     {
         if ( options.contains( "dataSet" ) )
-        {            
+        {
             DataSet ds = dataSetService.getDataSet( options.get( "dataSet" ) );
-            
+
             if ( ds == null )
             {
                 return null;
             }
-            
+
             return Lists.newArrayList( validationRuleService.getValidationRulesByDataElements( ds.getDataElements() ) );
         }
-        
+
         return super.getEntityList( metaData, options, filters, orders );
     }
 }

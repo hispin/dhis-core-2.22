@@ -32,6 +32,7 @@ import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.schema.descriptors.UserRoleSchemaDescriptor;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserAuthorityGroup;
@@ -61,7 +62,7 @@ public class UserRoleController
     private UserService userService;
 
     @Override
-    protected List<UserAuthorityGroup> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    protected List<UserAuthorityGroup> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
     {
         List<UserAuthorityGroup> entityList = super.getEntityList( metaData, options, filters, orders );
 

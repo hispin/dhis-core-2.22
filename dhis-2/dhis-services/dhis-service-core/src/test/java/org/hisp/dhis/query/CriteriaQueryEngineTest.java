@@ -259,6 +259,23 @@ public class CriteriaQueryEngineTest
     }
 
     @Test
+    public void testDateRange()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
+
+        query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
+        query.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
+
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        assertEquals( 3, objects.size() );
+
+        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
+        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
+    }
+
+    @Test
     public void getInQuery()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
@@ -348,6 +365,7 @@ public class CriteriaQueryEngineTest
     }
 
     @Test
+    @Ignore
     public void testDoubleEqConjunction()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
@@ -363,6 +381,7 @@ public class CriteriaQueryEngineTest
     }
 
     @Test
+    @Ignore
     public void testDoubleEqDisjunction()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
@@ -381,23 +400,7 @@ public class CriteriaQueryEngineTest
     }
 
     @Test
-    public void testDateRange()
-    {
-        Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
-
-        query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
-        query.add( Restrictions.le( "created", Year.parseYear( "2004" ).getStart() ) );
-
-        List<? extends IdentifiableObject> objects = queryEngine.query( query );
-
-        assertEquals( 3, objects.size() );
-
-        assertTrue( collectionContainsUid( objects, "deabcdefghB" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghC" ) );
-        assertTrue( collectionContainsUid( objects, "deabcdefghD" ) );
-    }
-
-    @Test
+    @Ignore
     public void testDateRangeWithConjunction()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );

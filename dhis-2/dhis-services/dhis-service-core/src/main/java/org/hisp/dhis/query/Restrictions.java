@@ -38,6 +38,8 @@ import org.hisp.dhis.query.operators.LessThanOperator;
 import org.hisp.dhis.query.operators.LikeOperator;
 import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.query.operators.NotEqualOperator;
+import org.hisp.dhis.query.operators.NotInOperator;
+import org.hisp.dhis.query.operators.NotLikeOperator;
 import org.hisp.dhis.query.operators.NotNullOperator;
 import org.hisp.dhis.query.operators.NullOperator;
 
@@ -88,14 +90,29 @@ public final class Restrictions
         return new Restriction( path, new LikeOperator( value, true, matchMode ) );
     }
 
+    public static Restriction notLike( String path, String value, MatchMode matchMode )
+    {
+        return new Restriction( path, new NotLikeOperator( value, true, matchMode ) );
+    }
+
     public static Restriction ilike( String path, String value, MatchMode matchMode )
     {
         return new Restriction( path, new LikeOperator( value, false, matchMode ) );
     }
 
+    public static Restriction notIlike( String path, String value, MatchMode matchMode )
+    {
+        return new Restriction( path, new NotLikeOperator( value, false, matchMode ) );
+    }
+
     public static Restriction in( String path, Collection<?> values )
     {
         return new Restriction( path, new InOperator( values ) );
+    }
+
+    public static Restriction notIn( String path, Collection<?> values )
+    {
+        return new Restriction( path, new NotInOperator( values ) );
     }
 
     public static Restriction isNull( String path )

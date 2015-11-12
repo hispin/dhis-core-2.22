@@ -106,6 +106,10 @@ public class DefaultQueryParser implements QueryParser
             {
                 return Restrictions.eq( path, QueryUtils.getValue( property.getKlass(), arg ) );
             }
+            case "!eq":
+            {
+                return Restrictions.ne( path, QueryUtils.getValue( property.getKlass(), arg ) );
+            }
             case "ne":
             {
                 return Restrictions.ne( path, QueryUtils.getValue( property.getKlass(), arg ) );
@@ -140,19 +144,69 @@ public class DefaultQueryParser implements QueryParser
             }
             case "like":
             {
-                return Restrictions.ilike( path, String.valueOf( arg ), MatchMode.ANYWHERE );
+                return Restrictions.like( path, String.valueOf( arg ), MatchMode.ANYWHERE );
+            }
+            case "!like":
+            {
+                return Restrictions.notLike( path, String.valueOf( arg ), MatchMode.ANYWHERE );
+            }
+            case "^like":
+            {
+                return Restrictions.like( path, String.valueOf( arg ), MatchMode.START );
+            }
+            case "!^like":
+            {
+                return Restrictions.notLike( path, String.valueOf( arg ), MatchMode.START );
+            }
+            case "$like":
+            {
+                return Restrictions.like( path, String.valueOf( arg ), MatchMode.END );
+            }
+            case "!$like":
+            {
+                return Restrictions.notLike( path, String.valueOf( arg ), MatchMode.END );
             }
             case "ilike":
             {
                 return Restrictions.ilike( path, String.valueOf( arg ), MatchMode.ANYWHERE );
             }
+            case "!ilike":
+            {
+                return Restrictions.notIlike( path, String.valueOf( arg ), MatchMode.ANYWHERE );
+            }
+            case "startsWith":
+            case "^ilike":
+            {
+                return Restrictions.ilike( path, String.valueOf( arg ), MatchMode.START );
+            }
+            case "!^ilike":
+            {
+                return Restrictions.notIlike( path, String.valueOf( arg ), MatchMode.START );
+            }
+            case "endsWith":
+            case "$ilike":
+            {
+                return Restrictions.ilike( path, String.valueOf( arg ), MatchMode.END );
+            }
+            case "!$ilike":
+            {
+                return Restrictions.notIlike( path, String.valueOf( arg ), MatchMode.END );
+            }
             case "in":
             {
                 return Restrictions.in( path, QueryUtils.getValue( Collection.class, arg ) );
             }
+            case "!in":
+            {
+                return Restrictions.notIn( path, QueryUtils.getValue( Collection.class, arg ) );
+            }
             case "null":
             {
                 return Restrictions.isNull( path );
+            }
+            case "!null":
+            {
+                return Restrictions.isNotNull( path );
             }
         }
 
@@ -163,6 +217,7 @@ public class DefaultQueryParser implements QueryParser
     {
         String[] paths = path.split( "\\." );
         Schema currentSchema = schema;
+        Property currentProperty = null;
 
         for ( int i = 0; i < paths.length; i++ )
         {
@@ -171,33 +226,28 @@ public class DefaultQueryParser implements QueryParser
                 return null;
             }
 
-            Property property = currentSchema.getProperty( paths[i] );
+            currentProperty = currentSchema.getProperty( paths[i] );
 
-            if ( property == null )
+            if ( currentProperty == null )
             {
                 throw new QueryParserException( "Unknown path property: " + paths[i] + " (" + path + ")" );
             }
 
-            if ( property.isSimple() )
+            if ( currentProperty.isSimple() && i != (paths.length - 1) )
             {
-                if ( i != (paths.length - 1) )
-                {
-                    throw new QueryParserException( "Simple type was found before finished parsing path expression, please check your path string." );
-                }
-
-                return property;
+                throw new QueryParserException( "Simple type was found before finished parsing path expression, please check your path string." );
             }
 
-            if ( property.isCollection() )
+            if ( currentProperty.isCollection() )
             {
-                currentSchema = schemaService.getDynamicSchema( property.getItemKlass() );
+                currentSchema = schemaService.getDynamicSchema( currentProperty.getItemKlass() );
             }
             else
             {
-                currentSchema = schemaService.getDynamicSchema( property.getKlass() );
+                currentSchema = schemaService.getDynamicSchema( currentProperty.getKlass() );
             }
         }
 
-        return null;
+        return currentProperty;
     }
 }
