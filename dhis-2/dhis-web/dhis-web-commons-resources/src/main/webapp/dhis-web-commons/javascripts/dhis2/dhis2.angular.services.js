@@ -1443,8 +1443,11 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             var valueFound = "''";
                             if(variableObject)
                             {
-                                if(variableObject.eventDate){
-                                    valueFound = VariableService.processValue(variableObject.eventDate, 'DATE');
+                                if(variableObject.variableEventDate){
+                                    valueFound = VariableService.processValue(variableObject.variableEventDate, 'DATE');
+                                }
+                                else {
+                                    $log.warn("no last event date found for variable: " + variableName);
                                 }
                             }
                             else
