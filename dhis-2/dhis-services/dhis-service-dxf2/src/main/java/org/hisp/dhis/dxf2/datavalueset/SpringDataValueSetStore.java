@@ -82,7 +82,9 @@ public class SpringDataValueSetStore
     {
         DataValueSet dataValueSet = new StreamingDataValueSet( XMLFactory.getXMLWriter( out ) );
 
-        writeDataValueSet( getDataValueSql( params ), params, completeDate, dataValueSet );
+        String sql = getDataValueSql( params );
+        
+        writeDataValueSet( sql, params, completeDate, dataValueSet );
 
         IOUtils.closeQuietly( out );
     }
@@ -92,7 +94,9 @@ public class SpringDataValueSetStore
     {
         DataValueSet dataValueSet = new StreamingJsonDataValueSet( out );
 
-        writeDataValueSet( getDataValueSql( params ), params, completeDate, dataValueSet );
+        String sql = getDataValueSql( params );
+        
+        writeDataValueSet( sql, params, completeDate, dataValueSet );
 
         IOUtils.closeQuietly( out );
     }
@@ -102,7 +106,9 @@ public class SpringDataValueSetStore
     {
         DataValueSet dataValueSet = new StreamingCsvDataValueSet( new CsvWriter( writer, CSV_DELIM ) );
 
-        writeDataValueSet( getDataValueSql( params ), params, completeDate, dataValueSet );
+        String sql = getDataValueSql( params );
+        
+        writeDataValueSet( sql, params, completeDate, dataValueSet );
 
         IOUtils.closeQuietly( writer );
     }
