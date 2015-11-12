@@ -499,7 +499,7 @@ $(function() {
         };
 
         MetaDataManager.prototype.getAnalysisFields = function() {
-            return this.analysisFields = this.analysisFields : (this.analysisFields = (this.defaultAnalysisFields.join(',').replaceAll('$', this.getDisplayProperty())));
+            return this.analysisFields ? this.analysisFields : (this.analysisFields = (this.defaultAnalysisFields.join(',').replaceAll('$', this.getDisplayProperty())));
         };
 
         N.MetaDataManager = new MetaDataManager();

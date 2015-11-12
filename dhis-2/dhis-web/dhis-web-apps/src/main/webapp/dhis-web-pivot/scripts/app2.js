@@ -67,17 +67,18 @@ Ext.onReady( function() {
         }));
 
         // root nodes
-        //requestManager.add(new N.Api.Request({
-            //baseUrl: metaDataManager.getPath() + '/api/organisationUnits.json',
-            //params: {
-                //'userDataViewFallback': true,
-                //'paging': false,
-                //'fields': 'id,' + metaDataManager.getDisplayProperty() + ',children[id,' + namePropertyUrl + ']',
-            //fn: function(r) {
-                //metaDataManager.viewUnapprovedData = r;
-                //requestManager.ok(this);
-            //}
-        //}));
+        requestManager.add(new N.Api.Request({
+            baseUrl: metaDataManager.getPath() + '/api/organisationUnits.json',
+            params: [
+                'userDataViewFallback=true',
+                'fields=id,' + metaDataManager.getDisplayProperty() + ',children[id,' + metaDataManager.getDisplayProperty() + ']',
+                'paging=false'
+            ],
+            fn: function(r) {
+                metaDataManager.rootNodes = r.organisationUnits;
+                requestManager.ok(this);
+            }
+        }));
 
 
         requestManager.run();
