@@ -480,7 +480,7 @@ public class JDBCDataBrowserStore
     {
         if ( maxLevel == null )
         {
-            maxLevel = organisationUnitService.getMaxOfOrganisationUnitLevels();
+            maxLevel = organisationUnitService.getNumberOfOrganisationalLevels();
         }
 
         int curLevel = organisationUnitService.getOrganisationUnit( orgUnitSelected ).getLevel();

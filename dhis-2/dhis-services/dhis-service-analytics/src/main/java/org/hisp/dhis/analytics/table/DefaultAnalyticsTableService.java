@@ -96,7 +96,7 @@ public class DefaultAnalyticsTableService
     public void update( Integer lastYears, TaskId taskId )
     {
         int processNo = getProcessNo();
-        int orgUnitLevelNo = organisationUnitService.getMaxOfOrganisationUnitLevels();
+        int orgUnitLevelNo = organisationUnitService.getNumberOfOrganisationalLevels();
         
         Clock clock = new Clock( log ).startClock().logTime( "Starting update, processes: " + processNo + ", org unit levels: " + orgUnitLevelNo );
         
@@ -214,7 +214,7 @@ public class DefaultAnalyticsTableService
     
     private void applyAggregationLevels( List<AnalyticsTable> tables )
     {
-        int maxLevels = organisationUnitService.getMaxOfOrganisationUnitLevels();
+        int maxLevels = organisationUnitService.getNumberOfOrganisationalLevels();
         
         boolean hasAggLevels = false;
         

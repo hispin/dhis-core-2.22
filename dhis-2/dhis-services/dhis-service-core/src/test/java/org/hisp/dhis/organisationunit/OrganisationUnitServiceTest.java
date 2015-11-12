@@ -339,12 +339,37 @@ public class OrganisationUnitServiceTest
         OrganisationUnit unit7 = createOrganisationUnit( '7' );
         organisationUnitService.addOrganisationUnit( unit7 );
 
-        assertTrue( organisationUnitService.getOrganisationUnitsAtLevel( 1 ).size() == 2 );
-        assertTrue( organisationUnitService.getOrganisationUnitsAtLevel( 3 ).size() == 3 );
-        assertTrue( organisationUnitService.getNumberOfOrganisationalLevels() == 4 );
+        assertEquals( 2, organisationUnitService.getOrganisationUnitsAtLevel( 1 ).size() );
+        assertEquals( 3, organisationUnitService.getOrganisationUnitsAtLevel( 3 ).size() );
+        assertEquals( 4, organisationUnitService.getNumberOfOrganisationalLevels() );
         assertTrue( unit4.getLevel() == 3 );
         assertTrue( unit1.getLevel() == 1 );
         assertTrue( unit6.getLevel() == 4 );
+    }    
+
+    @Test
+    public void testGetNumberOfOrganisationalLevels()
+    {
+        assertEquals( 0, organisationUnitService.getNumberOfOrganisationalLevels() );
+        
+        OrganisationUnit unit1 = createOrganisationUnit( '1' );
+        organisationUnitService.addOrganisationUnit( unit1 );
+
+        OrganisationUnit unit2 = createOrganisationUnit( '2', unit1 );
+        unit1.getChildren().add( unit2 );
+        organisationUnitService.addOrganisationUnit( unit2 );
+
+        assertEquals( 2, organisationUnitService.getNumberOfOrganisationalLevels() );
+
+        OrganisationUnit unit3 = createOrganisationUnit( '3', unit2 );
+        unit2.getChildren().add( unit3 );
+        organisationUnitService.addOrganisationUnit( unit3 );
+
+        OrganisationUnit unit4 = createOrganisationUnit( '4', unit2 );
+        unit2.getChildren().add( unit4 );
+        organisationUnitService.addOrganisationUnit( unit4 );
+
+        assertEquals( 3, organisationUnitService.getNumberOfOrganisationalLevels() );
     }
     
     @Test
@@ -857,20 +882,6 @@ public class OrganisationUnitServiceTest
         assertNull( organisationUnitService.getOrganisationUnitLevel( idB ) );
     }
 
-    @Test
-    public void testGetMaxLevels()
-    {
-        assertEquals( 0, organisationUnitService.getMaxOfOrganisationUnitLevels() );
-
-        OrganisationUnitLevel levelA = new OrganisationUnitLevel( 1, "National" );
-        OrganisationUnitLevel levelB = new OrganisationUnitLevel( 2, "District" );
-
-        organisationUnitService.addOrganisationUnitLevel( levelA );
-        organisationUnitService.addOrganisationUnitLevel( levelB );
-
-        assertEquals( 2, organisationUnitService.getMaxOfOrganisationUnitLevels() );
-    }
-    
     @Test
     public void testIsInUserHierarchy()
     {

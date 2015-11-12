@@ -52,11 +52,4 @@ public interface OrganisationUnitLevelStore
      * @return the OrganisationUnitLevel at the given level.
      */
     OrganisationUnitLevel getByLevel( int level );
-
-    /**
-     * Gets the maximum level from the hierarchy.
-     *
-     * @return the maximum number of level.
-     */
-    int getMaxLevels();
 }

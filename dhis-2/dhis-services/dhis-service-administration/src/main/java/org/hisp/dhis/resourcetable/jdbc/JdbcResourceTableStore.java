@@ -84,7 +84,7 @@ public class JdbcResourceTableStore
         jdbcTemplate.execute( createTableSql );
 
         // ---------------------------------------------------------------------
-        // Populate table
+        // Populate table through SQL or object batch update
         // ---------------------------------------------------------------------
 
         if ( populateTableSql.isPresent() )

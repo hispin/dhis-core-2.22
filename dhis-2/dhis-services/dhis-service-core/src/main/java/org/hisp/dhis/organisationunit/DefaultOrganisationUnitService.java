@@ -685,12 +685,6 @@ public class DefaultOrganisationUnitService
     }
 
     @Override
-    public int getMaxOfOrganisationUnitLevels()
-    {
-        return organisationUnitLevelStore.getMaxLevels();
-    }
-
-    @Override
     public int getOfflineOrganisationUnitLevels()
     {
         // ---------------------------------------------------------------------

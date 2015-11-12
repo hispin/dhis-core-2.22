@@ -92,7 +92,7 @@ public class JdbcAnalyticsTableManager
             return "No data values exist, not updating aggregate analytics tables";
         }
 
-        int orgUnitLevels = organisationUnitService.getMaxOfOrganisationUnitLevels();
+        int orgUnitLevels = organisationUnitService.getNumberOfOrganisationalLevels();
 
         if ( orgUnitLevels == 0 )
         {
