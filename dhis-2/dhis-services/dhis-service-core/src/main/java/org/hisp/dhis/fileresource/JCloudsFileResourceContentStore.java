@@ -74,8 +74,6 @@ public class JCloudsFileResourceContentStore
 
     private static final long FIVE_MINUTES_IN_SECONDS = Minutes.minutes( 5 ).toStandardDuration().getStandardSeconds();
 
-    private static final String DEFAULT_CONTAINER = "files";
-
     private BlobStore blobStore;
     private BlobStoreContext blobStoreContext;
     private String container;
@@ -129,10 +127,10 @@ public class JCloudsFileResourceContentStore
             {
                 log.warn( "Container name '" + container + "' is illegal." +
                     "Standard domain name naming conventions apply (and underscores are not allowed). " +
-                    "Using default container name '" + DEFAULT_CONTAINER + "'." );
+                    "Using default container name '" + ConfigurationKey.FILE_STORE_CONTAINER.getDefaultValue() + "'." );
             }
 
-            container = DEFAULT_CONTAINER;
+            container = ConfigurationKey.FILE_STORE_CONTAINER.getDefaultValue();
         }
 
         Properties overrides = new Properties();

@@ -46,7 +46,7 @@ public enum ConfigurationKey
     LDAP_SEARCH_BASE( "ldap.search.base", "" ),
     LDAP_SEARCH_FILTER( "ldap.search.filter", "(cn={0})" ),
     FILESTORE_PROVIDER( "filestore.provider", "filesystem" ),
-    FILE_STORE_CONTAINER( "filestore.container" ),
+    FILE_STORE_CONTAINER( "filestore.container", "files" ),
     FILE_STORE_LOCATION( "filestore.location" ),
     FILE_STORE_IDENTITY( "filestore.identity", "" ),
     FILE_STORE_SECRET( "filestore.secret", "" );
