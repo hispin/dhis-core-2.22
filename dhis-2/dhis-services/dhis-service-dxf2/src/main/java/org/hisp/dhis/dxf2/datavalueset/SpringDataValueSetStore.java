@@ -204,7 +204,7 @@ public class SpringDataValueSetStore
                 sql += "ou.path like '" + parent.getPath() + "%' or ";
             }
             
-            sql = TextUtils.removeLastOr( sql ) + ")";            
+            sql = TextUtils.removeLastOr( sql ) + ") ";            
         }
         else
         {
