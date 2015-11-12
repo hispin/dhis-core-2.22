@@ -159,9 +159,9 @@ trackerCapture.controller('DataEntryController',
                     else {
                         $log.warn("ProgramRuleAction " + effect.id + " is of type HIDESECTION, bot does not have a section defined");
                     }
-                } else if (effect.action === "ASSIGNVARIABLE") {
+                } else if (effect.action === "ASSIGN") {
                     if(effect.ineffect && effect.dataElement) {
-                        //For "ASSIGNVARIABLE" actions where we have a dataelement, we save the calculated value to the dataelement:
+                        //For "ASSIGN" actions where we have a dataelement, we save the calculated value to the dataelement:
                         //Blank out the value:
                         affectedEvent[effect.dataElement.id] = effect.data;
                         $scope.assignedFields[effect.dataElement.id] = true;

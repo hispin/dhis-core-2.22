@@ -48,7 +48,7 @@ trackerCapture.controller('RuleBoundController',
                         keyDataInEffect = true;
                     }
                 }
-                else if(effect.action === "ASSIGNVARIABLE") {
+                else if(effect.action === "ASSIGN") {
                     //the dataentry control saves the variable and or dataelement
                 }
                 else {
