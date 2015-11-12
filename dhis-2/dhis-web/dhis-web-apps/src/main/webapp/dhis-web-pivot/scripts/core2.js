@@ -484,7 +484,8 @@ $(function() {
                 return this.displayProperty;
             }
 
-            var key = this.userAccount.settings.keyAnalysisDisplayProperty;
+            //var key = this.userAccount.settings.keyAnalysisDisplayProperty || this.defaultDisplayProperty; //todo
+            var key = this.defaultDisplayProperty;
             return this.displayProperty = (key === 'name') ? key : (key + '|rename(name)');
         };
 

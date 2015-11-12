@@ -80,6 +80,24 @@ Ext.onReady( function() {
             }
         }));
 
+        // organisation unit levels
+        requestManager.add(new N.Api.Request({
+            baseUrl: metaDataManager.getPath() + '/api/organisationUnitLevels.json',
+            params: [
+                'fields=id,' + metaDataManager.getDisplayProperty() + 'level',
+                'paging=false'
+            ],
+            fn: function(r) {
+                metaDataManager.organisationUnitLevels = r.organisationUnitLevels;
+
+                if (!r.organisationUnitLevels.length) {
+                    alert('No organisation unit levels found');
+                }
+
+                requestManager.ok(this);
+            }
+        }));
+
 
         requestManager.run();
 
