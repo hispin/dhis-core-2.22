@@ -1042,9 +1042,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     else if(effect.action === "SHOWWARNING"){
                         $scope.warningMessages.push(effect.content + (effect.data ? effect.data : ""));
                     }
-                    else if (effect.action === "ASSIGNVARIABLE") {
+                    else if (effect.action === "ASSIGN") {
                         
-                        //For "ASSIGNVARIABLE" actions where we have a dataelement, we save the calculated value to the dataelement:
+                        //For "ASSIGN" actions where we have a dataelement, we save the calculated value to the dataelement:
                         affectedEvent[effect.dataElement.id] = effect.data;
                         $scope.assignedFields[effect.dataElement.id] = true;
                     }
