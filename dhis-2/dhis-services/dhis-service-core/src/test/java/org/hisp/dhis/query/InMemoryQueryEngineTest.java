@@ -60,9 +60,9 @@ public class InMemoryQueryEngineTest
     @Autowired
     private InMemoryQueryEngine<? extends IdentifiableObject> queryEngine;
 
-    private Collection<DataElement> dataElements = new ArrayList<>();
+    private List<DataElement> dataElements = new ArrayList<>();
 
-    private Collection<DataElementGroup> dataElementGroups = new ArrayList<>();
+    private List<DataElementGroup> dataElementGroups = new ArrayList<>();
 
     @Before
     public void createDataElements()

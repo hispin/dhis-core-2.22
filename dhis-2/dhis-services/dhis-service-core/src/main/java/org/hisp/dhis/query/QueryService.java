@@ -73,5 +73,5 @@ public interface QueryService
      * @param orders  List of orders to use for query
      * @return New query instance using provided filters/orders
      */
-    Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders );
+    Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders ) throws QueryParserException;
 }

@@ -28,18 +28,12 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObject;
-import org.hisp.dhis.query.operators.MatchMode;
-import org.hisp.dhis.schema.Property;
-import org.hisp.dhis.schema.Schema;
-import org.hisp.dhis.schema.SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Default implementation of QueryService which works with IdObjects.
@@ -48,24 +42,29 @@ import java.util.stream.Collectors;
  */
 public class DefaultQueryService implements QueryService
 {
+    private static final Log log = LogFactory.getLog( DefaultQueryService.class );
+
+    @Autowired
+    private QueryParser queryParser;
+
     @Autowired
     private CriteriaQueryEngine<? extends IdentifiableObject> criteriaQueryEngine;
 
     @Autowired
-    private SchemaService schemaService;
+    private InMemoryQueryEngine<? extends IdentifiableObject> inMemoryQueryEngine;
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends IdentifiableObject> query( Query query )
     {
-        return criteriaQueryEngine.query( query );
+        return queryObjects( query );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends IdentifiableObject> query( Query query, ResultTransformer transformer )
     {
-        List<? extends IdentifiableObject> objects = criteriaQueryEngine.query( query );
+        List<? extends IdentifiableObject> objects = queryObjects( query );
 
         if ( transformer != null )
         {
@@ -78,154 +77,42 @@ public class DefaultQueryService implements QueryService
     @Override
     public int count( Query query )
     {
-        return criteriaQueryEngine.count( query );
+        query.setFirstResult( 0 );
+        query.setMaxResults( Integer.MAX_VALUE );
+
+        return queryObjects( query ).size();
     }
 
     @Override
-    public Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders )
+    public Query getQueryFromUrl( Class<?> klass, List<String> filters, List<Order> orders ) throws QueryParserException
     {
-        Query query = Query.from( schemaService.getDynamicSchema( klass ) );
-        query.add( getCriterions( query.getSchema(), filters ) );
+        Query query = queryParser.parse( klass, filters );
         query.addOrders( orders );
 
         return query;
     }
 
-    //--------------------------------------------------------------------------
-    // Helpers
-    //--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    // Helper methods
+    //---------------------------------------------------------------------------------------------
 
-    private List<Criterion> getCriterions( Schema schema, List<String> filters )
+    private List<? extends IdentifiableObject> queryObjects( Query query )
     {
-        List<Criterion> criterions = new ArrayList<>();
-        List<String> candidates = getCandidates( schema, filters );
+        List<? extends IdentifiableObject> objects = query.getObjects();
 
-        if ( candidates.isEmpty() )
+        if ( objects == null )
         {
-            return criterions;
-        }
+            objects = criteriaQueryEngine.query( query );
 
-        criterions.addAll( candidates.stream().map( candidate -> getRestriction( schema, candidate ) ).collect( Collectors.toList() ) );
-
-        return criterions;
-    }
-
-    private List<String> getCandidates( Schema schema, List<String> filters )
-    {
-        List<String> candidates = new ArrayList<>();
-
-        Iterator<String> iterator = filters.iterator();
-
-        while ( iterator.hasNext() )
-        {
-            String candidate = iterator.next();
-
-            // if there are no translations available, we can simply map display fields to their real (persisted) fields
-            if ( !schema.isTranslated() )
+            if ( query.getCriterions().isEmpty() )
             {
-                if ( candidate.startsWith( "displayName" ) && schema.havePersistedProperty( "name" ) )
-                {
-                    candidate = candidate.replace( "displayName:", "name:" );
-                }
-                else if ( candidate.startsWith( "displayShortName" ) && schema.havePersistedProperty( "shortName" ) )
-                {
-                    candidate = candidate.replace( "displayShortName:", "shortName:" );
-                }
-                else if ( candidate.startsWith( "displayDescription" ) && schema.havePersistedProperty( "description" ) )
-                {
-                    candidate = candidate.replace( "displayDescription:", "description:" );
-                }
-            }
-
-            if ( !candidate.contains( "." ) && getRestriction( schema, candidate ) != null )
-            {
-                candidates.add( candidate );
-                iterator.remove();
+                return objects;
             }
         }
 
-        return candidates;
-    }
+        log.debug( "Doing in-memory filtering for " + query.getCriterions().size() + " criterions." );
 
-    private Restriction getRestriction( Schema schema, String filter )
-    {
-        if ( filter == null )
-        {
-            return null;
-        }
-
-        String[] split = filter.split( ":" );
-
-        if ( split.length < 3 )
-        {
-            return null;
-        }
-
-        Property property = schema.getProperty( split[0] );
-
-        if ( property == null || !property.isPersisted() || !property.isSimple() )
-        {
-            return null;
-        }
-
-        String value = filter.substring( split[0].length() + ":".length() + split[1].length() + ":".length() );
-
-        switch ( split[1] )
-        {
-            case "eq":
-            {
-                return Restrictions.eq( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "ne":
-            {
-                return Restrictions.ne( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "neq":
-            {
-                return Restrictions.ne( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "gt":
-            {
-                return Restrictions.gt( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "lt":
-            {
-                return Restrictions.lt( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "gte":
-            {
-                return Restrictions.ge( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "ge":
-            {
-                return Restrictions.ge( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "lte":
-            {
-                return Restrictions.le( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "le":
-            {
-                return Restrictions.le( split[0], QueryUtils.getValue( property.getKlass(), value ) );
-            }
-            case "like":
-            {
-                return Restrictions.ilike( split[0], value, MatchMode.ANYWHERE );
-            }
-            case "ilike":
-            {
-                return Restrictions.ilike( split[0], value, MatchMode.ANYWHERE );
-            }
-            case "in":
-            {
-                return Restrictions.in( split[0], QueryUtils.getValue( Collection.class, value ) );
-            }
-            case "null":
-            {
-                return Restrictions.isNull( split[0] );
-            }
-        }
-
-        return null;
+        query.setObjects( objects );
+        return inMemoryQueryEngine.query( query );
     }
 }

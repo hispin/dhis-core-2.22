@@ -38,6 +38,8 @@ import org.hisp.dhis.query.operators.MatchMode;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.jfree.data.time.Year;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -62,7 +64,8 @@ public class QueryServiceTest
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
 
-    private void createDataElements()
+    @Before
+    public void createDataElements()
     {
         DataElement dataElementA = createDataElement( 'A' );
         dataElementA.setValueType( ValueType.NUMBER );
@@ -113,15 +116,13 @@ public class QueryServiceTest
     @Test
     public void getAllQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         assertEquals( 6, queryService.query( query ).size() );
     }
 
     @Test
-    public void getAllQueryUrl()
+    public void getAllQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.<String>newArrayList(), Lists.<Order>newArrayList() );
         assertEquals( 6, queryService.query( query ).size() );
     }
@@ -129,7 +130,6 @@ public class QueryServiceTest
     @Test
     public void getMinMaxQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.setFirstResult( 2 );
         query.setMaxResults( 10 );
@@ -146,7 +146,6 @@ public class QueryServiceTest
     @Test
     public void getEqQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.eq( "id", "deabcdefghA" ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -156,9 +155,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void getEqQueryUrl()
+    public void getEqQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "id:eq:deabcdefghA" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
@@ -169,7 +167,6 @@ public class QueryServiceTest
     @Test
     public void getNeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.ne( "id", "deabcdefghA" ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -185,9 +182,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void getNeQueryUrl()
+    public void getNeQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "id:ne:deabcdefghA" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
@@ -204,7 +200,6 @@ public class QueryServiceTest
     @Test
     public void getLikeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.like( "name", "F", MatchMode.ANYWHERE ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -214,9 +209,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void getLikeQueryUrl()
+    public void getLikeQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "name:like:F" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
@@ -227,7 +221,6 @@ public class QueryServiceTest
     @Test
     public void getGtQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.gt( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -240,9 +233,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void getGtQueryUrl()
+    public void getGtQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:gt:2003" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
@@ -256,7 +248,6 @@ public class QueryServiceTest
     @Test
     public void getLtQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.lt( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -268,9 +259,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void getLtQueryUrl()
+    public void getLtQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:lt:2003" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
@@ -283,7 +273,6 @@ public class QueryServiceTest
     @Test
     public void getGeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.ge( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -297,9 +286,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void getGeQueryUrl()
+    public void getGeQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:ge:2003" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
@@ -314,7 +302,6 @@ public class QueryServiceTest
     @Test
     public void getLeQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.le( "created", Year.parseYear( "2003" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -327,9 +314,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void getLeQueryUrl()
+    public void getLeQueryUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "created:le:2003" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 
@@ -343,7 +329,6 @@ public class QueryServiceTest
     @Test
     public void getBetweenQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.between( "created", Year.parseYear( "2003" ).getStart(), Year.parseYear( "2005" ).getStart() ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -358,7 +343,6 @@ public class QueryServiceTest
     @Test
     public void getInQuery()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.in( "id", Lists.newArrayList( "deabcdefghD", "deabcdefghF" ) ) );
         List<? extends IdentifiableObject> objects = queryService.query( query );
@@ -372,7 +356,6 @@ public class QueryServiceTest
     @Test
     public void resultTransformerTest()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         List<? extends IdentifiableObject> objects = queryService.query( query, result1 -> new ArrayList() );
@@ -385,7 +368,6 @@ public class QueryServiceTest
     @Test
     public void sortNameDesc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -405,7 +387,6 @@ public class QueryServiceTest
     @Test
     public void sortNameAsc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -425,7 +406,6 @@ public class QueryServiceTest
     @Test
     public void sortCreatedDesc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -445,7 +425,6 @@ public class QueryServiceTest
     @Test
     public void sortCreatedAsc()
     {
-        createDataElements();
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
@@ -465,7 +444,6 @@ public class QueryServiceTest
     @Test
     public void testDoubleEqConjunction()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         Conjunction conjunction = query.conjunction();
@@ -481,7 +459,6 @@ public class QueryServiceTest
     @Test
     public void testDoubleEqDisjunction()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         Disjunction disjunction = query.disjunction();
@@ -500,7 +477,6 @@ public class QueryServiceTest
     @Test
     public void testDateRange()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         query.add( Restrictions.ge( "created", Year.parseYear( "2002" ).getStart() ) );
@@ -518,7 +494,6 @@ public class QueryServiceTest
     @Test
     public void testDateRangeWithConjunction()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
 
         Conjunction conjunction = query.conjunction();
@@ -538,7 +513,6 @@ public class QueryServiceTest
     @Test
     public void testIsNull()
     {
-        createDataElements();
         Query query = Query.from( schemaService.getDynamicSchema( DataElement.class ) );
         query.add( Restrictions.isNull( "categoryCombo" ) );
 
@@ -555,9 +529,8 @@ public class QueryServiceTest
     }
 
     @Test
-    public void testIsNullUrl()
+    public void testIsNullUrl() throws QueryParserException
     {
-        createDataElements();
         Query query = queryService.getQueryFromUrl( DataElement.class, Lists.newArrayList( "categoryCombo:null" ), Lists.<Order>newArrayList() );
         List<? extends IdentifiableObject> objects = queryService.query( query );
 

@@ -1,4 +1,4 @@
-package org.hisp.dhis.parser;
+package org.hisp.dhis.fieldfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -30,46 +30,16 @@ package org.hisp.dhis.parser;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.fieldfilter.FieldMap;
-import org.hisp.dhis.objectfilter.Filters;
 
 import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class DefaultParserService implements ParserService
+public class DefaultFieldParser implements FieldParser
 {
     @Override
-    public Filters parseObjectFilter( List<String> filters )
-    {
-        Filters parsed = new Filters();
-
-        for ( String filter : filters )
-        {
-            String[] split = filter.split( ":" );
-
-            if ( !(split.length >= 2) )
-            {
-                continue;
-            }
-
-            if ( split.length >= 3 )
-            {
-                int index = split[0].length() + ":".length() + split[1].length() + ":".length();
-                parsed.addFilter( split[0], split[1], filter.substring( index ) );
-            }
-            else
-            {
-                parsed.addFilter( split[0], split[1], null );
-            }
-        }
-
-        return parsed;
-    }
-
-    @Override
-    public FieldMap parseFieldFilter( String fields )
+    public FieldMap parse( String fields )
     {
         List<String> prefixList = Lists.newArrayList();
         FieldMap fieldMap = new FieldMap();

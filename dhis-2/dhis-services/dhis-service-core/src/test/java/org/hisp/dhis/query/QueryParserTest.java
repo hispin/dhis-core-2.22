@@ -95,12 +95,6 @@ public class QueryParserTest
         queryParser.parse( DataElement.class, Arrays.asList( "dataElementGroups.id.name:eq:1", "dataElementGroups.id.abc:eq:2" ) );
     }
 
-    @Test( expected = QueryParserException.class )
-    public void eqOperatorDeepPathFailNotSimpleType() throws QueryParserException
-    {
-        queryParser.parse( DataElement.class, Arrays.asList( "dataElementGroups:eq:1", "dataElementGroups:eq:2" ) );
-    }
-
     @Test
     public void nullOperator() throws QueryParserException
     {

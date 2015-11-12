@@ -36,6 +36,8 @@ import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.dataapproval.exceptions.DataApprovalException;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
+import org.hisp.dhis.query.QueryException;
+import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
@@ -126,7 +128,13 @@ public class CrudControllerAdvice
     }
 
     @ExceptionHandler( JsonParseException.class )
-    public void jsonParseExceptionHandler( JsonParseException ex, HttpServletResponse response, HttpServletRequest request )
+    public void jsonParseExceptionHandler( Exception ex, HttpServletResponse response, HttpServletRequest request )
+    {
+        webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
+    }
+
+    @ExceptionHandler( { QueryParserException.class, QueryException.class } )
+    public void queryExceptionHandler( Exception ex, HttpServletResponse response, HttpServletRequest request )
     {
         webMessageService.send( WebMessageUtils.conflict( ex.getMessage() ), response, request );
     }

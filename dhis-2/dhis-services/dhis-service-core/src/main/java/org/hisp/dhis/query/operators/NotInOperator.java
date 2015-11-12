@@ -1,4 +1,4 @@
-package org.hisp.dhis.objectfilter.ops;
+package org.hisp.dhis.query.operators;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,27 +28,32 @@ package org.hisp.dhis.objectfilter.ops;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.schema.Property;
+
+import java.util.Collection;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class NLikeOp extends Op
+public class NotInOperator extends InOperator
 {
-    @Override
-    public OpStatus evaluate( Object object )
+    public NotInOperator( Collection<?> arg )
     {
-        if ( getValue() == null || object == null )
-        {
-            return OpStatus.EXCLUDE;
-        }
+        super( arg );
+    }
 
-        if ( String.class.isInstance( object ) )
-        {
-            String s1 = getValue( String.class );
-            String s2 = (String) object;
+    @Override
+    public Criterion getHibernateCriterion( Property property )
+    {
+        return Restrictions.not( super.getHibernateCriterion( property ) );
+    }
 
-            return (s1 != null && s2.toLowerCase().contains( s1.toLowerCase() )) ? OpStatus.EXCLUDE : OpStatus.INCLUDE;
-        }
-
-        return OpStatus.EXCLUDE;
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public boolean test( Object value )
+    {
+        return !super.test( value );
     }
 }

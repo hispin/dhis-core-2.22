@@ -1,4 +1,4 @@
-package org.hisp.dhis.objectfilter.ops;
+package org.hisp.dhis.fieldfilter;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,24 +29,16 @@ package org.hisp.dhis.objectfilter.ops;
  */
 
 /**
-* @author Morten Olav Hansen <mortenoh@gmail.com>
-*/
-public class NnullOp extends Op
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
+public interface FieldParser
 {
-    @Override
-    public boolean wantValue()
-    {
-        return false;
-    }
-
-    @Override
-    public OpStatus evaluate( Object object )
-    {
-        if ( object != null )
-        {
-            return OpStatus.INCLUDE;
-        }
-
-        return OpStatus.EXCLUDE;
-    }
+    /**
+     * Parses and writes out fieldMap with included/excluded properties.
+     *
+     * @param filter String to parse, can be used for both inclusion/exclusion
+     * @return FieldMap with property name as key, and another FieldMap as value (recursive)
+     * @see org.hisp.dhis.fieldfilter.FieldMap
+     */
+    FieldMap parse( String filter );
 }

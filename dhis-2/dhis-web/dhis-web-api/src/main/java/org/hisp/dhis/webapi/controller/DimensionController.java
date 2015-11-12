@@ -33,7 +33,6 @@ import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.NameableObject;
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -43,6 +42,8 @@ import org.hisp.dhis.node.NodeUtils;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
+import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
@@ -58,7 +59,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +100,7 @@ public class DimensionController
 
     @RequestMapping( value = "/{uid}/items", method = RequestMethod.GET )
     public @ResponseBody RootNode getItems( @PathVariable String uid, @RequestParam Map<String, String> parameters,
-        TranslateParams translateParams, Model model, HttpServletRequest request, HttpServletResponse response )
+        TranslateParams translateParams, Model model, HttpServletRequest request, HttpServletResponse response ) throws QueryParserException
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
@@ -111,8 +111,9 @@ public class DimensionController
         }
 
         List<NameableObject> items = dimensionService.getCanReadDimensionItems( uid );
-        items = objectFilterService.filter( items, filters );
-        Collections.sort( items, IdentifiableObjectNameComparator.INSTANCE );
+        Query query = queryService.getQueryFromUrl( getEntityClass(), filters, new ArrayList<>() );
+        query.setObjects( items );
+        query.setDefaultOrder();
 
         translate( items, translateParams );
 

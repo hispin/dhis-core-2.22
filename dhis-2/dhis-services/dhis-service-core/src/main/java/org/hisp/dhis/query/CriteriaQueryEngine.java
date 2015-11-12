@@ -28,6 +28,8 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
@@ -40,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +54,8 @@ import java.util.Map;
  */
 public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryEngine
 {
+    private static final Log log = LogFactory.getLog( CriteriaQueryEngine.class );
+
     @Autowired
     private final List<HibernateGenericStore<T>> hibernateGenericStores = new ArrayList<>();
 
@@ -120,27 +125,73 @@ public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryE
 
     private Criteria buildCriteria( Criteria criteria, Query query )
     {
-        if ( query.getFirstResult() != null )
-        {
-            criteria.setFirstResult( query.getFirstResult() );
-        }
+        List<org.hisp.dhis.query.Criterion> criterions = getCriterions( query );
 
-        if ( query.getMaxResults() != null )
-        {
-            criteria.setMaxResults( query.getMaxResults() );
-        }
-
-        for ( org.hisp.dhis.query.Criterion criterion : query.getCriterions() )
+        for ( org.hisp.dhis.query.Criterion criterion : criterions )
         {
             addCriterion( criteria, criterion, query.getSchema() );
         }
 
-        for ( Order order : query.getOrders() )
+        // no more criterions available, so we can do our own paging
+        if ( query.getCriterions().isEmpty() )
         {
-            criteria.addOrder( getHibernateOrder( order ) );
+            if ( query.getFirstResult() != null )
+            {
+                criteria.setFirstResult( query.getFirstResult() );
+            }
+
+            if ( query.getMaxResults() != null )
+            {
+                criteria.setMaxResults( query.getMaxResults() );
+            }
+
+            for ( Order order : query.getOrders() )
+            {
+                criteria.addOrder( getHibernateOrder( order ) );
+            }
         }
 
         return criteria;
+    }
+
+    /**
+     * Remove criterions that can be applied by criteria engine, and return those. The rest of
+     * the criterions will be passed on to the next query engine.
+     *
+     * @param query Query
+     * @return List of usable criterions for this engine
+     */
+    private List<org.hisp.dhis.query.Criterion> getCriterions( Query query )
+    {
+        List<org.hisp.dhis.query.Criterion> criterions = new ArrayList<>();
+
+        Iterator<org.hisp.dhis.query.Criterion> criterionIterator = query.getCriterions().iterator();
+
+        while ( criterionIterator.hasNext() )
+        {
+            org.hisp.dhis.query.Criterion criterion = criterionIterator.next();
+
+            if ( Restriction.class.isInstance( criterion ) )
+            {
+                Restriction restriction = (Restriction) criterion;
+
+                if ( !restriction.getPath().contains( "\\." ) )
+                {
+                    if ( query.getSchema().haveProperty( restriction.getPath() ) )
+                    {
+                        Property property = query.getSchema().getProperty( restriction.getPath() );
+
+                        if ( property.isSimple() )
+                        {
+                            criterions.add( criterion );
+                            criterionIterator.remove();
+                        }
+                    }
+                }
+            }
+        }
+
+        return criterions;
     }
 
     private void addJunction( org.hibernate.criterion.Junction junction, org.hisp.dhis.query.Criterion criterion, Schema schema )

@@ -1,4 +1,4 @@
-package org.hisp.dhis.objectfilter;
+package org.hisp.dhis.query.operators;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,35 +28,29 @@ package org.hisp.dhis.objectfilter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.objectfilter.ops.Op;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.schema.Property;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class FilterOps
+public class NotLikeOperator extends LikeOperator
 {
-    private List<Op> filters = new ArrayList<>();
-
-    FilterOps()
+    public NotLikeOperator( String arg, boolean caseSensitive, MatchMode matchMode )
     {
-    }
-
-    public List<Op> getFilters()
-    {
-        return filters;
-    }
-
-    public void setFilters( List<Op> filters )
-    {
-        this.filters = filters;
+        super( arg, caseSensitive, matchMode );
     }
 
     @Override
-    public String toString()
+    public Criterion getHibernateCriterion( Property property )
     {
-        return filters.toString();
+        return Restrictions.not( super.getHibernateCriterion( property ) );
+    }
+
+    @Override
+    public boolean test( Object value )
+    {
+        return !super.test( value );
     }
 }
