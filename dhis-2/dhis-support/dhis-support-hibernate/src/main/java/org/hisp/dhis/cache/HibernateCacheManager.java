@@ -1,7 +1,5 @@
 package org.hisp.dhis.cache;
 
-import org.hibernate.stat.Statistics;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -30,16 +28,32 @@ import org.hibernate.stat.Statistics;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.stat.Statistics;
+
 /**
  * @author Lars Helge Overland
  */
 public interface HibernateCacheManager
 {
+    /**
+     * Evicts all entities and collections from the cache.
+     */
     void clearObjectCache();
-    
+
+    /**
+     * Evicts all queries from the cache.
+     */
     void clearQueryCache();
     
+    /**
+     * Evicts all entities, collections and queries from the cache.
+     */
     void clearCache();
     
+    /**
+     * Gets the statistics.
+     * 
+     * @return the statistics.
+     */
     Statistics getStatistics();
 }

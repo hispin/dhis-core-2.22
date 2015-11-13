@@ -30,6 +30,9 @@ package org.hisp.dhis.hibernate.dialect;
 
 import org.hibernate.dialect.H2Dialect;
 
+/**
+ * @author Lars Helge Overland
+ */
 public class DhisH2Dialect
     extends H2Dialect
 {
