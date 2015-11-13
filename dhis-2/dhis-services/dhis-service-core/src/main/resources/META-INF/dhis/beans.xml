@@ -803,6 +803,7 @@
     <property name="userGroupStore" ref="org.hisp.dhis.user.UserGroupStore" />
     <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
     <property name="aclService" ref="org.hisp.dhis.security.acl.AclService" />
+    <property name="cacheManager" ref="cacheManager" />
   </bean>
 
   <bean id="org.hisp.dhis.user.UserGroupAccessService" class="org.hisp.dhis.user.DefaultUserGroupAccessService">
