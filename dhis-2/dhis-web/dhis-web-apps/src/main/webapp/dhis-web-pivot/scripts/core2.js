@@ -401,6 +401,7 @@ $(function() {
             // constants
             t.defaultUiLocale = 'en';
             t.defaultDisplayProperty = 'displayName';
+            t.rootNodeId = 'root';
 
             t.valueTypes = {
                 'numeric': ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE'],
@@ -454,6 +455,12 @@ $(function() {
             t.periodGenerator;
             t.viewUnapprovedData;
 
+            t.rootNodes = [];
+            t.organisationUnitLevels = [];
+            t.dimensions = [];
+            t.legendSets = [];
+            t.dataApprovalLevels = [];
+
             // transient
             t.path;
             t.dateFormat;
@@ -493,6 +500,20 @@ $(function() {
             return this.valueTypes[type];
         };
 
+        AppManager.prototype.getRootNodes = function() {
+            return this.rootNodes;
+        };
+
+        AppManager.prototype.addRootNodes = function(param) {
+            var t = this,
+                nodes = N.arrayFrom(param);
+
+            nodes.forEach(function(node) {
+                node.expanded = true;
+                node.path = '/' + t.rootId + '/' + node.id;
+            });
+        };
+
         // dep 1
 
         AppManager.prototype.isUiLocaleDefault = function() {
@@ -501,6 +522,10 @@ $(function() {
 
         AppManager.prototype.getAnalysisFields = function() {
             return this.analysisFields ? this.analysisFields : (this.analysisFields = (this.defaultAnalysisFields.join(',').replaceAll('$', this.getDisplayProperty())));
+        };
+
+        AppManager.prototype.getRootNode = function() {
+            return this.getRootNodes()[0];
         };
 
         N.AppManager = new AppManager();
@@ -737,39 +762,6 @@ $(function() {
         };
 
         N.DimConf = new DimensionConfig();
-    })();
-
-    // RootNodeManager
-    (function() {
-        var RootNodeManager = function() {
-            var t = this;
-
-            // constants
-            t.rootId = 'root';
-
-            // uninitialized
-            t.nodes;
-        };
-
-        RootNodeManager.prototype.add = function(param) {
-            var t = this,
-                nodes = N.arrayFrom(param);
-
-            nodes.forEach(function(node) {
-                node.expanded = true;
-                node.path = '/' + t.rootId + '/' + node.id;
-            });
-        };
-
-        RootNodeManager.prototype.getRootNode = function() {
-            return this.nodes[0];
-        };
-
-        RootNodeManager.prototype.getRootNodes = function() {
-            return this.nodes;
-        };
-
-        N.RootNodeManager = new RootNodeManager();
     })();
 
     // PeriodConfig
@@ -1700,7 +1692,14 @@ $(function() {
             };
 
             RequestManager.prototype.add = function(param) {
-                this.requests = [].concat(this.requests, N.arrayFrom(param));
+                var t = this,
+                    requests = N.arrayFrom(param);
+
+                requests.forEach(function(request) {
+                    request.setManager(t);
+                });
+
+                this.requests = [].concat(this.requests, requests);
             };
 
             RequestManager.prototype.set = function(fn) {
