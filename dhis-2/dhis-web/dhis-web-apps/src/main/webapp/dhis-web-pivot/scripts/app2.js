@@ -3,7 +3,7 @@ Ext.onReady( function() {
 
     // initialize
     (function() {
-        var metaDataManager = N.MetaDataManager,
+        var appManager = N.AppManager,
             calendarManager = N.CalendarManager,
             requestManager = new N.Api.RequestManager(),
             manifestReq = $.getJSON('manifest.webapp'),
@@ -12,136 +12,157 @@ Ext.onReady( function() {
             userAccountReq = $.getJSON('/api/me/user-account.json');
 
         manifestReq.done(function(manifest) {
-            metaDataManager.manifest = manifest;
+            appManager.manifest = manifest;
 
         systemInfoReq.done(function(systemInfo) {
-            metaDataManager.systemInfo = systemInfo;
-            metaDataManager.path = systemInfo.contextPath;
+            appManager.systemInfo = systemInfo;
+            appManager.path = systemInfo.contextPath;
 
         systemSettingsReq.done(function(systemSettings) {
-            metaDataManager.systemSettings = systemSettings;
+            appManager.systemSettings = systemSettings;
 
         userAccountReq.done(function(userAccount) {
-            metaDataManager.userAccount = userAccount;
+            appManager.userAccount = userAccount;
 
-            calendarManager.setBaseUrl(metaDataManager.getPath());
-            calendarManager.setDateFormat(metaDataManager.getDateFormat());
-            calendarManager.generate(metaDataManager.systemSettings.keyCalendar);
+            calendarManager.setBaseUrl(appManager.getPath());
+            calendarManager.setDateFormat(appManager.getDateFormat());
+            calendarManager.generate(appManager.systemSettings.keyCalendar);
 
-        // i18n
-        requestManager.add(new N.Api.Request({
-            baseUrl: 'i18n/i18n_app.properties',
-            type: 'ajax',
-            fn: function(r) {
-                var t = this;
+        // requests
+        (function() {
+            var uiLocale = appManager.getUiLocale(),
+                displayProperty = appManager.getDisplayProperty(),
+                path = appManager.getPath();
 
-                N.I18nManager.add(dhis2.util.parseJavaProperties(r));
+            // i18n
+            requestManager.add(new N.Api.Request({
+                baseUrl: 'i18n/i18n_app.properties',
+                type: 'ajax',
+                success: function(r) {
+                    var t = this;
 
-                if (metaDataManager.isUiLocaleDefault()) {
-                    requestManager.ok(t);
-                }
-                else {
+                    N.I18nManager.add(dhis2.util.parseJavaProperties(r));
+
+                    if (appManager.isUiLocaleDefault()) {
+                        requestManager.ok(t);
+                    }
+                    else {
+                        $.ajax({
+                            url: 'i18n/i18n_app_' + uiLocale + '.properties',
+                            success: function(r) {
+                                N.I18nManager.add(dhis2.util.parseJavaProperties(r));
+                            },
+                            error: function() {
+                                console.log('(i18n) No translations found for system locale (' + uiLocale + ')');
+                            },
+                            complete: function() {
+                                requestManager.ok(t);
+                            }
+                        });
+                    }
+                },
+                error: function() {
                     $.ajax({
-                        url: 'i18n/i18n_app_' + metaDataManager.getUiLocale() + '.properties',
+                        url: 'i18n/i18n_app_' + uiLocale + '.properties',
                         success: function(r) {
                             N.I18nManager.add(dhis2.util.parseJavaProperties(r));
                         },
-                        error: function() {
-                            console.log('(i18n) No translations found for system locale (' + metaDataManager.getUiLocale() + ')');
+                        error: function() {
+                            alert('(i18n) No translations found for system locale (' + uiLocale + ') or default locale (' + appManager.defaultUiLocale + ')');
                         },
-                        complete: function() {
-                            requestManager.ok(t);
+                        completed: function() {
+                            requestManager.ok(this);
                         }
                     });
                 }
-            }
-        }));
+            }));
 
-        // authorization
-        requestManager.add(new N.Api.Request({
-            baseUrl: metaDataManager.getPath() + '/api/me/authorization/F_VIEW_UNAPPROVED_DATA',
-            fn: function(r) {
-                metaDataManager.viewUnapprovedData = r;
-                requestManager.ok(this);
-            }
-        }));
-
-        // root nodes
-        requestManager.add(new N.Api.Request({
-            baseUrl: metaDataManager.getPath() + '/api/organisationUnits.json',
-            params: [
-                'userDataViewFallback=true',
-                'fields=id,' + metaDataManager.getDisplayProperty() + ',children[id,' + metaDataManager.getDisplayProperty() + ']',
-                'paging=false'
-            ],
-            fn: function(r) {
-                metaDataManager.rootNodes = r.organisationUnits;
-                requestManager.ok(this);
-            }
-        }));
-
-        // organisation unit levels
-        requestManager.add(new N.Api.Request({
-            baseUrl: metaDataManager.getPath() + '/api/organisationUnitLevels.json',
-            params: [
-                'fields=id,' + metaDataManager.getDisplayProperty() + 'level',
-                'paging=false'
-            ],
-            fn: function(r) {
-                metaDataManager.organisationUnitLevels = r.organisationUnitLevels;
-
-                if (!r.organisationUnitLevels.length) {
-                    alert('No organisation unit levels found');
+            // authorization
+            requestManager.add(new N.Api.Request({
+                baseUrl: path + '/api/me/authorization/F_VIEW_UNAPPROVED_DATA',
+                success: function(r) {
+                    appManager.viewUnapprovedData = r;
+                    requestManager.ok(this);
                 }
+            }));
 
-                requestManager.ok(this);
-            }
-        }));
+            // root nodes
+            requestManager.add(new N.Api.Request({
+                baseUrl: path + '/api/organisationUnits.json',
+                params: [
+                    'userDataViewFallback=true',
+                    'fields=id,' + displayProperty + ',children[id,' + displayProperty + ']',
+                    'paging=false'
+                ],
+                success: function(r) {
+                    appManager.rootNodes = r.organisationUnits;
+                    requestManager.ok(this);
+                }
+            }));
+
+            // organisation unit levels
+            requestManager.add(new N.Api.Request({
+                baseUrl: path + '/api/organisationUnitLevels.json',
+                params: [
+                    'fields=id,' + displayProperty + 'level',
+                    'paging=false'
+                ],
+                fn: function(r) {
+                    appManager.organisationUnitLevels = r.organisationUnitLevels;
+
+                    if (!r.organisationUnitLevels.length) {
+                        alert('No organisation unit levels found');
+                    }
+
+                    requestManager.ok(this);
+                }
+            }));
+
+            // legend sets
+            requestManager.add(new N.Api.Request({
+                baseUrl: path + '/api/legendSets.json',
+                params: [
+                    'fields=id,' + displayProperty + ',legends[id,' + displayProperty + ',startValue,endValue,color]',
+                    'paging=false'
+                ],
+                fn: function(r) {
+                    appManager.legendSets = r.legendSets;
+                    requestManager.ok(this);
+                }
+            }));
+
+            // dimensions
+            requestManager.add(new N.Api.Request({
+                baseUrl: path + '/api/dimensions.json',
+                params: [
+                    'fields=id,' + displayProperty,
+                    'paging=false'
+                ],
+                success: function(r) {
+                    appManager.dimensions = r.dimensions;
+                    requestManager.ok(this);
+                }
+            }));
+
+            // approval levels
+            requestManager.add(new N.Api.Request({
+                baseUrl: path + '/api/dataApprovalLevels.json',
+                params: [
+                    'order=level:asc',
+                    'fields=id,' + displayProperty,
+                    'paging=false'
+                ],
+                success: function(r) {
+                    appManager.dataApprovalLevels = r.dataApprovalLevels;
+                    requestManager.ok(this);
+                }
+            }));
+        })();
+
+        //requestManager.set(function() {
 
 
         requestManager.run();
-
-
-                                        //requests.push({
-                                            //url: 'i18n/i18n_app.properties',
-                                            //success: function(r) {
-                                                //NS.i18n = dhis2.util.parseJavaProperties(r.responseText);
-
-                                                //if (keyUiLocale === defaultKeyUiLocale) {
-                                                    //fn();
-                                                //}
-                                                //else {
-                                                    //Ext.Ajax.request({
-                                                        //url: 'i18n/i18n_app_' + keyUiLocale + '.properties',
-                                                        //success: function(r) {
-                                                            //Ext.apply(NS.i18n, dhis2.util.parseJavaProperties(r.responseText));
-                                                        //},
-                                                        //failure: function() {
-                                                            //console.log('No translations found for system locale (' + keyUiLocale + ')');
-                                                        //},
-                                                        //callback: function() {
-                                                            //fn();
-                                                        //}
-                                                    //});
-                                                //}
-                                            //},
-                                            //failure: function() {
-                                                //Ext.Ajax.request({
-                                                    //url: 'i18n/i18n_app_' + keyUiLocale + '.properties',
-                                                    //success: function(r) {
-                                                        //NS.i18n = dhis2.util.parseJavaProperties(r.responseText);
-                                                    //},
-                                                    //failure: function() {
-                                                        //alert('No translations found for system locale (' + keyUiLocale + ') or default locale (' + defaultKeyUiLocale + ').');
-                                                    //},
-                                                    //callback: fn
-                                                //});
-                                            //}
-                                        //});
-
-
-
-
 
         });
         });

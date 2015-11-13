@@ -393,9 +393,9 @@ $(function() {
         N.DateManager = new DateManager();
     })();
 
-    // MetaDataManager
+    // AppManager
     (function() {
-        var MetaDataManager = function() {
+        var AppManager = function() {
             var t = this;
 
             // constants
@@ -463,23 +463,23 @@ $(function() {
             t.analysisFields;
         };
 
-        MetaDataManager.prototype.getPath = function() {
+        AppManager.prototype.getPath = function() {
             return this.path ? this.path : (this.path = this.manifest.activities.dhis.href);
         };
 
-        MetaDataManager.prototype.getDateFormat = function() {
+        AppManager.prototype.getDateFormat = function() {
             return this.dateFormat ? this.dateFormat : (this.dateFormat = N.isString(this.systemSettings.keyDateFormat) ? this.systemSettings.keyDateFormat.toLowerCase() : 'yyyy-mm-dd');
         };
 
-        MetaDataManager.prototype.getRelativePeriod = function() {
+        AppManager.prototype.getRelativePeriod = function() {
             return this.relativePeriod ? this.relativePeriod : (this.relativePeriod = this.systemSettings.keyAnalysisRelativePeriod || 'LAST_12_MONTHS');
         };
 
-        MetaDataManager.prototype.getUiLocale = function() {
+        AppManager.prototype.getUiLocale = function() {
             return this.uiLocale ? this.uiLocale : (this.uiLocale = this.userAccount.settings.keyUiLocale || this.defaultUiLocale);
         };
 
-        MetaDataManager.prototype.getDisplayProperty = function() {
+        AppManager.prototype.getDisplayProperty = function() {
             if (this.displayProperty) {
                 return this.displayProperty;
             }
@@ -489,21 +489,21 @@ $(function() {
             return this.displayProperty = (key === 'name') ? key : (key + '|rename(name)');
         };
 
-        MetaDataManager.prototype.getValueTypesByType = function(type) {
+        AppManager.prototype.getValueTypesByType = function(type) {
             return this.valueTypes[type];
         };
 
         // dep 1
 
-        MetaDataManager.prototype.isUiLocaleDefault = function() {
+        AppManager.prototype.isUiLocaleDefault = function() {
             return this.getUiLocale() === this.defaultUiLocale;
         };
 
-        MetaDataManager.prototype.getAnalysisFields = function() {
+        AppManager.prototype.getAnalysisFields = function() {
             return this.analysisFields ? this.analysisFields : (this.analysisFields = (this.defaultAnalysisFields.join(',').replaceAll('$', this.getDisplayProperty())));
         };
 
-        N.MetaDataManager = new MetaDataManager();
+        N.AppManager = new AppManager();
     })();
 
     // CalendarManager
@@ -737,6 +737,39 @@ $(function() {
         };
 
         N.DimConf = new DimensionConfig();
+    })();
+
+    // RootNodeManager
+    (function() {
+        var RootNodeManager = function() {
+            var t = this;
+
+            // constants
+            t.rootId = 'root';
+
+            // uninitialized
+            t.nodes;
+        };
+
+        RootNodeManager.prototype.add = function(param) {
+            var t = this,
+                nodes = N.arrayFrom(param);
+
+            nodes.forEach(function(node) {
+                node.expanded = true;
+                node.path = '/' + t.rootId + '/' + node.id;
+            });
+        };
+
+        RootNodeManager.prototype.getRootNode = function() {
+            return this.nodes[0];
+        };
+
+        RootNodeManager.prototype.getRootNodes = function() {
+            return this.nodes;
+        };
+
+        N.RootNodeManager = new RootNodeManager();
     })();
 
     // PeriodConfig
@@ -1501,13 +1534,6 @@ $(function() {
                     metaData: $.getJSON(metaDataRequest.url('skipData=true')),
                     data: $.getJSON(dataRequest.url('skipMeta=true'))
                 };
-
-                //return $.getJSON(metaDataRequest.url(), function(metaData) {
-                    //return $.getJSON(dataRequest.url());
-                //});
-
-
-                //$.getJSON('/api/analytics.json' + request.url());
             };
         })();
 
@@ -1523,16 +1549,21 @@ $(function() {
                 t.params = N.arrayFrom(config.params);
                 t.manager = config.manager || null;
                 t.type = N.isString(config.type) ? config.type : 'json';
-                t.fn = N.isFunction(config.fn) ? config.fn : function() { t.defaultFn(); };
+                t.success = N.isFunction(config.success) ? config.success : function() { t.defaultSuccess(); };
+                t.error = N.isFunction(config.error) ? config.error : function() { t.defaultError(); };
+                t.completed = N.isFunction(config.completed) ? config.completed : function() { t.defaultCompleted(); };
 
-                // default fn
-                t.defaultFn = function() {
+                // defaults
+                t.defaultSuccess = function() {
                     var t = this;
 
                     if (t.manager) {
                         t.manager.ok(t);
                     }
                 };
+
+                t.defaultError = function() {};
+                t.defaultCompleted = function() {};
             };
 
             Request.prototype.log = function(text, noError) {
@@ -1598,9 +1629,9 @@ $(function() {
                 }
             };
 
-            Request.prototype.setFn = function(fn) {
+            Request.prototype.setSuccess = function(fn) {
                 if (N.isFunction(fn)) {
-                    this.fn = fn;
+                    this.success = fn;
                 }
             };
 
@@ -1622,15 +1653,21 @@ $(function() {
 
             // dep 1
 
-            Request.prototype.run = function(fn) {
+            Request.prototype.run = function(config) {
                 var t = this;
-                this.setFn(fn);
+
+                config = N.isObject(config) ? config : {};
 
                 if (this.type === 'ajax') {
-                    return $.ajax({url: this.url(), success: t.fn});
+                    return $.ajax({
+                        url: this.url(),
+                        success: config.success || t.success,
+                        error: config.error || t.error,
+                        completed: config.completed || t.completed
+                    });
                 }
                 else {
-                    return $.getJSON(this.url(), t.fn);
+                    return $.getJSON(this.url(), config.success || t.success).error(config.error || t.error).completed(config.completed || t.completed);
                 }
             };
         })();
