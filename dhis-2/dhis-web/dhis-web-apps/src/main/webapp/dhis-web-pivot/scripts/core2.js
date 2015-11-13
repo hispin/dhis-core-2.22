@@ -512,6 +512,32 @@ $(function() {
                 node.expanded = true;
                 node.path = '/' + t.rootId + '/' + node.id;
             });
+
+            t.rootNodes = N.arrayClean(t.rootNodes.concat(nodes));
+        };
+
+        AppManager.prototype.addOrganisationUnitLevels = function(param) {
+            this.organisationUnitLevels = N.arrayClean(this.organisationUnitLevels.concat(N.arrayFrom(param)));
+
+            N.arraySort(this.organisationUnitLevels, 'ASC', 'level');
+        };
+
+        AppManager.prototype.addLegendSets = function(param) {
+            this.legendSets = N.arrayClean(this.legendSets.concat(N.arrayFrom(param)));
+
+            N.arraySort(this.legendSets, 'ASC', 'name');
+        };
+
+        AppManager.prototype.addDimensions = function(param) {
+            this.dimensions = N.arrayClean(this.dimensions.concat(N.arrayFrom(param)));
+
+            N.arraySort(this.dimensions, 'ASC', 'name');
+        };
+
+        AppManager.prototype.addDataApprovalLevels = function(param) {
+            this.dataApprovalLevels = N.arrayClean(this.dataApprovalLevels.concat(N.arrayFrom(param)));
+
+            N.arraySort(this.dataApprovalLevels, 'ASC', 'level');
         };
 
         // dep 1

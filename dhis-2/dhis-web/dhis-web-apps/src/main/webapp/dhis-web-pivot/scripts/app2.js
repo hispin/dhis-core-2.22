@@ -95,7 +95,7 @@ Ext.onReady( function() {
                     'paging=false'
                 ],
                 success: function(r) {
-                    appManager.rootNodes = r.organisationUnits;
+                    appManager.addRootNodes(r.organisationUnits);
                     requestManager.ok(this);
                 }
             }));
@@ -108,7 +108,7 @@ Ext.onReady( function() {
                     'paging=false'
                 ],
                 success: function(r) {
-                    appManager.organisationUnitLevels = r.organisationUnitLevels;
+                    appManager.addOrganisationUnitLevels(r.organisationUnitLevels);
 
                     if (!r.organisationUnitLevels.length) {
                         alert('No organisation unit levels found');
@@ -126,7 +126,7 @@ Ext.onReady( function() {
                     'paging=false'
                 ],
                 success: function(r) {
-                    appManager.legendSets = r.legendSets;
+                    appManager.addLegendSets(r.legendSets);
                     requestManager.ok(this);
                 }
             }));
@@ -139,7 +139,7 @@ Ext.onReady( function() {
                     'paging=false'
                 ],
                 success: function(r) {
-                    appManager.dimensions = r.dimensions;
+                    appManager.addDimensions(r.dimensions);
                     requestManager.ok(this);
                 }
             }));
@@ -149,11 +149,11 @@ Ext.onReady( function() {
                 baseUrl: path + '/api/dataApprovalLevels.json',
                 params: [
                     'order=level:asc',
-                    'fields=id,' + displayProperty,
+                    'fields=id,' + displayProperty + ',level',
                     'paging=false'
                 ],
                 success: function(r) {
-                    appManager.dataApprovalLevels = r.dataApprovalLevels;
+                    appManager.addDataApprovalLevels(r.dataApprovalLevels);
                     requestManager.ok(this);
                 }
             }));
