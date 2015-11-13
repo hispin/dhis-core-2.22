@@ -70,7 +70,7 @@ Ext.onReady( function() {
                         error: function() {
                             alert('(i18n) No translations found for system locale (' + uiLocale + ') or default locale (' + appManager.defaultUiLocale + ')');
                         },
-                        completed: function() {
+                        complete: function() {
                             requestManager.ok(this);
                         }
                     });
@@ -107,7 +107,7 @@ Ext.onReady( function() {
                     'fields=id,' + displayProperty + 'level',
                     'paging=false'
                 ],
-                fn: function(r) {
+                success: function(r) {
                     appManager.organisationUnitLevels = r.organisationUnitLevels;
 
                     if (!r.organisationUnitLevels.length) {
@@ -125,7 +125,7 @@ Ext.onReady( function() {
                     'fields=id,' + displayProperty + ',legends[id,' + displayProperty + ',startValue,endValue,color]',
                     'paging=false'
                 ],
-                fn: function(r) {
+                success: function(r) {
                     appManager.legendSets = r.legendSets;
                     requestManager.ok(this);
                 }
@@ -160,7 +160,6 @@ Ext.onReady( function() {
         })();
 
         //requestManager.set(function() {
-
 
         requestManager.run();
 

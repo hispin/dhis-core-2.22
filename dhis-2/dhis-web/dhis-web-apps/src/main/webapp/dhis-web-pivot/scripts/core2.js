@@ -1551,7 +1551,7 @@ $(function() {
                 t.type = N.isString(config.type) ? config.type : 'json';
                 t.success = N.isFunction(config.success) ? config.success : function() { t.defaultSuccess(); };
                 t.error = N.isFunction(config.error) ? config.error : function() { t.defaultError(); };
-                t.completed = N.isFunction(config.completed) ? config.completed : function() { t.defaultCompleted(); };
+                t.complete = N.isFunction(config.complete) ? config.complete : function() { t.defaultComplete(); };
 
                 // defaults
                 t.defaultSuccess = function() {
@@ -1563,7 +1563,7 @@ $(function() {
                 };
 
                 t.defaultError = function() {};
-                t.defaultCompleted = function() {};
+                t.defaultComplete = function() {};
             };
 
             Request.prototype.log = function(text, noError) {
@@ -1629,12 +1629,6 @@ $(function() {
                 }
             };
 
-            Request.prototype.setSuccess = function(fn) {
-                if (N.isFunction(fn)) {
-                    this.success = fn;
-                }
-            };
-
             Request.prototype.setType = function(type) {
                 if (N.isString(type)) {
                     this.type = type;
@@ -1643,6 +1637,24 @@ $(function() {
 
             Request.prototype.setManager = function(manager) {
                 this.manager = manager;
+            };
+
+            Request.prototype.setSuccess = function(fn) {
+                if (N.isFunction(fn)) {
+                    this.success = fn;
+                }
+            };
+
+            Request.prototype.setError = function(fn) {
+                if (N.isFunction(fn)) {
+                    this.error = fn;
+                }
+            };
+
+            Request.prototype.setComplete = function(fn) {
+                if (N.isFunction(fn)) {
+                    this.complete = fn;
+                }
             };
 
             Request.prototype.url = function(extraParams) {
@@ -1663,11 +1675,11 @@ $(function() {
                         url: this.url(),
                         success: config.success || t.success,
                         error: config.error || t.error,
-                        completed: config.completed || t.completed
+                        complete: config.complete || t.complete
                     });
                 }
                 else {
-                    return $.getJSON(this.url(), config.success || t.success).error(config.error || t.error).completed(config.completed || t.completed);
+                    return $.getJSON(this.url(), config.success || t.success).error(config.error || t.error).complete(config.complete || t.complete);
                 }
             };
         })();
