@@ -1,6 +1,59 @@
 Ext.onReady( function() {
 	var N = PT;
 
+    // UiManager
+    (function() {
+        var UiManager = function() {
+            var t = this;
+
+            t.getScrollbarSize = function(force) {
+                var scrollbarSize,
+                    db = document.body,
+                    div = document.createElement('div');
+
+                div.style.width = div.style.height = '100px';
+                div.style.overflow = 'scroll';
+                div.style.position = 'absolute';
+
+                db.appendChild(div);
+
+                scrollbarSize = {
+                    width: div.offsetWidth - div.clientWidth,
+                    height: div.offsetHeight - div.clientHeight
+                };
+
+                db.removeChild(div);
+
+                return scrollbarSize;
+            };
+        };
+
+        N.UiManager = new UiManager();
+    })();
+
+    // UiMenuRegion
+    (function() {
+        var UiMenuRegion = function(config) {
+            var t = this;
+
+            config = N.isObject(config) ? config : {};
+
+            // constants
+            var width = config.width || 424;
+
+            // constructor
+            $.extend(this, Ext.create('Ext.panel.Panel', {
+                region: 'west',
+                preventHeader: true,
+                collapsible: true,
+                collapseMode: 'mini',
+                border: false,
+                width: width + N.UiManager.getScrollbarSize().width,
+                items: new N.UiMenuAccordion()
+            }));
+        };
+    })();
+
     // initialize
     (function() {
         var appManager = N.AppManager,
