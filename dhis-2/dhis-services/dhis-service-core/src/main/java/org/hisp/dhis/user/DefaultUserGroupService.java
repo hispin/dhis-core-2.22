@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.hisp.dhis.security.acl.AclService;
+import org.hisp.dhis.cache.HibernateCacheManager;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +69,13 @@ public class DefaultUserGroupService
         this.aclService = aclService;
     }
     
+    private HibernateCacheManager cacheManager;
+
+    public void setCacheManager( HibernateCacheManager cacheManager )
+    {
+        this.cacheManager = cacheManager;
+    }
+
     // -------------------------------------------------------------------------
     // UserGroup
     // -------------------------------------------------------------------------
@@ -88,6 +96,10 @@ public class DefaultUserGroupService
     public void updateUserGroup( UserGroup userGroup )
     {
         userGroupStore.update( userGroup );
+        
+        // Clear query cache due to sharing and user group membership
+        
+        cacheManager.clearQueryCache();
     }
 
     @Override
