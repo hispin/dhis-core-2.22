@@ -7,28 +7,62 @@ Ext.onReady( function() {
             var t = this;
 
             t.getScrollbarSize = function(force) {
-                var scrollbarSize,
-                    db = document.body,
+                var size,
+                    body = document.body,
                     div = document.createElement('div');
 
                 div.style.width = div.style.height = '100px';
                 div.style.overflow = 'scroll';
                 div.style.position = 'absolute';
 
-                db.appendChild(div);
+                body.appendChild(div);
 
-                scrollbarSize = {
+                size = {
                     width: div.offsetWidth - div.clientWidth,
                     height: div.offsetHeight - div.clientHeight
                 };
 
-                db.removeChild(div);
+                body.removeChild(div);
 
-                return scrollbarSize;
+                return size;
             };
         };
 
         N.UiManager = new UiManager();
+    })();
+
+    // UiMenuRegion
+    (function() {
+        var UiMenuAccordion = function(config) {
+            var t = this;
+
+            config = N.isObject(config) ? config : {};
+
+            // constants
+            var tabHeight = config.tabHeight || 28;
+
+            // constructor
+            $.extend(this, Ext.create('Ext.panel.Panel', {
+                bodyStyle: 'border-style:none; padding:1px; padding-bottom:0; overflow-y:scroll;',
+                items: new N.UiMenuAccordionBody()
+            }));
+        };
+
+        //UiMenuAccordion.prototype.thisSetHeight = function(mx) {
+            //var panelHeight = this.panels.length * 28,
+                //height;
+
+            //if (westRegion.hasScrollbar) {
+                //height = panelHeight + mx;
+                //this.setHeight(viewport.getHeight() - 2);
+                //accordionBody.setHeight(height - 2);
+            //}
+            //else {
+                //height = westRegion.getHeight() - ns.core.conf.layout.west_fill;
+                //mx += panelHeight;
+                //accordion.setHeight((height > mx ? mx : height) - 2);
+                //accordionBody.setHeight((height > mx ? mx : height) - 2);
+            //}
     })();
 
     // UiMenuRegion
