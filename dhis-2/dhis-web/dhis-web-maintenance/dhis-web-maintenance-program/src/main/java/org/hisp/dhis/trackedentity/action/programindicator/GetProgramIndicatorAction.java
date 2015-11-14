@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
@@ -67,6 +69,9 @@ public class GetProgramIndicatorAction
     
     @Autowired
     private ProgramService programService;
+    
+    @Autowired
+    private LegendService legendService;
 
     // -------------------------------------------------------------------------
     // Setters
@@ -134,6 +139,13 @@ public class GetProgramIndicatorAction
     {
         return constants;
     }
+    
+    private List<LegendSet> legendSets = new ArrayList<>();
+
+    public List<LegendSet> getLegendSets()
+    {
+        return legendSets;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -157,13 +169,15 @@ public class GetProgramIndicatorAction
         }
         
         expressionAttributes = new ArrayList<>( program.getTrackedEntityAttributes() );
-        constants = new ArrayList<>( constantService.getAllConstants() );
+        constants = constantService.getAllConstants();
+        legendSets = legendService.getAllLegendSets();
 
         expressionAttributes = expressionAttributes.stream().filter( ArithmeticValueTypeTrackedEntityAttributeFilter.INSTANCE ).collect( Collectors.toList() );
         
         Collections.sort( expressionAttributes );
         Collections.sort( constants );
-                
+        Collections.sort( legendSets );
+        
         return SUCCESS;
     }
 }
