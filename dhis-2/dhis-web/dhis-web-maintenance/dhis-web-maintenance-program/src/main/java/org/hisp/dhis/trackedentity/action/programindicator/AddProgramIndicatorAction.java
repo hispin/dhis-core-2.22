@@ -30,10 +30,13 @@ package org.hisp.dhis.trackedentity.action.programindicator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.legend.LegendService;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorService;
 import org.hisp.dhis.program.ProgramService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
 
@@ -61,6 +64,9 @@ public class AddProgramIndicatorAction
     {
         this.programIndicatorService = programIndicatorService;
     }
+    
+    @Autowired
+    private LegendService legendService;
 
     // -------------------------------------------------------------------------
     // Setters
@@ -134,6 +140,13 @@ public class AddProgramIndicatorAction
         this.decimals = decimals;
     }
     
+    private Integer legendSetId;
+    
+    public void setLegendSetId( Integer legendSetId )
+    {
+        this.legendSetId = legendSetId;
+    }
+
     private Boolean displayInForm;
 
     public void setDisplayInForm( Boolean displayInForm )
@@ -151,6 +164,8 @@ public class AddProgramIndicatorAction
     {
         Program program = programService.getProgram( programId );
         
+        LegendSet legendSet = legendService.getLegendSet( legendSetId );
+        
         ProgramIndicator indicator = new ProgramIndicator();
         indicator.setName( StringUtils.trimToNull( name ) );
         indicator.setShortName( StringUtils.trimToNull( shortName ) );
@@ -161,6 +176,7 @@ public class AddProgramIndicatorAction
         indicator.setFilter( StringUtils.trimToNull( filter ) );
         indicator.setAggregationType( AggregationType.valueOf( aggregationType ) );
         indicator.setDecimals( decimals );
+        indicator.setLegendSet( legendSet );
         indicator.setDisplayInForm( displayInForm );
 
         programIndicatorService.addProgramIndicator( indicator );

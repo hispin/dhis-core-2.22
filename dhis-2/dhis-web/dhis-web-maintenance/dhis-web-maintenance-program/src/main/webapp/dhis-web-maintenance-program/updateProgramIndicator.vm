@@ -77,6 +77,17 @@ jQuery( document ).ready( function()
           </select>
 		</td>
     </tr>
+    <tr>
+        <td><label>$i18n.getString( 'legend_set' )</label></td>            
+        <td>
+            <select id="legendSetId" name="legendSetId">
+                <option value="0">[$i18n.getString('please_select')]</option>
+                #foreach ( $legendSet in $legendSets )
+                <option value="$legendSet.id"#if( $legendSet.id == $programIndicator.legendSet.id ) selected="selected"#end>$!encoder.htmlEncode( $legendSet.displayName )</option>
+                #end
+            </select>
+        </td>
+    </tr>
 	<tr>
 		<td><label for="displayInForm">$i18n.getString( "display_in_form" )</label></td>
 		<td><input type="checkbox" id="displayInForm" name="displayInForm" value="true"#if( $programIndicator.displayInForm ) checked="checked"#end></td>

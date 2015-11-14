@@ -34,8 +34,11 @@
 			<param name="type">12</param>
 		</type> 
 	</property>
-        
+    
     <property name="decimals" />
+
+    <many-to-one name="legendSet" class="org.hisp.dhis.legend.LegendSet" column="legendsetid"
+      foreign-key="fk_programindicator_legendset" />
 
     <property name="displayInForm" />
     
