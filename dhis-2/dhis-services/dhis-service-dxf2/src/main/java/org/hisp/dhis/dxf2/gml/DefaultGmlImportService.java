@@ -32,6 +32,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +43,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
@@ -283,6 +285,11 @@ public class DefaultGmlImportService
     private Map<String, OrganisationUnit> getMatchingPersistedOrgUnits( Collection<String> identifiers, final IdentifiableProperty property )
     {
         List<OrganisationUnit> orgUnits = idObjectManager.getObjects( OrganisationUnit.class, property, identifiers );
+
+        if ( orgUnits == null )
+        {
+            return Maps.newHashMap();
+        }
 
         return IdentifiableObjectUtils.getMap( orgUnits, property );
     }
