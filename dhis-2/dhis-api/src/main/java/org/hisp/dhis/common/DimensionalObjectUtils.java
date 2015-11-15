@@ -55,7 +55,7 @@ import com.google.common.collect.Sets;
 public class DimensionalObjectUtils
 {
     private static final Pattern INT_PATTERN = Pattern.compile( "^(0|-?[1-9]\\d*)$" );
-    private static final Pattern DIMENSIONAL_OPERAND_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
+    private static final Pattern COMPOSITE_DIMENSIONAL_OBJECT_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
     
     public static final String TITLE_ITEM_SEP = ", ";
 
@@ -332,14 +332,15 @@ public class DimensionalObjectUtils
     }
 
     /**
-     * Indicates whether the given string is a valid full operand expression.
+     * Indicates whether the given string is a composite dimensional object 
+     * expression.
      * 
      * @param expression the expression.
-     * @return true if valid full operand expression, false if not.
+     * @return true if composite dimensional object expression, false if not.
      */
-    public static boolean isValidDimensionalOperand( String expression )
+    public static boolean isCompositeDimensionalObject( String expression )
     {
-        return expression != null && DIMENSIONAL_OPERAND_PATTERN.matcher( expression ).matches();
+        return expression != null && COMPOSITE_DIMENSIONAL_OBJECT_PATTERN.matcher( expression ).matches();
     }
 
     /**
