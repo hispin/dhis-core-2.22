@@ -32,11 +32,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.hisp.dhis.i18n.I18n;
-import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntity;
-import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
 
@@ -240,17 +237,4 @@ public interface ProgramService
     List<Program> getByCurrentUser( ProgramType type );
 
     void mergeWithCurrentUserOrganisationUnits( Program program, Collection<OrganisationUnit> mergeOrganisationUnits );
-    
-    /**
-     * @param htmlCode
-     * @param program
-     * @param healthWorkers
-     * @param instance
-     * @param programInstance
-     * @param i18n
-     * @param format
-     * @return
-     */
-    String prepareDataEntryFormForAdd( String htmlCode, Program program, Collection<User> healthWorkers,
-        TrackedEntityInstance instance, ProgramInstance programInstance, I18n i18n, I18nFormat format );
 }
