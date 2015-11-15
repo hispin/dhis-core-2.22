@@ -299,8 +299,8 @@ public class DefaultDataQueryService
             
             //TODO proper handling of operands and option combinations
         }
-
-        if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
+        
+        else if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
         {
             List<NameableObject> cocs = new ArrayList<NameableObject>();
             
@@ -319,7 +319,7 @@ public class DefaultDataQueryService
             return object;
         }
 
-        if ( ATTRIBUTEOPTIONCOMBO_DIM_ID.equals( dimension ) )
+        else if ( ATTRIBUTEOPTIONCOMBO_DIM_ID.equals( dimension ) )
         {
             List<NameableObject> aocs = new ArrayList<NameableObject>();
             
@@ -338,7 +338,7 @@ public class DefaultDataQueryService
             return object;
         }
         
-        if ( PERIOD_DIM_ID.equals( dimension ) )
+        else if ( PERIOD_DIM_ID.equals( dimension ) )
         {
             Calendar calendar = PeriodType.getCalendar();
 
@@ -388,7 +388,7 @@ public class DefaultDataQueryService
             return object;
         }
 
-        if ( ORGUNIT_DIM_ID.equals( dimension ) )
+        else if ( ORGUNIT_DIM_ID.equals( dimension ) )
         {
             List<NameableObject> ous = new ArrayList<>();
             List<Integer> levels = new ArrayList<>();
@@ -475,33 +475,36 @@ public class DefaultDataQueryService
             return object;
         }
 
-        if ( LONGITUDE_DIM_ID.contains( dimension ) )
+        else if ( LONGITUDE_DIM_ID.contains( dimension ) )
         {
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.STATIC, null, DISPLAY_NAME_LONGITUDE, new ArrayList<NameableObject>() );
 
             return object;
         }
 
-        if ( LATITUDE_DIM_ID.contains( dimension ) )
+        else if ( LATITUDE_DIM_ID.contains( dimension ) )
         {
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.STATIC, null, DISPLAY_NAME_LATITUDE, new ArrayList<NameableObject>() );
 
             return object;
         }
 
-        DimensionalObject dimObject = idObjectManager.get( DataQueryParams.DYNAMIC_DIM_CLASSES, dimension );
-
-        if ( dimObject != null && dimObject.isDataDimension() )
+        else
         {
-            Class<?> dimClass = ReflectionUtils.getRealClass( dimObject.getClass() );
-            
-            Class<? extends NameableObject> itemClass = DimensionalObject.DIMENSION_CLASS_ITEM_CLASS_MAP.get( dimClass );
-            
-            List<NameableObject> dimItems = !allItems ? asList( idObjectManager.getByUidOrdered( itemClass, items ) ) : dimObject.getItems();
-                        
-            DimensionalObject object = new BaseDimensionalObject( dimension, dimObject.getDimensionType(), null, dimObject.getName(), dimItems, allItems );
-            
-            return object;
+            DimensionalObject dimObject = idObjectManager.get( DataQueryParams.DYNAMIC_DIM_CLASSES, dimension );
+    
+            if ( dimObject != null && dimObject.isDataDimension() )
+            {
+                Class<?> dimClass = ReflectionUtils.getRealClass( dimObject.getClass() );
+                
+                Class<? extends NameableObject> itemClass = DimensionalObject.DIMENSION_CLASS_ITEM_CLASS_MAP.get( dimClass );
+                
+                List<NameableObject> dimItems = !allItems ? asList( idObjectManager.getByUidOrdered( itemClass, items ) ) : dimObject.getItems();
+                            
+                DimensionalObject object = new BaseDimensionalObject( dimension, dimObject.getDimensionType(), null, dimObject.getName(), dimItems, allItems );
+                
+                return object;
+            }
         }
 
         if ( allowNull )
