@@ -267,7 +267,7 @@ public class DefaultDataQueryService
                         dataDimensionItems.addAll( group.getMembers() );
                     }
                 }
-                else if ( DimensionalObjectUtils.isValidDimensionalOperand( uid ) )
+                else if ( DimensionalObjectUtils.isCompositeDimensionalObject( uid ) )
                 {
                     DataElementOperand operand = operandService.getDataElementOperand( 
                         splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 0 ), splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 1 ) );

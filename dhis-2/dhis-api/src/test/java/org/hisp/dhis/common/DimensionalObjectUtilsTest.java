@@ -48,11 +48,11 @@ public class DimensionalObjectUtilsTest
     }
 
     @Test
-    public void testValidFullOperand()
+    public void testIsCompositeDimensionObject()
     {
-        assertTrue( DimensionalObjectUtils.isValidDimensionalOperand( "d4HjsAHkj42.G142kJ2k3Gj" ) );
+        assertTrue( DimensionalObjectUtils.isCompositeDimensionalObject( "d4HjsAHkj42.G142kJ2k3Gj" ) );
         
-        assertFalse( DimensionalObjectUtils.isValidDimensionalOperand( "d4HjsAHkj42" ) );
-        assertFalse( DimensionalObjectUtils.isValidDimensionalOperand( "14HjsAHkj42-G142kJ2k3Gj" ) );
+        assertFalse( DimensionalObjectUtils.isCompositeDimensionalObject( "d4HjsAHkj42" ) );
+        assertFalse( DimensionalObjectUtils.isCompositeDimensionalObject( "14HjsAHkj42-G142kJ2k3Gj" ) );
     }
 }
