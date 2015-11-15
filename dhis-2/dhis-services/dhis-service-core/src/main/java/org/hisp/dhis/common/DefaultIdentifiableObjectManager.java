@@ -768,7 +768,7 @@ public class DefaultIdentifiableObjectManager
             throw new InvalidIdentifierReferenceException( "Invalid identifiable property / class combination: " + property );
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -779,7 +779,7 @@ public class DefaultIdentifiableObjectManager
 
         if ( store == null )
         {
-            return null;
+            return new ArrayList<>();
         }
 
         return store.getById( identifiers );

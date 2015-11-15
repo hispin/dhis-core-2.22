@@ -284,11 +284,6 @@ public class DefaultGmlImportService
     {
         List<OrganisationUnit> orgUnits = idObjectManager.getObjects( OrganisationUnit.class, property, identifiers );
 
-        if ( orgUnits == null )
-        {
-            return Maps.newHashMap();
-        }
-
         return IdentifiableObjectUtils.getMap( orgUnits, property );
     }
 
