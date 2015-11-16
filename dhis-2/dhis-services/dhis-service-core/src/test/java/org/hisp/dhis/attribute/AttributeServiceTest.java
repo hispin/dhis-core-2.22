@@ -28,12 +28,12 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
-
-import org.hisp.dhis.DhisSpringTest;
 
 /**
  * @author mortenoh
@@ -48,33 +48,33 @@ public class AttributeServiceTest
     public void testAddAttribute()
     {
         Attribute attribute = new Attribute();
-        attribute.setValueType( "string" );
+        attribute.setValueType( ValueType.TEXT );
         attribute.setName( "attribute1" );
 
         attributeService.addAttribute( attribute );
         attribute = attributeService.getAttribute( attribute.getId() );
 
         assertNotNull( attribute );
+        assertEquals( ValueType.TEXT, attribute.getValueType() );
         assertEquals( "attribute1", attribute.getName() );
-        assertEquals( "string", attribute.getValueType() );
     }
 
     @Test
     public void testUpdateAttribute()
     {
         Attribute attribute = new Attribute();
-        attribute.setValueType( "string" );
+        attribute.setValueType( ValueType.TEXT );
         attribute.setName( "attribute1" );
 
         attributeService.addAttribute( attribute );
 
-        attribute.setValueType( "int" );
+        attribute.setValueType( ValueType.INTEGER );
         attribute.setName( "attribute2" );
 
         attributeService.updateAttribute( attribute );
         attribute = attributeService.getAttribute( attribute.getId() );
 
-        assertEquals( "int", attribute.getValueType() );
+        assertEquals( ValueType.INTEGER, attribute.getValueType() );
         assertEquals( "attribute2", attribute.getName() );
     }
 
@@ -82,7 +82,7 @@ public class AttributeServiceTest
     public void testDeleteAttribute()
     {
         Attribute attribute = new Attribute();
-        attribute.setValueType( "string" );
+        attribute.setValueType( ValueType.TEXT );
         attribute.setName( "attribute1" );
 
         attributeService.addAttribute( attribute );
@@ -91,7 +91,7 @@ public class AttributeServiceTest
         assertNotNull( attribute );
 
         int attributeId = attribute.getId();
-        
+
         attributeService.deleteAttribute( attribute );
         attribute = attributeService.getAttribute( attributeId );
 
@@ -102,7 +102,7 @@ public class AttributeServiceTest
     public void testGetAttribute()
     {
         Attribute attribute = new Attribute();
-        attribute.setValueType( "string" );
+        attribute.setValueType( ValueType.TEXT );
         attribute.setName( "attribute1" );
 
         attributeService.addAttribute( attribute );
@@ -115,11 +115,11 @@ public class AttributeServiceTest
     public void testGetAllAttributes()
     {
         Attribute attribute1 = new Attribute();
-        attribute1.setValueType( "string" );
+        attribute1.setValueType( ValueType.TEXT );
         attribute1.setName( "attribute1" );
 
         Attribute attribute2 = new Attribute();
-        attribute2.setValueType( "string" );
+        attribute2.setValueType( ValueType.TEXT );
         attribute2.setName( "attribute2" );
 
         attributeService.addAttribute( attribute1 );

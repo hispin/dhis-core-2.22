@@ -28,12 +28,12 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.*;
-
-import org.hisp.dhis.DhisSpringTest;
+import static org.junit.Assert.assertEquals;
 
 public class AttributeStoreTest
     extends DhisSpringTest
@@ -50,13 +50,13 @@ public class AttributeStoreTest
     {
         attribute1 = new Attribute();
         attribute1.setName( "attribute_simple" );
-        attribute1.setValueType( "string" );
+        attribute1.setValueType( ValueType.TEXT );
         attribute1.setIndicatorAttribute( true );
         attribute1.setDataElementAttribute( true );
 
         attribute2 = new Attribute();
         attribute2.setName( "attribute_with_options" );
-        attribute2.setValueType( "string" );
+        attribute2.setValueType( ValueType.TEXT );
         attribute2.setOrganisationUnitAttribute( true );
         attribute2.setDataElementAttribute( true );
 

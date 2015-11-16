@@ -29,10 +29,10 @@ package org.hisp.dhis.dataadmin.action.attribute;
  */
 
 import com.opensymphony.xwork2.Action;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +71,9 @@ public class AddAttributeAction
         this.code = code;
     }
 
-    private String valueType;
+    private ValueType valueType;
 
-    public void setValueType( String valueType )
+    public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
     }
@@ -211,19 +211,10 @@ public class AddAttributeAction
     @Override
     public String execute()
     {
-        OptionSet optionSet = null;
+        OptionSet optionSet = optionService.getOptionSet( optionSetUid );
+        valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
 
-        if ( "option_set".equals( valueType ) )
-        {
-            optionSet = optionService.getOptionSet( optionSetUid );
-
-            if ( optionSet == null )
-            {
-                return INPUT;
-            }
-        }
-
-        Attribute attribute = new Attribute( StringUtils.trimToNull( name ), StringUtils.trimToNull( valueType ) );
+        Attribute attribute = new Attribute( StringUtils.trimToNull( name ), valueType );
         attribute.setCode( StringUtils.trimToNull( code ) );
         attribute.setMandatory( mandatory );
         attribute.setDataElementAttribute( dataElementAttribute );

@@ -28,12 +28,12 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.ValueType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
-
-import org.hisp.dhis.DhisSpringTest;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -47,15 +47,15 @@ public class AttributeValueServiceTest
     private AttributeValue attributeValue1;
 
     private AttributeValue attributeValue2;
-    
+
     @Override
     protected void setUpTest()
     {
         attributeValue1 = new AttributeValue( "value 1" );
         attributeValue2 = new AttributeValue( "value 2" );
 
-        Attribute attribute1 = new Attribute( "attribute 1", "string" );
-        Attribute attribute2 = new Attribute( "attribute 2", "string" );
+        Attribute attribute1 = new Attribute( "attribute 1", ValueType.TEXT );
+        Attribute attribute2 = new Attribute( "attribute 2", ValueType.TEXT );
 
         attributeService.addAttribute( attribute1 );
         attributeService.addAttribute( attribute2 );
