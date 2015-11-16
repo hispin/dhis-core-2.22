@@ -54,82 +54,79 @@
                 <table class="listTable dhis2-table-striped-border dhis2-table-hover">
                     <thead>                        
                         <tr>
-                            <th ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}">                                
-                                <span ng-if="eventGridColumn.id !== 'comment'">
-                                    
-                                    <!-- sort icon begins -->                                
-                                    <span ng-hide="eventGridColumn.showFilter" class="bold" ng-click="sortEventGrid(eventGridColumn)">
-                                        <span ng-class="{true: 'red'} [sortHeader.id == eventGridColumn.id]"><i class="fa fa-sort"></i></span>
-                                        <span ng-if="eventGridColumn.id !== 'uid'">{{eventGridColumn.name}}</span>
-                                        <span ng-if="eventGridColumn.id == 'uid'">{{eventGridColumn.name | translate}}</span>
-                                    </span>
-                                    <!-- sort icon ends -->
+                            <th ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}" ng-if="eventGridColumn.id !== 'comment'">                                    
+                                <!-- sort icon begins -->                                
+                                <span ng-hide="eventGridColumn.showFilter" class="bold" ng-click="sortEventGrid(eventGridColumn)">
+                                    <span ng-class="{true: 'red'} [sortHeader.id == eventGridColumn.id]"><i class="fa fa-sort"></i></span>
+                                    <span ng-if="eventGridColumn.id !== 'uid'">{{eventGridColumn.name}}</span>
+                                    <span ng-if="eventGridColumn.id == 'uid'">{{eventGridColumn.name | translate}}</span>
+                                </span>
+                                <!-- sort icon ends -->
 
-                                    <!-- filter icon begins -->
-                                    <span class='pull-right hideInPrint'>
-                                        <span ng-show="!eventGridColumn.filterWithRange">
-                                            <a href ng-click="searchInGrid(eventGridColumn)" title="{{searchLabel}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [filterText[eventGridColumn.id] == undefined || filterText[eventGridColumn.id] == '']"><i class="fa fa-search"></i></span></a>
+                                <!-- filter icon begins -->
+                                <span class='pull-right hideInPrint'>
+                                    <span ng-show="!eventGridColumn.filterWithRange">
+                                        <a href ng-click="searchInGrid(eventGridColumn)" title="{{searchLabel}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [filterText[eventGridColumn.id] == undefined || filterText[eventGridColumn.id] == '']"><i class="fa fa-search"></i></span></a>
+                                    </span>
+                                    <span ng-show="eventGridColumn.filterWithRange">                                            
+                                        <a href ng-click="searchInGrid(eventGridColumn)" title="{{searchLabel}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [(filterText[eventGridColumn.id].start == undefined || filterText[eventGridColumn.id].start == '') && (filterText[eventGridColumn.id].end == undefined || filterText[eventGridColumn.id].end == '')]"><i class="fa fa-search"></i></span></a>
+                                    </span>                                                    
+                                </span>
+                                <!-- filter icon ends -->
+
+                                <!-- filter input field begins -->
+                                <span ng-show="eventGridColumn.showFilter">                                          
+                                    <span ng-switch="eventGridColumn.valueType">                                            
+                                        <span ng-switch-when="NUMBER">
+                                            <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                            <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
                                         </span>
-                                        <span ng-show="eventGridColumn.filterWithRange">                                            
-                                            <a href ng-click="searchInGrid(eventGridColumn)" title="{{searchLabel}}"><span ng-class="{true: 'filter-without-content', false: 'filter-with-content'} [(filterText[eventGridColumn.id].start == undefined || filterText[eventGridColumn.id].start == '') && (filterText[eventGridColumn.id].end == undefined || filterText[eventGridColumn.id].end == '')]"><i class="fa fa-search"></i></span></a>
-                                        </span>                                                    
-                                    </span>
-                                    <!-- filter icon ends -->
-                                    
-                                    <!-- filter input field begins -->
-                                    <span ng-show="eventGridColumn.showFilter">                                          
-                                        <span ng-switch="eventGridColumn.valueType">                                            
-                                            <span ng-switch-when="NUMBER">
-                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
-                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                        <span ng-switch-when="INTEGER">
+                                            <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                            <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                        </span>
+                                        <span ng-switch-when="INTEGER_POSITIVE">
+                                            <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" min="1" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                            <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" min="1" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                        </span>
+                                        <span ng-switch-when="INTEGER_NEGATIVE">
+                                            <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" max="-1" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                            <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" max="-1" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                        </span>
+                                        <span ng-switch-when="INTEGER_ZERO_OR_POSITIVE">
+                                            <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" min="0" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
+                                            <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" min="0" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
+                                        </span>
+                                        <span ng-switch-when="DATE">
+                                            <input style="width: 70%;" placeholder="{{'start_date' | translate}}" type="text" ng-model="filterText[eventGridColumn.id].start" d2-date readonly="readonly">
+                                            <span ng-hide="!filterText[eventGridColumn.id].start || filterText[eventGridColumn.id].start == undefined || filterText[eventGridColumn.id].start == ''">
+                                                <a href ng-click='removeStartFilterText(eventGridColumn.id)'><span class='black'><i class="fa fa-trash-o"></i></span></a>                                                        
                                             </span>
-                                            <span ng-switch-when="INTEGER">
-                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
-                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
-                                            </span>
-                                            <span ng-switch-when="INTEGER_POSITIVE">
-                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" min="1" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
-                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" min="1" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
-                                            </span>
-                                            <span ng-switch-when="INTEGER_NEGATIVE">
-                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" max="-1" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
-                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" max="-1" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
-                                            </span>
-                                            <span ng-switch-when="INTEGER_ZERO_OR_POSITIVE">
-                                                <input style="width: 45%;" placeholder="{{'lower_limit' | translate}}" type="number" min="0" ng-model="filterText[eventGridColumn.id].start" ng-blur="searchInGrid(eventGridColumn)">
-                                                <input style="width: 45%;" placeholder="{{'upper_limit' | translate}}" type="number" min="0" ng-model="filterText[eventGridColumn.id].end" ng-blur="searchInGrid(eventGridColumn)">
-                                            </span>
-                                            <span ng-switch-when="DATE">
-                                                <input style="width: 70%;" placeholder="{{'start_date' | translate}}" type="text" ng-model="filterText[eventGridColumn.id].start" d2-date readonly="readonly">
-                                                <span ng-hide="!filterText[eventGridColumn.id].start || filterText[eventGridColumn.id].start == undefined || filterText[eventGridColumn.id].start == ''">
-                                                    <a href ng-click='removeStartFilterText(eventGridColumn.id)'><span class='black'><i class="fa fa-trash-o"></i></span></a>                                                        
-                                                </span>
-                                                <input style="width: 70%;" placeholder="{{'end_date' | translate}}" type="text" ng-model="filterText[eventGridColumn.id].end" d2-date readonly="readonly">
-                                                <span ng-hide="!filterText[eventGridColumn.id].end || filterText[eventGridColumn.id].end == undefined || filterText[eventGridColumn.id].end == ''">
-                                                    <a href ng-click='removeEndFilterText(eventGridColumn.id)'><span class='black'><i class="fa fa-trash-o"></i></span></a>                                                        
-                                                </span> 
-                                            </span>
-                                            <span ng-switch-default>
-                                                <input type="text" style="width: 90%;" ng-model="filterText[eventGridColumn.id]" ng-blur="searchInGrid(eventGridColumn)">
+                                            <input style="width: 70%;" placeholder="{{'end_date' | translate}}" type="text" ng-model="filterText[eventGridColumn.id].end" d2-date readonly="readonly">
+                                            <span ng-hide="!filterText[eventGridColumn.id].end || filterText[eventGridColumn.id].end == undefined || filterText[eventGridColumn.id].end == ''">
+                                                <a href ng-click='removeEndFilterText(eventGridColumn.id)'><span class='black'><i class="fa fa-trash-o"></i></span></a>                                                        
                                             </span> 
-                                        </span>                                                    
-                                    </span>
-                                    <!-- filter input field ends -->
+                                        </span>
+                                        <span ng-switch-default>
+                                            <input type="text" style="width: 90%;" ng-model="filterText[eventGridColumn.id]" ng-blur="searchInGrid(eventGridColumn)">
+                                        </span> 
+                                    </span>                                                    
                                 </span>
-                                <span ng-if="eventGridColumn.id === 'comment'">
-                                    {{'comment' | translate}}
-                                </span>
-                            </th> 
+                                <!-- filter input field ends -->                                
+                            </th>
+                            <!-- visible when comment exisits -->
+                            <th ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}" ng-if="eventGridColumn.id === 'comment'">                                
+                                {{'comment' | translate}}
+                            </th>
+                            <!-- visible when comment exisits -->
                         </tr>                        
                     </thead>
                     <tbody id="list">
                         <tr title="{{'click_for_action' | translate}}" ng-repeat="dhis2Event in dhis2Events | orderBy:d2Sort:reverse | gridFilter:filterText:filterTypes">                           
-                            <td ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}">
+                            <td d2-context-menu ng-click="showEventList(dhis2Event)" ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}" ng-if="eventGridColumn.id !== 'comment'">
                                 
                                 <!-- Visible when event is not under editing -->                                
-                                <div d2-context-menu 
-                                    ng-click="showEventList(dhis2Event)"
-                                    ng-show="currentEvent.event !== dhis2Event.event && eventGridColumn.id !== 'comment'">
+                                <div ng-show="currentEvent.event !== dhis2Event.event">
                                     <span ng-switch="eventGridColumn.valueType">
                                         <span ng-switch-when="BOOLEAN">
                                             <span ng-if="dhis2Event[eventGridColumn.id] == 'false'">{{noLabel}}</span>
@@ -146,8 +143,7 @@
                                 <!-- Visible when event is not under editing -->                                
                                 
                                 <!-- Visible when event is under editing in grid -->
-                                <div style="cursor:default;"
-                                    ng-if="(currentEvent.event == dhis2Event.event) && eventGridColumn.id !== 'comment'">
+                                <div ng-if="currentEvent.event === dhis2Event.event" style="cursor:default;">
                                     <ng-form name="innerFormGrid">
                                         <div ng-if="eventGridColumn.id === 'uid'">
                                             <input type="text"
@@ -326,11 +322,11 @@
                                                 </div>
                                                 <div ng-switch-default>
                                                     <input type="text"
-                                                               ng-model="currentEvent[eventGridColumn.id]" 
-                                                               ng-required={{eventGridColumn.compulsory}}
-                                                               ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                               name="foo" 
-                                                               ng-class="getInputNotifcationClass(eventGridColumn.id,false)"/>                                                    
+                                                            ng-model="currentEvent[eventGridColumn.id]" 
+                                                            ng-required={{eventGridColumn.compulsory}}
+                                                            ng-blur="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
+                                                            name="foo" 
+                                                            ng-class="getInputNotifcationClass(eventGridColumn.id,false)"/>                                                    
                                                 </div>
                                                 <div ng-messages="innerFormGrid.foo.$error" ng-if="interacted(innerFormGrid.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
                                                 </div>
@@ -339,13 +335,12 @@
                                     </ng-form>
                                 </div>
                                 <!-- Visible when event is under editing in grid -->
-                                
-                                <!-- visible when comment exisits -->
-                                <span ng-if="eventGridColumn.id === 'comment'" >                                
-                                    <a href ng-click="showNotes(dhis2Event)" title="{{'show_comments'| translate}}" ng-if="dhis2Event.notes"><i class="fa fa-info-circle"></i></a>
-                                </span>    
-                                <!-- visible when comment exisits -->                                
                             </td>
+                            <!-- visible when comment exisits -->
+                            <td ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}" ng-if="eventGridColumn.id === 'comment'">
+                                <a href ng-click="showNotes(dhis2Event)" title="{{'show_comments'| translate}}" ng-if="dhis2Event.notes"><i class="fa fa-info-circle"></i></a>
+                            </td>
+                            <!-- visible when comment exisits -->
                         </tr>
                     </tbody>        
                 </table>
