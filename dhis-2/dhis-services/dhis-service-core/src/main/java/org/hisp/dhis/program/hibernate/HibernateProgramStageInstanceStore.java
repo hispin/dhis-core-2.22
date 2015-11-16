@@ -37,7 +37,6 @@ import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.ProgramInstance;
-import org.hisp.dhis.program.ProgramInstanceService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.program.ProgramStageInstanceStore;
@@ -62,17 +61,6 @@ public class HibernateProgramStageInstanceStore
     extends HibernateIdentifiableObjectStore<ProgramStageInstance>
     implements ProgramStageInstanceStore
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
-    private ProgramInstanceService programInstanceService;
-
-    public void setProgramInstanceService( ProgramInstanceService programInstanceService )
-    {
-        this.programInstanceService = programInstanceService;
-    }
-
     @Autowired
     private TrackedEntityInstanceReminderService reminderService;
 
