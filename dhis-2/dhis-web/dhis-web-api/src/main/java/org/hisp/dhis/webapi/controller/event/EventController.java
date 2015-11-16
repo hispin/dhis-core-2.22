@@ -28,6 +28,7 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -35,6 +36,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.events.event.DataValue;
 import org.hisp.dhis.dxf2.events.event.Event;
 import org.hisp.dhis.dxf2.events.event.EventSearchParams;
 import org.hisp.dhis.dxf2.events.event.EventService;
@@ -49,7 +51,9 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.utils.InputUtils;
+import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.dxf2.webmessage.responses.FileResourceWebMessageResponse;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.program.Program;
@@ -58,12 +62,14 @@ import org.hisp.dhis.program.ProgramStatus;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.scheduling.Scheduler;
+import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,12 +78,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.hisp.dhis.fileresource.FileResource;
+import org.hisp.dhis.fileresource.FileResourceDomain;
+import org.hisp.dhis.fileresource.FileResourceService;
+import org.hisp.dhis.fileresource.FileResourceStorageStatus;
+
+import com.google.common.io.ByteSource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -129,6 +143,9 @@ public class EventController
 
     @Autowired
     private ProgramStageInstanceService programStageInstanceService;
+    
+    @Autowired
+    private FileResourceService fileResourceService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -332,6 +349,124 @@ public class EventController
         return metaData;
     }
 
+    @RequestMapping( value = "/files", method = RequestMethod.GET)
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
+    public void getEventDataValueFile( @RequestParam String eventUid, @RequestParam String dataElementUid, HttpServletResponse response, HttpServletRequest request ) throws Exception
+    {
+        Event event = eventService.getEvent( eventUid );
+        
+        if ( event == null )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + eventUid ) );
+        }
+
+        DataElement dataElement = dataElementService.getDataElement( dataElementUid );
+
+        if ( dataElement == null )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "DataElement not found for ID " + dataElementUid ) );
+        }
+        
+        if ( !dataElement.isFileType() )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "DataElement must be of type file" ) );
+        }        
+        
+        // ---------------------------------------------------------------------
+        // Get file resource
+        // ---------------------------------------------------------------------
+
+        String uid = null;
+        
+        for ( DataValue value : event.getDataValues() )
+        {
+            if ( value.getDataElement() == dataElement.getUid() )
+            {
+                uid = value.getValue();
+                break;
+            }            
+        }
+        
+        if( uid == null)
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "DataElement must be of type file" ) );
+        }
+        
+
+        FileResource fileResource = fileResourceService.getFileResource( uid );
+
+        if ( fileResource == null || fileResource.getDomain() != FileResourceDomain.DATA_VALUE )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "A data value file resource with id " + uid + " does not exist." ) );
+        }
+
+        if ( fileResource.getStorageStatus() != FileResourceStorageStatus.STORED )
+        {
+            // Special case:
+            //  The FileResource exists and has been tied to this DataValue, however, the underlying file
+            //  content is still not stored to the (most likely external) file store provider.
+
+            // HTTP 409, for lack of a more suitable status code
+            WebMessage webMessage = WebMessageUtils.conflict( "The content is being processed and is not available yet. Try again later.",
+                "The content requested is in transit to the file store and will be available at a later time." );
+            webMessage.setResponse( new FileResourceWebMessageResponse( fileResource ) );
+
+            throw new WebMessageException( webMessage );
+        }
+
+        ByteSource content = fileResourceService.getFileResourceContent( fileResource );
+
+        if ( content == null )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "The referenced file could not be found" ) );
+        }
+
+        // ---------------------------------------------------------------------
+        // Attempt to build signed URL request for content and redirect
+        // ---------------------------------------------------------------------
+
+        URI signedGetUri = fileResourceService.getSignedGetFileResourceContentUri( uid );
+
+        if ( signedGetUri != null )
+        {
+            response.setStatus( HttpServletResponse.SC_TEMPORARY_REDIRECT );
+            response.setHeader( HttpHeaders.LOCATION, signedGetUri.toASCIIString() );
+
+            return;
+        }
+
+        // ---------------------------------------------------------------------
+        // Build response and return
+        // ---------------------------------------------------------------------
+
+        response.setContentType( fileResource.getContentType() );
+        response.setContentLength( Math.round( fileResource.getContentLength() ) );
+        response.setHeader( HttpHeaders.CONTENT_DISPOSITION, "filename=" + fileResource.getName() );
+
+        // ---------------------------------------------------------------------
+        // Request signing is not available, stream content back to client
+        // ---------------------------------------------------------------------
+
+        InputStream inputStream = null;
+
+        try
+        {
+            inputStream = content.openStream();
+            IOUtils.copy( inputStream, response.getOutputStream() );
+        }
+        catch ( IOException e )
+        {
+            throw new WebMessageException( WebMessageUtils.error( "Failed fetching the file from storage",
+                "There was an exception when trying to fetch the file from the storage backend. " +
+                    "Depending on the provider the root cause could be network or file system related." ) );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( inputStream );
+        }
+        
+    }
+    
     // -------------------------------------------------------------------------
     // CREATE
     // -------------------------------------------------------------------------
