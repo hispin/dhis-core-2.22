@@ -216,7 +216,7 @@ public class AddDataElementAction
         LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
 
         valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
-        
+
         dataElement.setName( StringUtils.trimToNull( name ) );
         dataElement.setShortName( StringUtils.trimToNull( shortName ) );
         dataElement.setCode( StringUtils.trimToNull( code ) );

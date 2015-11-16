@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +78,9 @@ public class UpdateAttributeAction
         this.code = code;
     }
 
-    private String valueType;
+    private ValueType valueType;
 
-    public void setValueType( String valueType )
+    public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
     }
@@ -221,21 +222,13 @@ public class UpdateAttributeAction
 
         if ( attribute != null )
         {
-            if ( "option_set".equals( attribute.getValueType() ) )
-            {
-                OptionSet optionSet = optionService.getOptionSet( optionSetUid );
-
-                if ( optionSet == null )
-                {
-                    return INPUT;
-                }
-
-                attribute.setOptionSet( optionSet );
-            }
+            OptionSet optionSet = optionService.getOptionSet( optionSetUid );
+            valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
 
             attribute.setName( StringUtils.trimToNull( name ) );
             attribute.setCode( StringUtils.trimToNull( code ) );
-            attribute.setValueType( StringUtils.trimToNull( valueType ) );
+            attribute.setValueType( valueType );
+            attribute.setOptionSet( optionSet );
             attribute.setMandatory( mandatory );
             attribute.setDataElementAttribute( dataElementAttribute );
             attribute.setDataElementGroupAttribute( dataElementGroupAttribute );

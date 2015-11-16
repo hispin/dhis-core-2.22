@@ -37,6 +37,7 @@ import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.option.OptionSet;
@@ -51,7 +52,7 @@ import java.util.Set;
 public class Attribute
     extends BaseIdentifiableObject
 {
-    private String valueType;
+    private ValueType valueType;
 
     private boolean dataElementAttribute;
 
@@ -98,7 +99,7 @@ public class Attribute
 
     }
 
-    public Attribute( String name, String valueType )
+    public Attribute( String name, ValueType valueType )
     {
         this.name = name;
         this.valueType = valueType;
@@ -107,12 +108,12 @@ public class Attribute
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getValueType()
+    public ValueType getValueType()
     {
         return valueType;
     }
 
-    public void setValueType( String valueType )
+    public void setValueType( ValueType valueType )
     {
         this.valueType = valueType;
     }
