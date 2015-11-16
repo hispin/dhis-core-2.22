@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller.organisationunit;
 
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.filter.FilterUtils;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -94,7 +95,8 @@ public class OrganisationUnitLocationController
                         if ( orgunitGroupSet.getUid().compareTo( orgUnitGroupSetId ) == 0 )
                         {
                             AttributeValue attributeValue = new AttributeValue();
-                            attributeValue.setAttribute( new Attribute( ORGUNIGROUP_SYMBOL, ORGUNIGROUP_SYMBOL ) );
+                            // attributeValue.setAttribute( new Attribute( ORGUNIGROUP_SYMBOL, ORGUNIGROUP_SYMBOL ) );
+                            attributeValue.setAttribute( new Attribute( ORGUNIGROUP_SYMBOL, ValueType.TEXT ) );
                             attributeValue.setValue( organisationUnitGroup.getSymbol() );
                             attributeValues.add( attributeValue );
                         }
