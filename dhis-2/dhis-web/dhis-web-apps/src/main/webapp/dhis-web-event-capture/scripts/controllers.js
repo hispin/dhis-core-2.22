@@ -12,6 +12,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $modal,
                 $translate,
                 $anchorScroll,
+                $window,
                 orderByFilter,
                 SessionStorageService,
                 Paginator,
@@ -61,7 +62,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.currentElement = {id: '', update: false};
     $scope.optionSets = [];
     $scope.proceedSelection = true;
-    $scope.formUnsaved = false;    
+    $scope.formUnsaved = false;
+    $scope.fileNames = {};
     
     //notes
     $scope.note = {};
@@ -1091,5 +1093,25 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             return '';
         }
         return 'form-control';
+    };
+    
+    $scope.getClickFunction = function(dhis2Event, column){
+        
+        if(column.id === 'comment'){
+            return "showNotes(" + dhis2Event + ")"; 
+        }
+        else{
+            if(dhis2Event.event ===$scope.currentEvent.evnet){
+                return '';
+            }
+            else{
+                return "showEventList(" + dhis2Event + ")"; 
+            }
+        }        
+        return '';        
+    };
+    
+    $scope.downloadFile = function(eventUid, dataElementUid) {        
+        $window.open('../api/events/files?eventUid=' + eventUid +'&dataElementUid=' + dataElementUid, '_blank', '');  
     };
 });
