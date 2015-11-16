@@ -56,7 +56,7 @@
                                      ng-click="showDataEntry(dhis2Event, false)">
                                     {{dhis2Event.orgUnitName}}<br/>
                                     {{dhis2Event.sortingDate}}<br>
-                                    <span ng-if="eventsByStage[stage.id].length > 1 && !filterEvents">[{{$index + 1}}]</span>
+                                    <span ng-if="eventsByStage[stage.id].length > 1 && !filterEvents">[{{eventsByStage[stage.id].length - $index}}]</span>
                                 </div>
                             </div>
                             <span ng-if="eventsByStage[stage.id].length > 1 && filterEvents">
