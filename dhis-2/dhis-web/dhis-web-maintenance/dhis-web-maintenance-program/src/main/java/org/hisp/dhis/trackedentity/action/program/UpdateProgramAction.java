@@ -354,7 +354,7 @@ public class UpdateProgramAction
             {
                 TrackedEntityAttribute attribute = trackedEntityAttributeService.getTrackedEntityAttribute( Integer
                     .parseInt( ids[1] ) );
-                ProgramTrackedEntityAttribute programAttribute = new ProgramTrackedEntityAttribute( attribute,
+                ProgramTrackedEntityAttribute programAttribute = new ProgramTrackedEntityAttribute( program, attribute,
                     personDisplayNames.get( index ), mandatory.get( index ), allowFutureDate.get( index ) );
                 program.getProgramAttributes().add( programAttribute );
             }

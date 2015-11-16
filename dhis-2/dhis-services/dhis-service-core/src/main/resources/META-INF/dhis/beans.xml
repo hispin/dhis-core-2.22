@@ -470,9 +470,16 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="org.hisp.dhis.program.ProgramExpressionStore" class="org.hisp.dhis.hibernate.HibernateGenericStore">
+  <bean id="org.hisp.dhis.program.ProgramExpressionStore" 
+    class="org.hisp.dhis.hibernate.HibernateGenericStore">
     <property name="clazz" value="org.hisp.dhis.program.ProgramExpression" />
     <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
+  <bean id="org.hisp.dhis.program.ProgramTrackedEntityAttributeStore" 
+    class="org.hisp.dhis.program.hibernate.HibernateProgramTrackedEntityAttributeStore">
+    <property name="clazz" value="org.hisp.dhis.program.ProgramTrackedEntityAttribute" />
+    <property name="sessionFactory" ref="sessionFactory" />      
   </bean>
 
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityInstanceStore"
