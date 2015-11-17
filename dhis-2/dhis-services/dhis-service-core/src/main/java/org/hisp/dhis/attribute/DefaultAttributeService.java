@@ -28,17 +28,16 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
+import org.hisp.dhis.i18n.I18nService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hisp.dhis.common.GenericStore;
-import org.hisp.dhis.i18n.I18nService;
-import org.springframework.transaction.annotation.Transactional;
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 /**
- * @author mortenoh
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @Transactional
 public class DefaultAttributeService
@@ -55,9 +54,9 @@ public class DefaultAttributeService
         this.attributeStore = attributeStore;
     }
 
-    private GenericStore<AttributeValue> attributeValueStore;
+    private AttributeValueStore attributeValueStore;
 
-    public void setAttributeValueStore( GenericStore<AttributeValue> attributeValueStore )
+    public void setAttributeValueStore( AttributeValueStore attributeValueStore )
     {
         this.attributeValueStore = attributeValueStore;
     }
