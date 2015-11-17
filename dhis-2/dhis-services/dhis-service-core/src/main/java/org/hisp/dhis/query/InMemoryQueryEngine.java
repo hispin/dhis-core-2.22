@@ -29,8 +29,6 @@ package org.hisp.dhis.query;
  */
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.schema.Property;
@@ -47,10 +45,9 @@ import java.util.stream.Collectors;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class InMemoryQueryEngine<T extends IdentifiableObject> implements QueryEngine
+public class InMemoryQueryEngine<T extends IdentifiableObject> 
+    implements QueryEngine
 {
-    private static final Log log = LogFactory.getLog( InMemoryQueryEngine.class );
-
     @Autowired
     private SchemaService schemaService;
 

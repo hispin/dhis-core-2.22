@@ -28,8 +28,12 @@ package org.hisp.dhis.query;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
@@ -40,22 +44,15 @@ import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Implementation of QueryEngine that uses Hibernate Criteria and
  * supports idObjects only.
  *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class CriteriaQueryEngine<T extends IdentifiableObject> implements QueryEngine
+public class CriteriaQueryEngine<T extends IdentifiableObject> 
+    implements QueryEngine<T>
 {
-    private static final Log log = LogFactory.getLog( CriteriaQueryEngine.class );
-
     @Autowired
     private final List<HibernateGenericStore<T>> hibernateGenericStores = new ArrayList<>();
 
