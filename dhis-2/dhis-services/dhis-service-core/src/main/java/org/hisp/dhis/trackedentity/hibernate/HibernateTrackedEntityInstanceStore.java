@@ -39,7 +39,6 @@ import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
-import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.commons.util.SqlHelper;
 import org.hisp.dhis.event.EventStatus;
@@ -342,11 +341,6 @@ public class HibernateTrackedEntityInstanceStore
             }
         }
 
-        if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS ) )
-        {
-            sql += "left join _orgunitstructure ous on tei.organisationunitid = ous.organisationunitid ";
-        }
-
         if ( params.hasTrackedEntity() )
         {
             sql += hlp.whereAnd() + " tei.trackedentityid = " + params.getTrackedEntity().getId() + " ";
@@ -358,12 +352,9 @@ public class HibernateTrackedEntityInstanceStore
         }
         else if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS ) )
         {
-            SetMap<Integer, OrganisationUnit> levelOuMap = params.getLevelOrgUnitMap();
-
-            for ( Integer level : levelOuMap.keySet() )
+            for ( OrganisationUnit unit : params.getOrganisationUnits() )
             {
-                sql += hlp.whereAnd() + " ous.idlevel" + level + " in ("
-                    + getCommaDelimitedString( getIdentifiers( levelOuMap.get( level ) ) ) + ") or ";
+                sql += hlp.whereAnd() + " ou.path like '" + unit.getPath() + "%' or ";
             }
 
             sql = removeLastOr( sql );

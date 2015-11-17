@@ -38,7 +38,6 @@ import java.util.Set;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
-import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
@@ -238,21 +237,6 @@ public class TrackedEntityInstanceQueryParams
         }
     }
     
-    /**
-     * Returns a mapping between level and organisation units.
-     */
-    public SetMap<Integer, OrganisationUnit> getLevelOrgUnitMap()
-    {
-        SetMap<Integer, OrganisationUnit> setMap = new SetMap<>();
-        
-        for ( OrganisationUnit ou : organisationUnits )
-        {
-            setMap.putValue( ou.getLevel(), ou );
-        }
-        
-        return setMap;
-    }
-
     /**
      * Add the given attributes to this params if they are not already present.
      */
