@@ -30,13 +30,15 @@ package org.hisp.dhis.attribute;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.ValueType;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
 public class AttributeValueStoreTest
     extends DhisSpringTest
 {
@@ -46,35 +48,34 @@ public class AttributeValueStoreTest
     @Autowired
     private AttributeStore attributeStore;
 
-    private AttributeValue attributeValue1;
+    private AttributeValue avA;
+    private AttributeValue avB;
 
-    private AttributeValue attributeValue2;
-
-    private Attribute attribute1;
+    private Attribute atA;
 
     @Override
     protected void setUpTest()
     {
-        attribute1 = new Attribute();
-        attribute1.setName( "attribute_simple" );
-        attribute1.setValueType( ValueType.TEXT );
+        atA = new Attribute();
+        atA.setName( "attribute_simple" );
+        atA.setValueType( ValueType.TEXT );
 
-        attributeStore.save( attribute1 );
+        attributeStore.save( atA );
 
-        attributeValue1 = new AttributeValue( "value 1" );
-        attributeValue1.setAttribute( attribute1 );
+        avA = new AttributeValue( "value 1" );
+        avA.setAttribute( atA );
 
-        attributeValue2 = new AttributeValue( "value 2" );
-        attributeValue2.setAttribute( attribute1 );
+        avB = new AttributeValue( "value 2" );
+        avB.setAttribute( atA );
 
-        attributeValueStore.save( attributeValue1 );
-        attributeValueStore.save( attributeValue2 );
+        attributeValueStore.save( avA );
+        attributeValueStore.save( avB );
     }
 
     @Test
     public void testGetAttribute()
     {
-        AttributeValue av = attributeValueStore.get( attributeValue1.getId() );
+        AttributeValue av = attributeValueStore.get( avA.getId() );
 
         assertNotNull( av );
         assertNotNull( av.getAttribute() );
@@ -83,7 +84,7 @@ public class AttributeValueStoreTest
     @Test
     public void testGetValue()
     {
-        AttributeValue av = attributeValueStore.get( attributeValue1.getId() );
+        AttributeValue av = attributeValueStore.get( avA.getId() );
 
         assertNotNull( av );
         assertEquals( "value 1", av.getValue() );
