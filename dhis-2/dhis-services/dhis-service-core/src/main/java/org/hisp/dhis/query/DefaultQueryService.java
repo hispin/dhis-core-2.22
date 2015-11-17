@@ -40,7 +40,8 @@ import java.util.List;
  *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class DefaultQueryService implements QueryService
+public class DefaultQueryService 
+    implements QueryService
 {
     private static final Log log = LogFactory.getLog( DefaultQueryService.class );
 
@@ -54,7 +55,6 @@ public class DefaultQueryService implements QueryService
     private InMemoryQueryEngine<? extends IdentifiableObject> inMemoryQueryEngine;
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public List<? extends IdentifiableObject> query( Query query )
     {
         return queryObjects( query );
