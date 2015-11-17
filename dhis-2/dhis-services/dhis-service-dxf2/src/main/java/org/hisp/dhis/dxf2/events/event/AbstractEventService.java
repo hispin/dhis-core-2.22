@@ -85,6 +85,7 @@ import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -504,6 +505,8 @@ public abstract class AbstractEventService
         OrganisationUnitSelectionMode orgUnitSelectionMode, String trackedEntityInstance, Date startDate, Date endDate,
         EventStatus status, Date lastUpdated, DataElementCategoryOptionCombo attributeCoc, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean includeAttributes )
     {
+        UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
+        
         EventSearchParams params = new EventSearchParams();
 
         Program pr = programService.getProgram( program );
@@ -526,6 +529,24 @@ public abstract class AbstractEventService
         {
             throw new IllegalQueryException( "Org unit is specified but does not exist: " + orgUnit );
         }
+        
+        if( ou != null && !organisationUnitService.isInUserHierarchy( ou ) )
+        {                
+            if( !userCredentials.isSuper() && !userCredentials.isAuthorized( "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS" ) ) 
+            {
+                throw new IllegalQueryException( "User has no access to organisation unit: " + ou.getUid() );
+            }
+        }
+        
+        if( pr == null &&  !userCredentials.isSuper() && userCredentials.getAllPrograms().size() == 0 )
+        {
+            throw new IllegalQueryException( "User has no access to programs");
+        }
+        
+        if( pr != null && userCredentials.getAllPrograms().contains( pr ) )
+        {
+            throw new IllegalQueryException( "User has no access to program: " + pr.getUid() );
+        }        
 
         TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
 
@@ -864,12 +885,31 @@ public abstract class AbstractEventService
         event.setDueDate( DateUtils.getLongDateString( programStageInstance.getDueDate() ) );
         event.setStoredBy( programStageInstance.getCompletedUser() );
 
-        if ( programStageInstance.getOrganisationUnit() != null )
-        {
-            event.setOrgUnit( programStageInstance.getOrganisationUnit().getUid() );
+        UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
+        
+        OrganisationUnit ou = programStageInstance.getOrganisationUnit();
+        
+        if ( ou != null )
+        {             
+            if( !organisationUnitService.isInUserHierarchy( ou ) )
+            {                
+                if( !userCredentials.isSuper()  && !userCredentials.isAuthorized( "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS" ) ) 
+                {
+                    throw new IllegalQueryException( "User has no access to organisation unit: " + ou.getUid() );
+                }
+            }
+            
+            event.setOrgUnit( ou.getUid() );
         }
-
-        event.setProgram( programStageInstance.getProgramInstance().getProgram().getUid() );
+        
+        Program program = programStageInstance.getProgramInstance().getProgram();
+        
+        if( !userCredentials.isSuper() && !userCredentials.getAllPrograms().contains( program ) )
+        {
+            throw new IllegalQueryException( "User has no access to program: " + program.getUid() );
+        }
+        
+        event.setProgram( program.getUid() );        
         event.setEnrollment( programStageInstance.getProgramInstance().getUid() );
         event.setProgramStage( programStageInstance.getProgramStage().getUid() );
 
@@ -1278,5 +1318,5 @@ public abstract class AbstractEventService
     private DataElement getDataElement( String dataElementId )
     {
         return dataElementCache.get( dataElementId, new IdentifiableObjectCallable<>( manager, DataElement.class, dataElementId ) );
-    }
+    }    
 }
