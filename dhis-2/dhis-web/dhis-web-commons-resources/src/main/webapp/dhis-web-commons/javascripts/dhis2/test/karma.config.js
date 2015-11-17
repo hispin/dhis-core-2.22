@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = function karmaConfigHandler(config) {
     config.set({
         browsers: [ 'PhantomJS' ], // run in Headless browser PhantomJS
@@ -18,6 +20,7 @@ module.exports = function karmaConfigHandler(config) {
         preprocessors: {
             'tests.webpack.js': [ 'webpack', 'sourcemap' ], // preprocess with webpack and our sourcemap loader
             '../dhis2.angular.*.js': ['coverage'],
+            // '../views/left-bar.html': ['ng-html2js'], // Example for transforming html files to be angular modules that are cached
         },
         reporters: [ 'dots', 'coverage' ], // report results in this format
         coverageReporter: {
@@ -36,6 +39,17 @@ module.exports = function karmaConfigHandler(config) {
                 ],
             },
         },
+
+        ngHtml2JsPreprocessor: {
+            cacheIdFromPath: function(filepath) {
+                return filepath.replace(path.normalize(__dirname + '/..') + '/', '');
+            },
+
+            moduleName: function (htmlPath, originalPath) {
+                return htmlPath;
+            }
+        },
+
         webpackServer: {
             noInfo: true, // please don't spam the console when running in karma!
         },
