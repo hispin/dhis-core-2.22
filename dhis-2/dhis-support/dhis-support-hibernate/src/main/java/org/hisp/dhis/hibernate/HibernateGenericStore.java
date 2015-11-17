@@ -42,6 +42,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.common.AuditLogUtil;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.GenericStore;
@@ -52,6 +53,8 @@ import org.hisp.dhis.hibernate.exception.DeleteAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
 import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.interpretation.Interpretation;
+import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaService;
 import org.hisp.dhis.security.acl.AccessStringHelper;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -88,6 +91,9 @@ public class HibernateGenericStore<T>
 
     @Autowired
     protected CurrentUserService currentUserService;
+
+    @Autowired
+    protected SchemaService schemaService;
 
     /**
      * Allows injection (e.g. by a unit test)
@@ -515,6 +521,24 @@ public class HibernateGenericStore<T>
         return ((Number) getCriteria()
             .setProjection( Projections.countDistinct( "id" ) )
             .uniqueResult()).intValue();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public T getByAttribute( Attribute attribute )
+    {
+        Schema schema = schemaService.getDynamicSchema( getClazz() );
+
+        if ( schema == null )
+        {
+            return null;
+        }
+
+        Criteria criteria = getCriteria();
+        criteria.createAlias( "attributeValues", "av" );
+        criteria.add( Restrictions.eq( "av.attribute", attribute ) );
+
+        return (T) criteria.uniqueResult();
     }
 
     //----------------------------------------------------------------------------------------------------------------
