@@ -35,33 +35,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
 public class AttributeStoreTest
     extends DhisSpringTest
 {
     @Autowired
     private AttributeStore attributeStore;
 
-    private Attribute attribute1;
-
-    private Attribute attribute2;
+    private Attribute atA;
+    private Attribute atB;
 
     @Override
     protected void setUpTest()
     {
-        attribute1 = new Attribute();
-        attribute1.setName( "attribute_simple" );
-        attribute1.setValueType( ValueType.TEXT );
-        attribute1.setIndicatorAttribute( true );
-        attribute1.setDataElementAttribute( true );
+        atA = new Attribute();
+        atA.setName( "attribute_simple" );
+        atA.setValueType( ValueType.TEXT );
+        atA.setIndicatorAttribute( true );
+        atA.setDataElementAttribute( true );
 
-        attribute2 = new Attribute();
-        attribute2.setName( "attribute_with_options" );
-        attribute2.setValueType( ValueType.TEXT );
-        attribute2.setOrganisationUnitAttribute( true );
-        attribute2.setDataElementAttribute( true );
+        atB = new Attribute();
+        atB.setName( "attribute_with_options" );
+        atB.setValueType( ValueType.TEXT );
+        atB.setOrganisationUnitAttribute( true );
+        atB.setDataElementAttribute( true );
 
-        attributeStore.save( attribute1 );
-        attributeStore.save( attribute2 );
+        attributeStore.save( atA );
+        attributeStore.save( atB );
     }
 
     @Test

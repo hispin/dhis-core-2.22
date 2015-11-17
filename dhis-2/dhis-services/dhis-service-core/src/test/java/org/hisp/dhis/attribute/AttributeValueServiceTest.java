@@ -44,15 +44,14 @@ public class AttributeValueServiceTest
     @Autowired
     private AttributeService attributeService;
 
-    private AttributeValue attributeValue1;
-
-    private AttributeValue attributeValue2;
+    private AttributeValue avA;
+    private AttributeValue avB;
 
     @Override
     protected void setUpTest()
     {
-        attributeValue1 = new AttributeValue( "value 1" );
-        attributeValue2 = new AttributeValue( "value 2" );
+        avA = new AttributeValue( "value 1" );
+        avB = new AttributeValue( "value 2" );
 
         Attribute attribute1 = new Attribute( "attribute 1", ValueType.TEXT );
         Attribute attribute2 = new Attribute( "attribute 2", ValueType.TEXT );
@@ -60,65 +59,65 @@ public class AttributeValueServiceTest
         attributeService.addAttribute( attribute1 );
         attributeService.addAttribute( attribute2 );
 
-        attributeValue1.setAttribute( attribute1 );
-        attributeValue2.setAttribute( attribute2 );
+        avA.setAttribute( attribute1 );
+        avB.setAttribute( attribute2 );
 
-        attributeService.addAttributeValue( attributeValue1 );
-        attributeService.addAttributeValue( attributeValue2 );
+        attributeService.addAttributeValue( avA );
+        attributeService.addAttributeValue( avB );
     }
 
     @Test
     public void testAddAttributeValue()
     {
-        attributeValue1 = attributeService.getAttributeValue( attributeValue1.getId() );
-        attributeValue2 = attributeService.getAttributeValue( attributeValue2.getId() );
+        avA = attributeService.getAttributeValue( avA.getId() );
+        avB = attributeService.getAttributeValue( avB.getId() );
 
-        assertNotNull( attributeValue1 );
-        assertNotNull( attributeValue2 );
+        assertNotNull( avA );
+        assertNotNull( avB );
     }
 
     @Test
     public void testUpdateAttributeValue()
     {
-        attributeValue1.setValue( "updated value 1" );
-        attributeValue2.setValue( "updated value 2" );
+        avA.setValue( "updated value 1" );
+        avB.setValue( "updated value 2" );
 
-        attributeService.updateAttributeValue( attributeValue1 );
-        attributeService.updateAttributeValue( attributeValue2 );
+        attributeService.updateAttributeValue( avA );
+        attributeService.updateAttributeValue( avB );
 
-        attributeValue1 = attributeService.getAttributeValue( attributeValue1.getId() );
-        attributeValue2 = attributeService.getAttributeValue( attributeValue2.getId() );
+        avA = attributeService.getAttributeValue( avA.getId() );
+        avB = attributeService.getAttributeValue( avB.getId() );
 
-        assertNotNull( attributeValue1 );
-        assertNotNull( attributeValue2 );
+        assertNotNull( avA );
+        assertNotNull( avB );
 
-        assertEquals( "updated value 1", attributeValue1.getValue() );
-        assertEquals( "updated value 2", attributeValue2.getValue() );
+        assertEquals( "updated value 1", avA.getValue() );
+        assertEquals( "updated value 2", avB.getValue() );
     }
 
     @Test
     public void testDeleteAttributeValue()
     {
-        int attributeValueId1 = attributeValue1.getId();
-        int attributeValueId2 = attributeValue2.getId();
+        int attributeValueId1 = avA.getId();
+        int attributeValueId2 = avB.getId();
 
-        attributeService.deleteAttributeValue( attributeValue1 );
-        attributeService.deleteAttributeValue( attributeValue2 );
+        attributeService.deleteAttributeValue( avA );
+        attributeService.deleteAttributeValue( avB );
 
-        attributeValue1 = attributeService.getAttributeValue( attributeValueId1 );
-        attributeValue2 = attributeService.getAttributeValue( attributeValueId2 );
+        avA = attributeService.getAttributeValue( attributeValueId1 );
+        avB = attributeService.getAttributeValue( attributeValueId2 );
 
-        assertNull( attributeValue1 );
-        assertNull( attributeValue2 );
+        assertNull( avA );
+        assertNull( avB );
     }
 
     @Test
     public void testGetAttributeValue()
     {
-        attributeValue1 = attributeService.getAttributeValue( attributeValue1.getId() );
-        attributeValue2 = attributeService.getAttributeValue( attributeValue2.getId() );
+        avA = attributeService.getAttributeValue( avA.getId() );
+        avB = attributeService.getAttributeValue( avB.getId() );
 
-        assertNotNull( attributeValue1 );
-        assertNotNull( attributeValue2 );
+        assertNotNull( avA );
+        assertNotNull( avB );
     }
 }
