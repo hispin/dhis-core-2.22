@@ -1,5 +1,7 @@
 package org.hisp.dhis.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -97,9 +99,32 @@ public class BaseNameableObject
     }
 
     // -------------------------------------------------------------------------
-    // hashCode and equals
+    // Logic
     // -------------------------------------------------------------------------
 
+    /**
+     * Returns the display property indicated by the given display property. Falls 
+     * back to display name if display short name is null.
+     * 
+     * @param displayProperty the display property.
+     * @return the display property.
+     */
+    @JsonIgnore
+    public String getDisplayProperty( DisplayProperty displayProperty )
+    {
+        if ( DisplayProperty.SHORTNAME.equals( displayProperty ) && getDisplayShortName() != null )
+        {
+            return getDisplayShortName();
+        }
+        else
+        {
+            return getDisplayName();
+        }
+    }
+    
+    // -------------------------------------------------------------------------
+    // hashCode and equals
+    // -------------------------------------------------------------------------
 
     @Override
     public int hashCode()

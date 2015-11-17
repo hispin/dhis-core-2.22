@@ -45,4 +45,6 @@ public interface NameableObject
     String getDisplayShortName();
 
     String getDisplayDescription();
+    
+    String getDisplayProperty( DisplayProperty property );
 }
