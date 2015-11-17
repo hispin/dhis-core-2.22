@@ -30,6 +30,7 @@ package org.hisp.dhis.trackedentity;
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 
 import java.util.List;
 
@@ -207,4 +208,13 @@ public interface TrackedEntityAttributeService
      * @return null if valid, a message if not
      */
     String validateValueType( TrackedEntityAttribute trackedEntityAttribute, String value );
+    
+    /**
+     * Returns a tracked entity attribute.
+     * 
+     * @param programUid the program identifier.
+     * @param attributeUid the tracked entity attribute identifier.
+     * @return a tracked entity attribute.
+     */
+    ProgramTrackedEntityAttribute getProgramTrackedEntityAttribute( String programUid, String attributeUid );
 }
