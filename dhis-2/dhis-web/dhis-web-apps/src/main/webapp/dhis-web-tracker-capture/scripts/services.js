@@ -250,7 +250,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         var hasRole = false;
 
         if($.isEmptyObject(program.userRoles)){
-            return !hasRole;
+            return hasRole;
         }
 
         for(var i=0; i < userRoles.length && !hasRole; i++){
@@ -261,7 +261,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             if(!hasRole && userRoles[i].authorities && userRoles[i].authorities.indexOf('ALL') !== -1){
                 hasRole = true;
             }
-        }        
+        } 
         return hasRole;        
     };
     
@@ -607,7 +607,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Service for getting tracked entity instances */
-.factory('TEIService', function($http, $q, AttributesFactory) {
+.factory('TEIService', function($http, $q, AttributesFactory, DialogService ) {
     
     return {
         get: function(entityUid, optionSets, attributesById){
@@ -649,8 +649,16 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 url = url + '&paging=false';
             }
             
-            var promise = $http.get( url ).then(function(response){                                
+            var promise = $http.get( url ).then(function(response){
                 return response.data;
+            }, function(error){
+                if(error && error.status === 403){
+                    var dialogOptions = {
+                        headerText: 'error',
+                        bodyText: 'access_denied'
+                    };		
+                    DialogService.showDialog({}, dialogOptions);
+                }
             });            
             return promise;
         },                

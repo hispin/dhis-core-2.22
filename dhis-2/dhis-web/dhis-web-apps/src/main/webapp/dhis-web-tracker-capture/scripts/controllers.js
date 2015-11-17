@@ -152,8 +152,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 $scope.selectedProgram = response.selectedProgram;
                 $scope.trackedEntityList = null;
                 $scope.selectedSearchMode = $scope.searchMode.listAll;
-                $scope.processAttributes();                
-                //$scope.search($scope.searchMode.listAll);
+                $scope.processAttributes();
             });
         }        
     };
@@ -275,7 +274,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                                             $scope.attributeUrl.url,
                                             $scope.pager,
                                             true).then(function(data){            
-            if( data.metaData && data.metaData.pager ){
+            if( data && data.metaData && data.metaData.pager ){
                 $scope.pager = data.metaData.pager;
                 $scope.pager.toolBarDisplay = 5;
 
