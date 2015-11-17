@@ -32,8 +32,8 @@ import com.google.common.collect.Sets;
 import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -304,17 +304,25 @@ public class ValidationUtils
      */
     public static String dataValueIsValid( String value, DataElement dataElement )
     {
-        if ( value == null || value.trim().isEmpty() )
-        {
-            return null;
-        }
-
         if ( dataElement == null || dataElement.getValueType() == null )
         {
             return "data_element_or_type_null_or_empty";
         }
 
-        ValueType valueType = dataElement.getValueType();
+        return dataValueIsValid( value, dataElement.getValueType() );
+    }
+
+    public static String dataValueIsValid( String value, ValueType valueType )
+    {
+        if ( value == null || value.trim().isEmpty() )
+        {
+            return null;
+        }
+
+        if ( valueType == null )
+        {
+            return "data_element_or_type_null_or_empty";
+        }
 
         if ( value.length() > VALUE_MAX_LENGTH )
         {
@@ -380,10 +388,10 @@ public class ValidationUtils
         {
             return "value_not_valid_file_resource_uid";
         }
-        
-        if ( ValueType.COORDINATE == valueType && !MathUtils.isCoordinate( value )) 
+
+        if ( ValueType.COORDINATE == valueType && !MathUtils.isCoordinate( value ) )
         {
-            return "value_not_coordinate";        	
+            return "value_not_coordinate";
         }
 
         return null;
@@ -466,10 +474,10 @@ public class ValidationUtils
     {
         return value != null && HEX_COLOR_PATTERN.matcher( value ).matches();
     }
-    
+
     /**
      * Returns a string useful for substitution.
-     * 
+     *
      * @param valueType the value type.
      * @return the string.
      */
