@@ -79,12 +79,12 @@ public class UserCredentials
      * such as through OpenID or LDAP.
      */
     private boolean externalAuth;
-    
+
     /**
      * Unique OpenID.
      */
     private String openId;
-    
+
     /**
      * Unique LDAP distinguished name.
      */
@@ -453,7 +453,7 @@ public class UserCredentials
     {
         return ldapId != null && !ldapId.isEmpty();
     }
-    
+
     /**
      * Indicates whether a password is set.
      */
@@ -461,7 +461,7 @@ public class UserCredentials
     {
         return password != null;
     }
-        
+
     // -------------------------------------------------------------------------
     // hashCode and equals
     // -------------------------------------------------------------------------
@@ -747,10 +747,12 @@ public class UserCredentials
             if ( strategy.isReplace() )
             {
                 openId = userCredentials.getOpenId();
+                ldapId = userCredentials.getLdapId();
             }
             else if ( strategy.isMerge() )
             {
                 openId = userCredentials.getOpenId() == null ? openId : userCredentials.getOpenId();
+                ldapId = userCredentials.getLdapId() == null ? ldapId : userCredentials.getLdapId();
             }
 
             userAuthorityGroups.clear();
