@@ -28,6 +28,8 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.attribute.Attribute;
+
 import java.util.List;
 
 /**
@@ -123,4 +125,12 @@ public interface GenericStore<T>
     List<T> getAllNoAcl( int first, int max );
 
     int getCountNoAcl();
+
+    /**
+     * Get object where an attribute value of a certain attribute exists.
+     *
+     * @param attribute Attribute
+     * @return Object if object.attributeValues.attribute=attribute exists
+     */
+    T getByAttribute( Attribute attribute );
 }

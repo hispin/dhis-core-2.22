@@ -30,6 +30,9 @@ package org.hisp.dhis.dataelement;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
@@ -55,6 +58,9 @@ public class DataElementStoreTest
 
     @Autowired
     private DataSetService dataSetService;
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Tests
@@ -410,5 +416,27 @@ public class DataElementStoreTest
         assertTrue( dataElements.contains( dataElementC ) );
         assertTrue( dataElements.contains( dataElementD ) );
         assertTrue( dataElements.contains( dataElementF ) );
+    }
+
+    @Test
+    public void testDataElementFromAttribute()
+    {
+        Attribute attribute = new Attribute( "test", ValueType.TEXT );
+        attribute.setDataElementAttribute( true );
+        attributeService.addAttribute( attribute );
+
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+        dataElementStore.save( dataElementA );
+        dataElementStore.save( dataElementB );
+
+        AttributeValue attributeValue = new AttributeValue( "SOME VALUE", attribute );
+        attributeService.addAttributeValue( attributeValue );
+
+        dataElementA.getAttributeValues().add( attributeValue );
+        dataElementStore.update( dataElementA );
+
+        DataElement dataElement = dataElementStore.getByAttribute( attribute );
+        assertEquals( dataElement.getUid(), dataElementA.getUid() );
     }
 }

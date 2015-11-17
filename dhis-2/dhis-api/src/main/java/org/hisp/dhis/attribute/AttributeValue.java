@@ -82,6 +82,12 @@ public class AttributeValue
         this.value = value;
     }
 
+    public AttributeValue( String value, Attribute attribute )
+    {
+        this( value );
+        this.attribute = attribute;
+    }
+
     public void setAutoFields()
     {
         if ( created == null )
@@ -121,7 +127,7 @@ public class AttributeValue
     {
         return "AttributeValue{" +
             "id=" + id +
-            ", attribute=" + ( attribute != null ? attribute.getUid() : "" ) +
+            ", attribute=" + (attribute != null ? attribute.getUid() : "") +
             ", value='" + value + '\'' +
             '}';
     }
