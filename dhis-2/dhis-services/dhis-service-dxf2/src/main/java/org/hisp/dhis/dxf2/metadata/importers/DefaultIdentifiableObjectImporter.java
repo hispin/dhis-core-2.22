@@ -933,7 +933,6 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         private Set<DataElementOperand> compulsoryDataElementOperands = new HashSet<>();
         private Set<DataElementOperand> greyedFields = new HashSet<>();
         private List<DataElementOperand> dataElementOperands = new ArrayList<>();
-        private List<ProgramTrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
         private List<DataElementCategoryDimension> categoryDimensions = new ArrayList<>();
         private List<DataDimensionItem> dataDimensionItems = new ArrayList<>();
 
@@ -953,7 +952,6 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             compulsoryDataElementOperands = Sets.newHashSet( extractDataElementOperands( object, "compulsoryDataElementOperands" ) );
             greyedFields = Sets.newHashSet( extractDataElementOperands( object, "greyedFields" ) );
             dataElementOperands = Lists.newArrayList( extractDataElementOperands( object, "dataElementOperands" ) );
-            programTrackedEntityAttributes = extractProgramTrackedEntityAttributes( object );
             categoryDimensions = extractCategoryDimensions( object );
             dataDimensionItems = extractDataDimensionItems( object );
         }
@@ -973,8 +971,6 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                     deleteDataElementOperands( object, "dataElementOperands" );
                     deleteDataElementOperands( object, "greyedFields" );
                 }
-
-                deleteProgramTrackedEntityAttributes( object );
             }
         }
 
@@ -987,7 +983,6 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             saveDataElementOperands( object, "compulsoryDataElementOperands", compulsoryDataElementOperands );
             saveDataElementOperands( object, "greyedFields", greyedFields );
             saveDataElementOperands( object, "dataElementOperands", dataElementOperands );
-            saveProgramTrackedEntityAttributes( object, programTrackedEntityAttributes );
             saveCategoryDimensions( object, categoryDimensions );
             saveDataDimensionItems( object, dataDimensionItems );
         }
@@ -1243,27 +1238,6 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             }
 
             return programTrackedEntityAttributeSet;
-        }
-
-        private void deleteProgramTrackedEntityAttributes( T object )
-        {
-            extractProgramTrackedEntityAttributes( object );
-        }
-
-        private void saveProgramTrackedEntityAttributes( T object, Collection<ProgramTrackedEntityAttribute>
-            programTrackedEntityAttributes )
-        {
-            List<ProgramTrackedEntityAttribute> programTrackedEntityAttributeList = ReflectionUtils.invokeGetterMethod( "programAttributes", object );
-
-            if ( programTrackedEntityAttributeList != null )
-            {
-                for ( ProgramTrackedEntityAttribute programTrackedEntityAttribute : programTrackedEntityAttributes )
-                {
-                    Map<Field, Object> identifiableObjects = detachFields( programTrackedEntityAttribute );
-                    reattachFields( programTrackedEntityAttribute, identifiableObjects, user );
-                    programTrackedEntityAttributeList.add( programTrackedEntityAttribute );
-                }
-            }
         }
 
         private List<DataDimensionItem> extractDataDimensionItems( T object )
