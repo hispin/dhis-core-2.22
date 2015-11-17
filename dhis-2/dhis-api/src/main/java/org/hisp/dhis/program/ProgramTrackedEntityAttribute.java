@@ -34,15 +34,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
-
-import org.hisp.dhis.analytics.AggregationType;
-import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
-import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
@@ -50,7 +45,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
  */
 @JacksonXmlRootElement( localName = "programTrackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
 public class ProgramTrackedEntityAttribute
-    extends BaseDimensionalObject
+    extends BaseIdentifiableObject
 {
     private Program program;
     
@@ -96,28 +91,6 @@ public class ProgramTrackedEntityAttribute
         this.allowFutureDate = allowFutureDate;
     }
 
-    // -------------------------------------------------------------------------
-    // DimensionalObject
-    // -------------------------------------------------------------------------
-
-    @Override
-    public DimensionType getDimensionType()
-    {
-        return DimensionType.PROGRAM_ATTRIBUTE;
-    }
-    
-    @Override
-    public LegendSet getLegendSet()
-    {
-        return attribute.getLegendSet();
-    }
-
-    @Override
-    public AggregationType getAggregationType()
-    {
-        return attribute.getAggregationType();
-    }
-    
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------
