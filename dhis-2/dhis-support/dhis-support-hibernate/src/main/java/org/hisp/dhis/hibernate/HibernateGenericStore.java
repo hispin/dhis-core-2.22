@@ -529,7 +529,7 @@ public class HibernateGenericStore<T>
     {
         Schema schema = schemaService.getDynamicSchema( getClazz() );
 
-        if ( schema == null )
+        if ( schema == null || !schema.havePersistedProperty( "attributeValues" ) )
         {
             return null;
         }
