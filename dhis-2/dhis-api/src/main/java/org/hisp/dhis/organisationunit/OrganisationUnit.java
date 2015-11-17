@@ -70,8 +70,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.hisp.dhis.common.NameableObjectUtils.getDisplayProperty;
-
 /**
  * @author Kristian Nordal
  */
@@ -783,7 +781,7 @@ public class OrganisationUnit
         {
             for ( OrganisationUnit unit : organisationUnits )
             {
-                map.put( getDisplayProperty( unit, displayProperty ), unit.getParentNameGraph( roots, includeThis ) );
+                map.put( unit.getDisplayProperty( displayProperty ), unit.getParentNameGraph( roots, includeThis ) );
             }
         }
 

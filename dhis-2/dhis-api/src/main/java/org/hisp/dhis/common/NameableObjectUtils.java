@@ -204,7 +204,7 @@ public class NameableObjectUtils
         {
             for ( NameableObject object : objects )
             {
-                map.put( object.getUid(), getDisplayProperty( object, displayProperty ) );
+                map.put( object.getUid(), object.getDisplayProperty( displayProperty ) );
             }
         }
 
@@ -242,32 +242,7 @@ public class NameableObjectUtils
 
         return map;
     }
-    
-    /**
-     * Returns the property of the given object indicated by the given display
-     * property. Falls back to name if short name is null.
-     * 
-     * @param object the object to read the property from.
-     * @param displayProperty the display property to use.
-     * @return a property value.
-     */
-    public static <T extends NameableObject> String getDisplayProperty( T object, DisplayProperty displayProperty )
-    {
-        if ( object != null )
-        {
-            if ( DisplayProperty.SHORTNAME.equals( displayProperty ) && object.getDisplayShortName() != null )
-            {
-                return object.getDisplayShortName();
-            }
-            else
-            {
-                return object.getDisplayName();
-            }
-        }
         
-        return null;
-    }
-    
     /**
      * Returns a copy of the given list. Returns an empty list if the argument is null.
      * 

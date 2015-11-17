@@ -344,7 +344,7 @@ public class DefaultEventAnalyticsService
 
         if ( params.hasValueDimension() )
         {
-            map.put( params.getValue().getUid(), NameableObjectUtils.getDisplayProperty( params.getValue(), params.getDisplayProperty() ) );
+            map.put( params.getValue().getUid(), params.getValue().getDisplayProperty( params.getDisplayProperty() ) );
         }
         
         map.putAll( getUidNameMap( params.getItems(), params.getDisplayProperty() ) );
@@ -362,7 +362,7 @@ public class DefaultEventAnalyticsService
         
         for ( QueryItem item : queryItems )
         {
-            map.put( item.getItem().getUid(), NameableObjectUtils.getDisplayProperty( item.getItem(), displayProperty ) );
+            map.put( item.getItem().getUid(), item.getItem().getDisplayProperty( displayProperty ) );
         }
         
         return map;
@@ -390,7 +390,7 @@ public class DefaultEventAnalyticsService
                 map.putAll( NameableObjectUtils.getUidDisplayPropertyMap( objects, displayProperty ) );
             }
             
-            map.put( dimension.getDimension(), NameableObjectUtils.getDisplayProperty( dimension, displayProperty ) );
+            map.put( dimension.getDimension(), dimension.getDisplayProperty( displayProperty ) );
         }
 
         return map;
