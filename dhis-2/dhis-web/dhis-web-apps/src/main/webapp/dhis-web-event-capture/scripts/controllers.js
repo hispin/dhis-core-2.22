@@ -125,6 +125,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
         $scope.currentEventOriginialValue = {};
+        $scope.fileNames = {};
 
         $scope.eventRegistration = false;
         $scope.editGridColumns = false;
@@ -483,12 +484,14 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.currentElement.updated = false;        
         $scope.currentEvent = {};
         $scope.currentElement = {};
+        $scope.fileNames = {};
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
     };
     
     $scope.showEventRegistration = function(){        
         $scope.displayCustomForm = $scope.customForm ? true:false;        
         $scope.currentEvent = {};
+        $scope.fileNames = {};
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
         $scope.outerForm.submitted = false;
@@ -515,6 +518,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.showEditEventInFull = function(){       
         $scope.note = {};
+        $scope.fileNames = {};
         $scope.displayCustomForm = $scope.customForm ? true:false;
 
         $scope.currentEvent = ContextMenuSelectedItem.getSelectedItem();
