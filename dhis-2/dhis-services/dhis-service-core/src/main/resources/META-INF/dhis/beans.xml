@@ -1385,7 +1385,6 @@
         <value>dataelement</value>
         <value>dataelementgroup</value>
         <value>dataelementgroupset</value>
-        <value>sqlview</value>
         <value>dataelementcategory</value>
         <value>dataelementcategoryoption</value>
         <value>categorycombo</value>
@@ -1410,11 +1409,13 @@
         <value>programinstance</value>
         <value>programstageinstance</value>
         <value>programstagesection</value>
+        <value>program_attributes</value>
         <value>programvalidation</value>
         <value>programrule</value>
         <value>programruleaction</value>
         <value>programrulevariable</value>
         <value>relationshiptype</value>
+        <value>sqlview</value>
       </list>
     </property>
   </bean>
