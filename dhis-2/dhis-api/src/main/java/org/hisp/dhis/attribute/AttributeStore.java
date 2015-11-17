@@ -33,7 +33,7 @@ import java.util.List;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 
 /**
- * @author mortenoh
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public interface AttributeStore
     extends GenericIdentifiableObjectStore<Attribute>

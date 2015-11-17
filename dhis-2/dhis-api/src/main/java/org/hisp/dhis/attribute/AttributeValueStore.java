@@ -28,64 +28,12 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.common.ValueType;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hisp.dhis.common.GenericStore;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-public class AttributeValueStoreTest
-    extends DhisSpringTest
+/**
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
+public interface AttributeValueStore
+    extends GenericStore<AttributeValue>
 {
-    @Autowired
-    private AttributeValueStore attributeValueStore;
-
-    @Autowired
-    private AttributeStore attributeStore;
-
-    private AttributeValue attributeValue1;
-
-    private AttributeValue attributeValue2;
-
-    private Attribute attribute1;
-
-    @Override
-    protected void setUpTest()
-    {
-        attribute1 = new Attribute();
-        attribute1.setName( "attribute_simple" );
-        attribute1.setValueType( ValueType.TEXT );
-
-        attributeStore.save( attribute1 );
-
-        attributeValue1 = new AttributeValue( "value 1" );
-        attributeValue1.setAttribute( attribute1 );
-
-        attributeValue2 = new AttributeValue( "value 2" );
-        attributeValue2.setAttribute( attribute1 );
-
-        attributeValueStore.save( attributeValue1 );
-        attributeValueStore.save( attributeValue2 );
-    }
-
-    @Test
-    public void testGetAttribute()
-    {
-        AttributeValue av = attributeValueStore.get( attributeValue1.getId() );
-
-        assertNotNull( av );
-        assertNotNull( av.getAttribute() );
-    }
-
-    @Test
-    public void testGetValue()
-    {
-        AttributeValue av = attributeValueStore.get( attributeValue1.getId() );
-
-        assertNotNull( av );
-        assertEquals( "value 1", av.getValue() );
-    }
 }
