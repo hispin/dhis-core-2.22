@@ -389,8 +389,7 @@ public class EventController
         if( uid == null)
         {
             throw new WebMessageException( WebMessageUtils.conflict( "DataElement must be of type file" ) );
-        }
-        
+        }        
 
         FileResource fileResource = fileResourceService.getFileResource( uid );
 

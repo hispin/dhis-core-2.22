@@ -47,6 +47,7 @@ import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
@@ -273,6 +274,23 @@ public class UserCredentials
         return dataSets;
     }
 
+    
+    /**
+     * Returns a set of the programs for all user authority groups
+     * of this user credentials.
+     */
+    public Set<Program> getAllPrograms()
+    {
+        Set<Program> programs = new HashSet<>();
+
+        for ( UserAuthorityGroup group : userAuthorityGroups )
+        {
+            programs.addAll( group.getPrograms() );
+        }
+
+        return programs;
+    }
+    
     /**
      * Indicates whether this user credentials can issue the given user authority
      * group. First the given authority group must not be null. Second this
