@@ -28,15 +28,6 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.ValidationUtils.valueTypeIsValid;
-import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsZeroAndInsignificant;
-
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.AuditType;
@@ -54,6 +45,15 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsValid;
+import static org.hisp.dhis.system.util.ValidationUtils.dataValueIsZeroAndInsignificant;
+
 /**
  * @author Kristian Nordal
  * @author Halvdan Hoem Grelland
@@ -63,7 +63,7 @@ public class DefaultDataValueService
     implements DataValueService
 {
     private static final Log log = LogFactory.getLog( DefaultDataValueService.class );
-    
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -119,17 +119,17 @@ public class DefaultDataValueService
             log.info( "Data value is null" );
             return false;
         }
-        
+
         String result = dataValueIsValid( dataValue.getValue(), dataValue.getDataElement() );
-        
+
         if ( result != null )
         {
-            log.info( "Data value is not valid: " +  result );
+            log.info( "Data value is not valid: " + result );
             return false;
         }
-        
+
         boolean zeroInsignificant = dataValueIsZeroAndInsignificant( dataValue.getValue(), dataValue.getDataElement() );
-        
+
         if ( zeroInsignificant )
         {
             log.info( "Data value is zero and insignificant" );
@@ -144,7 +144,7 @@ public class DefaultDataValueService
         {
             dataValue.setCategoryOptionCombo( categoryService.getDefaultDataElementCategoryOptionCombo() );
         }
-        
+
         if ( dataValue.getAttributeOptionCombo() == null )
         {
             dataValue.setAttributeOptionCombo( categoryService.getDefaultDataElementCategoryOptionCombo() );
@@ -153,7 +153,7 @@ public class DefaultDataValueService
         dataValue.setCreated( new Date() );
 
         dataValueStore.addDataValue( dataValue );
-        
+
         return true;
     }
 
@@ -196,7 +196,7 @@ public class DefaultDataValueService
     public DataValue getDataValue( DataElement dataElement, Period period, OrganisationUnit source, DataElementCategoryOptionCombo categoryOptionCombo )
     {
         DataElementCategoryOptionCombo defaultOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
-        
+
         return dataValueStore.getDataValue( dataElement, period, source, categoryOptionCombo, defaultOptionCombo );
     }
 
@@ -206,15 +206,15 @@ public class DefaultDataValueService
     {
         return dataValueStore.getDataValue( dataElement, period, source, categoryOptionCombo, attributeOptionCombo );
     }
-    
+
     @Override
     public DataValue getDataValue( int dataElementId, int periodId, int sourceId, int categoryOptionComboId )
     {
         DataElementCategoryOptionCombo defaultOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
-        
+
         return dataValueStore.getDataValue( dataElementId, periodId, sourceId, categoryOptionComboId, defaultOptionCombo.getId() );
     }
-    
+
     // -------------------------------------------------------------------------
     // Collections of DataValues
     // -------------------------------------------------------------------------
@@ -311,23 +311,23 @@ public class DefaultDataValueService
 
         return dataValueStore.getDataValueCountLastUpdatedAfter( cal.getTime() );
     }
-    
+
     @Override
     public int getDataValueCountLastUpdatedAfter( Date date )
     {
         return dataValueStore.getDataValueCountLastUpdatedAfter( date );
     }
-    
+
     @Override
     public MapMap<Integer, DataElementOperand, Double> getDataValueMapByAttributeCombo( Collection<DataElement> dataElements, Date date,
-            OrganisationUnit source, Collection<PeriodType> periodTypes, DataElementCategoryOptionCombo attributeCombo,
-            Set<CategoryOptionGroup> cogDimensionConstraints, Set<DataElementCategoryOption> coDimensionConstraints,
-            MapMap<Integer, DataElementOperand, Date> lastUpdatedMap )
+        OrganisationUnit source, Collection<PeriodType> periodTypes, DataElementCategoryOptionCombo attributeCombo,
+        Set<CategoryOptionGroup> cogDimensionConstraints, Set<DataElementCategoryOption> coDimensionConstraints,
+        MapMap<Integer, DataElementOperand, Date> lastUpdatedMap )
     {
         return dataValueStore.getDataValueMapByAttributeCombo( dataElements, date, source, periodTypes, attributeCombo,
-               cogDimensionConstraints, coDimensionConstraints, lastUpdatedMap );
+            cogDimensionConstraints, coDimensionConstraints, lastUpdatedMap );
     }
-    
+
     @Override
     public Collection<DeflatedDataValue> getDeflatedDataValues( int dataElementId, int periodId, Collection<Integer> sourceIds )
     {
