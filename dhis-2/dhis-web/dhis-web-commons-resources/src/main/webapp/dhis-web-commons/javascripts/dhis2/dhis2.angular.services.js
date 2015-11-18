@@ -1057,6 +1057,8 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     
             variables = pushVariable(variables, 'enrollment_date', selectedEnrollment ? selectedEnrollment.enrollmentDate : '', null, 'DATE', selectedEnrollment ? true : false, 'V', '' );
             variables = pushVariable(variables, 'enrollment_id', selectedEnrollment ? selectedEnrollment.enrollment : '', null, 'TEXT',  selectedEnrollment ? true : false, 'V', '');
+            variables = pushVariable(variables, 'event_id', executingEvent ? executingEvent.event : '', null, 'TEXT',  executingEvent ? true : false, 'V', executingEvent ? executingEvent.eventDate : false);
+            
             variables = pushVariable(variables, 'incident_date', selectedEnrollment ? selectedEnrollment.incidentDate : '', null, 'DATE',  selectedEnrollment ? true : false, 'V', '');
             variables = pushVariable(variables, 'enrollment_count', selectedEnrollment ? 1 : 0, null, 'INTEGER', true, 'V', '');
             variables = pushVariable(variables, 'tei_count', selectedEnrollment ? 1 : 0, null, 'INTEGER', true, 'V', '');
@@ -1072,7 +1074,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 })
 
 /* service for executing tracker rules and broadcasting results */
-.service('TrackerRulesExecutionService', function(VariableService,DateUtils,CalendarService, $rootScope, $log, $filter, orderByFilter){
+.service('TrackerRulesExecutionService', function(VariableService, DateUtils, DHIS2EventFactory, CalendarService, $rootScope, $log, $filter, orderByFilter){
     
     var replaceVariables = function(expression, variablesHash){
         //replaces the variables in an expression with actual variable values.                
@@ -1194,7 +1196,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 var successfulExecution = false;
                 angular.forEach(dhisFunctions, function(dhisFunction){
                     //Select the function call, with any number of parameters inside single quotations, or number parameters witout quotations
-                    var regularExFunctionCall = new RegExp(dhisFunction.name + "\\( *(([\\d/\\*\\+\\-%]+)|( *'[^']*'))*( *, *(([\\d/\\*\\+\\-%]+)|'[^']*'))* *\\)",'g');
+                    var regularExFunctionCall = new RegExp(dhisFunction.name + "\\( *(([\\d/\\*\\+\\-%\.]+)|( *'[^']*'))*( *, *(([\\d/\\*\\+\\-%\.]+)|'[^']*'))* *\\)",'g');
                     var callsToThisFunction = expression.match(regularExFunctionCall);
                     angular.forEach(callsToThisFunction, function(callToThisFunction){
                         //Remove the function name and paranthesis:
@@ -1509,6 +1511,92 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         return answer;
     }; 
     
+    var determineValueType = function(value) {
+        var valueType = 'TEXT';
+        if(value === 'true' || value === 'false') {
+            valueType = 'BOOLEAN';
+        }
+        else if(angular.isNumber(value) || !isNaN(value)) {
+            if(value % 1 !== 0) {
+                valueType = 'NUMBER';
+            }
+            else {
+                valueType = 'INTEGER';
+            }
+        }
+        return valueType;
+    };
+    
+    var performCreateEventAction = function(effect, selectedEntity, selectedEnrollment, currentEvents){
+        var valArray = [];
+        if(effect.data) {
+            valArray = effect.data.split(',');
+            var dataValues = [];
+            angular.forEach(valArray, function(value) {
+                var valParts = value.split(':');
+                if(valParts && valParts.length >= 1) {
+                    var valId = valParts[0];
+                    var valVal = "";
+                    if(valParts.length > 1) {
+                        valVal = valParts[1];
+                    }
+                    var valueType = determineValueType(valVal);
+                                    
+                    var processedValue = VariableService.processValue(valVal, valueType);
+                    processedValue = $filter('trimquotes')(processedValue);
+                    dataValues.push({dataElement:valId,value:processedValue});
+                    dataValues[valId] = processedValue;
+                }
+            });
+
+            var valuesAlreadyExists = false;
+            angular.forEach(currentEvents, function(currentEvent) {
+                var misMatch = false;
+                angular.forEach(dataValues, function(value) {
+                    if(currentEvent[value.dataElement] !== dataValues[value.dataElement]) {
+                        misMatch = true;
+                    }
+                });
+                if(!misMatch) {
+                    //if no mismatches on this point, the exact same event already exists, and we dont create it.
+                    valuesAlreadyExists = true;
+                }
+            });
+
+            if(!valuesAlreadyExists) {
+                var eventDate = DateUtils.getToday();
+                var dueDate = DateUtils.getToday();
+
+                var newEvent = {
+                    trackedEntityInstance: selectedEnrollment.trackedEntityInstance,
+                    program: selectedEnrollment.program,
+                    programStage: effect.programStage.id,
+                    enrollment: selectedEnrollment.enrollment,
+                    orgUnit: selectedEnrollment.orgUnit,
+                    dueDate: dueDate,
+                    eventDate: eventDate,
+                    notes: [],
+                    dataValues: dataValues,
+                    status: 'ACTIVE',
+                    event: dhis2.util.uid()
+                };
+
+                DHIS2EventFactory.create(newEvent).then(function(result){
+                   $rootScope.$broadcast("eventcreated", { event:newEvent });
+                });
+                //1 event created
+                return 1;
+            }
+            else
+            {
+                //no events created
+                return 0;
+            }
+        } else {
+            $log.warn("Cannot create event with empty content.");
+        }
+    };
+    
     return {
         executeRules: function(allProgramRules, executingEvent, evs, allDataElements, selectedEntity, selectedEnrollment, flag ) {
             if(allProgramRules) {
@@ -1550,6 +1638,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     }
 
                     var updatedEffectsExits = false;
+                    var eventsCreated = 0;
 
                     angular.forEach(rules, function(rule) {
                         var ruleEffective = false;
@@ -1626,9 +1715,13 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect = ruleEffective;
                             }
 
-                            //In case the rule is of type "assign" and the rule is effective,
+                            //In case the rule is of type CREATEEVENT, run event creation:
+                            if($rootScope.ruleeffects[ruleEffectKey][action.id].action === "CREATEEVENT" && $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect){
+                                eventsCreated += performCreateEventAction($rootScope.ruleeffects[ruleEffectKey][action.id], selectedEntity, selectedEnrollment, evs.byStage[$rootScope.ruleeffects[ruleEffectKey][action.id].programStage.id]);
+                            }
+                            //In case the rule is of type "assign variable" and the rule is effective,
                             //the variable data result needs to be applied to the correct variable:
-                            if($rootScope.ruleeffects[ruleEffectKey][action.id].action === "ASSIGN" && $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect){
+                            else if($rootScope.ruleeffects[ruleEffectKey][action.id].action === "ASSIGN" && $rootScope.ruleeffects[ruleEffectKey][action.id].ineffect){
                                 //from earlier evaluation, the data portion of the ruleeffect now contains the value of the variable to be assign.
                                 //the content portion of the ruleeffect defines the name for the variable, when dollar is removed:
                                 var variabletoassign = $rootScope.ruleeffects[ruleEffectKey][action.id].content ?
@@ -1646,18 +1739,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                     //If the variable was actually updated, we assume that there is an updated ruleeffect somewhere:
                                     updatedEffectsExits = true;
                                     //Then we assign the new value:
-                                    var valueType = 'TEXT';
-                                    if(updatedValue === 'true' || updatedValue === 'false') {
-                                        valueType = 'BOOLEAN';
-                                    }
-                                    else if(angular.isNumber(updatedValue)) {
-                                        if(updatedValue % 1 !== 0) {
-                                            valueType = 'NUMBER';
-                                        }
-                                        else {
-                                            valueType = 'INTEGER';
-                                        }
-                                    }
+                                    var valueType = determineValueType(updatedValue);
                                     
                                     var processedValue = VariableService.processValue(updatedValue, valueType);
                                     
@@ -1676,7 +1758,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 
                     //Broadcast rules finished if there was any actual changes to the event.
                     if(updatedEffectsExits){
-                        $rootScope.$broadcast("ruleeffectsupdated", { event: ruleEffectKey });
+                        $rootScope.$broadcast("ruleeffectsupdated", { event: ruleEffectKey, eventsCreated:eventsCreated });
                     }
                 }
 
