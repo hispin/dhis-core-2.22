@@ -113,7 +113,6 @@
     <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
     <property name="indicatorService" ref="org.hisp.dhis.indicator.IndicatorService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
     <property name="userGroupService" ref="org.hisp.dhis.user.UserGroupService" />
     <property name="attributeService" ref="org.hisp.dhis.attribute.AttributeService" />
     <property name="legendService" ref="org.hisp.dhis.legend.LegendService" />
