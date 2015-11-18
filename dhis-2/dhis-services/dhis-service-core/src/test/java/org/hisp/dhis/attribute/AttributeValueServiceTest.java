@@ -30,6 +30,7 @@ package org.hisp.dhis.attribute;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -54,7 +55,9 @@ public class AttributeValueServiceTest
         avB = new AttributeValue( "value 2" );
 
         Attribute attribute1 = new Attribute( "attribute 1", ValueType.TEXT );
+        attribute1.setDataElementAttribute( true );
         Attribute attribute2 = new Attribute( "attribute 2", ValueType.TEXT );
+        attribute2.setDataElementAttribute( true );
 
         attributeService.addAttribute( attribute1 );
         attributeService.addAttribute( attribute2 );
@@ -62,8 +65,11 @@ public class AttributeValueServiceTest
         avA.setAttribute( attribute1 );
         avB.setAttribute( attribute2 );
 
-        attributeService.addAttributeValue( avA );
-        attributeService.addAttributeValue( avB );
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        attributeService.addAttributeValue( dataElementA, avA );
+        attributeService.addAttributeValue( dataElementB, avB );
     }
 
     @Test
@@ -82,8 +88,11 @@ public class AttributeValueServiceTest
         avA.setValue( "updated value 1" );
         avB.setValue( "updated value 2" );
 
-        attributeService.updateAttributeValue( avA );
-        attributeService.updateAttributeValue( avB );
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        attributeService.updateAttributeValue( dataElementA, avA );
+        attributeService.updateAttributeValue( dataElementB, avB );
 
         avA = attributeService.getAttributeValue( avA.getId() );
         avB = attributeService.getAttributeValue( avB.getId() );

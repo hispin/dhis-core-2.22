@@ -32,6 +32,7 @@ import net.sf.json.JSONObject;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.common.IdentifiableObject;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -47,14 +48,14 @@ public class AttributeUtils
     /**
      * Given a list of JSON formatted values (with keys: 'id' and 'value'), this
      * method will add/update {@link AttributeValue} into the given {@code Set}.
-     * 
+     *
      * @param jsonAttributeValues List of JSON formatted values, needs two keys:
-     *        id => ID of attribute this value belongs to value => Actual value
-     * @param attributeValues Set that will be updated
+     *                            id => ID of attribute this value belongs to value => Actual value
+     * @param attributeValues     Set that will be updated
      * @param attributeService
      */
-    public static void updateAttributeValuesFromJson( Set<AttributeValue> attributeValues,
-        List<String> jsonAttributeValues, AttributeService attributeService )
+    public static <T extends IdentifiableObject> void updateAttributeValuesFromJson( T object,
+        Set<AttributeValue> attributeValues, List<String> jsonAttributeValues, AttributeService attributeService )
     {
         attributeValues.clear();
 
@@ -86,15 +87,15 @@ public class AttributeUtils
                     else
                     {
                         attributeValueItem.setValue( attributeValue.getValue() );
-                        attributeService.updateAttributeValue( attributeValueItem );
+                        attributeService.updateAttributeValue( object, attributeValueItem );
                         attributeValue = null;
                     }
                 }
             }
 
-            if ( attributeValue != null && attributeValue.getValue() != null && !attributeValue.getValue().isEmpty())
+            if ( attributeValue != null && attributeValue.getValue() != null && !attributeValue.getValue().isEmpty() )
             {
-                attributeService.addAttributeValue( attributeValue );
+                attributeService.addAttributeValue( object, attributeValue );
                 attributeValues.add( attributeValue );
             }
         }

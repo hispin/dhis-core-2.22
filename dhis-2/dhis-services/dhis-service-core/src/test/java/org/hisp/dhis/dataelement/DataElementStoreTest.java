@@ -431,7 +431,7 @@ public class DataElementStoreTest
         dataElementStore.save( dataElementB );
 
         AttributeValue attributeValue = new AttributeValue( "SOME VALUE", attribute );
-        attributeService.addAttributeValue( attributeValue );
+        attributeService.addAttributeValue( dataElementA, attributeValue );
 
         dataElementA.getAttributeValues().add( attributeValue );
         dataElementStore.update( dataElementA );
@@ -453,7 +453,7 @@ public class DataElementStoreTest
         dataElementStore.save( dataElementB );
 
         AttributeValue attributeValue = new AttributeValue( "SOME VALUE", attribute );
-        attributeService.addAttributeValue( attributeValue );
+        attributeService.addAttributeValue( dataElementA, attributeValue );
 
         dataElementA.getAttributeValues().add( attributeValue );
         dataElementStore.update( dataElementA );

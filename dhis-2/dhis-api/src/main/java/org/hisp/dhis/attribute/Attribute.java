@@ -40,9 +40,27 @@ import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.dataelement.CategoryOptionGroup;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
+import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.option.OptionSet;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.trackedentity.TrackedEntity;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserGroup;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -389,6 +407,31 @@ public class Attribute
     {
         this.attributeValues = attributeValues;
     }
+
+    public List<Class<? extends IdentifiableObject>> getSupportedClasses()
+    {
+        List<Class<? extends IdentifiableObject>> klasses = new ArrayList<>();
+
+        if ( dataElementAttribute ) klasses.add( DataElement.class );
+        if ( dataElementGroupAttribute ) klasses.add( DataElementGroup.class );
+        if ( categoryOptionAttribute ) klasses.add( DataElementCategoryOption.class );
+        if ( categoryOptionGroupAttribute ) klasses.add( CategoryOptionGroup.class );
+        if ( indicatorAttribute ) klasses.add( Indicator.class );
+        if ( indicatorGroupAttribute ) klasses.add( IndicatorGroup.class );
+        if ( dataSetAttribute ) klasses.add( DataSet.class );
+        if ( organisationUnitAttribute ) klasses.add( OrganisationUnit.class );
+        if ( organisationUnitGroupAttribute ) klasses.add( OrganisationUnitGroup.class );
+        if ( organisationUnitGroupSetAttribute ) klasses.add( OrganisationUnitGroupSet.class );
+        if ( userAttribute ) klasses.add( User.class );
+        if ( userGroupAttribute ) klasses.add( UserGroup.class );
+        if ( programAttribute ) klasses.add( Program.class );
+        if ( programStageAttribute ) klasses.add( ProgramStage.class );
+        if ( trackedEntityAttribute ) klasses.add( TrackedEntity.class );
+        if ( trackedEntityAttributeAttribute ) klasses.add( TrackedEntityAttribute.class );
+
+        return klasses;
+    }
+
 
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )

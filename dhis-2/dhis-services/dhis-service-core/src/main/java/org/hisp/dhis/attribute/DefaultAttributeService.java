@@ -28,7 +28,11 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -67,6 +71,9 @@ public class DefaultAttributeService
     {
         i18nService = service;
     }
+
+    @Autowired
+    private SchemaService schemaService;
 
     // -------------------------------------------------------------------------
     // Attribute implementation
@@ -243,16 +250,29 @@ public class DefaultAttributeService
     // AttributeValue implementation
     // -------------------------------------------------------------------------
 
+
     @Override
-    public void addAttributeValue( AttributeValue attributeValue )
+    public <T extends IdentifiableObject> void addAttributeValue( T object, AttributeValue attributeValue )
     {
+        if ( object == null || attributeValue == null || attributeValue.getAttribute() == null ||
+            !attributeValue.getAttribute().getSupportedClasses().contains( object.getClass() ) )
+        {
+            return;
+        }
+
         attributeValue.setAutoFields();
         attributeValueStore.save( attributeValue );
     }
 
     @Override
-    public void updateAttributeValue( AttributeValue attributeValue )
+    public <T extends IdentifiableObject> void updateAttributeValue( T object, AttributeValue attributeValue )
     {
+        if ( object == null || attributeValue == null || attributeValue.getAttribute() == null ||
+            !attributeValue.getAttribute().getSupportedClasses().contains( object.getClass() ) )
+        {
+            return;
+        }
+
         attributeValue.setAutoFields();
         attributeValueStore.update( attributeValue );
     }
