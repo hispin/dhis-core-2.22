@@ -340,7 +340,7 @@ public class AddProgramAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( program.getAttributeValues(), jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( program, program.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         programService.updateProgram( program );

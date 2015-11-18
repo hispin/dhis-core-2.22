@@ -30,7 +30,6 @@ package org.hisp.dhis.dd.action.indicatorgroup;
 
 import com.google.common.collect.Lists;
 import com.opensymphony.xwork2.Action;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.indicator.Indicator;
@@ -115,7 +114,7 @@ public class UpdateIndicatorGroupAction
         indicatorGroup = indicatorService.getIndicatorGroup( id );
 
         indicatorGroup.setName( StringUtils.trimToNull( name ) );
-        
+
         Set<Indicator> members = new HashSet<>();
 
         for ( String id : inSelected )
@@ -125,7 +124,7 @@ public class UpdateIndicatorGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( indicatorGroup.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( indicatorGroup, indicatorGroup.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

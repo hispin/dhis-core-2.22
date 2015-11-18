@@ -248,7 +248,7 @@ public class UpdateIndicatorAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( indicator.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( indicator, indicator.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

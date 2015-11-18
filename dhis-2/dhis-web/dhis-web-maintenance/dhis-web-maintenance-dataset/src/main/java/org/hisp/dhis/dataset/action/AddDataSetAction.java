@@ -28,10 +28,8 @@ package org.hisp.dhis.dataset.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -47,8 +45,9 @@ import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserService;
 
-import com.google.common.collect.Lists;
-import com.opensymphony.xwork2.Action;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Kristian
@@ -108,7 +107,7 @@ public class AddDataSetAction
     {
         this.attributeService = attributeService;
     }
-    
+
     private LegendService legendService;
 
     public void setLegendService( LegendService legendService )
@@ -280,14 +279,14 @@ public class AddDataSetAction
     {
         this.jsonAttributeValues = jsonAttributeValues;
     }
-    
+
     private boolean mobile;
-    
+
     public void setMobile( boolean mobile )
     {
         this.mobile = mobile;
     }
-    
+
     // -------------------------------------------------------------------------
     // Action
     // -------------------------------------------------------------------------
@@ -299,7 +298,7 @@ public class AddDataSetAction
         PeriodType periodType = PeriodType.getPeriodTypeByName( frequencySelect );
 
         DataSet dataSet = new DataSet();
-        
+
         dataSet.setName( StringUtils.trimToNull( name ) );
         dataSet.setShortName( StringUtils.trimToNull( shortName ) );
         dataSet.setCode( StringUtils.trimToNull( code ) );
@@ -347,7 +346,7 @@ public class AddDataSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataSet.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( dataSet, dataSet.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

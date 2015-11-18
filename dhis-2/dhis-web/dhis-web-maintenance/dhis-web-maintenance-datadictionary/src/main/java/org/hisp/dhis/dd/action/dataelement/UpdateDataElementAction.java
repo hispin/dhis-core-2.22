@@ -285,7 +285,7 @@ public class UpdateDataElementAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElement.getAttributeValues(), jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( dataElement, dataElement.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         dataElementService.updateDataElement( dataElement );

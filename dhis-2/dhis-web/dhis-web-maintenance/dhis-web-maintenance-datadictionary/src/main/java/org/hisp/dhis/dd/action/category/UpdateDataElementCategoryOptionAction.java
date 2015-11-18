@@ -164,7 +164,7 @@ public class UpdateDataElementCategoryOptionAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( categoryOption.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( categoryOption, categoryOption.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

@@ -28,11 +28,7 @@ package org.hisp.dhis.oum.action.organisationunitgroupset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -40,7 +36,10 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.system.util.AttributeUtils;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -91,7 +90,7 @@ public class AddGroupSetAction
     {
         this.code = code;
     }
-    
+
     private boolean compulsory;
 
     public void setCompulsory( boolean compulsory )
@@ -129,13 +128,13 @@ public class AddGroupSetAction
         throws Exception
     {
         OrganisationUnitGroupSet groupSet = new OrganisationUnitGroupSet();
-        
+
         groupSet.setName( StringUtils.trimToNull( name ) );
         groupSet.setCode( StringUtils.trimToNull( code ) );
         groupSet.setDescription( StringUtils.trimToNull( description ) );
         groupSet.setCompulsory( compulsory );
         groupSet.setDataDimension( dataDimension );
-        
+
         Set<OrganisationUnitGroup> selectedMembers = new HashSet<>();
 
         if ( ougSelected != null )
@@ -148,8 +147,7 @@ public class AddGroupSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( groupSet.getAttributeValues(),
-                jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( groupSet, groupSet.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         groupSet.setOrganisationUnitGroups( selectedMembers );

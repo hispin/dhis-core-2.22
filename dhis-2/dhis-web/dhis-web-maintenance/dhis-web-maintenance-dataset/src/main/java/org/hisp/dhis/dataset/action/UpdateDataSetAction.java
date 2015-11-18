@@ -28,12 +28,8 @@ package org.hisp.dhis.dataset.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.commons.util.TextUtils.equalsNullSafe;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -52,8 +48,11 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroupService;
 
-import com.google.common.collect.Lists;
-import com.opensymphony.xwork2.Action;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.hisp.dhis.commons.util.TextUtils.equalsNullSafe;
 
 /**
  * @author Kristian
@@ -301,12 +300,12 @@ public class UpdateDataSetAction
     }
 
     private boolean mobile;
-    
+
     public void setMobile( boolean mobile )
     {
         this.mobile = mobile;
     }
-    
+
     // -------------------------------------------------------------------------
     // Action
     // -------------------------------------------------------------------------
@@ -338,13 +337,13 @@ public class UpdateDataSetAction
         dataSet.setExpiryDays( expiryDays );
         dataSet.setTimelyDays( timelyDays );
 
-        if ( !( equalsNullSafe( name, dataSet.getName() ) &&
+        if ( !(equalsNullSafe( name, dataSet.getName() ) &&
             periodType.equals( dataSet.getPeriodType() ) &&
             expiryDays == dataSet.getExpiryDays() &&
             openFuturePeriods == dataSet.getOpenFuturePeriods() &&
             dataElements.equals( dataSet.getDataElements() ) &&
             indicators.equals( dataSet.getIndicators() ) &&
-            renderAsTabs == dataSet.isRenderAsTabs() ) )
+            renderAsTabs == dataSet.isRenderAsTabs()) )
         {
             dataSet.increaseVersion(); // Check if version must be updated
         }
@@ -377,8 +376,7 @@ public class UpdateDataSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataSet.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( dataSet, dataSet.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         dataSetService.updateDataSet( dataSet );
