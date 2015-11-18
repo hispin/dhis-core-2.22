@@ -116,6 +116,18 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }        
     });
     
+    function checkSkipOffline() {
+        if(dhis2.ec.isOffline && $scope.selectedProgram && $scope.selectedProgram.skipOffline){
+            var dialogOptions = {
+                headerText: 'offline',
+                bodyText: 'program_is_skip_offline'
+            };
+
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+    }
+    
     //load programs associated with the selected org unit.
     $scope.loadPrograms = function() {
         
@@ -135,8 +147,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.currentGridColumnId = '';           
         $scope.displayCustomForm = false;
         
-        if (angular.isObject($scope.selectedOrgUnit)) {    
-            
+        if (angular.isObject($scope.selectedOrgUnit)) {
             ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
                 $scope.programs = response.programs;
                 $scope.selectedProgram = response.selectedProgram;
@@ -155,6 +166,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.reverse = false;
         $scope.sortHeader = {};
         $scope.filterText = {};
+        
+        checkSkipOffline();
         
         if( $scope.userAuthority && $scope.userAuthority.canAddOrUpdateEvent &&
                 $scope.selectedProgram && 
@@ -271,6 +284,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     //get events for the selected program (and org unit)
     $scope.loadEvents = function(){   
         
+        checkSkipOffline();
+        
         $scope.noteExists = false;            
         $scope.dhis2Events = [];
         $scope.eventLength = 0;
@@ -285,7 +300,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 };
 
                 DialogService.showDialog({}, dialogOptions);
-                return false;
+                return;
             }            
             attributeCategoryUrl.cp = $scope.selectedOptions.join(';');
         }
@@ -546,6 +561,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.addEvent = function(addingAnotherEvent){                
         
+        checkSkipOffline();
+        
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
@@ -553,7 +570,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                 section.open = true;
             });
-            return false;
+            return;
         }
         
         //the form is valid, get the values
@@ -577,7 +594,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             };
 
             DialogService.showDialog({}, dialogOptions);
-            return false;
+            return;
         }        
         
         if(addingAnotherEvent){
@@ -621,7 +638,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 };
 
                 DialogService.showDialog({}, dialogOptions);
-                return false;
+                return;
             }
             
             //dhis2Event.attributeCc = $scope.selectedProgram.categoryCombo.id;
@@ -676,6 +693,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.updateEvent = function(){
         
+        checkSkipOffline();
+        
         //check for form validity
         $scope.outerForm.submitted = true;        
         if( $scope.outerForm.$invalid ){
@@ -683,7 +702,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                 section.open = true;
             });
-            return false;
+            return;
         }
         
         //the form is valid, get the values
@@ -735,6 +754,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.updateEventDate = function () {
+        
+        checkSkipOffline();
+        
         $scope.updateSuccess = false;
         
         $scope.currentElement = {id: 'eventDate'};
@@ -747,7 +769,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             $scope.currentEvent.eventDate = $scope.currentEventOriginialValue.eventDate;            
             $scope.resetEventValue($scope.currentEvent);
             $scope.currentElement.updated = false;
-            return false;
+            return;
         }
 
         //get new and old values
@@ -758,7 +780,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             $scope.currentEvent.eventDate = oldValue;            
             $scope.resetEventValue($scope.currentEvent);
             $scope.currentElement.updated = false;
-            return false;
+            return;
         }
         
         if(newValue !== oldValue){
@@ -783,6 +805,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
             
     $scope.updateEventDataValue = function(currentEvent, dataElement){
+        
+        checkSkipOffline();
+        
         $scope.updateSuccess = false;
         
         //get current element

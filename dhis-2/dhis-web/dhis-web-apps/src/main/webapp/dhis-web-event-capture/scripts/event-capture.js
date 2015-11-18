@@ -20,6 +20,7 @@ var PROGRAMS_METADATA = 'EVENT_PROGRAMS';
 var EVENT_VALUES = 'EVENT_VALUES';
 var optionSetsInPromise = [];
 
+dhis2.ec.isOffline = false;
 dhis2.ec.store = null;
 dhis2.ec.memoryOnly = $('html').hasClass('ie7') || $('html').hasClass('ie8');
 var adapters = [];    
@@ -67,6 +68,8 @@ $(document).bind('dhis2.online', function(event, loggedIn)
 {
     if (loggedIn)
     {   
+        dhis2.ec.isOffline = false;
+        
         var OfflineECStorageService = angular.element('body').injector().get('OfflineECStorageService');
 
         OfflineECStorageService.hasLocalData().then(function(localData){
@@ -111,6 +114,7 @@ $(document).bind('dhis2.offline', function()
         setHeaderMessage(i18n_no_orgunits);
     }
     else {
+        dhis2.ec.isOffline = true;
         setHeaderMessage(i18n_offline_notification);
     }
 });
@@ -241,7 +245,7 @@ function getMetaPrograms()
     $.ajax({
         url: '../api/programs.json',
         type: 'GET',
-        data:'filter=programType:eq:WITHOUT_REGISTRATION&paging=false&fields=id,name,version,categoryCombo[id,isDefault,categories[id,categoryOptions[id]]],programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]]'
+        data:'filter=programType:eq:WITHOUT_REGISTRATION&paging=false&fields=id,version,categoryCombo[id,isDefault,categories[id,categoryOptions[id]]],programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]]'
     }).done( function(response) {        
         def.resolve( response.programs ? response.programs: [] );
     }).fail(function(){
@@ -306,7 +310,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,programType,version,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,isDefault,categories[id]],organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
+            data: 'fields=id,name,programType,version,dataEntryMethod,skipOffline,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,isDefault,categories[id]],organisationUnits[id,name],programStages[id,name,version],userRoles[id,name]'
         }).done( function( program ){            
             var ou = {};
             _.each(_.values( program.organisationUnits), function(o){
