@@ -43,7 +43,6 @@ import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroupService;
-import org.hisp.dhis.user.UserService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -85,13 +84,6 @@ public class AddDataSetAction
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
-    }
-
-    private UserService userService;
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
     }
 
     private UserGroupService userGroupService;
@@ -351,8 +343,6 @@ public class AddDataSetAction
         }
 
         dataSetService.addDataSet( dataSet );
-
-        userService.assignDataSetToUserRole( dataSet );
 
         return SUCCESS;
     }

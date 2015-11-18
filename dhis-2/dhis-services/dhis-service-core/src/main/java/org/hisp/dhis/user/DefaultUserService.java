@@ -496,24 +496,6 @@ public class DefaultUserService
     }
 
     @Override
-    public void assignDataSetToUserRole( DataSet dataSet )
-    {
-        User currentUser = currentUserService.getCurrentUser();
-
-        if ( !currentUserService.currentUserIsSuper() && currentUser != null )
-        {
-            UserCredentials userCredentials = getUserCredentials( currentUser );
-
-            for ( UserAuthorityGroup userAuthorityGroup : userCredentials.getUserAuthorityGroups() )
-            {
-                userAuthorityGroup.getDataSets().add( dataSet );
-
-                updateUserAuthorityGroup( userAuthorityGroup );
-            }
-        }
-    }
-
-    @Override
     public void canIssueFilter( Collection<UserAuthorityGroup> userRoles )
     {
         User user = currentUserService.getCurrentUser();
