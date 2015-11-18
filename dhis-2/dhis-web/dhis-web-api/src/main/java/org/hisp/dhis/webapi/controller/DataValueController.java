@@ -67,12 +67,14 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.common.io.ByteSource;
 
@@ -120,8 +122,9 @@ public class DataValueController
     // POST
     // ---------------------------------------------------------------------
 
+    @ResponseStatus( HttpStatus.CREATED )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
-    @RequestMapping( method = RequestMethod.POST, produces = "text/plain" )
+    @RequestMapping( method = RequestMethod.POST )
     public void saveDataValue(
         @RequestParam String de,
         @RequestParam( required = false ) String co,
@@ -292,8 +295,9 @@ public class DataValueController
     // DELETE
     // ---------------------------------------------------------------------
 
+    @ResponseStatus( HttpStatus.NO_CONTENT )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_DELETE')" )
-    @RequestMapping( method = RequestMethod.DELETE, produces = "text/plain" )
+    @RequestMapping( method = RequestMethod.DELETE )
     public void deleteDataValue(
         @RequestParam String de,
         @RequestParam( required = false ) String co,
