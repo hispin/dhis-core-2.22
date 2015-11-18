@@ -458,10 +458,18 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="org.hisp.dhis.program.ProgramStore" class="org.hisp.dhis.program.hibernate.HibernateProgramStore">
+  <bean id="org.hisp.dhis.program.ProgramStore" 
+    class="org.hisp.dhis.program.hibernate.HibernateProgramStore">
     <property name="clazz" value="org.hisp.dhis.program.Program" />
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="cacheable" value="true" />
+  </bean>
+
+  <bean id="org.hisp.dhis.program.ProgramTrackedEntityAttributeStore" 
+    class="org.hisp.dhis.program.hibernate.HibernateProgramTrackedEntityAttributeStore">
+    <property name="clazz" value="org.hisp.dhis.program.ProgramTrackedEntityAttribute" />
+    <property name="sessionFactory" ref="sessionFactory" />     
+    <property name="cacheable" value="true" /> 
   </bean>
 
   <bean id="org.hisp.dhis.program.ProgramValidationStore"
@@ -474,12 +482,6 @@
     class="org.hisp.dhis.hibernate.HibernateGenericStore">
     <property name="clazz" value="org.hisp.dhis.program.ProgramExpression" />
     <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
-
-  <bean id="org.hisp.dhis.program.ProgramTrackedEntityAttributeStore" 
-    class="org.hisp.dhis.program.hibernate.HibernateProgramTrackedEntityAttributeStore">
-    <property name="clazz" value="org.hisp.dhis.program.ProgramTrackedEntityAttribute" />
-    <property name="sessionFactory" ref="sessionFactory" />      
   </bean>
 
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityInstanceStore"
