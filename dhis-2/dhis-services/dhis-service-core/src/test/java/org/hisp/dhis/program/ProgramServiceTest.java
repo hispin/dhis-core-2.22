@@ -39,8 +39,6 @@ import java.util.List;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.validation.ValidationCriteria;
-import org.hisp.dhis.validation.ValidationCriteriaService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -55,9 +53,6 @@ public class ProgramServiceTest
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
-
-    @Autowired
-    private ValidationCriteriaService validationCriteriaService;
 
     private OrganisationUnit organisationUnitA;
 
@@ -171,27 +166,6 @@ public class ProgramServiceTest
 
         programs = programService.getPrograms( organisationUnitB );
         assertTrue( equals( programs, programC ) );
-    }
-
-    @Test
-    public void testGetProgramsByCriteria()
-    {
-        programService.addProgram( programA );
-        programService.addProgram( programB );
-
-        ValidationCriteria validationCriteria = createValidationCriteria( 'A', "gender", 0, "F" );
-        validationCriteriaService.saveValidationCriteria( validationCriteria );
-
-        programA.getValidationCriteria().add( validationCriteria );
-        programService.updateProgram( programA );
-
-        programB.getValidationCriteria().add( validationCriteria );
-        programService.updateProgram( programB );
-
-        List<Program> programs = programService.getPrograms( validationCriteria );
-        assertEquals( 2, programs.size() );
-        assertTrue( programs.contains( programA ) );
-        assertTrue( programs.contains( programB ) );
     }
 
     @Test
