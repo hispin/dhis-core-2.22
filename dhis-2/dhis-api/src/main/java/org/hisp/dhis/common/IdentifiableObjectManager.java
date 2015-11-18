@@ -28,6 +28,8 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.NameableObject.NameableProperty;
 
 import java.util.Collection;
@@ -58,7 +60,7 @@ public interface IdentifiableObjectManager
     <T extends IdentifiableObject> T get( Class<T> clazz, String uid );
 
     <T extends IdentifiableObject> boolean exists( Class<T> clazz, String uid );
-    
+
     <T extends IdentifiableObject> T get( Collection<Class<? extends IdentifiableObject>> classes, String uid );
 
     <T extends IdentifiableObject> T getByCode( Class<T> clazz, String code );
@@ -82,7 +84,7 @@ public interface IdentifiableObjectManager
     <T extends IdentifiableObject> List<T> getByUid( Class<T> clazz, Collection<String> uids );
 
     <T extends IdentifiableObject> List<T> getByUidOrdered( Class<T> clazz, List<String> uids );
-    
+
     <T extends IdentifiableObject> List<T> getLikeName( Class<T> clazz, String name );
 
     <T extends NameableObject> List<T> getLikeShortName( Class<T> clazz, String shortName );
@@ -120,7 +122,7 @@ public interface IdentifiableObjectManager
     <T extends IdentifiableObject> List<T> getObjects( Class<T> clazz, IdentifiableProperty property, Collection<String> identifiers );
 
     <T extends IdentifiableObject> List<T> getObjects( Class<T> clazz, Collection<Integer> identifiers );
-    
+
     <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String id );
 
     IdentifiableObject getObject( String uid, String simpleClassName );
@@ -140,7 +142,7 @@ public interface IdentifiableObjectManager
     <T extends IdentifiableObject> int getCountLikeName( Class<T> clazz, String name );
 
     <T extends NameableObject> int getCountLikeShortName( Class<T> clazz, String shortName );
-    
+
     <T extends DimensionalObject> List<T> getDataDimensions( Class<T> clazz );
 
     <T extends DimensionalObject> List<T> getDataDimensionsNoAcl( Class<T> clazz );
@@ -149,12 +151,14 @@ public interface IdentifiableObjectManager
 
     void evict( Object object );
 
+    <T extends IdentifiableObject> AttributeValue getAttributeValueByAttribute( Class<T> klass, Attribute attribute );
+
     // -------------------------------------------------------------------------
     // NO ACL
     // -------------------------------------------------------------------------
 
     <T extends IdentifiableObject> T getNoAcl( Class<T> clazz, String uid );
-    
+
     <T extends IdentifiableObject> T getNoAcl( Class<T> clazz, int id );
 
     <T extends IdentifiableObject> void updateNoAcl( T object );

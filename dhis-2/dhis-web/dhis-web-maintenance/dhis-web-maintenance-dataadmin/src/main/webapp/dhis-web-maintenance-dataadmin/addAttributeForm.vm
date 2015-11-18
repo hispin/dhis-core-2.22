@@ -47,6 +47,11 @@
 	</tr>
 
 	<tr>
+		<td><label for="mandatory">$i18n.getString( "unique" )</td>
+		<td><input type="checkbox" id="unique" name="unique" value="true" /></td>
+	</tr>
+
+	<tr>
 		<td style="vertical-align: text-top;">$i18n.getString( "assigned_to" )</td>
 		<td>
       <input type="checkbox" id="dataElementAttribute" name="dataElementAttribute" value="true" /><label for="dataElementAttribute">$i18n.getString( 'data_element' )</label> <br />

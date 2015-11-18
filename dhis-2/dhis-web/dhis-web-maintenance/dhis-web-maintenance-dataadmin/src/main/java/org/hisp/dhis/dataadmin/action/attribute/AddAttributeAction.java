@@ -85,6 +85,13 @@ public class AddAttributeAction
         this.mandatory = mandatory;
     }
 
+    private Boolean unique = false;
+
+    public void setUnique( Boolean unique )
+    {
+        this.unique = unique;
+    }
+
     private Boolean dataElementAttribute = false;
 
     public void setDataElementAttribute( Boolean dataElementAttribute )
@@ -217,6 +224,7 @@ public class AddAttributeAction
         Attribute attribute = new Attribute( StringUtils.trimToNull( name ), valueType );
         attribute.setCode( StringUtils.trimToNull( code ) );
         attribute.setMandatory( mandatory );
+        attribute.setUnique( unique );
         attribute.setDataElementAttribute( dataElementAttribute );
         attribute.setDataElementGroupAttribute( dataElementGroupAttribute );
         attribute.setIndicatorAttribute( indicatorAttribute );
