@@ -60,7 +60,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row col-sm-12 small-vertical-spacing" ng-repeat="category in selectedCategories">
+                <div class="row col-sm-12 small-vertical-spacing" ng-if="selectedProgram" ng-repeat="category in selectedCategories">
                     <div class="col-sm-4">
                         {{category.name}}
                     </div>
