@@ -14,7 +14,7 @@
         column="programindicatorid" foreign-key="fk_programindicatordimension_programindicatorid" />
 
 	<many-to-one name="legendSet" class="org.hisp.dhis.legend.LegendSet"
-		column="legendsetid" foreign-key="fk_dataelementdimension_legendsetid" />
+		column="legendsetid" foreign-key="fk_programindicatordimension_legendsetid" />
 
     <property name="filter" />
 
