@@ -47,6 +47,8 @@
     <property name="displayIncidentDate" />
 
     <property name="onlyEnrollOnce" />
+    
+    <property name="skipOffline" />
 
     <list name="programAttributes" cascade="all-delete-orphan">
       <key column="programid" />
