@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -98,7 +99,7 @@ public class ProgramController
 
         if ( userFilter )
         {
-            List<Program> programs = Lists.newArrayList( programService.getProgramsByCurrentUser() );
+            Set<Program> programs = programService.getCurrentUserPrograms();
             entityList.retainAll( programs );
             metaData.setPager( null );
         }

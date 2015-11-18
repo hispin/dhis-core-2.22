@@ -150,7 +150,7 @@ public class UpdateUserAccountAction
         User user = userService.getUser( id );
         UserCredentials credentials = user.getUserCredentials();
         
-        String currentPassword = userService.getUserCredentials( user ).getPassword();
+        String currentPassword = credentials.getPassword();
 
         // ---------------------------------------------------------------------
         // Deny update if user has local authentication and password is wrong

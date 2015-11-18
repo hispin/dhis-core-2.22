@@ -562,17 +562,6 @@ public class DefaultUserService
     }
 
     @Override
-    public UserCredentials getUserCredentials( User user )
-    {
-        if ( user == null )
-        {
-            return null;
-        }
-
-        return userCredentialsStore.get( user.getId() );
-    }
-
-    @Override
     public UserCredentials getUserCredentialsByUsername( String username )
     {
         return userCredentialsStore.getUserCredentialsByUsername( username );

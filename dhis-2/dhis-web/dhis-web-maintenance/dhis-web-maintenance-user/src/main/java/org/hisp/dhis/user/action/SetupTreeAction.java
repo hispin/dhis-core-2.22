@@ -242,7 +242,7 @@ public class SetupTreeAction
                 selectionTreeManager.clearSelectedOrganisationUnits();
             }
             
-            userCredentials = userService.getUserCredentials( user );
+            userCredentials = user.getUserCredentials();
 
             userAuthorityGroups = new ArrayList<>( userCredentials.getUserAuthorityGroups() );            
             userService.canIssueFilter( userAuthorityGroups );

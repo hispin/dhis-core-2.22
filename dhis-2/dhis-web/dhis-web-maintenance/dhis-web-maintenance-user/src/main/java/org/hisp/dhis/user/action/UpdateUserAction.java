@@ -258,7 +258,7 @@ public class UpdateUserAction
         user.setEmail( StringUtils.trimToNull( email ) );
         user.setPhoneNumber( StringUtils.trimToNull( phoneNumber ) );
 
-        UserCredentials userCredentials = userService.getUserCredentials( user );
+        UserCredentials userCredentials = user.getUserCredentials();
 
         userCredentials.setExternalAuth( externalAuth );
         userCredentials.setOpenId( StringUtils.trimToNull( openId ) );

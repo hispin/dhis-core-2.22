@@ -181,7 +181,7 @@ public abstract class AbstractEventService
 
     private CachingMap<String, DataElement> dataElementCache = new CachingMap<>();
 
-    private List<Program> accessiblePrograms = new ArrayList<>();
+    private Set<Program> accessiblePrograms = new HashSet<>();
 
     // -------------------------------------------------------------------------
     // CREATE
@@ -538,7 +538,7 @@ public abstract class AbstractEventService
             }
         }
         
-        if( pr == null &&  !userCredentials.isSuper() && userCredentials.getAllPrograms().size() == 0 )
+        if( pr == null && !userCredentials.isSuper() && userCredentials.getAllPrograms().size() == 0 )
         {
             throw new IllegalQueryException( "User has no access to programs");
         }
@@ -996,7 +996,7 @@ public abstract class AbstractEventService
     {
         if ( accessiblePrograms.isEmpty() )
         {
-            accessiblePrograms = new ArrayList<>( programService.getProgramsByUser( user ) );
+            accessiblePrograms = programService.getCurrentUserPrograms();
         }
 
         return !accessiblePrograms.contains( program );

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -42,11 +43,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.user.UserAuthorityGroup;
-import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.google.common.collect.Sets;
 
 /**
@@ -81,13 +79,6 @@ public class DefaultProgramService
         this.currentUserService = currentUserService;
     }
 
-    private UserService userService;
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-    
     private OrganisationUnitService organisationUnitService;
 
     public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
@@ -170,36 +161,9 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getProgramsByCurrentUser()
-    {
-        return i18n( i18nService, getByCurrentUser() );
-    }
-
-    @Override
-    public List<Program> getProgramsByUser( User user )
-    {
-        return i18n( i18nService, getByUser( user ) );
-    }
-
-    @Override
-    public List<Program> getProgramsByCurrentUser( ProgramType type )
-    {
-        return i18n( i18nService, getByCurrentUser( type ) );
-    }
-
-    @Override
     public Program getProgram( String uid )
     {
         return i18n( i18nService, programStore.getByUid( uid ) );
-    }
-
-    @Override
-    public List<Program> getProgramsByCurrentUser( OrganisationUnit organisationUnit )
-    {
-        List<Program> programs = new ArrayList<>( getPrograms( organisationUnit ) );
-        programs.retainAll( getProgramsByCurrentUser() );
-
-        return programs;
     }
 
     @Override
@@ -233,60 +197,22 @@ public class DefaultProgramService
     }
 
     @Override
-    public List<Program> getByCurrentUser()
+    public Set<Program> getCurrentUserPrograms()
     {
-        return getByUser( currentUserService.getCurrentUser() );
-    }
-
-    public List<Program> getByUser( User user )
-    {
-        List<Program> programs = new ArrayList<>();
-
-        if ( user != null && !user.isSuper() )
+        User user = currentUserService.getCurrentUser();
+        
+        if ( user != null )
         {
-            Set<UserAuthorityGroup> userRoles = userService.getUserCredentials( currentUserService.getCurrentUser() )
-                .getUserAuthorityGroups();
-
-            for ( Program program : programStore.getAll() )
-            {
-                if ( Sets.intersection( program.getUserRoles(), userRoles ).size() > 0 )
-                {
-                    programs.add( program );
-                }
-            }
+            return user.isSuper() ? Sets.newHashSet( getAllPrograms() ) : user.getUserCredentials().getAllPrograms();
         }
-        else
-        {
-            programs = programStore.getAll();
-        }
-
-        return programs;
+        
+        return Sets.newHashSet();
     }
 
     @Override
-    public List<Program> getByCurrentUser( ProgramType type )
-    {
-        List<Program> programs = new ArrayList<>();
-
-        if ( currentUserService.getCurrentUser() != null && !currentUserService.currentUserIsSuper() )
-        {
-            Set<UserAuthorityGroup> userRoles = userService.getUserCredentials( currentUserService.getCurrentUser() )
-                .getUserAuthorityGroups();
-
-            for ( Program program : programStore.getByType( type ) )
-            {
-                if ( Sets.intersection( program.getUserRoles(), userRoles ).size() > 0 )
-                {
-                    programs.add( program );
-                }
-            }
-        }
-        else
-        {
-            programs = programStore.getByType( type );
-        }
-
-        return programs;
+    public Set<Program> getCurrentUserPrograms( ProgramType programType )
+    {        
+        return getCurrentUserPrograms().stream().filter( p -> p.getProgramType() == programType ).collect( Collectors.toSet() );
     }
 
     @Override
