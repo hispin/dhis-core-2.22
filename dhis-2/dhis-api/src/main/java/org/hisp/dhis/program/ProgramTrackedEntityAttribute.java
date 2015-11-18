@@ -36,6 +36,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -48,7 +50,7 @@ public class ProgramTrackedEntityAttribute
     extends BaseIdentifiableObject
 {
     private Program program;
-    
+
     private TrackedEntityAttribute attribute;
 
     private boolean displayInList;
@@ -172,5 +174,32 @@ public class ProgramTrackedEntityAttribute
             .add( "mandatory", mandatory )
             .add( "allowFutureDate", allowFutureDate )
             .toString();
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            ProgramTrackedEntityAttribute programTrackedEntityAttribute = (ProgramTrackedEntityAttribute) other;
+            displayInList = programTrackedEntityAttribute.isDisplayInList();
+
+            if ( strategy.isReplace() )
+            {
+                program = programTrackedEntityAttribute.getProgram();
+                attribute = programTrackedEntityAttribute.getAttribute();
+                mandatory = programTrackedEntityAttribute.isMandatory();
+                allowFutureDate = programTrackedEntityAttribute.getAllowFutureDate();
+            }
+            else if ( strategy.isMerge() )
+            {
+                program = programTrackedEntityAttribute.getProgram() == null ? program : programTrackedEntityAttribute.getProgram();
+                attribute = programTrackedEntityAttribute.getAttribute() == null ? attribute : programTrackedEntityAttribute.getAttribute();
+                mandatory = programTrackedEntityAttribute.isMandatory() == null ? mandatory : programTrackedEntityAttribute.isMandatory();
+                allowFutureDate = programTrackedEntityAttribute.getAllowFutureDate() == null ? allowFutureDate : programTrackedEntityAttribute.getAllowFutureDate();
+            }
+        }
     }
 }
