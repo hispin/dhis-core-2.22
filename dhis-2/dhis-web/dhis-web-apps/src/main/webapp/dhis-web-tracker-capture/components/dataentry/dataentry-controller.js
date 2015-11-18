@@ -71,6 +71,11 @@ trackerCapture.controller('DataEntryController',
     ];
     $scope.showEventColors = false;
 
+    //listen for new events created
+    $scope.$on('eventcreated', function (event, args) {
+        $scope.addNewEvent(args.event);
+    });
+
     //listen for rule effect changes
     $scope.$on('ruleeffectsupdated', function (event, args) {
         if ($rootScope.ruleeffects[args.event]) {
@@ -360,6 +365,15 @@ trackerCapture.controller('DataEntryController',
         }
         return false;
     };
+    
+    $scope.addNewEvent = function(newEvent) {
+        //Have to make sure the event is preprocessed - this does not happen unless "Dashboardwidgets" is invoked.
+        newEvent = EventUtils.processEvent(newEvent, $scope.stagesById[newEvent.programStage], $scope.optionSets, $scope.prStDes);
+
+        $scope.eventsByStage[newEvent.programStage].push(newEvent);
+        $scope.currentEvent = newEvent;
+        sortEventsByStage('ADD');
+    };
 
     $scope.showCreateEvent = function (stage) {
 
@@ -401,13 +415,7 @@ trackerCapture.controller('DataEntryController',
                     newEvent.coordinate = {};
                 }
 
-                //Have to make sure the event is preprocessed - this does not happen unless "Dashboardwidgets" is invoked.
-                newEvent = EventUtils.processEvent(newEvent, stage, $scope.optionSets, $scope.prStDes);
-
-
-                $scope.eventsByStage[newEvent.programStage].push(newEvent);
-                $scope.currentEvent = newEvent;
-                sortEventsByStage('ADD');
+                $scope.addNewEvent(newEvent);
 
                 $scope.currentEvent = null;
                 $scope.showDataEntry(newEvent, false);
