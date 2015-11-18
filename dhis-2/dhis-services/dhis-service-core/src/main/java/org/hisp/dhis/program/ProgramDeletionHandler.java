@@ -68,12 +68,14 @@ public class ProgramDeletionHandler
     @Override
     public void deleteValidationCriteria( ValidationCriteria validationCriteria )
     {
-        Collection<Program> programs = programService.getPrograms( validationCriteria );
+        Collection<Program> programs = idObjectManager.getAllNoAcl( Program.class );
 
         for ( Program program : programs )
         {
-            program.getValidationCriteria().remove( validationCriteria );
-            idObjectManager.updateNoAcl( program );
+            if ( program.getValidationCriteria().remove( validationCriteria ) )
+            {
+                idObjectManager.updateNoAcl( program );
+            }
         }
     }
 

@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntity;
-import org.hisp.dhis.validation.ValidationCriteria;
 
 /**
  * @author Abyot Asalefew
@@ -108,15 +107,6 @@ public interface ProgramService
      * @return The program list
      */
     List<Program> getPrograms( OrganisationUnit organisationUnit );
-
-    /**
-     * Get {@link Program} included in the expression of a
-     * {@link ValidationCriteria}
-     *
-     * @param validationCriteria {@link ValidationCriteria}
-     * @return Program list
-     */
-    List<Program> getPrograms( ValidationCriteria validationCriteria );
 
     /**
      * Get {@link Program} by a type
