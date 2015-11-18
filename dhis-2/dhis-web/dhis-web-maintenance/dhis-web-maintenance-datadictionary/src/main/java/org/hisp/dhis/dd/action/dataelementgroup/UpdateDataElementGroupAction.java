@@ -146,7 +146,7 @@ public class UpdateDataElementGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElementGroup.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( dataElementGroup, dataElementGroup.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

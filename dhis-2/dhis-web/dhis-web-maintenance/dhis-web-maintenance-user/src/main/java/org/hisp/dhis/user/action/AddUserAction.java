@@ -28,11 +28,8 @@ package org.hisp.dhis.user.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.attribute.AttributeService;
@@ -59,8 +56,10 @@ import org.hisp.dhis.user.UserSettingService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.common.collect.Lists;
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -114,7 +113,7 @@ public class AddUserAction
 
     @Autowired
     private CurrentUserService currentUserService;
-    
+
     @Autowired
     private UserSettingService userSettingService;
 
@@ -148,7 +147,7 @@ public class AddUserAction
     {
         this.inviteUsername = inviteUsername;
     }
-    
+
     private boolean externalAuth;
 
     public void setExternalAuth( boolean externalAuth )
@@ -190,7 +189,7 @@ public class AddUserAction
     {
         this.openId = openId;
     }
-    
+
     private String ldapId;
 
     public void setLdapId( String ldapId )
@@ -306,7 +305,7 @@ public class AddUserAction
         userCredentials.setExternalAuth( externalAuth );
         userCredentials.setOpenId( StringUtils.trimToNull( openId ) );
         userCredentials.setLdapId( StringUtils.trimToNull( ldapId ) );
-        
+
         if ( ACCOUNT_ACTION_INVITE.equals( accountAction ) )
         {
             userCredentials.setUsername( StringUtils.trimToNull( inviteUsername ) );
@@ -327,7 +326,7 @@ public class AddUserAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( user.getAttributeValues(), jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( user, user.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         // ---------------------------------------------------------------------

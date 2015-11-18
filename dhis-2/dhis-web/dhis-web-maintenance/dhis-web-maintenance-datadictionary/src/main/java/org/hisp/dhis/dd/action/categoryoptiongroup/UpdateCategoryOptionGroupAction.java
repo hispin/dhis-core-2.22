@@ -124,7 +124,7 @@ public class UpdateCategoryOptionGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( categoryOptionGroup.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( categoryOptionGroup, categoryOptionGroup.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

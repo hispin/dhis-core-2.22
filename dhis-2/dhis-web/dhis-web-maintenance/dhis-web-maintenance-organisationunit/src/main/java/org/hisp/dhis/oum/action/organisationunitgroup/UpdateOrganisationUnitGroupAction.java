@@ -143,7 +143,7 @@ public class UpdateOrganisationUnitGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( organisationUnitGroup.getAttributeValues(),
+            AttributeUtils.updateAttributeValuesFromJson( organisationUnitGroup, organisationUnitGroup.getAttributeValues(),
                 jsonAttributeValues, attributeService );
         }
 

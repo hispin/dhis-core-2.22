@@ -156,7 +156,7 @@ public class UpdateGroupSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( organisationUnitGroupSet.getAttributeValues(),
+            AttributeUtils.updateAttributeValuesFromJson( organisationUnitGroupSet, organisationUnitGroupSet.getAttributeValues(),
                 jsonAttributeValues, attributeService );
         }
 

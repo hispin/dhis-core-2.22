@@ -28,10 +28,7 @@ package org.hisp.dhis.user.action.usergroup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.system.util.AttributeUtils;
@@ -40,7 +37,9 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserService;
 
-import com.opensymphony.xwork2.Action;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class UpdateUserGroupAction
     implements Action
@@ -97,14 +96,14 @@ public class UpdateUserGroupAction
     {
         this.jsonAttributeValues = jsonAttributeValues;
     }
-    
+
     private Set<String> userGroupsSelected = new HashSet<>();
 
     public void setUserGroupsSelected( Set<String> userGroupsSelected )
     {
         this.userGroupsSelected = userGroupsSelected;
     }
-    
+
     // -------------------------------------------------------------------------
     // Action Implementation
     // -------------------------------------------------------------------------
@@ -114,7 +113,7 @@ public class UpdateUserGroupAction
         throws Exception
     {
         //TODO managed groups access control
-        
+
         UserGroup userGroup = userGroupService.getUserGroup( userGroupId );
 
         Set<User> users = new HashSet<>();
@@ -129,18 +128,18 @@ public class UpdateUserGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( userGroup.getAttributeValues(), jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( userGroup, userGroup.getAttributeValues(), jsonAttributeValues, attributeService );
         }
-        
+
         Set<UserGroup> managedGroups = new HashSet<>();
-        
+
         for ( String uid : userGroupsSelected )
         {
             managedGroups.add( userGroupService.getUserGroup( uid ) );
         }
-        
+
         userGroup.updateManagedGroups( managedGroups );
-        
+
         userGroupService.updateUserGroup( userGroup );
 
         return SUCCESS;

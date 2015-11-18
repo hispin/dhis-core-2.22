@@ -428,7 +428,7 @@ public class UpdateProgramStageAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( programStage.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( programStage, programStage.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

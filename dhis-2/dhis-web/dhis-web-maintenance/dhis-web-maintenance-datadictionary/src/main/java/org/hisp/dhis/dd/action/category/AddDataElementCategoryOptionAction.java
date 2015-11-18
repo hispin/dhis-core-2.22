@@ -152,7 +152,7 @@ public class AddDataElementCategoryOptionAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElementCategoryOption.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( dataElementCategoryOption, dataElementCategoryOption.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

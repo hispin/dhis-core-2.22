@@ -367,7 +367,7 @@ public class UpdateProgramAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( program.getAttributeValues(), jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( program, program.getAttributeValues(), jsonAttributeValues, attributeService );
         }
         
         if ( categoryComboId != null )

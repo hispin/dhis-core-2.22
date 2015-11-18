@@ -235,7 +235,7 @@ public class AddDataElementAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElement.getAttributeValues(), jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( dataElement, dataElement.getAttributeValues(), jsonAttributeValues, attributeService );
         }
 
         dataElementService.addDataElement( dataElement );

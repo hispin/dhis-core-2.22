@@ -208,7 +208,7 @@ public class UpdateAttributeAction
         OptionSet optionSet = optionService.getOptionSet( optionSetId );
 
         valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
-        
+
         TrackedEntityAttribute trackedEntityAttribute = trackedEntityAttributeService.getTrackedEntityAttribute( id );
 
         trackedEntityAttribute.setName( StringUtils.trimToNull( name ) );
@@ -260,7 +260,7 @@ public class UpdateAttributeAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute.getAttributeValues(), jsonAttributeValues,
+            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute, trackedEntityAttribute.getAttributeValues(), jsonAttributeValues,
                 attributeService );
         }
 

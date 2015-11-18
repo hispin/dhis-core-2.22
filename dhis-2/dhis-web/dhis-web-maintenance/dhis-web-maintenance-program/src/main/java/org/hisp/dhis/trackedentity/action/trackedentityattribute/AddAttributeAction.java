@@ -1,8 +1,6 @@
 package org.hisp.dhis.trackedentity.action.trackedentityattribute;
 
-import java.util.List;
-import java.util.Objects;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
@@ -15,6 +13,9 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Objects;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -43,8 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import com.opensymphony.xwork2.Action;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -200,9 +199,9 @@ public class AddAttributeAction
         throws Exception
     {
         OptionSet optionSet = optionService.getOptionSet( optionSetId );
-        
+
         valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
-        
+
         TrackedEntityAttribute trackedEntityAttribute = new TrackedEntityAttribute();
 
         trackedEntityAttribute.setName( StringUtils.trimToNull( name ) );
@@ -254,7 +253,8 @@ public class AddAttributeAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute.getAttributeValues(), jsonAttributeValues, attributeService );
+            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute, trackedEntityAttribute.getAttributeValues(),
+                jsonAttributeValues, attributeService );
         }
 
         trackedEntityAttributeService.addTrackedEntityAttribute( trackedEntityAttribute );
