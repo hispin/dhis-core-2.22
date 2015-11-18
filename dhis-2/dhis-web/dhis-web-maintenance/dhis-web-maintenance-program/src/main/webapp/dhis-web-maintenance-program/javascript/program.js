@@ -124,9 +124,9 @@ function programOnChange() {
   // anonymous
   if( type == "WITHOUT_REGISTRATION" ) {
     disable('onlyEnrollOnce');
-    disable('dateOfEnrollmentDescription');
+    disable('enrollmentDateLabel');
     disable("displayIncidentDate");
-    disable("dateOfIncidentDescription");
+    disable("incidentDateLabel");
     disable("generatedByEnrollmentDate");
     disable("availablePropertyIds");
     disable('ignoreOverdueEvents');
@@ -146,7 +146,7 @@ function programOnChange() {
     jQuery("[name=displayed]").prop("disabled", false);
     enable("availablePropertyIds");
     enable("generatedByEnrollmentDate");
-    enable('dateOfEnrollmentDescription');
+    enable('enrollmentDateLabel');
     enable("displayIncidentDate");
     enable('ignoreOverdueEvents');
     enable('trackedEntityId');
@@ -157,10 +157,10 @@ function programOnChange() {
     jQuery("[name=nonAnonymous]").show();
     
     if( byId('displayIncidentDate').checked ) {
-      enable("dateOfIncidentDescription");
+      enable("incidentDateLabel");
     }
     else {
-      disable("dateOfIncidentDescription");
+      disable("incidentDateLabel");
     }
 	jQuery('.multiEvents').show();
   }
