@@ -43,6 +43,7 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
 import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.AuditLogUtil;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.GenericStore;
@@ -539,6 +540,22 @@ public class HibernateGenericStore<T>
         criteria.add( Restrictions.eq( "av.attribute", attribute ) );
 
         return (T) criteria.uniqueResult();
+    }
+
+    @Override
+    public AttributeValue getAttributeValueByAttribute( Attribute attribute )
+    {
+        Schema schema = schemaService.getDynamicSchema( getClazz() );
+
+        if ( schema == null || !schema.havePersistedProperty( "attributeValues" ) )
+        {
+            return null;
+        }
+
+        String hql = "select av from " + getClazz().getSimpleName() + "  as e " +
+            "inner join e.attributeValues av inner join av.attribute at where at = :attribute )";
+
+        return (AttributeValue) getQuery( hql ).setEntity( "attribute", attribute ).uniqueResult();
     }
 
     //----------------------------------------------------------------------------------------------------------------
