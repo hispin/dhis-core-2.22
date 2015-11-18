@@ -88,6 +88,8 @@ public class Attribute
 
     private boolean mandatory;
 
+    private boolean unique;
+
     private Integer sortOrder;
 
     private OptionSet optionSet;
@@ -129,6 +131,19 @@ public class Attribute
     public void setMandatory( boolean mandatory )
     {
         this.mandatory = mandatory;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isUnique()
+    {
+        return unique;
+    }
+
+    public void setUnique( boolean unique )
+    {
+        this.unique = unique;
     }
 
     @JsonProperty

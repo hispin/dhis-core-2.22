@@ -28,6 +28,20 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.common.NameableObject.NameableProperty;
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitService;
+import org.hisp.dhis.user.UserCredentials;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,23 +52,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.SessionFactory;
-import org.hisp.dhis.common.NameableObject.NameableProperty;
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.user.UserCredentials;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
 /**
  * Note that it is required for nameable object stores to have concrete implementation
- * classes, not rely on the HibernateIdentifiableObjectStore class, in order to 
+ * classes, not rely on the HibernateIdentifiableObjectStore class, in order to
  * be injected as nameable object stores.
- * 
+ *
  * @author Lars Helge Overland
  */
 @Transactional
@@ -195,20 +197,20 @@ public class DefaultIdentifiableObjectManager
     @Override
     @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> T get( Collection<Class<? extends IdentifiableObject>> classes, String uid )
-    {        
+    {
         for ( Class<? extends IdentifiableObject> clazz : classes )
         {
             T object = (T) get( clazz, uid );
-            
+
             if ( object != null )
             {
                 return object;
             }
         }
-        
+
         return null;
     }
-    
+
     @Override
     @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> T getByCode( Class<T> clazz, String code )
@@ -674,7 +676,7 @@ public class DefaultIdentifiableObjectManager
         }
 
         List<T> objects = store.getAll();
-        
+
         return IdentifiableObjectUtils.getMap( objects, property );
     }
 
@@ -764,7 +766,7 @@ public class DefaultIdentifiableObjectManager
             {
                 return store.getByName( identifiers );
             }
-            
+
             throw new InvalidIdentifierReferenceException( "Invalid identifiable property / class combination: " + property );
         }
 
@@ -784,7 +786,7 @@ public class DefaultIdentifiableObjectManager
 
         return store.getById( identifiers );
     }
-    
+
     @Override
     @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String id )
@@ -816,7 +818,7 @@ public class DefaultIdentifiableObjectManager
             {
                 return store.getByName( id );
             }
-            
+
             throw new InvalidIdentifierReferenceException( "Invalid identifiable property / class combination: " + property );
         }
 
@@ -876,7 +878,7 @@ public class DefaultIdentifiableObjectManager
 
         return (T) store.getByUidNoAcl( uid );
     }
-    
+
     @Override
     @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> T getNoAcl( Class<T> clazz, int id )
@@ -956,7 +958,7 @@ public class DefaultIdentifiableObjectManager
 
         return (List<T>) store.getByDataDimension( true );
     }
-    
+
     @Override
     @SuppressWarnings( "unchecked" )
     public <T extends DimensionalObject> List<T> getDataDimensionsNoAcl( Class<T> clazz )
@@ -970,7 +972,21 @@ public class DefaultIdentifiableObjectManager
 
         return (List<T>) store.getByDataDimensionNoAcl( true );
     }
-    
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> AttributeValue getAttributeValueByAttribute( Class<T> klass, Attribute attribute )
+    {
+        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( klass );
+
+        if ( store == null )
+        {
+            return null;
+        }
+
+        return store.getAttributeValueByAttribute( attribute );
+    }
+
     //--------------------------------------------------------------------------
     // Supportive methods
     //--------------------------------------------------------------------------
@@ -1055,9 +1071,9 @@ public class DefaultIdentifiableObjectManager
         {
             nameableObjectStoreMap.put( store.getClazz(), store );
         }
-        
+
         dimensionalObjectStoreMap = new HashMap<>();
-        
+
         for ( GenericDimensionalObjectStore<? extends DimensionalObject> store : dimensionalObjectStores )
         {
             dimensionalObjectStoreMap.put( store.getClazz(), store );

@@ -27,6 +27,8 @@
 
     <property name="mandatory" not-null="true" />
 
+    <property name="unique" column="isunique" not-null="true" />
+
     <property name="dataElementAttribute" not-null="true" />
 
     <property name="dataElementGroupAttribute" not-null="false" />

@@ -82,6 +82,7 @@ public class InitTableAlteror
 
         executeSql( "alter table programstage rename column irregular to repeatable" );
         executeSql( "update programstage set repeatable=false where repeatable is null" );
+        executeSql( "update attribute set isunique=false where isunique is null" );
     }
 
     // -------------------------------------------------------------------------

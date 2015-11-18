@@ -92,6 +92,13 @@ public class UpdateAttributeAction
         this.mandatory = mandatory;
     }
 
+    private Boolean unique = false;
+
+    public void setUnique( Boolean unique )
+    {
+        this.unique = unique;
+    }
+
     private Boolean dataElementAttribute = false;
 
     public void setDataElementAttribute( Boolean dataElementAttribute )
@@ -230,6 +237,7 @@ public class UpdateAttributeAction
             attribute.setValueType( valueType );
             attribute.setOptionSet( optionSet );
             attribute.setMandatory( mandatory );
+            attribute.setUnique( unique );
             attribute.setDataElementAttribute( dataElementAttribute );
             attribute.setDataElementGroupAttribute( dataElementGroupAttribute );
             attribute.setIndicatorAttribute( indicatorAttribute );
