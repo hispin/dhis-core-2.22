@@ -30,7 +30,6 @@ package org.hisp.dhis.program;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +42,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.validation.ValidationCriteria;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Sets;
 
@@ -130,22 +128,6 @@ public class DefaultProgramService
     public List<Program> getPrograms( OrganisationUnit organisationUnit )
     {
         return i18n( i18nService, programStore.get( organisationUnit ) );
-    }
-
-    @Override
-    public List<Program> getPrograms( ValidationCriteria validationCriteria )
-    {
-        List<Program> programs = new ArrayList<>();
-
-        for ( Program program : getAllPrograms() )
-        {
-            if ( program.getValidationCriteria().contains( validationCriteria ) )
-            {
-                programs.add( program );
-            }
-        }
-
-        return i18n( i18nService, programs );
     }
 
     @Override
