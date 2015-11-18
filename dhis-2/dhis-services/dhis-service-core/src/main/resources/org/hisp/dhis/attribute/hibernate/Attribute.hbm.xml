@@ -27,7 +27,7 @@
 
     <property name="mandatory" not-null="true" />
 
-    <property name="unique" column="isunique" not-null="true" />
+    <property name="unique" column="isunique" not-null="false" />
 
     <property name="dataElementAttribute" not-null="true" />
 
