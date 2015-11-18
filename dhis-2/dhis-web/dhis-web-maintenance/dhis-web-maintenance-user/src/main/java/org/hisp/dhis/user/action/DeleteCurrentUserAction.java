@@ -65,7 +65,7 @@ public class DeleteCurrentUserAction
     {
         this.userService = userService;
     }
-
+    
     @Autowired
     private UserSettingService userSettingService;
 
@@ -119,9 +119,9 @@ public class DeleteCurrentUserAction
     public String execute() throws Exception
     {
         message = "";
-        User user = userService.getUser( currentUserService.getCurrentUser().getId() );
+        User user = currentUserService.getCurrentUser();
 
-        UserCredentials userCredentials = userService.getUserCredentials( user );
+        UserCredentials userCredentials = user.getUserCredentials();
 
         username = userCredentials.getUsername();
         String oldPasswordFromDB = userCredentials.getPassword();

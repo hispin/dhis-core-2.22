@@ -1572,7 +1572,8 @@ public abstract class DhisConvenienceTest
      * @param auths                     authorities to grant to user.
      * @return the user.
      */
-    protected User createUserAndInjectSecurityContext( Set<OrganisationUnit> organisationUnits, Set<OrganisationUnit> dataViewOrganisationUnits, boolean allAuth, String... auths )
+    protected User createUserAndInjectSecurityContext( Set<OrganisationUnit> organisationUnits, 
+        Set<OrganisationUnit> dataViewOrganisationUnits, boolean allAuth, String... auths )
     {
         Assert.notNull( userService, "UserService must be injected in test" );
 

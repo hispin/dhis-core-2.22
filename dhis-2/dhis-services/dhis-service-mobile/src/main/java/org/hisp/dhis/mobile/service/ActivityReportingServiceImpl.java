@@ -1175,16 +1175,16 @@ public class ActivityReportingServiceImpl
 
         OrganisationUnit organisationUnit = organisationUnitService.getOrganisationUnit( orgUnitId );
 
-        List<Program> tempPrograms = null;
+        Set<Program> tempPrograms = null;
         ProgramType programType = ProgramType.fromValue( type );
 
         if ( programType == ProgramType.WITHOUT_REGISTRATION )
         {
-            tempPrograms = new ArrayList<>( programService.getProgramsByCurrentUser( ProgramType.WITHOUT_REGISTRATION ) );
+            tempPrograms = programService.getCurrentUserPrograms( ProgramType.WITHOUT_REGISTRATION );
         }
         else if ( programType == ProgramType.WITH_REGISTRATION )
         {
-            tempPrograms = new ArrayList<>( programService.getProgramsByCurrentUser( ProgramType.WITH_REGISTRATION ) );
+            tempPrograms = programService.getCurrentUserPrograms( ProgramType.WITH_REGISTRATION );
         }
 
         List<Program> programs = new ArrayList<>();

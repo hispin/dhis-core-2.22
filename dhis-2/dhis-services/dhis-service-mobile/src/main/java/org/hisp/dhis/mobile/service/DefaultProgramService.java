@@ -47,7 +47,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -85,8 +84,7 @@ public class DefaultProgramService
     {
         Collection<org.hisp.dhis.program.Program> programByUnit = programService.getPrograms( unit );
 
-        Collection<org.hisp.dhis.program.Program> programByCurrentUser = new HashSet<>(
-            programService.getProgramsByCurrentUser() );
+        Collection<org.hisp.dhis.program.Program> programByCurrentUser = programService.getCurrentUserPrograms();
 
         programByCurrentUser.retainAll( programByUnit );
 

@@ -30,16 +30,15 @@ package org.hisp.dhis.program;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.trackedentity.TrackedEntity;
-import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationCriteria;
 
 /**
  * @author Abyot Asalefew
- * @version $Id$
  */
 public interface ProgramService
 {
@@ -111,30 +110,6 @@ public interface ProgramService
     List<Program> getPrograms( OrganisationUnit organisationUnit );
 
     /**
-     * Get {@link Program} by the current user.
-     *
-     * @return The program list the current user
-     */
-    List<Program> getProgramsByCurrentUser();
-
-    /**
-     * Get {@link Program} by user.
-     *
-     * @return The program list the current user
-     */
-    List<Program> getProgramsByUser( User user );
-
-    /**
-     * Get {@link Program} by the current user and a certain type
-     *
-     * @param type The type of program. There are three types, include Multi
-     *        events with registration, Single event with registration and
-     *        Single event without registration.
-     * @return Program list by a type specified
-     */
-    List<Program> getProgramsByCurrentUser( ProgramType type );
-
-    /**
      * Get {@link Program} included in the expression of a
      * {@link ValidationCriteria}
      *
@@ -171,13 +146,6 @@ public interface ProgramService
      * @return the Program with the given UID, or null if no match.
      */
     Program getProgram( String uid );
-
-    /**
-     * Get {@link Program} belong to an orgunit by the current user
-     *
-     * @param organisationUnit {@link OrganisationUnit}
-     */
-    List<Program> getProgramsByCurrentUser( OrganisationUnit organisationUnit );
 
     /**
      * Get {@link TrackedEntity} by TrackedEntity
@@ -220,21 +188,22 @@ public interface ProgramService
     List<Program> getProgramsBetween( int min, int max );
 
     /**
-     * Get {@link Program} by the current user.
+     * Get {@link Program} by the current user. Returns all programs if current
+     * user is superuser. Returns an empty list if there is no current user.
      *
-     * @return The program list the current user
+     * @return Immutable set of programs associated with the current user.
      */
-    List<Program> getByCurrentUser();
+    Set<Program> getCurrentUserPrograms();
 
     /**
      * Get {@link Program} by the current user and a certain type
      *
-     * @param type The type of program. There are three types, include Multi
+     * @param programType The type of program. There are three types, include Multi
      *        events with registration, Single event with registration and
      *        Single event without registration.
-     * @return Program list by a type specified
+     * @return Immutable set of programs associated with the current user.
      */
-    List<Program> getByCurrentUser( ProgramType type );
+    Set<Program> getCurrentUserPrograms( ProgramType programType );
 
     /**
      * Sets the given merge organisation units on the given programs. Only 

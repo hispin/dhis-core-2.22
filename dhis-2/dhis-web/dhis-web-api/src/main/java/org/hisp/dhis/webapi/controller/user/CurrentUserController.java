@@ -515,15 +515,15 @@ public class CurrentUserController
         Set<OrganisationUnit> organisationUnits = new HashSet<>();
         Set<Program> programs = new HashSet<>();
         Map<String, List<Program>> programAssociations = new HashMap<>();
-        List<Program> userPrograms;
+        Set<Program> userPrograms;
 
         if ( type == null )
         {
-            userPrograms = new ArrayList<>( programService.getProgramsByCurrentUser() );
+            userPrograms = programService.getCurrentUserPrograms();
         }
         else
         {
-            userPrograms = new ArrayList<>( programService.getProgramsByCurrentUser( ProgramType.fromValue( type ) ) );
+            userPrograms = programService.getCurrentUserPrograms( ProgramType.fromValue( type ) );
         }
 
         if ( currentUserService.currentUserIsSuper() && currentUser.getOrganisationUnits().isEmpty() )
