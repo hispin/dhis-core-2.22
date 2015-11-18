@@ -271,6 +271,13 @@ public class UpdateProgramAction
     {
         this.categoryComboId = categoryComboId;
     }
+    
+    private boolean skipOffline;
+
+    public void setSkipOffline( boolean skipOffline )
+    {
+        this.skipOffline = skipOffline;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -301,6 +308,7 @@ public class UpdateProgramAction
         program.setSelectEnrollmentDatesInFuture( selectEnrollmentDatesInFuture );
         program.setSelectIncidentDatesInFuture( selectIncidentDatesInFuture );
         program.setDataEntryMethod( dataEntryMethod );
+        program.setSkipOffline( skipOffline );
 
         if ( program.isRegistration() )
         {

@@ -132,6 +132,12 @@ public class Program
      * The CategoryCombo used for data attributes.
      */
     private DataElementCategoryCombo categoryCombo;
+    
+    /**
+     * Property indicating whether offline storage is enabled for this program
+     * or not
+     */
+    private boolean skipOffline;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -677,6 +683,19 @@ public class Program
     public boolean hasCategoryCombo()
     {
         return categoryCombo != null && !DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME.equals( categoryCombo.getName() );
+    }
+    
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isSkipOffline()
+    {
+        return skipOffline;
+    }
+
+    public void setSkipOffline( boolean skipOffline )
+    {
+        this.skipOffline = skipOffline;
     }
 
     @Override
