@@ -30,10 +30,14 @@ package org.hisp.dhis.attribute;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.indicator.IndicatorGroup;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -82,5 +86,23 @@ public class AttributeStoreTest
     public void testGetOrganisationUnitAttributes()
     {
         assertEquals( 1, attributeStore.getOrganisationUnitAttributes().size() );
+    }
+
+    @Test
+    public void testGetSupportedClasses()
+    {
+        Attribute attribute = new Attribute( "AttributeName", ValueType.TEXT );
+        attribute.setDataElementAttribute( true );
+
+        assertEquals( 1, attribute.getSupportedClasses().size() );
+        assertTrue( attribute.getSupportedClasses().contains( DataElement.class ) );
+
+        attribute.setDataElementAttribute( false );
+        attribute.setIndicatorAttribute( true );
+        attribute.setIndicatorGroupAttribute( true );
+
+        assertEquals( 2, attribute.getSupportedClasses().size() );
+        assertTrue( attribute.getSupportedClasses().contains( Indicator.class ) );
+        assertTrue( attribute.getSupportedClasses().contains( IndicatorGroup.class ) );
     }
 }

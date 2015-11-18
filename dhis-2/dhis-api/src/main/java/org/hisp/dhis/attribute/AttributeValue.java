@@ -72,8 +72,7 @@ public class AttributeValue
 
     public AttributeValue()
     {
-        this.created = new Date();
-        this.lastUpdated = new Date();
+        setAutoFields();
     }
 
     public AttributeValue( String value )

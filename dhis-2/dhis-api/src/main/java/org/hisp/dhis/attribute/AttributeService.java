@@ -28,6 +28,8 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.IdentifiableObject;
+
 import java.util.List;
 
 /**
@@ -240,14 +242,14 @@ public interface AttributeService
      *
      * @param attributeValue the attribute value.
      */
-    void addAttributeValue( AttributeValue attributeValue );
+    <T extends IdentifiableObject> void addAttributeValue( T object, AttributeValue attributeValue );
 
     /**
      * Updates an attribute value.
      *
      * @param attributeValue the attribute value.
      */
-    void updateAttributeValue( AttributeValue attributeValue );
+    <T extends IdentifiableObject> void updateAttributeValue( T object, AttributeValue attributeValue );
 
     /**
      * Deletes an attribute value.
