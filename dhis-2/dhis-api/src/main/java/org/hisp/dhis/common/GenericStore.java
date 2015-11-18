@@ -29,6 +29,7 @@ package org.hisp.dhis.common;
  */
 
 import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeValue;
 
 import java.util.List;
 
@@ -133,4 +134,6 @@ public interface GenericStore<T>
      * @return Object if object.attributeValues.attribute=attribute exists
      */
     T getByAttribute( Attribute attribute );
+
+    AttributeValue getAttributeValueByAttribute( Attribute attribute );
 }

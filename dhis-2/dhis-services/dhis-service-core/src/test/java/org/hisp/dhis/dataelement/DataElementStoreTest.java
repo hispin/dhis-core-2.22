@@ -439,4 +439,26 @@ public class DataElementStoreTest
         DataElement dataElement = dataElementStore.getByAttribute( attribute );
         assertEquals( dataElement.getUid(), dataElementA.getUid() );
     }
+
+    @Test
+    public void testAttributeValueFromAttribute()
+    {
+        Attribute attribute = new Attribute( "test", ValueType.TEXT );
+        attribute.setDataElementAttribute( true );
+        attributeService.addAttribute( attribute );
+
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+        dataElementStore.save( dataElementA );
+        dataElementStore.save( dataElementB );
+
+        AttributeValue attributeValue = new AttributeValue( "SOME VALUE", attribute );
+        attributeService.addAttributeValue( attributeValue );
+
+        dataElementA.getAttributeValues().add( attributeValue );
+        dataElementStore.update( dataElementA );
+
+        AttributeValue value = dataElementStore.getAttributeValueByAttribute( attribute );
+        assertEquals( value.getValue(), attributeValue.getValue() );
+    }
 }
