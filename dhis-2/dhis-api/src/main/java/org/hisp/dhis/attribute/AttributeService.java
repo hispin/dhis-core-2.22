@@ -277,6 +277,8 @@ public interface AttributeService
 
     List<AttributeValue> getAllAttributeValuesByAttributeAndValue( Attribute attribute, String value );
 
+    <T extends IdentifiableObject> boolean isAttributeValueUnique( T object, AttributeValue attributeValue );
+
     /**
      * Gets the number of attribute values.
      *

@@ -151,7 +151,11 @@ public interface IdentifiableObjectManager
 
     void evict( Object object );
 
-    <T extends IdentifiableObject> AttributeValue getAttributeValueByAttribute( Class<T> klass, Attribute attribute );
+    <T extends IdentifiableObject> List<AttributeValue> getAttributeValueByAttribute( Class<T> klass, Attribute attribute );
+
+    <T extends IdentifiableObject> List<AttributeValue> getAttributeValueByAttributeAndValue( Class<T> klass, Attribute attribute, String value );
+
+    <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, AttributeValue attributeValue );
 
     // -------------------------------------------------------------------------
     // NO ACL
