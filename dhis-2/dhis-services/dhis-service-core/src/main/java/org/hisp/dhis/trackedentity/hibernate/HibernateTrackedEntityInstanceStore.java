@@ -120,7 +120,7 @@ public class HibernateTrackedEntityInstanceStore
 
     private String buildTrackedEntityInstanceHql( TrackedEntityInstanceQueryParams params )
     {
-        String hql = "select distinct tei from TrackedEntityInstance tei left join fetch tei.attributeValues";
+        String hql = "select distinct tei from TrackedEntityInstance tei left join fetch tei.trackedEntityAttributeValues";
         SqlHelper hlp = new SqlHelper( true );
 
         if ( params.hasTrackedEntity() )
@@ -496,7 +496,7 @@ public class HibernateTrackedEntityInstanceStore
             {
                 Criteria criteria = getCriteria();
                 criteria.add( Restrictions.ne( "id", instance.getId() ) );
-                criteria.createAlias( "attributeValues", "attributeValue" );
+                criteria.createAlias( "trackedEntityAttributeValues", "attributeValue" );
                 criteria.createAlias( "attributeValue.attribute", "attribute" );
                 criteria.add( Restrictions.eq( "attributeValue.value", attributeValue.getValue() ) );
                 criteria.add( Restrictions.eq( "attributeValue.attribute", attribute ) );

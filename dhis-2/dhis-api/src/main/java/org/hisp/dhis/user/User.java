@@ -34,9 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -115,11 +113,6 @@ public class User
     private Set<OrganisationUnit> dataViewOrganisationUnits = new HashSet<>();
 
     /**
-     * Set of the dynamic attributes values that belong to this User.
-     */
-    private Set<AttributeValue> attributeValues = new HashSet<>();
-
-    /**
      * Ordered favorite apps.
      */
     private List<String> apps = new ArrayList<>();
@@ -194,13 +187,13 @@ public class User
     {
         return CollectionUtils.isEmpty( organisationUnits ) ? null : organisationUnits.iterator().next();
     }
-    
+
     public List<OrganisationUnit> getSortedOrganisationUnits()
     {
         List<OrganisationUnit> sortedOrgUnits = new ArrayList<>( organisationUnits );
-        
+
         Collections.sort( sortedOrgUnits, IdentifiableObjectNameComparator.INSTANCE );
-        
+
         return sortedOrgUnits;
     }
 
@@ -246,7 +239,7 @@ public class User
     {
         return IdentifiableObjectUtils.join( organisationUnits );
     }
-    
+
     public String getUsername()
     {
         return userCredentials != null ? userCredentials.getUsername() : null;
@@ -265,7 +258,7 @@ public class User
     {
         return userCredentials != null && userCredentials.isAuthorized( auth );
     }
-    
+
     public Set<UserGroup> getManagedGroups()
     {
         Set<UserGroup> managedGroups = new HashSet<>();
@@ -340,7 +333,7 @@ public class User
     /**
      * Indicates whether this user is managed by the given user.
      *
-     * @param userGroup the user  to test.
+     * @param user the user  to test.
      * @return true if the given user is managed by this user, false if not.
      */
     public boolean isManagedBy( User user )
@@ -365,7 +358,7 @@ public class User
     {
         return user != null && user.getUsername() != null ? user.getUsername() : "[Unknown]";
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -618,20 +611,6 @@ public class User
         this.dataViewOrganisationUnits = dataViewOrganisationUnits;
     }
 
-    @JsonProperty( "attributeValues" )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<AttributeValue> getAttributeValues()
-    {
-        return attributeValues;
-    }
-
-    public void setAttributeValues( Set<AttributeValue> attributeValues )
-    {
-        this.attributeValues = attributeValues;
-    }
-
     public List<String> getApps()
     {
         return apps;
@@ -688,9 +667,6 @@ public class User
                 userCredentials = user.getUserCredentials() == null ? userCredentials : user.getUserCredentials();
             }
 
-            attributeValues.clear();
-            attributeValues.addAll( user.getAttributeValues() );
-
             organisationUnits.clear();
             organisationUnits.addAll( user.getOrganisationUnits() );
 
@@ -721,7 +697,6 @@ public class User
             ", groups=" + groups +
             ", organisationUnits=" + organisationUnits +
             ", dataViewOrganisationUnits=" + dataViewOrganisationUnits +
-            ", attributeValues=" + attributeValues +
             ", apps=" + apps +
             '}';
     }

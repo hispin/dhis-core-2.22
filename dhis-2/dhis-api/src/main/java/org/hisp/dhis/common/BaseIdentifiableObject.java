@@ -36,8 +36,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.apache.commons.lang3.Validate;
-import org.hisp.dhis.security.acl.Access;
-import org.hisp.dhis.security.acl.AccessStringHelper;
+import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.annotation.Description;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
@@ -45,6 +44,8 @@ import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
+import org.hisp.dhis.security.acl.Access;
+import org.hisp.dhis.security.acl.AccessStringHelper;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroupAccess;
 
@@ -92,6 +93,11 @@ public class BaseIdentifiableObject
      * The date this object was last updated.
      */
     protected Date lastUpdated;
+
+    /**
+     * Set of the dynamic attributes values that belong to this data element.
+     */
+    protected Set<AttributeValue> attributeValues = new HashSet<>();
 
     /**
      * This object is available as external read-only
@@ -161,7 +167,7 @@ public class BaseIdentifiableObject
     @Override
     public int compareTo( IdentifiableObject object )
     {
-        return name == null ? ( object.getDisplayName() == null ? 0 : -1 ) : name.compareTo( object.getDisplayName() );
+        return name == null ? (object.getDisplayName() == null ? 0 : -1) : name.compareTo( object.getDisplayName() );
     }
 
     // -------------------------------------------------------------------------
@@ -270,6 +276,20 @@ public class BaseIdentifiableObject
     public void setLastUpdated( Date lastUpdated )
     {
         this.lastUpdated = lastUpdated;
+    }
+
+    @JsonProperty( "attributeValues" )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0 )
+    public Set<AttributeValue> getAttributeValues()
+    {
+        return attributeValues;
+    }
+
+    public void setAttributeValues( Set<AttributeValue> attributeValues )
+    {
+        this.attributeValues = attributeValues;
     }
 
     @Override
@@ -582,5 +602,8 @@ public class BaseIdentifiableObject
             userGroupAccesses.clear();
             userGroupAccesses.addAll( other.getUserGroupAccesses() );
         }
+
+        attributeValues.clear();
+        attributeValues.addAll( other.getAttributeValues() );
     }
 }

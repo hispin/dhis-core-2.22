@@ -37,7 +37,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DisplayProperty;
@@ -127,12 +126,6 @@ public class OrganisationUnit
     private Set<Program> programs = new HashSet<>();
 
     private Set<User> users = new HashSet<>();
-
-    /**
-     * Set of the dynamic attributes values that belong to this
-     * organisationUnit.
-     */
-    private Set<AttributeValue> attributeValues = new HashSet<>();
 
     // -------------------------------------------------------------------------
     // Transient fields
@@ -1125,20 +1118,6 @@ public class OrganisationUnit
         this.users = users;
     }
 
-    @JsonProperty( "attributeValues" )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<AttributeValue> getAttributeValues()
-    {
-        return attributeValues;
-    }
-
-    public void setAttributeValues( Set<AttributeValue> attributeValues )
-    {
-        this.attributeValues = attributeValues;
-    }
-
     // -------------------------------------------------------------------------
     // Getters and setters for transient fields
     // -------------------------------------------------------------------------
@@ -1215,9 +1194,6 @@ public class OrganisationUnit
             users.clear();
             dataSets.clear();
             programs.clear();
-
-            attributeValues.clear();
-            attributeValues.addAll( organisationUnit.getAttributeValues() );
         }
     }
 }

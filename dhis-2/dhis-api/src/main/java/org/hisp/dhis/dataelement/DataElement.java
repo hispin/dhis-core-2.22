@@ -141,11 +141,6 @@ public class DataElement
     private boolean zeroIsSignificant;
 
     /**
-     * Set of the dynamic attributes values that belong to this data element.
-     */
-    private Set<AttributeValue> attributeValues = new HashSet<>();
-
-    /**
      * The option set for data values linked to this data element.
      */
     private OptionSet optionSet;
@@ -629,20 +624,6 @@ public class DataElement
         this.zeroIsSignificant = zeroIsSignificant;
     }
 
-    @JsonProperty( "attributeValues" )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<AttributeValue> getAttributeValues()
-    {
-        return attributeValues;
-    }
-
-    public void setAttributeValues( Set<AttributeValue> attributeValues )
-    {
-        this.attributeValues = attributeValues;
-    }
-
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -706,9 +687,6 @@ public class DataElement
 
             aggregationLevels.clear();
             aggregationLevels.addAll( dataElement.getAggregationLevels() );
-
-            attributeValues.clear();
-            attributeValues.addAll( dataElement.getAttributeValues() );
         }
     }
 }

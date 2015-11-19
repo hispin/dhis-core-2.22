@@ -35,8 +35,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
-import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -85,11 +83,6 @@ public class Indicator
     private Set<IndicatorGroup> groups = new HashSet<>();
 
     private Set<DataSet> dataSets = new HashSet<>();
-
-    /**
-     * Set of the dynamic attributes values that belong to this indicator.
-     */
-    private Set<AttributeValue> attributeValues = new HashSet<>();
 
     /**
      * The legend set for this indicator.
@@ -334,20 +327,6 @@ public class Indicator
         this.dataSets = dataSets;
     }
 
-    @JsonProperty( "attributeValues" )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<AttributeValue> getAttributeValues()
-    {
-        return attributeValues;
-    }
-
-    public void setAttributeValues( Set<AttributeValue> attributeValues )
-    {
-        this.attributeValues = attributeValues;
-    }
-
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
@@ -398,9 +377,6 @@ public class Indicator
 
             dataSets.clear();
             groups.clear();
-
-            removeAllAttributeValues();
-            attributeValues.addAll( indicator.getAttributeValues() );
         }
     }
 }
