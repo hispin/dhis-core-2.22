@@ -127,8 +127,7 @@ public class DefaultTrackedEntityInstanceReminderService
             if ( matcher.group( 1 ).equals( ATTRIBUTE ) )
             {
                 String uid = matcher.group( 2 );
-                for ( TrackedEntityAttributeValue attributeValue : programInstance.getEntityInstance()
-                    .getAttributeValues() )
+                for ( TrackedEntityAttributeValue attributeValue : programInstance.getEntityInstance().getTrackedEntityAttributeValues() )
                 {
                     if ( attributeValue.getAttribute().getUid().equals( uid ) )
                     {
@@ -175,8 +174,8 @@ public class DefaultTrackedEntityInstanceReminderService
             if ( matcher.group( 1 ).equals( ATTRIBUTE ) )
             {
                 String uid = matcher.group( 2 );
-                for ( TrackedEntityAttributeValue attributeValue : programStageInstance.getProgramInstance()
-                    .getEntityInstance().getAttributeValues() )
+                for ( TrackedEntityAttributeValue attributeValue :
+                    programStageInstance.getProgramInstance().getEntityInstance().getTrackedEntityAttributeValues() )
                 {
                     if ( attributeValue.getAttribute().getUid().equals( uid ) )
                     {
@@ -229,7 +228,7 @@ public class DefaultTrackedEntityInstanceReminderService
             case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
                 if ( entityInstance.getAttributeValues() != null )
                 {
-                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
                     {
                         if ( ValueType.USERNAME == attributeValue.getAttribute().getValueType() )
                         {
@@ -262,7 +261,7 @@ public class DefaultTrackedEntityInstanceReminderService
             default:
                 if ( entityInstance.getAttributeValues() != null )
                 {
-                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
                     {
                         if ( ValueType.PHONE_NUMBER == attributeValue.getAttribute().getValueType() )
                         {
@@ -289,7 +288,7 @@ public class DefaultTrackedEntityInstanceReminderService
             case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
                 if ( entityInstance.getAttributeValues() != null )
                 {
-                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+                    for ( TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
                     {
                         if ( ValueType.USERNAME == attributeValue.getAttribute().getValueType() )
                         {

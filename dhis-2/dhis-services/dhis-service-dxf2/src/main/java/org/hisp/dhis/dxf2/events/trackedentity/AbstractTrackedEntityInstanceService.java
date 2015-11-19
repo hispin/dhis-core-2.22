@@ -174,7 +174,7 @@ public abstract class AbstractTrackedEntityInstanceService
             }
         }
 
-        for ( TrackedEntityAttributeValue attributeValue : entityInstance.getAttributeValues() )
+        for ( TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
         {
             Attribute attribute = new Attribute();
 
@@ -434,7 +434,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
     private void removeAttributeValues( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance )
     {
-        entityInstance.getAttributeValues().forEach( trackedEntityAttributeValueService::deleteTrackedEntityAttributeValue );
+        entityInstance.getTrackedEntityAttributeValues().forEach( trackedEntityAttributeValueService::deleteTrackedEntityAttributeValue );
         teiService.updateTrackedEntityInstance( entityInstance );
     }
 

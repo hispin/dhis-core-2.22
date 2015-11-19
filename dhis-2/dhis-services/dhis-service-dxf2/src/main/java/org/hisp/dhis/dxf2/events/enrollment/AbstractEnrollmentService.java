@@ -544,7 +544,7 @@ public abstract class AbstractEnrollmentService
             attributeValueMap.put( attribute.getAttribute(), attribute.getValue() );
         }
 
-        trackedEntityInstance.getAttributeValues().stream()
+        trackedEntityInstance.getTrackedEntityAttributeValues().stream()
             .filter( value -> attributeValueMap.containsKey( value.getAttribute().getUid() ) )
             .forEach( value -> {
                 String newValue = attributeValueMap.get( value.getAttribute().getUid() );

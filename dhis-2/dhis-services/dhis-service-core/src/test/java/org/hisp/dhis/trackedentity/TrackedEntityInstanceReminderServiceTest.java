@@ -203,7 +203,7 @@ public class TrackedEntityInstanceReminderServiceTest
         attributeValue.setValue( "123456789" );
         attributeValueService.addTrackedEntityAttributeValue( attributeValue );
 
-        entityInstance.getAttributeValues().add( attributeValue );
+        entityInstance.getTrackedEntityAttributeValues().add( attributeValue );
         entityInstanceService.updateTrackedEntityInstance( entityInstance );
 
         Set<String> phoneNumbers = reminderService.getPhoneNumbers( reminderA, entityInstance );

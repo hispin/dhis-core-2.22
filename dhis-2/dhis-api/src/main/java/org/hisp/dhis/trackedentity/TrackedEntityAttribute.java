@@ -31,11 +31,8 @@ package org.hisp.dhis.trackedentity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
-import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
@@ -48,9 +45,6 @@ import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.schema.annotation.PropertyRange;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Abyot Asalefew
@@ -90,11 +84,6 @@ public class TrackedEntityAttribute
     private Boolean orgunitScope = false;
 
     private Boolean programScope = false;
-
-    /**
-     * Set of the dynamic attributes values that belong to this data element.
-     */
-    private Set<AttributeValue> attributeValues = new HashSet<>();
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -179,7 +168,7 @@ public class TrackedEntityAttribute
     {
         return DimensionType.PROGRAM_ATTRIBUTE;
     }
-    
+
     // -------------------------------------------------------------------------
     // Helper getters
     // -------------------------------------------------------------------------
@@ -396,20 +385,6 @@ public class TrackedEntityAttribute
         this.confidential = confidential;
     }
 
-    @JsonProperty( "attributeValues" )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )
-    @JacksonXmlProperty( localName = "attributeValue", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<AttributeValue> getAttributeValues()
-    {
-        return attributeValues;
-    }
-
-    public void setAttributeValues( Set<AttributeValue> attributeValues )
-    {
-        this.attributeValues = attributeValues;
-    }
-
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -453,9 +428,6 @@ public class TrackedEntityAttribute
                 confidential = trackedEntityAttribute.getConfidential() == null ? confidential : trackedEntityAttribute.getConfidential();
                 optionSet = trackedEntityAttribute.getOptionSet() == null ? optionSet : trackedEntityAttribute.getOptionSet();
             }
-
-            attributeValues.clear();
-            attributeValues.addAll( trackedEntityAttribute.getAttributeValues() );
         }
     }
 }

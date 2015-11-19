@@ -111,7 +111,6 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -1050,16 +1049,16 @@ public abstract class DhisConvenienceTest
 
         return legendSet;
     }
-    
+
     public static Chart createChart( char uniqueCharacter )
     {
         Chart chart = new Chart();
         chart.setAutoFields();
         chart.setName( "Chart" + uniqueCharacter );
         chart.setType( ChartType.COLUMN );
-        
+
         return chart;
-        
+
     }
 
     public static Chart createChart( char uniqueCharacter, List<Indicator> indicators, List<Period> periods,
@@ -1302,7 +1301,7 @@ public abstract class DhisConvenienceTest
         attributeValue.setAttribute( attribute );
         attributeValue.setEntityInstance( entityInstance );
         attributeValue.setValue( "Attribute" + uniqueChar );
-        entityInstance.getAttributeValues().add( attributeValue );
+        entityInstance.getTrackedEntityAttributeValues().add( attributeValue );
 
         return entityInstance;
     }
@@ -1572,7 +1571,7 @@ public abstract class DhisConvenienceTest
      * @param auths                     authorities to grant to user.
      * @return the user.
      */
-    protected User createUserAndInjectSecurityContext( Set<OrganisationUnit> organisationUnits, 
+    protected User createUserAndInjectSecurityContext( Set<OrganisationUnit> organisationUnits,
         Set<OrganisationUnit> dataViewOrganisationUnits, boolean allAuth, String... auths )
     {
         Assert.notNull( userService, "UserService must be injected in test" );

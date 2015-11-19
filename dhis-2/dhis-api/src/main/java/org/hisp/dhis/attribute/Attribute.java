@@ -59,9 +59,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -111,8 +109,6 @@ public class Attribute
     private Integer sortOrder;
 
     private OptionSet optionSet;
-
-    private Set<AttributeValue> attributeValues = new HashSet<>();
 
     public Attribute()
     {
@@ -398,16 +394,6 @@ public class Attribute
         this.sortOrder = sortOrder;
     }
 
-    public Set<AttributeValue> getAttributeValues()
-    {
-        return attributeValues;
-    }
-
-    public void setAttributeValues( Set<AttributeValue> attributeValues )
-    {
-        this.attributeValues = attributeValues;
-    }
-
     public List<Class<? extends IdentifiableObject>> getSupportedClasses()
     {
         List<Class<? extends IdentifiableObject>> klasses = new ArrayList<>();
@@ -470,9 +456,6 @@ public class Attribute
                 valueType = attribute.getValueType() == null ? valueType : attribute.getValueType();
                 sortOrder = attribute.getSortOrder() == null ? sortOrder : attribute.getSortOrder();
             }
-
-            attributeValues.clear();
-            attributeValues.addAll( attribute.getAttributeValues() );
         }
     }
 
@@ -499,7 +482,6 @@ public class Attribute
             .add( "categoryOptionAttribute", categoryOptionAttribute )
             .add( "categoryOptionGroupAttribute", categoryOptionGroupAttribute )
             .add( "mandatory", mandatory )
-            .add( "attributeValues", attributeValues )
             .toString();
     }
 }

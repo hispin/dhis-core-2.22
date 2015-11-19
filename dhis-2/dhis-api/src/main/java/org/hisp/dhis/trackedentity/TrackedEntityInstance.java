@@ -56,7 +56,7 @@ public class TrackedEntityInstance
 {
     public static String PREFIX_TRACKED_ENTITY_ATTRIBUTE = "attr";
 
-    private Set<TrackedEntityAttributeValue> attributeValues = new HashSet<>();
+    private Set<TrackedEntityAttributeValue> trackedEntityAttributeValues = new HashSet<>();
 
     private Set<ProgramInstance> programInstances = new HashSet<>();
 
@@ -82,13 +82,13 @@ public class TrackedEntityInstance
 
     public void addAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
-        attributeValues.add( attributeValue );
+        trackedEntityAttributeValues.add( attributeValue );
         attributeValue.setEntityInstance( this );
     }
 
     public void removeAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
-        attributeValues.remove( attributeValue );
+        trackedEntityAttributeValues.remove( attributeValue );
         attributeValue.setEntityInstance( null );
     }
 
@@ -114,14 +114,14 @@ public class TrackedEntityInstance
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "trackedEntityAttributeValues", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "trackedEntityAttributeValue", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<TrackedEntityAttributeValue> getAttributeValues()
+    public Set<TrackedEntityAttributeValue> getTrackedEntityAttributeValues()
     {
-        return attributeValues;
+        return trackedEntityAttributeValues;
     }
 
-    public void setAttributeValues( Set<TrackedEntityAttributeValue> attributeValues )
+    public void setTrackedEntityAttributeValues( Set<TrackedEntityAttributeValue> trackedEntityAttributeValues )
     {
-        this.attributeValues = attributeValues;
+        this.trackedEntityAttributeValues = trackedEntityAttributeValues;
     }
 
     @JsonProperty
@@ -168,7 +168,6 @@ public class TrackedEntityInstance
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlElementWrapper( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "inactive", namespace = DxfNamespaces.DXF_2_0 )
     public Boolean isInactive()
     {
@@ -204,8 +203,8 @@ public class TrackedEntityInstance
                 representative = trackedEntityInstance.getRepresentative() == null ? representative : trackedEntityInstance.getRepresentative();
             }
 
-            attributeValues.clear();
-            attributeValues.addAll( trackedEntityInstance.getAttributeValues() );
+            trackedEntityAttributeValues.clear();
+            trackedEntityAttributeValues.addAll( trackedEntityInstance.getTrackedEntityAttributeValues() );
 
             programInstances.clear();
             programInstances.addAll( trackedEntityInstance.getProgramInstances() );

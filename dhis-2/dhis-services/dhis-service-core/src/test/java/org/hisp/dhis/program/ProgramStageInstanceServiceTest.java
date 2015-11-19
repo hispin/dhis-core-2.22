@@ -28,17 +28,6 @@ package org.hisp.dhis.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
@@ -60,6 +49,14 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueServ
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Chau Thu Tran
@@ -175,7 +172,7 @@ public class ProgramStageInstanceServiceTest
         attributeValue.setValue( "123456789" );
         attributeValueService.addTrackedEntityAttributeValue( attributeValue );
 
-        entityInstanceA.getAttributeValues().add( attributeValue );
+        entityInstanceA.getTrackedEntityAttributeValues().add( attributeValue );
         entityInstanceService.updateTrackedEntityInstance( entityInstanceA );
 
         /**
@@ -186,7 +183,7 @@ public class ProgramStageInstanceServiceTest
 
         stageA = new ProgramStage( "A", programA );
         stageA.setSortOrder( 1 );
-        
+
         TrackedEntityInstanceReminder reminderA = new TrackedEntityInstanceReminder( "A", 0,
             "Test program stage message template", TrackedEntityInstanceReminder.DUE_DATE_TO_COMPARE,
             TrackedEntityInstanceReminder.SEND_TO_TRACKED_ENTITY_INSTANCE, null, TrackedEntityInstanceReminder.MESSAGE_TYPE_BOTH );
@@ -267,7 +264,7 @@ public class ProgramStageInstanceServiceTest
         testDate1.withTimeAtStartOfDay();
         testDate1 = testDate1.minusDays( 70 );
         incidenDate = testDate1.toDate();
-        
+
         DateTime testDate2 = DateTime.now();
         testDate2.withTimeAtStartOfDay();
         enrollmentDate = testDate2.toDate();
@@ -442,7 +439,7 @@ public class ProgramStageInstanceServiceTest
         int idA = programStageInstanceService.addProgramStageInstance( programStageInstanceA );
 
         programStageInstanceService.completeProgramStageInstance( programStageInstanceA, mockFormat );
-        
+
         assertEquals( true, programStageInstanceService.getProgramStageInstance( idA ).isCompleted() );
     }
 

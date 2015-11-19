@@ -28,6 +28,7 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.security.acl.Access;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroupAccess;
@@ -66,6 +67,8 @@ public interface IdentifiableObject
     String getPublicAccess();
 
     boolean getExternalAccess();
+
+    Set<AttributeValue> getAttributeValues();
 
     User getUser();
 
