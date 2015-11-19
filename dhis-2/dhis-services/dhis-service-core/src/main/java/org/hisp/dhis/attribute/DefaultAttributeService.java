@@ -303,6 +303,12 @@ public class DefaultAttributeService
     }
 
     @Override
+    public List<AttributeValue> getAllByAttributeAndValue( Attribute attribute, String value )
+    {
+        return attributeValueStore.getAllByAttributeAndValue( attribute, value );
+    }
+
+    @Override
     public int getAttributeValueCount()
     {
         return attributeValueStore.getCount();

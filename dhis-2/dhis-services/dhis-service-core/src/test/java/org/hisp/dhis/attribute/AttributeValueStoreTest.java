@@ -95,4 +95,12 @@ public class AttributeValueStoreTest
     {
         assertEquals( 2, attributeValueStore.getAllByAttribute( atA ).size() );
     }
+
+    @Test
+    public void testGetAllByAttributeAndValue()
+    {
+        assertEquals( 0, attributeValueStore.getAllByAttributeAndValue( atA, "null" ).size() );
+        assertEquals( 1, attributeValueStore.getAllByAttributeAndValue( atA, "value 1" ).size() );
+        assertEquals( 1, attributeValueStore.getAllByAttributeAndValue( atA, "value 2" ).size() );
+    }
 }

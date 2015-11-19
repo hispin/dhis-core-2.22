@@ -49,4 +49,14 @@ public class HibernateAttributeValueStore
     {
         return getCriteria().add( Restrictions.eq( "attribute", attribute ) ).list();
     }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<AttributeValue> getAllByAttributeAndValue( Attribute attribute, String value )
+    {
+        return getCriteria()
+            .add( Restrictions.eq( "attribute", attribute ) )
+            .add( Restrictions.eq( "value", value ) )
+            .list();
+    }
 }
