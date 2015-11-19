@@ -39,4 +39,6 @@ public interface AttributeValueStore
     extends GenericStore<AttributeValue>
 {
     List<AttributeValue> getAllByAttribute( Attribute attribute );
+
+    List<AttributeValue> getAllByAttributeAndValue( Attribute attribute, String value );
 }
