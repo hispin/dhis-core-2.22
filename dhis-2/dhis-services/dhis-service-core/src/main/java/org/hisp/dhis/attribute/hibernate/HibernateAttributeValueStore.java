@@ -28,9 +28,13 @@ package org.hisp.dhis.attribute.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeValue;
 import org.hisp.dhis.attribute.AttributeValueStore;
 import org.hisp.dhis.hibernate.HibernateGenericStore;
+
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -39,4 +43,10 @@ public class HibernateAttributeValueStore
     extends HibernateGenericStore<AttributeValue>
     implements AttributeValueStore
 {
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<AttributeValue> getAllByAttribute( Attribute attribute )
+    {
+        return getCriteria().add( Restrictions.eq( "attribute", attribute ) ).list();
+    }
 }

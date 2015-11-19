@@ -273,6 +273,8 @@ public interface AttributeService
      */
     List<AttributeValue> getAllAttributeValues();
 
+    List<AttributeValue> getAllAttributeValuesByAttribute( Attribute attribute );
+
     /**
      * Gets the number of attribute values.
      *
