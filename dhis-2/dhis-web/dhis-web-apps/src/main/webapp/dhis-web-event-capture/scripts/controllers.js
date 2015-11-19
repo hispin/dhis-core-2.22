@@ -30,6 +30,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 ModalService,
                 DialogService,
                 CommonUtils,
+                FileService,
                 AuthorityService,
                 TrackerRulesExecutionService,
                 TrackerRulesFactory) {
@@ -63,7 +64,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.optionSets = [];
     $scope.proceedSelection = true;
     $scope.formUnsaved = false;
-    $scope.fileNames = {};
+    $scope.fileNames = [];
     
     //notes
     $scope.note = {};
@@ -137,7 +138,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
         $scope.currentEventOriginialValue = {};
-        $scope.fileNames = {};
+        $scope.fileNames = [];
 
         $scope.eventRegistration = false;
         $scope.editGridColumns = false;
@@ -314,7 +315,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     $scope.eventLength = data.events.length;
                 }                
 
-                $scope.dhis2Events = data.events; 
+                //$scope.dhis2Events = data.events; 
 
                 if( data.pager ){
                     $scope.pager = data.pager;
@@ -327,18 +328,18 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 }
 
                 //process event list for easier tabular sorting
-                if( angular.isObject( $scope.dhis2Events ) ) {
+                if( angular.isObject( data.events ) ) {
 
-                    for(var i=0; i < $scope.dhis2Events.length; i++){  
+                    angular.forEach(data.events,function(event){
 
-                        if($scope.dhis2Events[i].notes && !$scope.noteExists){
+                        if(event.notes && !$scope.noteExists){
                             $scope.noteExists = true;
                         }
 
                         //check if event is empty
-                        if(!angular.isUndefined($scope.dhis2Events[i].dataValues)){                            
+                        if(!angular.isUndefined(event.dataValues)){                            
 
-                            angular.forEach($scope.dhis2Events[i].dataValues, function(dataValue){
+                            angular.forEach(event.dataValues, function(dataValue){
 
                                 //converting event.datavalues[i].datavalue.dataelement = value to
                                 //event[dataElement] = value for easier grid display.                                
@@ -346,19 +347,36 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                     var val = dataValue.value;                                  
                                     if(angular.isObject($scope.prStDes[dataValue.dataElement].dataElement)){
                                         val = CommonUtils.formatDataValue(val, $scope.prStDes[dataValue.dataElement].dataElement, $scope.optionSets, 'USER');                                                                          
-                                    }                                    
-                                    $scope.dhis2Events[i][dataValue.dataElement] = val; 
+                                    }
+                                    
+                                    event[dataValue.dataElement] = val;
+                                    
+                                    if($scope.prStDes[dataValue.dataElement].dataElement.valueType === 'FILE_RESOURCE'){
+                                        FileService.get(val).then(function(response){
+                                            if(response && response.name){
+                                                if($scope.fileNames[event.event]){
+                                                    $scope.fileNames[event.event][dataValue.dataElement] = response.name;
+                                                } 
+                                                else{
+                                                    $scope.fileNames[event.event] = [];
+                                                    $scope.fileNames[event.event][dataValue.dataElement] = response.name;
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             });
 
-                            $scope.dhis2Events[i]['uid'] = $scope.dhis2Events[i].event;                                
-                            $scope.dhis2Events[i].eventDate = DateUtils.formatFromApiToUser($scope.dhis2Events[i].eventDate);                                
-                            $scope.dhis2Events[i]['eventDate'] = $scope.dhis2Events[i].eventDate;
+                            event['uid'] = event.event;                                
+                            event.eventDate = DateUtils.formatFromApiToUser(event.eventDate);                                
+                            event['eventDate'] = event.eventDate;
 
-                            delete $scope.dhis2Events[i].dataValues;
+                            delete event.dataValues;
                         }
-                    }
+                    });
 
+                    $scope.dhis2Events = data.events; 
+                    
                     if($scope.noteExists && !GridColumnService.columnExists($scope.eventGridColumns, 'comment')){
                         $scope.eventGridColumns.push({name: 'comment', id: 'comment', type: 'TEXT', filterWithRange: false, compulsory: false, showFilter: false, show: true});
                     }
@@ -499,14 +517,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.currentElement.updated = false;        
         $scope.currentEvent = {};
         $scope.currentElement = {};
-        $scope.fileNames = {};
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
     };
     
     $scope.showEventRegistration = function(){        
         $scope.displayCustomForm = $scope.customForm ? true:false;        
         $scope.currentEvent = {};
-        $scope.fileNames = {};
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
         $scope.outerForm.submitted = false;
@@ -533,7 +549,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.showEditEventInFull = function(){       
         $scope.note = {};
-        $scope.fileNames = {};
         $scope.displayCustomForm = $scope.customForm ? true:false;
 
         $scope.currentEvent = ContextMenuSelectedItem.getSelectedItem();
