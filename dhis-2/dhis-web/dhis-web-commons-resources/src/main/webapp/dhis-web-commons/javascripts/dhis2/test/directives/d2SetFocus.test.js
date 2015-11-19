@@ -1,4 +1,5 @@
 const {module, inject} = angular.mock;
+
 const {spy} = sinon;
 
 describe('Directives: d2SetFocus', () => {
