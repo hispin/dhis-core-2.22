@@ -30,7 +30,6 @@ package org.hisp.dhis.attribute;
 
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -262,6 +261,7 @@ public class DefaultAttributeService
 
         attributeValue.setAutoFields();
         attributeValueStore.save( attributeValue );
+        object.getAttributeValues().add( attributeValue );
     }
 
     @Override
@@ -275,6 +275,7 @@ public class DefaultAttributeService
 
         attributeValue.setAutoFields();
         attributeValueStore.update( attributeValue );
+        object.getAttributeValues().add( attributeValue );
     }
 
     @Override
