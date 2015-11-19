@@ -449,16 +449,59 @@ public class DataElementStoreTest
 
         DataElement dataElementA = createDataElement( 'A' );
         DataElement dataElementB = createDataElement( 'B' );
+        DataElement dataElementC = createDataElement( 'C' );
+
         dataElementStore.save( dataElementA );
         dataElementStore.save( dataElementB );
+        dataElementStore.save( dataElementC );
 
-        AttributeValue attributeValue = new AttributeValue( "SOME VALUE", attribute );
-        attributeService.addAttributeValue( dataElementA, attributeValue );
+        AttributeValue attributeValueA = new AttributeValue( "SOME VALUE", attribute );
+        AttributeValue attributeValueB = new AttributeValue( "SOME VALUE", attribute );
+        AttributeValue attributeValueC = new AttributeValue( "ANOTHER VALUE", attribute );
 
-        dataElementA.getAttributeValues().add( attributeValue );
+        attributeService.addAttributeValue( dataElementA, attributeValueA );
+        attributeService.addAttributeValue( dataElementB, attributeValueB );
+        attributeService.addAttributeValue( dataElementC, attributeValueC );
+
         dataElementStore.update( dataElementA );
+        dataElementStore.update( dataElementB );
+        dataElementStore.update( dataElementC );
 
-        AttributeValue value = dataElementStore.getAttributeValueByAttribute( attribute );
-        assertEquals( value.getValue(), attributeValue.getValue() );
+        List<AttributeValue> values = dataElementStore.getAttributeValueByAttribute( attribute );
+        assertEquals( 3, values.size() );
+    }
+
+    @Test
+    public void testAttributeValueFromAttributeAndValue()
+    {
+        Attribute attribute = new Attribute( "test", ValueType.TEXT );
+        attribute.setDataElementAttribute( true );
+        attributeService.addAttribute( attribute );
+
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+        DataElement dataElementC = createDataElement( 'C' );
+
+        dataElementStore.save( dataElementA );
+        dataElementStore.save( dataElementB );
+        dataElementStore.save( dataElementC );
+
+        AttributeValue attributeValueA = new AttributeValue( "SOME VALUE", attribute );
+        AttributeValue attributeValueB = new AttributeValue( "SOME VALUE", attribute );
+        AttributeValue attributeValueC = new AttributeValue( "ANOTHER VALUE", attribute );
+
+        attributeService.addAttributeValue( dataElementA, attributeValueA );
+        attributeService.addAttributeValue( dataElementB, attributeValueB );
+        attributeService.addAttributeValue( dataElementC, attributeValueC );
+
+        dataElementStore.update( dataElementA );
+        dataElementStore.update( dataElementB );
+        dataElementStore.update( dataElementC );
+
+        List<AttributeValue> values = dataElementStore.getAttributeValueByAttributeAndValue( attribute, "SOME VALUE" );
+        assertEquals( 2, values.size() );
+
+        values = dataElementStore.getAttributeValueByAttributeAndValue( attribute, "ANOTHER VALUE" );
+        assertEquals( 1, values.size() );
     }
 }

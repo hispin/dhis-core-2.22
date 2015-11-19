@@ -543,7 +543,8 @@ public class HibernateGenericStore<T>
     }
 
     @Override
-    public AttributeValue getAttributeValueByAttribute( Attribute attribute )
+    @SuppressWarnings( "unchecked" )
+    public List<AttributeValue> getAttributeValueByAttribute( Attribute attribute )
     {
         Schema schema = schemaService.getDynamicSchema( getClazz() );
 
@@ -555,7 +556,31 @@ public class HibernateGenericStore<T>
         String hql = "select av from " + getClazz().getSimpleName() + "  as e " +
             "inner join e.attributeValues av inner join av.attribute at where at = :attribute )";
 
-        return (AttributeValue) getQuery( hql ).setEntity( "attribute", attribute ).uniqueResult();
+        return getQuery( hql ).setEntity( "attribute", attribute ).list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<AttributeValue> getAttributeValueByAttributeAndValue( Attribute attribute, String value )
+    {
+        Schema schema = schemaService.getDynamicSchema( getClazz() );
+
+        if ( schema == null || !schema.havePersistedProperty( "attributeValues" ) )
+        {
+            return null;
+        }
+
+        String hql = "select av from " + getClazz().getSimpleName() + "  as e " +
+            "inner join e.attributeValues av inner join av.attribute at where at = :attribute and av.value = :value)";
+
+        return getQuery( hql ).setEntity( "attribute", attribute ).setString( "value", value ).list();
+    }
+
+    @Override
+    public <P extends IdentifiableObject> boolean isAttributeValueUnique( P object, AttributeValue attributeValue )
+    {
+        List<AttributeValue> values = getAttributeValueByAttribute( attributeValue.getAttribute() );
+        return values.isEmpty() || (object != null && values.size() == 1 && object.getAttributeValues().contains( values.get( 0 ) ));
     }
 
     //----------------------------------------------------------------------------------------------------------------

@@ -309,6 +309,12 @@ public class DefaultAttributeService
     }
 
     @Override
+    public <T extends IdentifiableObject> boolean isAttributeValueUnique( T object, AttributeValue attributeValue )
+    {
+        return attributeValueStore.isAttributeValueUnique( object, attributeValue );
+    }
+
+    @Override
     public int getAttributeValueCount()
     {
         return attributeValueStore.getCount();

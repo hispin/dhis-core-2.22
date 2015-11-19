@@ -974,8 +974,7 @@ public class DefaultIdentifiableObjectManager
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> AttributeValue getAttributeValueByAttribute( Class<T> klass, Attribute attribute )
+    public <T extends IdentifiableObject> List<AttributeValue> getAttributeValueByAttribute( Class<T> klass, Attribute attribute )
     {
         GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( klass );
 
@@ -985,6 +984,27 @@ public class DefaultIdentifiableObjectManager
         }
 
         return store.getAttributeValueByAttribute( attribute );
+    }
+
+    @Override
+    public <T extends IdentifiableObject> List<AttributeValue> getAttributeValueByAttributeAndValue( Class<T> klass, Attribute attribute, String value )
+    {
+        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( klass );
+
+        if ( store == null )
+        {
+            return null;
+        }
+
+        return store.getAttributeValueByAttributeAndValue( attribute, value );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, AttributeValue attributeValue )
+    {
+        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( klass );
+        return store != null && store.isAttributeValueUnique( object, attributeValue );
     }
 
     //--------------------------------------------------------------------------
