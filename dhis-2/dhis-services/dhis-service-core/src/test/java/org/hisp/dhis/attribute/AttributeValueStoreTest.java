@@ -29,12 +29,13 @@ package org.hisp.dhis.attribute;
  */
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
+import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -47,6 +48,9 @@ public class AttributeValueStoreTest
 
     @Autowired
     private AttributeStore attributeStore;
+
+    @Autowired
+    private IdentifiableObjectManager manager;
 
     private AttributeValue avA;
     private AttributeValue avB;
@@ -102,5 +106,19 @@ public class AttributeValueStoreTest
         assertEquals( 0, attributeValueStore.getAllByAttributeAndValue( atA, "null" ).size() );
         assertEquals( 1, attributeValueStore.getAllByAttributeAndValue( atA, "value 1" ).size() );
         assertEquals( 1, attributeValueStore.getAllByAttributeAndValue( atA, "value 2" ).size() );
+    }
+
+    @Test
+    public void testIsAttributeValueUnique()
+    {
+        DataElement dataElementA = createDataElement( 'A' );
+        dataElementA.getAttributeValues().add( avA );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        manager.save( dataElementA );
+        manager.save( dataElementB );
+
+        assertTrue( attributeValueStore.isAttributeValueUnique( dataElementA, avA ) );
+        assertFalse( attributeValueStore.isAttributeValueUnique( dataElementB, avA ) );
     }
 }
