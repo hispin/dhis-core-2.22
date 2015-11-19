@@ -15,6 +15,36 @@
 
   <build>
     <finalName>dhis-web-apps</finalName>
+    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <!-- Settings -->
+                <artifactItem>
+                  <groupId>org.hisp.dhis</groupId>
+                  <artifactId>dhis-app-settings</artifactId>
+                  <version>2.22-SNAPSHOT</version>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/${project.artifactId}/dhis-web-settings</outputDirectory>
+                  <includes>**/*.*</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
@@ -48,8 +78,7 @@
     <dependency>
       <groupId>org.hisp.dhis</groupId>
       <artifactId>dhis-service-core</artifactId>
-    </dependency>
-    
+    </dependency>    
     <dependency>
       <groupId>org.hisp.dhis</groupId>
       <artifactId>dhis-service-reporting</artifactId>
