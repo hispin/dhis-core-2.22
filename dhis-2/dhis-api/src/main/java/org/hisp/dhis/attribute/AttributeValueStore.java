@@ -30,10 +30,13 @@ package org.hisp.dhis.attribute;
 
 import org.hisp.dhis.common.GenericStore;
 
+import java.util.List;
+
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public interface AttributeValueStore
     extends GenericStore<AttributeValue>
 {
+    List<AttributeValue> getAllByAttribute( Attribute attribute );
 }

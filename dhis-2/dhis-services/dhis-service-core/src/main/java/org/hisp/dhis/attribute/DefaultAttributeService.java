@@ -297,6 +297,12 @@ public class DefaultAttributeService
     }
 
     @Override
+    public List<AttributeValue> getAllAttributeValuesByAttribute( Attribute attribute )
+    {
+        return attributeValueStore.getAllByAttribute( attribute );
+    }
+
+    @Override
     public int getAttributeValueCount()
     {
         return attributeValueStore.getCount();

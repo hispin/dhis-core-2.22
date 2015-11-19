@@ -89,4 +89,10 @@ public class AttributeValueStoreTest
         assertNotNull( av );
         assertEquals( "value 1", av.getValue() );
     }
+
+    @Test
+    public void testGetAllByAttribute()
+    {
+        assertEquals( 2, attributeValueStore.getAllByAttribute( atA ).size() );
+    }
 }
