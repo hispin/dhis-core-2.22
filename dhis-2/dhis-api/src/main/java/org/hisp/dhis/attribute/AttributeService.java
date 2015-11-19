@@ -275,7 +275,7 @@ public interface AttributeService
 
     List<AttributeValue> getAllAttributeValuesByAttribute( Attribute attribute );
 
-    List<AttributeValue> getAllByAttributeAndValue( Attribute attribute, String value );
+    List<AttributeValue> getAllAttributeValuesByAttributeAndValue( Attribute attribute, String value );
 
     /**
      * Gets the number of attribute values.
