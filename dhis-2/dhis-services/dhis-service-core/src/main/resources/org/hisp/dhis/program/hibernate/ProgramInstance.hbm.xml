@@ -23,6 +23,8 @@
     <property name="endDate" column="enddate" />
 
     <property name="followup" column="followup" />
+    
+    <property name="completedUser" />
 
     <property name="status" length="50">
       <type name="org.hibernate.type.EnumType">
