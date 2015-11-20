@@ -1007,6 +1007,13 @@ public class DefaultIdentifiableObjectManager
         return store != null && store.isAttributeValueUnique( object, attributeValue );
     }
 
+    @Override
+    public <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, Attribute attribute, String value )
+    {
+        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( klass );
+        return store != null && store.isAttributeValueUnique( object, attribute, value );
+    }
+
     //--------------------------------------------------------------------------
     // Supportive methods
     //--------------------------------------------------------------------------

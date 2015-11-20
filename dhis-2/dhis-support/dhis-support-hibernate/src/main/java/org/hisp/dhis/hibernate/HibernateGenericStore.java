@@ -583,6 +583,13 @@ public class HibernateGenericStore<T>
         return values.isEmpty() || (object != null && values.size() == 1 && object.getAttributeValues().contains( values.get( 0 ) ));
     }
 
+    @Override
+    public <P extends IdentifiableObject> boolean isAttributeValueUnique( P object, Attribute attribute, String value )
+    {
+        List<AttributeValue> values = getAttributeValueByAttributeAndValue( attribute, value );
+        return values.isEmpty() || (object != null && values.size() == 1 && object.getAttributeValues().contains( values.get( 0 ) ));
+    }
+
     //----------------------------------------------------------------------------------------------------------------
     // Helpers
     //----------------------------------------------------------------------------------------------------------------
