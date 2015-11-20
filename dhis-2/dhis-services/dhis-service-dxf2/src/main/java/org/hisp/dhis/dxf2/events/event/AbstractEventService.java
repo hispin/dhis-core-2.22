@@ -884,6 +884,7 @@ public abstract class AbstractEventService
         event.setEventDate( DateUtils.getLongDateString( programStageInstance.getExecutionDate() ) );
         event.setDueDate( DateUtils.getLongDateString( programStageInstance.getDueDate() ) );
         event.setStoredBy( programStageInstance.getCompletedUser() );
+        event.setCompletedDate( DateUtils.getLongDateString( programStageInstance.getCompletedDate() ) );
 
         UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
         

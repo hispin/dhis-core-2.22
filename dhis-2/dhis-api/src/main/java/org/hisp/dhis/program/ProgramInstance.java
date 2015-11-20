@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.view.DetailedView;
@@ -82,6 +83,8 @@ public class ProgramInstance
     private Boolean followup = false;
 
     private List<TrackedEntityComment> comments = new ArrayList<>();
+    
+    private String completedUser;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -403,4 +406,14 @@ public class ProgramInstance
     {
         this.comments = comments;
     }
+
+    public String getCompletedUser()
+    {
+        return completedUser;
+    }
+
+    public void setCompletedUser( String completedUser )
+    {
+        this.completedUser = completedUser;
+    }  
 }

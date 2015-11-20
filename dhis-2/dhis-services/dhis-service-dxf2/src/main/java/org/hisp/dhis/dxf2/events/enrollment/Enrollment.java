@@ -31,6 +31,7 @@ package org.hisp.dhis.dxf2.events.enrollment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dxf2.events.event.Note;
 import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
@@ -70,6 +71,10 @@ public class Enrollment
     private List<Note> notes = new ArrayList<>();
 
     private Boolean followup;
+    
+    private String completedUser;
+
+    private Date completedDate;
 
     public Enrollment()
     {
@@ -231,6 +236,30 @@ public class Enrollment
         this.followup = followup;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getCompletedUser()
+    {
+        return completedUser;
+    }
+
+    public void setCompletedUser( String completedUser )
+    {
+        this.completedUser = completedUser;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Date getCompletedDate()
+    {
+        return completedDate;
+    }
+
+    public void setCompletedDate( Date completedDate )
+    {
+        this.completedDate = completedDate;
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -248,6 +277,8 @@ public class Enrollment
         if ( program != null ? !program.equals( that.program ) : that.program != null ) return false;
         if ( status != that.status ) return false;
         if ( notes != null ? !notes.equals( that.notes ) : that.notes != null ) return false;
+        if ( completedUser != null ? !completedUser.equals( that.completedUser ) : that.completedUser != null ) return false;
+        if ( completedDate != null ? !completedDate.equals( that.completedDate ) : that.completedDate != null ) return false;
 
         return true;
     }
@@ -263,6 +294,8 @@ public class Enrollment
         result = 31 * result + (incidentDate != null ? incidentDate.hashCode() : 0);
         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        result = 31 * result + (completedUser != null ? completedUser.hashCode() : 0);
+        result = 31 * result + (completedDate != null ? completedDate.hashCode() : 0);
         return result;
     }
 
@@ -278,6 +311,8 @@ public class Enrollment
             ", incidentDate=" + incidentDate +
             ", attributes=" + attributes +
             ", notes=" + notes +
+            ", completedUser=" + completedUser +
+            ", completedDate=" + completedDate +
             '}';
     }
 }

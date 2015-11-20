@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.events.enrollment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
@@ -171,6 +172,8 @@ public abstract class AbstractEnrollmentService
         enrollment.setEnrollmentDate( programInstance.getEnrollmentDate() );
         enrollment.setIncidentDate( programInstance.getIncidentDate() );
         enrollment.setFollowup( programInstance.getFollowup() );
+        enrollment.setCompletedDate( programInstance.getEndDate() );
+        enrollment.setCompletedUser( programInstance.getCompletedUser() );
 
         List<TrackedEntityComment> comments = programInstance.getComments();
 
@@ -376,6 +379,7 @@ public abstract class AbstractEnrollmentService
             }
             else if ( EnrollmentStatus.COMPLETED == enrollment.getStatus() )
             {
+                System.out.println("It is completed...");
                 programInstanceService.completeProgramInstanceStatus( programInstance );
             }
             else

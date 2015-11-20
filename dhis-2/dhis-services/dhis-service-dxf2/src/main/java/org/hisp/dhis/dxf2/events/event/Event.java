@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.common.BaseLinkableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
@@ -84,7 +85,11 @@ public class Event
     private String lastUpdated;
     
     private String attributeCategoryOptions;
+    
+    private String completedUser;
 
+    private String completedDate;
+    
     public Event()
     {
     }
@@ -317,7 +322,31 @@ public class Event
     public void setAttributeCategoryOptions( String attributeCategoryOptions )
     {
         this.attributeCategoryOptions = attributeCategoryOptions;
-    } 
+    }    
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getCompletedUser()
+    {
+        return completedUser;
+    }
+
+    public void setCompletedUser( String completedUser )
+    {
+        this.completedUser = completedUser;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getCompletedDate()
+    {
+        return completedDate;
+    }
+
+    public void setCompletedDate( String completedDate )
+    {
+        this.completedDate = completedDate;
+    }
 
     @Override
     public boolean equals( Object o )
@@ -354,6 +383,8 @@ public class Event
             ", coordinate=" + coordinate +
             ", dataValues=" + dataValues +
             ", attributeCategoryOptions=" + attributeCategoryOptions +
+            ", completedUser=" + completedUser +
+            ", completedDate=" + completedDate +
             '}';
     }       
 }
