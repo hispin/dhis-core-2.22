@@ -48,7 +48,7 @@ describe('Directives: d2Drirectives', () => {
         beforeEach(inject(($injector) => {
             const $compile = $injector.get('$compile');
             const $rootScope = $injector.get('$rootScope');
-            $timeout = $injector.get('$timeout');
+
             mock$scope = $rootScope.$new();
             mock$scope.search = function() {
 
@@ -101,6 +101,76 @@ describe('Directives: d2Drirectives', () => {
             '<script type="text/ng-template" id="popover.html"><p>'+testContentString+'</p></script>');
             render(elm);
             expect(mySpy).to.have.been.calledOnce;
+        });
+    });
+
+    /*TODO: Test not added for d2Sortable*/
+
+    describe('Directive: serversidePaginator', () => {
+        let mock$scope;
+        let element;
+        let render;
+        beforeEach(inject(($injector) => {
+        const $compile = $injector.get('$compile');
+            const $rootScope = $injector.get('$rootScope');
+            $timeout = $injector.get('$timeout');
+            mock$scope = $rootScope.$new();
+
+            render = (elm) =>
+            {
+                $compile(elm)(mock$scope);
+                mock$scope.$digest();
+            };
+        }));
+        /* TODO ../dhis-web-commons/angular-forms/serverside-pagination.html is not loaded. */
+        /* works if the path in specified as ../../../dhis-web-commons/angular-forms/serverside-pagination.html */
+        xit('should set the focus when the attribute property is set to true', () => {
+            var elm = '<serverside-paginator></serverside-paginator>';
+            render(elm);
+            expect(mock$scope.paginator).to.be.defined();
+        });
+    });
+
+    /*TODO: draggabkModal directive is not used and likely to be removed*/
+    xdescribe('Directive: draggableModal', () => {
+        let mock$scope;
+        let render;
+        let mySpy;
+        beforeEach(inject(($injector) => {
+            const $compile = $injector.get('$compile');
+            const $rootScope = $injector.get('$rootScope');
+            mock$scope = $rootScope.$new();
+            render = (elm) =>
+            {
+                elm.draggable = function() {};
+                mySpy = spy(elm, "draggable");
+                $compile(elm)(mock$scope);
+                mock$scope.$digest();
+            };
+        }));
+        /* TODO ../dhis-web-commons/angular-forms/serverside-pagination.html is not loaded. */
+        /* works if the path in specified as ../../../dhis-web-commons/angular-forms/serverside-pagination.html */
+        it('call the draggable function when loaded.', () => {
+            var elm = angular.element('<draggable-modal></draggable-modal>');
+            render(elm);
+            expect(mySpy).to.have.been.calledOnce;
+        });
+    });
+
+    describe('Directive: d2CustomForm', () => {
+        let mock$scope;
+        let render;
+        let $compile;
+        beforeEach(inject(($injector) => {
+            $compile = $injector.get('$compile');
+            mock$scope = $injector.get('$rootScope').$new();
+        }));
+        it('should watch and process the customForm scope variable', () => {
+            let elm = angular.element('<d2-custom-form></d2-custom-form>');
+            $compile(elm)(mock$scope);
+            mock$scope.customForm= {htmlCode:'<div>TestContentOne</div>'};
+            mock$scope.$digest();
+            expect(elm[0].innerHTML).to.equal('<div class="ng-scope">TestContentOne</div>');
         });
     });
 });
