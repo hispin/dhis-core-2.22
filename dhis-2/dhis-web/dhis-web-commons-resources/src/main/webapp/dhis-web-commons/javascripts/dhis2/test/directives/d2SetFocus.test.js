@@ -45,9 +45,6 @@ describe('Directives: d2Drirectives', () => {
         let $timeout;
         let render;
 
-
-
-
         beforeEach(inject(($injector) => {
             const $compile = $injector.get('$compile');
             const $rootScope = $injector.get('$rootScope');
@@ -71,6 +68,39 @@ describe('Directives: d2Drirectives', () => {
             e.which = 13; // # Some key code value
             elm .trigger(e);
             expect(mock$scope.search).to.be.calledOnce;
+        });
+    });
+
+    describe('Directive: d2PopOver', () => {
+        let mock$scope;
+        let element;
+        let $timeout;
+        let render;
+        let mySpy;
+        let testContentString = "Sample Content";
+        beforeEach(inject(($injector) => {
+            const $compile = $injector.get('$compile');
+            const $rootScope = $injector.get('$rootScope');
+            mock$scope = $rootScope.$new();
+            render = (elm) => {
+                elm[0].popover = function(obj) {
+                    expect(obj.content[0].innerHTML).to.equal(testContentString);
+                    expect(obj.html).to.equal(true);
+                    expect(obj.placement).to.equal("bottom");
+                    expect(obj.title).to.equal("testDetails");
+                    expect(obj.trigger).to.equal("hover");
+                }
+                mySpy = spy(elm[0], "popover");
+                $compile(elm)(mock$scope);
+                mock$scope.$digest();
+            };
+        }));
+
+        it('should call the popover function, with correct arguments, when loaded', () => {
+            var elm = angular.element('<d2-pop-over content="testContent" template="popover.html" details="testDetails"></d2-pop-over>'+
+            '<script type="text/ng-template" id="popover.html"><p>'+testContentString+'</p></script>');
+            render(elm);
+            expect(mySpy).to.have.been.calledOnce;
         });
     });
 });
