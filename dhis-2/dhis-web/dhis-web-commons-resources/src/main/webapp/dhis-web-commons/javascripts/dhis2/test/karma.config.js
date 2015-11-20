@@ -12,14 +12,28 @@ module.exports = function karmaConfigHandler(config) {
         ],
         files: [
             '../node_modules/phantomjs-polyfill/bind-polyfill.js',
+            '../../jQuery/jquery.min.js',
+            '../../jQuery/calendars/jquery.calendars.min.js',
+            '../../jQuery/calendars/jquery.calendars.plus.min.js',
+            '../../jQuery/calendars/jquery.calendars.picker.min.js',
+            '../../jQuery/calendars/jquery.calendars.picker.ext.js',
             '../../angular/angular.js',
+            '../../angular/angular-resource.js',
+            '../../angular/angular-cookies.js',
             '../node_modules/angular-mocks/angular-mocks.js',
+            '../../angular/plugins/angularLocalStorage.js',
             '../dhis2.angular.*.js',
             'tests.webpack.js', // just load this file
+
+            //'../../../../../../../../dhis-web-apps/src/main/webapp/dhis-web-event-capture/views/left-bar.html'
+            //dhis-web/dhis-web-apps/src/main/webapp/dhis-web-event-capture/views/left-bar.html:14
+            //dhis-web/dhis-web-commons-resources/src/main/webapp/dhis-web-commons/javascripts/dhis2/test/karma.config.js
+            '../views/left-bar.html'
+
         ],
         preprocessors: {
             'tests.webpack.js': [ 'webpack', 'sourcemap' ], // preprocess with webpack and our sourcemap loader
-            '../dhis2.angular.*.js': ['coverage'],
+            //'../dhis2.angular.*.js': ['coverage'],
             // '../views/left-bar.html': ['ng-html2js'], // Example for transforming html files to be angular modules that are cached
         },
         reporters: [ 'dots', 'coverage' ], // report results in this format
