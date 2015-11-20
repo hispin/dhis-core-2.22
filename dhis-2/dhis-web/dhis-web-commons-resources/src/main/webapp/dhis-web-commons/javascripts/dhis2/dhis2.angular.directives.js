@@ -77,6 +77,11 @@ var d2Directives = angular.module('d2Directives', [])
 
     return {
         restrict: 'EA',
+        scope: {
+            content: '=',
+            title: '@details',
+            template: "@template"
+        },
         link: function (scope, element, attrs) {
             var content = $templateCache.get("popover.html");
             content = $compile(content)(scope);
@@ -87,12 +92,8 @@ var d2Directives = angular.module('d2Directives', [])
                 html: true,
                 title: scope.title
             };
-            $(element).popover(options);
-        },
-        scope: {
-            content: '=',
-            title: '@details',
-            template: "@template"
+            $(element)[0].popover(options);
+
         }
     };
 })
