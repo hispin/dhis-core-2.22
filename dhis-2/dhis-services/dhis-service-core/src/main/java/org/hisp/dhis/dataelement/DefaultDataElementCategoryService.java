@@ -28,16 +28,7 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.i18n.I18nUtils.i18n;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +39,15 @@ import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.i18n.I18nService;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 /**
  * @author Abyot Asalefew
@@ -111,7 +110,7 @@ public class DefaultDataElementCategoryService
     {
         this.dataElementService = dataElementService;
     }
-    
+
     private IdentifiableObjectManager idObjectManager;
 
     public void setIdObjectManager( IdentifiableObjectManager idObjectManager )
@@ -164,7 +163,7 @@ public class DefaultDataElementCategoryService
     public DataElementCategory getDataElementCategory( int id, boolean i18nCategoryOptions )
     {
         DataElementCategory category = getDataElementCategory( id );
-        
+
         if ( category != null )
         {
             if ( i18nCategoryOptions )
@@ -172,7 +171,7 @@ public class DefaultDataElementCategoryService
                 i18n( i18nService, category.getCategoryOptions() );
             }
         }
-        
+
         return category;
     }
 
@@ -200,6 +199,12 @@ public class DefaultDataElementCategoryService
         }
 
         return i18n( i18nService, dataElementCategories.get( 0 ) );
+    }
+
+    @Override
+    public DataElementCategory getDefaultDataElementCategory()
+    {
+        return getDataElementCategoryByName( DataElementCategory.DEFAULT_NAME );
     }
 
     @Override
@@ -309,11 +314,17 @@ public class DefaultDataElementCategoryService
     }
 
     @Override
+    public DataElementCategoryOption getDefaultDataElementCategoryOption()
+    {
+        return getDataElementCategoryOptionByName( DataElementCategoryOption.DEFAULT_NAME );
+    }
+
+    @Override
     public DataElementCategoryOption getDataElementCategoryOptionByShortName( String shortName )
     {
         return i18n( i18nService, categoryOptionStore.getByShortName( shortName ) );
     }
-    
+
     @Override
     public DataElementCategoryOption getDataElementCategoryOptionByCode( String code )
     {
@@ -458,35 +469,35 @@ public class DefaultDataElementCategoryService
         {
             return "category_combo_is_null";
         }
-        
+
         if ( categoryCombo.getCategories() == null || categoryCombo.getCategories().isEmpty() )
         {
             return "category_combo_must_have_at_least_one_category";
         }
-        
+
         if ( Sets.newHashSet( categoryCombo.getCategories() ).size() < categoryCombo.getCategories().size() )
         {
             return "category_combo_cannot_have_duplicate_categories";
         }
-        
+
         Set<DataElementCategoryOption> categoryOptions = new HashSet<DataElementCategoryOption>();
-        
-        for ( DataElementCategory category: categoryCombo.getCategories() )
+
+        for ( DataElementCategory category : categoryCombo.getCategories() )
         {
             if ( category == null || category.getCategoryOptions().isEmpty() )
             {
                 return "categories_must_have_at_least_one_category_option";
             }
-            
+
             if ( !Sets.intersection( categoryOptions, Sets.newHashSet( category.getCategoryOptions() ) ).isEmpty() )
             {
                 return "categories_cannot_share_category_options";
             }
         }
-        
+
         return null;
     }
-    
+
     // -------------------------------------------------------------------------
     // CategoryOptionCombo
     // -------------------------------------------------------------------------
@@ -520,7 +531,7 @@ public class DefaultDataElementCategoryService
     {
         return categoryOptionComboStore.getByUid( uid );
     }
-    
+
     @Override
     public DataElementCategoryOptionCombo getDataElementCategoryOptionComboByCode( String code )
     {
@@ -585,13 +596,13 @@ public class DefaultDataElementCategoryService
     {
         return categoryOptionComboStore.getAllOrderedLastUpdated( min, max );
     }
-    
+
     @Override
     public Integer getOptionComboCount()
     {
         return categoryOptionComboStore.getCount();
     }
-    
+
     @Override
     public void generateDefaultDimension()
     {
@@ -743,20 +754,20 @@ public class DefaultDataElementCategoryService
     public DataElementCategoryOptionCombo getDataElementCategoryOptionComboAcl( IdentifiableProperty property, String id )
     {
         DataElementCategoryOptionCombo coc = idObjectManager.getObject( DataElementCategoryOptionCombo.class, property, id );
-        
+
         return canReadDataElementCategoryOptionCombo( coc ) ? coc : null;
     }
-        
+
     private boolean canReadDataElementCategoryOptionCombo( DataElementCategoryOptionCombo categoryOptionCombo )
     {
         if ( categoryOptionCombo == null )
         {
             return false;
         }
-        
-        List<DataElementCategoryOption> options = categoryOptionStore.getByUid( 
+
+        List<DataElementCategoryOption> options = categoryOptionStore.getByUid(
             IdentifiableObjectUtils.getUids( categoryOptionCombo.getCategoryOptions() ) );
-        
+
         return options.size() == categoryOptionCombo.getCategoryOptions().size();
     }
 
@@ -798,15 +809,15 @@ public class DefaultDataElementCategoryService
                 {
                     DataElementOperand operand = new DataElementOperand( dataElement );
                     operand.updateProperties( dataElement );
-    
+
                     operands.add( operand );
                 }
-    
+
                 for ( DataElementCategoryOptionCombo categoryOptionCombo : dataElement.getCategoryCombo().getSortedOptionCombos() )
                 {
                     DataElementOperand operand = new DataElementOperand( dataElement, categoryOptionCombo );
                     operand.updateProperties( dataElement, categoryOptionCombo );
-    
+
                     operands.add( operand );
                 }
             }
@@ -848,7 +859,7 @@ public class DefaultDataElementCategoryService
     {
         return categoryOptionGroupStore.getByUid( uids );
     }
-    
+
     @Override
     public void deleteCategoryOptionGroup( CategoryOptionGroup group )
     {
@@ -878,7 +889,7 @@ public class DefaultDataElementCategoryService
     {
         return categoryOptionGroupStore.getCategoryOptionGroups( groupSet );
     }
-    
+
     @Override
     public CategoryOptionGroup getCategoryOptionGroupByName( String name )
     {
@@ -944,7 +955,7 @@ public class DefaultDataElementCategoryService
     {
         return categoryOptionGroupSetStore.getByUid( uid );
     }
-    
+
     @Override
     public List<CategoryOptionGroupSet> getCategoryOptionGroupSetsByUid( Collection<String> uids )
     {
@@ -974,7 +985,7 @@ public class DefaultDataElementCategoryService
     {
         return categoryOptionGroupSetStore.getAll();
     }
-    
+
     @Override
     public List<CategoryOptionGroupSet> getDisaggregationCategoryOptionGroupSetsNoAcl()
     {
