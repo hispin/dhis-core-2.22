@@ -32,6 +32,7 @@ import net.sf.json.JSONObject;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.attribute.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.springframework.util.StringUtils;
 
@@ -87,7 +88,14 @@ public class AttributeUtils
                     else
                     {
                         attributeValueItem.setValue( attributeValue.getValue() );
-                        attributeService.updateAttributeValue( object, attributeValueItem );
+                        try
+                        {
+                            attributeService.updateAttributeValue( object, attributeValueItem );
+                        }
+                        catch ( NonUniqueAttributeValueException ignored ) // ignore for now
+                        {
+                        }
+
                         attributeValue = null;
                     }
                 }
@@ -95,7 +103,14 @@ public class AttributeUtils
 
             if ( attributeValue != null && attributeValue.getValue() != null && !attributeValue.getValue().isEmpty() )
             {
-                attributeService.addAttributeValue( object, attributeValue );
+                try
+                {
+                    attributeService.addAttributeValue( object, attributeValue );
+                }
+                catch ( NonUniqueAttributeValueException ignored ) // ignore for now
+                {
+                }
+
                 attributeValues.add( attributeValue );
             }
         }

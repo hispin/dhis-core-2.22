@@ -242,14 +242,14 @@ public interface AttributeService
      *
      * @param attributeValue the attribute value.
      */
-    <T extends IdentifiableObject> void addAttributeValue( T object, AttributeValue attributeValue );
+    <T extends IdentifiableObject> void addAttributeValue( T object, AttributeValue attributeValue ) throws NonUniqueAttributeValueException;
 
     /**
      * Updates an attribute value.
      *
      * @param attributeValue the attribute value.
      */
-    <T extends IdentifiableObject> void updateAttributeValue( T object, AttributeValue attributeValue );
+    <T extends IdentifiableObject> void updateAttributeValue( T object, AttributeValue attributeValue ) throws NonUniqueAttributeValueException;
 
     /**
      * Deletes an attribute value.
