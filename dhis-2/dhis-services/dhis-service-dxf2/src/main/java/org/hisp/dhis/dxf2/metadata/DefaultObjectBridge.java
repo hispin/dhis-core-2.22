@@ -463,13 +463,13 @@ public class DefaultObjectBridge
 
         if ( DataElementCategoryOption.class.isInstance( object ) && ((DataElementCategoryOption) object).isDefault() )
         {
-            objects.add( (T) dataElementCategoryService.getDataElementCategoryOptionByName( DataElementCategoryOption.DEFAULT_NAME ) );
+            objects.add( (T) dataElementCategoryService.getDefaultDataElementCategoryOption() );
             return objects;
         }
 
         if ( DataElementCategory.class.isInstance( object ) && ((DataElementCategory) object).isDefault() )
         {
-            objects.add( (T) dataElementCategoryService.getDataElementCategoryByName( DataElementCategory.DEFAULT_NAME ) );
+            objects.add( (T) dataElementCategoryService.getDefaultDataElementCategory() );
             return objects;
         }
 
