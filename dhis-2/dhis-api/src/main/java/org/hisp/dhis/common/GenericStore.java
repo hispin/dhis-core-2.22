@@ -140,4 +140,6 @@ public interface GenericStore<T>
     List<AttributeValue> getAttributeValueByAttributeAndValue( Attribute attribute, String value );
 
     <P extends IdentifiableObject> boolean isAttributeValueUnique( P object, AttributeValue attributeValue );
+
+    <P extends IdentifiableObject> boolean isAttributeValueUnique( P object, Attribute attribute, String value );
 }

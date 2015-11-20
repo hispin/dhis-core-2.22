@@ -157,6 +157,8 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, AttributeValue attributeValue );
 
+    <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, Attribute attribute, String value );
+
     // -------------------------------------------------------------------------
     // NO ACL
     // -------------------------------------------------------------------------
