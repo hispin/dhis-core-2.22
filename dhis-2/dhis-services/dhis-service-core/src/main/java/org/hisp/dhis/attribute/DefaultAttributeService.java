@@ -29,8 +29,8 @@ package org.hisp.dhis.attribute;
  */
 
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.schema.SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +72,7 @@ public class DefaultAttributeService
     }
 
     @Autowired
-    private SchemaService schemaService;
+    private IdentifiableObjectManager manager;
 
     // -------------------------------------------------------------------------
     // Attribute implementation
@@ -251,12 +251,22 @@ public class DefaultAttributeService
 
 
     @Override
-    public <T extends IdentifiableObject> void addAttributeValue( T object, AttributeValue attributeValue )
+    public <T extends IdentifiableObject> void addAttributeValue( T object, AttributeValue attributeValue ) throws NonUniqueAttributeValueException
     {
         if ( object == null || attributeValue == null || attributeValue.getAttribute() == null ||
             !attributeValue.getAttribute().getSupportedClasses().contains( object.getClass() ) )
         {
             return;
+        }
+
+        if ( attributeValue.getAttribute().isUnique() )
+        {
+            List<AttributeValue> values = manager.getAttributeValueByAttributeAndValue( object.getClass(), attributeValue.getAttribute(), attributeValue.getValue() );
+
+            if ( !values.isEmpty() )
+            {
+                throw new NonUniqueAttributeValueException( "Value " + attributeValue.getValue() + " already exists for attribute." );
+            }
         }
 
         attributeValue.setAutoFields();
@@ -265,12 +275,22 @@ public class DefaultAttributeService
     }
 
     @Override
-    public <T extends IdentifiableObject> void updateAttributeValue( T object, AttributeValue attributeValue )
+    public <T extends IdentifiableObject> void updateAttributeValue( T object, AttributeValue attributeValue ) throws NonUniqueAttributeValueException
     {
         if ( object == null || attributeValue == null || attributeValue.getAttribute() == null ||
             !attributeValue.getAttribute().getSupportedClasses().contains( object.getClass() ) )
         {
             return;
+        }
+
+        if ( attributeValue.getAttribute().isUnique() )
+        {
+            List<AttributeValue> values = manager.getAttributeValueByAttributeAndValue( object.getClass(), attributeValue.getAttribute(), attributeValue.getValue() );
+
+            if ( values.size() > 1 || (values.size() == 1 && !object.getAttributeValues().contains( values.get( 0 ) )) )
+            {
+                throw new NonUniqueAttributeValueException( "Value " + attributeValue.getValue() + " already exists for attribute." );
+            }
         }
 
         attributeValue.setAutoFields();

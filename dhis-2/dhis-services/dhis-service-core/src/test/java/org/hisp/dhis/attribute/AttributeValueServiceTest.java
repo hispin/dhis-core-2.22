@@ -29,6 +29,7 @@ package org.hisp.dhis.attribute;
  */
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.junit.Test;
@@ -45,11 +46,14 @@ public class AttributeValueServiceTest
     @Autowired
     private AttributeService attributeService;
 
+    @Autowired
+    private IdentifiableObjectManager manager;
+
     private AttributeValue avA;
     private AttributeValue avB;
 
     @Override
-    protected void setUpTest()
+    protected void setUpTest() throws NonUniqueAttributeValueException
     {
         avA = new AttributeValue( "value 1" );
         avB = new AttributeValue( "value 2" );
@@ -83,7 +87,7 @@ public class AttributeValueServiceTest
     }
 
     @Test
-    public void testUpdateAttributeValue()
+    public void testUpdateAttributeValue() throws NonUniqueAttributeValueException
     {
         avA.setValue( "updated value 1" );
         avB.setValue( "updated value 2" );
@@ -128,5 +132,81 @@ public class AttributeValueServiceTest
 
         assertNotNull( avA );
         assertNotNull( avB );
+    }
+
+    @Test
+    public void testAddNonUniqueAttributeValue() throws NonUniqueAttributeValueException
+    {
+        Attribute attribute = new Attribute( "ID", ValueType.TEXT );
+        attribute.setUnique( true );
+        attribute.setDataElementAttribute( true );
+
+        attributeService.addAttribute( attribute );
+
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        manager.save( dataElementA );
+        manager.save( dataElementB );
+
+        AttributeValue attributeValueA = new AttributeValue( "A", attribute );
+        attributeService.addAttributeValue( dataElementA, attributeValueA );
+        manager.update( dataElementA );
+
+        AttributeValue attributeValueB = new AttributeValue( "B", attribute );
+        attributeService.addAttributeValue( dataElementB, attributeValueB );
+        manager.update( dataElementB );
+    }
+
+    @Test( expected = NonUniqueAttributeValueException.class )
+    public void testAddUniqueAttributeValue() throws NonUniqueAttributeValueException
+    {
+        Attribute attribute = new Attribute( "ID", ValueType.TEXT );
+        attribute.setUnique( true );
+        attribute.setDataElementAttribute( true );
+
+        attributeService.addAttribute( attribute );
+
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        manager.save( dataElementA );
+        manager.save( dataElementB );
+
+        AttributeValue attributeValueA = new AttributeValue( "A", attribute );
+        attributeService.addAttributeValue( dataElementA, attributeValueA );
+        manager.update( dataElementA );
+
+        AttributeValue attributeValueB = new AttributeValue( "A", attribute );
+        attributeService.addAttributeValue( dataElementB, attributeValueB );
+        manager.update( dataElementB );
+    }
+
+    @Test( expected = NonUniqueAttributeValueException.class )
+    public void testUpdateNonUniqueAttributeValue() throws NonUniqueAttributeValueException
+    {
+        Attribute attribute = new Attribute( "ID", ValueType.TEXT );
+        attribute.setUnique( true );
+        attribute.setDataElementAttribute( true );
+
+        attributeService.addAttribute( attribute );
+
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+
+        manager.save( dataElementA );
+        manager.save( dataElementB );
+
+        AttributeValue attributeValueA = new AttributeValue( "A", attribute );
+        attributeService.addAttributeValue( dataElementA, attributeValueA );
+        manager.update( dataElementA );
+
+        AttributeValue attributeValueB = new AttributeValue( "B", attribute );
+        attributeService.addAttributeValue( dataElementB, attributeValueB );
+        manager.update( dataElementB );
+
+        attributeValueB.setValue( "A" );
+        attributeService.updateAttributeValue( dataElementB, attributeValueB );
+        manager.update( dataElementB );
     }
 }

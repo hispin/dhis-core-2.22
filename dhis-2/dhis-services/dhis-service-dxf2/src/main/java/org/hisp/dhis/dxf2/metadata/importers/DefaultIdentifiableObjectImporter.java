@@ -37,6 +37,7 @@ import org.hibernate.SessionFactory;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.attribute.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DataDimensionItem;
@@ -1194,7 +1195,14 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
                 for ( AttributeValue attributeValue : attributeValues )
                 {
-                    attributeService.addAttributeValue( object, attributeValue );
+                    try
+                    {
+                        attributeService.addAttributeValue( object, attributeValue );
+                    }
+                    catch ( NonUniqueAttributeValueException ex )
+                    {
+                        log.info( ex.getMessage() );
+                    }
                 }
 
                 ReflectionUtils.invokeSetterMethod( "attributeValues", object, attributeValues );

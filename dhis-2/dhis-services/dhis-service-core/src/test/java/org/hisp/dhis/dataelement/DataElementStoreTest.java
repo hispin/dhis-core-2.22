@@ -33,6 +33,7 @@ import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.attribute.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
@@ -419,7 +420,7 @@ public class DataElementStoreTest
     }
 
     @Test
-    public void testDataElementFromAttribute()
+    public void testDataElementFromAttribute() throws NonUniqueAttributeValueException
     {
         Attribute attribute = new Attribute( "test", ValueType.TEXT );
         attribute.setDataElementAttribute( true );
@@ -441,7 +442,7 @@ public class DataElementStoreTest
     }
 
     @Test
-    public void testAttributeValueFromAttribute()
+    public void testAttributeValueFromAttribute() throws NonUniqueAttributeValueException
     {
         Attribute attribute = new Attribute( "test", ValueType.TEXT );
         attribute.setDataElementAttribute( true );
@@ -472,7 +473,7 @@ public class DataElementStoreTest
     }
 
     @Test
-    public void testAttributeValueFromAttributeAndValue()
+    public void testAttributeValueFromAttributeAndValue() throws NonUniqueAttributeValueException
     {
         Attribute attribute = new Attribute( "test", ValueType.TEXT );
         attribute.setDataElementAttribute( true );
