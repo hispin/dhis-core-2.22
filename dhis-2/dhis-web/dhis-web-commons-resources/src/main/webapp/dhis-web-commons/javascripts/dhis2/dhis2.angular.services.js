@@ -1079,19 +1079,18 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     var replaceVariables = function(expression, variablesHash){
         //replaces the variables in an expression with actual variable values.                
 
-        //Check if the expression contains program rule variables at all(any dollar signs):
-        if(expression.indexOf('#{') !== -1) {
+        //Check if the expression contains program rule variables at all(any curly braces):
+        if(expression.indexOf('{') !== -1) {
             //Find every variable name in the expression;
-            var variablespresent = expression.match(/#{\w+.?\w*}/g);
+            var variablespresent = expression.match(/[A#CV]{\w+.?\w*}/g);
             //Replace each matched variable:
             angular.forEach(variablespresent, function(variablepresent) {
                 //First strip away any prefix and postfix signs from the variable name:
-                variablepresent = variablepresent.replace("#{","").replace("}","");
+                variablepresent = variablepresent.replace("#{","").replace("A{","").replace("C{","").replace("V{","").replace("}","");
 
-                if(angular.isDefined(variablesHash[variablepresent]) &&
-                        variablesHash[variablepresent].variablePrefix === '#') {
+                if(angular.isDefined(variablesHash[variablepresent])) {
                     //Replace all occurrences of the variable name(hence using regex replacement):
-                    expression = expression.replace(new RegExp("#{" + variablepresent + "}", 'g'),
+                    expression = expression.replace(new RegExp( variablesHash[variablepresent].variablePrefix + "{" + variablepresent + "}", 'g'),
                         variablesHash[variablepresent].variableValue);
                 }
                 else {
