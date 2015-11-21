@@ -71,12 +71,16 @@ public interface EnrollmentService
     // -------------------------------------------------------------------------
 
     ImportSummary updateEnrollmentJson( String id, InputStream inputStream ) throws IOException;
+    
+    ImportSummary updateEnrollmentForNoteJson( String id, InputStream inputStream ) throws IOException;
 
     ImportSummary updateEnrollmentXml( String id, InputStream inputStream ) throws IOException;
 
     ImportSummaries updateEnrollments( List<Enrollment> enrollments );
 
     ImportSummary updateEnrollment( Enrollment enrollment );
+    
+    ImportSummary updateEnrollmentForNote( Enrollment enrollment );
 
     // -------------------------------------------------------------------------
     // DELETE
