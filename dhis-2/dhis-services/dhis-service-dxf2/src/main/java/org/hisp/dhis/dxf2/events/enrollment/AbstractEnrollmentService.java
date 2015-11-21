@@ -398,6 +398,33 @@ public abstract class AbstractEnrollmentService
 
         return importSummary;
     }
+    
+    @Override
+    public ImportSummary updateEnrollmentForNote( Enrollment enrollment )
+    {
+        ImportSummary importSummary = new ImportSummary();
+
+        if ( enrollment == null || enrollment.getEnrollment() == null )
+        {
+            return new ImportSummary( ImportStatus.ERROR, "No enrollment or enrollment ID was supplied" ).incrementIgnored();
+        }
+
+        ProgramInstance programInstance = programInstanceService.getProgramInstance( enrollment.getEnrollment() );
+
+        if ( programInstance == null )
+        {
+            return new ImportSummary( ImportStatus.ERROR, "Enrollment ID was not valid." ).incrementIgnored();
+        }
+
+        Set<ImportConflict> importConflicts = new HashSet<>();
+        
+        saveTrackedEntityComment( programInstance, enrollment );
+
+        importSummary.setReference( enrollment.getEnrollment() );
+        importSummary.getImportCount().incrementUpdated();
+
+        return importSummary;
+    }
 
     // -------------------------------------------------------------------------
     // DELETE

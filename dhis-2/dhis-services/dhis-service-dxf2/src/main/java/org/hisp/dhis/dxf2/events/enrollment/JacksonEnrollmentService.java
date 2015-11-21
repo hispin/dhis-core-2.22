@@ -198,6 +198,15 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
 
         return updateEnrollment( enrollment );
     }
+    
+    @Override
+    public ImportSummary updateEnrollmentForNoteJson( String id, InputStream inputStream ) throws IOException
+    {
+        Enrollment enrollment = fromJson( inputStream, Enrollment.class );
+        enrollment.setEnrollment( id );
+
+        return updateEnrollmentForNote( enrollment );
+    }
 
     @Override
     public ImportSummary updateEnrollmentXml( String id, InputStream inputStream ) throws IOException
