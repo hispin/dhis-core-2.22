@@ -41,7 +41,7 @@
                     <tr ng-repeat="note in selectedEnrollment.notes| filter:noteSearchText">
                         <td class="add-default-left-padding">
                             <d2-pop-over content="note" template="popover.html" details="{{'details'| translate}}">
-                                <!--div>{{note.value}}</div-->
+                                <div>{{note.value}}</div>
                             </d2-pop-over>
                             <script type="text/ng-template" id="popover.html">
                                 <p>{{content.value}}</p>
