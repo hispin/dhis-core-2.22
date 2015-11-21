@@ -65,7 +65,7 @@ trackerCapture.controller('NotesController',
             var e = angular.copy($scope.selectedEnrollment);
 
             e.notes = [newNote];
-            EnrollmentService.update(e).then(function(){
+            EnrollmentService.updateForNote(e).then(function(){
                 $scope.note = '';
                 $scope.addNoteField = false; //note is added, hence no need to show note field.                
             });

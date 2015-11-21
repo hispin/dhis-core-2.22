@@ -560,6 +560,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
             return promise;
         },
+        updateForNote: function( enrollment ){
+            var promise = $http.put('../api/enrollments/' + enrollment.enrollment + '/addNote', enrollment).then(function(response){
+                return response.data;         
+            });
+            return promise;
+        },
         cancel: function(enrollment){
             var promise = $http.put('../api/enrollments/' + enrollment.enrollment + '/cancelled').then(function(response){
                 return response.data;               
