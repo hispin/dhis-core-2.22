@@ -442,22 +442,24 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return orgUnitPromise;
         },    
         getSearchTreeRoot: function(){
-            if(!rootOrgUnitPromise){
-                
-                var url = '../api/me.json?fields=organisationUnits[id,name,children[id,name,children[id,name]]]&paging=false';
-                
-                if( roles && roles.userCredentials && roles.userCredentials.userRoles && roles.userCredentials.userRoles.authorities ){
-                    if( roles.userCredentials.userRoles.authorities.indexOf('ALL') !== -1 || 
-                            roles.userCredentials.userRoles.authorities.indexOf('F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS') !== -1 ){                        
-                        url = '../api/organisationUnits.json?filter=level:eq:1&fields=id,name,children[id,name,children[id,name]]&paging=false';                        
-                    }
-                }                
-                rootOrgUnitPromise = $http.get( url ).then(function(response){
-                    return response.data;
-                });
-            }
-            return rootOrgUnitPromise;
-        }
+           if(!rootOrgUnitPromise){
+               var url = '../api/me.json?fields=organisationUnits[id,name,children[id,name,children[id,name]]]&paging=false';
+               if( roles && roles.userCredentials && roles.userCredentials.userRoles){
+                   var userRoles = roles.userCredentials.userRoles;
+                   for(var i=0; i<userRoles.length; i++){
+                       if(userRoles[i].authorities.indexOf('ALL') !== -1 || 
+                         userRoles[i].authorities.indexOf('F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS') !== -1 ){                        
+                         url = '../api/organisationUnits.json?filter=level:eq:1&fields=id,name,children[id,name,children[id,name]]&paging=false';
+                         i=userRoles.length;
+                       }
+                   }  
+               }             
+               rootOrgUnitPromise = $http.get( url ).then(function(response){
+                   return response.data;
+               });
+           }
+           return rootOrgUnitPromise;
+       }
     }; 
 })
 
