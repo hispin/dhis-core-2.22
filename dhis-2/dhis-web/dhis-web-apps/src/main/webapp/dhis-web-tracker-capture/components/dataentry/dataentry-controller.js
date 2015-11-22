@@ -765,9 +765,11 @@ trackerCapture.controller('DataEntryController',
     $scope.notesModal = function(){
                 
         var bodyList = [];
-        for(i = 0; i < $scope.currentEvent.notes.length; i++){
-            var currentNote = $scope.currentEvent.notes[i];            
-            bodyList.push({value1: currentNote.storedDate, value2: currentNote.value});
+        if($scope.currentEvent.notes) {
+            for(i = 0; i < $scope.currentEvent.notes.length; i++){
+                var currentNote = $scope.currentEvent.notes[i];            
+                bodyList.push({value1: currentNote.storedDate, value2: currentNote.value});
+            }
         }
         
         var dialogOptions = {
