@@ -1185,3 +1185,32 @@ input, button, select, textarea {
 .remove-one-pix {
     margin-top: -1px;
 }
+
+
+
+.row.row-striped:nth-of-type(odd) {
+    background: #ebf0f6;   
+}
+
+.row.null-margins {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.event-table-options-dropdown {
+    display: flex;
+    padding: 0px;
+}
+
+.badge.event-table-options-badge {
+    padding-top: 0.5;
+    padding-bottom: 0.5;
+    padding-right: 0;
+    padding-left: 0;
+    height: 19px;
+    width: 19px;
+}
+
+.table-striped > tbody > tr:nth-child(odd)> td.current-event-td {
+    background-color: inherit;        
+}   

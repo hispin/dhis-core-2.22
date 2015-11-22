@@ -1,7 +1,7 @@
 <form name="tableEntryOuterForm" novalidate>          
     <table class="table-borderless table-striped" ng-if='currentEvent'>
         <thead>
-            <tr class="col-md-12">
+            <tr class="col-md-12">                
                 <th class="col-md-2" >
                     {{currentEvent.excecutionDateLabel}}
                 </th>
@@ -12,23 +12,28 @@
                         <span ng-show="showHelpText[prStDe.dataElement.id]" ><br>{{prStDes[prStDe.dataElement.id].dataElement.description}}</span>
                     </a> 
                 </th>
-            </tr>
+                <th class="col-md-2">Status</th>                
         </thead>
-        <tr ng-class="currentEvent === eventRow ? 'selected' : 'col-md-12'" ng-repeat="eventRow in currentStageEvents" ng-if="currentStageEvents" ng-click="switchToEventRow(eventRow)">
-            <td class="col-md-2">
-                <input type="text"
-                       placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
-                       class="form-control" 
-                       ng-class="getInputDueDateClass(eventRow)"
-                       d2-date 
-                       ng-model="eventRow.eventDate"
-                       ng-disabled="eventRow.status === 'SKIPPED' || eventRow.enrollmentStatus !== 'ACTIVE' || eventRow.editingNotAllowed "    
-                       ng-required="true"
-                       blur-or-change="saveEventDateForEvent(eventRow)"/>
+        <tr ng-class="currentEvent === eventRow ? getEventStyle(eventRow) : 'col-md-12'" ng-repeat="eventRow in currentStageEvents" ng-if="currentStageEvents" ng-click="switchToEventRow(eventRow)">            
+            <td class="col-md-2" ng-class="{'current-event-td': currentEvent === eventRow}">
+                <div ng-if="eventRow === currentEvent && eventRow.status !== EVENTSTATUSCOMPLETELABEL && eventRow.status !== EVENTSTATUSSKIPPEDLABEL">
+                    <input type="text"
+                           placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
+                           class="form-control" 
+                           ng-class="getInputDueDateClass(eventRow)"
+                           d2-date 
+                           ng-model="eventRow.eventDate"
+                           ng-disabled="eventRow.status === 'SKIPPED' || eventRow.enrollmentStatus !== 'ACTIVE' || eventRow.editingNotAllowed "    
+                           ng-required="true"
+                           blur-or-change="saveEventDateForEvent(eventRow)"/>                    
+                </div>
+                <div ng-if="eventRow !== currentEvent || eventRow.status === EVENTSTATUSCOMPLETELABEL || eventRow.status === EVENTSTATUSSKIPPEDLABEL">
+                    {{eventRow.eventDate}}
+                </div>
                 <span ng-if="invalidDate === eventRow.event" class="error">{{'date_required'| translate}}</span>
             </td>
-            <td ng-class="prStDe.dataElement.optionSetValue ? 'col-md-2 optionset' : 'col-md-2'" ng-repeat="prStDe in currentStage.programStageDataElements">
-                <ng-form ng-if="eventRow === currentEvent" name="innerform">
+            <td ng-class="{'current-event-td': currentEvent === eventRow, 'col-md-2 optionset': prStDe.dataElement.optionSetValue, 'col-md-2': !(prStDe.dataElement.optionSetValue)}" ng-repeat="prStDe in currentStage.programStageDataElements">                
+                <ng-form ng-if="eventRow === currentEvent && eventRow.status !== EVENTSTATUSCOMPLETELABEL && eventRow.status !== EVENTSTATUSSKIPPEDLABEL && eventRow.validatedEventDate" name="innerform">
                     <div ng-if="prStDe.dataElement.optionSetValue">
                         <div ng-if="!selectedProgram.dataEntryMethod || optionSets[prStDe.dataElement.optionSet.id].options.length >= 7">
                             <ui-select  ng-model="eventRow[prStDe.dataElement.id]" 
@@ -212,7 +217,7 @@
                         </div>
                     </div>
                 </ng-form>
-                <ng-form ng-if="eventRow !== currentEvent" name="innerform" >
+                <ng-form ng-if="eventRow !== currentEvent || eventRow.status === EVENTSTATUSCOMPLETELABEL || eventRow.status === EVENTSTATUSSKIPPEDLABEL || !eventRow.validatedEventDate" name="innerform" >
                     <div ng-switch="prStDe.dataElement.valueType">
                          <div ng-switch-when="BOOLEAN">
                             <select class="form-control"
@@ -249,6 +254,32 @@
                     </div>
                 </ng-form>
                 <span ng-show="dataEntryOuterForm.submitted && innerform.foo.$invalid" class="error">{{'required'| translate}}</span>
+            </td>
+            <td class="col-md-2" ng-class="{'current-event-td': currentEvent === eventRow}">
+                <div ng-controller="EventOptionsInTableController" ng-if="eventRow.enrollmentStatus === 'ACTIVE' && !eventRow.editingNotAllowed && eventRow.orgUnit === selectedOrgUnit.id">
+                    <div class="btn-group event-table-options-dropdown dropup" ng-show="eventRow==currentEvent">
+                      <button type="button" class="btn btn-default" ng-click="defaultOption.onClick()"  data-toggle='tooltip' title='{{defaultOption.tooltip | translate}}' ng-bind-html="defaultOption.icon" ng-disabled="defaultOption.disabled">                                   
+                      </button>
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                          <li ng-show="option.show && !option.disabled" ng-repeat="option in eventTableOptionsArr" ng-click="option.onClick()">
+                              <a href="">
+                                  <span ng-bind-html="option.icon"></span>
+                                  &nbsp;{{option.text | translate}}
+                              </a>
+                          </li>                                      
+                      </ul>                                                                
+                    </div>                     
+                    <div ng-show="eventRow!=currentEvent">
+                        <span class="badge event-table-options-badge" ng-class="getEventStyle(eventRow)">
+                            <span ng-show="eventRow.status == EVENTSTATUSCOMPLETELABEL" class="glyphicon glyphicon-ok event-table-options-glypicon"></span>
+                            <span ng-show="eventRow.status != EVENTSTATUSCOMPLETELABEL" class="glyphicon glyphicon-remove event-table-options-glypicon"></span>          
+                        </span>                                                
+                    </div>      
+                </div>
             </td>
             <!--<td class="col-md-2" ng-if="allowProvidedElsewhereExists">                
                 <div class="align-center" ng-show="prStDe.allowProvidedElsewhere">
