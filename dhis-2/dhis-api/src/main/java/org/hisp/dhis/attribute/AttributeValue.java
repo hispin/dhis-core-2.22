@@ -199,4 +199,9 @@ public class AttributeValue
     {
         return attribute != null && attribute.isUnique();
     }
+
+    public boolean isMandatory()
+    {
+        return attribute != null && attribute.isMandatory();
+    }
 }

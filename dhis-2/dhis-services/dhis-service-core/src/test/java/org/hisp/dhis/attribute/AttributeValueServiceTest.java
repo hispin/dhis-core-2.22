@@ -29,6 +29,7 @@ package org.hisp.dhis.attribute;
  */
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.attribute.exception.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;

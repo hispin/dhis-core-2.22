@@ -1,4 +1,4 @@
-package org.hisp.dhis.attribute;
+package org.hisp.dhis.attribute.exception;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -27,6 +27,8 @@ package org.hisp.dhis.attribute;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+import org.hisp.dhis.attribute.AttributeValue;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
