@@ -111,7 +111,7 @@
 
     <!-- Dynamic attribute values -->
 
-    <set name="attributeValues" table="datasetattributevalues">
+    <set name="attributeValues" table="datasetattributevalues" cascade="delete-orphan">
       <cache usage="read-write" />
       <key column="datasetid" />
       <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />

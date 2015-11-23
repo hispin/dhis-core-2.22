@@ -63,7 +63,7 @@
 
     <!-- Dynamic attribute values -->
 
-    <set name="attributeValues" table="indicatorattributevalues">
+    <set name="attributeValues" table="indicatorattributevalues" cascade="delete-orphan">
       <cache usage="read-write" />
       <key column="indicatorid" />
       <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />

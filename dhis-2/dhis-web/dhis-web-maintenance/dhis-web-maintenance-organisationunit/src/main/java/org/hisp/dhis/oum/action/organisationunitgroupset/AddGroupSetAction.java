@@ -34,7 +34,6 @@ import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
-import org.hisp.dhis.system.util.AttributeUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -127,13 +126,13 @@ public class AddGroupSetAction
     public String execute()
         throws Exception
     {
-        OrganisationUnitGroupSet groupSet = new OrganisationUnitGroupSet();
+        OrganisationUnitGroupSet organisationUnitGroupSet = new OrganisationUnitGroupSet();
 
-        groupSet.setName( StringUtils.trimToNull( name ) );
-        groupSet.setCode( StringUtils.trimToNull( code ) );
-        groupSet.setDescription( StringUtils.trimToNull( description ) );
-        groupSet.setCompulsory( compulsory );
-        groupSet.setDataDimension( dataDimension );
+        organisationUnitGroupSet.setName( StringUtils.trimToNull( name ) );
+        organisationUnitGroupSet.setCode( StringUtils.trimToNull( code ) );
+        organisationUnitGroupSet.setDescription( StringUtils.trimToNull( description ) );
+        organisationUnitGroupSet.setCompulsory( compulsory );
+        organisationUnitGroupSet.setDataDimension( dataDimension );
 
         Set<OrganisationUnitGroup> selectedMembers = new HashSet<>();
 
@@ -147,12 +146,12 @@ public class AddGroupSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( groupSet, groupSet.getAttributeValues(), jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( organisationUnitGroupSet, jsonAttributeValues );
         }
 
-        groupSet.setOrganisationUnitGroups( selectedMembers );
+        organisationUnitGroupSet.setOrganisationUnitGroups( selectedMembers );
 
-        organisationUnitGroupService.addOrganisationUnitGroupSet( groupSet );
+        organisationUnitGroupService.addOrganisationUnitGroupSet( organisationUnitGroupSet );
 
         return SUCCESS;
     }

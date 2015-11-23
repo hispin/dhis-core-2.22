@@ -82,7 +82,7 @@
 
     <!-- Dynamic attribute values -->
 
-    <set name="attributeValues" table="trackedentityattributeattributevalues">
+    <set name="attributeValues" table="trackedentityattributeattributevalues" cascade="delete-orphan">
       <cache usage="read-write" />
       <key column="trackedentityattributeid" />
       <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />

@@ -36,7 +36,6 @@ import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -126,7 +125,7 @@ public class AddDataElementCategoryOptionAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
+    public String execute() throws Exception
     {
         Date sDate = null;
         Date eDate = null;
@@ -152,8 +151,7 @@ public class AddDataElementCategoryOptionAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElementCategoryOption, dataElementCategoryOption.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            attributeService.updateAttributeValues( dataElementCategoryOption, jsonAttributeValues );
         }
 
         dataElementCategoryService.addDataElementCategoryOption( dataElementCategoryOption );

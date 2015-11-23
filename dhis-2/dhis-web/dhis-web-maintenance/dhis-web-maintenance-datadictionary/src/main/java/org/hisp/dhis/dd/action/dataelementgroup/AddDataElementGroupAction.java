@@ -35,7 +35,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;
-import org.hisp.dhis.system.util.AttributeUtils;
 
 import java.util.List;
 
@@ -120,7 +119,7 @@ public class AddDataElementGroupAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
+    public String execute() throws Exception
     {
         dataElementGroup = new DataElementGroup( StringUtils.trimToNull( name ) );
         dataElementGroup.setShortName( StringUtils.trimToNull( shortName ) );
@@ -133,8 +132,7 @@ public class AddDataElementGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElementGroup, dataElementGroup.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            attributeService.updateAttributeValues( dataElementGroup, jsonAttributeValues );
         }
 
         dataElementService.addDataElementGroup( dataElementGroup );

@@ -45,7 +45,6 @@ import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroupService;
 
 import java.util.HashSet;
@@ -311,8 +310,7 @@ public class UpdateDataSetAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
-        throws Exception
+    public String execute() throws Exception
     {
         Set<DataElement> dataElements = new HashSet<>();
 
@@ -376,7 +374,7 @@ public class UpdateDataSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataSet, dataSet.getAttributeValues(), jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( dataSet, jsonAttributeValues );
         }
 
         dataSetService.updateDataSet( dataSet );

@@ -41,7 +41,6 @@ import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroupService;
 
 import java.util.HashSet;
@@ -284,8 +283,7 @@ public class AddDataSetAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
-        throws Exception
+    public String execute() throws Exception
     {
         PeriodType periodType = PeriodType.getPeriodTypeByName( frequencySelect );
 
@@ -338,8 +336,7 @@ public class AddDataSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataSet, dataSet.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            attributeService.updateAttributeValues( dataSet, jsonAttributeValues );
         }
 
         dataSetService.addDataSet( dataSet );

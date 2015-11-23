@@ -36,7 +36,6 @@ import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;
-import org.hisp.dhis.system.util.AttributeUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -130,7 +129,7 @@ public class UpdateDataElementGroupAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
+    public String execute() throws Exception
     {
         dataElementGroup = dataElementService.getDataElementGroup( id );
         dataElementGroup.setName( StringUtils.trimToNull( name ) );
@@ -146,8 +145,7 @@ public class UpdateDataElementGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElementGroup, dataElementGroup.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            attributeService.updateAttributeValues( dataElementGroup, jsonAttributeValues );
         }
 
         dataElementGroup.updateDataElements( members );
