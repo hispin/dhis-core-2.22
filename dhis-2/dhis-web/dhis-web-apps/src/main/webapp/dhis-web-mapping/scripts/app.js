@@ -10078,7 +10078,7 @@ Ext.onReady( function() {
             }
         };
 
-        Ext.Loader.injectScriptElement('//maps.googleapis.com/maps/api/js?callback=GIS_GM_fn',
+        Ext.Loader.injectScriptElement('//maps.googleapis.com/maps/api/js?v=3.22&callback=GIS_GM_fn',
             function() {
                 console.log("GM available (online)");
             },
