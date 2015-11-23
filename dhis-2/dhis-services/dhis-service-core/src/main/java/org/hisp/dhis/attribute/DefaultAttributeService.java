@@ -137,19 +137,19 @@ public class DefaultAttributeService
     @Override
     public List<Attribute> getAttributes( Class<?> klass )
     {
-        return attributeStore.getAttributes( klass );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getAttributes( klass ) ) );
     }
 
     @Override
     public List<Attribute> getMandatoryAttributes( Class<?> klass )
     {
-        return attributeStore.getMandatoryAttributes( klass );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getMandatoryAttributes( klass ) ) );
     }
 
     @Override
     public List<Attribute> getUniqueAttributes( Class<?> klass )
     {
-        return attributeStore.getUniqueAttributes( klass );
+        return new ArrayList<>( i18n( i18nService, attributeStore.getUniqueAttributes( klass ) ) );
     }
 
     @Override
