@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.security.intercept.LoginInterceptor;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
@@ -63,6 +65,9 @@ public class DefaultAuthenticationSuccessHandler
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DhisConfigurationProvider config;
     
     @Override
     public void onAuthenticationSuccess( HttpServletRequest request, HttpServletResponse response, Authentication authentication )
@@ -87,7 +92,9 @@ public class DefaultAuthenticationSuccessHandler
 
         UserCredentials credentials = userService.getUserCredentialsByUsername( username );
 
-        if ( credentials != null )
+        boolean readOnly = config.isEnabled( ConfigurationKey.SYSTEM_READ_ONLY_MODE );
+        
+        if ( credentials != null && !readOnly )
         {
             credentials.updateLastLogin();
             userService.updateUserCredentials( credentials );            

@@ -34,6 +34,7 @@ package org.hisp.dhis.external.conf;
 public enum ConfigurationKey
 {
     SYSTEM_ID( "system.id" ),
+    SYSTEM_READ_ONLY_MODE( "system.read_only_mode", "off" ),
     CONNECTION_DIALECT( "connection.dialect" ),
     CONNECTION_DRIVER_CLASS( "connection.driver_class" ),
     CONNECTION_URL( "connection.url" ),
