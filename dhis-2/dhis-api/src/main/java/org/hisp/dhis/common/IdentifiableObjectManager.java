@@ -155,9 +155,9 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> List<AttributeValue> getAttributeValueByAttributeAndValue( Class<T> klass, Attribute attribute, String value );
 
-    <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, AttributeValue attributeValue );
+    <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<? extends IdentifiableObject> klass, T object, AttributeValue attributeValue );
 
-    <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, Attribute attribute, String value );
+    <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<? extends IdentifiableObject> klass, T object, Attribute attribute, String value );
 
     // -------------------------------------------------------------------------
     // NO ACL

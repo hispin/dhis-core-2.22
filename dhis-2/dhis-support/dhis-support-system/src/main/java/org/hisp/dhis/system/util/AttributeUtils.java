@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author mortenoh
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class AttributeUtils
 {

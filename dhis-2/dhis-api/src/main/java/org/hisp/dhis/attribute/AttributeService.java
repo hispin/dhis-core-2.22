@@ -285,4 +285,6 @@ public interface AttributeService
      * @return the number of attribute values.
      */
     int getAttributeValueCount();
+
+    <T extends IdentifiableObject> void updateAttributeValues( T object, List<String> jsonAttributeValues ) throws NonUniqueAttributeValueException;
 }

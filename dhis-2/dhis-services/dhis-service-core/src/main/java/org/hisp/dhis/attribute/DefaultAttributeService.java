@@ -28,14 +28,19 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import net.sf.json.JSONObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.i18n.I18nService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
@@ -265,7 +270,7 @@ public class DefaultAttributeService
 
             if ( !values.isEmpty() )
             {
-                throw new NonUniqueAttributeValueException( "Value " + attributeValue.getValue() + " already exists for attribute." );
+                throw new NonUniqueAttributeValueException( attributeValue );
             }
         }
 
@@ -289,7 +294,7 @@ public class DefaultAttributeService
 
             if ( values.size() > 1 || (values.size() == 1 && !object.getAttributeValues().contains( values.get( 0 ) )) )
             {
-                throw new NonUniqueAttributeValueException( "Value " + attributeValue.getValue() + " already exists for attribute." );
+                throw new NonUniqueAttributeValueException( attributeValue );
             }
         }
 
@@ -338,5 +343,77 @@ public class DefaultAttributeService
     public int getAttributeValueCount()
     {
         return attributeValueStore.getCount();
+    }
+
+    // TODO remove when actions are no longer in use
+    @Override
+    public <T extends IdentifiableObject> void updateAttributeValues( T object, List<String> jsonAttributeValues ) throws NonUniqueAttributeValueException
+    {
+        Map<String, AttributeValue> attributeValueMap = getJsonAttributeValueMap( jsonAttributeValues );
+        Iterator<AttributeValue> iterator = object.getAttributeValues().iterator();
+
+        while ( iterator.hasNext() )
+        {
+            AttributeValue attributeValue = iterator.next();
+
+            if ( attributeValueMap.containsKey( attributeValue.getAttribute().getUid() ) )
+            {
+                AttributeValue av = attributeValueMap.get( attributeValue.getAttribute().getUid() );
+
+                if ( attributeValue.isUnique() )
+                {
+                    if ( manager.isAttributeValueUnique( object.getClass(), object, attributeValue.getAttribute(), av.getValue() ) )
+                    {
+                        attributeValue.setValue( av.getValue() );
+                    }
+                    else
+                    {
+                        throw new NonUniqueAttributeValueException( attributeValue, av.getValue() );
+                    }
+                }
+                else
+                {
+                    attributeValue.setValue( av.getValue() );
+                }
+
+                attributeValueMap.remove( attributeValue.getAttribute().getUid() );
+            }
+            else
+            {
+                iterator.remove();
+            }
+        }
+
+        for ( String uid : attributeValueMap.keySet() )
+        {
+            AttributeValue attributeValue = attributeValueMap.get( uid );
+            addAttributeValue( object, attributeValue );
+        }
+    }
+
+    private Map<String, AttributeValue> getJsonAttributeValueMap( List<String> jsonAttributeValues )
+    {
+        Map<String, AttributeValue> map = new HashMap<>();
+
+        for ( String jsonValue : jsonAttributeValues )
+        {
+            JSONObject json = JSONObject.fromObject( jsonValue );
+            Integer id = json.getInt( "id" );
+            String value = json.getString( "value" );
+
+            Attribute attribute = getAttribute( id );
+
+            if ( attribute == null || StringUtils.isEmpty( value ) )
+            {
+                continue;
+            }
+
+            AttributeValue attributeValue = new AttributeValue( value, attribute );
+            attributeValue.setId( id );
+
+            map.put( attribute.getUid(), attributeValue );
+        }
+
+        return map;
     }
 }

@@ -33,8 +33,15 @@ package org.hisp.dhis.attribute;
  */
 public class NonUniqueAttributeValueException extends Exception
 {
-    public NonUniqueAttributeValueException( String message )
+    public NonUniqueAttributeValueException( AttributeValue attributeValue )
     {
-        super( message );
+        super( "Value " + attributeValue.getValue() + " already exists for attribute "
+            + attributeValue.getAttribute().getName() + "(" + attributeValue.getAttribute().getUid() + ")" );
+    }
+
+    public NonUniqueAttributeValueException( AttributeValue attributeValue, String value )
+    {
+        super( "Value " + value + " already exists for attribute "
+            + attributeValue.getAttribute().getName() + "(" + attributeValue.getAttribute().getUid() + ")" );
     }
 }

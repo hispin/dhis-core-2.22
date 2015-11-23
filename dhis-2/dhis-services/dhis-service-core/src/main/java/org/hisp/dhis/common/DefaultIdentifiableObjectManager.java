@@ -1001,14 +1001,15 @@ public class DefaultIdentifiableObjectManager
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, AttributeValue attributeValue )
+    public <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<? extends IdentifiableObject> klass, T object, AttributeValue attributeValue )
     {
         GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( klass );
         return store != null && store.isAttributeValueUnique( object, attributeValue );
     }
 
     @Override
-    public <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<T> klass, T object, Attribute attribute, String value )
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> boolean isAttributeValueUnique( Class<? extends IdentifiableObject> klass, T object, Attribute attribute, String value )
     {
         GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( klass );
         return store != null && store.isAttributeValueUnique( object, attribute, value );
