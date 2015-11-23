@@ -92,7 +92,7 @@ var d2Directives = angular.module('d2Directives', [])
                 html: true,
                 title: scope.title
             };
-            element.popover(options);
+            element[0].popover(options);
         }
     };
 })
@@ -173,6 +173,7 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
+/* TODO: this directive access an element #contextMenu somewhere in the document. Looks like it has to be rewritten */
 .directive('d2ContextMenu', function () {
 
     return {
@@ -180,7 +181,7 @@ var d2Directives = angular.module('d2Directives', [])
         link: function (scope, element, attrs) {
             var contextMenu = $("#contextMenu");
 
-            element.click(function (e) {                
+            element.click(function (e) {
                 var menuHeight = contextMenu.height();
                 var menuWidth = contextMenu.width();
                 var winHeight = $(window).height();
