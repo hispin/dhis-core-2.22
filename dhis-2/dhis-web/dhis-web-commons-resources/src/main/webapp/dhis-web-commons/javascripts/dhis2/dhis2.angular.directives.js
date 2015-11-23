@@ -92,7 +92,7 @@ var d2Directives = angular.module('d2Directives', [])
                 html: true,
                 title: scope.title
             };
-            element[0].popover(options);
+            element.popover(options);
         }
     };
 })
