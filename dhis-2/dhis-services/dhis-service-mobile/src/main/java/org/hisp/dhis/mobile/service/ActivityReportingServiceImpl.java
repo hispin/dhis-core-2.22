@@ -1566,7 +1566,7 @@ public class ActivityReportingServiceImpl
         if ( attributes != null && attributes.size() > 0 )
         {
             valuesForDelete = attValueService.getTrackedEntityAttributeValues( entityInstance );
-            tempTEI.getAttributeValues().clear();
+            tempTEI.getTrackedEntityAttributeValues().clear();
 
             for ( TrackedEntityAttribute attribute : attributes )
             {
@@ -1913,7 +1913,7 @@ public class ActivityReportingServiceImpl
             programStageInstanceService.updateProgramStageInstance( programStageInstance );
 
             // send SMS
-            if ( programStageInstance.getProgramInstance().getEntityInstance().getAttributeValues() != null
+            if ( programStageInstance.getProgramInstance().getEntityInstance().getTrackedEntityAttributeValues() != null
                 && lostEvent.getSMS() != null )
             {
                 List<User> recipientsList = new ArrayList<>();
