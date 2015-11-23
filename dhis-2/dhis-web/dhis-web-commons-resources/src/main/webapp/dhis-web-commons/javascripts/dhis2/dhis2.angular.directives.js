@@ -155,17 +155,7 @@ var d2Directives = angular.module('d2Directives', [])
         controller: function ($scope, Paginator) {
             $scope.paginator = Paginator;
         },
-        templateUrl: '../dhis-web-commons/angular-forms/serverside-pagination.html'
-    };
-})
-
-.directive('draggableModal', function () {
-
-    return {
-        restrict: 'EA',
-        link: function (scope, element) {
-            element.draggable();
-        }
+        templateUrl: '../../../dhis-web-commons/angular-forms/serverside-pagination.html'
     };
 })
 
@@ -183,7 +173,7 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('d2ContextMenu', function (ContextMenuSelectedItem) {
+.directive('d2ContextMenu', function () {
 
     return {
         restrict: 'A',
