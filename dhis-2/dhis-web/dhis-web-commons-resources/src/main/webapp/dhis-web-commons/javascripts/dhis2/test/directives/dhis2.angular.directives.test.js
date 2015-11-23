@@ -151,7 +151,8 @@ describe('Directives: d2Drirectives', () => {
     });
 
 
-    /*TODO: The directive purpose and implenentaion needs to be discussed before writing the tests.*/
+    /*TODO: The directive purpose and implenentation needs to be discussed before writing the tests.*/
+
     xdescribe('Directive: d2ContextMenu', () => {
         let mock$scope;
         let element;
@@ -168,7 +169,7 @@ describe('Directives: d2Drirectives', () => {
             };
         }));
 
-        it('should call the resgistered function on key press event', () => {
+        it('should call the resgistered function on click event', () => {
             var elm = angular.element('<div id="contextMenu"></div><div d2-context-menu></div>');
             render(elm);
             var contextMenu =  elm.find('#contextMenu');
