@@ -29,6 +29,7 @@ package org.hisp.dhis.attribute;
  */
 
 import net.sf.json.JSONObject;
+import org.hisp.dhis.attribute.exception.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.i18n.I18nService;
@@ -37,10 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
@@ -345,11 +348,18 @@ public class DefaultAttributeService
         return attributeValueStore.getCount();
     }
 
-    // TODO remove when actions are no longer in use
     @Override
     public <T extends IdentifiableObject> void updateAttributeValues( T object, List<String> jsonAttributeValues ) throws NonUniqueAttributeValueException
     {
-        Map<String, AttributeValue> attributeValueMap = getJsonAttributeValueMap( jsonAttributeValues );
+        updateAttributeValues( object, getJsonAttributeValues( jsonAttributeValues ) );
+    }
+
+    @Override
+    public <T extends IdentifiableObject> void updateAttributeValues( T object, Set<AttributeValue> attributeValues ) throws NonUniqueAttributeValueException
+    {
+        Map<String, AttributeValue> attributeValueMap = attributeValues.stream()
+            .collect( Collectors.toMap( av -> av.getAttribute().getUid(), av -> av ) );
+
         Iterator<AttributeValue> iterator = object.getAttributeValues().iterator();
 
         while ( iterator.hasNext() )
@@ -391,9 +401,13 @@ public class DefaultAttributeService
         }
     }
 
-    private Map<String, AttributeValue> getJsonAttributeValueMap( List<String> jsonAttributeValues )
+    //--------------------------------------------------------------------------------------------------
+    // Helpers
+    //--------------------------------------------------------------------------------------------------
+
+    private Set<AttributeValue> getJsonAttributeValues( List<String> jsonAttributeValues )
     {
-        Map<String, AttributeValue> map = new HashMap<>();
+        Set<AttributeValue> attributeValues = new HashSet<>();
 
         for ( String jsonValue : jsonAttributeValues )
         {
@@ -411,9 +425,9 @@ public class DefaultAttributeService
             AttributeValue attributeValue = new AttributeValue( value, attribute );
             attributeValue.setId( id );
 
-            map.put( attribute.getUid(), attributeValue );
+            attributeValues.add( attributeValue );
         }
 
-        return map;
+        return attributeValues;
     }
 }
