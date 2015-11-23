@@ -46,6 +46,7 @@ public class DefaultDhisConfigurationProvider
     private static final Log log = LogFactory.getLog( DefaultDhisConfigurationProvider.class );
 
     private static final String CONF_FILENAME = "dhis.conf";
+    private static final String ENABLED_VALUE = "on";
     
     // -------------------------------------------------------------------------
     // Dependencies
@@ -122,6 +123,12 @@ public class DefaultDhisConfigurationProvider
     public String getPropertyOrDefault( ConfigurationKey key, String defaultValue )
     {
         return properties.getProperty( key.getKey(), defaultValue );
+    }
+    
+    @Override
+    public boolean isEnabled( ConfigurationKey key )
+    {
+        return ENABLED_VALUE.equals( getProperty( key ) );
     }
 
     @Override

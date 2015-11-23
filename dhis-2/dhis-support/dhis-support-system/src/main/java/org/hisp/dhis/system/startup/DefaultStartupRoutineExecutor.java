@@ -35,6 +35,9 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Default implementation of StartupRoutineExecutor. The execute method will
@@ -53,6 +56,9 @@ public class DefaultStartupRoutineExecutor
 
     private static final String TRUE = "true";
     private static final String SKIP_PROP = "dhis.skip.startup";
+    
+    @Autowired
+    private DhisConfigurationProvider config;
     
     private List<StartupRoutine> routines = new ArrayList<>();
 
@@ -98,7 +104,13 @@ public class DefaultStartupRoutineExecutor
     {
         if ( TRUE.equalsIgnoreCase( System.getProperty( SKIP_PROP ) ) )
         {
-            LOG.info( "Skipping startup routines" );
+            LOG.info( "Skipping startup routines, system property " + SKIP_PROP + " is true" );
+            return;
+        }
+        
+        if ( config.isEnabled( ConfigurationKey.SYSTEM_READ_ONLY_MODE ) )
+        {
+            LOG.info( "Skipping startup routines, read-only mode is enabled" );
             return;
         }
         

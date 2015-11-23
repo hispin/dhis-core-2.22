@@ -65,6 +65,14 @@ public interface DhisConfigurationProvider
     String getPropertyOrDefault( ConfigurationKey key, String defaultValue );
     
     /**
+     * Indicates whether a value for the given key is equal to "on".
+     * 
+     * @param key the configuration key.
+     * @return true if the configuration key is enabled.
+     */
+    boolean isEnabled( ConfigurationKey key );
+    
+    /**
      * Indicates whether LDAP authentication is configured.
      * 
      * @return true if LDAP authentication is configured.
