@@ -42,6 +42,7 @@
                 <ul id="contextMenuItems" class="contextMenuItems">
                     <li><a href ng-click="showEditEventInFull()"><i class="fa fa-edit"></i>&nbsp;&nbsp;{{'edit'| translate}}</a></li>
                     <li><a href ng-click="showEditEventInGrid()"><i class="fa fa-edit"></i>&nbsp;&nbsp;{{'edit_in_grid'| translate}}</a></li>
+                    <li class="divider">&nbsp;</li>
                     <li ng-if="userAuthority.canDeleteEvent"><a href ng-click="removeEvent()"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;{{'remove'| translate}}</a></li>                                       
                 </ul>
             </div>
@@ -136,7 +137,7 @@
                                             <span ng-if="dhis2Event[eventGridColumn.id]"><i class="fa fa-check"></i></span>
                                         </span>
                                         <span ng-switch-when="FILE_RESOURCE">
-                                            <a href ng-click="downloadFile(dhis2Event.event, eventGridColumn.id)">{{fileNames[dhis2Event.event][eventGridColumn.id]}}</a>
+                                            <a href ng-click="downloadFile(dhis2Event.event, eventGridColumn.id, $event)">{{fileNames[dhis2Event.event][eventGridColumn.id]}}</a>
                                         </span>
                                         <span ng-switch-default>
                                             {{dhis2Event[eventGridColumn.id]}}
@@ -326,7 +327,7 @@
                                                 <div ng-switch-when="FILE_RESOURCE">                                
                                                     <div class="input-group">
                                                         <div class="form-control">
-                                                            <a href ng-click="downloadFile(currentEvent.event, eventGridColumn.id)">{{fileNames[eventGridColumn.id]}}</a>
+                                                            <a href ng-click="downloadFile(currentEvent.event, eventGridColumn.id, $event)">{{fileNames[eventGridColumn.id]}}</a>
                                                         </div>
                                                         <span class="input-group-btn">
                                                             <span class="btn btn-primary btn-file">

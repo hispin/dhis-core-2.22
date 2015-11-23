@@ -1155,7 +1155,11 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         return '';        
     };
     
-    $scope.downloadFile = function(eventUid, dataElementUid) {        
-        $window.open('../api/events/files?eventUid=' + eventUid +'&dataElementUid=' + dataElementUid, '_blank', '');  
+    $scope.downloadFile = function(eventUid, dataElementUid, e) {        
+        $window.open('../api/events/files?eventUid=' + eventUid +'&dataElementUid=' + dataElementUid, '_blank', '');
+        if(e){
+            e.stopPropagation();
+            e.preventDefault();
+        }
     };
 });

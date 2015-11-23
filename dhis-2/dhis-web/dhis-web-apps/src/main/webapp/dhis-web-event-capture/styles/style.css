@@ -396,6 +396,14 @@ div#orgUnitTree {
     cursor: inherit;
     display: block;
 }
+
+.contextMenuItems .divider {
+    height: 1px;
+    margin: 5px 0;
+    overflow: hidden;
+    background-color: #e5e5e5
+}
+
 /*.file-input input[readonly] {
     background-color: white !important;
     cursor: text !important;
