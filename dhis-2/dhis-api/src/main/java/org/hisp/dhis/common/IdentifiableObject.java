@@ -70,6 +70,8 @@ public interface IdentifiableObject
 
     Set<AttributeValue> getAttributeValues();
 
+    Set<AttributeValue> getUniqueAttributeValues();
+
     User getUser();
 
     Set<UserGroupAccess> getUserGroupAccesses();

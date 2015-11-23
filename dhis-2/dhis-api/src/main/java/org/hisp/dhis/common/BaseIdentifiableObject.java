@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Bob Jolliffe
@@ -290,6 +291,14 @@ public class BaseIdentifiableObject
     public void setAttributeValues( Set<AttributeValue> attributeValues )
     {
         this.attributeValues = attributeValues;
+    }
+
+    @Override
+    public Set<AttributeValue> getUniqueAttributeValues()
+    {
+        return attributeValues.stream()
+            .filter( attributeValue -> attributeValue.getAttribute().isUnique() )
+            .collect( Collectors.toSet() );
     }
 
     @Override
