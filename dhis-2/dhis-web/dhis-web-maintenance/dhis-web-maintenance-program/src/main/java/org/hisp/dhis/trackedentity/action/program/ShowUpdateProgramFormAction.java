@@ -28,12 +28,7 @@ package org.hisp.dhis.trackedentity.action.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
@@ -43,8 +38,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
+import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
 import org.hisp.dhis.system.util.AttributeUtils;
@@ -56,7 +51,11 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
@@ -102,7 +101,7 @@ public class ShowUpdateProgramFormAction
 
     @Autowired
     private AttributeService attributeService;
-    
+
     @Autowired
     private DataElementCategoryService categoryService;
 
@@ -257,8 +256,8 @@ public class ShowUpdateProgramFormAction
         trackedEntities = trackedEntityService.getAllTrackedEntity();
         Collections.sort( trackedEntities, IdentifiableObjectNameComparator.INSTANCE );
 
-        attributes = attributeService.getProgramAttributes();
-        
+        attributes = attributeService.getAttributes( Program.class );
+
         categoryCombos = new ArrayList<>( categoryService.getAttributeCategoryCombos() );
 
         return SUCCESS;

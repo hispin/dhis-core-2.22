@@ -28,13 +28,7 @@ package org.hisp.dhis.dd.action.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -53,7 +47,12 @@ import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.system.util.AttributeUtils;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Hans S. Toemmerholt
@@ -82,7 +81,7 @@ public class ShowDataElementFormAction
     // -------------------------------------------------------------------------
     // Input/output
     // -------------------------------------------------------------------------
-    
+
     private List<OrganisationUnitLevel> aggregationLevels = new ArrayList<>();
     private DataElementCategoryCombo defaultCategoryCombo;
     private List<DataElementGroupSet> groupSets;
@@ -231,7 +230,7 @@ public class ShowDataElementFormAction
         groupSets = new ArrayList<>( dataElementService
             .getCompulsoryDataElementGroupSetsWithMembers() );
 
-        attributes = new ArrayList<>( attributeService.getDataElementAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( DataElement.class ) );
 
         optionSets = new ArrayList<>( optionService.getAllOptionSets() );
 

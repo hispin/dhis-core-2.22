@@ -119,7 +119,7 @@ public class GetDataElementCategoryOptionAction
 
         selectionManager.setSelectedOrganisationUnits( dataElementCategoryOption.getOrganisationUnits() );
 
-        attributes = new ArrayList<>( attributeService.getCategoryOptionAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( DataElementCategoryOption.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( dataElementCategoryOption.getAttributeValues() );
 

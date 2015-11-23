@@ -28,12 +28,7 @@ package org.hisp.dhis.user.action.usergroup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -43,7 +38,11 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.comparator.UserComparator;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -91,7 +90,7 @@ public class EditUserGroupFormAction
     {
         return groupMembers;
     }
-    
+
     private List<UserGroup> managedGroups = new ArrayList<>();
 
     public List<UserGroup> getManagedGroups()
@@ -131,10 +130,10 @@ public class EditUserGroupFormAction
         group = userGroupService.getUserGroup( userGroupId );
 
         groupMembers = new ArrayList<>( group.getMembers() );
-        
+
         managedGroups = new ArrayList<>( group.getManagedGroups() );
 
-        attributes = new ArrayList<>( attributeService.getUserGroupAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( UserGroup.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( group.getAttributeValues() );
 

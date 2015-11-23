@@ -28,12 +28,7 @@ package org.hisp.dhis.dataset.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -52,10 +47,14 @@ import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * @author mortenoh
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class EditDataSetFormAction
     implements Action
@@ -77,7 +76,7 @@ public class EditDataSetFormAction
     {
         this.dataSetService = dataSetService;
     }
-    
+
     private UserGroupService userGroupService;
 
     public void setUserGroupService( UserGroupService userGroupService )
@@ -153,7 +152,7 @@ public class EditDataSetFormAction
     }
 
     private List<DataElementCategoryCombo> categoryCombos = new ArrayList<>();
-    
+
     public List<DataElementCategoryCombo> getCategoryCombos()
     {
         return categoryCombos;
@@ -192,7 +191,7 @@ public class EditDataSetFormAction
         userGroups = new ArrayList<>( userGroupService.getAllUserGroups() );
         categoryCombos = new ArrayList<>( categoryService.getAttributeCategoryCombos() );
         legendSets = new ArrayList<>( legendService.getAllLegendSets() );
-        
+
         if ( dataSetId != null )
         {
             dataSet = dataSetService.getDataSet( dataSetId, true, true, false );
@@ -202,7 +201,7 @@ public class EditDataSetFormAction
             attributeValues = AttributeUtils.getAttributeValueMap( dataSet.getAttributeValues() );
         }
 
-        attributes = new ArrayList<>( attributeService.getDataSetAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( DataSet.class ) );
 
         Collections.sort( userGroups, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( dataElements, IdentifiableObjectNameComparator.INSTANCE );

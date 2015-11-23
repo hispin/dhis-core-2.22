@@ -28,15 +28,15 @@ package org.hisp.dhis.dd.action.category;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jim Grace
@@ -76,7 +76,7 @@ public class ShowAddDataElementCategoryOptionAction
     {
         selectionManager.setSelectedOrganisationUnits( new ArrayList<>() );
 
-        attributes = new ArrayList<>( attributeService.getCategoryOptionAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( DataElementCategoryOption.class ) );
 
         return SUCCESS;
     }

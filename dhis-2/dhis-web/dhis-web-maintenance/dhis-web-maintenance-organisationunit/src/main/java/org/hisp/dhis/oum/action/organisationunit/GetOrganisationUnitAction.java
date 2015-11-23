@@ -28,14 +28,7 @@ package org.hisp.dhis.oum.action.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.util.ValidationUtils.coordinateIsValid;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -52,7 +45,13 @@ import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.hisp.dhis.system.util.ValidationUtils.coordinateIsValid;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -72,7 +71,7 @@ public class GetOrganisationUnitAction
 
     @Autowired
     private IdentifiableObjectManager idObjectManager;
-    
+
     @Autowired
     private AttributeService attributeService;
 
@@ -193,7 +192,7 @@ public class GetOrganisationUnitAction
 
         groupSets = new ArrayList<>( organisationUnitGroupService.getCompulsoryOrganisationUnitGroupSetsWithMembers() );
 
-        attributes = new ArrayList<>( attributeService.getOrganisationUnitAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( OrganisationUnit.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( organisationUnit.getAttributeValues() );
 

@@ -37,6 +37,7 @@ import org.hisp.dhis.calendar.DateTimeUnit;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +115,7 @@ public class ShowAddOrganisationUnitFormAction
         groupSets = new ArrayList<>(
             organisationUnitGroupService.getCompulsoryOrganisationUnitGroupSetsWithMembers() );
 
-        attributes = new ArrayList<>( attributeService.getOrganisationUnitAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( OrganisationUnit.class ) );
 
         Collections.sort( dataSets, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );

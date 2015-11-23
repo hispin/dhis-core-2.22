@@ -135,98 +135,21 @@ public class DefaultAttributeService
     }
 
     @Override
-    public List<Attribute> getDataElementAttributes()
+    public List<Attribute> getAttributes( Class<?> klass )
     {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getDataElementAttributes() ) );
+        return attributeStore.getAttributes( klass );
     }
 
     @Override
-    public List<Attribute> getDataElementGroupAttributes()
+    public List<Attribute> getMandatoryAttributes( Class<?> klass )
     {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getDataElementGroupAttributes() ) );
+        return attributeStore.getMandatoryAttributes( klass );
     }
 
     @Override
-    public List<Attribute> getIndicatorAttributes()
+    public List<Attribute> getUniqueAttributes( Class<?> klass )
     {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getIndicatorAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getIndicatorGroupAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getIndicatorGroupAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getDataSetAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getDataSetAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getOrganisationUnitAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getOrganisationUnitAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getOrganisationUnitGroupAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getOrganisationUnitGroupAttributes() ) );
-    }
-
-    @Override public List<Attribute> getOrganisationUnitGroupSetAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getOrganisationUnitGroupSetAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getUserAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getUserAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getUserGroupAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getUserGroupAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getProgramAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getProgramAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getProgramStageAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getProgramStageAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getTrackedEntityAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getTrackedEntityAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getTrackedEntityAttributeAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getTrackedEntityAttributeAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getCategoryOptionAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getCategoryOptionAttributes() ) );
-    }
-
-    @Override
-    public List<Attribute> getCategoryOptionGroupAttributes()
-    {
-        return new ArrayList<>( i18n( i18nService, attributeStore.getCategoryOptionGroupAttributes() ) );
+        return attributeStore.getUniqueAttributes( klass );
     }
 
     @Override

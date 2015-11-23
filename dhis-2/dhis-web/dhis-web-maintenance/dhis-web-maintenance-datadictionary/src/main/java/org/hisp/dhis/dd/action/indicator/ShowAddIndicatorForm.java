@@ -28,20 +28,20 @@ package org.hisp.dhis.dd.action.indicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -98,7 +98,7 @@ public class ShowAddIndicatorForm
     {
         return legendSets;
     }
-    
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -107,15 +107,15 @@ public class ShowAddIndicatorForm
     public String execute()
     {
         indicatorTypes = new ArrayList<>( indicatorService.getAllIndicatorTypes() );
-        
-        attributes = new ArrayList<>( attributeService.getIndicatorAttributes() );
+
+        attributes = new ArrayList<>( attributeService.getAttributes( Indicator.class ) );
 
         legendSets = new ArrayList<>( legendService.getAllLegendSets() );
-        
+
         Collections.sort( indicatorTypes, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
         Collections.sort( legendSets, IdentifiableObjectNameComparator.INSTANCE );
-        
+
         return SUCCESS;
     }
 }

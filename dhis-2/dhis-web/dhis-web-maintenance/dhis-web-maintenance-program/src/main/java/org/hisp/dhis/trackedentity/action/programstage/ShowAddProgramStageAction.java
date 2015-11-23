@@ -28,10 +28,7 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
@@ -44,11 +41,14 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -171,10 +171,10 @@ public class ShowAddProgramStageAction
 
         userGroups = userGroupService.getAllUserGroups();
 
-        constants = constantService.getAllConstants();        
+        constants = constantService.getAllConstants();
         Collections.sort( constants, IdentifiableObjectNameComparator.INSTANCE );
 
-        attributes = attributeService.getProgramStageAttributes();
+        attributes = attributeService.getAttributes( ProgramStage.class );
 
         return SUCCESS;
     }

@@ -28,12 +28,7 @@ package org.hisp.dhis.oum.action.organisationunitgroupset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -41,9 +36,13 @@ import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
-
-import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.system.util.AttributeUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -122,7 +121,7 @@ public class ShowUpdateGroupSetFormAction
 
         Collections.sort( selectedGroups, IdentifiableObjectNameComparator.INSTANCE );
 
-        attributes = new ArrayList<>( attributeService.getOrganisationUnitGroupSetAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( OrganisationUnitGroupSet.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( organisationUnitGroupSet.getAttributeValues() );
 

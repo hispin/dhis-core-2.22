@@ -28,20 +28,16 @@ package org.hisp.dhis.dd.action.categoryoptiongroupset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version $ ShowAddCategoryOptionGroupSetAction.java Feb 12, 2014 11:20:01 PM
- *          $
  */
 public class ShowAddCategoryOptionGroupSetAction
     implements Action
@@ -72,8 +68,7 @@ public class ShowAddCategoryOptionGroupSetAction
     public String execute()
         throws Exception
     {
-        categoryOptionGroups = new ArrayList<>(
-            dataElementCategoryService.getAllCategoryOptionGroups() );
+        categoryOptionGroups = new ArrayList<>( dataElementCategoryService.getAllCategoryOptionGroups() );
 
         return SUCCESS;
     }

@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
+import org.hisp.dhis.dataelement.DataElementGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +70,7 @@ public class ShowAddDataElementGroupForm
     @Override
     public String execute()
     {
-        attributes = new ArrayList<>( attributeService.getDataElementGroupAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( DataElementGroup.class ) );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
 
         return SUCCESS;

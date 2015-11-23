@@ -28,12 +28,7 @@ package org.hisp.dhis.dd.action.indicator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -46,12 +41,15 @@ import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.system.util.AttributeUtils;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
  * @version $ ShowUpdateIndicatorFormAction.java May 30, 2011 2:34:10 PM $
- * 
  */
 public class ShowUpdateIndicatorFormAction
     implements Action
@@ -168,12 +166,12 @@ public class ShowUpdateIndicatorFormAction
 
         groupSets = new ArrayList<>( indicatorService.getCompulsoryIndicatorGroupSetsWithMembers() );
 
-        attributes = new ArrayList<>( attributeService.getIndicatorAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( Indicator.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( indicator.getAttributeValues() );
 
         legendSets = new ArrayList<>( legendService.getAllLegendSets() );
-        
+
         Collections.sort( indicatorTypes, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( groupSets, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
