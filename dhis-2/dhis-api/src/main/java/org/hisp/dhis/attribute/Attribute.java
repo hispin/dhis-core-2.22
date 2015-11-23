@@ -60,6 +60,7 @@ import org.hisp.dhis.user.UserGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -119,6 +120,53 @@ public class Attribute
     {
         this.name = name;
         this.valueType = valueType;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return 31 * super.hashCode() + Objects.hash( valueType, dataElementAttribute, dataElementGroupAttribute, indicatorAttribute, indicatorGroupAttribute, dataSetAttribute, organisationUnitAttribute, organisationUnitGroupAttribute,
+            organisationUnitGroupSetAttribute, userAttribute, userGroupAttribute, programAttribute, programStageAttribute, trackedEntityAttribute, trackedEntityAttributeAttribute, categoryOptionAttribute, categoryOptionGroupAttribute, mandatory, unique,
+            sortOrder, optionSet );
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if ( this == obj )
+        {
+            return true;
+        }
+        if ( obj == null || getClass() != obj.getClass() )
+        {
+            return false;
+        }
+        if ( !super.equals( obj ) )
+        {
+            return false;
+        }
+        final Attribute other = (Attribute) obj;
+        return Objects.equals( this.valueType, other.valueType )
+            && Objects.equals( this.dataElementAttribute, other.dataElementAttribute )
+            && Objects.equals( this.dataElementGroupAttribute, other.dataElementGroupAttribute )
+            && Objects.equals( this.indicatorAttribute, other.indicatorAttribute )
+            && Objects.equals( this.indicatorGroupAttribute, other.indicatorGroupAttribute )
+            && Objects.equals( this.dataSetAttribute, other.dataSetAttribute )
+            && Objects.equals( this.organisationUnitAttribute, other.organisationUnitAttribute )
+            && Objects.equals( this.organisationUnitGroupAttribute, other.organisationUnitGroupAttribute )
+            && Objects.equals( this.organisationUnitGroupSetAttribute, other.organisationUnitGroupSetAttribute )
+            && Objects.equals( this.userAttribute, other.userAttribute )
+            && Objects.equals( this.userGroupAttribute, other.userGroupAttribute )
+            && Objects.equals( this.programAttribute, other.programAttribute )
+            && Objects.equals( this.programStageAttribute, other.programStageAttribute )
+            && Objects.equals( this.trackedEntityAttribute, other.trackedEntityAttribute )
+            && Objects.equals( this.trackedEntityAttributeAttribute, other.trackedEntityAttributeAttribute )
+            && Objects.equals( this.categoryOptionAttribute, other.categoryOptionAttribute )
+            && Objects.equals( this.categoryOptionGroupAttribute, other.categoryOptionGroupAttribute )
+            && Objects.equals( this.mandatory, other.mandatory )
+            && Objects.equals( this.unique, other.unique )
+            && Objects.equals( this.sortOrder, other.sortOrder )
+            && Objects.equals( this.optionSet, other.optionSet );
     }
 
     @JsonProperty

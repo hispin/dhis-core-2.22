@@ -194,4 +194,9 @@ public class AttributeValue
     {
         this.value = value;
     }
+
+    public boolean isUnique()
+    {
+        return attribute != null && attribute.isUnique();
+    }
 }

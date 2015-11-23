@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.attribute.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -44,7 +45,6 @@ import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -205,7 +205,7 @@ public class AddDataElementAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
+    public String execute() throws NonUniqueAttributeValueException
     {
         DataElement dataElement = new DataElement();
 
@@ -235,7 +235,7 @@ public class AddDataElementAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElement, dataElement.getAttributeValues(), jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( dataElement, jsonAttributeValues );
         }
 
         dataElementService.addDataElement( dataElement );

@@ -32,6 +32,8 @@ import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.attribute.NonUniqueAttributeValueException;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -47,7 +49,6 @@ import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -82,6 +83,9 @@ public class UpdateDataElementAction
 
     @Autowired
     private LegendService legendService;
+
+    @Autowired
+    private IdentifiableObjectManager manager;
 
     // -------------------------------------------------------------------------
     // Input
@@ -225,7 +229,7 @@ public class UpdateDataElementAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
+    public String execute() throws NonUniqueAttributeValueException
     {
         DataElement dataElement = dataElementService.getDataElement( id );
 
@@ -237,7 +241,7 @@ public class UpdateDataElementAction
         LegendSet legendSet = legendService.getLegendSet( selectedLegendSetId );
 
         valueType = optionSet != null && optionSet.getValueType() != null ? optionSet.getValueType() : valueType;
-        
+
         dataElement.setName( StringUtils.trimToNull( name ) );
         dataElement.setShortName( StringUtils.trimToNull( shortName ) );
         dataElement.setCode( StringUtils.trimToNull( code ) );
@@ -285,7 +289,7 @@ public class UpdateDataElementAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( dataElement, dataElement.getAttributeValues(), jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( dataElement, jsonAttributeValues );
         }
 
         dataElementService.updateDataElement( dataElement );
