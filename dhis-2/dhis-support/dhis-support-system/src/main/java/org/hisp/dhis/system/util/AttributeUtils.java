@@ -88,15 +88,15 @@ public class AttributeUtils
                     else
                     {
                         attributeValueItem.setValue( attributeValue.getValue() );
+
                         try
                         {
                             attributeService.updateAttributeValue( object, attributeValueItem );
+                            attributeValue = null;
                         }
                         catch ( NonUniqueAttributeValueException ignored ) // ignore for now
                         {
                         }
-
-                        attributeValue = null;
                     }
                 }
             }
