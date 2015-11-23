@@ -97,44 +97,45 @@ trackerCapture.controller('OverdueEventsController',
             $scope.reportStarted = true;            
             $scope.overdueEvents = [];
             
-            EventReportService.getEventReport($scope.selectedOrgUnit.id, $scope.selectedOuMode, $scope.selectedProgram.id, null, null, 'ACTIVE','OVERDUE', $scope.pager).then(function(data){                     
-                if( data.pager ){
-                    $scope.pager = data.pager;
-                    $scope.pager.toolBarDisplay = 5;
+            EventReportService.getEventReport($scope.selectedOrgUnit.id, $scope.selectedOuMode, $scope.selectedProgram.id, null, null, 'ACTIVE','OVERDUE', $scope.pager).then(function(data){                
+                if( data ) {
+                    if( data.pager ){
+                        $scope.pager = data.pager;
+                        $scope.pager.toolBarDisplay = 5;
 
-                    Paginator.setPage($scope.pager.page);
-                    Paginator.setPageCount($scope.pager.pageCount);
-                    Paginator.setPageSize($scope.pager.pageSize);
-                    Paginator.setItemCount($scope.pager.total);                    
-                }
-                    
-                angular.forEach(data.eventRows, function(row){
-                    var overdueEvent = {};                    
-                    angular.forEach(row.attributes, function(att){
-                        var val = AttributesFactory.formatAttributeValue(att, $scope.attributesById, $scope.optionSets, 'USER');                        
-                        overdueEvent[att.attribute] = val;                        
+                        Paginator.setPage($scope.pager.page);
+                        Paginator.setPageCount($scope.pager.pageCount);
+                        Paginator.setPageSize($scope.pager.pageSize);
+                        Paginator.setItemCount($scope.pager.total);                    
+                    }
+
+                    angular.forEach(data.eventRows, function(row){
+                        var overdueEvent = {};                    
+                        angular.forEach(row.attributes, function(att){
+                            var val = AttributesFactory.formatAttributeValue(att, $scope.attributesById, $scope.optionSets, 'USER');                        
+                            overdueEvent[att.attribute] = val;                        
+                        });
+
+                        overdueEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);
+                        overdueEvent.event = row.event;
+                        overdueEvent.eventName = $scope.programStages[row.programStage].name;
+                        overdueEvent.orgUnitName = row.orgUnitName;                    
+                        overdueEvent.followup = row.followup;
+                        overdueEvent.program = row.program;
+                        overdueEvent.programStage = row.programStage;
+                        overdueEvent.trackedEntityInstance = row.trackedEntityInstance;
+                        $scope.overdueEvents.push(overdueEvent);
+
                     });
-                    
-                    overdueEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);
-                    overdueEvent.event = row.event;
-                    overdueEvent.eventName = $scope.programStages[row.programStage].name;
-                    overdueEvent.orgUnitName = row.orgUnitName;                    
-                    overdueEvent.followup = row.followup;
-                    overdueEvent.program = row.program;
-                    overdueEvent.programStage = row.programStage;
-                    overdueEvent.trackedEntityInstance = row.trackedEntityInstance;
-                    $scope.overdueEvents.push(overdueEvent);
-                    
-                });
-                
-                //sort overdue events by their due dates - this is default
-                if(!$scope.sortColumn.id){                                      
-                    $scope.sortGrid({id: 'dueDate', name: $translate('due_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: true});
-                    $scope.reverse = false;
-                }
-        
+
+                    //sort overdue events by their due dates - this is default
+                    if(!$scope.sortColumn.id){                                      
+                        $scope.sortGrid({id: 'dueDate', name: $translate('due_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: true});
+                        $scope.reverse = false;
+                    }
+                }                
                 $scope.reportFinished = true;
-                $scope.reportStarted = false;
+                $scope.reportStarted = false;                
             });
         }
     };    
