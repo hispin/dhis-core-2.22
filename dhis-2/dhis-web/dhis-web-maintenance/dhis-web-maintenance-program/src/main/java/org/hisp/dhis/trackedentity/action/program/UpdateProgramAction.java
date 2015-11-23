@@ -29,7 +29,6 @@ package org.hisp.dhis.trackedentity.action.program;
  */
 
 import com.opensymphony.xwork2.Action;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -39,7 +38,6 @@ import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -75,7 +73,7 @@ public class UpdateProgramAction
 
     @Autowired
     private AttributeService attributeService;
-    
+
     @Autowired
     private DataElementCategoryService categoryService;
 
@@ -264,14 +262,14 @@ public class UpdateProgramAction
     {
         this.jsonAttributeValues = jsonAttributeValues;
     }
-    
+
     private Integer categoryComboId;
 
     public void setCategoryComboId( Integer categoryComboId )
     {
         this.categoryComboId = categoryComboId;
     }
-    
+
     private boolean skipOffline;
 
     public void setSkipOffline( boolean skipOffline )
@@ -296,7 +294,7 @@ public class UpdateProgramAction
         selectEnrollmentDatesInFuture = (selectEnrollmentDatesInFuture == null) ? false : selectEnrollmentDatesInFuture;
         selectIncidentDatesInFuture = (selectIncidentDatesInFuture == null) ? false : selectIncidentDatesInFuture;
         dataEntryMethod = (dataEntryMethod == null) ? false : dataEntryMethod;
-        
+
         Program program = programService.getProgram( id );
         program.setName( StringUtils.trimToNull( name ) );
         program.setDescription( StringUtils.trimToNull( description ) );
@@ -324,8 +322,8 @@ public class UpdateProgramAction
             RelationshipType relationshipType = relationshipTypeService.getRelationshipType( relationshipTypeId );
             program.setRelationshipType( relationshipType );
             program.setRelationshipFromA( relationshipFromA );
-            program.setRelationshipText( relationshipText ); 
-            
+            program.setRelationshipText( relationshipText );
+
             Program relatedProgram = programService.getProgram( relatedProgramId );
             program.setRelatedProgram( relatedProgram );
         }
@@ -375,12 +373,12 @@ public class UpdateProgramAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( program, program.getAttributeValues(), jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( program, jsonAttributeValues );
         }
-        
+
         if ( categoryComboId != null )
         {
-                program.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
+            program.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
         }
 
         programService.updateProgram( program );

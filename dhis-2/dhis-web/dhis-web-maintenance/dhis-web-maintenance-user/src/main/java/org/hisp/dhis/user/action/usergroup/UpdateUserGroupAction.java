@@ -31,7 +31,6 @@ package org.hisp.dhis.user.action.usergroup;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
@@ -128,7 +127,7 @@ public class UpdateUserGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( userGroup, userGroup.getAttributeValues(), jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( userGroup, jsonAttributeValues );
         }
 
         Set<UserGroup> managedGroups = new HashSet<>();

@@ -43,7 +43,6 @@ import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeService;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -249,7 +248,7 @@ public class AddProgramAction
     {
         this.categoryComboId = categoryComboId;
     }
-    
+
     private boolean skipOffline;
 
     public void setSkipOffline( boolean skipOffline )
@@ -348,7 +347,7 @@ public class AddProgramAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( program, program.getAttributeValues(), jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( program, jsonAttributeValues );
         }
 
         programService.updateProgram( program );

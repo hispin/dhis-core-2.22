@@ -32,7 +32,6 @@ import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
-import org.hisp.dhis.attribute.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
@@ -229,7 +228,7 @@ public class UpdateDataElementAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute() throws NonUniqueAttributeValueException
+    public String execute() throws Exception
     {
         DataElement dataElement = dataElementService.getDataElement( id );
 

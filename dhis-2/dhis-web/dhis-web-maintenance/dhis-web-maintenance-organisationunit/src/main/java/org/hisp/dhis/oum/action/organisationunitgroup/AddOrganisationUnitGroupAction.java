@@ -35,7 +35,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
-import org.hisp.dhis.system.util.AttributeUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -138,8 +137,7 @@ public class AddOrganisationUnitGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( organisationUnitGroup, organisationUnitGroup.getAttributeValues(),
-                jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( organisationUnitGroup, jsonAttributeValues );
         }
 
         organisationUnitGroupService.updateOrganisationUnitGroup( organisationUnitGroup );

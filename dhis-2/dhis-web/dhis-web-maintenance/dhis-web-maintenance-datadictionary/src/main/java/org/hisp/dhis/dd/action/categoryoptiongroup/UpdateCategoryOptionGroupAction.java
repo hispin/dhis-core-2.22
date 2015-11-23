@@ -29,12 +29,10 @@ package org.hisp.dhis.dd.action.categoryoptiongroup;
  */
 
 import com.opensymphony.xwork2.Action;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
@@ -124,8 +122,7 @@ public class UpdateCategoryOptionGroupAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( categoryOptionGroup, categoryOptionGroup.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            attributeService.updateAttributeValues( categoryOptionGroup, jsonAttributeValues );
         }
 
         dataElementCategoryService.updateCategoryOptionGroup( categoryOptionGroup );

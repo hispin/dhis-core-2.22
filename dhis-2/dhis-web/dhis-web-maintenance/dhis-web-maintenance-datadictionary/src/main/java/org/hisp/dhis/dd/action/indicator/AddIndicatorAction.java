@@ -37,7 +37,6 @@ import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
-import org.hisp.dhis.system.util.AttributeUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -188,7 +187,7 @@ public class AddIndicatorAction
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
+    public String execute() throws Exception
     {
         IndicatorType indicatorType = indicatorService.getIndicatorType( indicatorTypeId );
 
@@ -212,8 +211,7 @@ public class AddIndicatorAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( indicator, indicator.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            attributeService.updateAttributeValues( indicator, jsonAttributeValues );
         }
 
         indicatorService.addIndicator( indicator );

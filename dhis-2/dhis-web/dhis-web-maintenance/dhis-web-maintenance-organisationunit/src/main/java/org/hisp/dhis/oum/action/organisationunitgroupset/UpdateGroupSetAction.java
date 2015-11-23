@@ -29,13 +29,11 @@ package org.hisp.dhis.oum.action.organisationunitgroupset;
  */
 
 import com.opensymphony.xwork2.Action;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
-import org.hisp.dhis.system.util.AttributeUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -97,7 +95,7 @@ public class UpdateGroupSetAction
     {
         this.code = code;
     }
-    
+
     private boolean compulsory;
 
     public void setCompulsory( boolean compulsory )
@@ -135,7 +133,7 @@ public class UpdateGroupSetAction
         throws Exception
     {
         OrganisationUnitGroupSet organisationUnitGroupSet = organisationUnitGroupService.getOrganisationUnitGroupSet( id );
-        
+
         organisationUnitGroupSet.setName( StringUtils.trimToNull( name ) );
         organisationUnitGroupSet.setCode( StringUtils.trimToNull( code ) );
         organisationUnitGroupSet.setDescription( StringUtils.trimToNull( description ) );
@@ -156,8 +154,7 @@ public class UpdateGroupSetAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( organisationUnitGroupSet, organisationUnitGroupSet.getAttributeValues(),
-                jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( organisationUnitGroupSet, jsonAttributeValues );
         }
 
         organisationUnitGroupService.updateOrganisationUnitGroupSet( organisationUnitGroupSet );

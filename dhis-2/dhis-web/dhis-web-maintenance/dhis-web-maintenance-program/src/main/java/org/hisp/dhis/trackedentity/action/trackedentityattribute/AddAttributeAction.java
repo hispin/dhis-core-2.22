@@ -8,7 +8,6 @@ import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
@@ -253,8 +252,7 @@ public class AddAttributeAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( trackedEntityAttribute, trackedEntityAttribute.getAttributeValues(),
-                jsonAttributeValues, attributeService );
+            attributeService.updateAttributeValues( trackedEntityAttribute, jsonAttributeValues );
         }
 
         trackedEntityAttributeService.addTrackedEntityAttribute( trackedEntityAttribute );

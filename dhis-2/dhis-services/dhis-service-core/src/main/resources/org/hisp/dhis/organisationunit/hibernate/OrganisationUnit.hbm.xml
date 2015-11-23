@@ -93,7 +93,7 @@
 
     <!-- Dynamic attribute values -->
 
-    <set name="attributeValues" table="organisationunitattributevalues">
+    <set name="attributeValues" table="organisationunitattributevalues" cascade="delete-orphan">
       <cache usage="read-write" />
       <key column="organisationunitid" />
       <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />

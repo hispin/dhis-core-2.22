@@ -31,7 +31,6 @@ package org.hisp.dhis.trackedentity.action.trackedentity;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
-import org.hisp.dhis.system.util.AttributeUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +93,7 @@ public class AddTrackedEntityAction
 
         if ( jsonAttributeValues != null )
         {
-            AttributeUtils.updateAttributeValuesFromJson( trackedEntity, trackedEntity.getAttributeValues(), jsonAttributeValues,
-                attributeService );
+            attributeService.updateAttributeValues( trackedEntity, jsonAttributeValues );
         }
 
         trackedEntityService.addTrackedEntity( trackedEntity );
