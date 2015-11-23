@@ -131,31 +131,7 @@ describe('Directives: d2Drirectives', () => {
         });
     });
 
-    /*TODO: draggabkModal directive is not used and likely to be removed*/
-    xdescribe('Directive: draggableModal', () => {
-        let mock$scope;
-        let render;
-        let mySpy;
-        beforeEach(inject(($injector) => {
-            const $compile = $injector.get('$compile');
-            const $rootScope = $injector.get('$rootScope');
-            mock$scope = $rootScope.$new();
-            render = (elm) =>
-            {
-                elm.draggable = function() {};
-                mySpy = spy(elm, "draggable");
-                $compile(elm)(mock$scope);
-                mock$scope.$digest();
-            };
-        }));
-        /* TODO ../dhis-web-commons/angular-forms/serverside-pagination.html is not loaded. */
-        /* works if the path in specified as ../../../dhis-web-commons/angular-forms/serverside-pagination.html */
-        it('call the draggable function when loaded.', () => {
-            var elm = angular.element('<draggable-modal></draggable-modal>');
-            render(elm);
-            expect(mySpy).to.have.been.calledOnce;
-        });
-    });
+
 
     describe('Directive: d2CustomForm', () => {
         let mock$scope;
@@ -171,6 +147,40 @@ describe('Directives: d2Drirectives', () => {
             mock$scope.customForm= {htmlCode:'<div>TestContentOne</div>'};
             mock$scope.$digest();
             expect(elm[0].innerHTML).to.equal('<div class="ng-scope">TestContentOne</div>');
+        });
+    });
+
+
+
+    describe('Directive: d2ContextMenu', () => {
+        let mock$scope;
+        let element;
+        let $timeout;
+        let render;
+
+        beforeEach(inject(($injector) => {
+            const $compile = $injector.get('$compile');
+            const $rootScope = $injector.get('$rootScope');
+            mock$scope = $rootScope.$new();
+            render = (elm) => {
+                $compile(elm)(mock$scope);
+                mock$scope.$digest();
+            };
+        }));
+
+        it('should call the resgistered function on key press event', () => {
+            var elm = angular.element('<div id="contextMenu"></div><div d2-context-menu></div>');
+            render(elm);
+            var contextMenu =  elm.find('#contextMenu');
+            contextMenu.show = spy();
+            console.log(elm[0].innerHTML);
+
+            var e = jQuery.Event("click");
+
+            elm .trigger(e);
+            console.log(elm[0].innerHTML);
+
+            expect(contextMenu.show).to.be.calledOnce;
         });
     });
 });
