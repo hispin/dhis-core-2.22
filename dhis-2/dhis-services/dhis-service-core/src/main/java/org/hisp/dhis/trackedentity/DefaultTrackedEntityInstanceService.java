@@ -659,7 +659,7 @@ public class DefaultTrackedEntityInstanceService
             }
         }
 
-        if ( instance.getAttributeValues() != null && instance.getAttributeValues().size() > 0 )
+        if ( instance.getTrackedEntityAttributeValues() != null && instance.getTrackedEntityAttributeValues().size() > 0 )
         {
             for ( TrackedEntityAttributeValue attributeValue : instance.getTrackedEntityAttributeValues() )
             {

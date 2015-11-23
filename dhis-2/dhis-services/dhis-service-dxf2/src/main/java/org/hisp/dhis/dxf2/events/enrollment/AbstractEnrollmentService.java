@@ -500,7 +500,7 @@ public abstract class AbstractEnrollmentService
         }
 
         // ignore attributes which do not belong to this program
-        trackedEntityInstance.getAttributeValues().stream()
+        trackedEntityInstance.getTrackedEntityAttributeValues().stream()
             .filter( value -> mandatoryMap.containsKey( value.getAttribute() ) )
             .forEach( value -> attributeValueMap.put( value.getAttribute().getUid(), value.getValue() ) );
 

@@ -226,7 +226,7 @@ public class DefaultTrackedEntityInstanceReminderService
                 }
                 break;
             case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
-                if ( entityInstance.getAttributeValues() != null )
+                if ( entityInstance.getTrackedEntityAttributeValues() != null )
                 {
                     for ( TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
                     {
@@ -259,7 +259,7 @@ public class DefaultTrackedEntityInstanceReminderService
                 }
                 break;
             default:
-                if ( entityInstance.getAttributeValues() != null )
+                if ( entityInstance.getTrackedEntityAttributeValues() != null )
                 {
                     for ( TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
                     {
@@ -286,7 +286,7 @@ public class DefaultTrackedEntityInstanceReminderService
                 users.addAll( entityInstance.getOrganisationUnit().getUsers() );
                 break;
             case TrackedEntityInstanceReminder.SEND_TO_ATTRIBUTE_TYPE_USERS:
-                if ( entityInstance.getAttributeValues() != null )
+                if ( entityInstance.getTrackedEntityAttributeValues() != null )
                 {
                     for ( TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
                     {
