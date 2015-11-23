@@ -97,28 +97,32 @@ trackerCapture.controller('ProgramSummaryController',
                                         $scope.pager).then(function(data){
             $scope.dhis2Events = [];  
             $scope.teiList = [];
-            angular.forEach(data.eventRows, function(ev){
-                if(ev.trackedEntityInstance){
-                    ev.name = $scope.stagesById[ev.programStage].name;
-                    ev.programName = $scope.selectedProgram.name;
-                    ev.statusColor = EventUtils.getEventStatusColor(ev); 
-                    ev.eventDate = DateUtils.formatFromApiToUser(ev.eventDate);
+            
+            if( data && data.eventRows ){
+                angular.forEach(data.eventRows, function(ev){
+                    if(ev.trackedEntityInstance){
+                        ev.name = $scope.stagesById[ev.programStage].name;
+                        ev.programName = $scope.selectedProgram.name;
+                        ev.statusColor = EventUtils.getEventStatusColor(ev); 
+                        ev.eventDate = DateUtils.formatFromApiToUser(ev.eventDate);
 
-                    angular.forEach(ev.dataValues, function(dv){
-                        ev[dv.dataElement] = dv.value;
-                        $scope.stagesById[ev.programStage].hasData = true;
-                    });
-                    
-                    angular.forEach(ev.attributes, function(att){
-                        ev[att.attribute] = att.value;
-                    });
-                    
-                    if($scope.teiList.indexOf(ev.trackedEntityInstance) === -1){
-                        $scope.teiList.push( ev.trackedEntityInstance );
+                        angular.forEach(ev.dataValues, function(dv){
+                            ev[dv.dataElement] = dv.value;
+                            $scope.stagesById[ev.programStage].hasData = true;
+                        });
+
+                        angular.forEach(ev.attributes, function(att){
+                            ev[att.attribute] = att.value;
+                        });
+
+                        if($scope.teiList.indexOf(ev.trackedEntityInstance) === -1){
+                            $scope.teiList.push( ev.trackedEntityInstance );
+                        }
+                        $scope.dhis2Events.push(ev);
                     }
-                    $scope.dhis2Events.push(ev);
-                }
-            });            
+                });
+            }
+            
             $scope.reportStarted = false;
             $scope.dataReady = true;            
         });

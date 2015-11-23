@@ -501,7 +501,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Service to deal with enrollment */
-.service('EnrollmentService', function($http, DateUtils) {
+.service('EnrollmentService', function($http, DateUtils, DialogService, $translate) {
     
     var convertFromApiToUser = function(enrollment){
         if(enrollment.enrollments){
@@ -539,6 +539,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         getByEntityAndProgram: function( entity, program ){
             var promise = $http.get(  '../api/enrollments.json?ouMode=ACCESSIBLE&trackedEntityInstance=' + entity + '&program=' + program + '&paging=false').then(function(response){
                 return convertFromApiToUser(response.data);
+            }, function(response){
+                if( response && response.data && response.data.status === 'ERROR'){
+                    var dialogOptions = {
+                        headerText: response.data.status,
+                        bodyText: response.data.message ? response.data.message : $translate.instant('unable_to_fetch_data_from_server')
+                    };		
+                    DialogService.showDialog({}, dialogOptions);
+                }                
             });
             return promise;
         },
@@ -912,7 +920,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* factory for handling events */
-.factory('DHIS2EventFactory', function($http) {   
+.factory('DHIS2EventFactory', function($http, DialogService, $translate) {   
     
     return {     
         
@@ -943,6 +951,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             var promise = $http.get( url ).then(function(response){
                 return response.data.events;
+            }, function(response){
+                if( response && response.data && response.data.status === 'ERROR'){
+                    var dialogOptions = {
+                        headerText: response.data.status,
+                        bodyText: response.data.message ? response.data.message : $translate.instant('unable_to_fetch_data_from_server')
+                    };		
+                    DialogService.showDialog({}, dialogOptions);
+                }
             });            
             return promise;
         },
@@ -992,7 +1008,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* factory for handling event reports */
-.factory('EventReportService', function($http) {   
+.factory('EventReportService', function($http, DialogService, $translate) {   
     
     return {        
         getEventReport: function(orgUnit, ouMode, program, startDate, endDate, programStatus, eventStatus, pager){
@@ -1021,6 +1037,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             
             var promise = $http.get( url ).then(function(response){
                 return response.data;
+            }, function(response){
+                if( response && response.data && response.data.status === 'ERROR'){
+                    var dialogOptions = {
+                        headerText: response.data.status,
+                        bodyText: response.data.message ? response.data.message : $translate.instant('unable_to_fetch_data_from_server')
+                    };		
+                    DialogService.showDialog({}, dialogOptions);
+                }                
             });            
             return promise;
         }
