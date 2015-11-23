@@ -130,7 +130,7 @@ trackerCapture.controller('OverdueEventsController',
 
                     //sort overdue events by their due dates - this is default
                     if(!$scope.sortColumn.id){                                      
-                        $scope.sortGrid({id: 'dueDate', name: $translate('due_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: true});
+                        $scope.sortGrid({id: 'dueDate', name: $translate.instant('due_date'), valueType: 'DATE', displayInListNoProgram: false, showFilter: false, show: true});
                         $scope.reverse = false;
                     }
                 }                
@@ -162,15 +162,14 @@ trackerCapture.controller('OverdueEventsController',
                     col.eventCol = false;
                 });
 
-                $scope.gridColumns.push({name: $translate('event_orgunit_name'), id: 'orgUnitName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
+                $scope.gridColumns.push({name: $translate.instant('event_orgunit_name'), id: 'orgUnitName', valueType: 'TEXT', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
                 $scope.filterTypes['orgUnitName'] = 'string';
-                $scope.gridColumns.push({name: $translate('event_name'), id: 'eventName', type: 'string', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
+                $scope.gridColumns.push({name: $translate.instant('event_name'), id: 'eventName', valueType: 'TEXT', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
                 $scope.filterTypes['eventName'] = 'string';
-                $scope.gridColumns.push({name: $translate('due_date'), id: 'dueDate', type: 'date', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
-                $scope.filterTypes['dueDate'] = 'date';
-                $scope.filterText['dueDate']= {};                
-            });
-            
+                $scope.gridColumns.push({name: $translate.instant('due_date'), id: 'dueDate', valueType: 'DATE', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
+                $scope.filterTypes['dueDate'] = 'DATE';
+                $scope.filterText['dueDate']= {};
+            });            
         }      
     };
     
@@ -210,7 +209,7 @@ trackerCapture.controller('OverdueEventsController',
             return;
         }        
         $scope.sortColumn = gridHeader;
-        if($scope.sortColumn.valueType === 'date'){
+        if($scope.sortColumn.valueType === 'DATE'){
             $scope.reverse = true;
         }
         else{
@@ -220,7 +219,7 @@ trackerCapture.controller('OverdueEventsController',
     
     
     $scope.d2Sort = function(overDueEvent){ 
-        if($scope.sortColumn && $scope.sortColumn.valueType === 'date'){            
+        if($scope.sortColumn && $scope.sortColumn.valueType === 'DATE'){            
             var d = overDueEvent[$scope.sortColumn.id];         
             return DateUtils.getDate(d);
         }

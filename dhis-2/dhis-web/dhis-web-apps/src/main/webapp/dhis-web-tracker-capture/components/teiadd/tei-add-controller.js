@@ -298,7 +298,7 @@ trackerCapture.controller('TEIAddController',
             $scope.teiFetched = true;
             
             if(!$scope.sortColumn.id){                                      
-                $scope.sortGrid({id: 'created', name: $translate('registration_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: false});
+                $scope.sortGrid({id: 'created', name: $translate.instant('registration_date'), valueType: 'date', displayInListNoProgram: false, showFilter: false, show: false});
             }
             
         });
