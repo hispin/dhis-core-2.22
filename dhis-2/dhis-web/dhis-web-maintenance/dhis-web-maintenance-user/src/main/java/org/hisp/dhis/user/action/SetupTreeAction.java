@@ -28,16 +28,7 @@ package org.hisp.dhis.user.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.user.UserSettingService.KEY_DB_LOCALE;
-import static org.hisp.dhis.user.UserSettingService.KEY_UI_LOCALE;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
@@ -56,7 +47,15 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.hisp.dhis.user.UserSettingService.KEY_DB_LOCALE;
+import static org.hisp.dhis.user.UserSettingService.KEY_UI_LOCALE;
 
 /**
  * @author Nguyen Hong Duc
@@ -113,7 +112,7 @@ public class SetupTreeAction
 
     @Autowired
     private UserSettingService userSettingService;
-    
+
     @Autowired
     private SystemSettingManager systemSettingManager;
 
@@ -150,12 +149,12 @@ public class SetupTreeAction
     }
 
     private List<UserGroup> userGroups;
-    
+
     public List<UserGroup> getUserGroups()
     {
         return userGroups;
     }
-    
+
     private List<DimensionalObject> dimensionConstraints;
 
     public List<DimensionalObject> getDimensionConstraints()
@@ -204,7 +203,7 @@ public class SetupTreeAction
     {
         return attributeValues;
     }
-    
+
     private boolean allowInvite;
 
     public boolean isAllowInvite()
@@ -232,7 +231,7 @@ public class SetupTreeAction
             {
                 selectionManager.clearSelectedOrganisationUnits();
             }
-            
+
             if ( user.hasDataViewOrganisationUnit() )
             {
                 selectionTreeManager.setSelectedOrganisationUnits( user.getDataViewOrganisationUnits() );
@@ -241,39 +240,39 @@ public class SetupTreeAction
             {
                 selectionTreeManager.clearSelectedOrganisationUnits();
             }
-            
+
             userCredentials = user.getUserCredentials();
 
-            userAuthorityGroups = new ArrayList<>( userCredentials.getUserAuthorityGroups() );            
+            userAuthorityGroups = new ArrayList<>( userCredentials.getUserAuthorityGroups() );
             userService.canIssueFilter( userAuthorityGroups );
             Collections.sort( userAuthorityGroups );
 
             userGroups = new ArrayList<>( user.getGroups() );
             Collections.sort( userGroups );
-            
+
             dimensionConstraints = new ArrayList<>( userCredentials.getDimensionConstraints() );
             Collections.sort( dimensionConstraints );
-            
+
             attributeValues = AttributeUtils.getAttributeValueMap( user.getAttributeValues() );
-            
+
             currentLocale = (Locale) userSettingService.getUserSetting( KEY_UI_LOCALE, LocaleManager.DEFAULT_LOCALE, user );
-            
+
             currentLocaleDb = (Locale) userSettingService.getUserSetting( KEY_DB_LOCALE, null, user );
         }
         else
-        {            
+        {
             currentLocale = LocaleManager.DEFAULT_LOCALE;
         }
 
         availableLocales = localeManager.getAvailableLocales();
-        
+
         availableLocalesDb = i18nService.getAvailableLocales();
-        
-        attributes = new ArrayList<>( attributeService.getUserAttributes() );
+
+        attributes = new ArrayList<>( attributeService.getAttributes( User.class ) );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
-        
+
         allowInvite = systemSettingManager.emailEnabled();
-        
+
         return SUCCESS;
     }
 }

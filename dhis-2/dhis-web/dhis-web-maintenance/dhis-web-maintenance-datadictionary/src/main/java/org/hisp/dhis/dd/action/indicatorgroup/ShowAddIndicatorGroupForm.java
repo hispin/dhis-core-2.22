@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
+import org.hisp.dhis.indicator.Indicator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +73,7 @@ public class ShowAddIndicatorGroupForm
     @Override
     public String execute()
     {
-        attributes = new ArrayList<>( attributeService.getIndicatorAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( Indicator.class ) );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
 
         return SUCCESS;

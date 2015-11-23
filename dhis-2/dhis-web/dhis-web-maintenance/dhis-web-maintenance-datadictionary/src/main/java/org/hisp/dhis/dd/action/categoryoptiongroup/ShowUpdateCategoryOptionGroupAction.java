@@ -111,7 +111,7 @@ public class ShowUpdateCategoryOptionGroupAction
 
         categoryOptions = new ArrayList<>( categoryOptionGroup.getMembers() );
 
-        attributes = new ArrayList<>( attributeService.getCategoryOptionGroupAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( CategoryOptionGroup.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( categoryOptionGroup.getAttributeValues() );
 

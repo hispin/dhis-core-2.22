@@ -28,10 +28,7 @@ package org.hisp.dhis.trackedentity.action.trackedentity;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.system.util.AttributeUtils;
@@ -39,7 +36,9 @@ import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -103,7 +102,7 @@ public class ShowAddUpdateTrackedEntityAction
             attributeValues = AttributeUtils.getAttributeValueMap( trackedEntity.getAttributeValues() );
         }
 
-        attributes = attributeService.getTrackedEntityAttributes();
+        attributes = attributeService.getAttributes( TrackedEntity.class );
 
         return SUCCESS;
     }

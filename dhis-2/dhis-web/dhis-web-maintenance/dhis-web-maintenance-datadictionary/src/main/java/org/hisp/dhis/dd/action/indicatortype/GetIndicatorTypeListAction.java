@@ -28,19 +28,20 @@ package org.hisp.dhis.dd.action.indicatortype;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.Collections;
-import java.util.List;
-
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
 import org.hisp.dhis.paging.ActionPagingSupport;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -126,7 +127,7 @@ public class GetIndicatorTypeListAction
 
         groupSets = indicatorService.getCompulsoryIndicatorGroupSetsWithMembers();
 
-        attributes = attributeService.getIndicatorAttributes();
+        attributes = attributeService.getAttributes( Indicator.class );
 
         Collections.sort( indicatorTypes, IdentifiableObjectNameComparator.INSTANCE );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );

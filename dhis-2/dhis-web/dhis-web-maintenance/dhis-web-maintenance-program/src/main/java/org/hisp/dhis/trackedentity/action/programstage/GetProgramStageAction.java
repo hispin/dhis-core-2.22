@@ -28,12 +28,7 @@ package org.hisp.dhis.trackedentity.action.programstage;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.period.PeriodService;
@@ -46,7 +41,11 @@ import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Abyot Asalefew Gizaw
@@ -169,7 +168,7 @@ public class GetProgramStageAction
         userGroups = userGroupService.getAllUserGroups();
 
         attributeValues = AttributeUtils.getAttributeValueMap( programStage.getAttributeValues() );
-        attributes = attributeService.getProgramStageAttributes();
+        attributes = attributeService.getAttributes( ProgramStage.class );
 
         return SUCCESS;
     }

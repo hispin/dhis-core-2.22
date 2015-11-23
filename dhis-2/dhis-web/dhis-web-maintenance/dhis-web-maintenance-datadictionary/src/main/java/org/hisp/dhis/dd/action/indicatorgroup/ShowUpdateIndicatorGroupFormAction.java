@@ -38,7 +38,11 @@ import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.system.util.AttributeUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
@@ -115,7 +119,7 @@ public class ShowUpdateIndicatorGroupFormAction
 
         indicators = new ArrayList<>( indicatorGroup.getMembers() );
 
-        attributes = new ArrayList<>( attributeService.getIndicatorGroupAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( IndicatorGroup.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( indicatorGroup.getAttributeValues() );
 

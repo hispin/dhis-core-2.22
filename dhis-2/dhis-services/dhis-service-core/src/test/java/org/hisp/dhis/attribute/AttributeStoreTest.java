@@ -33,6 +33,7 @@ import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -73,19 +74,19 @@ public class AttributeStoreTest
     @Test
     public void testGetDataElementAttributes()
     {
-        assertEquals( 2, attributeStore.getDataElementAttributes().size() );
+        assertEquals( 2, attributeStore.getAttributes( DataElement.class ).size() );
     }
 
     @Test
     public void testGetIndicatorAttributes()
     {
-        assertEquals( 1, attributeStore.getIndicatorAttributes().size() );
+        assertEquals( 1, attributeStore.getAttributes( Indicator.class ).size() );
     }
 
     @Test
     public void testGetOrganisationUnitAttributes()
     {
-        assertEquals( 1, attributeStore.getOrganisationUnitAttributes().size() );
+        assertEquals( 1, attributeStore.getAttributes( OrganisationUnit.class ).size() );
     }
 
     @Test

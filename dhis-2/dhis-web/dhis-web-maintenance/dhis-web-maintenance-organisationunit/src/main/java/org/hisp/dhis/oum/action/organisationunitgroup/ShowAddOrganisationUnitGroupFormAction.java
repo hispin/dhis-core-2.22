@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +70,7 @@ public class ShowAddOrganisationUnitGroupFormAction
     @Override
     public String execute()
     {
-        attributes = new ArrayList<>( attributeService.getOrganisationUnitGroupAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( OrganisationUnitGroup.class ) );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
 
         return SUCCESS;

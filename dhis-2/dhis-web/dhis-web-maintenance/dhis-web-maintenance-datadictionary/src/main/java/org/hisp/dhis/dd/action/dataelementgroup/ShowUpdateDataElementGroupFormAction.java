@@ -38,7 +38,11 @@ import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.system.util.AttributeUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
@@ -123,7 +127,7 @@ public class ShowUpdateDataElementGroupFormAction
 
         dataElements = new ArrayList<>( dataElementGroup.getMembers() );
 
-        attributes = new ArrayList<>( attributeService.getDataElementGroupAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( DataElementGroup.class ) );
 
         attributeValues = AttributeUtils.getAttributeValueMap( dataElementGroup.getAttributeValues() );
 

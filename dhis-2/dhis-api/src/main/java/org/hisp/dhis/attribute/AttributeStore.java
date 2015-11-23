@@ -28,9 +28,26 @@ package org.hisp.dhis.attribute;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
+import com.google.common.collect.ImmutableMap;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.dataelement.CategoryOptionGroup;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
+import org.hisp.dhis.dataelement.DataElementGroup;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.indicator.IndicatorGroup;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
+import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.trackedentity.TrackedEntity;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserGroup;
+
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -40,115 +57,28 @@ public interface AttributeStore
 {
     String ID = AttributeStore.class.getName();
 
-    /**
-     * Get all attributes that are enabled for data elements.
-     *
-     * @return All attributes with attribute.dataElement = true
-     */
-    List<Attribute> getDataElementAttributes();
+    ImmutableMap<Class<?>, String> CLASS_ATTRIBUTE_MAP = ImmutableMap.<Class<?>, String>builder()
+        .put( DataElement.class, "dataElementAttribute" )
+        .put( DataElementGroup.class, "dataElementGroupAttribute" )
+        .put( Indicator.class, "indicatorAttribute" )
+        .put( IndicatorGroup.class, "indicatorGroupAttribute" )
+        .put( DataSet.class, "dataSetAttribute" )
+        .put( OrganisationUnit.class, "organisationUnitAttribute" )
+        .put( OrganisationUnitGroup.class, "organisationUnitGroupAttribute" )
+        .put( OrganisationUnitGroupSet.class, "organisationUnitGroupSetAttribute" )
+        .put( User.class, "userAttribute" )
+        .put( UserGroup.class, "userGroupAttribute" )
+        .put( Program.class, "programAttribute" )
+        .put( ProgramStage.class, "programStageAttribute" )
+        .put( TrackedEntity.class, "trackedEntityAttribute" )
+        .put( TrackedEntityAttribute.class, "trackedEntityAttributeAttribute" )
+        .put( DataElementCategoryOption.class, "categoryOptionAttribute" )
+        .put( CategoryOptionGroup.class, "categoryOptionGroupAttribute" )
+        .build();
 
-    /**
-     * Get all attributes that are enabled for data element groups.
-     *
-     * @return All attributes with attribute.dataElementGroup = true
-     */
-    List<Attribute> getDataElementGroupAttributes();
+    List<Attribute> getAttributes( Class<?> klass );
 
-    /**
-     * Get all attributes that are enabled for indicators.
-     *
-     * @return All attributes with attribute.indicator = true
-     */
-    List<Attribute> getIndicatorAttributes();
+    List<Attribute> getMandatoryAttributes( Class<?> klass );
 
-    /**
-     * Get all attributes that are enabled for indicator groups.
-     *
-     * @return All attributes with attribute.indicatorGroup = true
-     */
-    List<Attribute> getIndicatorGroupAttributes();
-
-    /**
-     * Get all attributes that are enabled for data sets.
-     *
-     * @return All attributes with attribute.dataSet = true
-     */
-    List<Attribute> getDataSetAttributes();
-
-    /**
-     * Get all attributes that are enabled for organisation units.
-     *
-     * @return All attributes with attribute.organisationUnit = true
-     */
-    List<Attribute> getOrganisationUnitAttributes();
-
-    /**
-     * Get all attributes that are enabled for organisation unit groups.
-     *
-     * @return All attributes with attribute.organisationUnitGroup = true
-     */
-    List<Attribute> getOrganisationUnitGroupAttributes();
-
-    /**
-     * Get all attributes that are enabled for organisation unit group sets.
-     *
-     * @return All attributes with attribute.organisationUnitGroupSet = true
-     */
-    List<Attribute> getOrganisationUnitGroupSetAttributes();
-
-    /**
-     * Get all attributes that are enabled for users.
-     *
-     * @return All attributes with attribute.organisationUnit = true
-     */
-    List<Attribute> getUserAttributes();
-
-    /**
-     * Get all attributes that are enabled for user group.
-     *
-     * @return All attributes with attribute.organisationUnitGroup = true
-     */
-    List<Attribute> getUserGroupAttributes();
-
-    /**
-     * Get all attributes that are enabled for program.
-     *
-     * @return All attributes with attribute.program = true
-     */
-    List<Attribute> getProgramAttributes();
-
-    /**
-     * Gets attributes which are associated with program stages.
-     *
-     * @return a set of attributes which are associated with programs.
-     */
-    List<Attribute> getProgramStageAttributes();
-
-    /**
-     * Gets attributes which are associated with tracked entities.
-     *
-     * @return a set of attributes which are associated with programs.
-     */
-    List<Attribute> getTrackedEntityAttributes();
-
-    /**
-     * Gets attributes which are associated with tracked entity attributes
-     *
-     * @return a set of attributes which are associated with tracked entity attributes
-     */
-    List<Attribute> getTrackedEntityAttributeAttributes();
-
-    /**
-     * Gets attributes which are associated with category option attributes
-     *
-     * @return a set of attributes which are associated with category option attributes
-     */
-    List<Attribute> getCategoryOptionAttributes();
-
-    /**
-     * Gets attributes which are associated with category option group attributes
-     *
-     * @return a set of attributes which are associated with category option group attributes
-     */
-    List<Attribute> getCategoryOptionGroupAttributes();
+    List<Attribute> getUniqueAttributes( Class<?> klass );
 }

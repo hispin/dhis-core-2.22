@@ -45,113 +45,43 @@ public class HibernateAttributeStore
 {
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Attribute> getDataElementAttributes()
+    public List<Attribute> getAttributes( Class<?> klass )
     {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "dataElementAttribute", true ) ).list() );
+        if ( !CLASS_ATTRIBUTE_MAP.containsKey( klass ) )
+        {
+            return new ArrayList<>();
+        }
+
+        return new ArrayList<>( getCriteria( Restrictions.eq( CLASS_ATTRIBUTE_MAP.get( klass ), true ) ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Attribute> getDataElementGroupAttributes()
+    public List<Attribute> getMandatoryAttributes( Class<?> klass )
     {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "dataElementGroupAttribute", true ) ).list() );
+        if ( !CLASS_ATTRIBUTE_MAP.containsKey( klass ) )
+        {
+            return new ArrayList<>();
+        }
+
+        return new ArrayList<>( getCriteria(
+            Restrictions.eq( "mandatory", true ),
+            Restrictions.eq( CLASS_ATTRIBUTE_MAP.get( klass ), true )
+        ).list() );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Attribute> getIndicatorAttributes()
+    public List<Attribute> getUniqueAttributes( Class<?> klass )
     {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "indicatorAttribute", true ) ).list() );
-    }
+        if ( !CLASS_ATTRIBUTE_MAP.containsKey( klass ) )
+        {
+            return new ArrayList<>();
+        }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getIndicatorGroupAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "indicatorGroupAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getDataSetAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "dataSetAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getOrganisationUnitAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "organisationUnitAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getOrganisationUnitGroupAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "organisationUnitGroupAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getOrganisationUnitGroupSetAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "organisationUnitGroupSetAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getUserAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "userAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getUserGroupAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "userGroupAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getProgramAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "programAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getProgramStageAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "programStageAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getTrackedEntityAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "trackedEntityAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getTrackedEntityAttributeAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "trackedEntityAttributeAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getCategoryOptionAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "categoryOptionAttribute", true ) ).list() );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Attribute> getCategoryOptionGroupAttributes()
-    {
-        return new ArrayList<>( getCriteria( Restrictions.eq( "categoryOptionGroupAttribute", true ) ).list() );
+        return new ArrayList<>( getCriteria(
+            Restrictions.eq( "unique", true ),
+            Restrictions.eq( CLASS_ATTRIBUTE_MAP.get( klass ), true )
+        ).list() );
     }
 }

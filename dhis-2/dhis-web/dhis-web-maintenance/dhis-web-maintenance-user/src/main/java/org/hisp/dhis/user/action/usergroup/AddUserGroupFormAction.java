@@ -28,15 +28,15 @@ package org.hisp.dhis.user.action.usergroup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
+import org.hisp.dhis.user.UserGroup;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AddUserGroupFormAction
     implements Action
@@ -71,7 +71,7 @@ public class AddUserGroupFormAction
     public String execute()
         throws Exception
     {
-        attributes = new ArrayList<>( attributeService.getUserGroupAttributes() );
+        attributes = new ArrayList<>( attributeService.getAttributes( UserGroup.class ) );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
 
         return SUCCESS;

@@ -31,6 +31,7 @@ package org.hisp.dhis.dd.action.categoryoptiongroup;
 import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class ShowAddCategoryOptionGroupAction
     public String execute()
         throws Exception
     {
-        attributes = attributeService.getCategoryOptionGroupAttributes();
+        attributes = attributeService.getAttributes( CategoryOptionGroup.class );
 
         return SUCCESS;
     }
