@@ -298,7 +298,7 @@ public class DefaultAttributeService
                     {
                         validationViolations.add( new ValidationViolation( attributeValue.getAttribute().getUid(),
                             "Value '" + av.getValue() + "' already exists for attribute '"
-                                + attributeValue.getAttribute().getName() + "' (" + attributeValue.getAttribute().getUid() + ")" ) );
+                                + attributeValue.getAttribute().getDisplayName() + "' (" + attributeValue.getAttribute().getUid() + ")" ) );
                     }
                 }
 
@@ -310,7 +310,17 @@ public class DefaultAttributeService
         for ( String uid : attributeValueMap.keySet() )
         {
             AttributeValue attributeValue = attributeValueMap.get( uid );
-            mandatoryAttributes.remove( attributeValue.getAttribute() );
+
+            if ( !attributeValue.getAttribute().getSupportedClasses().contains( object.getClass() ) )
+            {
+                validationViolations.add( new ValidationViolation( attributeValue.getAttribute().getUid(),
+                    "Attribute '" + attributeValue.getAttribute().getDisplayName() + "' (" + attributeValue.getAttribute().getUid() + ") is not supported for type "
+                        + object.getClass().getSimpleName() ) );
+            }
+            else
+            {
+                mandatoryAttributes.remove( attributeValue.getAttribute() );
+            }
         }
 
         mandatoryAttributes.stream()
