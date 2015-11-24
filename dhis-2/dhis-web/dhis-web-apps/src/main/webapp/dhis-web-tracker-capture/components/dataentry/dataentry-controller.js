@@ -235,6 +235,7 @@ trackerCapture.controller('DataEntryController',
         $rootScope.ruleeffects = {};
         $scope.prStDes = [];
         $scope.allProgramRules = [];
+        $scope.allowProvidedElsewhereExists = [];
 
         var selections = CurrentSelection.get();
         $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');
@@ -251,9 +252,12 @@ trackerCapture.controller('DataEntryController',
                     if (stage.openAfterEnrollment) {
                         $scope.currentStage = stage;
                     }
-
+          
                     angular.forEach(stage.programStageDataElements, function (prStDe) {
                         $scope.prStDes[prStDe.dataElement.id] = prStDe;
+                        if(prStDe.allowProvidedElsewhere){
+                            $scope.allowProvidedElsewhereExists[stage.id] = true;
+                        }
                     });
 
                     $scope.stagesById[stage.id] = stage;
