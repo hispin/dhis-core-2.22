@@ -4,9 +4,9 @@
             <tr>
                 <th ng-bind="dataElementLabel">
                 </th>
-                <th ng-bind="valueLabel">
+                <th class="align-center" ng-bind="valueLabel">
                 </th>
-                <th ng-if="allowProvidedElsewhereExists" ng-bind="providedElsewhereLabel">
+                <th class="align-center" ng-if="allowProvidedElsewhereExists[currentStage.id]" ng-bind="providedElsewhereLabel">
                 </th>
             </tr>
         </thead>
@@ -204,9 +204,10 @@
                     </div>
                 </ng-form>                
             </td>
-            <td ng-if="allowProvidedElsewhereExists">                
+            <td ng-if="allowProvidedElsewhereExists[currentStage.id]">                
                 <div class="align-center" ng-show="prStDe.allowProvidedElsewhere">
                     <input type="checkbox" 
+                           class="form-control"
                            ng-model="currentEvent.providedElsewhere[prStDe.dataElement.id]" 
                            ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
                            ng-change="saveDatavalueLocation(prStDe)"/>                
@@ -224,9 +225,9 @@
                         <tr>
                             <th ng-bind="dataElementLabel">
                             </th>
-                            <th ng-bind="valueLabel">
+                            <th class="align-center" ng-bind="valueLabel">
                             </th>
-                            <th ng-if="allowProvidedElsewhereExists" ng-bind="providedElsewhereLabel">
+                            <th class="align-center" ng-if="allowProvidedElsewhereExists[currentStage.id]" ng-bind="providedElsewhereLabel">
                             </th>
                         </tr>
                     </thead>
@@ -425,9 +426,10 @@
                                     </div>    
                                 </ng-form>                                
                             </td>
-                            <td ng-if="allowProvidedElsewhereExists">                
+                            <td ng-if="allowProvidedElsewhereExists[currentStage.id]">                
                                 <div class="align-center" ng-show="prStDes[de.dataElement.id].allowProvidedElsewhere">
                                     <input type="checkbox" 
+                                           class="form-control"
                                            ng-model="currentEvent.providedElsewhere[prStDes[de.dataElement.id].dataElement.id]"
                                            ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed" 
                                            ng-change="saveDatavalueLocation(prStDes[de.dataElement.id])"/>                
