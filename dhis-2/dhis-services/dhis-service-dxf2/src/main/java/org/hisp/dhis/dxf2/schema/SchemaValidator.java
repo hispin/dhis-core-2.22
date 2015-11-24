@@ -28,6 +28,8 @@ package org.hisp.dhis.dxf2.schema;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.validation.ValidationViolation;
+
 import java.util.List;
 
 /**

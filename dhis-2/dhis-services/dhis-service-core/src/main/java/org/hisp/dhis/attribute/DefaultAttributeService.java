@@ -34,6 +34,7 @@ import org.hisp.dhis.attribute.exception.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.validation.ValidationViolation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -270,6 +271,53 @@ public class DefaultAttributeService
     public int getAttributeValueCount()
     {
         return attributeValueStore.getCount();
+    }
+
+    @Override
+    public <T extends IdentifiableObject> List<ValidationViolation> validateAttributeValues( T object, Set<AttributeValue> attributeValues )
+    {
+        List<ValidationViolation> validationViolations = new ArrayList<>();
+
+        Map<String, AttributeValue> attributeValueMap = attributeValues.stream()
+            .collect( Collectors.toMap( av -> av.getAttribute().getUid(), av -> av ) );
+
+        Iterator<AttributeValue> iterator = object.getAttributeValues().iterator();
+        List<Attribute> mandatoryAttributes = getMandatoryAttributes( object.getClass() );
+
+        while ( iterator.hasNext() )
+        {
+            AttributeValue attributeValue = iterator.next();
+
+            if ( attributeValueMap.containsKey( attributeValue.getAttribute().getUid() ) )
+            {
+                AttributeValue av = attributeValueMap.get( attributeValue.getAttribute().getUid() );
+
+                if ( attributeValue.isUnique() )
+                {
+                    if ( !manager.isAttributeValueUnique( object.getClass(), object, attributeValue.getAttribute(), av.getValue() ) )
+                    {
+                        validationViolations.add( new ValidationViolation( attributeValue.getAttribute().getUid(),
+                            "Value '" + av.getValue() + "' already exists for attribute '"
+                                + attributeValue.getAttribute().getName() + "' (" + attributeValue.getAttribute().getUid() + ")" ) );
+                    }
+                }
+
+                attributeValueMap.remove( attributeValue.getAttribute().getUid() );
+                mandatoryAttributes.remove( attributeValue.getAttribute() );
+            }
+        }
+
+        for ( String uid : attributeValueMap.keySet() )
+        {
+            AttributeValue attributeValue = attributeValueMap.get( uid );
+            mandatoryAttributes.remove( attributeValue.getAttribute() );
+        }
+
+        mandatoryAttributes.stream()
+            .forEach( att -> validationViolations.add(
+                new ValidationViolation( att.getUid(), "Missing mandatory attribute '" + att.getDisplayName() + "' (" + att.getUid() + ")" ) ) );
+
+        return validationViolations;
     }
 
     @Override

@@ -32,7 +32,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
-import org.hisp.dhis.dxf2.schema.ValidationViolation;
+import org.hisp.dhis.validation.ValidationViolation;
 import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.dxf2.webmessage.responses.ValidationViolationsWebMessageResponse;
