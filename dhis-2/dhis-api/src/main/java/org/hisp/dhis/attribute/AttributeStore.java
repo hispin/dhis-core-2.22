@@ -76,9 +76,27 @@ public interface AttributeStore
         .put( CategoryOptionGroup.class, "categoryOptionGroupAttribute" )
         .build();
 
+    /**
+     * Get all metadata attributes for a given class, returns empty list for un-supported types.
+     *
+     * @param klass Class to get metadata attributes for
+     * @return List of attributes for this class
+     */
     List<Attribute> getAttributes( Class<?> klass );
 
+    /**
+     * Get all mandatory metadata attributes for a given class, returns empty list for un-supported types.
+     *
+     * @param klass Class to get metadata attributes for
+     * @return List of mandatory metadata attributes for this class
+     */
     List<Attribute> getMandatoryAttributes( Class<?> klass );
 
+    /**
+     * Get all unique metadata attributes for a given class, returns empty list for un-supported types.
+     *
+     * @param klass Class to get metadata attributes for
+     * @return List of unique metadata attributes for this class
+     */
     List<Attribute> getUniqueAttributes( Class<?> klass );
 }
