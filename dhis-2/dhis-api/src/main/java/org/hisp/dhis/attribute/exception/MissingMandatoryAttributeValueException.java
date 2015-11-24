@@ -28,15 +28,20 @@ package org.hisp.dhis.attribute.exception;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.attribute.Attribute;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class MissingMandatoryAttributeValueException extends Exception
 {
-    public MissingMandatoryAttributeValueException( AttributeValue attributeValue )
+    public MissingMandatoryAttributeValueException( List<Attribute> mandatoryAttributes )
     {
-        super( "Missing mandatory attribute " + attributeValue.getAttribute().getName() + "(" + attributeValue.getAttribute().getUid() + ")" );
+        super( String.valueOf( mandatoryAttributes.stream()
+            .map( att -> "Attribute " + att.getDisplayName() + " (" + att.getUid() + ")" )
+            .collect( Collectors.toList() ) ) );
     }
 }
