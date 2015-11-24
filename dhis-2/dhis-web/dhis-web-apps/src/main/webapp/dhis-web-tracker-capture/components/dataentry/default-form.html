@@ -220,7 +220,12 @@
         <accordion close-others='false'>
             <!-- The inline style was needed to override overflow:hidden in the css. Can possibly be replaced with a CSS update. --> 
             <accordion-group heading="{{section.name}}" is-open="section.open" ng-repeat='section in currentStage.programStageSections' ng-if="!hiddenSections[section.id]" style="overflow:visible">
-                <table class="dhis2-list-table-striped">                    
+                
+                <div class="vertical-spacing" ng-if="!section.programStageDataElements || section.programStageDataElements.length === 0">
+                    <div class="alert alert-warning">{{'section'| translate}} {{section.name}} {{'has_no_dataelements'| translate}}</div>
+                </div> 
+                
+                <table class="dhis2-list-table-striped" ng-if="section.programStageDataElements && section.programStageDataElements.length > 0">                    
                     <thead>
                         <tr>
                             <th ng-bind="dataElementLabel">
