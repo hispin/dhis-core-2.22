@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.schema;
+package org.hisp.dhis.validation;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,82 +29,43 @@ package org.hisp.dhis.dxf2.schema;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.DxfNamespaces;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
+ * Temporary wrapper for ValidationViolation
+ *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@JsonPropertyOrder( {
-    "message"
-} )
-@JacksonXmlRootElement( localName = "validationViolation", namespace = DxfNamespaces.DXF_2_0 )
-public class ValidationViolation
+@JacksonXmlRootElement( localName = "validationViolations", namespace = DxfNamespaces.DXF_2_0 )
+public class ValidationViolations
 {
-    private String property;
+    private List<ValidationViolation> validationViolations = new ArrayList<>();
 
-    private String message;
-
-    private Object value;
-
-    public ValidationViolation( String property, String message )
+    public ValidationViolations()
     {
-        this.property = property;
-        this.message = message;
     }
 
-    public ValidationViolation( String property, String message, Object value )
+    public ValidationViolations( List<ValidationViolation> validationViolations )
     {
-        this.property = property;
-        this.message = message;
-        this.value = value;
+        this.validationViolations = validationViolations;
     }
 
     @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getProperty()
+    @JacksonXmlElementWrapper( localName = "validationViolations", namespace = DxfNamespaces.DXF_2_0, useWrapping = false )
+    @JacksonXmlProperty( localName = "validationViolation", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ValidationViolation> getValidationViolations()
     {
-        return property;
+        return validationViolations;
     }
 
-    public void setProperty( String property )
+    public void setValidationViolations( List<ValidationViolation> validationViolations )
     {
-        this.property = property;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getMessage()
-    {
-        return message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Object getValue()
-    {
-        return value;
-    }
-
-    public void setValue( Object value )
-    {
-        this.value = value;
-    }
-
-    @Override public String toString()
-    {
-        final StringBuilder sb = new StringBuilder( "ValidationViolation{" );
-        sb.append( "property='" ).append( property ).append( '\'' );
-        sb.append( ", message='" ).append( message ).append( '\'' );
-        sb.append( ", value=" ).append( value );
-        sb.append( '}' );
-        return sb.toString();
+        this.validationViolations = validationViolations;
     }
 }

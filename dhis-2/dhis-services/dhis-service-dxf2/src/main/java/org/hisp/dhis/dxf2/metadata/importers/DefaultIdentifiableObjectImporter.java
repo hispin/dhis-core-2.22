@@ -60,7 +60,6 @@ import org.hisp.dhis.dxf2.metadata.ObjectBridge;
 import org.hisp.dhis.dxf2.metadata.handlers.ObjectHandler;
 import org.hisp.dhis.dxf2.metadata.handlers.ObjectHandlerUtils;
 import org.hisp.dhis.dxf2.schema.SchemaValidator;
-import org.hisp.dhis.dxf2.schema.ValidationViolation;
 import org.hisp.dhis.eventchart.EventChart;
 import org.hisp.dhis.eventreport.EventReport;
 import org.hisp.dhis.expression.Expression;
@@ -83,6 +82,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.validation.ValidationRule;
+import org.hisp.dhis.validation.ValidationViolation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Field;
@@ -302,6 +302,16 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         }
 
         NonIdentifiableObjects nonIdentifiableObjects = new NonIdentifiableObjects( user );
+        validationViolations = nonIdentifiableObjects.validate( object, object );
+
+        if ( !validationViolations.isEmpty() )
+        {
+            summaryType.getImportConflicts().add(
+                new ImportConflict( ImportUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
+
+            return false;
+        }
+
         nonIdentifiableObjects.extract( object );
 
         UserCredentials userCredentials = null;
@@ -409,6 +419,16 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         }
 
         NonIdentifiableObjects nonIdentifiableObjects = new NonIdentifiableObjects( user );
+        validationViolations = nonIdentifiableObjects.validate( persistedObject, object );
+
+        if ( !validationViolations.isEmpty() )
+        {
+            summaryType.getImportConflicts().add(
+                new ImportConflict( ImportUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
+
+            return false;
+        }
+
         nonIdentifiableObjects.extract( object );
         nonIdentifiableObjects.delete( persistedObject );
 
@@ -943,6 +963,32 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         private NonIdentifiableObjects( User user )
         {
             this.user = user;
+        }
+
+        public List<ValidationViolation> validate( T persistedObject, T object )
+        {
+            schema = schemaService.getDynamicSchema( object.getClass() );
+            List<ValidationViolation> validationViolations = new ArrayList<>();
+
+            if ( schema.havePersistedProperty( "attributeValues" ) )
+            {
+                for ( AttributeValue attributeValue : object.getAttributeValues() )
+                {
+                    Attribute attribute = objectBridge.getObject( attributeValue.getAttribute() );
+
+                    if ( attribute == null )
+                    {
+                        validationViolations.add( new ValidationViolation( attributeValue.getAttribute().getUid(),
+                            "Unknown reference to " + attributeValue.getAttribute() + " on object " + attributeValue ) );
+                    }
+
+                    attributeValue.setAttribute( attribute );
+                }
+
+                validationViolations.addAll( attributeService.validateAttributeValues( persistedObject, object.getAttributeValues() ) );
+            }
+
+            return validationViolations;
         }
 
         public void extract( T object )

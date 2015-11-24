@@ -37,7 +37,7 @@ import org.hisp.dhis.dxf2.metadata.ExportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.schema.SchemaValidator;
-import org.hisp.dhis.dxf2.schema.ValidationViolation;
+import org.hisp.dhis.validation.ValidationViolation;
 import org.hisp.dhis.maintenance.MaintenanceService;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.resourcetable.ResourceTableService;
