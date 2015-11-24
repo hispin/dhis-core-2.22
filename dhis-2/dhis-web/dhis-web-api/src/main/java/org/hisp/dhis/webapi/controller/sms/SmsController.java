@@ -51,17 +51,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping( value = "/sms" )
 public class SmsController
 {
-    public static final String SENDSMS = "/sendSMS";
-    public static final String SENDSMSTOALL = "/sendSMSToAll";
-    public static final String GETAALLINBOUNDSMS = "/getAllInboundSMS";
-    public static final String GETALLOUTBOUNDSMS = "/getAllOutboundSMS";
-    public static final String RECEIVESMS = "/receiveSMS";
-    public static final String GETSMSSTATUS = "/getSMSStatus";
-    public static final String DELETESMS = "/deleteSMS";
-    public static final String DELETEALLSMS = "/deleteAllSMS";
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -80,7 +72,7 @@ public class SmsController
     // -------------------------------------------------------------------------
 
     @PreAuthorize( "hasRole('ALL') or hasRole(' F_MOBILE_SENDSMS')" )
-    @RequestMapping( value = SENDSMS, method = RequestMethod.POST )
+    @RequestMapping( value = "/outbound", method = RequestMethod.POST )
     public void sendSMSMessage( @RequestParam String recipient, @RequestParam String message,
         HttpServletResponse response, HttpServletRequest request )
             throws WebMessageException
@@ -108,7 +100,7 @@ public class SmsController
     }
 
     @PreAuthorize( "hasRole('ALL') or hasRole(' F_MOBILE_SENDSMS')" )
-    @RequestMapping( value = SENDSMS, method = RequestMethod.POST, consumes = "application/json" )
+    @RequestMapping( value = "/outbound", method = RequestMethod.POST, consumes = "application/json" )
     public void sendSMSMessage( @RequestBody Map<String, Object> jsonMessage, HttpServletResponse response,
         HttpServletRequest request )
             throws WebMessageException
@@ -131,7 +123,7 @@ public class SmsController
         }
     }
 
-    @RequestMapping( value = RECEIVESMS, method = RequestMethod.POST )
+    @RequestMapping( value = "/inbound", method = RequestMethod.POST )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_MOBILE_SETTINGS')" )
     public void receiveSMSMessage( @RequestParam String originator,
         @RequestParam( required = false ) String received_time, @RequestParam String message,
@@ -154,7 +146,7 @@ public class SmsController
         webMessageService.send( WebMessageUtils.ok( "Received" ), response, request );
     }
 
-    @RequestMapping( value = RECEIVESMS, method = RequestMethod.POST, consumes = "application/json" )
+    @RequestMapping( value = "/inbound", method = RequestMethod.POST, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_MOBILE_SETTINGS')" )
     public void receiveSMSMessage( @RequestBody Map<String, Object> jsonMassage, HttpServletRequest request,
         HttpServletResponse response )
