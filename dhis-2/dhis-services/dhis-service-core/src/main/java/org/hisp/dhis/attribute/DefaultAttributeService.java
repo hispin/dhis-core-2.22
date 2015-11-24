@@ -29,6 +29,7 @@ package org.hisp.dhis.attribute;
  */
 
 import net.sf.json.JSONObject;
+import org.hisp.dhis.attribute.exception.MissingMandatoryAttributeValueException;
 import org.hisp.dhis.attribute.exception.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -272,18 +273,19 @@ public class DefaultAttributeService
     }
 
     @Override
-    public <T extends IdentifiableObject> void updateAttributeValues( T object, List<String> jsonAttributeValues ) throws NonUniqueAttributeValueException
+    public <T extends IdentifiableObject> void updateAttributeValues( T object, List<String> jsonAttributeValues ) throws Exception
     {
         updateAttributeValues( object, getJsonAttributeValues( jsonAttributeValues ) );
     }
 
     @Override
-    public <T extends IdentifiableObject> void updateAttributeValues( T object, Set<AttributeValue> attributeValues ) throws NonUniqueAttributeValueException
+    public <T extends IdentifiableObject> void updateAttributeValues( T object, Set<AttributeValue> attributeValues ) throws Exception
     {
         Map<String, AttributeValue> attributeValueMap = attributeValues.stream()
             .collect( Collectors.toMap( av -> av.getAttribute().getUid(), av -> av ) );
 
         Iterator<AttributeValue> iterator = object.getAttributeValues().iterator();
+        List<Attribute> mandatoryAttributes = getMandatoryAttributes( object.getClass() );
 
         while ( iterator.hasNext() )
         {
@@ -310,6 +312,7 @@ public class DefaultAttributeService
                 }
 
                 attributeValueMap.remove( attributeValue.getAttribute().getUid() );
+                mandatoryAttributes.remove( attributeValue.getAttribute() );
             }
             else
             {
@@ -321,6 +324,12 @@ public class DefaultAttributeService
         {
             AttributeValue attributeValue = attributeValueMap.get( uid );
             addAttributeValue( object, attributeValue );
+            mandatoryAttributes.remove( attributeValue.getAttribute() );
+        }
+
+        if ( !mandatoryAttributes.isEmpty() )
+        {
+            throw new MissingMandatoryAttributeValueException( mandatoryAttributes );
         }
     }
 
