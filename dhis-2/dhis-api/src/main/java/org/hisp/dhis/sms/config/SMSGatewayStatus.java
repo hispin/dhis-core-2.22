@@ -31,19 +31,8 @@ package org.hisp.dhis.sms.config;
 /**
  * Zubair <rajazubair.asghar@gmail.com>
  */
-public interface SmsConfigurationManager
+public enum SMSGatewayStatus
 {
-    SmsConfiguration getSmsConfiguration();
+    STOPPED,STOPPING, STARTING, STARTED, UNDEFINED
 
-    void updateSmsConfiguration( SmsConfiguration config );
-    
-    SmsGatewayConfig checkInstanceOfGateway( Class<?> clazz );
-    
-    boolean setDefaultSMSGateway(String gatewayId);
-    
-    boolean gatewayExists (String gatewayId);
-    
-    boolean removeSMSGatewayById(String gatewayId);
-    
-    String addSMSGateway();
 }
