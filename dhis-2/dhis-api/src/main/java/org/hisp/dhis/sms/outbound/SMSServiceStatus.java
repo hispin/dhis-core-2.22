@@ -1,4 +1,4 @@
-package org.hisp.dhis.sms.config;
+package org.hisp.dhis.sms.outbound;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -31,19 +31,7 @@ package org.hisp.dhis.sms.config;
 /**
  * Zubair <rajazubair.asghar@gmail.com>
  */
-public interface SmsConfigurationManager
+public enum SMSServiceStatus
 {
-    SmsConfiguration getSmsConfiguration();
-
-    void updateSmsConfiguration( SmsConfiguration config );
-    
-    SmsGatewayConfig checkInstanceOfGateway( Class<?> clazz );
-    
-    boolean setDefaultSMSGateway(String gatewayId);
-    
-    boolean gatewayExists (String gatewayId);
-    
-    boolean removeSMSGatewayById(String gatewayId);
-    
-    String addSMSGateway();
+    STARTED, STOPPED, STARTING, STOPPING
 }
