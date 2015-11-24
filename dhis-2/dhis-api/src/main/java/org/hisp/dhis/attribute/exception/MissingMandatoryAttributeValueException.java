@@ -38,10 +38,19 @@ import java.util.stream.Collectors;
  */
 public class MissingMandatoryAttributeValueException extends Exception
 {
+    private final List<Attribute> mandatoryAttributes;
+
     public MissingMandatoryAttributeValueException( List<Attribute> mandatoryAttributes )
     {
         super( String.valueOf( mandatoryAttributes.stream()
             .map( att -> "Attribute " + att.getDisplayName() + " (" + att.getUid() + ")" )
             .collect( Collectors.toList() ) ) );
+
+        this.mandatoryAttributes = mandatoryAttributes;
+    }
+
+    public List<Attribute> getMandatoryAttributes()
+    {
+        return mandatoryAttributes;
     }
 }
