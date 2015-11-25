@@ -58,21 +58,45 @@
                                ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
                     <span ng-switch-when="BOOLEAN">
-                        <select name="foo" 
-                                ng-model="selectedTei[attribute.id]" 
-                                ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
-                                d2-attribute-validator 
-                                attribute-data={{attribute}}
-                                selected-program-id={{selectedProgram.id}}  
-                                selected-tei-id={{selectedTei.trackedEntityInstance}}  
-                                class="form-control" 
-                                ng-disabled="editingDisabled" 
-                                ng-change="teiValueUpdated(selectedTei, attribute.id)"
-                                ng-required="attribute.mandatory || attribute.unique">
-                            <option value="">{{'please_select'| translate}}</option>                        
-                            <option value="false">{{'no'| translate}}</option>
-                            <option value="true">{{'yes'| translate}}</option>
-                        </select>
+                        <label class="radio-inline">
+                            <input  type="radio"
+                                    ng-model="selectedTei[attribute.id]" 
+                                    d2-attribute-validator 
+                                    attribute-data={{attribute}}
+                                    selected-program-id={{selectedProgram.id}}  
+                                    selected-tei-id={{selectedTei.trackedEntityInstance}} 
+                                    ng-disabled="editingDisabled" 
+                                    ng-change="teiValueUpdated(selectedTei, attribute.id)"
+                                    ng-required="attribute.mandatory || attribute.unique" 
+                                    value=""> 
+                            {{'no_value'| translate}}
+                        </label>
+                        <label class="radio-inline">
+                            <input  type="radio"
+                                    ng-model="selectedTei[attribute.id]" 
+                                    d2-attribute-validator 
+                                    attribute-data={{attribute}}
+                                    selected-program-id={{selectedProgram.id}}  
+                                    selected-tei-id={{selectedTei.trackedEntityInstance}} 
+                                    ng-disabled="editingDisabled" 
+                                    ng-change="teiValueUpdated(selectedTei, attribute.id)"
+                                    ng-required="attribute.mandatory || attribute.unique" 
+                                    value="true"> 
+                            {{'yes'| translate}}
+                        </label>
+                        <label class="radio-inline">
+                            <input  type="radio"                                                         
+                                    ng-model="selectedTei[attribute.id]" 
+                                    d2-attribute-validator 
+                                    attribute-data={{attribute}}
+                                    selected-program-id={{selectedProgram.id}}  
+                                    selected-tei-id={{selectedTei.trackedEntityInstance}} 
+                                    ng-disabled="editingDisabled" 
+                                    ng-change="teiValueUpdated(selectedTei, attribute.id)"
+                                    ng-required="attribute.mandatory || attribute.unique" 
+                                    value="false"> 
+                            {{'no'| translate}}
+                        </label>                        
                     </span>                    
                     <span ng-switch-when="NUMBER">
                         <input type="number" 
