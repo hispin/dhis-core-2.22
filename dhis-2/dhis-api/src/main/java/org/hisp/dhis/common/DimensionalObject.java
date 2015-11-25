@@ -64,11 +64,6 @@ public interface DimensionalObject
     String ORGUNIT_GROUP_DIM_ID = "oug"; // Used for org unit target
     String ITEM_DIM_ID = "item";
 
-    String OU_MODE_SELECTED = "selected"; //TODO replace with OrganisationUnitSelectionMode
-    String OU_MODE_CHILDREN = "children";
-    String OU_MODE_DESCENDANTS = "descendants";
-    String OU_MODE_ALL = "all";
-    
     String DIMENSION_SEP = "-";
 
     String LONGITUDE_DIM_ID = "longitude";

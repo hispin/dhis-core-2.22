@@ -43,6 +43,7 @@ import org.hisp.dhis.analytics.event.EventDataQueryService;
 import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.Grid;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.system.grid.GridUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -303,7 +304,7 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) String ouMode,
+        @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
         @RequestParam( required = false ) boolean skipMeta,
@@ -336,7 +337,7 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) String ouMode,
+        @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
         @RequestParam( required = false ) boolean skipMeta,
@@ -367,7 +368,7 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) String ouMode,
+        @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
         @RequestParam( required = false ) boolean skipMeta,
@@ -398,7 +399,7 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) String ouMode,
+        @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
         @RequestParam( required = false ) boolean skipMeta,
@@ -429,7 +430,7 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) String ouMode,
+        @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
         @RequestParam( required = false ) boolean skipMeta,
@@ -460,7 +461,7 @@ public class EventAnalyticsController
         @RequestParam( required = false ) String endDate,
         @RequestParam Set<String> dimension,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) String ouMode,
+        @RequestParam( required = false ) OrganisationUnitSelectionMode ouMode,
         @RequestParam( required = false ) Set<String> asc,
         @RequestParam( required = false ) Set<String> desc,
         @RequestParam( required = false ) boolean skipMeta,

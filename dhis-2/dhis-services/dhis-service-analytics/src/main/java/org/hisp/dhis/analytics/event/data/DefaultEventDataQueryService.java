@@ -53,6 +53,7 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.EventAnalyticalObject;
 import org.hisp.dhis.common.IllegalQueryException;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.QueryOperator;
@@ -134,7 +135,7 @@ public class DefaultEventDataQueryService
 
     @Override
     public EventQueryParams getFromUrl( String program, String stage, String startDate, String endDate,
-        Set<String> dimension, Set<String> filter, String ouMode, Set<String> asc, Set<String> desc,
+        Set<String> dimension, Set<String> filter, OrganisationUnitSelectionMode ouMode, Set<String> asc, Set<String> desc,
         boolean skipMeta, boolean skipData, boolean completedOnly, boolean hierarchyMeta, boolean coordinatesOnly, 
         DisplayProperty displayProperty, String userOrgUnit, Integer page, Integer pageSize, I18nFormat format )
     {
