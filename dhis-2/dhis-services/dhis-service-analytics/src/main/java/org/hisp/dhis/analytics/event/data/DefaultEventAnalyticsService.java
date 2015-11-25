@@ -141,7 +141,7 @@ public class DefaultEventAnalyticsService
                     grid.addHeader( new GridHeader( item.getItem().getUid(), item.getItem().getName(), item.getTypeAsString(), false, true, item.getOptionSetUid(), legendSet ) );
                 }
             }
-    
+            
             for ( DimensionalObject dimension : params.getDimensions() )
             {
                 grid.addHeader( new GridHeader( dimension.getDimension(), dimension.getDisplayName(), String.class.getName(), false, true ) );

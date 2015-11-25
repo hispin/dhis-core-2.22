@@ -46,6 +46,7 @@ import org.hisp.dhis.analytics.SortOrder;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -80,22 +81,48 @@ public class EventQueryParams
 
     private List<String> desc = new ArrayList<>();
     
-    private String organisationUnitMode;
+    private OrganisationUnitSelectionMode organisationUnitMode;
 
+    /**
+     * The page number.
+     */
     private Integer page;
 
+    /**
+     * The page size.
+     */
     private Integer pageSize;
 
+    /**
+     * The value sort order.
+     */
     private SortOrder sortOrder;
 
+    /**
+     * The max limit of records to return.
+     */
     private Integer limit;
 
+    /**
+     * Indicates the event output type which can be by event, enrollment type
+     * or tracked entity instance.
+     */
     private EventOutputType outputType;
 
+    /**
+     * Indicates whether the data dimension items should be collapsed into a
+     * single dimension.
+     */
     private boolean collapseDataDimensions;
 
+    /**
+     * Indicates whether request is intended to fetch coordinates only.
+     */
     private boolean coordinatesOnly;
 
+    /**
+     * Indicates whether the query originates from an aggregate data query.
+     */
     private boolean aggregateData;
 
     // -------------------------------------------------------------------------
@@ -348,9 +375,9 @@ public class EventQueryParams
     /**
      * Indicates whether this query is of the given organisation unit mode.
      */
-    public boolean isOrganisationUnitMode( String mode )
+    public boolean isOrganisationUnitMode( OrganisationUnitSelectionMode mode )
     {
-        return organisationUnitMode != null && organisationUnitMode.equalsIgnoreCase( mode );
+        return organisationUnitMode != null && organisationUnitMode == mode;
     }
 
     /**
@@ -568,12 +595,12 @@ public class EventQueryParams
         this.desc = desc;
     }
 
-    public String getOrganisationUnitMode()
+    public OrganisationUnitSelectionMode getOrganisationUnitMode()
     {
         return organisationUnitMode;
     }
 
-    public void setOrganisationUnitMode( String organisationUnitMode )
+    public void setOrganisationUnitMode( OrganisationUnitSelectionMode organisationUnitMode )
     {
         this.organisationUnitMode = organisationUnitMode;
     }

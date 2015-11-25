@@ -55,6 +55,7 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.commons.collection.ListUtils;
@@ -544,11 +545,11 @@ public class JdbcEventAnalyticsManager
         // Organisation units
         // ---------------------------------------------------------------------
 
-        if ( params.isOrganisationUnitMode( DimensionalObject.OU_MODE_SELECTED ) )
+        if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED ) )
         {
             sql += "and ou in (" + getQuotedCommaDelimitedString( getUids( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ) ) ) + ") ";
         }
-        else if ( params.isOrganisationUnitMode( DimensionalObject.OU_MODE_CHILDREN ) )
+        else if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.CHILDREN ) )
         {
             sql += "and ou in (" + getQuotedCommaDelimitedString( getUids( params.getOrganisationUnitChildren() ) ) + ") ";
         }
