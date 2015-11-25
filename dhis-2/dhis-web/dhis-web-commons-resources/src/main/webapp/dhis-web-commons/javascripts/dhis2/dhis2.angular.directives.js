@@ -155,7 +155,7 @@ var d2Directives = angular.module('d2Directives', [])
         controller: function ($scope, Paginator) {
             $scope.paginator = Paginator;
         },
-        templateUrl: '../../../dhis-web-commons/angular-forms/serverside-pagination.html'
+        templateUrl: '../dhis-web-commons/angular-forms/serverside-pagination.html'
     };
 })
 
