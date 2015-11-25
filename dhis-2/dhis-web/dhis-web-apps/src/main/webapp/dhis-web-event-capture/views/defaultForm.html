@@ -140,17 +140,36 @@
                                 </textarea>                                              
                             </div>
                             <div ng-switch-when="BOOLEAN">
-                                <select ng-model="currentEvent[eventGridColumn.id]"                                                                
-                                        ng-required={{eventGridColumn.compulsory}}
-                                        ng-disabled="assignedFields[eventGridColumn.id]"
-                                        name="foo" 
-                                        input-field-id={{eventGridColumn.id}} 
-                                        ng-change="saveDatavalue()" 
-                                        class="form-control">
-                                <option value="">{{pleaseSelectLabel}}</option>                        
-                                <option value="false">{{'no'| translate}}</option>
-                                <option value="true">{{'yes'| translate}}</option>
-                                </select>
+                                <label class="radio-inline">
+                                    <input  type="radio" 
+                                            ng-model="currentEvent[eventGridColumn.id]"                                                                
+                                            ng-required={{eventGridColumn.compulsory}}
+                                            ng-disabled="assignedFields[eventGridColumn.id]"
+                                            input-field-id={{eventGridColumn.id}} 
+                                            ng-change="saveDatavalue()" 
+                                           value=""> 
+                                    {{'no_value'| translate}}
+                                </label>
+                                <label class="radio-inline">
+                                    <input  type="radio" 
+                                            ng-model="currentEvent[eventGridColumn.id]"                                                                
+                                            ng-required={{eventGridColumn.compulsory}}
+                                            ng-disabled="assignedFields[eventGridColumn.id]"
+                                            input-field-id={{eventGridColumn.id}} 
+                                            ng-change="saveDatavalue()" 
+                                           value="true"> 
+                                    {{'yes'| translate}}
+                                </label>
+                                <label class="radio-inline">
+                                    <input  type="radio" 
+                                            ng-model="currentEvent[eventGridColumn.id]"                                                                
+                                            ng-required={{eventGridColumn.compulsory}}
+                                            ng-disabled="assignedFields[eventGridColumn.id]"
+                                            input-field-id={{eventGridColumn.id}} 
+                                            ng-change="saveDatavalue()" 
+                                           value="false"> 
+                                    {{'no'| translate}}
+                                </label>
                             </div>
                             <div ng-switch-when="DATE">
                                 <input type="text"                                                                
@@ -386,17 +405,36 @@
                                     </textarea>                                             
                                 </div>
                                 <div ng-switch-when="BOOLEAN">
-                                    <select ng-model="currentEvent[de.dataElement.id]"                                                 
+                                    <label class="radio-inline">
+                                        <input type="radio" 
+                                            ng-model="currentEvent[de.dataElement.id]"                                                 
                                             ng-required={{prStDes[de.dataElement.id].compulsory}}
                                             ng-disabled="assignedFields[de.dataElement.id]"
-                                            name="foo" 
                                             input-field-id={{de.dataElement.id}} 
-                                            ng-change="saveDatavalue()" 
-                                            class="form-control">
-                                        <option value="">{{pleaseSelectLabel}}</option>                        
-                                        <option value="false">{{'no'| translate}}</option>
-                                        <option value="true">{{'yes'| translate}}</option>
-                                    </select>
+                                            ng-change="saveDatavalue()">
+                                            value="">
+                                        {{'no_value'| translate}}
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" 
+                                            ng-model="currentEvent[de.dataElement.id]"                                                 
+                                            ng-required={{prStDes[de.dataElement.id].compulsory}}
+                                            ng-disabled="assignedFields[de.dataElement.id]"
+                                            input-field-id={{de.dataElement.id}} 
+                                            ng-change="saveDatavalue()">
+                                            value="true">
+                                        {{'yes'| translate}}
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" 
+                                            ng-model="currentEvent[de.dataElement.id]"                                                 
+                                            ng-required={{prStDes[de.dataElement.id].compulsory}}
+                                            ng-disabled="assignedFields[de.dataElement.id]"
+                                            input-field-id={{de.dataElement.id}} 
+                                            ng-change="saveDatavalue()">
+                                            value="false">
+                                        {{'no'| translate}}
+                                    </label>
                                 </div>
                                 <div ng-switch-when="DATE">
                                     <input type="text"                                                                

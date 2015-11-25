@@ -277,16 +277,36 @@
                                                                ng-class="getInputNotifcationClass(eventGridColumn.id,false)"/>                                                    
                                                 </div>                                        
                                                 <div ng-switch-when="BOOLEAN">
-                                                    <select ng-model="currentEvent[eventGridColumn.id]" 
-                                                            ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
-                                                            ng-required={{eventGridColumn.compulsory}}
-                                                            input-field-id={{eventGridColumn.id}} 
-                                                            name="foo" 
-                                                            ng-class="getInputNotifcationClass(eventGridColumn.id,false)">
-                                                        <option value="">{{pleaseSelectLabel}}</option>                        
-                                                        <option value="false">{{noLabel}}</option>
-                                                        <option value="true">{{yesLabel}}</option>
-                                                    </select>
+                                                    <label class="radio-inline">
+                                                        <input  type="radio"                                                                 
+                                                                ng-model="currentEvent[eventGridColumn.id]"                                                                
+                                                                ng-required={{eventGridColumn.compulsory}}
+                                                                ng-disabled="assignedFields[eventGridColumn.id]"
+                                                                input-field-id={{eventGridColumn.id}} 
+                                                                ng-change="saveDatavalue()" 
+                                                               value=""> 
+                                                        {{'no_value'| translate}}
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input  type="radio" 
+                                                                ng-model="currentEvent[eventGridColumn.id]"                                                                
+                                                                ng-required={{eventGridColumn.compulsory}}
+                                                                ng-disabled="assignedFields[eventGridColumn.id]"
+                                                                input-field-id={{eventGridColumn.id}} 
+                                                                ng-change="saveDatavalue()" 
+                                                               value="true"> 
+                                                        {{'yes'| translate}}
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input  type="radio" 
+                                                                ng-model="currentEvent[eventGridColumn.id]"                                                                
+                                                                ng-required={{eventGridColumn.compulsory}}
+                                                                ng-disabled="assignedFields[eventGridColumn.id]"
+                                                                input-field-id={{eventGridColumn.id}} 
+                                                                ng-change="saveDatavalue()" 
+                                                               value="false"> 
+                                                        {{'no'| translate}}
+                                                    </label>                                                    
                                                 </div>
                                                 <div ng-switch-when="DATE">
                                                     <input type="text" 
@@ -321,7 +341,6 @@
                                                            ng-change="updateEventDataValue(dhis2Event, eventGridColumn.id)" 
                                                            ng-required={{eventGridColumn.compulsory}} 
                                                            input-field-id={{eventGridColumn.id}} 
-                                                           ng-class="getInputNotifcationClass(eventGridColumn.id,false)"
                                                            name="foo"/>
                                                 </div>
                                                 <div ng-switch-when="FILE_RESOURCE">                                
