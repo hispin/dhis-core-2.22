@@ -109,6 +109,12 @@ public class ProgramTrackedEntityAttribute
         return program.getDisplayName() + " " + attribute.getDisplayName();
     }
 
+    @Override
+    public String getShortName()
+    {
+        return program.getDisplayName() + " " + attribute.getDisplayShortName();
+    }
+    
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
