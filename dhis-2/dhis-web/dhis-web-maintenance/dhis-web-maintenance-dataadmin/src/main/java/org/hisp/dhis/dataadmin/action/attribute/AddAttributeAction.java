@@ -204,6 +204,13 @@ public class AddAttributeAction
         this.categoryOptionGroupAttribute = categoryOptionGroupAttribute;
     }
 
+    private boolean documentAttribute;
+
+    public void setDocumentAttribute( boolean documentAttribute )
+    {
+        this.documentAttribute = documentAttribute;
+    }
+
     private String optionSetUid;
 
     public void setOptionSetUid( String optionSetUid )
@@ -225,6 +232,7 @@ public class AddAttributeAction
         attribute.setCode( StringUtils.trimToNull( code ) );
         attribute.setMandatory( mandatory );
         attribute.setUnique( unique );
+        attribute.setOptionSet( optionSet );
         attribute.setDataElementAttribute( dataElementAttribute );
         attribute.setDataElementGroupAttribute( dataElementGroupAttribute );
         attribute.setIndicatorAttribute( indicatorAttribute );
@@ -241,7 +249,7 @@ public class AddAttributeAction
         attribute.setTrackedEntityAttributeAttribute( trackedEntityAttributeAttribute );
         attribute.setCategoryOptionAttribute( categoryOptionAttribute );
         attribute.setCategoryOptionGroupAttribute( categoryOptionGroupAttribute );
-        attribute.setOptionSet( optionSet );
+        attribute.setDocumentAttribute( documentAttribute );
 
         attributeService.addAttribute( attribute );
 

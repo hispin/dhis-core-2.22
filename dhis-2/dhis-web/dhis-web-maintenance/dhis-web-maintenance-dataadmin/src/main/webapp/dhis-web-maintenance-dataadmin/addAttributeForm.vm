@@ -70,6 +70,7 @@
       <input type="checkbox" id="trackedEntityAttributeAttribute" name="trackedEntityAttributeAttribute" value="true" /><label for="trackedEntityAttributeAttribute">$i18n.getString( 'tracked_entity_attribute' )</label> <br />
 			<input type="checkbox" id="categoryOptionAttribute" name="categoryOptionAttribute" value="true" /><label for="categoryOptionAttribute">$i18n.getString( 'category_option' )</label> <br />
 			<input type="checkbox" id="categoryOptionGroupAttribute" name="categoryOptionGroupAttribute" value="true" /><label for="categoryOptionGroupAttribute">$i18n.getString( 'category_option_group' )</label> <br />
+			<input type="checkbox" id="documentAttribute" name="documentAttribute" value="true" /><label for="documentAttribute">$i18n.getString( 'document' )</label> <br />
 		</td>
 	</tr>
 

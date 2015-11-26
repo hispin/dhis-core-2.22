@@ -61,6 +61,8 @@
 
     <property name="categoryOptionGroupAttribute" not-null="false" />
 
+    <property name="documentAttribute" not-null="false" />
+
     <property name="sortOrder" />
 
     <set name="attributeValues" inverse="true" lazy="true">
