@@ -40,9 +40,9 @@ import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IllegalQueryException;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataapproval.DataApproval;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
@@ -86,7 +86,7 @@ public class DefaultAnalyticsSecurityManager
         
         User user = currentUserService.getCurrentUser();
         
-        List<NameableObject> queryOrgUnits = params.getDimensionOrFilterItems( DimensionalObject.ORGUNIT_DIM_ID );
+        List<DimensionalItemObject> queryOrgUnits = params.getDimensionOrFilterItems( DimensionalObject.ORGUNIT_DIM_ID );
         
         if ( queryOrgUnits.isEmpty() || user == null || !user.hasDataViewOrganisationUnit() )
         {
@@ -95,7 +95,7 @@ public class DefaultAnalyticsSecurityManager
         
         Set<OrganisationUnit> viewOrgUnits = user.getDataViewOrganisationUnits();
                 
-        for ( NameableObject object : queryOrgUnits )
+        for ( DimensionalItemObject object : queryOrgUnits )
         {
             OrganisationUnit queryOrgUnit = (OrganisationUnit) object;
             
@@ -218,7 +218,7 @@ public class DefaultAnalyticsSecurityManager
                 continue;
             }
 
-            List<NameableObject> canReadItems = dimensionService.getCanReadDimensionItems( dimension.getDimension() );
+            List<DimensionalItemObject> canReadItems = dimensionService.getCanReadDimensionItems( dimension.getDimension() );
 
             // -----------------------------------------------------------------
             // Check if current user has access to any items from constraint

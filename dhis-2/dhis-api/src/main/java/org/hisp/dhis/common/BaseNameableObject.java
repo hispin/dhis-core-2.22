@@ -44,8 +44,8 @@ import org.hisp.dhis.schema.annotation.PropertyRange;
  */
 @JacksonXmlRootElement( localName = "nameableObject", namespace = DxfNamespaces.DXF_2_0 )
 public class BaseNameableObject
-    extends BaseIdentifiableObject
-    implements NameableObject
+    extends BaseIdentifiableObject 
+        implements NameableObject
 {
     /**
      * An short name representing this Object. Optional but unique.

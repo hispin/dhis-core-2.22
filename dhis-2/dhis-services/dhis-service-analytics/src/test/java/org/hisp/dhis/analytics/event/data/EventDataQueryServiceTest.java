@@ -35,11 +35,11 @@ import org.hisp.dhis.analytics.event.EventDataQueryService;
 import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.common.AnalyticsType;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.eventchart.EventChart;
@@ -317,12 +317,11 @@ public class EventDataQueryServiceTest
         DimensionalObjectUtils.setDimensionItemsForFilters( dim, grid, true );
 
         assertNotNull( dim );
-        assertEquals( tea.getDimension(), dim.getDimension() );
         assertEquals( DimensionType.PROGRAM_ATTRIBUTE, dim.getDimensionType() );
         assertEquals( AnalyticsType.EVENT, dim.getAnalyticsType() );
         assertEquals( tead.getFilter(), dim.getFilter() );
 
-        List<NameableObject> items = dim.getItems();
+        List<DimensionalItemObject> items = dim.getItems();
         assertEquals( 4, items.size() );
         assertNotNull( items.get( 0 ).getUid() );
         assertNotNull( items.get( 0 ).getName() );

@@ -1,4 +1,4 @@
-package org.hisp.dhis.common;
+package org.hisp.dhis.program;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,30 +28,14 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
-import org.hisp.dhis.user.User;
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.dataelement.DataElement;
 
 /**
  * @author Lars Helge Overland
  */
-public interface DimensionService
+public interface ProgramDataElementStore
+    extends GenericIdentifiableObjectStore<ProgramDataElement>
 {
-    List<DimensionalItemObject> getCanReadDimensionItems( String uid );
-    
-    <T extends IdentifiableObject> List<T> getCanReadObjects( List<T> objects );
-    
-    <T extends IdentifiableObject> List<T> getCanReadObjects( User user, List<T> objects );
-    
-    DimensionType getDimensionType( String uid );
-    
-    List<DimensionalObject> getAllDimensions();
-    
-    List<DimensionalObject> getDimensionConstraints();
-    
-    DimensionalObject getDimensionalObjectCopy( String uid, boolean filterCanRead );
-    
-    void mergeAnalyticalObject( BaseAnalyticalObject object );
-    
-    void mergeEventAnalyticalObject( EventAnalyticalObject object );
+    ProgramDataElement get( Program program, DataElement dataElement );
 }

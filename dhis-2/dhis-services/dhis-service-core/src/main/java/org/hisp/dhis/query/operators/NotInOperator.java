@@ -51,7 +51,6 @@ public class NotInOperator extends InOperator
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public boolean test( Object value )
     {
         return !super.test( value );

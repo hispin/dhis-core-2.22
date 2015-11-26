@@ -38,10 +38,10 @@ import java.util.List;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
@@ -166,7 +166,7 @@ public class MapView
     {
         DimensionalObject object = getDimensionalObject( ORGUNIT_DIM_ID, relativePeriodDate, user, true, organisationUnitsAtLevel, organisationUnitsInGroups, format );
 
-        return object != null ? NameableObjectUtils.asTypedList( object.getItems(), OrganisationUnit.class ) : null;
+        return object != null ? DimensionalObjectUtils.asTypedList( object.getItems() ) : null;
     }
 
     public boolean hasLegendSet()
@@ -193,9 +193,9 @@ public class MapView
     @Override
     public String getName()
     {
-        if ( !dataDimensionItems.isEmpty() && dataDimensionItems.get( 0 ).getNameableObject() != null )
+        if ( !dataDimensionItems.isEmpty() && dataDimensionItems.get( 0 ).getDimensionalItemObject() != null )
         {
-            return dataDimensionItems.get( 0 ).getNameableObject().getName();
+            return dataDimensionItems.get( 0 ).getDimensionalItemObject().getName();
         }
         
         return uid;

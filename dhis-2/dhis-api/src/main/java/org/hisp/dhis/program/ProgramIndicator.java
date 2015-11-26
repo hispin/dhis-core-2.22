@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.analytics.AggregationType;
-import org.hisp.dhis.common.BaseDimensionalObject;
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -54,7 +54,7 @@ import com.google.common.collect.Sets;
  */
 @JacksonXmlRootElement( localName = "programIndicator", namespace = DxfNamespaces.DXF_2_0 )
 public class ProgramIndicator
-    extends BaseDimensionalObject
+    extends BaseDimensionalItemObject
 {
     public static final String SEPARATOR_ID = "\\.";
     public static final String SEP_OBJECT = ":";
@@ -125,7 +125,7 @@ public class ProgramIndicator
     {
         return decimals != null && decimals >= 0;
     }
-
+    
     /**
      * Returns aggregation type, if not exists returns AVERAGE.
      */
@@ -194,7 +194,7 @@ public class ProgramIndicator
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getFilter()
     {
-        return filter;
+        return filter; // Note: Also overrides DimensionalObject
     }
 
     public void setFilter( String filter )

@@ -28,30 +28,42 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
-import org.hisp.dhis.user.User;
+import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.legend.LegendSet;
 
 /**
- * @author Lars Helge Overland
- */
-public interface DimensionService
+* @author Lars Helge Overland
+*/
+public interface DimensionalItemObject
+    extends NameableObject
 {
-    List<DimensionalItemObject> getCanReadDimensionItems( String uid );
+    /**
+     * Gets the dimension item identifier.
+     */
+    String getDimensionItem();
     
-    <T extends IdentifiableObject> List<T> getCanReadObjects( List<T> objects );
+    /**
+     * Gets the dimension type of this dimension item.
+     */
+    DimensionType getDimensionType();
+
+    /**
+     * Gets the legend set.
+     */
+    LegendSet getLegendSet();
+
+    /**
+     * Indicates whether this dimension has a legend set.
+     */
+    boolean hasLegendSet();
     
-    <T extends IdentifiableObject> List<T> getCanReadObjects( User user, List<T> objects );
+    /**
+     * Gets the aggregation type.
+     */
+    AggregationType getAggregationType();
     
-    DimensionType getDimensionType( String uid );
-    
-    List<DimensionalObject> getAllDimensions();
-    
-    List<DimensionalObject> getDimensionConstraints();
-    
-    DimensionalObject getDimensionalObjectCopy( String uid, boolean filterCanRead );
-    
-    void mergeAnalyticalObject( BaseAnalyticalObject object );
-    
-    void mergeEventAnalyticalObject( EventAnalyticalObject object );
+    /**
+     * Indicates whether this dimension has an aggregation type.
+     */
+    boolean hasAggregationType();
 }

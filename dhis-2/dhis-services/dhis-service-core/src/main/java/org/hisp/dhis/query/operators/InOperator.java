@@ -54,7 +54,6 @@ public class InOperator extends Operator
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public boolean test( Object value )
     {
         Collection<?> items = getValue( Collection.class );

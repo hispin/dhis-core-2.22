@@ -2910,10 +2910,10 @@ console.log(table);
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/indicators.json?fields=id,' + ns.core.init.namePropertyUrl + '&filter=indicatorGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
+					path = '/indicators.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=indicatorGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/indicators.json?fields=id,' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
+					path = '/indicators.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
 				}
 
 				if (!path) {
@@ -3079,10 +3079,10 @@ console.log(table);
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElements.json?fields=id,' + ns.core.init.namePropertyUrl + '&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElements.json?fields=id,' + ns.core.init.namePropertyUrl + '&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=name:like:' + filter : '');
 				}
 
 				if (!path) {
@@ -3126,10 +3126,10 @@ console.log(table);
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElementOperands.json?fields=id,' + ns.core.init.namePropertyUrl + '&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElementOperands.json?fields=id,' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
 				}
 
 				if (!path) {
@@ -3276,7 +3276,7 @@ console.log(table);
                     return;
                 }
 
-                path = '/dataSets.json?fields=id,' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
+                path = '/dataSets.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
 
 				if (noPaging) {
 					params.paging = false;
@@ -3642,8 +3642,6 @@ console.log(table);
                 dataSet.hide();
                 eventDataItem.hide();
                 programIndicator.hide();
-
-                //dataSelected.show();
             }
             else if (type === 'de') {
                 indicator.hide();
@@ -4438,54 +4436,38 @@ console.log(table);
         // event data item
         onEventDataItemProgramSelect = function(programId, skipSync) {
             if (!skipSync) {
-                dataSelectedStore.removeByProperty('objectName', ['di','pi']);
+                //dataSelectedStore.removeByProperty('objectName', ['di','pi']);
                 programIndicatorProgram.setValue(programId);
                 onProgramIndicatorProgramSelect(programId, true);
             }
 
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programTrackedEntityAttributes[trackedEntityAttribute[id,name,valueType]],programStages[programStageDataElements[dataElement[id,name,valueType]]]&filter=id:eq:' + programId,
+                url: ns.core.init.contextPath + '/api/programDataElements.json?program=' + programId + '&fields=dimensionItem|rename(id),name,valueType&paging=false',
+                disableCaching: false,
                 success: function(r) {
-                    r = Ext.decode(r.responseText);
+                    var types = ns.core.conf.valueType.aggregateTypes,
+                        elements = Ext.decode(r.responseText).programDataElements.filter(function(item) {
+                            return Ext.Array.contains(types, (item || {}).valueType);
+                        }),
+                        isA = Ext.isArray,
+                        isO = Ext.isObject;
 
-                    var isA = Ext.isArray,
-                        isO = Ext.isObject,
-                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
-                        stages = isO(program) && isA(program.programStages) && program.programStages.length ? program.programStages : [],
-                        teas = isO(program) && isA(program.programTrackedEntityAttributes) ? Ext.Array.pluck(program.programTrackedEntityAttributes, 'trackedEntityAttribute') : [],
-                        dataElements = [],
-                        attributes = [],
-                        types = ns.core.conf.valueType.aggregateTypes,
-                        data;
+                    Ext.Ajax.request({
+                        url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programTrackedEntityAttributes[dimensionItem|rename(id),name,valueType]&paging=false',
+                        disableCaching: false,
+                        success: function(r) {
+                            var attributes = ((Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || []).filter(function(item) {
+                                    return Ext.Array.contains(types, (item || {}).valueType);
+                                }),
+                                data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(elements, attributes))) || [];
 
-                    // data elements
-                    for (var i = 0, stage, elements; i < stages.length; i++) {
-                        stage = stages[i];
-
-                        if (isA(stage.programStageDataElements) && stage.programStageDataElements.length) {
-                            elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
-
-                            for (var j = 0; j < elements.length; j++) {
-                                if (Ext.Array.contains(types, elements[j].valueType)) {
-                                    dataElements.push(elements[j]);
-                                }
+                            if (data) {
+                                eventDataItemAvailableStore.loadDataAndUpdate(data);
                             }
                         }
-                    }
-
-                    // attributes
-                    for (i = 0; i < teas.length; i++) {
-                        if (Ext.Array.contains(types, teas[i].valueType)) {
-                            attributes.push(teas[i]);
-                        }
-                    }
-
-                    data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(dataElements, attributes))) || [];
-
-                    eventDataItemAvailableStore.loadDataAndUpdate(data);
+                    });
                 }
             });
-
         };
 
 		eventDataItemProgram = Ext.create('Ext.form.field.ComboBox', {
@@ -4496,6 +4478,7 @@ console.log(table);
 			displayField: 'name',
 			emptyText: NS.i18n.select_program,
 			editable: false,
+            queryMode: 'local',
 			store: programStore,
 			listeners: {
 				select: function(cb) {
@@ -4710,23 +4693,21 @@ console.log(table);
         // program indicator
         onProgramIndicatorProgramSelect = function(programId, skipSync) {
             if (!skipSync) {
-                dataSelectedStore.removeByProperty('objectName', ['di','pi']);
+                //dataSelectedStore.removeByProperty('objectName', ['di','pi']);
                 eventDataItemProgram.setValue(programId);
                 onEventDataItemProgramSelect(programId, true);
             }
 
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?paging=false&fields=programIndicators[id,name]&filter=id:eq:' + programId,
+                url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programIndicators[dimensionItem|rename(id),name]&paging=false',
+                disableCaching: false,
                 success: function(r) {
-                    r = Ext.decode(r.responseText);
+                    var indicators = (Ext.decode(r.responseText).programs[0] || {}).programIndicators || [],
+                        data = ns.core.support.prototype.array.sort(indicators);
 
-                    var isA = Ext.isArray,
-                        isO = Ext.isObject,
-                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
-                        programIndicators = isO(program) && isA(program.programIndicators) && program.programIndicators.length ? program.programIndicators : [],
-                        data = ns.core.support.prototype.array.sort(Ext.Array.clean(programIndicators)) || [];
-
-                    programIndicatorAvailableStore.loadDataAndUpdate(data);
+                    if (data) {
+                        programIndicatorAvailableStore.loadDataAndUpdate(data);
+                    }
                 }
             });
 
@@ -4740,6 +4721,7 @@ console.log(table);
 			displayField: 'name',
 			emptyText: NS.i18n.select_program,
 			editable: false,
+            queryMode: 'local',
 			store: programStore,
 			listeners: {
 				select: function(cb) {

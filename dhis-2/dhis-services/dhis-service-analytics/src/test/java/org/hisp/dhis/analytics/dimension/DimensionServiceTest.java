@@ -35,10 +35,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
-import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -66,7 +67,7 @@ public class DimensionServiceTest
     private Period peA;
     private Period peB;
     
-    private BaseNameableObject peLast12Months;
+    private DimensionalItemObject peLast12Months;
     
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
@@ -74,8 +75,8 @@ public class DimensionServiceTest
     private OrganisationUnit ouD;
     private OrganisationUnit ouE;
     
-    private BaseNameableObject ouUser;
-    private BaseNameableObject ouLevel2;
+    private DimensionalItemObject ouUser;
+    private DimensionalItemObject ouLevel2;
     
     private OrganisationUnitGroup ouGroupA;
     private OrganisationUnitGroup ouGroupB;
@@ -106,7 +107,7 @@ public class DimensionServiceTest
         
         peA = createPeriod( "201201" );
         peB = createPeriod( "201202" );
-        peLast12Months = new BaseNameableObject( LAST_12_MONTHS.toString(), LAST_12_MONTHS.toString(), LAST_12_MONTHS.toString() );
+        peLast12Months = new BaseDimensionalItemObject( LAST_12_MONTHS.toString() );
         
         peA.setUid( "201201" );
         peB.setUid( "201202" );
@@ -130,8 +131,8 @@ public class DimensionServiceTest
 
         String level2 = KEY_LEVEL + 2;
         
-        ouUser = new BaseNameableObject( KEY_USER_ORGUNIT, KEY_USER_ORGUNIT, KEY_USER_ORGUNIT );
-        ouLevel2 = new BaseNameableObject( level2, level2, level2 );
+        ouUser = new BaseDimensionalItemObject( KEY_USER_ORGUNIT );
+        ouLevel2 = new BaseDimensionalItemObject( level2 );
         
         ouGroupSetA = createOrganisationUnitGroupSet( 'A' );
         

@@ -31,10 +31,13 @@ package org.hisp.dhis.program;
 import static org.hisp.dhis.i18n.I18nUtils.i18n;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitQueryParams;
@@ -43,6 +46,8 @@ import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -82,6 +87,20 @@ public class DefaultProgramService
     public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
     {
         this.organisationUnitService = organisationUnitService;
+    }
+    
+    private DataElementService dataElementService;
+
+    public void setDataElementService( DataElementService dataElementService )
+    {
+        this.dataElementService = dataElementService;
+    }
+    
+    private ProgramDataElementStore programDataElementStore;
+
+    public void setProgramDataElementStore( ProgramDataElementStore programDataElementStore )
+    {
+        this.programDataElementStore = programDataElementStore;
     }
 
     // -------------------------------------------------------------------------
@@ -196,7 +215,7 @@ public class DefaultProgramService
     {        
         return getCurrentUserPrograms().stream().filter( p -> p.getProgramType() == programType ).collect( Collectors.toSet() );
     }
-
+    
     @Override
     public void mergeWithCurrentUserOrganisationUnits( Program program, Collection<OrganisationUnit> mergeOrganisationUnits )
     {
@@ -213,5 +232,70 @@ public class DefaultProgramService
         program.updateOrganisationUnits( selectedOrgUnits );
 
         updateProgram( program );
+    }
+    
+    // -------------------------------------------------------------------------
+    // ProgramDataElement
+    // -------------------------------------------------------------------------
+
+    @Override
+    public ProgramDataElement getOrAddProgramDataElement( String programUid, String dataElementUid )
+    {
+        Program program = programStore.getByUid( programUid );
+        
+        DataElement dataElement = dataElementService.getDataElement( dataElementUid );
+        
+        if ( program == null || dataElement == null )
+        {
+            return null;
+        }
+        
+        ProgramDataElement programDataElement = programDataElementStore.get( program, dataElement );
+        
+        if ( programDataElement == null )
+        {
+            programDataElement = new ProgramDataElement( program, dataElement );
+            
+            programDataElementStore.save( programDataElement );
+        }
+        
+        return programDataElement;
+    }
+        
+    @Override
+    public ProgramDataElement getProgramDataElement( String programUid, String dataElementUid )
+    {
+        Program program = programStore.getByUid( programUid );
+        
+        DataElement dataElement = dataElementService.getDataElement( dataElementUid );
+        
+        if ( program == null || dataElement == null )
+        {
+            return null;
+        }
+        
+        return new ProgramDataElement( program, dataElement );
+    }
+
+    @Override
+    public List<ProgramDataElement> getGeneratedProgramDataElements( String programUid )
+    {
+        Program program = getProgram( programUid );
+        
+        List<ProgramDataElement> programDataElements = Lists.newArrayList();
+        
+        if ( program == null )
+        {
+            return programDataElements;
+        }
+        
+        for ( DataElement element : program.getAllDataElements() )
+        {
+            programDataElements.add( new ProgramDataElement( program, element ) );
+        }
+        
+        Collections.sort( programDataElements );
+        
+        return programDataElements;
     }
 }

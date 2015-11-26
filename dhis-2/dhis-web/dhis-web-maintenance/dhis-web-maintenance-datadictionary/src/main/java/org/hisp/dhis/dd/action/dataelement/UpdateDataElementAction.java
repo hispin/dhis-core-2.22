@@ -32,7 +32,6 @@ import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
-import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.dataelement.DataElement;
@@ -82,9 +81,6 @@ public class UpdateDataElementAction
 
     @Autowired
     private LegendService legendService;
-
-    @Autowired
-    private IdentifiableObjectManager manager;
 
     // -------------------------------------------------------------------------
     // Input

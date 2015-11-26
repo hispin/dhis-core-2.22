@@ -100,7 +100,7 @@ public class DefaultEventQueryPlanner
             violation = "Query items cannot be specified more than once: " + params.getDuplicateQueryItems();
         }
         
-        if ( params.hasValueDimension() && params.getNameableObjectItems().contains( params.getValue() ) )
+        if ( params.hasValueDimension() && params.getDimensionalObjectItems().contains( params.getValue() ) )
         {
             violation = "Value dimension cannot also be specified as an item or item filter";
         }
@@ -150,19 +150,19 @@ public class DefaultEventQueryPlanner
 
         List<EventQueryParams> queries = new ArrayList<>();
         
-        List<EventQueryParams> groupedByPartition = groupByPartition( params, validPartitions );
+        List<EventQueryParams> groupedByQueryItems = groupByQueryItems( params );
         
-        for ( EventQueryParams byPartition : groupedByPartition )
-        {
-            List<EventQueryParams> groupedByOrgUnitLevel = convert( queryPlanner.groupByOrgUnitLevel( byPartition ) );
+        for ( EventQueryParams byQueryItem : groupedByQueryItems )
+        {        
+            List<EventQueryParams> groupedByPartition = groupByPartition( byQueryItem, validPartitions );
             
-            for ( EventQueryParams byOrgUnitLevel : groupedByOrgUnitLevel )
+            for ( EventQueryParams byPartition : groupedByPartition )
             {
-                List<EventQueryParams> groupedByPeriodType = convert( queryPlanner.groupByPeriodType( byOrgUnitLevel ) );
+                List<EventQueryParams> groupedByOrgUnitLevel = convert( queryPlanner.groupByOrgUnitLevel( byPartition ) );
                 
-                for ( EventQueryParams byPeriodType : groupedByPeriodType )
+                for ( EventQueryParams byOrgUnitLevel : groupedByOrgUnitLevel )
                 {
-                    queries.addAll( groupByItems( byPeriodType ) );
+                    queries.addAll( convert( queryPlanner.groupByPeriodType( byOrgUnitLevel ) ) );
                 }
             }
         }
@@ -238,7 +238,7 @@ public class DefaultEventQueryPlanner
      * Group by items if query items are to be collapsed in order to aggregate
      * each item individually.
      */
-    private List<EventQueryParams> groupByItems( EventQueryParams params )
+    private List<EventQueryParams> groupByQueryItems( EventQueryParams params )
     {
         List<EventQueryParams> queries = new ArrayList<>();
         
@@ -250,6 +250,12 @@ public class DefaultEventQueryPlanner
                 query.getItems().clear();
                 query.getItemProgramIndicators().clear();
                 query.setValue( item.getItem() );
+                
+                if ( item.hasProgram() )
+                {
+                    query.setProgram( item.getProgram() );
+                }
+                
                 queries.add( query );
             }
             
@@ -259,6 +265,7 @@ public class DefaultEventQueryPlanner
                 query.getItems().clear();
                 query.getItemProgramIndicators().clear();
                 query.setProgramIndicator( programIndicator );
+                query.setProgram( programIndicator.getProgram() );
                 queries.add( query );
             }
         }
@@ -269,6 +276,7 @@ public class DefaultEventQueryPlanner
                 EventQueryParams query = params.instance();
                 query.getItems().clear();
                 query.getItems().add( item );
+                query.setProgram( item.getProgram() );
                 queries.add( query );
             }
         }

@@ -36,8 +36,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
+
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
@@ -56,7 +57,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.UserGroup;
@@ -72,7 +72,7 @@ import java.util.Set;
  */
 @JacksonXmlRootElement( localName = "dataSet", namespace = DxfNamespaces.DXF_2_0 )
 public class DataSet
-    extends BaseNameableObject
+    extends BaseDimensionalItemObject
     implements VersionedObject
 {
     public static final int NO_EXPIRY = 0;
@@ -208,18 +208,12 @@ public class DataSet
      */
     private boolean renderHorizontally;
 
-    /**
-     * The legend set for this indicator.
-     */
-    private LegendSet legendSet;
-
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
     public DataSet()
     {
-
     }
 
     public DataSet( String name )
@@ -248,7 +242,7 @@ public class DataSet
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-
+    
     public void addOrganisationUnit( OrganisationUnit organisationUnit )
     {
         sources.add( organisationUnit );
@@ -745,20 +739,6 @@ public class DataSet
         this.dataElementDecoration = dataElementDecoration;
     }
 
-    @JsonProperty
-    @JsonSerialize( as = BaseIdentifiableObject.class )
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public LegendSet getLegendSet()
-    {
-        return legendSet;
-    }
-
-    public void setLegendSet( LegendSet legendSet )
-    {
-        this.legendSet = legendSet;
-    }
-
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -783,14 +763,12 @@ public class DataSet
             {
                 periodType = dataSet.getPeriodType();
                 dataEntryForm = dataSet.getDataEntryForm();
-                legendSet = dataSet.getLegendSet();
                 notificationRecipients = dataSet.getNotificationRecipients();
             }
             else if ( strategy.isMerge() )
             {
                 periodType = dataSet.getPeriodType() == null ? periodType : dataSet.getPeriodType();
                 dataEntryForm = dataSet.getDataEntryForm() == null ? dataEntryForm : dataSet.getDataEntryForm();
-                legendSet = dataSet.getLegendSet() == null ? legendSet : dataSet.getLegendSet();
                 notificationRecipients = dataSet.getNotificationRecipients() == null ? notificationRecipients : dataSet.getNotificationRecipients();
             }
 

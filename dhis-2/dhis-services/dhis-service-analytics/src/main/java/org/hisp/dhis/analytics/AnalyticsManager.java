@@ -31,9 +31,9 @@ package org.hisp.dhis.analytics;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.common.NameableObject;
 
 /**
  * @author Lars Helge Overland
@@ -62,5 +62,5 @@ public interface AnalyticsManager
      * @param dataPeriodAggregationPeriodMap the mapping between data periods and
      *        aggregation periods for this query.
      */
-    void replaceDataPeriodsWithAggregationPeriods( Map<String, Object> dataValueMap, DataQueryParams params, ListMap<NameableObject, NameableObject> dataPeriodAggregationPeriodMap );
+    void replaceDataPeriodsWithAggregationPeriods( Map<String, Object> dataValueMap, DataQueryParams params, ListMap<DimensionalItemObject, DimensionalItemObject> dataPeriodAggregationPeriodMap );
 }

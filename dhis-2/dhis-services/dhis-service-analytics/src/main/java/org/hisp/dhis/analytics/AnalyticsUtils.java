@@ -29,7 +29,6 @@ package org.hisp.dhis.analytics;
  */
 
 import static org.hisp.dhis.common.DataDimensionItem.DATA_DIMENSION_TYPE_CLASS_MAP;
-import static org.hisp.dhis.common.DataDimensionItem.DATA_DIMENSION_TYPE_DOMAIN_MAP;
 import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
 
 import java.util.ArrayList;
@@ -37,12 +36,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.DataDimensionItemType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.commons.util.TextUtils;
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.util.MathUtils;
@@ -55,13 +53,13 @@ public class AnalyticsUtils
 {
     public static String getDebugDataSql( DataQueryParams params )
     {
-        List<NameableObject> dataElements = new ArrayList<>( NameableObjectUtils.getCopyNullSafe( params.getDataElements() ) );
+        List<DimensionalItemObject> dataElements = new ArrayList<>( NameableObjectUtils.getCopyNullSafe( params.getDataElements() ) );
         dataElements.addAll( NameableObjectUtils.getCopyNullSafe( params.getFilterDataElements() ) );
         
-        List<NameableObject> periods = new ArrayList<>( NameableObjectUtils.getCopyNullSafe( params.getPeriods() ) );
+        List<DimensionalItemObject> periods = new ArrayList<>( NameableObjectUtils.getCopyNullSafe( params.getPeriods() ) );
         periods.addAll( NameableObjectUtils.getCopyNullSafe( params.getFilterPeriods() ) );
         
-        List<NameableObject> orgUnits = new ArrayList<>( NameableObjectUtils.getCopyNullSafe( params.getOrganisationUnits() ) );
+        List<DimensionalItemObject> orgUnits = new ArrayList<>( NameableObjectUtils.getCopyNullSafe( params.getOrganisationUnits() ) );
         orgUnits.addAll( NameableObjectUtils.getCopyNullSafe( params.getFilterOrganisationUnits() ) );
         
         if ( dataElements.isEmpty() || periods.isEmpty() || orgUnits.isEmpty() )
@@ -84,7 +82,7 @@ public class AnalyticsUtils
             "where dv.dataelementid in (" + StringUtils.join( IdentifiableObjectUtils.getIdentifiers( dataElements ), "," ) + ") " +
             "and (";
         
-        for ( NameableObject period : periods )
+        for ( DimensionalItemObject period : periods )
         {
             Period pe = (Period) period;
             sql += "(pe.startdate >= '" + getMediumDateString( pe.getStartDate() ) + "' and pe.enddate <= '" + getMediumDateString( pe.getEndDate() ) + "') or ";
@@ -92,7 +90,7 @@ public class AnalyticsUtils
         
         sql = TextUtils.removeLastOr( sql ) + ") and (";
         
-        for ( NameableObject orgUnit : orgUnits )
+        for ( DimensionalItemObject orgUnit : orgUnits )
         {
             OrganisationUnit ou = (OrganisationUnit) orgUnit;
             int level = ou.getLevel();
@@ -112,25 +110,18 @@ public class AnalyticsUtils
      * @param dataDimensionOptions the data dimension options.
      * @return list of nameable objects.
      */
-    public static List<NameableObject> getByDataDimensionType( DataDimensionItemType itemType, List<NameableObject> dataDimensionOptions )
+    public static List<DimensionalItemObject> getByDataDimensionType( DataDimensionItemType itemType, List<DimensionalItemObject> dataDimensionOptions )
     {
-        List<NameableObject> list = new ArrayList<>();
+        List<DimensionalItemObject> list = new ArrayList<>();
         
-        for ( NameableObject object : dataDimensionOptions )
+        for ( DimensionalItemObject object : dataDimensionOptions )
         {
             Class<?> clazz = ReflectionUtils.getRealClass( object.getClass() );
             
-            if ( !clazz.equals( DATA_DIMENSION_TYPE_CLASS_MAP.get( itemType ) ) )
+            if ( clazz.equals( DATA_DIMENSION_TYPE_CLASS_MAP.get( itemType ) ) )
             {
-                continue;
+                list.add( object );
             }
-            
-            if ( clazz.equals( DataElement.class ) && !( ((DataElement) object).getDomainType().equals( DATA_DIMENSION_TYPE_DOMAIN_MAP.get( itemType ) ) ) )
-            {
-                continue;
-            }
-            
-            list.add( object );
         }
         
         return list;

@@ -30,7 +30,7 @@ package org.hisp.dhis.analytics.table;
 
 import static org.hisp.dhis.DhisConvenienceTest.createPeriod;
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ANALYTICS_TABLE_NAME;
-import static org.hisp.dhis.common.NameableObjectUtils.getList;
+import static org.hisp.dhis.common.DimensionalObjectUtils.getList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.hisp.dhis.analytics.Partitions;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.period.Period;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -68,7 +68,7 @@ public class PartitionUtilsTest
     @Test
     public void getGetPartitionsMultiplePeriods()
     {
-        List<NameableObject> periods = new ArrayList<>();
+        List<DimensionalItemObject> periods = new ArrayList<>();
         periods.add( createPeriod( "200011" ) );
         periods.add( createPeriod( "200105" ) );
         periods.add( createPeriod( "200108" ) );
@@ -79,7 +79,7 @@ public class PartitionUtilsTest
     @Test
     public void getGetPartitionsMultiplePeriodsPrune()
     {
-        List<NameableObject> periods = new ArrayList<>();
+        List<DimensionalItemObject> periods = new ArrayList<>();
         periods.add( createPeriod( "200011" ) );
         periods.add( createPeriod( "200105" ) );
         periods.add( createPeriod( "200108" ) );
@@ -133,7 +133,7 @@ public class PartitionUtilsTest
     @Test
     public void testGetTablePeriodMapA()
     {        
-        ListMap<Partitions, NameableObject> map = PartitionUtils.getPartitionPeriodMap( getList( 
+        ListMap<Partitions, DimensionalItemObject> map = PartitionUtils.getPartitionPeriodMap( getList( 
             createPeriod( "2000S1" ), createPeriod( "2000S2" ), createPeriod( "2001S1" ), createPeriod( "2001S2" ), createPeriod( "2002S1" ) ), TBL, null, null );
         
         assertEquals( 3, map.size() );
@@ -150,7 +150,7 @@ public class PartitionUtilsTest
     @Test
     public void testGetTablePeriodMapB()
     {        
-        ListMap<Partitions, NameableObject> map = PartitionUtils.getPartitionPeriodMap( getList( 
+        ListMap<Partitions, DimensionalItemObject> map = PartitionUtils.getPartitionPeriodMap( getList( 
             createPeriod( "2000April" ), createPeriod( "2000" ), createPeriod( "2001" ), createPeriod( "2001Oct" ), createPeriod( "2002Oct" ) ), TBL, null, null );
 
         assertEquals( 5, map.size() );
@@ -170,7 +170,7 @@ public class PartitionUtilsTest
         validPartitions.add( TBL + "_2002" );
         validPartitions.add( TBL + "_2003" );
         
-        ListMap<Partitions, NameableObject> map = PartitionUtils.getPartitionPeriodMap( getList( 
+        ListMap<Partitions, DimensionalItemObject> map = PartitionUtils.getPartitionPeriodMap( getList( 
             createPeriod( "2000April" ), createPeriod( "2000" ), createPeriod( "2001" ), createPeriod( "2001Oct" ), createPeriod( "2002Oct" ) ), TBL, null, validPartitions );
 
         assertEquals( 4, map.size() );

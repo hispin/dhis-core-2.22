@@ -52,7 +52,7 @@ public interface EventAnalyticalObject
     
     EventOutputType getOutputType();
     
-    DimensionalObject getValue();
+    DimensionalItemObject getValue();
     
     boolean isCollapseDataDimensions();
 

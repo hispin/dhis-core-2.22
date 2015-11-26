@@ -251,9 +251,9 @@ public abstract class BaseAnalyticalObject
     /**
      * Returns dimension items for data dimensions.
      */
-    public List<NameableObject> getDataDimensionNameableObjects()
+    public List<DimensionalItemObject> getDataDimensionNameableObjects()
     {
-        return dataDimensionItems.stream().map( DataDimensionItem::getNameableObject ).collect( Collectors.toList() );
+        return dataDimensionItems.stream().map( DataDimensionItem::getDimensionalItemObject ).collect( Collectors.toList() );
     }
     
     /**
@@ -261,7 +261,7 @@ public abstract class BaseAnalyticalObject
      * 
      * @return true if a data dimension was added, false if not.
      */
-    public boolean addDataDimensionItem( NameableObject object )
+    public boolean addDataDimensionItem( DimensionalItemObject object )
     {
         if ( object != null && DataDimensionItem.DATA_DIMENSION_CLASSES.contains( object.getClass() ) )
         {
@@ -274,9 +274,9 @@ public abstract class BaseAnalyticalObject
     /**
      * Adds all given data dimension objects.
      */
-    public void addAllDataDimensionItems( Collection<? extends NameableObject> objects )
+    public void addAllDataDimensionItems( Collection<? extends DimensionalItemObject> objects )
     {
-        for ( NameableObject object : objects )
+        for ( DimensionalItemObject object : objects )
         {
             addDataDimensionItem( object );
         }
@@ -324,7 +324,7 @@ public abstract class BaseAnalyticalObject
     protected DimensionalObject getDimensionalObject( String dimension, Date date, User user, boolean dynamicNames,
         List<OrganisationUnit> organisationUnitsAtLevel, List<OrganisationUnit> organisationUnitsInGroups, I18nFormat format )
     {
-        List<NameableObject> items = new ArrayList<>();
+        List<DimensionalItemObject> items = new ArrayList<>();
 
         DimensionType type = null;
 
@@ -403,7 +403,7 @@ public abstract class BaseAnalyticalObject
         {
             // Data element group set
 
-            ListMap<String, NameableObject> deGroupMap = new ListMap<>();
+            ListMap<String, DimensionalItemObject> deGroupMap = new ListMap<>();
 
             for ( DataElementGroup group : dataElementGroups )
             {
@@ -422,7 +422,7 @@ public abstract class BaseAnalyticalObject
 
             // Organisation unit group set
 
-            ListMap<String, NameableObject> ouGroupMap = new ListMap<>();
+            ListMap<String, DimensionalItemObject> ouGroupMap = new ListMap<>();
 
             for ( OrganisationUnitGroup group : organisationUnitGroups )
             {
@@ -441,7 +441,7 @@ public abstract class BaseAnalyticalObject
 
             // Category option group set
 
-            ListMap<String, NameableObject> coGroupMap = new ListMap<>();
+            ListMap<String, DimensionalItemObject> coGroupMap = new ListMap<>();
 
             for ( CategoryOptionGroup group : categoryOptionGroups )
             {
@@ -539,23 +539,23 @@ public abstract class BaseAnalyticalObject
         }
         else if ( ORGUNIT_DIM_ID.equals( dimension ) )
         {
-            List<NameableObject> ouList = new ArrayList<>();
+            List<DimensionalItemObject> ouList = new ArrayList<>();
             ouList.addAll( organisationUnits );
             ouList.addAll( transientOrganisationUnits );
 
             if ( userOrganisationUnit )
             {
-                ouList.add( new BaseNameableObject( KEY_USER_ORGUNIT, KEY_USER_ORGUNIT, KEY_USER_ORGUNIT ) );
+                ouList.add( new BaseDimensionalItemObject( KEY_USER_ORGUNIT ) );
             }
 
             if ( userOrganisationUnitChildren )
             {
-                ouList.add( new BaseNameableObject( KEY_USER_ORGUNIT_CHILDREN, KEY_USER_ORGUNIT_CHILDREN, KEY_USER_ORGUNIT_CHILDREN ) );
+                ouList.add( new BaseDimensionalItemObject( KEY_USER_ORGUNIT_CHILDREN ) );
             }
 
             if ( userOrganisationUnitGrandChildren )
             {
-                ouList.add( new BaseNameableObject( KEY_USER_ORGUNIT_GRANDCHILDREN, KEY_USER_ORGUNIT_GRANDCHILDREN, KEY_USER_ORGUNIT_GRANDCHILDREN ) );
+                ouList.add( new BaseDimensionalItemObject( KEY_USER_ORGUNIT_GRANDCHILDREN ) );
             }
 
             if ( organisationUnitLevels != null && !organisationUnitLevels.isEmpty() )
@@ -564,7 +564,7 @@ public abstract class BaseAnalyticalObject
                 {
                     String id = KEY_LEVEL + level;
 
-                    ouList.add( new BaseNameableObject( id, id, id ) );
+                    ouList.add( new BaseDimensionalItemObject( id ) );
                 }
             }
 
@@ -574,7 +574,7 @@ public abstract class BaseAnalyticalObject
                 {
                     String id = KEY_ORGUNIT_GROUP + group.getUid();
 
-                    ouList.add( new BaseNameableObject( id, id, id ) );
+                    ouList.add( new BaseDimensionalItemObject( id ) );
                 }
             }
 
@@ -582,7 +582,7 @@ public abstract class BaseAnalyticalObject
         }
         else if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
         {
-            return new BaseDimensionalObject( dimension, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<BaseNameableObject>() ) ;
+            return new BaseDimensionalObject( dimension, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<DimensionalItemObject>() ) ;
         }
         else if ( categoryDims.contains( dimension ) )
         {
@@ -602,7 +602,7 @@ public abstract class BaseAnalyticalObject
         {
             // Data element group set
 
-            ListMap<String, NameableObject> deGroupMap = new ListMap<>();
+            ListMap<String, DimensionalItemObject> deGroupMap = new ListMap<>();
 
             for ( DataElementGroup group : dataElementGroups )
             {
@@ -619,7 +619,7 @@ public abstract class BaseAnalyticalObject
 
             // Organisation unit group set
 
-            ListMap<String, NameableObject> ouGroupMap = new ListMap<>();
+            ListMap<String, DimensionalItemObject> ouGroupMap = new ListMap<>();
 
             for ( OrganisationUnitGroup group : organisationUnitGroups )
             {
@@ -636,7 +636,7 @@ public abstract class BaseAnalyticalObject
 
             // Category option group set
 
-            ListMap<String, NameableObject> coGroupMap = new ListMap<>();
+            ListMap<String, DimensionalItemObject> coGroupMap = new ListMap<>();
 
             for ( CategoryOptionGroup group : categoryOptionGroups )
             {
@@ -768,7 +768,7 @@ public abstract class BaseAnalyticalObject
         {
             if ( item.getClass().equals( DataElementOperand.class ) )
             {
-                ids.add( ((DataElementOperand) item).getAnalyticsId() );
+                ids.add( ((DataElementOperand) item).getDimensionItem() );
             }
             else
             {
@@ -1213,7 +1213,6 @@ public abstract class BaseAnalyticalObject
     @Override
     @JsonProperty
     @JsonDeserialize( contentAs = BaseDimensionalObject.class )
-    @JsonSerialize( contentAs = BaseDimensionalObject.class )
     @JsonView( { DimensionalView.class } )
     @JacksonXmlElementWrapper( localName = "columns", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "column", namespace = DxfNamespaces.DXF_2_0 )
@@ -1230,7 +1229,6 @@ public abstract class BaseAnalyticalObject
     @Override
     @JsonProperty
     @JsonDeserialize( contentAs = BaseDimensionalObject.class )
-    @JsonSerialize( contentAs = BaseDimensionalObject.class )
     @JsonView( { DimensionalView.class } )
     @JacksonXmlElementWrapper( localName = "rows", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "row", namespace = DxfNamespaces.DXF_2_0 )
@@ -1247,7 +1245,6 @@ public abstract class BaseAnalyticalObject
     @Override
     @JsonProperty
     @JsonDeserialize( contentAs = BaseDimensionalObject.class )
-    @JsonSerialize( contentAs = BaseDimensionalObject.class )
     @JsonView( { DimensionalView.class } )
     @JacksonXmlElementWrapper( localName = "filters", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "filter", namespace = DxfNamespaces.DXF_2_0 )

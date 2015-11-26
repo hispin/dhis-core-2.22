@@ -43,6 +43,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.CombinationGenerator;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.DisplayDensity;
@@ -348,7 +349,7 @@ public class ReportTable
     {
         List<NameableObject[]> tableColumns = new ArrayList<>();
         List<NameableObject[]> tableRows = new ArrayList<>();
-        List<NameableObject> filterItems = new ArrayList<>();
+        List<DimensionalItemObject> filterItems = new ArrayList<>();
 
         for ( String dimension : columnDimensions )
         {

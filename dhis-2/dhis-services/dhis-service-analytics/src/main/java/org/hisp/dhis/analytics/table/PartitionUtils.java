@@ -38,8 +38,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.Partitions;
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.calendar.DateTimeUnit;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
@@ -103,11 +103,11 @@ public class PartitionUtils
         return partitions.prunePartitions( validPartitions );
     }
 
-    public static Partitions getPartitions( List<NameableObject> periods, String tablePrefix, String tableSuffix, Set<String> validPartitions )
+    public static Partitions getPartitions( List<DimensionalItemObject> periods, String tablePrefix, String tableSuffix, Set<String> validPartitions )
     {
         UniqueArrayList<String> partitions = new UniqueArrayList<>();
 
-        for ( NameableObject period : periods )
+        for ( DimensionalItemObject period : periods )
         {
             partitions.addAll( getPartitions( (Period) period, tablePrefix, tableSuffix, null ).getPartitions() );
         }
@@ -115,11 +115,11 @@ public class PartitionUtils
         return new Partitions( new ArrayList<>( partitions ) ).prunePartitions( validPartitions );
     }
 
-    public static ListMap<Partitions, NameableObject> getPartitionPeriodMap( List<NameableObject> periods, String tablePrefix, String tableSuffix, Set<String> validPartitions )
+    public static ListMap<Partitions, DimensionalItemObject> getPartitionPeriodMap( List<DimensionalItemObject> periods, String tablePrefix, String tableSuffix, Set<String> validPartitions )
     {
-        ListMap<Partitions, NameableObject> map = new ListMap<>();
+        ListMap<Partitions, DimensionalItemObject> map = new ListMap<>();
 
-        for ( NameableObject period : periods )
+        for ( DimensionalItemObject period : periods )
         {
             map.putValue( getPartitions( (Period) period, tablePrefix, tableSuffix, null ).prunePartitions( validPartitions ), period );
         }
@@ -130,11 +130,11 @@ public class PartitionUtils
     /**
      * Creates a mapping between period type name and period for the given periods.
      */
-    public static ListMap<String, NameableObject> getPeriodTypePeriodMap( Collection<NameableObject> periods )
+    public static ListMap<String, DimensionalItemObject> getPeriodTypePeriodMap( Collection<DimensionalItemObject> periods )
     {
-        ListMap<String, NameableObject> map = new ListMap<>();
+        ListMap<String, DimensionalItemObject> map = new ListMap<>();
 
-        for ( NameableObject period : periods )
+        for ( DimensionalItemObject period : periods )
         {
             String periodTypeName = ((Period) period).getPeriodType().getName();
 

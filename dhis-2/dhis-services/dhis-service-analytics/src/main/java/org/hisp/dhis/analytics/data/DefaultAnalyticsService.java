@@ -42,14 +42,14 @@ import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getLocalPeriodIdentifiers;
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-import static org.hisp.dhis.common.NameableObjectUtils.asList;
-import static org.hisp.dhis.common.NameableObjectUtils.asTypedList;
+import static org.hisp.dhis.common.DimensionalObjectUtils.asList;
+import static org.hisp.dhis.common.DimensionalObjectUtils.asTypedList;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentGraphMap;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentNameGraphMap;
 import static org.hisp.dhis.period.PeriodType.getPeriodTypeFromIsoString;
 import static org.hisp.dhis.reporttable.ReportTable.IRT2D;
 import static org.hisp.dhis.reporttable.ReportTable.addIfEmpty;
+import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionalItemIds;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,13 +82,13 @@ import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.CombinationGenerator;
 import org.hisp.dhis.common.DataDimensionItemType;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.MapMap;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.commons.util.DebugUtils;
@@ -346,8 +346,8 @@ public class DefaultAnalyticsService
             // -----------------------------------------------------------------
             
             List<DataElementOperand> operands = asTypedList( dataSourceParams.getDataElementOperands() );
-            List<NameableObject> dataElements = Lists.newArrayList( DimensionalObjectUtils.getDataElements( operands ) );
-            List<NameableObject> categoryOptionCombos = Lists.newArrayList( DimensionalObjectUtils.getCategoryOptionCombos( operands ) );
+            List<DimensionalItemObject> dataElements = Lists.newArrayList( DimensionalObjectUtils.getDataElements( operands ) );
+            List<DimensionalItemObject> categoryOptionCombos = Lists.newArrayList( DimensionalObjectUtils.getCategoryOptionCombos( operands ) );
 
             //TODO check if data was dim or filter
             
@@ -530,7 +530,7 @@ public class DefaultAnalyticsService
             Calendar calendar = PeriodType.getCalendar();
 
             List<String> periodUids = calendar.isIso8601() ? 
-                getUids( params.getDimensionOrFilterItems( PERIOD_DIM_ID ) ) :
+                getDimensionalItemIds( params.getDimensionOrFilterItems( PERIOD_DIM_ID ) ) :
                     getLocalPeriodIdentifiers( params.getDimensionOrFilterItems( PERIOD_DIM_ID ), calendar );
 
             metaData.put( PERIOD_DIM_ID, periodUids );
@@ -540,7 +540,7 @@ public class DefaultAnalyticsService
             {
                 if ( !metaData.keySet().contains( dim.getDimension() ) )
                 {
-                    metaData.put( dim.getDimension(), getUids( dim.getItems() ) );
+                    metaData.put( dim.getDimension(), getDimensionalItemIds( dim.getItems() ) );
                 }
             }
 
@@ -550,7 +550,7 @@ public class DefaultAnalyticsService
 
             User user = currentUserService.getCurrentUser();
             
-            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ), OrganisationUnit.class );
+            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ) );
             Collection<OrganisationUnit> roots = user != null ? user.getOrganisationUnits() : null;
             
             if ( params.isHierarchyMeta() )
@@ -578,7 +578,7 @@ public class DefaultAnalyticsService
     {
         if ( params.hasNonUidOutputIdScheme() )
         {
-            List<NameableObject> items = params.getAllDimensionItems();
+            List<DimensionalItemObject> items = params.getAllDimensionItems();
             
             Map<String, String> map = NameableObjectUtils.getUidPropertyMap( items, params.getOutputIdScheme() );
             
@@ -605,8 +605,8 @@ public class DefaultAnalyticsService
 
         ReportTable reportTable = new ReportTable();
 
-        List<NameableObject[]> tableColumns = new ArrayList<>();
-        List<NameableObject[]> tableRows = new ArrayList<>();
+        List<DimensionalItemObject[]> tableColumns = new ArrayList<>();
+        List<DimensionalItemObject[]> tableRows = new ArrayList<>();
 
         if ( columns != null )
         {
@@ -690,7 +690,7 @@ public class DefaultAnalyticsService
         }
 
         DataQueryParams orgUnitTargetParams = params.instance().pruneToDimensionType( DimensionType.ORGANISATIONUNIT );
-        orgUnitTargetParams.getDimensions().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_GROUP_DIM_ID, null, new ArrayList<NameableObject>( orgUnitGroups ) ) );
+        orgUnitTargetParams.getDimensions().add( new BaseDimensionalObject( DimensionalObject.ORGUNIT_GROUP_DIM_ID, null, new ArrayList<DimensionalItemObject>( orgUnitGroups ) ) );
         orgUnitTargetParams.setSkipPartitioning( true );
 
         Map<String, Double> orgUnitCountMap = getAggregatedOrganisationUnitTargetMap( orgUnitTargetParams );
@@ -890,7 +890,7 @@ public class DefaultAnalyticsService
     private Map<String, Double> getAggregatedDataValueMapTotals( DataQueryParams params )
     {
         List<Indicator> indicators = asTypedList( params.getIndicators() );
-        List<NameableObject> dataElements = asList( expressionService.getDataElementTotalsInIndicators( indicators ) );
+        List<DimensionalItemObject> dataElements = asList( expressionService.getDataElementTotalsInIndicators( indicators ) );
 
         if ( !dataElements.isEmpty() )
         {
@@ -916,7 +916,7 @@ public class DefaultAnalyticsService
     private Map<String, Double> getAggregatedDataValueMapOptionCombos( DataQueryParams params )
     {
         List<Indicator> indicators = asTypedList( params.getIndicators() );
-        List<NameableObject> dataElements = asList( expressionService.getDataElementWithOptionCombosInIndicators( indicators ) );
+        List<DimensionalItemObject> dataElements = asList( expressionService.getDataElementWithOptionCombosInIndicators( indicators ) );
 
         if ( !dataElements.isEmpty() )
         {
@@ -925,7 +925,7 @@ public class DefaultAnalyticsService
             dataSourceParams.getDimensions().add( DataQueryParams.DX_INDEX, new BaseDimensionalObject( 
                 DATA_X_DIM_ID, DimensionType.DATA_X, dataElements ) );
             dataSourceParams.getDimensions().add( DataQueryParams.CO_INDEX, new BaseDimensionalObject( 
-                CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<NameableObject>() ) );
+                CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<>() ) );
     
             return getAggregatedDataValueMap( dataSourceParams );
         }
@@ -950,11 +950,11 @@ public class DefaultAnalyticsService
 
         for ( DimensionalObject dimension : dimensions )
         {
-            List<NameableObject> items = new ArrayList<>( dimension.getItems() );
+            List<DimensionalItemObject> items = new ArrayList<>( dimension.getItems() );
 
             i18nService.internationalise( items );
             
-            for ( NameableObject object : items )
+            for ( DimensionalItemObject object : items )
             {
                 if ( DimensionType.PERIOD.equals( dimension.getDimensionType() ) && !calendar.isIso8601() )
                 {
@@ -964,7 +964,7 @@ public class DefaultAnalyticsService
                 }
                 else
                 {
-                    map.put( object.getUid(), object.getDisplayProperty( params.getDisplayProperty() ) );
+                    map.put( object.getDimensionItem(), object.getDisplayProperty( params.getDisplayProperty() ) );
                 }
 
                 if ( DimensionType.ORGANISATIONUNIT.equals( dimension.getDimensionType() ) && params.isHierarchyMeta() )
@@ -992,13 +992,13 @@ public class DefaultAnalyticsService
     {
         Map<String, String> metaData = new HashMap<>();
 
-        List<NameableObject> des = params.getAllDataElements();
+        List<DimensionalItemObject> des = params.getAllDataElements();
 
         if ( des != null && !des.isEmpty() )
         {
             Set<DataElementCategoryCombo> categoryCombos = new HashSet<>();
 
-            for ( NameableObject de : des )
+            for ( DimensionalItemObject de : des )
             {
                 DataElement dataElement = (DataElement) de;
 

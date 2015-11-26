@@ -34,12 +34,19 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
+
+import static org.hisp.dhis.common.DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_PLAIN_SEP;
+
+import org.hisp.dhis.analytics.AggregationType;
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
@@ -47,7 +54,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
  */
 @JacksonXmlRootElement( localName = "programTrackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
 public class ProgramTrackedEntityAttribute
-    extends BaseIdentifiableObject
+    extends BaseDimensionalItemObject
 {
     private Program program;
 
@@ -67,11 +74,10 @@ public class ProgramTrackedEntityAttribute
     {
     }
 
-    public ProgramTrackedEntityAttribute( Program program, TrackedEntityAttribute attribute, int sortOrder, boolean displayInList )
+    public ProgramTrackedEntityAttribute( Program program, TrackedEntityAttribute attribute )
     {
         this.program = program;
         this.attribute = attribute;
-        this.displayInList = displayInList;
     }
 
     public ProgramTrackedEntityAttribute( Program program, TrackedEntityAttribute attribute, boolean displayInList,
@@ -93,6 +99,46 @@ public class ProgramTrackedEntityAttribute
         this.allowFutureDate = allowFutureDate;
     }
 
+    // -------------------------------------------------------------------------
+    // Logic
+    // -------------------------------------------------------------------------
+    
+    @Override
+    public String getName()
+    {
+        return program.getDisplayName() + " " + attribute.getDisplayName();
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public ValueType getValueType()
+    {
+        return attribute.getValueType();
+    }
+    
+    // -------------------------------------------------------------------------
+    // DimensionalItemObject
+    // -------------------------------------------------------------------------
+    
+    @Override
+    public String getDimensionItem()
+    {
+        return program.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + attribute.getUid();
+    }
+    
+    @Override
+    public LegendSet getLegendSet()
+    {
+        return attribute.getLegendSet();
+    }
+    
+    @Override
+    public AggregationType getAggregationType()
+    {
+        return attribute.getAggregationType();
+    }
+    
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------

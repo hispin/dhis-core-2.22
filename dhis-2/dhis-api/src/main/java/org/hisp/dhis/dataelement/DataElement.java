@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hisp.dhis.common.BaseDimensionalObject;
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -83,7 +83,7 @@ import com.google.common.collect.Sets;
  */
 @JacksonXmlRootElement( localName = "dataElement", namespace = DxfNamespaces.DXF_2_0 )
 public class DataElement
-    extends BaseDimensionalObject
+    extends BaseDimensionalItemObject
 {
     public static final String[] I18N_PROPERTIES = { "name", "shortName", "description", "formName" };
 
@@ -166,7 +166,7 @@ public class DataElement
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-
+    
     public void addDataElementGroup( DataElementGroup group )
     {
         groups.add( group );
@@ -463,12 +463,6 @@ public class DataElement
     public boolean hasOptionSet()
     {
         return optionSet != null;
-    }
-
-    @Override
-    public boolean hasLegendSet()
-    {
-        return legendSet != null;
     }
 
     // -------------------------------------------------------------------------

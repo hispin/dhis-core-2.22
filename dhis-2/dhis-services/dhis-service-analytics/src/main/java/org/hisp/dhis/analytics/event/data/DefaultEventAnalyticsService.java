@@ -33,8 +33,8 @@ import static org.hisp.dhis.analytics.AnalyticsService.OU_HIERARCHY_KEY;
 import static org.hisp.dhis.analytics.AnalyticsService.OU_NAME_HIERARCHY_KEY;
 import static org.hisp.dhis.common.DimensionalObject.ORGUNIT_DIM_ID;
 import static org.hisp.dhis.common.DimensionalObject.PERIOD_DIM_ID;
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-import static org.hisp.dhis.common.NameableObjectUtils.asTypedList;
+import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionalItemIds;
+import static org.hisp.dhis.common.DimensionalObjectUtils.asTypedList;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentGraphMap;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.getParentNameGraphMap;
 
@@ -55,6 +55,7 @@ import org.hisp.dhis.analytics.event.EventQueryParams;
 import org.hisp.dhis.analytics.event.EventQueryPlanner;
 import org.hisp.dhis.common.AnalyticalObject;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.EventAnalyticalObject;
@@ -62,7 +63,6 @@ import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.QueryItem;
@@ -193,16 +193,16 @@ public class DefaultEventAnalyticsService
         if ( !params.isSkipMeta() )
         {
             Map<Object, Object> metaData = new HashMap<>();
-    
+
             Map<String, String> uidNameMap = getUidNameMap( params );
-    
+            
             metaData.put( NAMES_META_KEY, uidNameMap );
-            metaData.put( PERIOD_DIM_ID, getUids( params.getDimensionOrFilterItems( PERIOD_DIM_ID ) ) );
-            metaData.put( ORGUNIT_DIM_ID, getUids( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ) ) );
+            metaData.put( PERIOD_DIM_ID, getDimensionalItemIds( params.getDimensionOrFilterItems( PERIOD_DIM_ID ) ) );
+            metaData.put( ORGUNIT_DIM_ID, getDimensionalItemIds( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ) ) );
 
             User user = currentUserService.getCurrentUser();
 
-            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ), OrganisationUnit.class );
+            List<OrganisationUnit> organisationUnits = asTypedList( params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ) );
             Collection<OrganisationUnit> roots = user != null ? user.getOrganisationUnits() : null;
             
             if ( params.isHierarchyMeta() )
@@ -303,7 +303,7 @@ public class DefaultEventAnalyticsService
         if ( params.isHierarchyMeta() )
         {
             metaData.put( OU_HIERARCHY_KEY, getParentGraphMap( asTypedList( 
-                params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ), OrganisationUnit.class ), roots ) );
+                params.getDimensionOrFilterItems( ORGUNIT_DIM_ID ) ), roots ) );
         }
 
         if ( params.isPaging() )
@@ -376,9 +376,9 @@ public class DefaultEventAnalyticsService
         {
             boolean hierarchy = hierarchyMeta && DimensionType.ORGANISATIONUNIT.equals( dimension.getDimensionType() );
 
-            for ( NameableObject object : dimension.getItems() )
+            for ( DimensionalItemObject object : dimension.getItems() )
             {
-                Set<NameableObject> objects = new HashSet<>();
+                Set<DimensionalItemObject> objects = new HashSet<>();
                 objects.add( object );
                 
                 if ( hierarchy )

@@ -42,9 +42,9 @@ import java.util.Map;
 import org.hisp.dhis.DhisConvenienceTest;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.Period;
@@ -80,8 +80,8 @@ public class DataQueryParamsTest
     @Test
     public void testSetGetDataElements()
     {
-        List<? extends NameableObject> dataElements = Lists.newArrayList( deA, deB, deC );
-        List<? extends NameableObject> dataSets = Lists.newArrayList( dsA, dsB );
+        List<? extends DimensionalItemObject> dataElements = Lists.newArrayList( deA, deB, deC );
+        List<? extends DimensionalItemObject> dataSets = Lists.newArrayList( dsA, dsB );
         
         DataQueryParams params = new DataQueryParams();
         params.setDataElements( dataElements );
@@ -133,7 +133,7 @@ public class DataQueryParamsTest
         
         assertFalse( params.hasPeriods() );
         
-        List<NameableObject> periods = new ArrayList<>();
+        List<DimensionalItemObject> periods = new ArrayList<>();
         
         params.getDimensions().add( new BaseDimensionalObject( PERIOD_DIM_ID, DimensionType.PERIOD, periods ) );
         
