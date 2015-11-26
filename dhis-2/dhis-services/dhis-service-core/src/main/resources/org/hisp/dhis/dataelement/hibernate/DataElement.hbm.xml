@@ -75,7 +75,6 @@
       foreign-key="fk_dataelement_legendset" />
 
     <!-- Dynamic attribute values -->
-
     <set name="attributeValues" table="dataelementattributevalues" cascade="delete-orphan">
       <cache usage="read-write" />
       <key column="dataelementid" />

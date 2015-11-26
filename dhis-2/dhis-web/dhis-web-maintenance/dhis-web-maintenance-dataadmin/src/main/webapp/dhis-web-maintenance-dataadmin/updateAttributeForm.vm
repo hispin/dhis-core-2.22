@@ -71,6 +71,7 @@
       <input type="checkbox" id="trackedEntityAttributeAttribute" name="trackedEntityAttributeAttribute" value="true" #if( $attribute.trackedEntityAttributeAttribute ) checked="checked" #end /><label for="trackedEntityAttributeAttribute">$i18n.getString( 'tracked_entity_attribute' )</label> <br />
       <input type="checkbox" id="categoryOptionAttribute" name="categoryOptionAttribute" value="true" #if( $attribute.categoryOptionAttribute ) checked="checked" #end /><label for="categoryOptionAttribute">$i18n.getString( 'category_option' ) <br />
       <input type="checkbox" id="categoryOptionGroupAttribute" name="categoryOptionGroupAttribute" value="true" #if( $attribute.categoryOptionGroupAttribute ) checked="checked" #end /><label for="categoryOptionGroupAttribute">$i18n.getString( 'category_option_group' ) <br />
+      <input type="checkbox" id="documentAttribute" name="documentAttribute" value="true" #if( $attribute.documentAttribute ) checked="checked" #end /><label for="documentAttribute">$i18n.getString( 'document' ) <br />
 		</label> <br />
 		</td>
 	</tr>

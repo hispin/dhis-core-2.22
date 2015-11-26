@@ -45,6 +45,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.document.Document;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.option.OptionSet;
@@ -102,6 +103,8 @@ public class Attribute
     private boolean categoryOptionAttribute;
 
     private boolean categoryOptionGroupAttribute;
+
+    private boolean documentAttribute;
 
     private boolean mandatory;
 
@@ -419,6 +422,19 @@ public class Attribute
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isDocumentAttribute()
+    {
+        return documentAttribute;
+    }
+
+    public void setDocumentAttribute( boolean documentAttribute )
+    {
+        this.documentAttribute = documentAttribute;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public OptionSet getOptionSet()
     {
         return optionSet;
@@ -462,6 +478,7 @@ public class Attribute
         if ( programStageAttribute ) klasses.add( ProgramStage.class );
         if ( trackedEntityAttribute ) klasses.add( TrackedEntity.class );
         if ( trackedEntityAttributeAttribute ) klasses.add( TrackedEntityAttribute.class );
+        if ( documentAttribute ) klasses.add( Document.class );
 
         return klasses;
     }

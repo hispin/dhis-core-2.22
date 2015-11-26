@@ -211,6 +211,13 @@ public class UpdateAttributeAction
         this.categoryOptionGroupAttribute = categoryOptionGroupAttribute;
     }
 
+    private boolean documentAttribute;
+
+    public void setDocumentAttribute( boolean documentAttribute )
+    {
+        this.documentAttribute = documentAttribute;
+    }
+
     private String optionSetUid;
 
     public void setOptionSetUid( String optionSetUid )
@@ -254,6 +261,7 @@ public class UpdateAttributeAction
             attribute.setTrackedEntityAttributeAttribute( trackedEntityAttributeAttribute );
             attribute.setCategoryOptionAttribute( categoryOptionAttribute );
             attribute.setCategoryOptionGroupAttribute( categoryOptionGroupAttribute );
+            attribute.setDocumentAttribute( documentAttribute );
 
             attributeService.updateAttribute( attribute );
 

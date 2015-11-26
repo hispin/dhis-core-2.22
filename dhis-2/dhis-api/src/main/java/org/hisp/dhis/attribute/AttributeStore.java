@@ -35,6 +35,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.document.Document;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -74,6 +75,7 @@ public interface AttributeStore
         .put( TrackedEntityAttribute.class, "trackedEntityAttributeAttribute" )
         .put( DataElementCategoryOption.class, "categoryOptionAttribute" )
         .put( CategoryOptionGroup.class, "categoryOptionGroupAttribute" )
+        .put( Document.class, "documentAttribute" )
         .build();
 
     /**
