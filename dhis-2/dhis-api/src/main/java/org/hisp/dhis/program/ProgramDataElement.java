@@ -79,6 +79,12 @@ public class ProgramDataElement
         return program.getDisplayName() + " " + dataElement.getDisplayName();
     }
 
+    @Override
+    public String getShortName()
+    {
+        return program.getDisplayName() + " " + dataElement.getDisplayShortName();
+    }
+    
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
