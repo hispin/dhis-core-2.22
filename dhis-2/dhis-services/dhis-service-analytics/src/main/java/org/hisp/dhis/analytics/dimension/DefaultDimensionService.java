@@ -127,24 +127,6 @@ public class DefaultDimensionService
     //--------------------------------------------------------------------------
 
     @Override
-    public DimensionalObject getDimension( String uid, DimensionType dimensionType )
-    {
-        if ( uid == null || dimensionType == null )
-        {
-            return null;
-        }
-        
-        Class<? extends DimensionalObject> clazz = DimensionalObject.DYNAMIC_DIMENSION_TYPE_CLASS_MAP.get( dimensionType );
-        
-        if ( clazz == null )
-        {
-            return null;
-        }
-        
-        return identifiableObjectManager.get( clazz, uid );
-    }
-    
-    @Override
     public List<NameableObject> getCanReadDimensionItems( String uid )
     {        
         DimensionalObject dimension = identifiableObjectManager.get( DimensionalObject.DYNAMIC_DIMENSION_CLASSES, uid );
