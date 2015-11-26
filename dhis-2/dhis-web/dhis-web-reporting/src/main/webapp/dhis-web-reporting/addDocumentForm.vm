@@ -3,7 +3,8 @@
 		validation( 'documentForm', function( form ){			
 			form.submit();
 		},function(){
-		});	
+        #tblDynamicAttributesJavascript()
+		});
 
 		toggleExternal();
 	});	
@@ -65,6 +66,8 @@
     </tr>
 </table>
 </div>
+
+#tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
 
 <table>
     <tr>

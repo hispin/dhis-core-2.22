@@ -1,12 +1,16 @@
 package org.hisp.dhis.reporting.document.action;
 
-import java.io.File;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.document.Document;
 import org.hisp.dhis.document.DocumentService;
 import org.hisp.dhis.external.location.LocationManager;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.File;
+import java.util.List;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -35,8 +39,6 @@ import org.hisp.dhis.external.location.LocationManager;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import com.opensymphony.xwork2.Action;
 
 /**
  * @author Lars Helge Overland
@@ -67,6 +69,9 @@ public class SaveDocumentAction
     {
         this.documentService = documentService;
     }
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Input
@@ -128,6 +133,13 @@ public class SaveDocumentAction
         this.contentType = contentType;
     }
 
+    private List<String> jsonAttributeValues;
+
+    public void setJsonAttributeValues( List<String> jsonAttributeValues )
+    {
+        this.jsonAttributeValues = jsonAttributeValues;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -165,7 +177,7 @@ public class SaveDocumentAction
 
         else if ( external )
         {
-            if ( !( url.startsWith( HTTP_PREFIX ) || url.startsWith( HTTPS_PREFIX ) ) )
+            if ( !(url.startsWith( HTTP_PREFIX ) || url.startsWith( HTTPS_PREFIX )) )
             {
                 url = HTTP_PREFIX + url;
             }
@@ -180,6 +192,13 @@ public class SaveDocumentAction
         document.setExternal( external );
 
         document.setName( name );
+
+        documentService.saveDocument( document );
+
+        if ( jsonAttributeValues != null )
+        {
+            attributeService.updateAttributeValues( document, jsonAttributeValues );
+        }
 
         documentService.saveDocument( document );
 
