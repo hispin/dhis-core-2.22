@@ -47,6 +47,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
@@ -81,6 +82,12 @@ public interface DimensionalObject
         CATEGORYOPTIONCOMBO_DIM_ID, "Data details",
         PERIOD_DIM_ID, "Period",
         ORGUNIT_DIM_ID, "Organisation unit" );
+    
+    Set<Class<? extends IdentifiableObject>> DYNAMIC_DIMENSION_CLASSES = ImmutableSet.<Class<? extends IdentifiableObject>>builder().
+        add( DataElementCategory.class ).
+        add( DataElementGroupSet.class ).
+        add( OrganisationUnitGroupSet.class ).
+        add( CategoryOptionGroupSet.class ).build();
     
     Map<DimensionType, Class<? extends DimensionalObject>> DYNAMIC_DIMENSION_TYPE_CLASS_MAP = ImmutableMap.<DimensionType, Class<? extends DimensionalObject>>builder().
         put( DimensionType.CATEGORY, DataElementCategory.class ).
