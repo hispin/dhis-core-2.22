@@ -31,7 +31,6 @@ package org.hisp.dhis.common;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -199,61 +198,6 @@ public class IdentifiableObjectUtils
         }
 
         return objects;
-    }
-
-    /**
-     * Returns a list of IdentifiableObjects.
-     *
-     * @param objects the IdentifiableObjects to include in the list.
-     * @return a list of IdentifiableObjects.
-     */
-    public static List<IdentifiableObject> getList( IdentifiableObject... objects )
-    {
-        List<IdentifiableObject> list = new ArrayList<>();
-
-        if ( objects != null )
-        {
-            Collections.addAll( list, objects );
-        }
-
-        return list;
-    }
-
-    /**
-     * Returns a list with erasure IdentifiableObject based on the given collection.
-     *
-     * @param collection the collection.
-     * @return a list of IdentifiableObjects.
-     */
-    public static List<IdentifiableObject> asList( Collection<? extends IdentifiableObject> collection )
-    {
-        List<IdentifiableObject> list = new ArrayList<>();
-        list.addAll( collection );
-        return list;
-    }
-
-    /**
-     * Returns a list typed with the desired erasure based on the given collection.
-     * This operation implies an unchecked cast and it is the responsibility of
-     * the caller to make sure the cast is valid.
-     *
-     * @param collection the collection.
-     * @return a list.
-     */
-    @SuppressWarnings( "unchecked" )
-    public static <T extends IdentifiableObject> List<T> asTypedList( Collection<IdentifiableObject> collection )
-    {
-        List<T> list = new ArrayList<>();
-
-        if ( collection != null )
-        {
-            for ( IdentifiableObject object : collection )
-            {
-                list.add( (T) object );
-            }
-        }
-
-        return list;
     }
 
     /**
