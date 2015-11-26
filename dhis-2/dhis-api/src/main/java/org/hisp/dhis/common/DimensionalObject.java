@@ -36,7 +36,6 @@ import java.util.Set;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
-import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementGroup;
@@ -44,7 +43,6 @@ import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
-import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -89,14 +87,6 @@ public interface DimensionalObject
         add( OrganisationUnitGroupSet.class ).
         add( CategoryOptionGroupSet.class ).build();
     
-    Map<DimensionType, Class<? extends DimensionalObject>> DYNAMIC_DIMENSION_TYPE_CLASS_MAP = ImmutableMap.<DimensionType, Class<? extends DimensionalObject>>builder().
-        put( DimensionType.CATEGORY, DataElementCategory.class ).
-        put( DimensionType.DATAELEMENT_GROUPSET, DataElementGroupSet.class ).
-        put( DimensionType.ORGANISATIONUNIT_GROUPSET, OrganisationUnitGroupSet.class ).
-        put( DimensionType.CATEGORYOPTION_GROUPSET, CategoryOptionGroupSet.class ).
-        put( DimensionType.PROGRAM_ATTRIBUTE, TrackedEntityAttribute.class ).
-        put( DimensionType.PROGRAM_DATAELEMENT, DataElement.class ).build();              
-
     Map<Class<? extends DimensionalObject>, Class<? extends NameableObject>> DIMENSION_CLASS_ITEM_CLASS_MAP = ImmutableMap.<Class<? extends DimensionalObject>, Class<? extends NameableObject>>builder().
         put( DataElementCategory.class, DataElementCategoryOption.class ).
         put( DataElementGroupSet.class, DataElementGroup.class ).

@@ -155,15 +155,7 @@ public class DimensionServiceTest
         
         organisationUnitGroupService.updateOrganisationUnitGroupSet( ouGroupSetA );
     }
-    
-    @Test
-    public void testGetDimensionalObjectByType()
-    {
-        String dim = ouGroupSetA.getUid();
         
-        assertEquals( ouGroupSetA, dimensionService.getDimension( dim, DimensionType.ORGANISATIONUNIT_GROUPSET ) );
-    }
-    
     @Test
     public void testMergeAnalyticalObject()
     {
