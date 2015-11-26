@@ -28,10 +28,18 @@ package org.hisp.dhis.reporting.document.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.document.Document;
 import org.hisp.dhis.document.DocumentService;
+import org.hisp.dhis.system.util.AttributeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lars Helge Overland
@@ -49,6 +57,9 @@ public class GetDocumentAction
     {
         this.documentService = documentService;
     }
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------
     // Input
@@ -72,6 +83,20 @@ public class GetDocumentAction
         return document;
     }
 
+    private List<Attribute> attributes;
+
+    public List<Attribute> getAttributes()
+    {
+        return attributes;
+    }
+
+    private Map<Integer, String> attributeValues = new HashMap<>();
+
+    public Map<Integer, String> getAttributeValues()
+    {
+        return attributeValues;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -79,10 +104,15 @@ public class GetDocumentAction
     @Override
     public String execute()
     {
+        attributes = new ArrayList<>( attributeService.getAttributes( Document.class ) );
+
         if ( id != null )
         {
             document = documentService.getDocument( id );
+
+            attributeValues = AttributeUtils.getAttributeValueMap( document.getAttributeValues() );
         }
+
         return SUCCESS;
     }
 }
