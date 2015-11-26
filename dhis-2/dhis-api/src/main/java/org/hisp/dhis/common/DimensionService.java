@@ -37,8 +37,6 @@ import org.hisp.dhis.user.User;
  */
 public interface DimensionService
 {
-    DimensionalObject getDimension( String uid );
-    
     DimensionalObject getDimension( String uid, DimensionType dimensionType );
     
     List<NameableObject> getCanReadDimensionItems( String uid );

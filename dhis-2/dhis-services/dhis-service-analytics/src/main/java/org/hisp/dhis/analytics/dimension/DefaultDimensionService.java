@@ -127,68 +127,6 @@ public class DefaultDimensionService
     //--------------------------------------------------------------------------
 
     @Override
-    public DimensionalObject getDimension( String uid )
-    {
-        DataElementCategory cat = identifiableObjectManager.get( DataElementCategory.class, uid );
-
-        if ( cat != null )
-        {
-            cat.setDimensionType( DimensionType.CATEGORY );
-            return cat;
-        }
-
-        DataElementGroupSet degs = identifiableObjectManager.get( DataElementGroupSet.class, uid );
-
-        if ( degs != null )
-        {
-            degs.setDimensionType( DimensionType.DATAELEMENT_GROUPSET );
-            return degs;
-        }
-
-        OrganisationUnitGroupSet ougs = identifiableObjectManager.get( OrganisationUnitGroupSet.class, uid );
-
-        if ( ougs != null )
-        {
-            ougs.setDimensionType( DimensionType.ORGANISATIONUNIT_GROUPSET );
-            return ougs;
-        }
-
-        CategoryOptionGroupSet cogs = identifiableObjectManager.get( CategoryOptionGroupSet.class, uid );
-
-        if ( cogs != null )
-        {
-            cogs.setDimensionType( DimensionType.CATEGORYOPTION_GROUPSET );
-            return cogs;
-        }
-        
-        TrackedEntityAttribute tea = identifiableObjectManager.get( TrackedEntityAttribute.class, uid );
-        
-        if ( tea != null )
-        {
-            tea.setDimensionType( DimensionType.PROGRAM_ATTRIBUTE );
-            return tea;
-        }
-        
-        DataElement pde = identifiableObjectManager.get( DataElement.class, uid );
-        
-        if ( pde != null && DataElementDomain.TRACKER.equals( pde.getDomainType() ) )
-        {
-            pde.setDimensionType( DimensionType.PROGRAM_DATAELEMENT );
-            return pde;
-        }
-        
-        ProgramIndicator pin = identifiableObjectManager.get( ProgramIndicator.class, uid );
-        
-        if ( pin != null )
-        {
-            pin.setDimensionType( DimensionType.PROGRAM_INDICATOR );
-            return pin;
-        }
-        
-        return null;
-    }
-    
-    @Override
     public DimensionalObject getDimension( String uid, DimensionType dimensionType )
     {
         if ( uid == null || dimensionType == null )
@@ -208,9 +146,9 @@ public class DefaultDimensionService
     
     @Override
     public List<NameableObject> getCanReadDimensionItems( String uid )
-    {
-        DimensionalObject dimension = getDimension( uid );
-
+    {        
+        DimensionalObject dimension = identifiableObjectManager.get( DimensionalObject.DYNAMIC_DIMENSION_CLASSES, uid );
+        
         List<NameableObject> items = new ArrayList<>();
 
         if ( dimension != null && dimension.hasItems() )
@@ -401,7 +339,7 @@ public class DefaultDimensionService
     @Override
     public DimensionalObject getDimensionalObjectCopy( String uid, boolean filterCanRead )
     {
-        DimensionalObject dimension = getDimension( uid );
+        DimensionalObject dimension = identifiableObjectManager.get( DimensionalObject.DYNAMIC_DIMENSION_CLASSES, uid );
         
         BaseDimensionalObject copy = new BaseDimensionalObject();
         copy.mergeWith( dimension, MergeStrategy.MERGE_IF_NOT_NULL );
