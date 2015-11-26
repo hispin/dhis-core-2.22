@@ -39,7 +39,7 @@ import java.util.List;
 import org.hisp.dhis.DhisConvenienceTest;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.DimensionType;
-import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.joda.time.DateTime;
@@ -56,7 +56,7 @@ public class EventQueryParamsTest
     {
         EventQueryParams params = new EventQueryParams();
 
-        List<NameableObject> periods = new ArrayList<>();
+        List<DimensionalItemObject> periods = new ArrayList<>();
         periods.add( new MonthlyPeriodType().createPeriod( new DateTime( 2014, 4, 1, 0, 0 ).toDate() ) );
         periods.add( new MonthlyPeriodType().createPeriod( new DateTime( 2014, 5, 1, 0, 0 ).toDate() ) );
         periods.add( new MonthlyPeriodType().createPeriod( new DateTime( 2014, 6, 1, 0, 0 ).toDate() ) );

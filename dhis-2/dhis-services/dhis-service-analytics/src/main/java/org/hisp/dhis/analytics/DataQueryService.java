@@ -72,15 +72,13 @@ public interface DataQueryService
      * @param approvalLevel the approval level identifier.
      * @param relativePeriodDate the date to use as basis for relative periods.
      * @param userOrgUnit the user organisation unit to use, overrides current user.
-     * @param program the program identifier.
-     * @param stage the program stage identifier.
      * @param format the i18n format.
      * @return a data query parameter object created based on the given URL info.
      */
     DataQueryParams getFromUrl( Set<String> dimensionParams, Set<String> filterParams, AggregationType aggregationType, String measureCriteria, 
         boolean skipMeta, boolean skipData, boolean skipRounding, boolean completedOnly, boolean hierarchyMeta, boolean ignoreLimit, 
         boolean hideEmptyRows, boolean showHierarchy, DisplayProperty displayProperty, IdentifiableProperty outputIdScheme, String approvalLevel, 
-        Date relativePeriodDate, String userOrgUnit, String program, String stage, I18nFormat format );
+        Date relativePeriodDate, String userOrgUnit, I18nFormat format );
     
     /**
      * Creates a data query parameter object from the given BaseAnalyticalObject.

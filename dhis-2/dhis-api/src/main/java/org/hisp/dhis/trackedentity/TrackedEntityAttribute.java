@@ -33,7 +33,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import org.hisp.dhis.common.BaseDimensionalObject;
+
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -51,7 +52,7 @@ import org.hisp.dhis.schema.annotation.PropertyRange;
  */
 @JacksonXmlRootElement( localName = "trackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
 public class TrackedEntityAttribute
-    extends BaseDimensionalObject
+    extends BaseDimensionalItemObject
 {
     private String description;
 
@@ -91,7 +92,6 @@ public class TrackedEntityAttribute
 
     public TrackedEntityAttribute()
     {
-
     }
 
     public TrackedEntityAttribute( String name, String description, ValueType valueType, Boolean inherit, Boolean displayOnVisitSchedule )
@@ -160,7 +160,7 @@ public class TrackedEntityAttribute
     }
 
     // -------------------------------------------------------------------------
-    // DimensionalObject
+    // DimensionalItemObject
     // -------------------------------------------------------------------------
 
     @Override

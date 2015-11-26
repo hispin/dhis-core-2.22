@@ -43,9 +43,7 @@ import org.hisp.dhis.dataelement.DataElementOperandStore;
 public class HibernateDataElementOperandStore
     extends HibernateIdentifiableObjectStore<DataElementOperand>
     implements DataElementOperandStore
-{
-    //TODO remove?
-    
+{    
     @Override
     @SuppressWarnings( "unchecked" )
     public List<DataElementOperand> getAllOrderedName()

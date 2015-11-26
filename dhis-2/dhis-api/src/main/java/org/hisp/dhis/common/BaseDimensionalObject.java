@@ -66,7 +66,7 @@ public class BaseDimensionalObject
     /**
      * The dimensional items for this dimension.
      */
-    private List<NameableObject> items = new ArrayList<>();
+    private List<DimensionalItemObject> items = new ArrayList<>();
     
     /**
      * Indicates whether all available items in this dimension are included.
@@ -112,21 +112,21 @@ public class BaseDimensionalObject
         this.uid = dimension;
     }
 
-    public BaseDimensionalObject( String dimension, DimensionType dimensionType, List<? extends NameableObject> items )
+    public BaseDimensionalObject( String dimension, DimensionType dimensionType, List<? extends DimensionalItemObject> items )
     {
         this.uid = dimension;
         this.dimensionType = dimensionType;
         this.items = new ArrayList<>( items );
     }
 
-    public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, List<? extends NameableObject> items )
+    public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, List<? extends DimensionalItemObject> items )
     {
         this( dimension, dimensionType, items );
         this.dimensionName = dimensionName;
         this.displayName = displayName;
     }
 
-    public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, List<? extends NameableObject> items, boolean allItems )
+    public BaseDimensionalObject( String dimension, DimensionType dimensionType, String dimensionName, String displayName, List<? extends DimensionalItemObject> items, boolean allItems )
     {
         this( dimension, dimensionType, dimensionName, displayName, items );
         this.allItems = allItems;
@@ -240,17 +240,16 @@ public class BaseDimensionalObject
 
     @Override
     @JsonProperty
-    @JsonSerialize( contentAs = BaseNameableObject.class )
-    @JsonDeserialize( contentAs = BaseNameableObject.class )
+    @JsonDeserialize( contentAs = BaseDimensionalItemObject.class )
     @JsonView( { DimensionalView.class } )
     @JacksonXmlElementWrapper( localName = "items", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "item", namespace = DxfNamespaces.DXF_2_0 )
-    public List<NameableObject> getItems()
+    public List<DimensionalItemObject> getItems()
     {
         return items;
     }
 
-    public void setItems( List<NameableObject> items )
+    public void setItems( List<DimensionalItemObject> items )
     {
         this.items = items;
     }

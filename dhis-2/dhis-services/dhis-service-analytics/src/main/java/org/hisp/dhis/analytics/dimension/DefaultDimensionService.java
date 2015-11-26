@@ -38,6 +38,7 @@ import static org.hisp.dhis.common.DimensionType.PERIOD;
 import static org.hisp.dhis.common.DimensionType.PROGRAM_ATTRIBUTE;
 import static org.hisp.dhis.common.DimensionType.PROGRAM_DATAELEMENT;
 import static org.hisp.dhis.common.DimensionType.PROGRAM_INDICATOR;
+import static org.hisp.dhis.common.DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_ESCAPED_SEP;
 import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.commons.util.TextUtils.splitSafe;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_LEVEL;
@@ -58,13 +59,13 @@ import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.EventAnalyticalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.commons.collection.UniqueArrayList;
 import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
@@ -88,10 +89,14 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramDataElement;
 import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension;
+import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.hisp.dhis.trackedentity.TrackedEntityProgramIndicatorDimension;
 import org.hisp.dhis.user.CurrentUserService;
@@ -112,6 +117,12 @@ public class DefaultDimensionService
 
     @Autowired
     private DataElementOperandService operandService;
+    
+    @Autowired
+    private ProgramService programService;
+    
+    @Autowired
+    private TrackedEntityAttributeService attributeService;
 
     @Autowired
     private PeriodService periodService;
@@ -126,12 +137,11 @@ public class DefaultDimensionService
     // DimensionService implementation
     //--------------------------------------------------------------------------
 
-    @Override
-    public List<NameableObject> getCanReadDimensionItems( String uid )
+    public List<DimensionalItemObject> getCanReadDimensionItems( String uid )
     {        
         DimensionalObject dimension = identifiableObjectManager.get( DimensionalObject.DYNAMIC_DIMENSION_CLASSES, uid );
         
-        List<NameableObject> items = new ArrayList<>();
+        List<DimensionalItemObject> items = new ArrayList<>();
 
         if ( dimension != null && dimension.hasItems() )
         {            
@@ -329,7 +339,7 @@ public class DefaultDimensionService
         if ( filterCanRead )
         {
             User user = currentUserService.getCurrentUser();
-            List<NameableObject> items = getCanReadObjects( user, dimension.getItems() );
+            List<DimensionalItemObject> items = getCanReadObjects( user, dimension.getItems() );
             copy.setItems( items );
         }
         
@@ -365,7 +375,7 @@ public class DefaultDimensionService
 
             String dimensionId = dimension.getDimension();
 
-            List<NameableObject> items = dimension.getItems();
+            List<DimensionalItemObject> items = dimension.getItems();
 
             if ( items != null )
             {
@@ -377,17 +387,29 @@ public class DefaultDimensionService
                     {
                         if ( DimensionalObjectUtils.isCompositeDimensionalObject( uid ) )
                         {
-                            DataElementOperand operand = operandService.getOrAddDataElementOperand( 
-                                splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 0 ), splitSafe( uid, DataElementOperand.ESCAPED_SEPARATOR, 1 ) );
+                            String id0 = splitSafe( uid, COMPOSITE_DIM_OBJECT_ESCAPED_SEP, 0 );
+                            String id1 = splitSafe( uid, COMPOSITE_DIM_OBJECT_ESCAPED_SEP, 1 );
+
+                            DataElementOperand operand = null;
+                            ProgramDataElement programDataElement = null;                    
+                            ProgramTrackedEntityAttribute programAttribute = null;
                             
-                            if ( operand != null )
+                            if ( ( operand = operandService.getOrAddDataElementOperand( id0, id1 ) ) != null )
                             {
                                 object.getDataDimensionItems().add( DataDimensionItem.create( operand ) );
+                            }
+                            else if ( ( programDataElement = programService.getOrAddProgramDataElement( id0, id1 ) ) != null )
+                            {
+                                object.getDataDimensionItems().add( DataDimensionItem.create( programDataElement ) );
+                            }
+                            else if ( ( programAttribute = attributeService.getOrAddProgramTrackedEntityAttribute( id0, id1 ) ) != null )
+                            {
+                                object.getDataDimensionItems().add( DataDimensionItem.create( programAttribute ) );
                             }
                         }
                         else
                         {
-                            NameableObject dataObject = identifiableObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, uid );
+                            DimensionalItemObject dataObject = identifiableObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, uid );
                             
                             if ( dataObject != null )
                             {

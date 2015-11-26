@@ -40,8 +40,6 @@ import java.util.Map;
  */
 public class NameableObjectUtils
 {
-    public static final String NULL_REPLACEMENT = "[n/a]";
-    
     /**
      * Returns a list of NameableObjects.
      *
@@ -71,79 +69,6 @@ public class NameableObjectUtils
         List<NameableObject> list = new ArrayList<>();
         list.addAll( collection );
         return list;
-    }
-
-    /**
-     * Returns a list typed with the desired erasure based on the given collection.
-     * This operation implies an unchecked cast and it is the responsibility of
-     * the caller to make sure the cast is valid. A copy of the given list will
-     * be returned.
-     *
-     * @param collection the collection.
-     * @return a list.
-     */
-    @SuppressWarnings("unchecked")
-    public static <T extends NameableObject> List<T> asTypedList( Collection<NameableObject> collection )
-    {
-        List<T> list = new ArrayList<>();
-
-        if ( collection != null )
-        {
-            for ( NameableObject object : collection )
-            {
-                list.add( (T) object );
-            }
-        }
-
-        return list;
-    }
-
-    /**
-     * Returns a list typed with the desired erasure based on the given collection.
-     * This operation implies an unchecked cast and it is the responsibility of
-     * the caller to make sure the cast is valid.
-     *
-     * @param collection the collection.
-     * @param the        class type.
-     * @return a list.
-     */
-    public static <T extends NameableObject> List<T> asTypedList( Collection<NameableObject> collection, Class<T> clazz )
-    {
-        return asTypedList( collection );
-    }
-    
-    /**
-     * Returns a list of BaseNameableObjects based on the given list of values,
-     * where the name, code and short name of each BaseNameableObject is set to
-     * the value of each list item.
-     * 
-     * @param values the list of object values.
-     * @param naForNull indicates whether a [n/a] string should be used as
-     *        replacement for null values.
-     * @return a list of BaseNameableObejcts.
-     */
-    public static List<NameableObject> getNameableObjects( Collection<?> values, boolean naForNull )
-    {
-        List<NameableObject> objects = new ArrayList<>();
-        
-        for ( Object value : values )
-        {
-            if ( value == null && naForNull )
-            {
-                value = NULL_REPLACEMENT;
-            }
-            
-            if ( value != null )
-            {
-                String val = String.valueOf( value );
-                
-                BaseNameableObject nameableObject = new BaseNameableObject( val, val, val );
-                nameableObject.setShortName( val );
-                objects.add( nameableObject );
-            }
-        }
-        
-        return objects;
     }
 
     /**
@@ -219,7 +144,7 @@ public class NameableObjectUtils
      * @param property the property.
      * @return a mapping.
      */
-    public static Map<String, String> getUidPropertyMap( Collection<NameableObject> objects,
+    public static Map<String, String> getUidPropertyMap( Collection<? extends NameableObject> objects,
         IdentifiableProperty property )
     {
         Map<String, String> map = new HashMap<>();

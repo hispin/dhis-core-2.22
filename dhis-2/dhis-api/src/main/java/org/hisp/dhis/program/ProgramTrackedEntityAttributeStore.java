@@ -1,5 +1,7 @@
 package org.hisp.dhis.program;
 
+import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -34,6 +36,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
  * @author Lars Helge Overland
  */
 public interface ProgramTrackedEntityAttributeStore
+    extends GenericIdentifiableObjectStore<ProgramTrackedEntityAttribute>
 {
     ProgramTrackedEntityAttribute get( Program program, TrackedEntityAttribute attribute );
 }

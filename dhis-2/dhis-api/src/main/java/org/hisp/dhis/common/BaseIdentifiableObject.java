@@ -62,8 +62,8 @@ import java.util.stream.Collectors;
  */
 @JacksonXmlRootElement( localName = "identifiableObject", namespace = DxfNamespaces.DXF_2_0 )
 public class BaseIdentifiableObject
-    extends BaseLinkableObject
-    implements IdentifiableObject
+    extends BaseLinkableObject 
+        implements IdentifiableObject
 {
     /**
      * The database internal identifier for this Object.

@@ -44,10 +44,11 @@ import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.analytics.DataQueryService;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.DimensionalObjectUtils;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IllegalQueryException;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -67,8 +68,12 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriodEnum;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramDataElement;
+import org.hisp.dhis.program.ProgramDataElementStore;
+import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.junit.Test;
@@ -82,20 +87,26 @@ import static org.hisp.dhis.common.DimensionalObject.*;
 public class DataQueryServiceTest
     extends DhisSpringTest
 {
+    private Program prA;
+    
     private DataElement deA;
     private DataElement deB;
     private DataElement deC;
     private DataElement deD;
-    private DataElement deE;
-    private DataElement deF;
+    
+    private ProgramDataElement pdA;
+    private ProgramDataElement pdB;
     
     private DataElementCategoryOptionCombo cocA;
     
     private DataSet dsA;
     private DataSet dsB;
     
-    private TrackedEntityAttribute paA;
-    private TrackedEntityAttribute paB;
+    private TrackedEntityAttribute atA;
+    private TrackedEntityAttribute atB;
+    
+    private ProgramTrackedEntityAttribute patA;
+    private ProgramTrackedEntityAttribute patB;
     
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
@@ -136,17 +147,28 @@ public class DataQueryServiceTest
     private OrganisationUnitGroupService organisationUnitGroupService;
 
     @Autowired
-    private TrackedEntityAttributeService attributeService;
+    private IdentifiableObjectManager idObjectManager;
+    
+    @Autowired
+    private ProgramService programService;
+    
+    @Autowired
+    private ProgramDataElementStore programDataElementStore;
     
     @Override
     public void setUpTest()
     {
+        prA = createProgram( 'A' );
+        
+        programService.addProgram( prA );
+        
         deA = createDataElement( 'A' );
         deB = createDataElement( 'B' );
         deC = createDataElement( 'C' );
         deD = createDataElement( 'D' );
-        deE = createDataElement( 'E' );
-        deF = createDataElement( 'F' );
+        
+        DataElement deE = createDataElement( 'E' );
+        DataElement deF = createDataElement( 'F' );
         
         deE.setDomainType( DataElementDomain.TRACKER );
         deF.setDomainType( DataElementDomain.TRACKER );
@@ -158,6 +180,12 @@ public class DataQueryServiceTest
         dataElementService.addDataElement( deE );
         dataElementService.addDataElement( deF );
         
+        pdA = new ProgramDataElement( prA, deE );
+        pdB = new ProgramDataElement( prA, deF );
+        
+        programDataElementStore.save( pdA );
+        programDataElementStore.save( pdB );
+        
         cocA = categoryService.getDefaultDataElementCategoryOptionCombo();
 
         dsA = createDataSet( 'A', monthly );
@@ -166,11 +194,17 @@ public class DataQueryServiceTest
         dataSetService.addDataSet( dsA );
         dataSetService.addDataSet( dsB );
         
-        paA = createTrackedEntityAttribute( 'A' );
-        paB = createTrackedEntityAttribute( 'B' );
+        atA = createTrackedEntityAttribute( 'A' );
+        atB = createTrackedEntityAttribute( 'B' );
         
-        attributeService.addTrackedEntityAttribute( paA );
-        attributeService.addTrackedEntityAttribute( paB );
+        idObjectManager.save( atA );
+        idObjectManager.save( atB );
+        
+        patA = new ProgramTrackedEntityAttribute( prA, atA );
+        patB = new ProgramTrackedEntityAttribute( prA, atB );
+        
+        idObjectManager.save( patA );
+        idObjectManager.save( patB );
         
         ouA = createOrganisationUnit( 'A' );
         ouB = createOrganisationUnit( 'B' );
@@ -237,7 +271,7 @@ public class DataQueryServiceTest
         deGroupSetA.addDataElementGroup( deGroupC );
         
         dataElementService.updateDataElementGroupSet( deGroupSetA );
-        
+
         // ---------------------------------------------------------------------
         // Mock injection
         // ---------------------------------------------------------------------
@@ -262,8 +296,8 @@ public class DataQueryServiceTest
         DimensionalObject dxObject = dimensionalObject.get( 0 );
         DimensionalObject ouObject = dimensionalObject.get( 1 );
 
-        List<NameableObject> dxItems = Lists.newArrayList( deA, deB, dsA );
-        List<NameableObject> ouItems = Lists.newArrayList( ouA, ouB );
+        List<DimensionalItemObject> dxItems = Lists.newArrayList( deA, deB, dsA );
+        List<DimensionalItemObject> ouItems = Lists.newArrayList( ouA, ouB );
 
         assertEquals( DimensionalObject.DATA_X_DIM_ID, dxObject.getDimension() );
         assertEquals( DimensionType.DATA_X, dxObject.getDimensionType() );
@@ -279,9 +313,9 @@ public class DataQueryServiceTest
     @Test
     public void testGetDimensionData()
     {
-        List<NameableObject> items = Lists.newArrayList( deA, deB, deC, dsA, dsB );
+        List<DimensionalItemObject> items = Lists.newArrayList( deA, deB, deC, dsA, dsB );
         
-        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        List<String> itemUids = DimensionalObjectUtils.getDimensionalItemIds( items );
         
         DimensionalObject actual = dataQueryService.getDimension( DimensionalObject.DATA_X_DIM_ID, itemUids, null, null, null, false );
         
@@ -298,9 +332,9 @@ public class DataQueryServiceTest
         DataElementOperand opB = new DataElementOperand( deB, cocA );
         DataElementOperand opC = new DataElementOperand( deC, cocA );
         
-        List<NameableObject> items = Lists.newArrayList( opA, opB, opC );
+        List<DimensionalItemObject> items = Lists.newArrayList( opA, opB, opC );
         
-        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        List<String> itemUids = DimensionalObjectUtils.getDimensionalItemIds( items );
         
         DimensionalObject actual = dataQueryService.getDimension( DimensionalObject.DATA_X_DIM_ID, itemUids, null, null, null, false );
         
@@ -313,9 +347,9 @@ public class DataQueryServiceTest
     @Test
     public void testGetDimensionOrgUnit()
     {
-        List<NameableObject> items = Lists.newArrayList( ouA, ouB, ouC );
+        List<DimensionalItemObject> items = Lists.newArrayList( ouA, ouB, ouC );
         
-        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        List<String> itemUids = DimensionalObjectUtils.getDimensionalItemIds( items );
 
         DimensionalObject actual = dataQueryService.getDimension( DimensionalObject.ORGUNIT_DIM_ID, itemUids, null, null, null, false );
         
@@ -357,9 +391,9 @@ public class DataQueryServiceTest
     @Test
     public void testGetDimensionOrgUnitGroupSet()
     {
-        List<NameableObject> items = Lists.newArrayList( ouGroupA, ouGroupB );
+        List<DimensionalItemObject> items = Lists.newArrayList( ouGroupA, ouGroupB );
         
-        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        List<String> itemUids = DimensionalObjectUtils.getDimensionalItemIds( items );
         
         DimensionalObject actual = dataQueryService.getDimension( ouGroupSetA.getUid(), itemUids, null, null, null, false );
         
@@ -372,9 +406,9 @@ public class DataQueryServiceTest
     @Test
     public void testGetDimensionDataElementGroupSet()
     {
-        List<NameableObject> items = Lists.newArrayList( deGroupA, deGroupB );
+        List<DimensionalItemObject> items = Lists.newArrayList( deGroupA, deGroupB );
         
-        List<String> itemUids = IdentifiableObjectUtils.getUids( items );
+        List<String> itemUids = DimensionalObjectUtils.getDimensionalItemIds( items );
         
         DimensionalObject actual = dataQueryService.getDimension( deGroupSetA.getUid(), itemUids, null, null, null, false );
         
@@ -396,7 +430,7 @@ public class DataQueryServiceTest
         filterParams.add( "ou:" + ouA.getUid() + ";" + ouB.getUid() + ";" + ouC.getUid() + ";" + ouD.getUid() + ";" + ouE.getUid() );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 4, params.getDataElements().size() );
         assertEquals( 3, params.getPeriods().size() );
@@ -408,13 +442,13 @@ public class DataQueryServiceTest
     public void testGetFromUrlB()
     {
         Set<String> dimensionParams = new HashSet<>();
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() + ";" + deC.getUid() + ";" + deD.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() + ";" + deC.getDimensionItem() + ";" + deD.getUid() );
 
         Set<String> filterParams = new HashSet<>();
         filterParams.add( "ou:" + ouA.getUid() );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 4, params.getDataElements().size() );
         assertEquals( 1, params.getFilterOrganisationUnits().size() );
@@ -424,13 +458,13 @@ public class DataQueryServiceTest
     public void testGetFromUrlC()
     {
         Set<String> dimensionParams = new HashSet<>();
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() + ";" + deE.getUid() + ";" + deF.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() + ";" + pdA.getDimensionItem() + ";" + pdB.getDimensionItem() );
 
         Set<String> filterParams = new HashSet<>();
-        filterParams.add( "ou:" + ouA.getUid() );
+        filterParams.add( "ou:" + ouA.getDimensionItem() );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 2, params.getDataElements().size() );
         assertEquals( 2, params.getProgramDataElements().size() );
@@ -441,13 +475,13 @@ public class DataQueryServiceTest
     public void testGetFromUrlD()
     {
         Set<String> dimensionParams = new HashSet<>();
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() + ";" + paA.getUid() + ";" + paB.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() + ";" + patA.getDimensionItem() + ";" + patB.getDimensionItem() );
 
         Set<String> filterParams = new HashSet<>();
-        filterParams.add( "ou:" + ouA.getUid() );
+        filterParams.add( "ou:" + ouA.getDimensionItem() );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 2, params.getDataElements().size() );
         assertEquals( 2, params.getProgramAttributes().size() );
@@ -458,15 +492,15 @@ public class DataQueryServiceTest
     public void testGetFromUrlOrgUnitGroupSetAllItems()
     {
         Set<String> dimensionParams = new HashSet<>();
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() + ";" + deC.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() + ";" + deC.getDimensionItem() );
         dimensionParams.add( "pe:2012;2012S1" );
         dimensionParams.add( ouGroupSetA.getUid() );
         
         Set<String> filterParams = new HashSet<>();
-        filterParams.add( "ou:" + ouA.getUid() + ";" + ouB.getUid() + ";" + ouC.getUid() );
+        filterParams.add( "ou:" + ouA.getDimensionItem() + ";" + ouB.getDimensionItem() + ";" + ouC.getDimensionItem() );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 3, params.getDataElements().size() );
         assertEquals( 2, params.getPeriods().size() );
@@ -478,14 +512,14 @@ public class DataQueryServiceTest
     public void testGetFromUrlRelativePeriods()
     {
         Set<String> dimensionParams = new HashSet<>();
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() + ";" + deC.getUid() + ";" + deD.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() + ";" + deC.getDimensionItem() + ";" + deD.getDimensionItem() );
         dimensionParams.add( "pe:LAST_12_MONTHS" );
 
         Set<String> filterParams = new HashSet<>();
-        filterParams.add( "ou:" + ouA.getUid() + ";" + ouB.getUid() );
+        filterParams.add( "ou:" + ouA.getDimensionItem() + ";" + ouB.getDimensionItem() );
 
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, filterParams, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 4, params.getDataElements().size() );
         assertEquals( 12, params.getPeriods().size() );
@@ -497,11 +531,11 @@ public class DataQueryServiceTest
     {
         Set<String> dimensionParams = new HashSet<>();
         dimensionParams.add( "ou:" + OrganisationUnit.KEY_USER_ORGUNIT );
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() );
         dimensionParams.add( "pe:2011;2012" );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 1, params.getOrganisationUnits().size() );  
         assertEquals( 2, params.getDataElements().size() );
@@ -513,11 +547,11 @@ public class DataQueryServiceTest
     {
         Set<String> dimensionParams = new HashSet<>();
         dimensionParams.add( "ou:OU_GROUP-" + ouGroupA.getUid() );
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() );
         dimensionParams.add( "pe:2011;2012" );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 3, params.getOrganisationUnits().size() );  
         assertEquals( 2, params.getDataElements().size() );
@@ -529,11 +563,11 @@ public class DataQueryServiceTest
     {
         Set<String> dimensionParams = new HashSet<>();
         dimensionParams.add( "ou:LEVEL-2" );
-        dimensionParams.add( "dx:" + deA.getUid() + ";" + deB.getUid() );
+        dimensionParams.add( "dx:" + deA.getDimensionItem() + ";" + deB.getDimensionItem() );
         dimensionParams.add( "pe:2011;2012" );
         
         DataQueryParams params = dataQueryService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );
         
         assertEquals( 2, params.getOrganisationUnits().size() );  
         assertEquals( 2, params.getDataElements().size() );
@@ -548,7 +582,7 @@ public class DataQueryServiceTest
         dimensionParams.add( "pe:2012,2012S1,2012S2" );
         
         dataQueryService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );        
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );        
     }
     
     @Test( expected = IllegalQueryException.class )
@@ -559,7 +593,7 @@ public class DataQueryServiceTest
         dimensionParams.add( "pe" );
 
         dataQueryService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );        
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );        
     }
 
     @Test( expected = IllegalQueryException.class )
@@ -570,7 +604,7 @@ public class DataQueryServiceTest
         dimensionParams.add( "ou" );
         
         dataQueryService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );        
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );        
     }
 
     @Test( expected = IllegalQueryException.class )
@@ -581,7 +615,7 @@ public class DataQueryServiceTest
         dimensionParams.add( "yebo:2012,2012S1,2012S2" );
         
         dataQueryService.getFromUrl( dimensionParams, null, null, null, 
-            false, false, false, false, false, false, false, false, null, null, null, null, null, null, null, null );        
+            false, false, false, false, false, false, false, false, null, null, null, null, null, null );        
     }
     
     @Test
@@ -648,8 +682,8 @@ public class DataQueryServiceTest
         chart.getFilterDimensions().add( DimensionalObject.PERIOD_DIM_ID );
         
         chart.addDataDimensionItem( deA );
-        chart.addDataDimensionItem( deE );
-        chart.addDataDimensionItem( deF );
+        chart.addDataDimensionItem( pdA );
+        chart.addDataDimensionItem( pdB );
         
         chart.getOrganisationUnitGroups().add( ouGroupA );
         chart.getOrganisationUnitGroups().add( ouGroupB );

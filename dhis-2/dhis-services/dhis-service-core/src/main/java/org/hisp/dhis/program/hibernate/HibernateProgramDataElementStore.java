@@ -1,4 +1,4 @@
-package org.hisp.dhis.common;
+package org.hisp.dhis.program.hibernate;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,30 +28,24 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
-import org.hisp.dhis.user.User;
+import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramDataElement;
+import org.hisp.dhis.program.ProgramDataElementStore;
 
 /**
  * @author Lars Helge Overland
  */
-public interface DimensionService
+public class HibernateProgramDataElementStore
+    extends HibernateIdentifiableObjectStore<ProgramDataElement>
+        implements ProgramDataElementStore
 {
-    List<DimensionalItemObject> getCanReadDimensionItems( String uid );
-    
-    <T extends IdentifiableObject> List<T> getCanReadObjects( List<T> objects );
-    
-    <T extends IdentifiableObject> List<T> getCanReadObjects( User user, List<T> objects );
-    
-    DimensionType getDimensionType( String uid );
-    
-    List<DimensionalObject> getAllDimensions();
-    
-    List<DimensionalObject> getDimensionConstraints();
-    
-    DimensionalObject getDimensionalObjectCopy( String uid, boolean filterCanRead );
-    
-    void mergeAnalyticalObject( BaseAnalyticalObject object );
-    
-    void mergeEventAnalyticalObject( EventAnalyticalObject object );
+    public ProgramDataElement get( Program program, DataElement dataElement )
+    {
+        return (ProgramDataElement) getCriteria( 
+            Restrictions.eq( "program", program ),
+            Restrictions.eq( "dataElement", dataElement ) ).uniqueResult();
+    }
 }

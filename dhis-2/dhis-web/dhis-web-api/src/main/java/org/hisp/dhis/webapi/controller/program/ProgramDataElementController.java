@@ -1,4 +1,4 @@
-package org.hisp.dhis.common;
+package org.hisp.dhis.webapi.controller.program;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -30,28 +30,32 @@ package org.hisp.dhis.common;
 
 import java.util.List;
 
-import org.hisp.dhis.user.User;
+import org.hisp.dhis.program.ProgramDataElement;
+import org.hisp.dhis.program.ProgramService;
+import org.hisp.dhis.query.Order;
+import org.hisp.dhis.webapi.controller.AbstractCrudController;
+import org.hisp.dhis.webapi.webdomain.WebMetaData;
+import org.hisp.dhis.webapi.webdomain.WebOptions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author Lars Helge Overland
  */
-public interface DimensionService
+@Controller
+@RequestMapping( value = "/programDataElements" )
+public class ProgramDataElementController
+    extends AbstractCrudController<ProgramDataElement>
 {
-    List<DimensionalItemObject> getCanReadDimensionItems( String uid );
+    @Autowired
+    private ProgramService programService;
     
-    <T extends IdentifiableObject> List<T> getCanReadObjects( List<T> objects );
-    
-    <T extends IdentifiableObject> List<T> getCanReadObjects( User user, List<T> objects );
-    
-    DimensionType getDimensionType( String uid );
-    
-    List<DimensionalObject> getAllDimensions();
-    
-    List<DimensionalObject> getDimensionConstraints();
-    
-    DimensionalObject getDimensionalObjectCopy( String uid, boolean filterCanRead );
-    
-    void mergeAnalyticalObject( BaseAnalyticalObject object );
-    
-    void mergeEventAnalyticalObject( EventAnalyticalObject object );
+    @Override
+    protected List<ProgramDataElement> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    {
+        String programUid = options.get( "program" );
+        
+        return programService.getGeneratedProgramDataElements( programUid );        
+    }
 }

@@ -52,7 +52,8 @@ import com.google.common.collect.Lists;
  */
 @Controller
 @RequestMapping( value = DataElementOperandSchemaDescriptor.API_ENDPOINT )
-public class DataElementOperandController extends AbstractCrudController<DataElementOperand>
+public class DataElementOperandController 
+    extends AbstractCrudController<DataElementOperand>
 {
     @Autowired
     private DataElementCategoryService dataElementCategoryService;

@@ -52,9 +52,11 @@ import org.hibernate.type.TextType;
 import org.hibernate.type.Type;
 import org.hisp.dhis.common.AnalyticalObject;
 import org.hisp.dhis.common.BaseAnalyticalObject;
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.BaseNameableObject;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.NameableObject;
@@ -79,6 +81,7 @@ public abstract class AbstractPropertyIntrospectorService
         .put( IdentifiableObject.class, BaseIdentifiableObject.class )
         .put( NameableObject.class, BaseNameableObject.class )
         .put( DimensionalObject.class, BaseDimensionalObject.class )
+        .put( DimensionalItemObject.class, BaseDimensionalItemObject.class )
         .put( AnalyticalObject.class, BaseAnalyticalObject.class )
         .build();
 

@@ -33,9 +33,9 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.DataDimensionItem;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataset.DataSet;
@@ -103,7 +103,7 @@ public class FavoriteDataItemUpgrader
             int obId = rs.getInt( 2 );
             
             BaseAnalyticalObject favorite = idObjectManager.get( favoriteClass, rtId );
-            NameableObject object = (NameableObject) idObjectManager.get( objectClass, obId );
+            DimensionalItemObject object = (DimensionalItemObject) idObjectManager.get( objectClass, obId );
             DataDimensionItem item = DataDimensionItem.create( object );
                         
             favorite.getDataDimensionItems().add( item );

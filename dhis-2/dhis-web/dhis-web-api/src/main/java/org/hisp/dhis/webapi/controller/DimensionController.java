@@ -30,9 +30,9 @@ package org.hisp.dhis.webapi.controller;
 
 import com.google.common.collect.Lists;
 import org.hisp.dhis.common.DimensionService;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -110,7 +110,7 @@ public class DimensionController
             fields.add( ":identifiable" );
         }
 
-        List<NameableObject> items = dimensionService.getCanReadDimensionItems( uid );
+        List<DimensionalItemObject> items = dimensionService.getCanReadDimensionItems( uid );
         Query query = queryService.getQueryFromUrl( getEntityClass(), filters, new ArrayList<>() );
         query.setObjects( items );
         query.setDefaultOrder();

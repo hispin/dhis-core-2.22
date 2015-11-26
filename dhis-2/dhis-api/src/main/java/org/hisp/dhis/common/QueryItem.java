@@ -35,6 +35,7 @@ import java.util.List;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionSet;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
@@ -45,7 +46,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
  */
 public class QueryItem
 {
-    private DimensionalObject item;
+    private DimensionalItemObject item;
 
     private LegendSet legendSet;
 
@@ -56,17 +57,19 @@ public class QueryItem
     private AggregationType aggregationType;
 
     private OptionSet optionSet;
+    
+    private Program program;
 
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
-    public QueryItem( DimensionalObject item )
+    public QueryItem( DimensionalItemObject item )
     {
         this.item = item;
     }
 
-    public QueryItem( DimensionalObject item, LegendSet legendSet, ValueType valueType, AggregationType aggregationType, OptionSet optionSet )
+    public QueryItem( DimensionalItemObject item, LegendSet legendSet, ValueType valueType, AggregationType aggregationType, OptionSet optionSet )
     {
         this.item = item;
         this.legendSet = legendSet;
@@ -75,7 +78,7 @@ public class QueryItem
         this.optionSet = optionSet;
     }
 
-    public QueryItem( DimensionalObject item, QueryOperator operator, String filter, ValueType valueType, AggregationType aggregationType, OptionSet optionSet )
+    public QueryItem( DimensionalItemObject item, QueryOperator operator, String filter, ValueType valueType, AggregationType aggregationType, OptionSet optionSet )
     {
         this.item = item;
         this.valueType = valueType;
@@ -143,6 +146,11 @@ public class QueryItem
     {
         return filters != null && !filters.isEmpty();
     }
+    
+    public boolean hasProgram()
+    {
+        return program != null;
+    }
 
     public boolean isProgramIndicator()
     {
@@ -204,12 +212,12 @@ public class QueryItem
     // Getters and setters
     // -------------------------------------------------------------------------
 
-    public DimensionalObject getItem()
+    public DimensionalItemObject getItem()
     {
         return item;
     }
 
-    public void setItem( DimensionalObject item )
+    public void setItem( DimensionalItemObject item )
     {
         this.item = item;
     }
@@ -262,5 +270,15 @@ public class QueryItem
     public void setOptionSet( OptionSet optionSet )
     {
         this.optionSet = optionSet;
+    }
+
+    public Program getProgram()
+    {
+        return program;
+    }
+
+    public void setProgram( Program program )
+    {
+        this.program = program;
     }
 }

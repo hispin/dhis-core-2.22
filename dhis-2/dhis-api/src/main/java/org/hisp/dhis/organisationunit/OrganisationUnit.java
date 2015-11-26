@@ -37,8 +37,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
-import org.hisp.dhis.common.BaseNameableObject;
 import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
@@ -74,7 +74,7 @@ import java.util.regex.Pattern;
  */
 @JacksonXmlRootElement( localName = "organisationUnit", namespace = DxfNamespaces.DXF_2_0 )
 public class OrganisationUnit
-    extends BaseNameableObject
+    extends BaseDimensionalItemObject
 {
     private static final String PATH_SEP = "/";
     private static final Joiner PATH_JOINER = Joiner.on( PATH_SEP );
@@ -208,7 +208,7 @@ public class OrganisationUnit
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-
+    
     public void addOrganisationUnitGroup( OrganisationUnitGroup organisationUnitGroup )
     {
         groups.add( organisationUnitGroup );

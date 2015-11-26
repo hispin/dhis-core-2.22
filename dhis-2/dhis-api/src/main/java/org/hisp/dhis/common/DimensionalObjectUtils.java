@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,11 +55,14 @@ import com.google.common.collect.Sets;
  */
 public class DimensionalObjectUtils
 {
-    private static final Pattern INT_PATTERN = Pattern.compile( "^(0|-?[1-9]\\d*)$" );
-    private static final Pattern COMPOSITE_DIMENSIONAL_OBJECT_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
-    
+    public static final String COMPOSITE_DIM_OBJECT_ESCAPED_SEP = "\\.";
+    public static final String COMPOSITE_DIM_OBJECT_PLAIN_SEP = ".";
     public static final String TITLE_ITEM_SEP = ", ";
+    public static final String NULL_REPLACEMENT = "[n/a]";
 
+    private static final Pattern INT_PATTERN = Pattern.compile( "^(0|-?[1-9]\\d*)$" );
+    private static final Pattern COMPOSITE_DIM_OBJECT_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
+    
     public static List<DimensionalObject> getCopies( List<DimensionalObject> dimensions )
     {
         List<DimensionalObject> list = new ArrayList<>();
@@ -285,11 +289,11 @@ public class DimensionalObjectUtils
         
         List<?> itemList = filterItems != null ? ListUtils.retainAll( filterItems, values ) : values;
                 
-        List<NameableObject> items = NameableObjectUtils.getNameableObjects( itemList, naForNull );
+        List<DimensionalItemObject> items = getDimensionalItemObjects( itemList, naForNull );
         
         dim.setItems( items );
     }
-        
+    
     /**
      * Accepts filter strings on the format:
      * </p>
@@ -340,7 +344,108 @@ public class DimensionalObjectUtils
      */
     public static boolean isCompositeDimensionalObject( String expression )
     {
-        return expression != null && COMPOSITE_DIMENSIONAL_OBJECT_PATTERN.matcher( expression ).matches();
+        return expression != null && COMPOSITE_DIM_OBJECT_PATTERN.matcher( expression ).matches();
+    }
+
+    /**
+     * Returns a list of DimensionalItemObjects.
+     *
+     * @param objects the DimensionalItemObjects to include in the list.
+     * @return a list of DimensionalItemObjects.
+     */
+    public static List<DimensionalItemObject> getList( DimensionalItemObject... objects )
+    {
+        List<DimensionalItemObject> list = new ArrayList<>();
+
+        if ( objects != null )
+        {
+            Collections.addAll( list, objects );
+        }
+
+        return list;
+    }
+
+    /**
+     * Returns a list with erasure DimensionalItemObject based on the given collection.
+     *
+     * @param collection the collection.
+     * @return a list of DimensionalItemObjects.
+     */
+    public static List<DimensionalItemObject> asList( Collection<? extends DimensionalItemObject> collection )
+    {
+        List<DimensionalItemObject> list = new ArrayList<>();
+        list.addAll( collection );
+        return list;
+    }
+    
+    /**
+     * Returns a list typed with the desired erasure based on the given collection.
+     * This operation implies an unchecked cast and it is the responsibility of
+     * the caller to make sure the cast is valid. A copy of the given list will
+     * be returned.
+     *
+     * @param collection the collection.
+     * @return a list.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends DimensionalItemObject> List<T> asTypedList( Collection<DimensionalItemObject> collection )
+    {
+        List<T> list = new ArrayList<>();
+
+        if ( collection != null )
+        {
+            for ( DimensionalItemObject object : collection )
+            {
+                list.add( (T) object );
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * Returns a list of BaseNameableObjects based on the given list of values,
+     * where the name, code and short name of each BaseNameableObject is set to
+     * the value of each list item.
+     * 
+     * @param values the list of object values.
+     * @param naForNull indicates whether a [n/a] string should be used as
+     *        replacement for null values.
+     * @return a list of BaseNameableObejcts.
+     */
+    public static List<DimensionalItemObject> getDimensionalItemObjects( Collection<?> values, boolean naForNull )
+    {
+        List<DimensionalItemObject> objects = new ArrayList<>();
+        
+        for ( Object value : values )
+        {
+            if ( value == null && naForNull )
+            {
+                value = NULL_REPLACEMENT;
+            }
+            
+            if ( value != null )
+            {
+                String val = String.valueOf( value );
+                
+                BaseDimensionalItemObject nameableObject = new BaseDimensionalItemObject( val );
+                nameableObject.setShortName( val );
+                objects.add( nameableObject );
+            }
+        }
+        
+        return objects;
+    }
+    
+    /**
+     * Returns dimension item identifiers for the given collection of DimensionalItemObject.
+     * 
+     * @param objects the DimensionalItemObjects.
+     * @return a list of dimension item identifiers.
+     */
+    public static List<String> getDimensionalItemIds( Collection<DimensionalItemObject> objects )
+    {
+        return objects.stream().map( o -> o.getDimensionItem() ).collect( Collectors.toList() );
     }
 
     /**
@@ -349,9 +454,9 @@ public class DimensionalObjectUtils
      * @param operands the collection of operands.
      * @return a set of data elements.
      */
-    public static Set<NameableObject> getDataElements( Collection<DataElementOperand> operands )
+    public static Set<DimensionalItemObject> getDataElements( Collection<DataElementOperand> operands )
     {
-        Set<NameableObject> set = Sets.newHashSet();
+        Set<DimensionalItemObject> set = Sets.newHashSet();
         
         for ( DataElementOperand operand : operands )
         {
@@ -368,9 +473,9 @@ public class DimensionalObjectUtils
      * @param operands the collection of operands.
      * @return a set of category option combos.
      */
-    public static Set<NameableObject> getCategoryOptionCombos( Collection<DataElementOperand> operands )
+    public static Set<DimensionalItemObject> getCategoryOptionCombos( Collection<DataElementOperand> operands )
     {
-        Set<NameableObject> set = Sets.newHashSet();
+        Set<DimensionalItemObject> set = Sets.newHashSet();
         
         for ( DataElementOperand operand : operands )
         {

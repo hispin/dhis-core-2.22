@@ -50,7 +50,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.filter.AggregatableDataElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.hisp.dhis.common.NameableObject;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.commons.filter.FilterUtils;
 
 /**
@@ -89,7 +89,7 @@ public class AnalyticsDataSetReportStore
         params.setDataElements( dataElements );
         params.setPeriod( period );
         params.setOrganisationUnit( unit );
-        params.setCategoryOptionCombos( new ArrayList<NameableObject>() );
+        params.setCategoryOptionCombos( new ArrayList<DimensionalItemObject>() );
         
         if ( dimensions != null )
         {

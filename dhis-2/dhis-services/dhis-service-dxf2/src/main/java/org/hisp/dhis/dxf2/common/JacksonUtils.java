@@ -132,6 +132,18 @@ public class JacksonUtils
         return JSON_MAPPER.writeValueAsString( value );
     }
 
+    public static String toJsonAsStringSilent( Object value )
+    {
+        try
+        {
+            return JSON_MAPPER.writeValueAsString( value );
+        }
+        catch ( IOException ex )
+        {
+            return null;
+        }
+    }
+    
     /**
      * TODO remove
      */

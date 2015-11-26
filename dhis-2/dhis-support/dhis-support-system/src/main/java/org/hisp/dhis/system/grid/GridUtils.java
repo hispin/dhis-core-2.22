@@ -71,9 +71,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;
+import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
-import org.hisp.dhis.common.NameableObjectUtils;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.commons.util.Encoder;
@@ -638,7 +638,7 @@ public class GridUtils
         {
             List<Object> metaDataRowItems = ListUtils.getAtIndexes( row, metaIndexes );
             
-            String key = TextUtils.join( metaDataRowItems, DIMENSION_SEP, NameableObjectUtils.NULL_REPLACEMENT );
+            String key = TextUtils.join( metaDataRowItems, DIMENSION_SEP, DimensionalObjectUtils.NULL_REPLACEMENT );
             
             map.put( key, row.get( valueIndex ) );
         }

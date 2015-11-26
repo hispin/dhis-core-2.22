@@ -313,6 +313,31 @@ public class DefaultTrackedEntityAttributeService
     // ProgramTrackedEntityAttribute
     // -------------------------------------------------------------------------
 
+    @Override
+    public ProgramTrackedEntityAttribute getOrAddProgramTrackedEntityAttribute( String programUid, String attributeUid )
+    {
+        Program program = programService.getProgram( programUid );
+        
+        TrackedEntityAttribute attribute = getTrackedEntityAttribute( attributeUid );
+        
+        if ( program == null || attribute == null )
+        {
+            return null;
+        }
+        
+        ProgramTrackedEntityAttribute programAttribute = programAttributeStore.get( program, attribute );
+        
+        if ( programAttribute == null )
+        {
+            programAttribute = new ProgramTrackedEntityAttribute( program, attribute );
+            
+            programAttributeStore.save( programAttribute );
+        }
+        
+        return programAttribute;
+    }        
+    
+    @Override
     public ProgramTrackedEntityAttribute getProgramTrackedEntityAttribute( String programUid, String attributeUid )
     {
         Program program = programService.getProgram( programUid );

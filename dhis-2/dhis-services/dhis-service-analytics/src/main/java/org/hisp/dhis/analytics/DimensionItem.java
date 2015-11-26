@@ -33,8 +33,8 @@ import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.commons.collection.CollectionUtils;
 
 /**
@@ -44,13 +44,13 @@ public class DimensionItem
 {
     private String dimension;
     
-    private NameableObject item;
+    private DimensionalItemObject item;
 
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
 
-    public DimensionItem( String dimension, NameableObject item )
+    public DimensionItem( String dimension, DimensionalItemObject item )
     {
         this.dimension = dimension;
         this.item = item;
@@ -70,12 +70,12 @@ public class DimensionItem
         this.dimension = dimension;
     }
 
-    public NameableObject getItem()
+    public DimensionalItemObject getItem()
     {
         return item;
     }
 
-    public void setItem( NameableObject item )
+    public void setItem( DimensionalItemObject item )
     {
         this.item = item;
     }
@@ -97,7 +97,7 @@ public class DimensionItem
         {
             for ( DimensionItem item : items )
             {
-                builder.append( item.getItem().getUid() ).append( DIMENSION_SEP );
+                builder.append( item.getItem().getDimensionItem() ).append( DIMENSION_SEP );
             }
             
             builder.deleteCharAt( builder.length() - 1 );
@@ -118,7 +118,7 @@ public class DimensionItem
         {
             for ( DimensionItem item : items )
             {
-                itemUids.add( item != null ? item.getItem().getUid() : null );
+                itemUids.add( item != null ? item.getItem().getDimensionItem() : null );
             }
         }
         
@@ -130,7 +130,7 @@ public class DimensionItem
      * dimension items. If no items are given, items are null or there are no 
      * period dimension, null is returned.
      */
-    public static NameableObject getPeriodItem( List<DimensionItem> items )
+    public static DimensionalItemObject getPeriodItem( List<DimensionItem> items )
     {
         if ( items != null && !items.isEmpty() )
         {
@@ -151,7 +151,7 @@ public class DimensionItem
      * dimension items. If no items are given, items are null or there are no 
      * period dimension, null is returned.
      */
-    public static NameableObject getOrganisationUnitItem( List<DimensionItem> items )
+    public static DimensionalItemObject getOrganisationUnitItem( List<DimensionItem> items )
     {
         if ( items != null && !items.isEmpty() )
         {

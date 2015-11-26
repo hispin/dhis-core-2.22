@@ -413,16 +413,15 @@ public abstract class DhisConvenienceTest
      * @param uniqueCharacter A unique character to identify the object.
      * @param valueType       The value type.
      * @param aggregationType The aggregation type.
-     * @param categoryCombo   The category combo.
+     * @param domainType      The domain type.
      */
-    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType, AggregationType aggregationType,
-        DataElementCategoryCombo categoryCombo )
+    public static DataElement createDataElement( char uniqueCharacter, ValueType valueType, AggregationType aggregationType, DataElementDomain domainType )
     {
         DataElement dataElement = createDataElement( uniqueCharacter );
         dataElement.setValueType( valueType );
         dataElement.setDomainType( DataElementDomain.AGGREGATE );
         dataElement.setAggregationType( aggregationType );
-        dataElement.setCategoryCombo( categoryCombo );
+        dataElement.setDomainType( domainType );
 
         return dataElement;
     }
@@ -1128,6 +1127,11 @@ public abstract class DhisConvenienceTest
         return role;
     }
 
+    public static Program createProgram( char uniqueCharacter )
+    {
+        return createProgram( uniqueCharacter, null, null );
+    }
+    
     public static Program createProgram( char uniqueCharacter, Set<ProgramStage> programStages,
         OrganisationUnit unit )
     {
@@ -1164,11 +1168,9 @@ public abstract class DhisConvenienceTest
 
         if ( attributes != null )
         {
-            int i = 0;
-
             for ( TrackedEntityAttribute attribute : attributes )
             {
-                program.getProgramAttributes().add( new ProgramTrackedEntityAttribute( program, attribute, i++, false ) );
+                program.getProgramAttributes().add( new ProgramTrackedEntityAttribute( program, attribute, false, false ) );
             }
         }
 

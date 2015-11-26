@@ -126,7 +126,6 @@ public class BaseAnalyticalObjectTest
         DimensionalObject dim = eventChart.getColumns().get( 0 );
         
         assertNotNull( dim );
-        assertEquals( tea.getDimension(), dim.getDimension() );
         assertEquals( DimensionType.PROGRAM_ATTRIBUTE, dim.getDimensionType() );
         assertEquals( AnalyticsType.EVENT, dim.getAnalyticsType() );
         assertEquals( tead.getFilter(), dim.getFilter() );

@@ -87,7 +87,7 @@ public interface DimensionalObject
         add( OrganisationUnitGroupSet.class ).
         add( CategoryOptionGroupSet.class ).build();
     
-    Map<Class<? extends DimensionalObject>, Class<? extends NameableObject>> DIMENSION_CLASS_ITEM_CLASS_MAP = ImmutableMap.<Class<? extends DimensionalObject>, Class<? extends NameableObject>>builder().
+    Map<Class<? extends DimensionalObject>, Class<? extends DimensionalItemObject>> DIMENSION_CLASS_ITEM_CLASS_MAP = ImmutableMap.<Class<? extends DimensionalObject>, Class<? extends DimensionalItemObject>>builder().
         put( DataElementCategory.class, DataElementCategoryOption.class ).
         put( DataElementGroupSet.class, DataElementGroup.class ).
         put( OrganisationUnitGroupSet.class, OrganisationUnitGroup.class ).
@@ -118,7 +118,7 @@ public interface DimensionalObject
     /**
      * Dimension items.
      */
-    List<NameableObject> getItems();
+    List<DimensionalItemObject> getItems();
 
     /**
      * Indicates whether all available items in this dimension are included.

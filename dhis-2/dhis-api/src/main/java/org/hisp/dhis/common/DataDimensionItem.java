@@ -34,12 +34,12 @@ import java.util.Set;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.program.ProgramDataElement;
 import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -58,16 +58,13 @@ public class DataDimensionItem
 {    
     public static final Set<Class<? extends IdentifiableObject>> DATA_DIMENSION_CLASSES = ImmutableSet.<Class<? extends IdentifiableObject>>builder().
         add( Indicator.class ).add( DataElement.class ).add( DataElementOperand.class ).
-        add( DataSet.class ).add( ProgramIndicator.class ).add( TrackedEntityAttribute.class ).build();
+        add( DataSet.class ).add( ProgramIndicator.class ).add( ProgramDataElement.class ).add( ProgramTrackedEntityAttribute.class ).build();
     
     public static final Map<DataDimensionItemType, Class<? extends NameableObject>> DATA_DIMENSION_TYPE_CLASS_MAP = ImmutableMap.<DataDimensionItemType, Class<? extends NameableObject>>builder().
         put( DataDimensionItemType.INDICATOR, Indicator.class ).put( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, DataElement.class ).
         put( DataDimensionItemType.DATA_ELEMENT_OPERAND, DataElementOperand.class ).put( DataDimensionItemType.DATA_SET, DataSet.class ).
-        put( DataDimensionItemType.PROGRAM_INDICATOR, ProgramIndicator.class ).put( DataDimensionItemType.PROGRAM_ATTRIBUTE, TrackedEntityAttribute.class ).
-        put( DataDimensionItemType.PROGRAM_DATA_ELEMENT, DataElement.class ).build();
-    
-    public static final Map<DataDimensionItemType, DataElementDomain> DATA_DIMENSION_TYPE_DOMAIN_MAP = ImmutableMap.<DataDimensionItemType, DataElementDomain>builder().
-        put( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, DataElementDomain.AGGREGATE ).put( DataDimensionItemType.PROGRAM_DATA_ELEMENT, DataElementDomain.TRACKER ).build();
+        put( DataDimensionItemType.PROGRAM_INDICATOR, ProgramIndicator.class ).put( DataDimensionItemType.PROGRAM_DATA_ELEMENT, ProgramDataElement.class ).
+        put( DataDimensionItemType.PROGRAM_ATTRIBUTE, ProgramTrackedEntityAttribute.class ).build();
     
     private int id;
     
@@ -84,9 +81,11 @@ public class DataDimensionItem
     private DataSet dataSet;
     
     private ProgramIndicator programIndicator;
-    
-    private TrackedEntityAttribute trackedEntityAttribute;
 
+    private ProgramDataElement programDataElement;
+    
+    private ProgramTrackedEntityAttribute programAttribute;
+    
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
@@ -95,7 +94,7 @@ public class DataDimensionItem
     {
     }
 
-    public static DataDimensionItem create( NameableObject object )
+    public static DataDimensionItem create( DimensionalItemObject object )
     {
         DataDimensionItem dimension = new DataDimensionItem();
         
@@ -119,9 +118,13 @@ public class DataDimensionItem
         {
             dimension.setProgramIndicator( (ProgramIndicator) object );
         }
-        else if ( TrackedEntityAttribute.class.isAssignableFrom( object.getClass() ) )
+        else if ( ProgramDataElement.class.isAssignableFrom( object.getClass() ) )
         {
-            dimension.setTrackedEntityAttribute( (TrackedEntityAttribute) object );
+            dimension.setProgramDataElement( (ProgramDataElement) object );
+        }
+        else if ( ProgramTrackedEntityAttribute.class.isAssignableFrom( object.getClass() ) )
+        {
+            dimension.setProgramAttribute( (ProgramTrackedEntityAttribute) object );
         }
         else
         {
@@ -135,7 +138,7 @@ public class DataDimensionItem
     // Logic
     // -------------------------------------------------------------------------
 
-    public NameableObject getNameableObject()
+    public DimensionalItemObject getDimensionalItemObject()
     {
         if ( indicator != null )
         {
@@ -157,9 +160,13 @@ public class DataDimensionItem
         {
             return programIndicator;
         }
-        else if ( trackedEntityAttribute != null )
+        else if ( programDataElement != null )
         {
-            return trackedEntityAttribute;
+            return programDataElement;
+        }
+        else if ( programAttribute != null )
+        {
+            return programAttribute;
         }
         
         return null;
@@ -176,14 +183,7 @@ public class DataDimensionItem
         }
         else if ( dataElement != null )
         {
-            if ( DataElementDomain.TRACKER.equals( dataElement.getDomainType() ) )
-            {
-                return DataDimensionItemType.PROGRAM_DATA_ELEMENT;
-            }
-            else
-            {
-                return DataDimensionItemType.AGGREGATE_DATA_ELEMENT;
-            }
+            return DataDimensionItemType.AGGREGATE_DATA_ELEMENT;
         }
         else if ( dataElementOperand != null )
         {
@@ -197,7 +197,11 @@ public class DataDimensionItem
         {
             return DataDimensionItemType.PROGRAM_INDICATOR;
         }
-        else if ( trackedEntityAttribute != null )
+        else if ( programDataElement != null )
+        {
+            return DataDimensionItemType.PROGRAM_DATA_ELEMENT;
+        }
+        else if ( programAttribute != null )
         {
             return DataDimensionItemType.PROGRAM_ATTRIBUTE;
         }
@@ -294,13 +298,27 @@ public class DataDimensionItem
     @JsonSerialize( as = BaseNameableObject.class )
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public TrackedEntityAttribute getTrackedEntityAttribute()
+    public ProgramDataElement getProgramDataElement()
     {
-        return trackedEntityAttribute;
+        return programDataElement;
     }
 
-    public void setTrackedEntityAttribute( TrackedEntityAttribute trackedEntityAttribute )
+    public void setProgramDataElement( ProgramDataElement programDataElement )
     {
-        this.trackedEntityAttribute = trackedEntityAttribute;
+        this.programDataElement = programDataElement;
     }
+
+    @JsonProperty
+    @JsonSerialize( as = BaseNameableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public ProgramTrackedEntityAttribute getProgramAttribute()
+    {
+        return programAttribute;
+    }
+
+    public void setProgramAttribute( ProgramTrackedEntityAttribute programAttribute )
+    {
+        this.programAttribute = programAttribute;
+    }    
 }

@@ -64,11 +64,11 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsManager;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.analytics.MeasureFilter;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.commons.util.SqlHelper;
 import org.hisp.dhis.commons.util.TextUtils;
@@ -117,7 +117,7 @@ public class JdbcAnalyticsManager
     {
         try
         {
-            ListMap<NameableObject, NameableObject> dataPeriodAggregationPeriodMap = params.getDataPeriodAggregationPeriodMap();
+            ListMap<DimensionalItemObject, DimensionalItemObject> dataPeriodAggregationPeriodMap = params.getDataPeriodAggregationPeriodMap();
 
             params.replaceAggregationPeriodsWithDataPeriods( dataPeriodAggregationPeriodMap );
 
@@ -162,7 +162,7 @@ public class JdbcAnalyticsManager
     }
 
     @Override
-    public void replaceDataPeriodsWithAggregationPeriods( Map<String, Object> dataValueMap, DataQueryParams params, ListMap<NameableObject, NameableObject> dataPeriodAggregationPeriodMap )
+    public void replaceDataPeriodsWithAggregationPeriods( Map<String, Object> dataValueMap, DataQueryParams params, ListMap<DimensionalItemObject, DimensionalItemObject> dataPeriodAggregationPeriodMap )
     {
         if ( params.isDisaggregation() )
         {
@@ -181,13 +181,13 @@ public class JdbcAnalyticsManager
 
                 Assert.notNull( keyArray[periodIndex] );
 
-                List<NameableObject> periods = dataPeriodAggregationPeriodMap.get( PeriodType.getPeriodFromIsoString( keyArray[periodIndex] ) );
+                List<DimensionalItemObject> periods = dataPeriodAggregationPeriodMap.get( PeriodType.getPeriodFromIsoString( keyArray[periodIndex] ) );
 
                 Assert.notNull( periods, dataPeriodAggregationPeriodMap.toString() );
 
                 Object value = dataValueMap.get( key );
 
-                for ( NameableObject period : periods )
+                for ( DimensionalItemObject period : periods )
                 {
                     String[] keyCopy = keyArray.clone();
                     keyCopy[periodIndex] = ((Period) period).getIsoDate();

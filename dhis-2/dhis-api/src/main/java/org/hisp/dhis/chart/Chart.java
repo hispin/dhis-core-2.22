@@ -33,11 +33,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.hisp.dhis.common.AnalyticsType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.i18n.I18nFormat;
@@ -98,7 +98,7 @@ public class Chart
     // -------------------------------------------------------------------------
 
     @Override
-    public List<NameableObject> series()
+    public List<DimensionalItemObject> series()
     {
         DimensionalObject object = getDimensionalObject( series, relativePeriodDate, user, true,
             organisationUnitsAtLevel, organisationUnitsInGroups, format );
@@ -107,7 +107,7 @@ public class Chart
     }
 
     @Override
-    public List<NameableObject> category()
+    public List<DimensionalItemObject> category()
     {
         DimensionalObject object = getDimensionalObject( category, relativePeriodDate, user, true,
             organisationUnitsAtLevel, organisationUnitsInGroups, format );

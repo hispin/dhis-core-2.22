@@ -34,11 +34,14 @@ import org.hisp.dhis.analytics.DataQueryGroups;
 import org.hisp.dhis.analytics.DataQueryParams;
 import org.hisp.dhis.analytics.DimensionItem;
 import org.hisp.dhis.analytics.QueryPlanner;
+import org.hisp.dhis.common.BaseDimensionalObject;
+import org.hisp.dhis.common.DimensionType;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.MapMap;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -48,7 +51,6 @@ import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.indicator.IndicatorType;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -57,6 +59,8 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.QuarterlyPeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramDataElement;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +73,7 @@ import java.util.Map;
 
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ANALYTICS_TABLE_NAME;
 import static org.hisp.dhis.common.DimensionalObject.*;
-import static org.hisp.dhis.common.NameableObjectUtils.getList;
+import static org.hisp.dhis.common.DimensionalObjectUtils.getList;
 import static org.junit.Assert.*;
 
 /**
@@ -82,6 +86,9 @@ public class QueryPlannerTest
     private QueryPlanner queryPlanner;
 
     @Autowired
+    private IdentifiableObjectManager idObjectManager;
+    
+    @Autowired
     private DataElementService dataElementService;
 
     @Autowired
@@ -89,9 +96,6 @@ public class QueryPlannerTest
 
     @Autowired
     private DataElementCategoryService categoryService;
-
-    @Autowired
-    private IndicatorService indicatorService;
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
@@ -102,7 +106,9 @@ public class QueryPlannerTest
 
     private IndicatorType itA;
     private Indicator inA;
-
+    
+    private Program prA;
+    
     private DataElement deA;
     private DataElement deB;
     private DataElement deC;
@@ -111,12 +117,18 @@ public class QueryPlannerTest
     private DataElement deF;
     private DataElement deG;
     private DataElement deH;
+    
+    private ProgramDataElement pdeA;
+    private ProgramDataElement pdeB;
 
     private DataSet dsA;
     private DataSet dsB;
     private DataSet dsC;
     private DataSet dsD;
 
+    private Period peA;
+    private Period peB;
+    
     private DataElementCategoryOptionCombo coc;
 
     private OrganisationUnit ouA;
@@ -134,11 +146,15 @@ public class QueryPlannerTest
 
         itA = createIndicatorType( 'A' );
 
-        indicatorService.addIndicatorType( itA );
+        idObjectManager.save( itA );
 
         inA = createIndicator( 'A', itA );
 
-        indicatorService.addIndicator( inA );
+        idObjectManager.save( inA );
+        
+        prA = createProgram( 'A' );
+        
+        idObjectManager.save( prA );
 
         deA = createDataElement( 'A', ValueType.INTEGER, AggregationType.SUM );
         deB = createDataElement( 'B', ValueType.INTEGER, AggregationType.SUM );
@@ -148,7 +164,7 @@ public class QueryPlannerTest
         deF = createDataElement( 'F', ValueType.TEXT, AggregationType.NONE );
         deG = createDataElement( 'G', ValueType.INTEGER, AggregationType.SUM );
         deH = createDataElement( 'H', ValueType.INTEGER, AggregationType.SUM );
-
+        
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );
         dataElementService.addDataElement( deC );
@@ -158,6 +174,12 @@ public class QueryPlannerTest
         dataElementService.addDataElement( deG );
         dataElementService.addDataElement( deH );
 
+        pdeA = new ProgramDataElement( prA, deA );
+        pdeB = new ProgramDataElement( prA, deB );
+
+        idObjectManager.save( pdeA );
+        idObjectManager.save( pdeB );
+        
         dsA = createDataSet( 'A', pt );
         dsB = createDataSet( 'B', pt );
         dsC = createDataSet( 'C', pt );
@@ -167,6 +189,9 @@ public class QueryPlannerTest
         dataSetService.addDataSet( dsB );
         dataSetService.addDataSet( dsC );
         dataSetService.addDataSet( dsD );
+        
+        peA = PeriodType.getPeriodFromIsoString( "201501" );
+        peB = PeriodType.getPeriodFromIsoString( "201502" );
 
         coc = categoryService.getDefaultDataElementCategoryOptionCombo();
 
@@ -190,11 +215,11 @@ public class QueryPlannerTest
     @Test
     public void testSetGetCopy()
     {
-        List<NameableObject> desA = getList( deA, deB );
-        List<NameableObject> ousA = getList( ouA, ouB );
-        List<NameableObject> ousB = getList( ouC, ouD );
-        List<NameableObject> pesA = getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ) );
-        List<NameableObject> pesB = getList( createPeriod( "200001" ), createPeriod( "200002" ) );
+        List<DimensionalItemObject> desA = getList( deA, deB );
+        List<DimensionalItemObject> ousA = getList( ouA, ouB );
+        List<DimensionalItemObject> ousB = getList( ouC, ouD );
+        List<DimensionalItemObject> pesA = getList( createPeriod( "2000Q1" ), createPeriod( "2000Q2" ) );
+        List<DimensionalItemObject> pesB = getList( createPeriod( "200001" ), createPeriod( "200002" ) );
 
         DataQueryParams paramsA = new DataQueryParams();
         paramsA.setDataElements( desA );
@@ -430,7 +455,7 @@ public class QueryPlannerTest
         params.setPeriodType( QuarterlyPeriodType.NAME );
         params.setDataPeriodType( new YearlyPeriodType() );
 
-        ListMap<NameableObject, NameableObject> map = params.getDataPeriodAggregationPeriodMap();
+        ListMap<DimensionalItemObject, DimensionalItemObject> map = params.getDataPeriodAggregationPeriodMap();
 
         assertEquals( 2, map.size() );
 
@@ -782,13 +807,45 @@ public class QueryPlannerTest
         }
     }
 
+    @Test
+    public void validateSuccesA()
+    {
+        DataQueryParams params = new DataQueryParams();
+        params.getDimensions().add( new BaseDimensionalObject( ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, getList( ouA, ouB ) ) );
+        params.getDimensions().add( new BaseDimensionalObject( PERIOD_DIM_ID, DimensionType.PERIOD, getList( peA, peB ) ) );
+        params.getFilters().add( new BaseDimensionalObject( DATA_X_DIM_ID, DimensionType.DATA_X, getList( deA, deB ) ) );
+        
+        queryPlanner.validate( params );
+    }
+
+    @Test
+    public void validateSuccesB()
+    {
+        DataQueryParams params = new DataQueryParams();
+        params.getDimensions().add( new BaseDimensionalObject( DATA_X_DIM_ID, DimensionType.DATA_X, getList( deA, deB, pdeA, pdeB ) ) );
+        params.getFilters().add( new BaseDimensionalObject( ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, getList( ouA, ouB ) ) );
+        params.getDimensions().add( new BaseDimensionalObject( PERIOD_DIM_ID, DimensionType.PERIOD, getList( peA, peB ) ) );
+        
+        queryPlanner.validate( params );
+    }
+    
+    @Test( expected = IllegalQueryException.class )
+    public void validateFailureA()
+    {
+        DataQueryParams params = new DataQueryParams();
+        params.getDimensions().add( new BaseDimensionalObject( ORGUNIT_DIM_ID, DimensionType.ORGANISATIONUNIT, getList( ouA, ouB ) ) );
+        params.getFilters().add( new BaseDimensionalObject( DATA_X_DIM_ID, DimensionType.DATA_X, getList( deA, inA ) ) );
+        
+        queryPlanner.validate( params );
+    }
+    
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private static boolean samePeriodType( List<NameableObject> isoPeriods )
+    private static boolean samePeriodType( List<DimensionalItemObject> isoPeriods )
     {
-        Iterator<NameableObject> periods = new ArrayList<>( isoPeriods ).iterator();
+        Iterator<DimensionalItemObject> periods = new ArrayList<>( isoPeriods ).iterator();
 
         PeriodType first = ((Period) periods.next()).getPeriodType();
 
@@ -805,9 +862,9 @@ public class QueryPlannerTest
         return true;
     }
 
-    private static boolean samePartition( List<NameableObject> isoPeriods )
+    private static boolean samePartition( List<DimensionalItemObject> isoPeriods )
     {
-        Iterator<NameableObject> periods = new ArrayList<>( isoPeriods ).iterator();
+        Iterator<DimensionalItemObject> periods = new ArrayList<>( isoPeriods ).iterator();
 
         int year = new DateTime( ((Period) periods.next()).getStartDate() ).getYear();
 

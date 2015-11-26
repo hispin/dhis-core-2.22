@@ -28,7 +28,7 @@ package org.hisp.dhis.analytics.data;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.NameableObjectUtils.getList;
+import static org.hisp.dhis.common.DimensionalObjectUtils.getList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -39,8 +39,8 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.analytics.AnalyticsManager;
 import org.hisp.dhis.analytics.DataQueryParams;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.YearlyPeriodType;
 import org.junit.Test;
@@ -71,7 +71,7 @@ public class AnalyticsManagerTest
         dataValueMap.put( BASE_UID + "A-2012-" + BASE_UID + "A", 1d );
         dataValueMap.put( BASE_UID + "B-2012-" + BASE_UID + "A", 1d );
         
-        ListMap<NameableObject, NameableObject> dataPeriodAggregationPeriodMap = new ListMap<>();
+        ListMap<DimensionalItemObject, DimensionalItemObject> dataPeriodAggregationPeriodMap = new ListMap<>();
         dataPeriodAggregationPeriodMap.putValue( y2012, createPeriod( "2012Q1" ) );
         dataPeriodAggregationPeriodMap.putValue( y2012, createPeriod( "2012Q2" ) );
         dataPeriodAggregationPeriodMap.putValue( y2012, createPeriod( "2012Q3" ) );
