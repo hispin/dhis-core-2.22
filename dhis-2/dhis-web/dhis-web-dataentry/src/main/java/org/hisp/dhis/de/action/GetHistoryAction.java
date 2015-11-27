@@ -259,7 +259,7 @@ public class GetHistoryAction
 
         DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
 
-        dataValueAudits = dataValueAuditService.getDataValueAudits( dataElement, period, organisationUnit, categoryOptionCombo, attributeOptionCombo );
+        dataValueAudits = dataValueAuditService.getDataValueAudits( dataElement, period, organisationUnit, categoryOptionCombo, attributeOptionCombo, null );
 
         dataValue = dataValueService.getDataValue( dataElement, period, organisationUnit, categoryOptionCombo, attributeOptionCombo );
 

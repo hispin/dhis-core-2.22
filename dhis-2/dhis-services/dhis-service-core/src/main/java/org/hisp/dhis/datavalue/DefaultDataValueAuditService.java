@@ -29,6 +29,7 @@ package org.hisp.dhis.datavalue;
  */
 
 import com.google.common.collect.Lists;
+import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -71,16 +72,16 @@ public class DefaultDataValueAuditService
     }
 
     @Override
-    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period,
-        OrganisationUnit organisationUnit, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
+    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period, OrganisationUnit organisationUnit,
+        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType )
     {
-        return getDataValueAudits( dataElement, Lists.newArrayList( period ), Lists.newArrayList( organisationUnit ), categoryOptionCombo, attributeOptionCombo );
+        return getDataValueAudits( dataElement, Lists.newArrayList( period ), Lists.newArrayList( organisationUnit ), categoryOptionCombo, attributeOptionCombo, auditType );
     }
 
     @Override
-    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods,
-        List<OrganisationUnit> organisationUnits, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
+    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
+        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType )
     {
-        return dataValueAuditStore.getDataValueAudits( dataElement, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo );
+        return dataValueAuditStore.getDataValueAudits( dataElement, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
     }
 }

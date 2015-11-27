@@ -33,6 +33,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAudit;
@@ -69,7 +70,8 @@ public class HibernateTrackedEntityDataValueAuditStore implements TrackedEntityD
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances )
+    public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements,
+        List<ProgramStageInstance> programStageInstances, AuditType auditType )
     {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( TrackedEntityDataValueAudit.class );
@@ -82,6 +84,11 @@ public class HibernateTrackedEntityDataValueAuditStore implements TrackedEntityD
         if ( !programStageInstances.isEmpty() )
         {
             criteria.add( Restrictions.in( "programStageInstance", programStageInstances ) );
+        }
+
+        if ( auditType != null )
+        {
+            criteria.add( Restrictions.eq( "auditType", auditType ) );
         }
 
         criteria.addOrder( Order.desc( "timestamp" ) );

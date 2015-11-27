@@ -28,6 +28,7 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -83,7 +84,8 @@ public class AuditController
         @RequestParam( required = false, defaultValue = "" ) List<String> pe,
         @RequestParam( required = false, defaultValue = "" ) List<String> ou,
         @RequestParam( required = false ) String co,
-        @RequestParam( required = false ) String cc
+        @RequestParam( required = false ) String cc,
+        @RequestParam( required = false ) AuditType auditType
     ) throws WebMessageException
     {
         DataElement dataElement = getDataElement( de );
@@ -93,7 +95,7 @@ public class AuditController
         DataElementCategoryOptionCombo attributeOptionCombo = getAttributeOptionCombo( cc );
 
         List<DataValueAudit> dataValueAudits = dataValueAuditService.getDataValueAudits( dataElement, periods,
-            organisationUnits, categoryOptionCombo, attributeOptionCombo );
+            organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
 
         RootNode rootNode = NodeUtils.createRootNode( "dataValueAudits" );
         rootNode.addChild( fieldFilterService.filter( DataValueAudit.class, dataValueAudits, new ArrayList<>() ) );
@@ -104,13 +106,15 @@ public class AuditController
     @RequestMapping( value = "trackedEntityDataValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getTrackedEntityDataValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> de,
-        @RequestParam( required = false, defaultValue = "" ) List<String> ps
+        @RequestParam( required = false, defaultValue = "" ) List<String> ps,
+        @RequestParam( required = false ) AuditType auditType
     ) throws WebMessageException
     {
         List<DataElement> dataElements = getDataElements( de );
         List<ProgramStageInstance> programStageInstances = getProgramStageInstances( ps );
 
-        List<TrackedEntityDataValueAudit> dataValueAudits = trackedEntityDataValueAuditService.getTrackedEntityDataValueAudits( dataElements, programStageInstances );
+        List<TrackedEntityDataValueAudit> dataValueAudits = trackedEntityDataValueAuditService.getTrackedEntityDataValueAudits(
+            dataElements, programStageInstances, auditType );
 
         RootNode rootNode = NodeUtils.createRootNode( "trackedEntityDataValueAudits" );
         rootNode.addChild( fieldFilterService.filter( TrackedEntityDataValueAudit.class, dataValueAudits, new ArrayList<>() ) );
