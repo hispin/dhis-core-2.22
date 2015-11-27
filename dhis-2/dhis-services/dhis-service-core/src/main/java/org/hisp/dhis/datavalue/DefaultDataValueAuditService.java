@@ -28,13 +28,14 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Quang Nguyen
@@ -81,7 +82,14 @@ public class DefaultDataValueAuditService
     public List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period,
         OrganisationUnit organisationUnit, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
     {
-        return dataValueAuditStore.getDataValueAudits( dataElement, period, organisationUnit, categoryOptionCombo, attributeOptionCombo );
+        return getDataValueAudits( dataElement, Lists.newArrayList( period ), Lists.newArrayList( organisationUnit ), categoryOptionCombo, attributeOptionCombo );
+    }
+
+    @Override
+    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods,
+        List<OrganisationUnit> organisationUnits, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
+    {
+        return dataValueAuditStore.getDataValueAudits( dataElement, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo );
     }
 
     @Override

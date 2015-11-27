@@ -28,12 +28,12 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+
+import java.util.List;
 
 /**
  * @author Quang Nguyen
@@ -56,8 +56,8 @@ public interface DataValueAuditStore
      *
      * @param dataValue the DataValue to get DataValueAudits for.
      * @return a list of DataValueAudits which match the DataElement Period,
-     *         OrganisationUnit and DataElementCategoryOptionCombo of the given DataValue,
-     *         or an empty list if no DataValueAudits match.
+     * OrganisationUnit and DataElementCategoryOptionCombo of the given DataValue,
+     * or an empty list if no DataValueAudits match.
      */
     List<DataValueAudit> getDataValueAudits( DataValue dataValue );
 
@@ -65,16 +65,19 @@ public interface DataValueAuditStore
      * Returns all DataValueAudits which match the given DataElement, Period,
      * OrganisationUnit and DataElementCategoryOptionCombo.
      *
-     * @param dataElement the DataElement of the DataValueAudits.
-     * @param period the Period of the DataValueAudits.
-     * @param organisationUnit the OrganisationUnit of the DataValueAudits.
-     * @param categoryOptionCombo the DataElementCategoryOptionCombo of the DataValueAudits.
+     * @param dataElement          the DataElement of the DataValueAudits.
+     * @param period               the Period of the DataValueAudits.
+     * @param organisationUnit     the OrganisationUnit of the DataValueAudits.
+     * @param categoryOptionCombo  the DataElementCategoryOptionCombo of the DataValueAudits.
      * @param attributeOptionCombo the attribute option combo.
      * @return a list of DataValueAudits which match the given DataElement, Period,
-     *         OrganisationUnit and DataElementCategoryOptionCombo, or an empty list
-     *         if no DataValueAudits match.
+     * OrganisationUnit and DataElementCategoryOptionCombo, or an empty list
+     * if no DataValueAudits match.
      */
-    List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period, OrganisationUnit organisationUnit, 
+    List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period, OrganisationUnit organisationUnit,
+        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo );
+
+    List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> period, List<OrganisationUnit> organisationUnits,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo );
 
     /**
