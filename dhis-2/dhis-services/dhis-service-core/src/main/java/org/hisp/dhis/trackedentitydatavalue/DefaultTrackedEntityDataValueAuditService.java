@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentitydatavalue;
  */
 
 import com.google.common.collect.Lists;
+import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,13 @@ public class DefaultTrackedEntityDataValueAuditService implements TrackedEntityD
     @Override
     public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances )
     {
-        return trackedEntityDataValueAuditStore.getTrackedEntityDataValueAudits( dataElements, programStageInstances );
+        return trackedEntityDataValueAuditStore.getTrackedEntityDataValueAudits( dataElements, programStageInstances, null );
+    }
+
+    @Override
+    public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances,
+        AuditType auditType )
+    {
+        return trackedEntityDataValueAuditStore.getTrackedEntityDataValueAudits( dataElements, programStageInstances, auditType );
     }
 }
