@@ -281,8 +281,8 @@ Ext.onReady( function() {
             conf.url = {
                 analysisFields: [
                     '*',
-                    'program[id,' + init.namePropertyUrl + ']',
-                    'programStage[id,' + init.namePropertyUrl + ']',
+                    'program[id,displayName|rename(name)]',
+                    'programStage[id,displayName|rename(name)]',
                     'columns[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
                     'rows[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
                     'filters[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
