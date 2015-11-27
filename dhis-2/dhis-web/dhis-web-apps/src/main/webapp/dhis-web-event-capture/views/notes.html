@@ -6,7 +6,7 @@
     <table class="dhis2-list-table-striped">    
         
         <tr ng-repeat="note in dhis2Event.notes">
-            <td class="over-flow-hidden" style="width:100%;">
+            <td class="wrap-text">
                 <p>{{note.value}}</p>
                 <p><strong>{{'created_by' | translate}}: </strong>{{note.storedBy}}</p>
                 <p><strong>{{'date' | translate}}: </strong>{{note.storedDate}}</p>                    

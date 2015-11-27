@@ -1186,8 +1186,6 @@ input, button, select, textarea {
     margin-top: -1px;
 }
 
-
-
 .row.row-striped:nth-of-type(odd) {
     background: #ebf0f6;   
 }
@@ -1214,3 +1212,7 @@ input, button, select, textarea {
 .table-striped > tbody > tr:nth-child(odd)> td.current-event-td {
     background-color: inherit;        
 }   
+
+.wrap-text {
+    word-wrap: break-word;
+}

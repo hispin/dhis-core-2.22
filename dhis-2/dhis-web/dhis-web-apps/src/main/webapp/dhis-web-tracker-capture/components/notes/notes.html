@@ -23,7 +23,7 @@
             <div ng-show="!selectedEnrollment" class="alert alert-danger">{{'not_yet_enrolled_note'| translate}}</div>
             <div ng-show='selectedEnrollment' class='remove-default-padding overflow-ellipsis'>                
                 <div class="add-default-padding">
-                    <textarea class="form-control" rows="3" ng-model="note" placeholder="{{'add_new_note_here'| translate}}"></textarea> 
+                    <textarea class="form-control" rows="3" ng-model="note.value" placeholder="{{'add_new_note_here'| translate}}"></textarea> 
                     <div class="vertical-spacing">
                         <button type="button" 
                                 class="btn btn-primary"
@@ -41,10 +41,10 @@
                     <tr ng-repeat="note in selectedEnrollment.notes| filter:noteSearchText">
                         <td class="add-default-left-padding">
                             <d2-pop-over content="note" template="popover.html" details="{{'details'| translate}}">
-                                <div>{{note.value}}</div>
+                                <div>{{note.heading}}</div>
                             </d2-pop-over>
                             <script type="text/ng-template" id="popover.html">
-                                <p>{{content.value}}</p>
+                                <div class="wrap-text">{{content.value}}</div>
                                 <hr>
                                 <p><strong>{{'created_by' | translate}}: </strong>{{content.storedBy}}</p>
                                 <p><strong>{{'date' | translate}}: </strong>{{content.storedDate}}</p>                           

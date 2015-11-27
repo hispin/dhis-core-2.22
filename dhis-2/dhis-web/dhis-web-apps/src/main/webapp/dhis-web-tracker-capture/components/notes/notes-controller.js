@@ -13,6 +13,7 @@ trackerCapture.controller('NotesController',
 
     var today = DateUtils.getToday();
     
+    $scope.note = {};
     $scope.showMessagingDiv = false;
     $scope.showNotesDiv = true;
     
@@ -49,31 +50,29 @@ trackerCapture.controller('NotesController',
     });
        
     $scope.addNote = function(){
-        
-        if(!angular.isUndefined($scope.note) && $scope.note !== ""){
-            
-            var newNote = {value: $scope.note};
+        if ($scope.note.value !== "" || !angular.isUndefined($scope.note.value)) {
+            var newNote = {value: $scope.note.value};
 
             if(angular.isUndefined( $scope.selectedEnrollment.notes) ){
-                $scope.selectedEnrollment.notes = [{value: $scope.note, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy}];
+                $scope.selectedEnrollment.notes = [{value: newNote.value, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy}];
                 
             }
             else{
-                $scope.selectedEnrollment.notes.splice(0,0,{value: $scope.note, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy});
+                $scope.selectedEnrollment.notes.splice(0,0,{value: newNote.value, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy});
             }
 
             var e = angular.copy($scope.selectedEnrollment);
 
             e.notes = [newNote];
             EnrollmentService.updateForNote(e).then(function(){
-                $scope.note = '';
+                $scope.note = {};
                 $scope.addNoteField = false; //note is added, hence no need to show note field.                
             });
         }        
     };
     
     $scope.clearNote = function(){
-         $scope.note = '';           
+        $scope.note = {};
     };
     
     $scope.showNotes = function(){
