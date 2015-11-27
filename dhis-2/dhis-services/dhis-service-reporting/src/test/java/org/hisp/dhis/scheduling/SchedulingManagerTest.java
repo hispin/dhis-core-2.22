@@ -39,7 +39,7 @@ import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.ListMap;
-import org.hisp.dhis.system.scheduling.Scheduler;
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -68,7 +68,7 @@ public class SchedulingManagerTest
         assertTrue( cronKeyMap.containsKey( CRON_DAILY_0AM ) );
         assertEquals( 3, cronKeyMap.get( CRON_DAILY_0AM ).size() );
         
-        assertEquals( Scheduler.STATUS_RUNNING, schedulingManager.getTaskStatus() );
+        assertEquals( ScheduledTaskStatus.RUNNING, schedulingManager.getTaskStatus() );
     }
 
     @Test
@@ -78,15 +78,15 @@ public class SchedulingManagerTest
         cronKeyMap.putValue( CRON_DAILY_0AM, TASK_RESOURCE_TABLE );
         cronKeyMap.putValue( CRON_DAILY_0AM, TASK_ANALYTICS_ALL );
 
-        assertEquals( Scheduler.STATUS_NOT_STARTED, schedulingManager.getTaskStatus() );
+        assertEquals( ScheduledTaskStatus.NOT_STARTED, schedulingManager.getTaskStatus() );
         
         schedulingManager.scheduleTasks( cronKeyMap );
         
-        assertEquals( Scheduler.STATUS_RUNNING, schedulingManager.getTaskStatus() );
+        assertEquals( ScheduledTaskStatus.RUNNING, schedulingManager.getTaskStatus() );
         
         schedulingManager.stopTasks();
 
-        assertEquals( Scheduler.STATUS_NOT_STARTED, schedulingManager.getTaskStatus() );
+        assertEquals( ScheduledTaskStatus.NOT_STARTED, schedulingManager.getTaskStatus() );
     }
     
     @Test

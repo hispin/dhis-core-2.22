@@ -31,15 +31,12 @@ package org.hisp.dhis.trackedentity.action.schedule;
 import org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager;
 import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.system.scheduling.Scheduler;
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 
 import com.opensymphony.xwork2.Action;
 
 /**
  * @author Chau Thu Tran
- * 
- * @version GetScheduleAggQueryBuilderParamsAction.java 1:47:08 PM Oct 12, 2012
- *          $
  */
 public class GetScheduleAggQueryBuilderParamsAction
     implements Action
@@ -66,9 +63,9 @@ public class GetScheduleAggQueryBuilderParamsAction
     // Output
     // -------------------------------------------------------------------------
 
-    private String status;
+    private ScheduledTaskStatus status;
 
-    public String getStatus()
+    public ScheduledTaskStatus getStatus()
     {
         return status;
     }
@@ -99,7 +96,7 @@ public class GetScheduleAggQueryBuilderParamsAction
 
         status = schedulingManager.getTaskStatus();
 
-        running = Scheduler.STATUS_RUNNING.equals( status );
+        running = ScheduledTaskStatus.RUNNING.equals( status );
 
         return SUCCESS;
     }

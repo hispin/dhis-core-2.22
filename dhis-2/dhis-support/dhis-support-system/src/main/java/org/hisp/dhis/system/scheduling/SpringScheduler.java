@@ -142,25 +142,25 @@ public class SpringScheduler
     }
 
     @Override
-    public String getTaskStatus( String key )
+    public ScheduledTaskStatus getTaskStatus( String key )
     {        
         ScheduledFuture<?> future = futures.get( key );
         
         if ( future == null )
         {
-            return STATUS_NOT_STARTED;
+            return ScheduledTaskStatus.NOT_STARTED;
         }
         else if ( future.isCancelled() )
         {
-            return STATUS_STOPPED;
+            return ScheduledTaskStatus.STOPPED;
         }
         else if ( future.isDone() )
         {
-            return STATUS_DONE;
+            return ScheduledTaskStatus.DONE;
         }
         else
         {
-            return STATUS_RUNNING;
+            return ScheduledTaskStatus.RUNNING;
         }   
     }
 }

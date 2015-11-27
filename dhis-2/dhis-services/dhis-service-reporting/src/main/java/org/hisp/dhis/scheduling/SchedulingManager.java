@@ -29,6 +29,7 @@ package org.hisp.dhis.scheduling;
  */
 
 import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 
 import java.util.Set;
 
@@ -74,8 +75,7 @@ public interface SchedulingManager
     Set<String> getScheduledKeys();
     
     /**
-     * Gets the task status. Can be STATUS_RUNNING, STATUS_DONE, STATUS_STOPPED,
-     * STATUS_NOT_STARTED.
+     * Gets the task status.
      */
-    String getTaskStatus();   
+    ScheduledTaskStatus getTaskStatus();   
 }

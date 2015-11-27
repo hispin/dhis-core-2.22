@@ -37,7 +37,6 @@ import static org.hisp.dhis.scheduling.SchedulingManager.TASK_RESOURCE_TABLE_15_
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_DAILY_0AM;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_15MIN;
 import static org.hisp.dhis.system.scheduling.Scheduler.CRON_EVERY_MIN;
-import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_RUNNING;
 
 import java.util.Collection;
 import java.util.Date;
@@ -52,7 +51,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.scheduling.SchedulingManager;
 import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
-import org.hisp.dhis.system.scheduling.Scheduler;
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
@@ -149,9 +148,9 @@ public class ScheduleTasksAction
     // Output
     // -------------------------------------------------------------------------
 
-    private String status;
+    private ScheduledTaskStatus status;
 
-    public String getStatus()
+    public ScheduledTaskStatus getStatus()
     {
         return status;
     }
@@ -207,7 +206,7 @@ public class ScheduleTasksAction
     {
         if ( schedule )
         {
-            if ( Scheduler.STATUS_RUNNING.equals( schedulingManager.getTaskStatus() ) )
+            if ( ScheduledTaskStatus.RUNNING.equals( schedulingManager.getTaskStatus() ) )
             {
                 schedulingManager.stopTasks();
             }
@@ -312,7 +311,7 @@ public class ScheduleTasksAction
         }
 
         status = schedulingManager.getTaskStatus();
-        running = STATUS_RUNNING.equals( status );
+        running = ScheduledTaskStatus.RUNNING.equals( status );
 
         levels = organisationUnitService.getOrganisationUnitLevels();
 
