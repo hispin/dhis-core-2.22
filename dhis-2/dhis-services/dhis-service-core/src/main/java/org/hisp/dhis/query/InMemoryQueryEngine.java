@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 public class InMemoryQueryEngine<T extends IdentifiableObject> 
-    implements QueryEngine
+    implements QueryEngine<T>
 {
     @Autowired
     private SchemaService schemaService;

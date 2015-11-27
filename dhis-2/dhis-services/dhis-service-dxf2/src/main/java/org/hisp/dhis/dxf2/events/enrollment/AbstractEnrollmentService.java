@@ -416,8 +416,6 @@ public abstract class AbstractEnrollmentService
             return new ImportSummary( ImportStatus.ERROR, "Enrollment ID was not valid." ).incrementIgnored();
         }
 
-        Set<ImportConflict> importConflicts = new HashSet<>();
-        
         saveTrackedEntityComment( programInstance, enrollment );
 
         importSummary.setReference( enrollment.getEnrollment() );
