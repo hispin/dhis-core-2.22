@@ -28,10 +28,14 @@ package org.hisp.dhis.trackedentitydatavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
+import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Date;
@@ -48,12 +52,14 @@ public class DefaultTrackedEntityDataValueService
     // Dependencies
     // -------------------------------------------------------------------------
 
+    @Autowired
     private TrackedEntityDataValueStore dataValueStore;
 
-    public void setDataValueStore( TrackedEntityDataValueStore dataValueStore )
-    {
-        this.dataValueStore = dataValueStore;
-    }
+    @Autowired
+    private TrackedEntityDataValueAuditService dataValueAuditService;
+
+    @Autowired
+    private CurrentUserService currentUserService;
 
     // -------------------------------------------------------------------------
     // Implementation methods
@@ -69,28 +75,45 @@ public class DefaultTrackedEntityDataValueService
     }
 
     @Override
+    public void updateTrackedEntityDataValue( TrackedEntityDataValue dataValue )
+    {
+        if ( StringUtils.isEmpty( dataValue.getValue() ) )
+        {
+            dataValueStore.delete( dataValue );
+        }
+        else
+        {
+            TrackedEntityDataValueAudit dataValueAudit = new TrackedEntityDataValueAudit( dataValue, dataValue.getValue(), dataValue.getStoredBy(),
+                new Date(), AuditType.UPDATE );
+
+            dataValueAuditService.addTrackedEntityDataValueAudit( dataValueAudit );
+            dataValueStore.update( dataValue );
+        }
+    }
+w
+    @Override
     public void deleteTrackedEntityDataValue( TrackedEntityDataValue dataValue )
     {
+        TrackedEntityDataValueAudit dataValueAudit = new TrackedEntityDataValueAudit( dataValue, dataValue.getValue(), currentUserService.getCurrentUsername(),
+            new Date(), AuditType.DELETE );
+
+        dataValueAuditService.addTrackedEntityDataValueAudit( dataValueAudit );
         dataValueStore.delete( dataValue );
     }
 
     @Override
     public void deleteTrackedEntityDataValue( ProgramStageInstance programStageInstance )
     {
-        dataValueStore.detele( programStageInstance );
-    }
+        List<TrackedEntityDataValue> dataValues = dataValueStore.get( programStageInstance );
+        String username = currentUserService.getCurrentUsername();
 
-    @Override
-    public void updateTrackedEntityDataValue( TrackedEntityDataValue dataValue )
-    {
-        if ( dataValue.getValue() == null )
+        for ( TrackedEntityDataValue dataValue : dataValues )
         {
-            dataValueStore.delete( dataValue );
+            TrackedEntityDataValueAudit dataValueAudit = new TrackedEntityDataValueAudit( dataValue, dataValue.getValue(), username, new Date(), AuditType.DELETE );
+            dataValueAuditService.addTrackedEntityDataValueAudit( dataValueAudit );
         }
-        else
-        {
-            dataValueStore.update( dataValue );
-        }
+
+        dataValueStore.delete( programStageInstance );
     }
 
     @Override

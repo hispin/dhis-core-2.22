@@ -458,13 +458,13 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="org.hisp.dhis.program.ProgramStore" 
+  <bean id="org.hisp.dhis.program.ProgramStore"
     class="org.hisp.dhis.program.hibernate.HibernateProgramStore">
     <property name="clazz" value="org.hisp.dhis.program.Program" />
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="cacheable" value="true" />
   </bean>
-  
+
   <bean id="org.hisp.dhis.program.ProgramTrackedEntityAttributeStore"
     class="org.hisp.dhis.program.hibernate.HibernateProgramTrackedEntityAttributeStore">
     <property name="clazz" value="org.hisp.dhis.program.ProgramTrackedEntityAttribute" />
@@ -478,14 +478,14 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="org.hisp.dhis.program.ProgramDataElementStore" 
+  <bean id="org.hisp.dhis.program.ProgramDataElementStore"
     class="org.hisp.dhis.program.hibernate.HibernateProgramDataElementStore">
     <property name="clazz" value="org.hisp.dhis.program.ProgramDataElement" />
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="cacheable" value="true" />
   </bean>
 
-  <bean id="org.hisp.dhis.program.ProgramExpressionStore" 
+  <bean id="org.hisp.dhis.program.ProgramExpressionStore"
     class="org.hisp.dhis.hibernate.HibernateGenericStore">
     <property name="clazz" value="org.hisp.dhis.program.ProgramExpression" />
     <property name="sessionFactory" ref="sessionFactory" />
@@ -518,6 +518,14 @@
     <property name="clazz" value="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValue" />
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+
+  <bean id="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAuditStore"
+    class="org.hisp.dhis.trackedentitydatavalue.hibernate.HibernateTrackedEntityDataValueAuditStore">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
+  <bean id="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAuditService"
+    class="org.hisp.dhis.trackedentitydatavalue.DefaultTrackedEntityDataValueAuditService" />
 
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupStore"
     class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
@@ -1220,7 +1228,6 @@
 
   <bean id="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueService"
     class="org.hisp.dhis.trackedentitydatavalue.DefaultTrackedEntityDataValueService">
-    <property name="dataValueStore" ref="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueStore" />
   </bean>
 
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupService"
