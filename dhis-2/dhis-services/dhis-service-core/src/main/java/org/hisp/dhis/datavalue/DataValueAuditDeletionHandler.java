@@ -28,10 +28,6 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
@@ -61,29 +57,5 @@ public class DataValueAuditDeletionHandler
     public String getClassName()
     {
         return DataValueAudit.class.getSimpleName();
-    }
-
-    @Override
-    public void deleteOrganisationUnit( OrganisationUnit unit )
-    {
-        dataValueAuditService.deleteDataValueAuditByOrganisationUnit( unit );
-    }
-
-    @Override
-    public void deleteDataElement( DataElement dataElement )
-    {
-        dataValueAuditService.deleteDataValueAuditByDataElement( dataElement );
-    }
-
-    @Override
-    public void deletePeriod( Period period )
-    {
-        dataValueAuditService.deleteDataValueAuditByPeriod( period );
-    }
-    
-    @Override
-    public void deleteDataElementCategoryOptionCombo( DataElementCategoryOptionCombo categoryOptionCombo)
-    {
-        dataValueAuditService.deleteDataValueAuditByCategoryOptionCombo( categoryOptionCombo );
     }
 }
