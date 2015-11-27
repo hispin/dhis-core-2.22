@@ -57,7 +57,7 @@ public class HibernateTrackedEntityDataValueStore
     }
    
     @Override
-    public int detele( ProgramStageInstance programStageInstance )
+    public int delete( ProgramStageInstance programStageInstance )
     {
         Query query = getQuery( "delete from TrackedEntityDataValue where programStageInstance = :programStageInstance" );
         query.setEntity( "programStageInstance", programStageInstance );
