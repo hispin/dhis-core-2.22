@@ -40,6 +40,10 @@ import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.program.ProgramStageInstance;
+import org.hisp.dhis.program.ProgramStageInstanceService;
+import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAudit;
+import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAuditService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,7 +66,13 @@ public class AuditController
     private IdentifiableObjectManager manager;
 
     @Autowired
+    private ProgramStageInstanceService programStageInstanceService;
+
+    @Autowired
     private DataValueAuditService dataValueAuditService;
+
+    @Autowired
+    private TrackedEntityDataValueAuditService trackedEntityDataValueAuditService;
 
     @Autowired
     private FieldFilterService fieldFilterService;
@@ -91,9 +101,77 @@ public class AuditController
         return rootNode;
     }
 
+    @RequestMapping( value = "trackedEntityDataValue", method = RequestMethod.GET )
+    public @ResponseBody RootNode getTrackedEntityDataValueAudit(
+        @RequestParam( required = false, defaultValue = "" ) List<String> de,
+        @RequestParam( required = false, defaultValue = "" ) List<String> ps
+    ) throws WebMessageException
+    {
+        List<DataElement> dataElements = getDataElements( de );
+        List<ProgramStageInstance> programStageInstances = getProgramStageInstances( ps );
+
+        List<TrackedEntityDataValueAudit> dataValueAudits = trackedEntityDataValueAuditService.getTrackedEntityDataValueAudits( dataElements, programStageInstances );
+
+        RootNode rootNode = NodeUtils.createRootNode( "trackedEntityDataValueAudits" );
+        rootNode.addChild( fieldFilterService.filter( TrackedEntityDataValueAudit.class, dataValueAudits, new ArrayList<>() ) );
+
+        return rootNode;
+    }
+
     //-----------------------------------------------------------------------------------------------------------------
     // Helpers
     //-----------------------------------------------------------------------------------------------------------------
+
+    private List<ProgramStageInstance> getProgramStageInstances( List<String> psIdentifier ) throws WebMessageException
+    {
+        List<ProgramStageInstance> programStageInstances = new ArrayList<>();
+
+        for ( String ps : psIdentifier )
+        {
+            ProgramStageInstance programStageInstance = getProgramStageInstance( ps );
+
+            if ( programStageInstance != null )
+            {
+                programStageInstances.add( programStageInstance );
+            }
+        }
+
+        return programStageInstances;
+    }
+
+    private ProgramStageInstance getProgramStageInstance( String ps ) throws WebMessageException
+    {
+        if ( ps == null )
+        {
+            return null;
+        }
+
+        ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( ps );
+
+        if ( programStageInstance == null )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal programStageInstance identifier: " + ps ) );
+        }
+
+        return programStageInstance;
+    }
+
+    private List<DataElement> getDataElements( List<String> deIdentifier ) throws WebMessageException
+    {
+        List<DataElement> dataElements = new ArrayList<>();
+
+        for ( String de : deIdentifier )
+        {
+            DataElement dataElement = getDataElement( de );
+
+            if ( dataElement != null )
+            {
+                dataElements.add( dataElement );
+            }
+        }
+
+        return dataElements;
+    }
 
     private DataElement getDataElement( String de ) throws WebMessageException
     {
