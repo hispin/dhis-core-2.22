@@ -85,9 +85,10 @@ var d2Directives = angular.module('d2Directives', [])
         link: function (scope, element, attrs) {
             var content = $templateCache.get("popover.html");
             content = $compile(content)(scope);
+            scope.content.heading = scope.content.value && scope.content.value.length > 20 ? scope.content.value.substring(0,20).concat('...') : scope.content.value;
             var options = {
                 content: content,
-                placement: 'bottom',
+                placement: 'auto',
                 trigger: 'hover',
                 html: true,
                 title: scope.title
