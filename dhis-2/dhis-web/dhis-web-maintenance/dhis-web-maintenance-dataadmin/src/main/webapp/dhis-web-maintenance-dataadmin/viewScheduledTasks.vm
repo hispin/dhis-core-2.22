@@ -81,4 +81,4 @@
 
 </form>
 
-<span id="info">$i18n.getString( "scheduling_is" ) $!i18n.getString( $!status )</span>
+<span id="info">$i18n.getString( "scheduling_is" ) $!i18n.getString( $!status.key )</span>

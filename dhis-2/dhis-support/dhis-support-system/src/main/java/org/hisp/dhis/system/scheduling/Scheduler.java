@@ -46,11 +46,6 @@ public interface Scheduler
     String CRON_EVERY_15MIN = "0 0/15 * * * ?";
     String CRON_TEST = "0 * * * * ?";
     
-    String STATUS_RUNNING = "running";
-    String STATUS_DONE = "done";
-    String STATUS_STOPPED  = "stopped";
-    String STATUS_NOT_STARTED = "not_started";
-    
     /**
      * Execute the given task immediately.
      * 
@@ -101,5 +96,5 @@ public interface Scheduler
      * @param key the task key.
      * @return the task status.
      */
-    String getTaskStatus( String key );
+    ScheduledTaskStatus getTaskStatus( String key );
 }

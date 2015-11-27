@@ -28,13 +28,12 @@ package org.hisp.dhis.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_NOT_STARTED;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.hisp.dhis.system.scheduling.Scheduler;
 
 /**
@@ -134,13 +133,13 @@ public class DefaultCaseAggregateConditionSchedulingManager
     }
 
     @Override
-    public String getTaskStatus()
+    public ScheduledTaskStatus getTaskStatus()
     {
         Map<String, String> keyCronMap = getScheduledTasks();
 
         if ( keyCronMap.size() == 0 )
         {
-            return STATUS_NOT_STARTED;
+            return ScheduledTaskStatus.NOT_STARTED;
         }
 
         return scheduler.getTaskStatus( keyCronMap.keySet().iterator().next() );

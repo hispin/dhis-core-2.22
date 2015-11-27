@@ -28,8 +28,6 @@ package org.hisp.dhis.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.system.scheduling.Scheduler.STATUS_NOT_STARTED;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -38,6 +36,7 @@ import java.util.Set;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.hisp.dhis.system.scheduling.Scheduler;
 
 /**
@@ -135,13 +134,13 @@ public class DefaultSchedulingManager
     }
     
     @Override
-    public String getTaskStatus()
+    public ScheduledTaskStatus getTaskStatus()
     {
         ListMap<String, String> cronKeyMap = getCronKeyMap();
 
         if ( cronKeyMap.size() == 0 )
         {
-            return STATUS_NOT_STARTED;
+            return ScheduledTaskStatus.NOT_STARTED;
         }
         
         String firstTask = cronKeyMap.keySet().iterator().next();

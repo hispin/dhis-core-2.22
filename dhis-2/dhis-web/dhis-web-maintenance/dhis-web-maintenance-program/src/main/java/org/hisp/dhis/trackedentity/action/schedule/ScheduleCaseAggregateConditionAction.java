@@ -34,6 +34,7 @@ import java.util.Map;
 import org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager;
 import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.hisp.dhis.system.scheduling.Scheduler;
 
 import com.opensymphony.xwork2.Action;
@@ -79,9 +80,9 @@ public class ScheduleCaseAggregateConditionAction
     // Output
     // -------------------------------------------------------------------------
 
-    private String status;
+    private ScheduledTaskStatus status;
 
-    public String getStatus()
+    public ScheduledTaskStatus getStatus()
     {
         return status;
     }
@@ -114,7 +115,7 @@ public class ScheduleCaseAggregateConditionAction
         }
         else
         {
-            if ( Scheduler.STATUS_RUNNING.equals( schedulingManager.getTaskStatus() ) )
+            if ( ScheduledTaskStatus.RUNNING.equals( schedulingManager.getTaskStatus() ) )
             {
                 schedulingManager.stopTasks();
             }
@@ -134,7 +135,7 @@ public class ScheduleCaseAggregateConditionAction
 
         status = schedulingManager.getTaskStatus();
 
-        running = Scheduler.STATUS_RUNNING.equals( status );
+        running = ScheduledTaskStatus.RUNNING.equals( status );
 
         return SUCCESS;
     }

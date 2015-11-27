@@ -30,6 +30,8 @@ package org.hisp.dhis.scheduling;
 
 import java.util.Map;
 
+import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
+
 /**
  * @author Chau Thu Tran
  *
@@ -53,5 +55,5 @@ public interface CaseAggregateConditionSchedulingManager
     
     Map<String, String> getScheduledTasks();
     
-    String getTaskStatus();   
+    ScheduledTaskStatus getTaskStatus();   
 }

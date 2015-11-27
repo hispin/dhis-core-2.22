@@ -1,4 +1,4 @@
-package org.hisp.dhis.scheduling;
+package org.hisp.dhis.system.scheduling;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,28 +28,25 @@ package org.hisp.dhis.scheduling;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Map;
-
-import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
-
 /**
- * @author Chau Thu Tran
- *
- * @version ProgramSchedulingManager.java 12:47:57 PM Sep 10, 2012 $
- */
-public interface ProgramSchedulingManager
+* @author Lars Helge Overland
+*/
+public enum ScheduledTaskStatus
 {
-    final String TASK_SENDING_MESSAGE = "sendingMessageTask";
+    RUNNING( "running" ), 
+    DONE( "done" ), 
+    STOPPED( "stopped" ), 
+    NOT_STARTED( "not_started" );
+    
+    private final String key;
+    
+    private ScheduledTaskStatus( String key )
+    {
+        this.key = key;
+    }
 
-    void scheduleTasks();
-    
-    void scheduleTasks( Map<String, String> keyCronMap );
-    
-    void stopTasks();
-    
-    void executeTasks();
-    
-    Map<String, String> getScheduledTasks();
-    
-    ScheduledTaskStatus getTaskStatus();   
+    public String getKey()
+    {
+        return key;
+    }
 }
