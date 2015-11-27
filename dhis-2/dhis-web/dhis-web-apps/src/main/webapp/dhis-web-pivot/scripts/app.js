@@ -1291,7 +1291,7 @@ Ext.onReady( function() {
 							this.currentValue = this.getValue();
 
 							var value = this.getValue(),
-								url = value ? ns.core.init.contextPath + '/api/reportTables.json?fields=id,name,access' + (value ? '&filter=name:like:' + value : '') : null;
+								url = value ? ns.core.init.contextPath + '/api/reportTables.json?fields=id,name,access' + (value ? '&filter=name:ilike:' + value : '') : null;
 								store = ns.app.stores.reportTable;
 
 							store.page = 1;
@@ -1307,7 +1307,7 @@ Ext.onReady( function() {
 			text: NS.i18n.prev,
 			handler: function() {
 				var value = searchTextfield.getValue(),
-					url = value ? ns.core.init.contextPath + '/api/reportTables.json?fields=id,name,access' + (value ? '&filter=name:like:' + value : '') : null,
+					url = value ? ns.core.init.contextPath + '/api/reportTables.json?fields=id,name,access' + (value ? '&filter=name:ilike:' + value : '') : null,
 					store = ns.app.stores.reportTable;
 
 				store.page = store.page <= 1 ? 1 : store.page - 1;
@@ -1319,7 +1319,7 @@ Ext.onReady( function() {
 			text: NS.i18n.next,
 			handler: function() {
 				var value = searchTextfield.getValue(),
-					url = value ? ns.core.init.contextPath + '/api/reportTables.json?fields=id,name,access' + (value ? '&filter=name:like:' + value : '') : null,
+					url = value ? ns.core.init.contextPath + '/api/reportTables.json?fields=id,name,access' + (value ? '&filter=name:ilike:' + value : '') : null,
 					store = ns.app.stores.reportTable;
 
 				store.page = store.page + 1;
@@ -2847,7 +2847,9 @@ console.log(table);
             setGui,
             viewport,
 
-			accordionPanels = [];
+			accordionPanels = [],
+            namePropertyUrl = ns.core.init.namePropertyUrl,
+            nameProperty = ns.core.init.userAccount.settings.keyAnalysisDisplayProperty;
 
 		ns.app.stores = ns.app.stores || {};
 
@@ -2910,10 +2912,10 @@ console.log(table);
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/indicators.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=indicatorGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
+					path = '/indicators.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=indicatorGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/indicators.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
+					path = '/indicators.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -2979,7 +2981,7 @@ console.log(table);
 			fields: ['id', 'name', 'index'],
 			proxy: {
 				type: 'ajax',
-				url: ns.core.init.contextPath + '/api/indicatorGroups.json?fields=id,name&paging=false',
+				url: ns.core.init.contextPath + '/api/indicatorGroups.json?fields=id,displayName|rename(name)&paging=false',
 				reader: {
 					type: 'json',
 					root: 'indicatorGroups'
@@ -3079,10 +3081,10 @@ console.log(table);
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElements.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElements.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -3126,10 +3128,10 @@ console.log(table);
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -3276,7 +3278,7 @@ console.log(table);
                     return;
                 }
 
-                path = '/dataSets.json?fields=dimensionItem|rename(id),' + ns.core.init.namePropertyUrl + '' + (filter ? '&filter=name:like:' + filter : '');
+                path = '/dataSets.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 
 				if (noPaging) {
 					params.paging = false;
@@ -3414,7 +3416,7 @@ console.log(table);
 			fields: ['id', 'name'],
 			proxy: {
 				type: 'ajax',
-				url: ns.core.init.contextPath + '/api/programs.json?fields=id,name&paging=false',
+				url: ns.core.init.contextPath + '/api/programs.json?fields=id,displayName|rename(name)&paging=false',
 				reader: {
 					type: 'json',
 					root: 'programs'
@@ -3557,7 +3559,7 @@ console.log(table);
 			isLoaded: false,
 			pageSize: 10,
 			page: 1,
-			defaultUrl: ns.core.init.contextPath + '/api/reportTables.json?fields=id,name,access',
+			defaultUrl: ns.core.init.contextPath + '/api/reportTables.json?fields=id,displayName|rename(name),access',
 			loadStore: function(url) {
 				this.proxy.url = url || this.defaultUrl;
 
@@ -4453,7 +4455,7 @@ console.log(table);
                         isO = Ext.isObject;
 
                     Ext.Ajax.request({
-                        url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programTrackedEntityAttributes[dimensionItem|rename(id),name,valueType]&paging=false',
+                        url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programTrackedEntityAttributes[dimensionItem|rename(id),' + namePropertyUrl + '|rename(name),valueType]&paging=false',
                         disableCaching: false,
                         success: function(r) {
                             var attributes = ((Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || []).filter(function(item) {
@@ -4699,7 +4701,7 @@ console.log(table);
             }
 
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programIndicators[dimensionItem|rename(id),name]&paging=false',
+                url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programIndicators[dimensionItem|rename(id),' + namePropertyUrl + ']&paging=false',
                 disableCaching: false,
                 success: function(r) {
                     var indicators = (Ext.decode(r.responseText).programs[0] || {}).programIndicators || [],
@@ -6061,7 +6063,7 @@ console.log(table);
 							return;
 						}
 
-						path = '/dimensions/' + dimension.id + '/items.json' + (filter ? '?filter=name:like:' + filter : '');
+						path = '/dimensions/' + dimension.id + '/items.json' + (filter ? '?filter=' + nameProperty + ':ilike:' + filter : '');
 
 						if (noPaging) {
 							params.paging = false;
@@ -7902,20 +7904,26 @@ console.log(table);
 
                                         // init
                                         var defaultKeyUiLocale = 'en',
-                                            defaultKeyAnalysisDisplayProperty = 'name',
+                                            defaultKeyAnalysisDisplayProperty = 'displayName',
+                                            displayPropertyMap = {
+                                                'name': 'displayName',
+                                                'displayName': 'displayName',
+                                                'shortName': 'displayShortName',
+                                                'displayShortName': 'displayShortName'
+                                            },
                                             namePropertyUrl,
                                             contextPath,
                                             keyUiLocale,
                                             dateFormat;
 
                                         init.userAccount.settings.keyUiLocale = init.userAccount.settings.keyUiLocale || defaultKeyUiLocale;
-                                        init.userAccount.settings.keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty || defaultKeyAnalysisDisplayProperty;
+                                        init.userAccount.settings.keyAnalysisDisplayProperty = displayPropertyMap[init.userAccount.settings.keyAnalysisDisplayProperty] || defaultKeyAnalysisDisplayProperty;
 
                                         // local vars
                                         contextPath = init.contextPath;
                                         keyUiLocale = init.userAccount.settings.keyUiLocale;
                                         keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty;
-                                        namePropertyUrl = keyAnalysisDisplayProperty === defaultKeyAnalysisDisplayProperty ? keyAnalysisDisplayProperty : keyAnalysisDisplayProperty + '|rename(' + defaultKeyAnalysisDisplayProperty + ')';
+                                        namePropertyUrl = keyAnalysisDisplayProperty + '|rename(name)';
                                         dateFormat = init.systemInfo.dateFormat;
 
                                         init.namePropertyUrl = namePropertyUrl;
@@ -8007,7 +8015,7 @@ console.log(table);
 
                                         // organisation unit levels
                                         requests.push({
-                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,name,level&paging=false',
+                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,' + namePropertyUrl + ',level&paging=false',
                                             success: function(r) {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
@@ -8052,7 +8060,7 @@ console.log(table);
 
                                         // legend sets
                                         requests.push({
-                                            url: contextPath + '/api/legendSets.json?fields=id,name,legends[id,name,startValue,endValue,color]&paging=false',
+                                            url: contextPath + '/api/legendSets.json?fields=id,displayName|rename(name),legends[id,displayName|rename(name),startValue,endValue,color]&paging=false',
                                             success: function(r) {
                                                 init.legendSets = Ext.decode(r.responseText).legendSets || [];
                                                 fn();
@@ -8061,7 +8069,7 @@ console.log(table);
 
                                         // dimensions
                                         requests.push({
-                                            url: contextPath + '/api/dimensions.json?fields=id,name&paging=false',
+                                            url: contextPath + '/api/dimensions.json?fields=id,' + namePropertyUrl + '&paging=false',
                                             success: function(r) {
                                                 init.dimensions = Ext.decode(r.responseText).dimensions || [];
                                                 fn();
@@ -8070,7 +8078,7 @@ console.log(table);
 
                                         // approval levels
                                         requests.push({
-                                            url: contextPath + '/api/dataApprovalLevels.json?fields=id,name&paging=false&order=level:asc',
+                                            url: contextPath + '/api/dataApprovalLevels.json?fields=id,displayName|rename(name)&paging=false&order=level:asc',
                                             success: function(r) {
                                                 init.dataApprovalLevels = Ext.decode(r.responseText).dataApprovalLevels || [];
                                                 fn();
