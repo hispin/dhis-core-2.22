@@ -82,7 +82,7 @@ public class ProgramDataElement
     @Override
     public String getShortName()
     {
-        return program.getDisplayName() + " " + dataElement.getDisplayShortName();
+        return program.getDisplayShortName() + " " + dataElement.getDisplayShortName();
     }
     
     @JsonProperty

@@ -101,6 +101,13 @@ public class AddProgramAction
     {
         this.name = name;
     }
+    
+    private String shortName;
+
+    public void setShortName( String shortName )
+    {
+        this.shortName = shortName;
+    }
 
     private String description;
 
@@ -274,6 +281,7 @@ public class AddProgramAction
         Program program = new Program();
 
         program.setName( StringUtils.trimToNull( name ) );
+        program.setShortName( StringUtils.trimToNull( shortName ) );
         program.setDescription( StringUtils.trimToNull( description ) );
         program.setVersion( 1 );
         program.setEnrollmentDateLabel( StringUtils.trimToNull( enrollmentDateLabel ) );

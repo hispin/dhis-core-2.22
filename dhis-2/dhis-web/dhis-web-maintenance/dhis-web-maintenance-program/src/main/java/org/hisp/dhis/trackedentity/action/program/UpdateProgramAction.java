@@ -95,6 +95,13 @@ public class UpdateProgramAction
         this.name = name;
     }
 
+    private String shortName;
+
+    public void setShortName( String shortName )
+    {
+        this.shortName = shortName;
+    }
+
     private String description;
 
     public void setDescription( String description )
@@ -297,6 +304,7 @@ public class UpdateProgramAction
 
         Program program = programService.getProgram( id );
         program.setName( StringUtils.trimToNull( name ) );
+        program.setShortName( StringUtils.trimToNull( shortName ) );
         program.setDescription( StringUtils.trimToNull( description ) );
         program.setEnrollmentDateLabel( StringUtils.trimToNull( enrollmentDateLabel ) );
         program.setIncidentDateLabel( StringUtils.trimToNull( incidentDateLabel ) );

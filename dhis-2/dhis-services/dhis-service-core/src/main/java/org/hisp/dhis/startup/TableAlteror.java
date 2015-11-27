@@ -717,6 +717,7 @@ public class TableAlteror
         executeSql( "UPDATE optionset SET version=0 WHERE version IS NULL" );
         executeSql( "UPDATE dataset SET version=0 WHERE version IS NULL" );
         executeSql( "UPDATE program SET version=0 WHERE version IS NULL" );
+        executeSql( "update program set shortname = substring(name,0,50) where shortname is null" );
         executeSql( "update program set categorycomboid = " + defaultCategoryComboId + " where categorycomboid is null" );
         executeSql( "update programstageinstance set attributeoptioncomboid = " + defaultOptionComboId + " where attributeoptioncomboid is null" );
 

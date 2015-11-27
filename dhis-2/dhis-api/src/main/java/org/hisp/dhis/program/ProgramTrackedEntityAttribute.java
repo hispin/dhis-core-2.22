@@ -112,7 +112,7 @@ public class ProgramTrackedEntityAttribute
     @Override
     public String getShortName()
     {
-        return program.getDisplayName() + " " + attribute.getDisplayShortName();
+        return program.getDisplayShortName() + " " + attribute.getDisplayShortName();
     }
     
     @JsonProperty
