@@ -28,9 +28,7 @@ package org.hisp.dhis.datavalue.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -45,6 +43,9 @@ import org.hisp.dhis.datavalue.DataValueAuditStore;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Quang Nguyen
@@ -92,26 +93,62 @@ public class HibernateDataValueAuditStore
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period,
         OrganisationUnit organisationUnit, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
     {
+        return getDataValueAudits( dataElement, Lists.newArrayList( period ), Lists.newArrayList( organisationUnit ), categoryOptionCombo, attributeOptionCombo );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
+        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo )
+    {
         Session session = sessionFactory.getCurrentSession();
+        List<Period> storedPeriods = new ArrayList<>();
 
-        Period storedPeriod = periodStore.reloadPeriod( period );
-
-        if( storedPeriod == null )
+        if ( !periods.isEmpty() )
         {
-            return new ArrayList<>();
+            for ( Period period : periods )
+            {
+                Period storedPeriod = periodStore.reloadPeriod( period );
+
+                if ( storedPeriod != null )
+                {
+                    storedPeriods.add( storedPeriod );
+                }
+            }
         }
 
-        Criteria criteria = session.createCriteria( DataValueAudit.class )
-            .add( Restrictions.eq( "dataElement", dataElement ) )
-            .add( Restrictions.eq( "period", storedPeriod ) )
-            .add( Restrictions.eq( "organisationUnit", organisationUnit ) )
-            .add( Restrictions.eq( "categoryOptionCombo", categoryOptionCombo ) )
-            .add( Restrictions.eq( "attributeOptionCombo", attributeOptionCombo ) )
-            .addOrder( Order.desc( "timestamp" ) );
+        Criteria criteria = session.createCriteria( DataValueAudit.class );
+
+        if ( dataElement != null )
+        {
+            criteria.add( Restrictions.eq( "dataElement", dataElement ) );
+        }
+
+        if ( !storedPeriods.isEmpty() )
+        {
+            criteria.add( Restrictions.in( "period", storedPeriods ) );
+        }
+
+        if ( !organisationUnits.isEmpty() )
+        {
+            criteria.add( Restrictions.in( "organisationUnit", organisationUnits ) );
+        }
+
+        if ( categoryOptionCombo != null )
+        {
+            criteria.add( Restrictions.eq( "categoryOptionCombo", categoryOptionCombo ) );
+        }
+
+        if ( attributeOptionCombo != null )
+        {
+            criteria.add( Restrictions.eq( "attributeOptionCombo", attributeOptionCombo ) );
+        }
+
+        criteria.addOrder( Order.desc( "timestamp" ) );
 
         return criteria.list();
     }

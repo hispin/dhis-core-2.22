@@ -28,7 +28,10 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.hisp.dhis.common.AuditType;
+import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -58,7 +61,7 @@ public class DataValueAudit
     private OrganisationUnit organisationUnit;
 
     private DataElementCategoryOptionCombo categoryOptionCombo;
-    
+
     private DataElementCategoryOptionCombo attributeOptionCombo;
 
     private AuditType auditType;
@@ -99,6 +102,8 @@ public class DataValueAudit
         this.id = id;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getValue()
     {
         return value;
@@ -109,6 +114,8 @@ public class DataValueAudit
         this.value = value;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getModifiedBy()
     {
         return modifiedBy;
@@ -119,6 +126,8 @@ public class DataValueAudit
         this.modifiedBy = modifiedBy;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Date getTimestamp()
     {
         return timestamp;
@@ -129,6 +138,8 @@ public class DataValueAudit
         this.timestamp = timestamp;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public DataElement getDataElement()
     {
         return dataElement;
@@ -139,6 +150,8 @@ public class DataValueAudit
         this.dataElement = dataElement;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Period getPeriod()
     {
         return period;
@@ -149,6 +162,8 @@ public class DataValueAudit
         this.period = period;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public OrganisationUnit getOrganisationUnit()
     {
         return organisationUnit;
@@ -159,6 +174,8 @@ public class DataValueAudit
         this.organisationUnit = organisationUnit;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public DataElementCategoryOptionCombo getCategoryOptionCombo()
     {
         return categoryOptionCombo;
@@ -169,6 +186,8 @@ public class DataValueAudit
         this.categoryOptionCombo = categoryOptionCombo;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public DataElementCategoryOptionCombo getAttributeOptionCombo()
     {
         return attributeOptionCombo;
@@ -179,6 +198,8 @@ public class DataValueAudit
         this.attributeOptionCombo = attributeOptionCombo;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public AuditType getAuditType()
     {
         return auditType;
