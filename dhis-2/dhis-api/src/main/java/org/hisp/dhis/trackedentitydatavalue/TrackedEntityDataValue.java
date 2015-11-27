@@ -53,7 +53,7 @@ public class TrackedEntityDataValue
 
     private String value;
 
-    private Boolean providedElsewhere;
+    private Boolean providedElsewhere = false;
 
     private String storedBy;
 
