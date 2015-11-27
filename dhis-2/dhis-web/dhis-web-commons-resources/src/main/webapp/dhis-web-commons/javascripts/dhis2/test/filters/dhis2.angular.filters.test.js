@@ -8,7 +8,6 @@ describe('Filters: d2Filters', () => {
 
     describe('d2Filter: trimquotesFilter', () => {
         let trimquotesFilter;
-
         beforeEach(inject(($injector) => {
             trimquotesFilter = $injector.get('trimquotesFilter');
         }));
@@ -25,7 +24,6 @@ describe('Filters: d2Filters', () => {
 
     describe('d2Filter: trimvariablequalifiers', () => {
         let trimvariablequalifiersFilter;
-
         beforeEach(inject(($injector) => {
             trimvariablequalifiersFilter = $injector.get('trimvariablequalifiersFilter');
         }));
@@ -42,5 +40,17 @@ describe('Filters: d2Filters', () => {
             expect(trimvariablequalifiersFilter(25)).to.equal(25);
         });
 
+    });
+
+    describe('d2Filter: forLoop', () => {
+        let forLoopFilter;
+
+        beforeEach(inject(($injector) => {
+            forLoopFilter = $injector.get('forLoopFilter');
+        }));
+
+        it('should return an array with elements from start to end', function() {
+            expect(forLoopFilter(2,3,10).toString()).to.equal([3,4,5,6,7,8,9].toString());
+        });
     });
 });
