@@ -28,14 +28,6 @@ package org.hisp.dhis.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-import java.util.List;
-
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.dataelement.DataElement;
@@ -48,6 +40,12 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Halvdan Hoem Grelland
@@ -71,8 +69,8 @@ public class DataValueAuditServiceTest
     private PeriodService periodService;
 
     @Autowired
-    private  OrganisationUnitService organisationUnitService ;
- 
+    private OrganisationUnitService organisationUnitService;
+
     // -------------------------------------------------------------------------
     // Supporting data
     // -------------------------------------------------------------------------
@@ -156,10 +154,10 @@ public class DataValueAuditServiceTest
         optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
         categoryService.addDataElementCategoryOptionCombo( optionCombo );
 
-        dataValueA = createDataValue( dataElementA, periodA, orgUnitA,  "1", optionCombo );
-        dataValueB = createDataValue( dataElementB, periodB, orgUnitB,  "2", optionCombo );
-        dataValueC = createDataValue( dataElementC, periodC, orgUnitC,  "3", optionCombo );
-        dataValueD = createDataValue( dataElementD, periodD, orgUnitD,  "4", optionCombo );
+        dataValueA = createDataValue( dataElementA, periodA, orgUnitA, "1", optionCombo );
+        dataValueB = createDataValue( dataElementB, periodB, orgUnitB, "2", optionCombo );
+        dataValueC = createDataValue( dataElementC, periodC, orgUnitC, "3", optionCombo );
+        dataValueD = createDataValue( dataElementD, periodD, orgUnitD, "4", optionCombo );
 
         dataValueService.addDataValue( dataValueA );
         dataValueService.addDataValue( dataValueB );
@@ -187,180 +185,5 @@ public class DataValueAuditServiceTest
         List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
         assertNotNull( audits );
         assertTrue( audits.contains( dataValueAuditA ) );
-    }
-
-    @Test
-    public void testDeleteDataValueAudit()
-    {
-        Date now = new Date();
-
-        DataValueAudit dataValueAuditA = new DataValueAudit( dataValueA, dataValueA.getValue(), dataValueA.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditB = new DataValueAudit( dataValueA, dataValueA.getValue(), dataValueA.getStoredBy(),
-            now, AuditType.DELETE );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditA );
-        dataValueAuditService.addDataValueAudit( dataValueAuditB );
-
-        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
-
-        assertEquals( 2, audits.size() );
-
-        dataValueAuditService.deleteDataValueAudit( dataValueAuditA );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueA );
-
-        assertNotNull( audits );
-        assertEquals( 1, audits.size() );
-        assertTrue( audits.contains( dataValueAuditB ) );
-    }
-
-    // -------------------------------------------------------------------------
-    // DeletionHandler methods
-    // -------------------------------------------------------------------------
-
-    @Test
-    public void testDeleteDataValueAuditByDataElement()
-    {
-        Date now = new Date();
-
-        DataValueAudit dataValueAuditA = new DataValueAudit( dataValueA, dataValueA.getValue(), dataValueA.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditB = new DataValueAudit( dataValueB, dataValueB.getValue(), dataValueB.getStoredBy(),
-            now, AuditType.UPDATE );
-
-        DataValueAudit dataValueAuditC1 = new DataValueAudit( dataValueC, dataValueC.getValue(), dataValueC.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditC2 = new DataValueAudit( dataValueC, dataValueC.getValue(), dataValueC.getStoredBy(),
-            now, AuditType.UPDATE );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditA );
-        dataValueAuditService.addDataValueAudit( dataValueAuditB );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditC1 );
-        dataValueAuditService.addDataValueAudit( dataValueAuditC2 );
-
-        dataValueAuditService.deleteDataValueAuditByDataElement( dataValueAuditA.getDataElement() );
-
-        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
-
-        assertTrue( audits.isEmpty() );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueB );
-        assertTrue( audits.contains( dataValueAuditB ) );
-
-        dataValueAuditService.deleteDataValueAuditByDataElement( dataValueAuditC1.getDataElement() );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueD );
-
-        assertFalse( audits.contains( dataValueAuditC1 ) );
-        assertFalse( audits.contains( dataValueAuditC2 ) );
-    }
-
-    @Test
-    public void testDeleteDataValueAuditByPeriod()
-    {
-        Date now = new Date();
-
-        DataValueAudit dataValueAuditA = new DataValueAudit( dataValueA, dataValueA.getValue(), dataValueA.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditB = new DataValueAudit( dataValueB, dataValueB.getValue(), dataValueB.getStoredBy(),
-            now, AuditType.UPDATE );
-
-        DataValueAudit dataValueAuditC1 = new DataValueAudit( dataValueC, dataValueC.getValue(), dataValueC.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditC2 = new DataValueAudit( dataValueC, dataValueC.getValue(), dataValueC.getStoredBy(),
-            now, AuditType.UPDATE );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditA );
-        dataValueAuditService.addDataValueAudit( dataValueAuditB );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditC1 );
-        dataValueAuditService.addDataValueAudit( dataValueAuditC2 );
-
-        dataValueAuditService.deleteDataValueAuditByPeriod( dataValueAuditA.getPeriod() );
-
-        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
-
-        assertTrue( audits.isEmpty() );
-
-        dataValueAuditService.deleteDataValueAuditByPeriod( dataValueAuditC1.getPeriod() );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueB );
-
-        assertTrue( audits.contains( dataValueAuditB ) );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueC );
-
-        assertTrue( audits.isEmpty() );
-    }
-
-    @Test
-    public void testDeleteDataValueAuditByOrganisationUnit()
-    {
-        Date now = new Date();
-
-        DataValueAudit dataValueAuditA = new DataValueAudit( dataValueA, dataValueA.getValue(), dataValueA.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditB = new DataValueAudit( dataValueB, dataValueB.getValue(), dataValueB.getStoredBy(),
-            now, AuditType.UPDATE );
-
-        DataValueAudit dataValueAuditC1 = new DataValueAudit( dataValueC, dataValueC.getValue(), dataValueC.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditC2 = new DataValueAudit( dataValueC, dataValueC.getValue(), dataValueC.getStoredBy(),
-            now, AuditType.UPDATE );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditA );
-        dataValueAuditService.addDataValueAudit( dataValueAuditB );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditC1 );
-        dataValueAuditService.addDataValueAudit( dataValueAuditC2 );
-
-        dataValueAuditService.deleteDataValueAuditByOrganisationUnit( dataValueAuditA.getOrganisationUnit() );
-
-        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
-
-        assertTrue( audits.isEmpty() );
-
-        dataValueAuditService.deleteDataValueAuditByOrganisationUnit( dataValueAuditC1.getOrganisationUnit() );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueC );
-
-        assertTrue( audits.isEmpty() );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueB );
-
-        assertNotNull( dataValueAuditB );
-        assertNotNull( audits );
-
-        assertTrue( audits.contains( dataValueAuditB ) );
-    }
-
-    @Test
-    public void testDeleteDataValueAuditByCategoryOptionCombo()
-    {
-        Date now = new Date();
-
-        DataValueAudit dataValueAuditA = new DataValueAudit( dataValueA, dataValueA.getValue(), dataValueA.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditB = new DataValueAudit( dataValueB, dataValueB.getValue(), dataValueB.getStoredBy(),
-            now, AuditType.UPDATE );
-        DataValueAudit dataValueAuditC = new DataValueAudit( dataValueC, dataValueC.getValue(), dataValueC.getStoredBy(),
-            now, AuditType.UPDATE );
-
-        dataValueAuditService.addDataValueAudit( dataValueAuditA );
-        dataValueAuditService.addDataValueAudit( dataValueAuditB );
-        dataValueAuditService.addDataValueAudit( dataValueAuditC );
-
-        dataValueAuditService.deleteDataValueAuditByCategoryOptionCombo( optionCombo );
-
-        List<DataValueAudit> audits = dataValueAuditService.getDataValueAudits( dataValueA );
-        assertTrue( audits.isEmpty() );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueB );
-        assertTrue( audits.isEmpty() );
-
-        audits = dataValueAuditService.getDataValueAudits( dataValueC );
-        assertTrue( audits.isEmpty() );
     }
 }

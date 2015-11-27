@@ -54,6 +54,7 @@ import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityService;
 import org.hisp.dhis.user.UserService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -216,6 +217,7 @@ public class RegistrationMultiEventsServiceTest
     }
 
     @Test
+    @Ignore
     public void testSaveSameEventMultipleTimesShouldOnlyGive1Event()
     {
         Enrollment enrollment = createEnrollment( programA.getUid(), trackedEntityInstanceMaleA.getTrackedEntityInstance() );

@@ -78,43 +78,4 @@ public interface DataValueAuditService
 
     List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo );
-
-    /**
-     * Deletes a DataValueAudit.
-     *
-     * @param dataValueAudit the DataValueAudit to be deleted.
-     */
-    void deleteDataValueAudit( DataValueAudit dataValueAudit );
-
-    /**
-     * Deletes all DataValueAudits for the given DataElement.
-     *
-     * @param dataElement the DataElement for which the DataValueAudits should be deleted.
-     * @return the number of deleted DataValueAudits.
-     */
-    int deleteDataValueAuditByDataElement( DataElement dataElement );
-
-    /**
-     * Deletes all DataValueAudits for the given Period.
-     *
-     * @param period the Period for which the DataValueAudits should be deleted.
-     * @return the number of deleted DataValueAudits.
-     */
-    int deleteDataValueAuditByPeriod( Period period );
-
-    /**
-     * Deletes all DataValues for the given OrganisationUnit.
-     *
-     * @param organisationUnit the OrganisationUnit for which the DataValueAudits should be deleted.
-     * @return the number of deleted DataValueAudits.
-     */
-    int deleteDataValueAuditByOrganisationUnit( OrganisationUnit organisationUnit );
-
-    /**
-     * Deletes all DataValues for the given DataElementCategoryOptionCombo.
-     *
-     * @param categoryOptionCombo the DataElementCategoryOptionCombo for which the DataValueAudits should be deleted.
-     * @return the number of deleted DataValueAudits.
-     */
-    int deleteDataValueAuditByCategoryOptionCombo( DataElementCategoryOptionCombo categoryOptionCombo );
 }
