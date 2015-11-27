@@ -804,6 +804,8 @@ public class TableAlteror
         executeSql( "alter table datavalueaudit alter column value type varchar(50000)" );
         executeSql( "alter table trackedentitydatavalue alter column value type varchar(50000)" );
 
+        executeSql( "update trackedentitydatavalue set providedelsewhere=false where providedelsewhere is null" );
+
         executeSql( "update datavalueaudit set attributeoptioncomboid = " + defaultOptionComboId + " where attributeoptioncomboid is null" );
         executeSql( "alter table datavalueaudit alter column attributeoptioncomboid set not null;" );
 
