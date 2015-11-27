@@ -45,6 +45,8 @@ import java.util.Objects;
 public class TrackedEntityDataValueAudit
     implements Serializable
 {
+    private int id;
+    
     private DataElement dataElement;
 
     private ProgramStageInstance programStageInstance;
@@ -112,6 +114,16 @@ public class TrackedEntityDataValueAudit
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
+    }
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )

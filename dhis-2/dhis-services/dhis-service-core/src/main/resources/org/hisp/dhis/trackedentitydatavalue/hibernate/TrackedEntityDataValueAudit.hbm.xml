@@ -6,13 +6,16 @@
 <hibernate-mapping>
   <class name="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAudit" table="trackedentitydatavalueaudit">
 
-    <composite-id>
-      <key-many-to-one name="programStageInstance" class="org.hisp.dhis.program.ProgramStageInstance"
-        column="programstageinstanceid" foreign-key="fk_entityinstancedatavalue_programstageinstanceid" />
-      <key-many-to-one name="dataElement" class="org.hisp.dhis.dataelement.DataElement" column="dataelementid"
-        foreign-key="fk_entityinstancedatavalue_dataelementid" />
-    </composite-id>
+    <id name="id" column="trackedentitydatavalueauditid">
+      <generator class="native" />
+    </id>
 
+    <many-to-one name="programStageInstance" class="org.hisp.dhis.program.ProgramStageInstance"
+        column="programstageinstanceid" foreign-key="fk_entityinstancedatavalue_programstageinstanceid" />
+    
+    <many-to-one name="dataElement" class="org.hisp.dhis.dataelement.DataElement" column="dataelementid"
+        foreign-key="fk_entityinstancedatavalue_dataelementid" />
+    
     <property name="value" length="50000" />
 
     <property name="timestamp" type="timestamp" />
