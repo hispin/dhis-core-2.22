@@ -124,10 +124,10 @@
                     </thead>
                     <tbody id="list">
                         <tr title="{{'click_for_action' | translate}}" ng-repeat="dhis2Event in dhis2Events | orderBy:d2Sort:reverse | gridFilter:filterText:filterTypes">                           
-                            <td d2-context-menu ng-click="showEventList(dhis2Event)" ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}" ng-if="eventGridColumn.id !== 'comment'">
+                            <td ng-repeat="eventGridColumn in eventGridColumns | filter: {show: true}" ng-if="eventGridColumn.id !== 'comment'">
                                 
                                 <!-- Visible when event is not under editing -->                                
-                                <div ng-show="currentEvent.event !== dhis2Event.event">
+                                <div d2-context-menu ng-click="showEventList(dhis2Event)" ng-show="currentEvent.event !== dhis2Event.event">
                                     <span ng-switch="eventGridColumn.valueType">
                                         <span ng-switch-when="BOOLEAN">
                                             <span ng-if="dhis2Event[eventGridColumn.id] == 'false'">{{noLabel}}</span>
@@ -142,6 +142,9 @@
                                         <span ng-switch-default>
                                             {{dhis2Event[eventGridColumn.id]}}
                                         </span>
+                                    </span>
+                                    <span ng-if="!dhis2Event[eventGridColumn.id] || dhis2Event[eventGridColumn.id] === ''">
+                                        &nbsp;&nbsp;
                                     </span>
                                 </div>
                                 <!-- Visible when event is not under editing -->                                
