@@ -281,8 +281,8 @@ Ext.onReady( function() {
             conf.url = {
                 analysisFields: [
                     '*',
-                    'program[id,name]',
-                    'programStage[id,name]',
+                    'program[id,' + init.namePropertyUrl + ']',
+                    'programStage[id,' + init.namePropertyUrl + ']',
                     'columns[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
                     'rows[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
                     'filters[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
@@ -2115,7 +2115,14 @@ Ext.onReady( function() {
 					dx = dimConf.indicator.dimensionName,
 					co = dimConf.category.dimensionName,
                     aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
-                    displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
+                    propertyMap = {
+                        'name': 'name',
+                        'displayName': 'name',
+                        'shortName': 'shortName',
+                        'displayShortName': 'shortName'
+                    },
+                    keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty,
+                    displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[xLayout.displayProperty] || 'name';
 
 				for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
 					dimName = axisDimensionNames[i];
