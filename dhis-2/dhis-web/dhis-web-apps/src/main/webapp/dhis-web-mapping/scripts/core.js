@@ -499,7 +499,7 @@ Ext.onReady( function() {
 			// Infrastructural data
 			showInfo = function() {
 				Ext.Ajax.request({
-					url: gis.init.contextPath + '/api/organisationUnits/' + att.id + '.json?fields=id,name,code,address,email,phoneNumber,coordinates,parent[id,name],organisationUnitGroups[id,name]',
+					url: gis.init.contextPath + '/api/organisationUnits/' + att.id + '.json?fields=id,' + gis.init.namePropertyUrl + ',code,address,email,phoneNumber,coordinates,parent[id,' + gis.init.namePropertyUrl + '],organisationUnitGroups[id,' + gis.init.namePropertyUrl + ']',
 					success: function(r) {
 						var ou = Ext.decode(r.responseText);
 
@@ -1586,6 +1586,14 @@ Ext.onReady( function() {
 		loadOrganisationUnits = function(view) {
             var items = view.rows[0].items,
                 isPlugin = GIS.plugin && !GIS.app,
+                propertyMap = {
+                    'name': 'name',
+                    'displayName': 'name',
+                    'shortName': 'shortName',
+                    'displayShortName': 'shortName'
+                },
+                keyAnalysisDisplayProperty = gis.init.userAccount.settings.keyAnalysisDisplayProperty,
+                displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[xLayout.displayProperty] || 'name',
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -1594,7 +1602,7 @@ Ext.onReady( function() {
                         params += i !== items.length - 1 ? ';' : '';
                     }
 
-                    params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                    params += '&displayProperty=' + displayProperty.toUpperCase();
 
                     if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
                         params += '&userOrgUnit=';
@@ -1673,7 +1681,7 @@ Ext.onReady( function() {
 		loadLegend = function(view) {
             var isPlugin = GIS.plugin && !GIS.app,
                 type = isPlugin ? 'jsonp' : 'json',
-                url = gis.init.contextPath + '/api/organisationUnitGroupSets/' + view.organisationUnitGroupSet.id + '.' + type + '?fields=organisationUnitGroups[id,name,symbol]',
+                url = gis.init.contextPath + '/api/organisationUnitGroupSets/' + view.organisationUnitGroupSet.id + '.' + type + '?fields=organisationUnitGroups[id,' + gis.init.namePropertyUrl + ',symbol]',
                 success;
 
 			view = view || layer.core.view;
@@ -1871,6 +1879,14 @@ Ext.onReady( function() {
 		loadOrganisationUnits = function(view) {
 			var items = view.rows[0].items,
                 isPlugin = GIS.plugin && !GIS.app,
+                propertyMap = {
+                    'name': 'name',
+                    'displayName': 'name',
+                    'shortName': 'shortName',
+                    'displayShortName': 'shortName'
+                },
+                keyAnalysisDisplayProperty = gis.init.userAccount.settings.keyAnalysisDisplayProperty,
+                displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[xLayout.displayProperty] || 'name',
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -1879,7 +1895,7 @@ Ext.onReady( function() {
                         params += i !== items.length - 1 ? ';' : '';
                     }
 
-                    params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                    params += '&displayProperty=' + displayProperty.toUpperCase();
 
                     if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
                         params += '&userOrgUnit=';
@@ -2234,6 +2250,14 @@ Ext.onReady( function() {
 		loadOrganisationUnits = function(view) {
 			var items = view.rows[0].items,
                 isPlugin = GIS.plugin && !GIS.app,
+                propertyMap = {
+                    'name': 'name',
+                    'displayName': 'name',
+                    'shortName': 'shortName',
+                    'displayShortName': 'shortName'
+                },
+                keyAnalysisDisplayProperty = gis.init.userAccount.settings.keyAnalysisDisplayProperty,
+                displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[view.displayProperty] || 'name',
                 url = function() {
                     var params = '?ou=ou:';
 
@@ -2242,7 +2266,7 @@ Ext.onReady( function() {
                         params += i !== items.length - 1 ? ';' : '';
                     }
 
-                    params += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                    params += '&displayProperty=' + displayProperty.toUpperCase();
 
                     if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
                         params += '&userOrgUnit=';
@@ -2318,7 +2342,15 @@ Ext.onReady( function() {
 				dxItems = view.columns[0].items,
 				isOperand = view.columns[0].dimension === dimConf.operand.objectName,
 				peItems = view.filters[0].items,
-				ouItems = view.rows[0].items;
+				ouItems = view.rows[0].items,
+                propertyMap = {
+                    'name': 'name',
+                    'displayName': 'name',
+                    'shortName': 'shortName',
+                    'displayShortName': 'shortName'
+                },
+                keyAnalysisDisplayProperty = gis.init.userAccount.settings.keyAnalysisDisplayProperty,
+                displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[view.displayProperty] || 'name';
 
 			// ou
 			paramString += 'dimension=ou:';
@@ -2352,7 +2384,7 @@ Ext.onReady( function() {
 			}
 
             // display property
-            paramString += '&displayProperty=' + gis.init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();            
+            paramString += '&displayProperty=' + displayProperty.toUpperCase();            
 
             if (Ext.isArray(view.userOrgUnit) && view.userOrgUnit.length) {
                 paramString += '&userOrgUnit=';
@@ -2572,7 +2604,7 @@ Ext.onReady( function() {
                 }
 
                 Ext.Ajax.request({
-                    url: gis.init.contextPath + '/api/' + elementUrl + '.json?fields=legendSet[id,name]&paging=false&filter=id:eq:' + id,
+                    url: gis.init.contextPath + '/api/' + elementUrl + '.json?fields=legendSet[id,displayName|rename(name)]&paging=false&filter=id:eq:' + id,
                     success: function(r) {
                         var elements = Ext.decode(r.responseText)[elementUrl],
                             set;
@@ -3029,7 +3061,7 @@ Ext.onReady( function() {
             ];
 
             conf.url.legendSetFields = [
-                'id,name,legends[' + conf.url.legendFields.join(',') + ']'
+                'id,displayName|rename(name),legends[' + conf.url.legendFields.join(',') + ']'
             ];
         }());
 
