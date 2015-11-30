@@ -137,7 +137,7 @@ public class AuditController
     ) throws WebMessageException
     {
         List<TrackedEntityAttribute> trackedEntityAttributes = getTrackedEntityAttributes( tea );
-        List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( te );
+        List<TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( te );
 
         List<TrackedEntityAttributeValueAudit> attributeValueAudits = trackedEntityAttributeValueAuditService.getTrackedEntityAttributeValueAudits(
             trackedEntityAttributes, trackedEntityInstances, auditType );
