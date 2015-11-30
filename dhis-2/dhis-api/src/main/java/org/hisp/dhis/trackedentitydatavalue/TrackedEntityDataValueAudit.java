@@ -67,6 +67,10 @@ public class TrackedEntityDataValueAudit
     // Constructors
     // -------------------------------------------------------------------------
 
+    public TrackedEntityDataValueAudit()
+    {
+    }
+
     public TrackedEntityDataValueAudit( TrackedEntityDataValue trackedEntityDataValue, String value, String modifiedBy, AuditType auditType )
     {
         this.dataElement = trackedEntityDataValue.getDataElement();
