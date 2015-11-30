@@ -61,6 +61,10 @@ public class TrackedEntityAttributeValueAudit
 
     private AuditType auditType;
 
+    public TrackedEntityAttributeValueAudit()
+    {
+    }
+
     public TrackedEntityAttributeValueAudit( TrackedEntityAttributeValue trackedEntityAttributeValue, String value, String modifiedBy, AuditType auditType )
     {
         this.attribute = trackedEntityAttributeValue.getAttribute();
