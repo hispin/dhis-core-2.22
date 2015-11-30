@@ -28,7 +28,12 @@ package org.hisp.dhis.trackedentityattributevalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.common.AuditType;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -43,5 +48,12 @@ public class DefaultTrackedEntityAttributeValueAuditService
     public void addTrackedEntityAttributeValueAudit( TrackedEntityAttributeValueAudit trackedEntityAttributeValueAudit )
     {
         trackedEntityAttributeValueAuditStore.addTrackedEntityAttributeValueAudit( trackedEntityAttributeValueAudit );
+    }
+
+    @Override
+    public List<TrackedEntityAttributeValueAudit> getTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
+        List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
+    {
+        return trackedEntityAttributeValueAuditStore.getTrackedEntityAttributeValueAudits( trackedEntityAttributes, trackedEntityInstances, auditType );
     }
 }
