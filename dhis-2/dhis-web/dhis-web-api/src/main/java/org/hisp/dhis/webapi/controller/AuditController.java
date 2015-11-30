@@ -132,12 +132,12 @@ public class AuditController
     @RequestMapping( value = "trackedEntityAttributeValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getTrackedEntityAttributeValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> tea,
-        @RequestParam( required = false, defaultValue = "" ) List<String> tei,
+        @RequestParam( required = false, defaultValue = "" ) List<String> te,
         @RequestParam( required = false ) AuditType auditType
     ) throws WebMessageException
     {
         List<TrackedEntityAttribute> trackedEntityAttributes = getTrackedEntityAttributes( tea );
-        List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( tei );
+        List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( te );
 
         List<TrackedEntityAttributeValueAudit> attributeValueAudits = trackedEntityAttributeValueAuditService.getTrackedEntityAttributeValueAudits(
             trackedEntityAttributes, trackedEntityInstances, auditType );
