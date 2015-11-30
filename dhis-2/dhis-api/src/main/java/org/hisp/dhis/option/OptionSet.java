@@ -46,6 +46,7 @@ import org.hisp.dhis.common.view.ExportView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -99,6 +100,11 @@ public class OptionSet
     public List<String> getOptionCodes()
     {
         return options.stream().map( Option::getCode ).collect( Collectors.toList() );
+    }
+
+    public Set<String> getOptionCodesAsSet()
+    {
+        return options.stream().map( Option::getCode ).collect( Collectors.toSet() );
     }
 
     public Option getOptionByCode( String code )

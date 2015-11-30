@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.amplecode.quick.BatchHandler;
@@ -587,6 +588,7 @@ public class DefaultDataValueSetService
         CachingMap<String, Boolean> dataElementOrgUnitMap = new CachingMap<>();
         CachingMap<String, Boolean> dataElementOpenFuturePeriodsMap = new CachingMap<>();
         CachingMap<String, Boolean> orgUnitInHierarchyMap = new CachingMap<>();
+        CachingMap<String, Optional<Set<String>>> dataElementOptionsMap = new CachingMap<>();
 
         //----------------------------------------------------------------------
         // Load meta-data maps
@@ -774,6 +776,15 @@ public class DefaultDataValueSetService
                 continue;
             }
 
+            Optional<Set<String>> optionCodes = dataElementOptionsMap.get( dataElement.getUid(), 
+                () -> dataElementService.getOptionCodesAsSet( dataElement.getId() ) );
+            
+            if ( optionCodes.isPresent() && !optionCodes.get().contains( dataValue.getValue() ) )
+            {
+                summary.getConflicts().add( new ImportConflict( dataValue.getValue(), "Data value is not a valid option of the data element option set: " + dataElement.getUid() ) );
+                continue;
+            }
+            
             // -----------------------------------------------------------------
             // Constraints
             // -----------------------------------------------------------------
