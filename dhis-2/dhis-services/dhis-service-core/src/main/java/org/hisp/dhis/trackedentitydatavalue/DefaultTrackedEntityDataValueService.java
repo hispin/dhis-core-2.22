@@ -68,8 +68,13 @@ public class DefaultTrackedEntityDataValueService
     @Override
     public void saveTrackedEntityDataValue( TrackedEntityDataValue dataValue )
     {
-        if ( dataValue.getValue() != null )
+        if ( !StringUtils.isEmpty( dataValue.getValue() ) )
         {
+            if ( StringUtils.isEmpty( dataValue.getStoredBy() ) )
+            {
+                dataValue.setStoredBy( currentUserService.getCurrentUsername() );
+            }
+
             dataValueStore.saveVoid( dataValue );
         }
     }
@@ -83,6 +88,11 @@ public class DefaultTrackedEntityDataValueService
         }
         else
         {
+            if ( StringUtils.isEmpty( dataValue.getStoredBy() ) )
+            {
+                dataValue.setStoredBy( currentUserService.getCurrentUsername() );
+            }
+
             TrackedEntityDataValueAudit dataValueAudit = new TrackedEntityDataValueAudit( dataValue, dataValue.getValue(), dataValue.getStoredBy(),
                 new Date(), AuditType.UPDATE );
 
