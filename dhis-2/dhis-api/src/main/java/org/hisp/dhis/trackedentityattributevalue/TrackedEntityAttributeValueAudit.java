@@ -37,6 +37,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -51,6 +52,8 @@ public class TrackedEntityAttributeValueAudit
     private TrackedEntityAttribute attribute;
 
     private TrackedEntityInstance entityInstance;
+
+    private Date timestamp;
 
     private String value;
 
@@ -71,7 +74,7 @@ public class TrackedEntityAttributeValueAudit
     @Override
     public int hashCode()
     {
-        return Objects.hash( attribute, entityInstance, value, modifiedBy, auditType );
+        return Objects.hash( id, attribute, entityInstance, timestamp, value, modifiedBy, auditType );
     }
 
     @Override
@@ -89,11 +92,23 @@ public class TrackedEntityAttributeValueAudit
 
         final TrackedEntityAttributeValueAudit other = (TrackedEntityAttributeValueAudit) obj;
 
-        return Objects.equals( this.attribute, other.attribute )
+        return Objects.equals( this.id, other.id )
+            && Objects.equals( this.attribute, other.attribute )
             && Objects.equals( this.entityInstance, other.entityInstance )
+            && Objects.equals( this.timestamp, other.timestamp )
             && Objects.equals( this.value, other.value )
             && Objects.equals( this.modifiedBy, other.modifiedBy )
             && Objects.equals( this.auditType, other.auditType );
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
     }
 
     @JsonProperty( "trackedEntityAttribute" )
