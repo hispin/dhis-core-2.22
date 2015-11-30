@@ -31,6 +31,7 @@ package org.hisp.dhis.trackedentity.action.program;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflowService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
@@ -90,6 +91,9 @@ public class AddProgramAction
 
     @Autowired
     private DataElementCategoryService categoryService;
+
+    @Autowired
+    private DataApprovalWorkflowService workflowService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -263,6 +267,13 @@ public class AddProgramAction
         this.skipOffline = skipOffline;
     }
 
+    private Integer workflowId;
+
+    public void setWorkflowId( Integer workflowId )
+    {
+        this.workflowId = workflowId;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -330,6 +341,11 @@ public class AddProgramAction
         if ( categoryComboId != null )
         {
             program.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
+        }
+
+        if ( workflowId != null && workflowId > 0 )
+        {
+            program.setWorkflow( workflowService.getWorkflow( workflowId ) );
         }
 
         programService.addProgram( program );

@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflowService;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
@@ -83,6 +84,13 @@ public class AddDataSetAction
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
+    }
+
+    private DataApprovalWorkflowService workflowService;
+
+    public void setWorkflowService( DataApprovalWorkflowService workflowService )
+    {
+        this.workflowService = workflowService;
     }
 
     private UserGroupService userGroupService;
@@ -166,11 +174,11 @@ public class AddDataSetAction
         this.notifyCompletingUser = notifyCompletingUser;
     }
 
-    private boolean approveData;
+    private Integer workflowId;
 
-    public void setApproveData( boolean approveData )
+    public void setWorkflowId( Integer workflowId )
     {
-        this.approveData = approveData;
+        this.workflowId = workflowId;
     }
 
     private String frequencySelect;
@@ -316,6 +324,11 @@ public class AddDataSetAction
             dataSet.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
         }
 
+        if ( workflowId != null && workflowId > 0 )
+        {
+            dataSet.setWorkflow( workflowService.getWorkflow( workflowId ) );
+        }
+
         dataSet.setDescription( StringUtils.trimToNull( description ) );
         dataSet.setVersion( 1 );
         dataSet.setMobile( false );
@@ -326,7 +339,6 @@ public class AddDataSetAction
         dataSet.setValidCompleteOnly( validCompleteOnly );
         dataSet.setNoValueRequiresComment( noValueRequiresComment );
         dataSet.setNotifyCompletingUser( notifyCompletingUser );
-        dataSet.setApproveData( approveData );
         dataSet.setMobile( mobile );
         dataSet.setSkipOffline( skipOffline );
         dataSet.setDataElementDecoration( dataElementDecoration );

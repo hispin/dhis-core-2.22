@@ -39,6 +39,8 @@ import org.hisp.dhis.dataapproval.DataApprovalStateRequests;
 import org.hisp.dhis.dataapproval.DataApprovalStateResponse;
 import org.hisp.dhis.dataapproval.DataApprovalStateResponses;
 import org.hisp.dhis.dataapproval.DataApprovalStatus;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflow;
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
@@ -65,6 +67,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javafx.util.Pair;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -142,6 +145,11 @@ public class DataApprovalController
             throw new WebMessageException( WebMessageUtils.conflict( "Illegal data set identifier: " + ds ) );
         }
 
+        if ( dataSet.getWorkflow() == null )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "DataSet does not have an approval workflow: " + ds ) );
+        }
+
         Period period = PeriodType.getPeriodFromIsoString( pe );
 
         if ( period == null )
@@ -156,10 +164,10 @@ public class DataApprovalController
             throw new WebMessageException( WebMessageUtils.conflict( "Illegal organisation unit identifier: " + ou ) );
         }
 
-        DataElementCategoryOptionCombo combo = categoryService.getDefaultDataElementCategoryOptionCombo();
+        DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
 
         DataApprovalStatus status = dataApprovalService
-            .getDataApprovalStatusAndPermissions( dataSet, period, organisationUnit, combo );
+            .getDataApprovalStatusAndPermissions( dataSet.getWorkflow(), period, organisationUnit, optionCombo );
 
         DataApprovalPermissions permissions = status.getPermissions();
         permissions.setState( status.getState().toString() );
@@ -176,11 +184,9 @@ public class DataApprovalController
         @RequestParam Set<String> ou,
         @RequestParam( required = false ) boolean children,
         HttpServletResponse response )
-        throws IOException
+        throws IOException, WebMessageException
     {
-        Set<DataSet> dataSets = new HashSet<>();
-
-        dataSets.addAll( objectManager.getByUid( DataSet.class, ds ) );
+        Set<DataSet> dataSets = parseDataSetsWithWorkflow( ds );
 
         Set<Period> periods = new HashSet<>();
 
@@ -226,10 +232,10 @@ public class DataApprovalController
     private DataApprovalStateResponse getDataApprovalStateResponse( DataSet dataSet,
         OrganisationUnit organisationUnit, Period period )
     {
-        DataElementCategoryOptionCombo combo = categoryService.getDefaultDataElementCategoryOptionCombo();
+        DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
 
-        DataApprovalStatus status = dataApprovalService.getDataApprovalStatusAndPermissions( dataSet, period,
-            organisationUnit, combo );
+        DataApprovalStatus status = dataApprovalService.getDataApprovalStatusAndPermissions( dataSet.getWorkflow(), period,
+            organisationUnit, optionCombo );
 
         DataApproval dataApproval = status.getDataApproval();
         Date createdDate = dataApproval == null ? null : dataApproval.getCreated();
@@ -248,7 +254,7 @@ public class DataApprovalController
         @RequestParam( required = false ) String ou,
         HttpServletResponse response ) throws IOException, WebMessageException
     {
-        Set<DataSet> dataSets = new HashSet<>( objectManager.getByUid( DataSet.class, ds ) );
+        Set<DataSet> dataSets = parseDataSetsWithWorkflow( ds );
 
         Period period = PeriodType.getPeriodFromIsoString( pe );
 
@@ -259,7 +265,19 @@ public class DataApprovalController
 
         OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( ou );
 
-        List<DataApprovalStatus> statusList = dataApprovalService.getUserDataApprovalsAndPermissions( dataSets, period, orgUnit );
+        Set<Pair<DataApprovalWorkflow, DataElementCategoryCombo>> pairs = new HashSet<>();
+
+        for ( DataSet dataSet : dataSets )
+        {
+            pairs.add( new Pair<>( dataSet.getWorkflow(), dataSet.getCategoryCombo() ) );
+        }
+
+        List<DataApprovalStatus> statusList = new ArrayList<>();
+
+        for ( Pair<DataApprovalWorkflow, DataElementCategoryCombo> pair : pairs )
+        {
+            statusList.addAll( dataApprovalService.getUserDataApprovalsAndPermissions( pair.getKey(), period, orgUnit, pair.getValue() ) );
+        }
 
         List<Map<String, Object>> list = new ArrayList<>();
 
@@ -308,6 +326,11 @@ public class DataApprovalController
         if ( dataSet == null )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Illegal data set identifier: " + ds ) );
+        }
+
+        if ( dataSet.getWorkflow() == null )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "DataSet does not have an approval workflow: " + ds ) );
         }
 
         Period period = PeriodType.getPeriodFromIsoString( pe );
@@ -432,6 +455,11 @@ public class DataApprovalController
             throw new WebMessageException( WebMessageUtils.conflict( "Illegal data set identifier: " + ds ) );
         }
 
+        if ( dataSet.getWorkflow() == null )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "DataSet does not have an approval workflow: " + ds ) );
+        }
+
         Period period = PeriodType.getPeriodFromIsoString( pe );
 
         if ( period == null )
@@ -546,7 +574,7 @@ public class DataApprovalController
         @RequestParam String pe,
         @RequestParam String ou, HttpServletResponse response ) throws WebMessageException
     {
-        Set<DataSet> dataSets = new HashSet<>( objectManager.getByUid( DataSet.class, ds ) );
+        Set<DataSet> dataSets = parseDataSetsWithWorkflow( ds );
 
         if ( dataSets.size() != ds.size() )
         {
@@ -601,6 +629,11 @@ public class DataApprovalController
             throw new WebMessageException( WebMessageUtils.conflict( "Illegal data set identifier: " + ds ) );
         }
 
+        if ( dataSet.getWorkflow() == null )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "DataSet does not have an approval workflow: " + ds ) );
+        }
+
         Period period = PeriodType.getPeriodFromIsoString( pe );
 
         if ( period == null )
@@ -634,6 +667,21 @@ public class DataApprovalController
     // Supportive methods
     // -------------------------------------------------------------------------
 
+    private Set<DataSet> parseDataSetsWithWorkflow( Set<String> ds ) throws WebMessageException
+    {
+        Set<DataSet> dataSets = new HashSet<>( objectManager.getByUid( DataSet.class, ds ) );
+
+        for ( DataSet dataSet : dataSets )
+        {
+            if ( dataSet.getWorkflow() == null )
+            {
+                throw new WebMessageException( WebMessageUtils.conflict( "DataSet does not have an approval workflow: " + dataSet.getUid() ) );
+            }
+        }
+
+        return dataSets;
+    }
+
     private List<DataApproval> getApprovalsAsList( DataApprovalLevel dataApprovalLevel, DataSet dataSet,
         Period period, OrganisationUnit organisationUnit, boolean accepted, Date created, User creator )
     {
@@ -642,7 +690,7 @@ public class DataApprovalController
         DataElementCategoryOptionCombo combo = categoryService.getDefaultDataElementCategoryOptionCombo();
         period = periodService.reloadPeriod( period );
 
-        approvals.add( new DataApproval( dataApprovalLevel, dataSet, period, organisationUnit, combo, accepted, created, creator ) );
+        approvals.add( new DataApproval( dataApprovalLevel, dataSet.getWorkflow(), period, organisationUnit, combo, accepted, created, creator ) );
 
         return approvals;
     }
@@ -656,7 +704,7 @@ public class DataApprovalController
         User user = currentUserService.getCurrentUser();
         Date date = new Date();
 
-        List<DataApproval> list = new ArrayList<>();
+        Set<DataApproval> set = new HashSet<>(); // Avoid duplicates when different datasets have the same workflow
 
         for ( DataSet dataSet : dataSets )
         {
@@ -671,13 +719,13 @@ public class DataApprovalController
                 {
                     if ( dataSetOptionCombos != null && dataSetOptionCombos.contains( optionCombo ) )
                     {
-                        DataApproval dataApproval = new DataApproval( null, dataSet, period, unit, optionCombo, false, date, user );
-                        list.add( dataApproval );
+                        DataApproval dataApproval = new DataApproval( null, dataSet.getWorkflow(), period, unit, optionCombo, false, date, user );
+                        set.add( dataApproval );
                     }
                 }
             }
         }
 
-        return list;
+        return new ArrayList<>( set );
     }
 }

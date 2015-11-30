@@ -11,11 +11,11 @@
       <generator class="native" />
     </id>
 
-    <many-to-one name="dataApprovalLevel" class="org.hisp.dhis.dataapproval.DataApprovalLevel" column="dataapprovallevelid" not-null="true" foreign-key="fk_dataapproval_dataapprovallevel" unique-key="dataapproval_unique_key" />
-    <many-to-one name="dataSet" class="org.hisp.dhis.dataset.DataSet" column="datasetid" not-null="true" foreign-key="fk_dataapproval_datasetid" unique-key="dataapproval_unique_key" />
-    <many-to-one name="period" class="org.hisp.dhis.period.Period" column="periodid" not-null="true" foreign-key="fk_dataapproval_periodid" unique-key="dataapproval_unique_key" />
-    <many-to-one name="organisationUnit" class="org.hisp.dhis.organisationunit.OrganisationUnit" not-null="true" column="organisationunitid" foreign-key="fk_dataapproval_organisationunitid" unique-key="dataapproval_unique_key" />
-    <many-to-one name="attributeOptionCombo" class="org.hisp.dhis.dataelement.DataElementCategoryOptionCombo" column="attributeoptioncomboid" foreign-key="fk_dataapproval_attributeoptioncomboid" unique-key="dataapproval_unique_key" />
+    <many-to-one name="dataApprovalLevel" class="org.hisp.dhis.dataapproval.DataApprovalLevel" column="dataapprovallevelid" not-null="true" foreign-key="fk_dataapproval_dataapprovallevel" />
+    <many-to-one name="workflow" class="org.hisp.dhis.dataapproval.DataApprovalWorkflow" column="workflowid" foreign-key="fk_dataapproval_workflowid" />
+    <many-to-one name="period" class="org.hisp.dhis.period.Period" column="periodid" not-null="true" foreign-key="fk_dataapproval_periodid" />
+    <many-to-one name="organisationUnit" class="org.hisp.dhis.organisationunit.OrganisationUnit" not-null="true" column="organisationunitid" foreign-key="fk_dataapproval_organisationunitid" />
+    <many-to-one name="attributeOptionCombo" class="org.hisp.dhis.dataelement.DataElementCategoryOptionCombo" column="attributeoptioncomboid" foreign-key="fk_dataapproval_attributeoptioncomboid" />
 
     <property name="accepted" type="boolean" />
 

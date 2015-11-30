@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflowService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -96,6 +97,13 @@ public class UpdateDataSetAction
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
+    }
+
+    private DataApprovalWorkflowService workflowService;
+
+    public void setWorkflowService( DataApprovalWorkflowService workflowService )
+    {
+        this.workflowService = workflowService;
     }
 
     private SectionService sectionService;
@@ -186,11 +194,11 @@ public class UpdateDataSetAction
         this.notifyCompletingUser = notifyCompletingUser;
     }
 
-    private boolean approveData;
+    private Integer workflowId;
 
-    public void setApproveData( boolean approveData )
+    public void setWorkflowId( Integer workflowId )
     {
-        this.approveData = approveData;
+        this.workflowId = workflowId;
     }
 
     private String frequencySelect;
@@ -358,7 +366,6 @@ public class UpdateDataSetAction
         dataSet.setValidCompleteOnly( validCompleteOnly );
         dataSet.setNoValueRequiresComment( noValueRequiresComment );
         dataSet.setNotifyCompletingUser( notifyCompletingUser );
-        dataSet.setApproveData( approveData );
         dataSet.setMobile( mobile );
         dataSet.setSkipOffline( skipOffline );
         dataSet.setDataElementDecoration( dataElementDecoration );
@@ -370,6 +377,15 @@ public class UpdateDataSetAction
         if ( categoryComboId != null )
         {
             dataSet.setCategoryCombo( categoryService.getDataElementCategoryCombo( categoryComboId ) );
+        }
+
+        if ( workflowId != null && workflowId > 0 )
+        {
+            dataSet.setWorkflow( workflowService.getWorkflow( workflowId ) );
+        }
+        else
+        {
+            dataSet.setWorkflow( null );
         }
 
         if ( jsonAttributeValues != null )

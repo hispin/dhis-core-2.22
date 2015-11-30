@@ -28,6 +28,7 @@ package org.hisp.dhis.dataapproval;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -72,34 +73,44 @@ public interface DataApprovalStore
     void deleteDataApproval( DataApproval dataApproval );
 
     /**
+     * Returns the DataApproval object (if any) matching the properties
+     * of a (non-Hibernate) DataApproval object.
+     *
+     * @param dataApproval the DataApproval object properties to look for
+     */
+    DataApproval getDataApproval( DataApproval dataApproval );
+
+    /**
      * Returns the DataApproval object (if any) for a given approval level,
-     * dataset, period, organisation unit, and attribute option combo.
+     * workflow, period, organisation unit, and attribute option combo.
      *
      * @param dataApprovalLevel Level for approval
-     * @param dataSet DataSet for approval
+     * @param workflow DataApprovalWorkflow for approval
      * @param period Period for approval
      * @param organisationUnit OrganisationUnit for approval
      * @param attributeOptionCombo attribute option combo for approval
      * @return matching DataApproval object, if any
      */
-    DataApproval getDataApproval( DataApprovalLevel dataApprovalLevel, DataSet dataSet, Period period,
-        OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo );
+    DataApproval getDataApproval( DataApprovalLevel dataApprovalLevel, DataApprovalWorkflow workflow,
+        Period period, OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo );
 
     /**
      * Returns a list of data approval results and corresponding states for
-     * a collection of data sets and a given period. The list may be constrained
+     * a collection of workflows and a given period. The list may be constrained
      * to a given organisation unit, or it may be all the organisation units
      * the user is allowed to see. The list may also be constrained to a given
      * attribute category combination, or it may be all the attribute category
      * combos the user is allowed to see. If the list is constrained to a given
      * attribute category combination, then only a single value is returned.
      *
-     * @param dataSets Data sets to look within
+     * @param workflow Data approval workflow to check
      * @param period Period to look within
      * @param orgUnit Organisation unit to look for (null means all)
-     * @param attributeOptionCombo Attribute option combo (null means all)
+     * @param attributeCombo Attribute category combo to look within
+     * @param attributeOptionCombos Attribute option combos (null means all)
      * @return data approval status objects
      */
-    List<DataApprovalStatus> getDataApprovals( Set<DataSet> dataSets, Period period,
-        OrganisationUnit orgUnit, DataElementCategoryOptionCombo attributeOptionCombo );
+    List<DataApprovalStatus> getDataApprovals( DataApprovalWorkflow workflow,
+        Period period, OrganisationUnit orgUnit, DataElementCategoryCombo attributeCombo,
+        Set<DataElementCategoryOptionCombo> attributeOptionCombos );
 }

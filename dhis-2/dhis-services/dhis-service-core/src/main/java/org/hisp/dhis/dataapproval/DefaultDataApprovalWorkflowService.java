@@ -1,4 +1,4 @@
-package org.hisp.dhis.reporting.dataapproval.action;
+package org.hisp.dhis.dataapproval;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,71 +28,59 @@ package org.hisp.dhis.reporting.dataapproval.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.period.PeriodType.getAvailablePeriodTypes;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.commons.filter.Filter;
-import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.dataset.DataSetService;
-import org.hisp.dhis.period.PeriodType;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.Action;
-
-public class GetDataApprovalOptionsAction
-    implements Action
+/**
+ * @author Jim Grace
+ */
+@Transactional
+public class DefaultDataApprovalWorkflowService
+    implements DataApprovalWorkflowService
 {
-    @Autowired
-    private DataSetService dataSetService;
-    
     // -------------------------------------------------------------------------
-    // Output
+    // Dependencies
     // -------------------------------------------------------------------------
 
-    private List<DataSet> dataSets;
+    private DataApprovalWorkflowStore workflowStore;
 
-    public List<DataSet> getDataSets()
+    public void setWorkflowStore( DataApprovalWorkflowStore workflowStore )
     {
-        return dataSets;
-    }
-
-    private List<PeriodType> periodTypes;
-
-    public List<PeriodType> getPeriodTypes()
-    {
-        return periodTypes;
+        this.workflowStore = workflowStore;
     }
 
     // -------------------------------------------------------------------------
-    // Action implementation
+    // DataApprovalWorkflow
     // -------------------------------------------------------------------------
 
     @Override
-    public String execute()
-        throws Exception
+    public int addWorkflow( DataApprovalWorkflow workflow )
     {
-        dataSets = new ArrayList<>( dataSetService.getAllDataSets() );
-        periodTypes = getAvailablePeriodTypes();
-
-        FilterUtils.filter( dataSets, new DataSetApproveDataFilter() );
-        
-        Collections.sort( dataSets, IdentifiableObjectNameComparator.INSTANCE );
-        
-        return SUCCESS;
+        return workflowStore.save( workflow );
     }
 
-    class DataSetApproveDataFilter
-        implements Filter<DataSet>
+    @Override
+    public void updateWorkflow( DataApprovalWorkflow dataApprovalWorkflow )
     {
-        @Override
-        public boolean retain( DataSet dataSet )
-        {
-            return dataSet != null && dataSet.getWorkflow() != null;
-        }        
+        workflowStore.update( dataApprovalWorkflow );
+    }
+
+    @Override
+    public void deleteWorkflow( DataApprovalWorkflow workflow )
+    {
+        workflowStore.delete( workflow );
+    }
+
+    @Override
+    public DataApprovalWorkflow getWorkflow( int id )
+    {
+        return workflowStore.get( id );
+    }
+
+    @Override
+    public List<DataApprovalWorkflow> getAllWorkflows()
+    {
+        return workflowStore.getAll();
     }
 }

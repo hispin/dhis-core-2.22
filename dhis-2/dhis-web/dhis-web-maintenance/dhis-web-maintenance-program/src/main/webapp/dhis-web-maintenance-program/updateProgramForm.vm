@@ -149,8 +149,20 @@
           		</select>
         	</td>
       	</tr>
-		
+
 		<tr>
+			<td><label>$i18n.getString( "data_approval_workflow" )</label></td>
+			<td>
+				<select id="workflowId" name="workflowId">
+				<option value="-1">[ $i18n.getString( "none" ) ]</option>
+					#foreach( $workflow in $workflows )
+                        <option value="$workflow.id"#if( $program.workflow.id == $workflow.id ) selected="selected"#end>$encoder.htmlEncode( $workflow.name ) ($i18n.getString( $workflow.periodType.name ))</option>
+					#end
+				</select>
+			</td
+		</tr>
+
+        <tr>
             <td><label>$i18n.getString( "skip_offline" )</label></td>
             <td>
               <select id="skipOffline" name="skipOffline">
