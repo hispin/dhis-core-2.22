@@ -56,8 +56,6 @@ public class TrackedEntityAttributeValue
      */
     private static final long serialVersionUID = -4469496681709547707L;
 
-    public static final String UNKNOWN = " ";
-
     private TrackedEntityAttribute attribute;
 
     private TrackedEntityInstance entityInstance;

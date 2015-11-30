@@ -28,15 +28,18 @@ package org.hisp.dhis.trackedentitydatavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-import java.util.Date;
-
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.program.ProgramStageInstance;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Abyot Asalefew Gizaw
  */
+@JacksonXmlRootElement( localName = "trackedEntityDataValue", namespace = DxfNamespaces.DXF_2_0 )
 public class TrackedEntityDataValue
     implements Serializable
 {

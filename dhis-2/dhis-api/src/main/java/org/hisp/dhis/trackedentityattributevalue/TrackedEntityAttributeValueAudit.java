@@ -1,4 +1,4 @@
-package org.hisp.dhis.trackedentitydatavalue;
+package org.hisp.dhis.trackedentityattributevalue;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -33,56 +33,45 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.common.DxfNamespaces;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.program.ProgramStageInstance;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@JacksonXmlRootElement( localName = "trackedEntityDataValueAudit", namespace = DxfNamespaces.DXF_2_0 )
-public class TrackedEntityDataValueAudit
+@JacksonXmlRootElement( localName = "trackedEntityAttributeValueAudit", namespace = DxfNamespaces.DXF_2_0 )
+public class TrackedEntityAttributeValueAudit
     implements Serializable
 {
     private int id;
 
-    private DataElement dataElement;
+    private TrackedEntityAttribute attribute;
 
-    private ProgramStageInstance programStageInstance;
-
-    private Date timestamp;
+    private TrackedEntityInstance entityInstance;
 
     private String value;
-
-    private Boolean providedElsewhere;
 
     private String modifiedBy;
 
     private AuditType auditType;
 
-    // -------------------------------------------------------------------------
-    // Constructors
-    // -------------------------------------------------------------------------
-
-    public TrackedEntityDataValueAudit( TrackedEntityDataValue trackedEntityDataValue, String value, String modifiedBy, Date timestamp, AuditType auditType )
+    public TrackedEntityAttributeValueAudit( TrackedEntityAttributeValue trackedEntityAttributeValue, String value, String modifiedBy, AuditType auditType )
     {
-        this.dataElement = trackedEntityDataValue.getDataElement();
-        this.programStageInstance = trackedEntityDataValue.getProgramStageInstance();
-        this.providedElsewhere = trackedEntityDataValue.getProvidedElsewhere();
+        this.attribute = trackedEntityAttributeValue.getAttribute();
+        this.entityInstance = trackedEntityAttributeValue.getEntityInstance();
 
         this.value = value;
         this.modifiedBy = modifiedBy;
-        this.timestamp = timestamp;
         this.auditType = auditType;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash( dataElement, programStageInstance, timestamp, value, providedElsewhere, modifiedBy, auditType );
+        return Objects.hash( attribute, entityInstance, value, modifiedBy, auditType );
     }
 
     @Override
@@ -98,65 +87,37 @@ public class TrackedEntityDataValueAudit
             return false;
         }
 
-        final TrackedEntityDataValueAudit other = (TrackedEntityDataValueAudit) obj;
+        final TrackedEntityAttributeValueAudit other = (TrackedEntityAttributeValueAudit) obj;
 
-        return Objects.equals( this.dataElement, other.dataElement )
-            && Objects.equals( this.programStageInstance, other.programStageInstance )
-            && Objects.equals( this.timestamp, other.timestamp )
+        return Objects.equals( this.attribute, other.attribute )
+            && Objects.equals( this.entityInstance, other.entityInstance )
             && Objects.equals( this.value, other.value )
-            && Objects.equals( this.providedElsewhere, other.providedElsewhere )
             && Objects.equals( this.modifiedBy, other.modifiedBy )
             && Objects.equals( this.auditType, other.auditType );
     }
 
-    // -------------------------------------------------------------------------
-    // Getters and setters
-    // -------------------------------------------------------------------------
-
-    public int getId()
+    @JsonProperty( "trackedEntityAttribute" )
+    @JacksonXmlProperty( localName = "trackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
+    public TrackedEntityAttribute getAttribute()
     {
-        return id;
+        return attribute;
     }
 
-    public void setId( int id )
+    public void setAttribute( TrackedEntityAttribute attribute )
     {
-        this.id = id;
+        this.attribute = attribute;
     }
 
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public ProgramStageInstance getProgramStageInstance()
+    @JsonProperty( "trackedEntityInstance" )
+    @JacksonXmlProperty( localName = "trackedEntityInstance", namespace = DxfNamespaces.DXF_2_0 )
+    public TrackedEntityInstance getEntityInstance()
     {
-        return programStageInstance;
+        return entityInstance;
     }
 
-    public void setProgramStageInstance( ProgramStageInstance programStageInstance )
+    public void setEntityInstance( TrackedEntityInstance entityInstance )
     {
-        this.programStageInstance = programStageInstance;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public DataElement getDataElement()
-    {
-        return dataElement;
-    }
-
-    public void setDataElement( DataElement dataElement )
-    {
-        this.dataElement = dataElement;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Date getTimestamp()
-    {
-        return timestamp;
-    }
-
-    public void setTimestamp( Date timestamp )
-    {
-        this.timestamp = timestamp;
+        this.entityInstance = entityInstance;
     }
 
     @JsonProperty
@@ -169,18 +130,6 @@ public class TrackedEntityDataValueAudit
     public void setValue( String value )
     {
         this.value = value;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean getProvidedElsewhere()
-    {
-        return providedElsewhere;
-    }
-
-    public void setProvidedElsewhere( boolean providedElsewhere )
-    {
-        this.providedElsewhere = providedElsewhere;
     }
 
     @JsonProperty
