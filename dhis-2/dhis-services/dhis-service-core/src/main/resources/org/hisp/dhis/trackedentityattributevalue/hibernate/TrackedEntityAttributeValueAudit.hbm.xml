@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAudit" table="trackedentityattributevalueaudit">
+
+    <id name="id" column="trackedentityattributevalueauditid">
+      <generator class="native" />
+    </id>
+
+    <many-to-one name="entityInstance" class="org.hisp.dhis.trackedentity.TrackedEntityInstance" column="trackedentityinstanceid"
+      foreign-key="fk_attributevalue_trackedentityinstanceid" />
+
+    <many-to-one name="attribute" class="org.hisp.dhis.trackedentity.TrackedEntityAttribute" column="trackedentityattributeid"
+      foreign-key="fk_attributevalue_trackedentityattributeid" />
+
+    <property name="value" length="50000" />
+
+    <property name="timestamp" type="timestamp" />
+
+    <property name="modifiedBy" />
+
+    <property name="auditType" column="audittype" length="100" not-null="true">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.hisp.dhis.common.AuditType</param>
+        <param name="type">12</param>
+      </type>
+    </property>
+
+  </class>
+</hibernate-mapping>

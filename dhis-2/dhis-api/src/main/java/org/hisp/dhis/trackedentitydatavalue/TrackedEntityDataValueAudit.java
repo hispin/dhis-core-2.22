@@ -67,15 +67,15 @@ public class TrackedEntityDataValueAudit
     // Constructors
     // -------------------------------------------------------------------------
 
-    public TrackedEntityDataValueAudit( TrackedEntityDataValue trackedEntityDataValue, String value, String modifiedBy, Date timestamp, AuditType auditType )
+    public TrackedEntityDataValueAudit( TrackedEntityDataValue trackedEntityDataValue, String value, String modifiedBy, AuditType auditType )
     {
         this.dataElement = trackedEntityDataValue.getDataElement();
         this.programStageInstance = trackedEntityDataValue.getProgramStageInstance();
         this.providedElsewhere = trackedEntityDataValue.getProvidedElsewhere();
 
+        this.timestamp = new Date();
         this.value = value;
         this.modifiedBy = modifiedBy;
-        this.timestamp = timestamp;
         this.auditType = auditType;
     }
 

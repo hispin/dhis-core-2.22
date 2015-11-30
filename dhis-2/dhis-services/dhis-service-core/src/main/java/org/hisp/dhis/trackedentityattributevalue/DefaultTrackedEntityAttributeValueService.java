@@ -28,12 +28,16 @@ package org.hisp.dhis.trackedentityattributevalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-import java.util.List;
-
+import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
+import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Abyot Asalefew
@@ -53,6 +57,12 @@ public class DefaultTrackedEntityAttributeValueService
         this.attributeValueStore = attributeValueStore;
     }
 
+    @Autowired
+    private TrackedEntityAttributeValueAuditService trackedEntityAttributeValueAuditService;
+
+    @Autowired
+    private CurrentUserService currentUserService;
+
     // -------------------------------------------------------------------------
     // Implementation methods
     // -------------------------------------------------------------------------
@@ -60,6 +70,10 @@ public class DefaultTrackedEntityAttributeValueService
     @Override
     public void deleteTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
+        TrackedEntityAttributeValueAudit trackedEntityAttributeValueAudit = new TrackedEntityAttributeValueAudit( attributeValue,
+            attributeValue.getValue(), currentUserService.getCurrentUsername(), AuditType.DELETE );
+
+        trackedEntityAttributeValueAuditService.addTrackedEntityAttributeValueAudit( trackedEntityAttributeValueAudit );
         attributeValueStore.delete( attributeValue );
     }
 
@@ -87,7 +101,10 @@ public class DefaultTrackedEntityAttributeValueService
         Collection<TrackedEntityInstance> instances )
     {
         if ( instances != null && instances.size() > 0 )
+        {
             return attributeValueStore.get( instances );
+        }
+
         return null;
     }
 
@@ -103,12 +120,16 @@ public class DefaultTrackedEntityAttributeValueService
     @Override
     public void updateTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
-        if ( attributeValue.getValue() == null )
+        if ( StringUtils.isEmpty( attributeValue.getValue() ) )
         {
             attributeValueStore.delete( attributeValue );
         }
         else
         {
+            TrackedEntityAttributeValueAudit trackedEntityAttributeValueAudit = new TrackedEntityAttributeValueAudit( attributeValue,
+                attributeValue.getValue(), currentUserService.getCurrentUsername(), AuditType.UPDATE );
+
+            trackedEntityAttributeValueAuditService.addTrackedEntityAttributeValueAudit( trackedEntityAttributeValueAudit );
             attributeValueStore.update( attributeValue );
         }
     }

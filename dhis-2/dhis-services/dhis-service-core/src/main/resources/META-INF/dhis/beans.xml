@@ -524,8 +524,16 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
+  <bean id="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAuditStore"
+    class="org.hisp.dhis.trackedentityattributevalue.hibernate.HibernateTrackedEntityAttributeValueAuditStore">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
   <bean id="org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAuditService"
     class="org.hisp.dhis.trackedentitydatavalue.DefaultTrackedEntityDataValueAuditService" />
+
+  <bean id="org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAuditService"
+    class="org.hisp.dhis.trackedentityattributevalue.DefaultTrackedEntityAttributeValueAuditService" />
 
   <bean id="org.hisp.dhis.trackedentity.TrackedEntityAttributeGroupStore"
     class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
