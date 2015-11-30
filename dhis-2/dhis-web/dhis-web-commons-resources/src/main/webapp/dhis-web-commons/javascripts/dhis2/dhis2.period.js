@@ -564,7 +564,7 @@ $.extend(dhis2.period.WeeklyGenerator.prototype, {
 
       startDate.add(1, 'w');
 
-      if( startDate.weekOfYear() == 1 ) {
+      if( startDate.weekOfYear() == 1 && week > 50) {
         break;
       }
     }
