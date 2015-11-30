@@ -13,7 +13,7 @@
         foreign-key="fk_attributevalue_trackedentityattributeid" />
     </composite-id>
 
-    <property name="value" />
+    <property name="value" length="50000" />
 
   </class>
 </hibernate-mapping>

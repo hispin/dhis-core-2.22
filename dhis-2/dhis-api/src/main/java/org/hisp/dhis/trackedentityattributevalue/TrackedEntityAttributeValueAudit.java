@@ -66,6 +66,7 @@ public class TrackedEntityAttributeValueAudit
         this.attribute = trackedEntityAttributeValue.getAttribute();
         this.entityInstance = trackedEntityAttributeValue.getEntityInstance();
 
+        this.timestamp = new Date();
         this.value = value;
         this.modifiedBy = modifiedBy;
         this.auditType = auditType;
@@ -74,7 +75,7 @@ public class TrackedEntityAttributeValueAudit
     @Override
     public int hashCode()
     {
-        return Objects.hash( id, attribute, entityInstance, timestamp, value, modifiedBy, auditType );
+        return Objects.hash( attribute, entityInstance, timestamp, value, modifiedBy, auditType );
     }
 
     @Override
@@ -92,8 +93,7 @@ public class TrackedEntityAttributeValueAudit
 
         final TrackedEntityAttributeValueAudit other = (TrackedEntityAttributeValueAudit) obj;
 
-        return Objects.equals( this.id, other.id )
-            && Objects.equals( this.attribute, other.attribute )
+        return Objects.equals( this.attribute, other.attribute )
             && Objects.equals( this.entityInstance, other.entityInstance )
             && Objects.equals( this.timestamp, other.timestamp )
             && Objects.equals( this.value, other.value )
@@ -133,6 +133,18 @@ public class TrackedEntityAttributeValueAudit
     public void setEntityInstance( TrackedEntityInstance entityInstance )
     {
         this.entityInstance = entityInstance;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Date getTimestamp()
+    {
+        return timestamp;
+    }
+
+    public void setTimestamp( Date timestamp )
+    {
+        this.timestamp = timestamp;
     }
 
     @JsonProperty

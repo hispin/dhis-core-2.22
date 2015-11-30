@@ -804,6 +804,7 @@ public class TableAlteror
         executeSql( "alter table datavalue alter column comment type varchar(50000)" );
         executeSql( "alter table datavalueaudit alter column value type varchar(50000)" );
         executeSql( "alter table trackedentitydatavalue alter column value type varchar(50000)" );
+        executeSql( "alter table trackedentityattributevalue alter column value type varchar(50000)" );
 
         executeSql( "update trackedentitydatavalue set providedelsewhere=false where providedelsewhere is null" );
 
