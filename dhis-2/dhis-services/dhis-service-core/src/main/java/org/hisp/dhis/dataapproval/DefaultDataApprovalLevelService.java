@@ -463,23 +463,13 @@ public class DefaultDataApprovalLevelService
     }
 
     @Override
-    public DataApprovalLevel getUserApprovalLevel( OrganisationUnit orgUnit )
-    {
-        User user = currentUserService.getCurrentUser();
-        
-        return getUserApprovalLevel( user, orgUnit );
-    }
-    
-    @Override
-    public DataApprovalLevel getUserApprovalLevel( User user, OrganisationUnit orgUnit )
+    public DataApprovalLevel getUserApprovalLevel( User user, OrganisationUnit orgUnit, List<DataApprovalLevel> approvalLevels )
     {
         if ( user == null || orgUnit == null )
         {
             return null;
         }
-        
-        List<DataApprovalLevel> approvalLevels = getAllDataApprovalLevels();
-        
+
         OrganisationUnit organisationUnit = null;
         
         for ( OrganisationUnit unit : user.getOrganisationUnits() )

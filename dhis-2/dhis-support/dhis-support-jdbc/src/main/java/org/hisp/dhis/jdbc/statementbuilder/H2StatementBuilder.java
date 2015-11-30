@@ -77,7 +77,19 @@ public class H2StatementBuilder
     {
         return "[[:>:]]";
     }
-    
+
+    @Override
+    public String getRandom( int n )
+    {
+        return "cast(trunc(" + n + "*random(),0) as int)";
+    }
+
+    @Override
+    public String getCharAt( String str, String n )
+    {
+        return "substring(" + str + "," + n + ",1)";
+    }
+
     @Override
     public String getDeleteZeroDataValues()
     {

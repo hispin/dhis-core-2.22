@@ -48,6 +48,7 @@ import org.hisp.dhis.common.adapter.JacksonPeriodTypeSerializer;
 import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
+import org.hisp.dhis.dataapproval.DataApprovalWorkflow;
 import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
@@ -156,9 +157,9 @@ public class DataSet
     private boolean notifyCompletingUser;
 
     /**
-     * Indicating whether to approve data for this data set.
+     * The approval workflow (if any) for this data set.
      */
-    private boolean approveData;
+    private DataApprovalWorkflow workflow;
 
     // -------------------------------------------------------------------------
     // Form properties
@@ -625,14 +626,14 @@ public class DataSet
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean isApproveData()
+    public DataApprovalWorkflow getWorkflow()
     {
-        return approveData;
+        return workflow;
     }
 
-    public void setApproveData( boolean approveData )
+    public void setWorkflow( DataApprovalWorkflow workflow )
     {
-        this.approveData = approveData;
+        this.workflow = workflow;
     }
 
     @JsonProperty

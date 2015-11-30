@@ -88,9 +88,6 @@ public class HibernateDbmsManager
         emptyTable( "datavalueaudit" );
         emptyTable( "datavalue" );
         emptyTable( "completedatasetregistration" );
-        
-        emptyTable( "dataapproval" );
-        emptyTable( "dataapprovallevel" );
 
         emptyTable( "reporttable_categorydimensions" );
         emptyTable( "reporttable_categoryoptiongroups" );
@@ -148,11 +145,17 @@ public class HibernateDbmsManager
         emptyTable( "validationrulegroup" );
         emptyTable( "validationrule" );
 
+        emptyTable( "dataapproval" );
+
         emptyTable( "datasetsource" );
         emptyTable( "datasetmembers" );
         emptyTable( "datasetindicators" );
         emptyTable( "datasetoperands" );
         emptyTable( "dataset" );
+
+        emptyTable( "dataapprovalworkflowlevels" );
+        emptyTable( "dataapprovalworkflow" );
+        emptyTable( "dataapprovallevel" );
 
         emptyTable( "trackedentitydatavalue" );
         emptyTable( "programstageinstance" );
