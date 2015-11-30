@@ -28,8 +28,8 @@ package org.hisp.dhis.de.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-
+import com.google.common.collect.Lists;
+import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -40,6 +40,7 @@ import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueAudit;
 import org.hisp.dhis.datavalue.DataValueAuditService;
 import org.hisp.dhis.datavalue.DataValueService;
+import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -47,10 +48,9 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.Collection;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -195,7 +195,7 @@ public class GetHistoryAction
     {
         return historyInvalid;
     }
-    
+
     private boolean minMaxInvalid;
 
     public boolean isMinMaxInvalid()
@@ -223,7 +223,7 @@ public class GetHistoryAction
     {
         return storedBy;
     }
-    
+
     private OptionSet commentOptionSet;
 
     public OptionSet getCommentOptionSet()
@@ -259,7 +259,8 @@ public class GetHistoryAction
 
         DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cc, cp );
 
-        dataValueAudits = dataValueAuditService.getDataValueAudits( dataElement, period, organisationUnit, categoryOptionCombo, attributeOptionCombo, null );
+        dataValueAudits = dataValueAuditService.getDataValueAudits( dataElement, Lists.newArrayList( period ), Lists.newArrayList( organisationUnit ),
+            categoryOptionCombo, attributeOptionCombo, null );
 
         dataValue = dataValueService.getDataValue( dataElement, period, organisationUnit, categoryOptionCombo, attributeOptionCombo );
 
@@ -276,7 +277,7 @@ public class GetHistoryAction
         minMaxInvalid = !dataElement.getValueType().isNumeric();
 
         commentOptionSet = dataElement.getCommentOptionSet();
-        
+
         return SUCCESS;
     }
 }

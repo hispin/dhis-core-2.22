@@ -43,4 +43,7 @@ public interface TrackedEntityAttributeValueAuditStore
 
     List<TrackedEntityAttributeValueAudit> getTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
         List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType );
+
+    List<TrackedEntityAttributeValueAudit> getTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
+        List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType, int first, int max );
 }

@@ -38,7 +38,6 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAudit;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAuditStore;
-import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAudit;
 
 import java.util.List;
 
@@ -75,6 +74,24 @@ public class HibernateTrackedEntityAttributeValueAuditStore
     public List<TrackedEntityAttributeValueAudit> getTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
         List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
     {
+        Criteria criteria = getTrackedEntityAttributeValueAuditCriteria( trackedEntityAttributes, trackedEntityInstances, auditType );
+        return criteria.list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<TrackedEntityAttributeValueAudit> getTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
+        List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType, int first, int max )
+    {
+        Criteria criteria = getTrackedEntityAttributeValueAuditCriteria( trackedEntityAttributes, trackedEntityInstances, auditType );
+        criteria.setFirstResult( first );
+        criteria.setFirstResult( max );
+
+        return criteria.list();
+    }
+
+    private Criteria getTrackedEntityAttributeValueAuditCriteria( List<TrackedEntityAttribute> trackedEntityAttributes, List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
+    {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( TrackedEntityAttributeValueAudit.class );
 
@@ -95,6 +112,6 @@ public class HibernateTrackedEntityAttributeValueAuditStore
 
         criteria.addOrder( Order.desc( "timestamp" ) );
 
-        return criteria.list();
+        return criteria;
     }
 }

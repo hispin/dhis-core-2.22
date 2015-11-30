@@ -66,17 +66,18 @@ public interface DataValueAuditService
      * OrganisationUnit and DataElementCategoryOptionCombo.
      *
      * @param dataElement          the DataElement of the DataValueAudits.
-     * @param period               the Period of the DataValueAudits.
-     * @param organisationUnit     the OrganisationUnit of the DataValueAudits.
+     * @param periods              the Period of the DataValueAudits.
+     * @param organisationUnits    the OrganisationUnit of the DataValueAudits.
      * @param categoryOptionCombo  the DataElementCategoryOptionCombo of the DataValueAudits.
      * @param attributeOptionCombo the attribute option combo.
      * @return a list of DataValueAudits which matches the given DataElement, Period,
      * OrganisationUnit and DataElementCategoryOptionCombo, or an empty collection if
      * there are not matches.
      */
-    List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period, OrganisationUnit organisationUnit,
+    List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType );
 
     List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
-        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType );
+        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType,
+        int first, int max );
 }
