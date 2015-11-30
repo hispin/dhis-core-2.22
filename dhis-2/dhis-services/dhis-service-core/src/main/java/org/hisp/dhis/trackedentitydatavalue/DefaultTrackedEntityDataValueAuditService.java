@@ -41,7 +41,8 @@ import java.util.List;
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @Transactional
-public class DefaultTrackedEntityDataValueAuditService implements TrackedEntityDataValueAuditService
+public class DefaultTrackedEntityDataValueAuditService
+    implements TrackedEntityDataValueAuditService
 {
     // -------------------------------------------------------------------------
     // Dependencies
@@ -79,9 +80,16 @@ public class DefaultTrackedEntityDataValueAuditService implements TrackedEntityD
     }
 
     @Override
-    public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances,
-        AuditType auditType )
+    public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements,
+        List<ProgramStageInstance> programStageInstances, AuditType auditType )
     {
         return trackedEntityDataValueAuditStore.getTrackedEntityDataValueAudits( dataElements, programStageInstances, auditType );
+    }
+
+    @Override
+    public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements,
+        List<ProgramStageInstance> programStageInstances, AuditType auditType, int first, int max )
+    {
+        return trackedEntityDataValueAuditStore.getTrackedEntityDataValueAudits( dataElements, programStageInstances, auditType, first, max );
     }
 }

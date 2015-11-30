@@ -56,4 +56,12 @@ public class DefaultTrackedEntityAttributeValueAuditService
     {
         return trackedEntityAttributeValueAuditStore.getTrackedEntityAttributeValueAudits( trackedEntityAttributes, trackedEntityInstances, auditType );
     }
+
+    @Override
+    public List<TrackedEntityAttributeValueAudit> getTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
+        List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType, int first, int max )
+    {
+        return trackedEntityAttributeValueAuditStore.getTrackedEntityAttributeValueAudits( trackedEntityAttributes, trackedEntityInstances,
+            auditType, first, max );
+    }
 }

@@ -49,4 +49,7 @@ public interface TrackedEntityDataValueAuditService
 
     List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances,
         AuditType auditType );
+
+    List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances,
+        AuditType auditType, int first, int max );
 }

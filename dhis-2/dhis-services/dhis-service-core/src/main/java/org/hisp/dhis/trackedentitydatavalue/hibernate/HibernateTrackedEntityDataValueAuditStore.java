@@ -44,7 +44,8 @@ import java.util.List;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class HibernateTrackedEntityDataValueAuditStore implements TrackedEntityDataValueAuditStore
+public class HibernateTrackedEntityDataValueAuditStore
+    implements TrackedEntityDataValueAuditStore
 {
     // -------------------------------------------------------------------------
     // Dependencies
@@ -73,6 +74,25 @@ public class HibernateTrackedEntityDataValueAuditStore implements TrackedEntityD
     public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements,
         List<ProgramStageInstance> programStageInstances, AuditType auditType )
     {
+        Criteria criteria = getTrackedEntityDataValueAuditCriteria( dataElements, programStageInstances, auditType );
+        return criteria.list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<TrackedEntityDataValueAudit> getTrackedEntityDataValueAudits( List<DataElement> dataElements,
+        List<ProgramStageInstance> programStageInstances, AuditType auditType, int first, int max )
+    {
+        Criteria criteria = getTrackedEntityDataValueAuditCriteria( dataElements, programStageInstances, auditType );
+        criteria.setFirstResult( first );
+        criteria.setMaxResults( max );
+
+        return criteria.list();
+    }
+
+    private Criteria getTrackedEntityDataValueAuditCriteria( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances,
+        AuditType auditType )
+    {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( TrackedEntityDataValueAudit.class );
 
@@ -93,6 +113,6 @@ public class HibernateTrackedEntityDataValueAuditStore implements TrackedEntityD
 
         criteria.addOrder( Order.desc( "timestamp" ) );
 
-        return criteria.list();
+        return criteria;
     }
 }
