@@ -43,6 +43,10 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.ProgramStageInstance;
 import org.hisp.dhis.program.ProgramStageInstanceService;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
+import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAudit;
+import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAuditService;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAudit;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAuditService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
@@ -74,6 +78,9 @@ public class AuditController
 
     @Autowired
     private TrackedEntityDataValueAuditService trackedEntityDataValueAuditService;
+
+    @Autowired
+    private TrackedEntityAttributeValueAuditService trackedEntityAttributeValueAuditService;
 
     @Autowired
     private FieldFilterService fieldFilterService;
@@ -122,15 +129,102 @@ public class AuditController
         return rootNode;
     }
 
+    @RequestMapping( value = "trackedEntityAttributeValue", method = RequestMethod.GET )
+    public @ResponseBody RootNode getTrackedEntityAttributeValueAudit(
+        @RequestParam( required = false, defaultValue = "" ) List<String> tea,
+        @RequestParam( required = false, defaultValue = "" ) List<String> tei,
+        @RequestParam( required = false ) AuditType auditType
+    ) throws WebMessageException
+    {
+        List<TrackedEntityAttribute> trackedEntityAttributes = getTrackedEntityAttributes( tea );
+        List<org.hisp.dhis.trackedentity.TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( tei );
+
+        List<TrackedEntityAttributeValueAudit> attributeValueAudits = trackedEntityAttributeValueAuditService.getTrackedEntityAttributeValueAudits(
+            trackedEntityAttributes, trackedEntityInstances, auditType );
+
+        RootNode rootNode = NodeUtils.createRootNode( "trackedEntityAttributeValueAudits" );
+        rootNode.addChild( fieldFilterService.filter( TrackedEntityAttributeValueAudit.class, attributeValueAudits, new ArrayList<>() ) );
+
+        return rootNode;
+    }
+
     //-----------------------------------------------------------------------------------------------------------------
     // Helpers
     //-----------------------------------------------------------------------------------------------------------------
 
-    private List<ProgramStageInstance> getProgramStageInstances( List<String> psIdentifier ) throws WebMessageException
+    private List<TrackedEntityInstance> getTrackedEntityInstances( List<String> teiIdentifiers ) throws WebMessageException
+    {
+        List<TrackedEntityInstance> trackedEntityInstances = new ArrayList<>();
+
+        for ( String tei : teiIdentifiers )
+        {
+            TrackedEntityInstance trackedEntityInstance = getTrackedEntityInstance( tei );
+
+            if ( trackedEntityInstance != null )
+            {
+                trackedEntityInstances.add( trackedEntityInstance );
+            }
+        }
+
+        return trackedEntityInstances;
+    }
+
+    private TrackedEntityInstance getTrackedEntityInstance( String tei ) throws WebMessageException
+    {
+        if ( tei == null )
+        {
+            return null;
+        }
+
+        TrackedEntityInstance trackedEntityInstance = manager.get( TrackedEntityInstance.class, tei );
+
+        if ( trackedEntityInstance == null )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal trackedEntityInstance identifier: " + tei ) );
+        }
+
+        return trackedEntityInstance;
+    }
+
+    private List<TrackedEntityAttribute> getTrackedEntityAttributes( List<String> teaIdentifiers ) throws WebMessageException
+    {
+        List<TrackedEntityAttribute> trackedEntityAttributes = new ArrayList<>();
+
+        for ( String tea : teaIdentifiers )
+        {
+            TrackedEntityAttribute trackedEntityAttribute = getTrackedEntityAttribute( tea );
+
+            if ( trackedEntityAttribute != null )
+            {
+                trackedEntityAttributes.add( trackedEntityAttribute );
+            }
+        }
+
+        return trackedEntityAttributes;
+    }
+
+    private TrackedEntityAttribute getTrackedEntityAttribute( String tea ) throws WebMessageException
+    {
+        if ( tea == null )
+        {
+            return null;
+        }
+
+        TrackedEntityAttribute trackedEntityAttribute = manager.get( TrackedEntityAttribute.class, tea );
+
+        if ( trackedEntityAttribute == null )
+        {
+            throw new WebMessageException( WebMessageUtils.conflict( "Illegal trackedEntityAttribute identifier: " + tea ) );
+        }
+
+        return trackedEntityAttribute;
+    }
+
+    private List<ProgramStageInstance> getProgramStageInstances( List<String> psIdentifiers ) throws WebMessageException
     {
         List<ProgramStageInstance> programStageInstances = new ArrayList<>();
 
-        for ( String ps : psIdentifier )
+        for ( String ps : psIdentifiers )
         {
             ProgramStageInstance programStageInstance = getProgramStageInstance( ps );
 

@@ -28,10 +28,19 @@ package org.hisp.dhis.trackedentityattributevalue.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.hisp.dhis.common.AuditType;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAudit;
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAuditStore;
+import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAudit;
+
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -59,5 +68,33 @@ public class HibernateTrackedEntityAttributeValueAuditStore
     {
         Session session = sessionFactory.getCurrentSession();
         session.save( trackedEntityAttributeValueAudit );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<TrackedEntityAttributeValueAudit> getTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
+        List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
+    {
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria( TrackedEntityAttributeValueAudit.class );
+
+        if ( !trackedEntityAttributes.isEmpty() )
+        {
+            criteria.add( Restrictions.in( "attribute", trackedEntityAttributes ) );
+        }
+
+        if ( !trackedEntityInstances.isEmpty() )
+        {
+            criteria.add( Restrictions.in( "entityInstance", trackedEntityInstances ) );
+        }
+
+        if ( auditType != null )
+        {
+            criteria.add( Restrictions.eq( "auditType", auditType ) );
+        }
+
+        criteria.addOrder( Order.desc( "timestamp" ) );
+
+        return criteria.list();
     }
 }
