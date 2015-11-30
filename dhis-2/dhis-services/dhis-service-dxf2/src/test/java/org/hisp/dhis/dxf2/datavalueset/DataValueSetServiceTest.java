@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -58,6 +59,8 @@ import org.hisp.dhis.jdbc.batchhandler.DataValueBatchHandler;
 import org.hisp.dhis.mock.MockCurrentUserService;
 import org.hisp.dhis.mock.batchhandler.MockBatchHandler;
 import org.hisp.dhis.mock.batchhandler.MockBatchHandlerFactory;
+import org.hisp.dhis.option.Option;
+import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.MonthlyPeriodType;
@@ -85,10 +88,10 @@ public class DataValueSetServiceTest
     private DataElementCategoryService categoryService;
     
     @Autowired
-    private DataSetService dataSetService;
-
-    @Autowired
     private OrganisationUnitService organisationUnitService;
+    
+    @Autowired
+    private DataSetService dataSetService;
     
     @Autowired
     private PeriodService periodService;
@@ -98,6 +101,9 @@ public class DataValueSetServiceTest
     
     @Autowired
     private CompleteDataSetRegistrationService registrationService;
+    
+    @Autowired
+    private IdentifiableObjectManager idObjectManager;
 
     private DataElementCategoryOptionCombo ocDef;
     private DataElementCategoryOption categoryOptionA;
@@ -107,11 +113,13 @@ public class DataValueSetServiceTest
     private DataElementCategoryCombo categoryComboA;
     private DataElementCategoryOptionCombo ocA;
     private DataElementCategoryOptionCombo ocB;
-    
+
+    private OptionSet osA;
     private DataElement deA;
     private DataElement deB;
     private DataElement deC;
     private DataElement deD;
+    private DataElement deE;
     private DataSet dsA;
     private OrganisationUnit ouA;
     private OrganisationUnit ouB;
@@ -133,13 +141,18 @@ public class DataValueSetServiceTest
         mockBatchHandlerFactory = new MockBatchHandlerFactory();
         mockBatchHandlerFactory.registerBatchHandler( DataValueBatchHandler.class, mockDataValueBatchHandler );
         setDependency( dataValueSetService, "batchHandlerFactory", mockBatchHandlerFactory );
-        
+
         categoryOptionA = createCategoryOption( 'A' );
         categoryOptionB = createCategoryOption( 'B' );
         categoryA = createDataElementCategory( 'A', categoryOptionA, categoryOptionB );
         categoryComboA = createCategoryCombo( 'A', categoryA );
         categoryComboDef = categoryService.getDefaultDataElementCategoryCombo();
         ocDef = categoryService.getDefaultDataElementCategoryOptionCombo();
+
+        osA = new OptionSet( "OptionSetA" );
+        osA.getOptions().add( new Option( "Blue", "1" ) );
+        osA.getOptions().add( new Option( "Green", "2" ) );
+        osA.getOptions().add( new Option( "Yellow", "3" ) );
         
         ocA = createCategoryOptionCombo( categoryComboA, categoryOptionA );
         ocB = createCategoryOptionCombo( categoryComboA, categoryOptionB );
@@ -147,6 +160,8 @@ public class DataValueSetServiceTest
         deB = createDataElement( 'B', categoryComboDef );
         deC = createDataElement( 'C', categoryComboDef );
         deD = createDataElement( 'D', categoryComboDef );
+        deE = createDataElement( 'E' );
+        deE.setOptionSet( osA );
         dsA = createDataSet( 'A', new MonthlyPeriodType() );
         dsA.setCategoryCombo( categoryComboDef );
         ouA = createOrganisationUnit( 'A' );
@@ -160,6 +175,7 @@ public class DataValueSetServiceTest
         deA.setUid( "f7n9E0hX8qk" );
         deB.setUid( "Ix2HsbDMLea" );
         deC.setUid( "eY5ehpbEsB7" );
+        deE.setUid( "jH26dja2f28" );
         dsA.setUid( "pBOMPrpg1QX" );
         ouA.setUid( "DiszpKrYNg8" );
         ouB.setUid( "BdfsJfj87js" );
@@ -187,6 +203,8 @@ public class DataValueSetServiceTest
         dataElementService.addDataElement( deB );
         dataElementService.addDataElement( deC );
         dataElementService.addDataElement( deD );
+
+        idObjectManager.save( osA );
         
         dsA.addDataElement( deA );
         dsA.addDataElement( deB );
@@ -593,6 +611,19 @@ public class DataValueSetServiceTest
         assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
     }
 
+    @Test
+    public void testImportDataValuesInvalidOptionCode()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetInvalid.xml" ).getInputStream();
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in );
+
+        assertEquals( summary.getConflicts().toString(), 1, summary.getConflicts().size() );
+        assertEquals( 2, summary.getImportCount().getImported() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
+    }
+    
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
