@@ -224,13 +224,10 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         //check search mode
         if( $scope.selectedSearchMode === $scope.searchMode.freeText ){     
 
-            if(!$scope.searchText){                
-                $scope.emptySearchText = true;
-                $scope.teiFetched = false;
-                return;
-            }       
-            
-            $scope.queryUrl = 'query=LIKE:' + $scope.searchText;            
+            if( $scope.searchText ){
+                $scope.queryUrl = 'query=LIKE:' + $scope.searchText;
+            }            
+                        
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
             $scope.searchingOrgUnit = $scope.selectedOrgUnit;
         }
