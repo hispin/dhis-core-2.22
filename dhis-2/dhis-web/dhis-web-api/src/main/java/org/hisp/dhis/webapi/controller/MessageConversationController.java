@@ -92,7 +92,7 @@ public class MessageConversationController
     private UserGroupService userGroupService;
 
     @Override
-    public void postProcessEntity( org.hisp.dhis.message.MessageConversation entity, WebOptions options, Map<String, String> parameters ) throws Exception
+    public void postProcessEntity( org.hisp.dhis.message.MessageConversation entity, WebOptions options, Map<String, String> parameters, TranslateParams translateParams ) throws Exception
     {
         Boolean markRead = Boolean.parseBoolean( parameters.get( "markRead" ) );
 
