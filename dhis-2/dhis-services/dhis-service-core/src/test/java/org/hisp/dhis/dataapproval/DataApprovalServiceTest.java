@@ -1632,7 +1632,7 @@ public class DataApprovalServiceTest
     }
 
     @Test
-    public void testPeriodsEndingDurringWorkflowApproval() throws Exception
+    public void testPeriodsEndingDuringWorkflowApproval() throws Exception
     {
         Set<OrganisationUnit> units = newHashSet( organisationUnitC );
 
@@ -1687,7 +1687,7 @@ public class DataApprovalServiceTest
      * @return A String representing the state, level, and allowed user actions
      */
     private String statusAndPermissions( DataApprovalWorkflow workflow, Period period, OrganisationUnit organisationUnit,
-                                         DataElementCategoryOptionCombo attributeOptionCombo )
+        DataElementCategoryOptionCombo attributeOptionCombo )
     {
         DataApprovalStatus status = dataApprovalService.getDataApprovalStatusAndPermissions( workflow, period, organisationUnit, attributeOptionCombo );
 
