@@ -32,26 +32,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DisplayDensity;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 
-import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Bharath Kumar
  */
 @JacksonXmlRootElement( localName = "dataEntryForm", namespace = DxfNamespaces.DXF_2_0 )
 public class DataEntryForm
-    implements Serializable
+    extends BaseIdentifiableObject
 {
     public static final int CURRENT_FORMAT = 2;
-
-    /**
-     * The unique identifier for this DataEntryForm
-     */
-    private int id;
 
     /**
      * Name of DataEntryForm. Required and unique.
@@ -83,13 +79,12 @@ public class DataEntryForm
 
     public DataEntryForm( String name )
     {
-        this.name = name;
+        this(name,null);
     }
 
     public DataEntryForm( String name, String htmlCode )
     {
-        this.name = name;
-        this.htmlCode = htmlCode;
+        this(name,null,htmlCode);
     }
 
     public DataEntryForm( String name, DisplayDensity style, String htmlCode )
@@ -115,33 +110,30 @@ public class DataEntryForm
     // hashCode and equals
     // -------------------------------------------------------------------------
 
-    @Override
-    public int hashCode()
+    @Override public int hashCode()
     {
-        return name.hashCode();
+        return 31 * super.hashCode() + Objects.hash( name, style, htmlCode, format );
     }
 
-    @Override
-    public boolean equals( Object o )
+    @Override public boolean equals( Object obj )
     {
-        if ( this == o )
+        if ( this == obj )
         {
             return true;
         }
-
-        if ( o == null )
+        if ( obj == null || getClass() != obj.getClass() )
         {
             return false;
         }
-
-        if ( !(o instanceof DataEntryForm) )
+        if ( !super.equals( obj ) )
         {
             return false;
         }
-
-        final DataEntryForm other = (DataEntryForm) o;
-
-        return name.equals( other.getName() );
+        final DataEntryForm other = (DataEntryForm) obj;
+        return Objects.equals( this.name, other.name )
+            && Objects.equals( this.style, other.style )
+            && Objects.equals( this.htmlCode, other.htmlCode )
+            && Objects.equals( this.format, other.format );
     }
 
     @Override
@@ -153,16 +145,6 @@ public class DataEntryForm
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
-
-    public int getId()
-    {
-        return id;
-    }
-
-    public void setId( int id )
-    {
-        this.id = id;
-    }
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )

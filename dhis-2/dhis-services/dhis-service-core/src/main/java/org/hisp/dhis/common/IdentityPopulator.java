@@ -117,7 +117,7 @@ public class IdentityPopulator
 
                 if ( count > 0 )
                 {
-                    log.info( count + " last updated set on " + table );
+                    log.info( count + " lastupdated set on " + table );
                 }
 
                 count = 0;
