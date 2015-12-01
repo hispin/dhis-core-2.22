@@ -45,7 +45,6 @@ import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.period.PeriodType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -66,8 +65,6 @@ import java.util.Set;
 public class DataApprovalWorkflow
     extends BaseIdentifiableObject
 {
-    private static final long serialVersionUID = 7717119142689479930L;
-
     /**
      * The period type for approving data with this workflow
      */

@@ -171,8 +171,7 @@ public class TrackedEntityAttributeValue
     @Override
     public String toString()
     {
-        return "[Tracked attribute=" + attribute + ", entityInstance=" + entityInstance + ", value='" + getValue() + "'"
-            + "]";
+        return "[Tracked attribute=" + attribute + ", entityInstance=" + entityInstance + ", value='" + getValue() + "']";
     }
 
     // -------------------------------------------------------------------------
@@ -180,10 +179,11 @@ public class TrackedEntityAttributeValue
     // -------------------------------------------------------------------------
 
     /**
-     * Retrieves the encrypted value if the attribute is confidential.
-     * If the value is not confidential, returns old value (Should be null unless it was
-     * confidential at an earlier stage)
-     * @return String with decrypted value or null
+     * Retrieves the encrypted value if the attribute is confidential. If the 
+     * value is not confidential, returns old value. Should be null unless it was
+     * confidential at an earlier stage.
+     * 
+     * @return String with decrypted value or null.
      */
     @JsonIgnore
     public String getEncryptedValue()
@@ -191,19 +191,17 @@ public class TrackedEntityAttributeValue
         return (getAttribute().getConfidential() && this.value != null ? this.value : this.encryptedValue);
     }
 
-    /**
-     * Used by hibernate to set the object's value
-     */
     public void setEncryptedValue( String encryptedValue )
     {
         this.encryptedValue = encryptedValue;
     }
 
     /**
-     * Retrieves the plaintext value is the attribute isn't confidential.
-     * If the value is confidential, this value should be null, unless it was non-confidential at
-     * an earlier stage.
-     * @return String with plaintext value or null
+     * Retrieves the plain-text value is the attribute isn't confidential. If 
+     * the value is confidential, this value should be null, unless it was 
+     * non-confidential at an earlier stage.
+     * 
+     * @return String with plain-text value or null.
      */
     @JsonIgnore
     public String getPlainValue()
@@ -211,17 +209,16 @@ public class TrackedEntityAttributeValue
         return (!getAttribute().getConfidential() && this.value != null ? this.value : this.plainValue);
     }
 
-    /**
-     * Used by hibernate to set the objects value
-     */
     public void setPlainValue( String plainValue )
     {
         this.plainValue = plainValue;
     }
 
     /**
-     * Returns the encrypted or the plaintext value, based on the attribute's confidential value.
-     * @return String with value, either plaintext or decrypted
+     * Returns the encrypted or the plain-text value, based on the attribute's 
+     * confidential value.
+     * 
+     * @return String with value, either plain-text or decrypted.
      */
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
@@ -232,9 +229,10 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Since we never can be 100% certain Attribute is not null, we store the value in a temporary
-     * variable. The getEncrypted and getPlaintext methods will handle this value when someone requires it
-     * (Either a user or hibernate)
+     * Since we never can be 100% certain Attribute is not null, we store the 
+     * value in a temporary variable. The getEncrypted and getPlaintext methods 
+     * will handle this value when requested.
+     * 
      * @param value the value to be stored
      */
     public void setValue( String value )

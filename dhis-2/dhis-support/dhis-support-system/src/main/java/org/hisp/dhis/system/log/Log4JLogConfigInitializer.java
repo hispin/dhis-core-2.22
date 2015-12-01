@@ -91,7 +91,7 @@ public class Log4JLogConfigInitializer
         
         configureRootLogger( GENERAL_LOGGER_FILENAME );
     }
-        
+    
     /**
      * Configures rolling file loggers.
      * 

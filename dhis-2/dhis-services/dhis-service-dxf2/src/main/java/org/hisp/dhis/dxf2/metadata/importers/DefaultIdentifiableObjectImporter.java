@@ -69,7 +69,6 @@ import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
-import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.program.ProgramValidation;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
@@ -1253,28 +1252,6 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         {
             Collection<DataElementOperand> dataElementOperands = extractDataElementOperands( object, fieldName );
             dataElementOperands.forEach( dataElementOperandService::deleteDataElementOperand );
-        }
-
-        private List<ProgramTrackedEntityAttribute> extractProgramTrackedEntityAttributes( T object )
-        {
-            List<ProgramTrackedEntityAttribute> programTrackedEntityAttributeSet = new ArrayList<>();
-
-            if ( ReflectionUtils.isCollection( "programAttributes", object, ProgramTrackedEntityAttribute.class ) )
-            {
-                List<ProgramTrackedEntityAttribute> programTrackedEntityAttributes = ReflectionUtils.invokeGetterMethod(
-                    "programAttributes", object );
-
-                if ( programTrackedEntityAttributes == null )
-                {
-                    programTrackedEntityAttributes = new ArrayList<>();
-                    ReflectionUtils.invokeSetterMethod( "programAttributes", object, programTrackedEntityAttributes );
-                }
-
-                programTrackedEntityAttributeSet.addAll( programTrackedEntityAttributes );
-                programTrackedEntityAttributes.clear();
-            }
-
-            return programTrackedEntityAttributeSet;
         }
 
         private List<DataDimensionItem> extractDataDimensionItems( T object )
