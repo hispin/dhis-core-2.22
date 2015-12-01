@@ -71,16 +71,16 @@ public class DefaultDataValueAuditService
     }
 
     @Override
-    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
+    public List<DataValueAudit> getDataValueAudits( List<DataElement> dataElements, List<Period> periods, List<OrganisationUnit> organisationUnits,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType )
     {
-        return dataValueAuditStore.getDataValueAudits( dataElement, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
+        return dataValueAuditStore.getDataValueAudits( dataElements, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
     }
 
     @Override
-    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
+    public List<DataValueAudit> getDataValueAudits( List<DataElement> dataElements, List<Period> periods, List<OrganisationUnit> organisationUnits,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType, int first, int max )
     {
-        return dataValueAuditStore.getDataValueAudits( dataElement, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType, first, max );
+        return dataValueAuditStore.getDataValueAudits( dataElements, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType, first, max );
     }
 }

@@ -87,41 +87,32 @@ public class HibernateDataValueAuditStore
     @Override
     public List<DataValueAudit> getDataValueAudits( DataValue dataValue )
     {
-        return getDataValueAudits( dataValue.getDataElement(), dataValue.getPeriod(),
-            dataValue.getSource(), dataValue.getCategoryOptionCombo(), dataValue.getAttributeOptionCombo(), null );
+        return getDataValueAudits( Lists.newArrayList( dataValue.getDataElement() ), Lists.newArrayList( dataValue.getPeriod() ),
+            Lists.newArrayList( dataValue.getSource() ), dataValue.getCategoryOptionCombo(), dataValue.getAttributeOptionCombo(), null );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, Period period, OrganisationUnit organisationUnit,
+    public List<DataValueAudit> getDataValueAudits( List<DataElement> dataElements, List<Period> periods, List<OrganisationUnit> organisationUnits,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType )
     {
-        return getDataValueAudits( dataElement, Lists.newArrayList( period ), Lists.newArrayList( organisationUnit ),
-            categoryOptionCombo, attributeOptionCombo, auditType );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
-        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType )
-    {
-        Criteria criteria = getDataValueAuditCriteria( dataElement, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
+        Criteria criteria = getDataValueAuditCriteria( dataElements, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
         return criteria.list();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<DataValueAudit> getDataValueAudits( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits,
+    public List<DataValueAudit> getDataValueAudits( List<DataElement> dataElements, List<Period> periods, List<OrganisationUnit> organisationUnits,
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType, int first, int max )
     {
-        Criteria criteria = getDataValueAuditCriteria( dataElement, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
+        Criteria criteria = getDataValueAuditCriteria( dataElements, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
         criteria.setFirstResult( first );
         criteria.setMaxResults( max );
 
         return criteria.list();
     }
 
-    private Criteria getDataValueAuditCriteria( DataElement dataElement, List<Period> periods, List<OrganisationUnit> organisationUnits, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType
+    private Criteria getDataValueAuditCriteria( List<DataElement> dataElements, List<Period> periods, List<OrganisationUnit> organisationUnits, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType
         auditType )
     {
         Session session = sessionFactory.getCurrentSession();
@@ -142,9 +133,9 @@ public class HibernateDataValueAuditStore
 
         Criteria criteria = session.createCriteria( DataValueAudit.class );
 
-        if ( dataElement != null )
+        if ( !dataElements.isEmpty() )
         {
-            criteria.add( Restrictions.eq( "dataElement", dataElement ) );
+            criteria.add( Restrictions.in( "dataElement", dataElements ) );
         }
 
         if ( !storedPeriods.isEmpty() )
