@@ -93,25 +93,55 @@
   <bean id="encryptionPassword" class="org.hisp.dhis.hibernate.ConnectionPropertyFactoryBean">
     <property name="hibernateConfigurationProvider" ref="hibernateConfigurationProvider" />
     <property name="hibernateProperty" value="encryption.password" />
-    <property name="defaultValue" value="J7GhAs287hsSQlKd9g5" />    
+    <property name="defaultValue" value="J7GhAs287hsSQlKd9g5" />
   </bean>
-  
+
+
   <!-- Encryption -->
-  
+
+  <!-- Bouncy Castle Crypto APIs -->
+  <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="staticMethod" value="java.security.Security.addProvider" />
+    <property name="arguments">
+      <list>
+        <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider" />
+      </list>
+    </property>
+  </bean>
+
+
+  <!-- Deprecated encryption, but can't be removed!! Needed for systems that still uses it. -->
+
   <bean id="hibernateStringEncryptor" class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
     <property name="registeredName" value="strongHibernateStringEncryptor" />
     <property name="encryptor" ref="stringEncryptor" />
   </bean>
-  
+
   <bean id="stringEncryptor" class="org.jasypt.encryption.pbe.PooledPBEStringEncryptor">
     <property name="algorithm" value="PBEWithSHA1AndDESede" />
     <property name="password" ref="encryptionPassword" />
     <property name="saltGenerator" ref="fixedSaltGenerator" />
     <property name="poolSize" value="4" />
   </bean>
-  
+
   <bean id="fixedSaltGenerator" class="org.jasypt.salt.StringFixedSaltGenerator">
     <constructor-arg type="java.lang.String" value="H7g0oLkEw3wf52fs52g3hbG" />
   </bean>
-  
-</beans>
+
+  <!-- New stronger string encryption -->
+  <!-- Requires BouncyCastle api -->
+  <bean id="hibernateStrongStringEncryptor" class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
+    <property name="registeredName" value="strongStringEncryptor" />
+    <property name="encryptor" ref="strongStringEncryptor" />
+  </bean>
+
+  <bean id="strongStringEncryptor" class="org.jasypt.encryption.pbe.PooledPBEStringEncryptor">
+    <property name="algorithm" value="PBEWITHSHA256AND256BITAES-CBC-BC" />
+    <property name="password" ref="encryptionPassword" />
+    <property name="saltGenerator" ref="org.jasypt.salt.RandomSaltGenerator" />
+    <property name="poolSize" value="4" />
+  </bean>
+
+  <bean id="org.jasypt.salt.RandomSaltGenerator" class="org.jasypt.salt.RandomSaltGenerator"></bean>
+
+  </beans>

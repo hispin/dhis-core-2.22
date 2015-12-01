@@ -106,7 +106,7 @@ public class HibernateTrackedEntityAttributeValueStore
     {
         return getCriteria( 
             Restrictions.eq( "attribute", attribute ),
-            Restrictions.ilike( "value", "%" + searchText + "%" ) ).list();
+            Restrictions.ilike( "plainValue", "%" + searchText + "%" ) ).list();
     }
 
     @Override
