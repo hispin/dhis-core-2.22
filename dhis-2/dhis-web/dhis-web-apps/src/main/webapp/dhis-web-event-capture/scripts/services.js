@@ -27,6 +27,12 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             });
             return promise;
         },
+        delete: function (uid) {
+            var promise = $http.get('../api/fileResources/' + uid).then(function (response) {
+                return response.data;
+            });
+            return promise;
+        },
         download: function (fileName) {
             var promise = $http.get(fileName).then(function (response) {
                 return response.data;
@@ -595,6 +601,16 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             }
 
             return e;
-        }        
+        },
+        refreshList: function(eventList, currentEvent){
+            var continueLoop = true;
+            for(var i=0; i< eventList.length && continueLoop; i++){
+                if(eventList[i].event === currentEvent.event ){
+                    eventList[i] = currentEvent;
+                    continueLoop = false;
+                }
+            }            
+            return eventList;
+        }
     };
 });
