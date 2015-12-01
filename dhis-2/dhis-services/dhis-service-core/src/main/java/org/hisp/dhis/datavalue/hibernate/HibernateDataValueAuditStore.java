@@ -172,7 +172,7 @@ public class HibernateDataValueAuditStore
             criteria.add( Restrictions.eq( "auditType", auditType ) );
         }
 
-        criteria.addOrder( Order.desc( "timestamp" ) );
+        criteria.addOrder( Order.desc( "created" ) );
 
         return criteria;
     }

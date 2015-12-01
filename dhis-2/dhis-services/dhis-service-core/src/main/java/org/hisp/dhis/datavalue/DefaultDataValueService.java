@@ -167,8 +167,7 @@ public class DefaultDataValueService
         }
         else if ( dataValueIsValid( dataValue.getValue(), dataValue.getDataElement() ) == null )
         {
-            DataValueAudit dataValueAudit = new DataValueAudit( dataValue, dataValue.getAuditValue(),
-                dataValue.getStoredBy(), new Date(), AuditType.UPDATE );
+            DataValueAudit dataValueAudit = new DataValueAudit( dataValue, dataValue.getAuditValue(), dataValue.getStoredBy(), AuditType.UPDATE );
 
             dataValueAuditService.addDataValueAudit( dataValueAudit );
             dataValueStore.updateDataValue( dataValue );
@@ -179,8 +178,7 @@ public class DefaultDataValueService
     @Transactional
     public void deleteDataValue( DataValue dataValue )
     {
-        DataValueAudit dataValueAudit = new DataValueAudit( dataValue, dataValue.getAuditValue(),
-            currentUserService.getCurrentUsername(), new Date(), AuditType.DELETE );
+        DataValueAudit dataValueAudit = new DataValueAudit( dataValue, dataValue.getAuditValue(), currentUserService.getCurrentUsername(), AuditType.DELETE );
 
         dataValueAuditService.addDataValueAudit( dataValueAudit );
 

@@ -108,7 +108,7 @@ $( document ).ready( function() {
                             #foreach( $dataValueAudit in $dataValueAudits )
                                 <tr>
                                     <td>
-                                        $format.formatDateTime( $dataValueAudit.timestamp )
+                                        $format.formatDateTime( $dataValueAudit.created )
                                     </td>
                                     <td>
                                         #if( $dataValueAudit.modifiedBy )

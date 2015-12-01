@@ -75,6 +75,7 @@ public class InitTableAlteror
         updateFeatureTypes();
         updateValidationRuleEnums();
         updateProgramStatus();
+        updateAuditTimestamps();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
@@ -88,6 +89,13 @@ public class InitTableAlteror
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
+
+    private void updateAuditTimestamps()
+    {
+        executeSql( "alter table datavalueaudit rename column timestamp to created" );
+        executeSql( "alter table trackedentitydatavalueaudit rename column timestamp to created" );
+        executeSql( "alter table trackedentityattributevalueaudit rename column timestamp to created" );
+    }
 
     private void updateProgramStatus()
     {
