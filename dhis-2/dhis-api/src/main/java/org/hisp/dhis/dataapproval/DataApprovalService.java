@@ -29,17 +29,14 @@ package org.hisp.dhis.dataapproval;
  */
 
 import java.util.List;
-import java.util.Set;
 
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
-import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 
 /**
  * @author Jim Grace
- * @version $Id$
  */
 public interface DataApprovalService
 {

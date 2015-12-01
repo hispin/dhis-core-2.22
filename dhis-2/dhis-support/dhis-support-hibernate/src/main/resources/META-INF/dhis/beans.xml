@@ -96,10 +96,10 @@
     <property name="defaultValue" value="J7GhAs287hsSQlKd9g5" />
   </bean>
 
-
   <!-- Encryption -->
 
   <!-- Bouncy Castle Crypto APIs -->
+  
   <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
     <property name="staticMethod" value="java.security.Security.addProvider" />
     <property name="arguments">
@@ -109,8 +109,7 @@
     </property>
   </bean>
 
-
-  <!-- Deprecated encryption, but can't be removed!! Needed for systems that still uses it. -->
+  <!-- Deprecated encryption, still needed for legacy systems -->
 
   <bean id="hibernateStringEncryptor" class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
     <property name="registeredName" value="strongHibernateStringEncryptor" />
@@ -128,8 +127,8 @@
     <constructor-arg type="java.lang.String" value="H7g0oLkEw3wf52fs52g3hbG" />
   </bean>
 
-  <!-- New stronger string encryption -->
-  <!-- Requires BouncyCastle api -->
+  <!-- New stronger string encryption, requires BouncyCastle API -->
+  
   <bean id="hibernateStrongStringEncryptor" class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
     <property name="registeredName" value="strongStringEncryptor" />
     <property name="encryptor" ref="strongStringEncryptor" />
@@ -144,4 +143,4 @@
 
   <bean id="org.jasypt.salt.RandomSaltGenerator" class="org.jasypt.salt.RandomSaltGenerator"></bean>
 
-  </beans>
+</beans>
