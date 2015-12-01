@@ -32,6 +32,7 @@ import static org.hisp.dhis.dataset.DataSet.NO_EXPIRY;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,12 +52,14 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.comparator.DataSetFrequencyComparator;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.hisp.dhis.util.ObjectUtils;
+import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -433,7 +436,7 @@ public class DataElement
 
     /**
      * Returns the minimum number of expiry days from the data sets of this data
-     * element.
+     * element. Returns {@link DataSet.NO_EXPIRY} if no data sets has expiry.
      */
     public int getExpiryDays()
     {
@@ -448,6 +451,22 @@ public class DataElement
         }
 
         return expiryDays == Integer.MAX_VALUE ? NO_EXPIRY : expiryDays;
+    }
+    
+    /**
+     * Indicates whether the given period is considered expired for the end date
+     * of the given date based on the expiry days of the data sets associated 
+     * with this data element.
+     * 
+     * @param period the period.
+     * @param now the date used as basis.
+     * @return true or false.
+     */
+    public boolean isExpired( Period period, Date now )
+    {
+        int expiryDays = getExpiryDays();
+        
+        return expiryDays != DataSet.NO_EXPIRY && new DateTime( period.getEndDate() ).plusDays( expiryDays ).isBefore( new DateTime( now ) );
     }
 
     public boolean hasDescription()
