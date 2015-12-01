@@ -65,6 +65,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.proceedSelection = true;
     $scope.formUnsaved = false;
     $scope.fileNames = [];
+    $scope.currentFileNames = [];
     
     //notes
     $scope.note = {};
@@ -139,6 +140,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.currentEvent = {};
         $scope.currentEventOriginialValue = {};
         $scope.fileNames = [];
+        $scope.currentFileNames = [];
 
         $scope.eventRegistration = false;
         $scope.editGridColumns = false;
@@ -354,13 +356,10 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                                     if($scope.prStDes[dataValue.dataElement].dataElement.valueType === 'FILE_RESOURCE'){
                                         FileService.get(val).then(function(response){
                                             if(response && response.name){
-                                                if($scope.fileNames[event.event]){
-                                                    $scope.fileNames[event.event][dataValue.dataElement] = response.name;
-                                                } 
-                                                else{
+                                                if(!$scope.fileNames[event.event]){
                                                     $scope.fileNames[event.event] = [];
-                                                    $scope.fileNames[event.event][dataValue.dataElement] = response.name;
-                                                }
+                                                } 
+                                                $scope.fileNames[event.event][dataValue.dataElement] = response.name;
                                             }
                                         });
                                     }
@@ -673,7 +672,11 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             else {
                 
                 //add the new event to the grid                
-                newEvent.event = data.response.importSummaries[0].reference;                
+                newEvent.event = data.response.importSummaries[0].reference; 
+                $scope.currentEvent.event = newEvent.event;
+                
+                $scope.updateFileNames();
+                
                 if( !$scope.dhis2Events ){
                     $scope.dhis2Events = [];                   
                 }
@@ -758,9 +761,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }
 
         DHIS2EventFactory.update(updatedEvent).then(function(data){            
-            
             //reflect the change in the gird            
-            $scope.resetEventValue($scope.currentEvent);            
+            $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);    
+            $scope.updateFileNames();
             $scope.outerForm.submitted = false;            
             $scope.editingEventInFull = false;
             $scope.currentEvent = {};
@@ -782,7 +785,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         if (!rawDate || !convertedDate || rawDate !== convertedDate) {
             $scope.invalidDate = true;
             $scope.currentEvent.eventDate = $scope.currentEventOriginialValue.eventDate;            
-            $scope.resetEventValue($scope.currentEvent);
+            $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
             $scope.currentElement.updated = false;
             return;
         }
@@ -793,7 +796,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         if ($scope.currentEvent.eventDate === '') {
             $scope.currentEvent.eventDate = oldValue;            
-            $scope.resetEventValue($scope.currentEvent);
+            $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
             $scope.currentElement.updated = false;
             return;
         }
@@ -808,7 +811,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
 
             DHIS2EventFactory.updateForEventDate(e, updatedFullValueEvent).then(function () {
                 //reflect the new value in the grid
-                $scope.resetEventValue($scope.currentEvent);
+                $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
                 
                 //update original value
                 $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);      
@@ -837,7 +840,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             $scope.currentElement.updated = false;            
             //reset value back to original
             $scope.currentEvent[dataElement] = oldValue;            
-            $scope.resetEventValue($scope.currentEvent);
+            $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
             return;            
         }
         
@@ -845,7 +848,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             $scope.currentElement.updated = false;                        
             //reset value back to original
             $scope.currentEvent[dataElement] = oldValue;            
-            $scope.resetEventValue($scope.currentEvent);
+            $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
             return;
         }        
                 
@@ -857,7 +860,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             DHIS2EventFactory.updateForSingleValue(updatedSingleValueEvent, updatedFullValueEvent).then(function(data){
                 
                 //reflect the new value in the grid
-                $scope.resetEventValue($scope.currentEvent);
+                $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
                 
                 //update original value
                 $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);      
@@ -865,16 +868,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.currentElement.updated = true;
                 $scope.updateSuccess = true;
             });
-        }
-    };
-    
-    $scope.resetEventValue = function(){
-        var continueLoop = true;
-        for(var i=0; i< $scope.dhis2Events.length && continueLoop; i++){
-            if($scope.dhis2Events[i].event === $scope.currentEvent.event ){
-                $scope.dhis2Events[i] = $scope.currentEvent;
-                continueLoop = false;
-            }
         }
     };
     
@@ -893,6 +886,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
             DHIS2EventFactory.delete(dhis2Event).then(function(data){
                 
+                $scope.currentFileNames = [];
+                delete $scope.fileNames[$scope.currentEvent.event];
                 var continueLoop = true, index = -1;
                 for(var i=0; i< $scope.dhis2Events.length && continueLoop; i++){
                     if($scope.dhis2Events[i].event === dhis2Event.event ){
@@ -1160,6 +1155,32 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         if(e){
             e.stopPropagation();
             e.preventDefault();
+        }
+    };
+    
+    $scope.deleteFile = function(dataElement){
+        var modalOptions = {
+            closeButtonText: 'cancel',
+            actionButtonText: 'remove',
+            headerText: 'remove',
+            bodyText: 'are_you_sure_to_remove'
+        };
+
+        ModalService.showModal({}, modalOptions).then(function(result){            
+            $scope.fileNames[$scope.currentEvent.event][dataElement] = null;
+            $scope.currentEvent[dataElement] = null;
+            $scope.updateEventDataValue($scope.currentEvent, dataElement);
+        });
+    };
+    
+    $scope.updateFileNames = function(){        
+        for(var dataElement in $scope.currentFileNames){
+            if($scope.currentFileNames[dataElement]){
+                if(!$scope.fileNames[$scope.currentEvent.event]){
+                    $scope.fileNames[$scope.currentEvent.event] = [];
+                }                 
+                $scope.fileNames[$scope.currentEvent.event][dataElement] = $scope.currentFileNames[dataElement];
+            }
         }
     };
 });
