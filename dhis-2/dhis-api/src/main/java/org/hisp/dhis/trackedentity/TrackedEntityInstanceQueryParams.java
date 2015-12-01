@@ -169,7 +169,7 @@ public class TrackedEntityInstanceQueryParams
     // Constructors
     // -------------------------------------------------------------------------
 
-    public TrackedEntityInstanceQueryParams()
+    public  TrackedEntityInstanceQueryParams()
     {
     }
 

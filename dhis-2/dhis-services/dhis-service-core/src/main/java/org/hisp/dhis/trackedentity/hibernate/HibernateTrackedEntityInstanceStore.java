@@ -163,11 +163,11 @@ public class HibernateTrackedEntityInstanceStore
 
                     if ( queryItem.isNumeric() )
                     {
-                        hql += " and teav.value " + queryFilter.getSqlOperator() + filter + ")";
+                        hql += " and teav.plainValue " + queryFilter.getSqlOperator() + filter + ")";
                     }
                     else
                     {
-                        hql += " and lower(teav.value) " + queryFilter.getSqlOperator() + filter + ")";
+                        hql += " and lower(teav.plainValue) " + queryFilter.getSqlOperator() + filter + ")";
                     }
 
                 }
