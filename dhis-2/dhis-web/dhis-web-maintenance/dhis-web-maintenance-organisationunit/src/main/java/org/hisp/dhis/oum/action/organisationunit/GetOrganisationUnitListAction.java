@@ -28,7 +28,12 @@ package org.hisp.dhis.oum.action.organisationunit;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
+import org.hisp.dhis.i18n.I18nService;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
+import org.hisp.dhis.paging.ActionPagingSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,10 +41,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager;
-import org.hisp.dhis.paging.ActionPagingSupport;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author Torgeir Lorange Ostby
@@ -52,13 +54,16 @@ public class GetOrganisationUnitListAction
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
-    
+
     private OrganisationUnitSelectionManager selectionManager;
 
     public void setSelectionManager( OrganisationUnitSelectionManager selectionManager )
     {
         this.selectionManager = selectionManager;
     }
+
+    @Autowired
+    private I18nService i18nService;
 
     // -------------------------------------------------------------------------
     // Input & Output
@@ -105,7 +110,7 @@ public class GetOrganisationUnitListAction
                 {
                     organisationUnits.add( selectedUnit ); // Add to list if root
                 }
-                
+
                 organisationUnits.addAll( selectedUnit.getChildren() );
             }
         }
@@ -119,6 +124,8 @@ public class GetOrganisationUnitListAction
 
         this.paging = createPaging( organisationUnits.size() );
         organisationUnits = getBlockElement( organisationUnits, paging.getStartPos(), paging.getPageSize() );
+
+        i18nService.internationalise( organisationUnits );
 
         return SUCCESS;
     }
