@@ -258,8 +258,8 @@ public class OrganisationUnit
         Set<DataSet> toRemove = Sets.difference( dataSets, updates );
         Set<DataSet> toAdd = Sets.difference( updates, dataSets );
 
-        toRemove.parallelStream().forEach( d -> d.getSources().remove( this ) );
-        toAdd.parallelStream().forEach( d -> d.getSources().add( this ) );
+        toRemove.stream().forEach( d -> d.getSources().remove( this ) );
+        toAdd.stream().forEach( d -> d.getSources().add( this ) );
 
         dataSets.clear();
         dataSets.addAll( updates );
