@@ -67,7 +67,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javafx.util.Pair;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -80,6 +79,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.AbstractMap.SimpleEntry;
+
 
 /**
  * This controller uses both /dataApprovals and /dataAcceptances.
@@ -265,16 +266,16 @@ public class DataApprovalController
 
         OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( ou );
 
-        Set<Pair<DataApprovalWorkflow, DataElementCategoryCombo>> pairs = new HashSet<>();
+        Set<SimpleEntry<DataApprovalWorkflow, DataElementCategoryCombo>> pairs = new HashSet<>();
 
         for ( DataSet dataSet : dataSets )
         {
-            pairs.add( new Pair<>( dataSet.getWorkflow(), dataSet.getCategoryCombo() ) );
+            pairs.add( new SimpleEntry<>( dataSet.getWorkflow(), dataSet.getCategoryCombo() ) );
         }
 
         List<DataApprovalStatus> statusList = new ArrayList<>();
 
-        for ( Pair<DataApprovalWorkflow, DataElementCategoryCombo> pair : pairs )
+        for ( SimpleEntry<DataApprovalWorkflow, DataElementCategoryCombo> pair : pairs )
         {
             statusList.addAll( dataApprovalService.getUserDataApprovalsAndPermissions( pair.getKey(), period, orgUnit, pair.getValue() ) );
         }
