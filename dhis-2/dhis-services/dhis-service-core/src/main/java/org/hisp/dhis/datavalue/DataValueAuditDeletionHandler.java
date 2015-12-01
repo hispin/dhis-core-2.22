@@ -32,9 +32,7 @@ import org.hisp.dhis.system.deletion.DeletionHandler;
 
 /**
  * @author Quang Nguyen
- * @version Apr 5, 2010 10:27:08 PM
  */
-
 public class DataValueAuditDeletionHandler
     extends DeletionHandler
 {
