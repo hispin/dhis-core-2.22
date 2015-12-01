@@ -32,6 +32,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -75,6 +76,8 @@ public class HibernateTrackedEntityAttributeValueAuditStore
         List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
     {
         Criteria criteria = getTrackedEntityAttributeValueAuditCriteria( trackedEntityAttributes, trackedEntityInstances, auditType );
+        criteria.addOrder( Order.desc( "created" ) );
+
         return criteria.list();
     }
 
@@ -84,10 +87,19 @@ public class HibernateTrackedEntityAttributeValueAuditStore
         List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType, int first, int max )
     {
         Criteria criteria = getTrackedEntityAttributeValueAuditCriteria( trackedEntityAttributes, trackedEntityInstances, auditType );
+        criteria.addOrder( Order.desc( "created" ) );
         criteria.setFirstResult( first );
-        criteria.setFirstResult( max );
+        criteria.setMaxResults( max );
 
         return criteria.list();
+    }
+
+    @Override
+    public int countTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
+        List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
+    {
+        return ((Number) getTrackedEntityAttributeValueAuditCriteria( trackedEntityAttributes, trackedEntityInstances, auditType )
+            .setProjection( Projections.countDistinct( "id" ) ).uniqueResult()).intValue();
     }
 
     private Criteria getTrackedEntityAttributeValueAuditCriteria( List<TrackedEntityAttribute> trackedEntityAttributes, List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
@@ -109,8 +121,6 @@ public class HibernateTrackedEntityAttributeValueAuditStore
         {
             criteria.add( Restrictions.eq( "auditType", auditType ) );
         }
-
-        criteria.addOrder( Order.desc( "created" ) );
 
         return criteria;
     }

@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.DataSet;
@@ -38,6 +39,7 @@ import org.hisp.dhis.datavalue.DataValueAuditService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.node.NodeUtils;
+import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
@@ -94,7 +96,10 @@ public class AuditController
         @RequestParam( required = false, defaultValue = "" ) List<String> ou,
         @RequestParam( required = false ) String co,
         @RequestParam( required = false ) String cc,
-        @RequestParam( required = false ) AuditType auditType
+        @RequestParam( required = false ) AuditType auditType,
+        @RequestParam( required = false ) boolean skipPaging,
+        @RequestParam( required = false, defaultValue = "50" ) int pageSize,
+        @RequestParam( required = false, defaultValue = "1" ) int page
     ) throws WebMessageException
     {
         List<DataElement> dataElements = new ArrayList<>();
@@ -106,11 +111,35 @@ public class AuditController
         DataElementCategoryOptionCombo categoryOptionCombo = getCategoryOptionCombo( co );
         DataElementCategoryOptionCombo attributeOptionCombo = getAttributeOptionCombo( cc );
 
-        List<DataValueAudit> dataValueAudits = dataValueAuditService.getDataValueAudits( dataElements, periods,
-            organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
+        List<DataValueAudit> dataValueAudits;
+        Pager pager = null;
 
-        RootNode rootNode = NodeUtils.createRootNode( "dataValueAudits" );
-        rootNode.addChild( fieldFilterService.filter( DataValueAudit.class, dataValueAudits, new ArrayList<>() ) );
+        if ( skipPaging )
+        {
+            dataValueAudits = dataValueAuditService.getDataValueAudits( dataElements, periods,
+                organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
+        }
+        else
+        {
+            int total = dataValueAuditService.countDataValueAudits( dataElements, periods, organisationUnits, categoryOptionCombo,
+                attributeOptionCombo, auditType );
+
+            pager = new Pager( page, total, pageSize );
+
+            dataValueAudits = dataValueAuditService.getDataValueAudits( dataElements, periods,
+                organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType, pager.getOffset(), pager.getPageSize() );
+        }
+
+        RootNode rootNode = NodeUtils.createMetadata();
+
+        if ( pager != null )
+        {
+            rootNode.addChild( NodeUtils.createPager( pager ) );
+        }
+
+        CollectionNode trackedEntityAttributeValueAudits = rootNode.addChild( new CollectionNode( "dataValueAudits", true ) );
+        trackedEntityAttributeValueAudits.addChildren( fieldFilterService.filter( DataValueAudit.class,
+            dataValueAudits, new ArrayList<>() ).getChildren() );
 
         return rootNode;
     }
@@ -119,17 +148,43 @@ public class AuditController
     public @ResponseBody RootNode getTrackedEntityDataValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> de,
         @RequestParam( required = false, defaultValue = "" ) List<String> ps,
-        @RequestParam( required = false ) AuditType auditType
+        @RequestParam( required = false ) AuditType auditType,
+        @RequestParam( required = false ) boolean skipPaging,
+        @RequestParam( required = false, defaultValue = "50" ) int pageSize,
+        @RequestParam( required = false, defaultValue = "1" ) int page
     ) throws WebMessageException
     {
         List<DataElement> dataElements = getDataElements( de );
         List<ProgramStageInstance> programStageInstances = getProgramStageInstances( ps );
 
-        List<TrackedEntityDataValueAudit> dataValueAudits = trackedEntityDataValueAuditService.getTrackedEntityDataValueAudits(
-            dataElements, programStageInstances, auditType );
+        List<TrackedEntityDataValueAudit> dataValueAudits;
+        Pager pager = null;
 
-        RootNode rootNode = NodeUtils.createRootNode( "trackedEntityDataValueAudits" );
-        rootNode.addChild( fieldFilterService.filter( TrackedEntityDataValueAudit.class, dataValueAudits, new ArrayList<>() ) );
+        if ( skipPaging )
+        {
+            dataValueAudits = trackedEntityDataValueAuditService.getTrackedEntityDataValueAudits(
+                dataElements, programStageInstances, auditType );
+        }
+        else
+        {
+            int total = trackedEntityDataValueAuditService.countTrackedEntityDataValueAudits( dataElements, programStageInstances, auditType );
+
+            pager = new Pager( page, total, pageSize );
+
+            dataValueAudits = trackedEntityDataValueAuditService.getTrackedEntityDataValueAudits(
+                dataElements, programStageInstances, auditType, pager.getOffset(), pager.getPageSize() );
+        }
+
+        RootNode rootNode = NodeUtils.createMetadata();
+
+        if ( pager != null )
+        {
+            rootNode.addChild( NodeUtils.createPager( pager ) );
+        }
+
+        CollectionNode trackedEntityAttributeValueAudits = rootNode.addChild( new CollectionNode( "trackedEntityDataValueAudits", true ) );
+        trackedEntityAttributeValueAudits.addChildren( fieldFilterService.filter( TrackedEntityDataValueAudit.class,
+            dataValueAudits, new ArrayList<>() ).getChildren() );
 
         return rootNode;
     }
@@ -138,17 +193,44 @@ public class AuditController
     public @ResponseBody RootNode getTrackedEntityAttributeValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> tea,
         @RequestParam( required = false, defaultValue = "" ) List<String> te,
-        @RequestParam( required = false ) AuditType auditType
+        @RequestParam( required = false ) AuditType auditType,
+        @RequestParam( required = false ) boolean skipPaging,
+        @RequestParam( required = false, defaultValue = "50" ) int pageSize,
+        @RequestParam( required = false, defaultValue = "1" ) int page
     ) throws WebMessageException
     {
         List<TrackedEntityAttribute> trackedEntityAttributes = getTrackedEntityAttributes( tea );
         List<TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( te );
 
-        List<TrackedEntityAttributeValueAudit> attributeValueAudits = trackedEntityAttributeValueAuditService.getTrackedEntityAttributeValueAudits(
-            trackedEntityAttributes, trackedEntityInstances, auditType );
+        List<TrackedEntityAttributeValueAudit> attributeValueAudits;
+        Pager pager = null;
 
-        RootNode rootNode = NodeUtils.createRootNode( "trackedEntityAttributeValueAudits" );
-        rootNode.addChild( fieldFilterService.filter( TrackedEntityAttributeValueAudit.class, attributeValueAudits, new ArrayList<>() ) );
+        if ( skipPaging )
+        {
+            attributeValueAudits = trackedEntityAttributeValueAuditService.getTrackedEntityAttributeValueAudits(
+                trackedEntityAttributes, trackedEntityInstances, auditType );
+        }
+        else
+        {
+            int total = trackedEntityAttributeValueAuditService.countTrackedEntityAttributeValueAudits( trackedEntityAttributes,
+                trackedEntityInstances, auditType );
+
+            pager = new Pager( page, total, pageSize );
+
+            attributeValueAudits = trackedEntityAttributeValueAuditService.getTrackedEntityAttributeValueAudits(
+                trackedEntityAttributes, trackedEntityInstances, auditType, pager.getOffset(), pager.getPageSize() );
+        }
+
+        RootNode rootNode = NodeUtils.createMetadata();
+
+        if ( pager != null )
+        {
+            rootNode.addChild( NodeUtils.createPager( pager ) );
+        }
+
+        CollectionNode trackedEntityAttributeValueAudits = rootNode.addChild( new CollectionNode( "trackedEntityAttributeValueAudits", true ) );
+        trackedEntityAttributeValueAudits.addChildren( fieldFilterService.filter( TrackedEntityAttributeValueAudit.class,
+            attributeValueAudits, new ArrayList<>() ).getChildren() );
 
         return rootNode;
     }

@@ -33,6 +33,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.dataelement.DataElement;
@@ -97,6 +98,8 @@ public class HibernateDataValueAuditStore
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType )
     {
         Criteria criteria = getDataValueAuditCriteria( dataElements, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
+        criteria.addOrder( Order.desc( "created" ) );
+
         return criteria.list();
     }
 
@@ -106,10 +109,19 @@ public class HibernateDataValueAuditStore
         DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType, int first, int max )
     {
         Criteria criteria = getDataValueAuditCriteria( dataElements, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
+        criteria.addOrder( Order.desc( "created" ) );
         criteria.setFirstResult( first );
         criteria.setMaxResults( max );
 
         return criteria.list();
+    }
+
+    @Override
+    public int countDataValueAudits( List<DataElement> dataElements, List<Period> periods, List<OrganisationUnit> organisationUnits,
+        DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType auditType )
+    {
+        return ((Number) getDataValueAuditCriteria( dataElements, periods, organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType )
+            .setProjection( Projections.countDistinct( "id" ) ).uniqueResult()).intValue();
     }
 
     private Criteria getDataValueAuditCriteria( List<DataElement> dataElements, List<Period> periods, List<OrganisationUnit> organisationUnits, DataElementCategoryOptionCombo categoryOptionCombo, DataElementCategoryOptionCombo attributeOptionCombo, AuditType
@@ -162,8 +174,6 @@ public class HibernateDataValueAuditStore
         {
             criteria.add( Restrictions.eq( "auditType", auditType ) );
         }
-
-        criteria.addOrder( Order.desc( "created" ) );
 
         return criteria;
     }
