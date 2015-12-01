@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.events.event;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,6 +60,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.utils.InputUtils;
 import org.hisp.dhis.event.EventStatus;
+import org.hisp.dhis.fileresource.FileResourceService;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -168,6 +170,9 @@ public abstract class AbstractEventService
 
     @Autowired
     protected InputUtils inputUtils;
+
+    @Autowired
+    protected FileResourceService fileResourceService;
 
     protected static final int FLUSH_FREQUENCY = 20;
 
@@ -732,9 +737,9 @@ public abstract class AbstractEventService
 
         Set<TrackedEntityDataValue> dataValues = new HashSet<>( dataValueService.getTrackedEntityDataValues( programStageInstance ) );
         Map<String, TrackedEntityDataValue> existingDataValues = getDataElementDataValueMap( dataValues );
-
+        
         for ( DataValue value : event.getDataValues() )
-        {
+        {        	        		
             DataElement dataElement = getDataElement( value.getDataElement() );
             TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue( programStageInstance, dataElement );
 
@@ -745,6 +750,11 @@ public abstract class AbstractEventService
 
             if ( dataValue != null )
             {
+            	if ( StringUtils.isEmpty( value.getValue() ) && dataElement.isFileType() && !StringUtils.isEmpty( dataValue.getValue() ) )
+                {
+            		fileResourceService.deleteFileResource( dataValue.getValue() );
+                }
+            	
                 dataValue.setValue( value.getValue() );
                 dataValue.setProvidedElsewhere( value.getProvidedElsewhere() );
                 dataValueService.updateTrackedEntityDataValue( dataValue );
