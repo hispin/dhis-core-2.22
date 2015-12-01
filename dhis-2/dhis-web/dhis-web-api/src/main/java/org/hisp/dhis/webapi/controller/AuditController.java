@@ -32,6 +32,7 @@ import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
+import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.datavalue.DataValueAudit;
 import org.hisp.dhis.datavalue.DataValueAuditService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -87,7 +88,8 @@ public class AuditController
 
     @RequestMapping( value = "dataValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getAggregateDataValueAudit(
-        @RequestParam( required = false ) String de,
+        @RequestParam( required = false, defaultValue = "" ) List<String> ds,
+        @RequestParam( required = false, defaultValue = "" ) List<String> de,
         @RequestParam( required = false, defaultValue = "" ) List<String> pe,
         @RequestParam( required = false, defaultValue = "" ) List<String> ou,
         @RequestParam( required = false ) String co,
@@ -95,13 +97,16 @@ public class AuditController
         @RequestParam( required = false ) AuditType auditType
     ) throws WebMessageException
     {
-        DataElement dataElement = getDataElement( de );
+        List<DataElement> dataElements = new ArrayList<>();
+        dataElements.addAll( getDataElements( de ) );
+        dataElements.addAll( getDataElementsByDataSet( ds ) );
+
         List<Period> periods = getPeriods( pe );
         List<OrganisationUnit> organisationUnits = getOrganisationUnit( ou );
         DataElementCategoryOptionCombo categoryOptionCombo = getCategoryOptionCombo( co );
         DataElementCategoryOptionCombo attributeOptionCombo = getAttributeOptionCombo( cc );
 
-        List<DataValueAudit> dataValueAudits = dataValueAuditService.getDataValueAudits( dataElement, periods,
+        List<DataValueAudit> dataValueAudits = dataValueAuditService.getDataValueAudits( dataElements, periods,
             organisationUnits, categoryOptionCombo, attributeOptionCombo, auditType );
 
         RootNode rootNode = NodeUtils.createRootNode( "dataValueAudits" );
@@ -252,6 +257,25 @@ public class AuditController
         }
 
         return programStageInstance;
+    }
+
+    private List<DataElement> getDataElementsByDataSet( List<String> dsIdentifiers ) throws WebMessageException
+    {
+        List<DataElement> dataElements = new ArrayList<>();
+
+        for ( String ds : dsIdentifiers )
+        {
+            DataSet dataSet = manager.get( DataSet.class, ds );
+
+            if ( dataSet == null )
+            {
+                throw new WebMessageException( WebMessageUtils.conflict( "Illegal dataSet identifier: " + ds ) );
+            }
+
+            dataElements.addAll( dataSet.getDataElements() );
+        }
+
+        return dataElements;
     }
 
     private List<DataElement> getDataElements( List<String> deIdentifier ) throws WebMessageException
