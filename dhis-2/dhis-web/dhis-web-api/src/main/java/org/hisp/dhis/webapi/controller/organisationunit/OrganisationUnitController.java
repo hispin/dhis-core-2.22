@@ -179,6 +179,23 @@ public class OrganisationUnitController
         return organisationUnits;
     }
 
+    @Override
+    protected void postProcessEntity( OrganisationUnit entity, WebOptions options, Map<String, String> parameters, TranslateParams translateParams )
+        throws Exception
+    {
+        if ( translateParams.isTranslate() )
+        {
+            if ( translateParams.defaultLocale() )
+            {
+                i18nService.internationalise( entity.getChildren() );
+            }
+            else
+            {
+                i18nService.internationalise( entity.getChildren(), translateParams.getLocale() );
+            }
+        }
+    }
+
     @RequestMapping( value = "/{uid}/parents", method = RequestMethod.GET )
     public List<OrganisationUnit> getEntityList( @PathVariable( "uid" ) String uid,
         @RequestParam Map<String, String> parameters, Model model, TranslateParams translateParams,

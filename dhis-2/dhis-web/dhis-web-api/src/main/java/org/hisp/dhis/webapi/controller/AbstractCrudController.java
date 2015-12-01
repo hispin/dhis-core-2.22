@@ -188,7 +188,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         }
 
         postProcessEntities( entities );
-        postProcessEntities( entities, options, rpParameters );
+        postProcessEntities( entities, options, rpParameters, translateParams );
 
         if ( fields.contains( "access" ) )
         {
@@ -445,7 +445,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         for ( T entity : entities )
         {
             postProcessEntity( entity );
-            postProcessEntity( entity, options, parameters );
+            postProcessEntity( entity, options, parameters, translateParams );
         }
 
         CollectionNode collectionNode = fieldFilterService.filter( getEntityClass(), entities, fields );
@@ -810,7 +810,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
      * Override to process entities after it has been retrieved from
      * storage and before it is returned to the view. Entities is null-safe.
      */
-    protected void postProcessEntities( List<T> entityList, WebOptions options, Map<String, String> parameters )
+    protected void postProcessEntities( List<T> entityList, WebOptions options, Map<String, String> parameters, TranslateParams translateParams )
     {
     }
 
@@ -834,7 +834,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
      * Override to process a single entity after it has been retrieved from
      * storage and before it is returned to the view. Entity is null-safe.
      */
-    protected void postProcessEntity( T entity, WebOptions options, Map<String, String> parameters ) throws Exception
+    protected void postProcessEntity( T entity, WebOptions options, Map<String, String> parameters, TranslateParams translateParams ) throws Exception
     {
     }
 
