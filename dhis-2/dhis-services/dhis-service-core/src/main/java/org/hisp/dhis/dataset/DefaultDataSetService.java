@@ -401,13 +401,11 @@ public class DefaultDataSetService
     {
         now = now != null ? now : new Date();
 
-        int expiryDays = dataElement.getExpiryDays();
-
-        boolean expired = expiryDays != DataSet.NO_EXPIRY && new DateTime( period.getEndDate() ).plusDays( expiryDays ).isBefore( new DateTime( now ) );
-
+        boolean expired = dataElement.isExpired( period, now );
+        
         return expired && lockExceptionStore.getCount( dataElement, period, organisationUnit ) == 0L;
     }
-
+    
     @Override
     public void mergeWithCurrentUserOrganisationUnits( DataSet dataSet, Collection<OrganisationUnit> mergeOrganisationUnits )
     {
