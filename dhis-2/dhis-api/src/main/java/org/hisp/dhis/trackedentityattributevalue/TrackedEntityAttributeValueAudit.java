@@ -53,7 +53,7 @@ public class TrackedEntityAttributeValueAudit
 
     private TrackedEntityInstance entityInstance;
 
-    private Date timestamp;
+    private Date created;
 
     private String value;
 
@@ -70,7 +70,7 @@ public class TrackedEntityAttributeValueAudit
         this.attribute = trackedEntityAttributeValue.getAttribute();
         this.entityInstance = trackedEntityAttributeValue.getEntityInstance();
 
-        this.timestamp = new Date();
+        this.created = new Date();
         this.value = value;
         this.modifiedBy = modifiedBy;
         this.auditType = auditType;
@@ -79,7 +79,7 @@ public class TrackedEntityAttributeValueAudit
     @Override
     public int hashCode()
     {
-        return Objects.hash( attribute, entityInstance, timestamp, value, modifiedBy, auditType );
+        return Objects.hash( attribute, entityInstance, created, value, modifiedBy, auditType );
     }
 
     @Override
@@ -99,7 +99,7 @@ public class TrackedEntityAttributeValueAudit
 
         return Objects.equals( this.attribute, other.attribute )
             && Objects.equals( this.entityInstance, other.entityInstance )
-            && Objects.equals( this.timestamp, other.timestamp )
+            && Objects.equals( this.created, other.created )
             && Objects.equals( this.value, other.value )
             && Objects.equals( this.modifiedBy, other.modifiedBy )
             && Objects.equals( this.auditType, other.auditType );
@@ -141,14 +141,14 @@ public class TrackedEntityAttributeValueAudit
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public Date getTimestamp()
+    public Date getCreated()
     {
-        return timestamp;
+        return created;
     }
 
-    public void setTimestamp( Date timestamp )
+    public void setCreated( Date created )
     {
-        this.timestamp = timestamp;
+        this.created = created;
     }
 
     @JsonProperty

@@ -119,6 +119,7 @@ public class HibernateTrackedEntityDataValueStore
         criteria.add( Restrictions.in( "dataElement", dataElements ) );
         criteria.add( Restrictions.eq( "programInstance.entityInstance", entityInstance ) );
         criteria.add( Restrictions.between( "programStageInstance.executionDate", startDate, endDate ) );
+
         return criteria.list();
     }
 
