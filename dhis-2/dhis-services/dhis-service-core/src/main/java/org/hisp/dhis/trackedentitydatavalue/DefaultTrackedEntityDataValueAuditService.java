@@ -92,4 +92,10 @@ public class DefaultTrackedEntityDataValueAuditService
     {
         return trackedEntityDataValueAuditStore.getTrackedEntityDataValueAudits( dataElements, programStageInstances, auditType, first, max );
     }
+
+    @Override
+    public int countTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances, AuditType auditType )
+    {
+        return trackedEntityDataValueAuditStore.countTrackedEntityDataValueAudits( dataElements, programStageInstances, auditType );
+    }
 }

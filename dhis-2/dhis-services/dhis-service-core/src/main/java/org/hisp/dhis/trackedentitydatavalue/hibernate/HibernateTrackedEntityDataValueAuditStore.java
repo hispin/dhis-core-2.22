@@ -32,6 +32,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.dataelement.DataElement;
@@ -75,6 +76,8 @@ public class HibernateTrackedEntityDataValueAuditStore
         List<ProgramStageInstance> programStageInstances, AuditType auditType )
     {
         Criteria criteria = getTrackedEntityDataValueAuditCriteria( dataElements, programStageInstances, auditType );
+        criteria.addOrder( Order.desc( "created" ) );
+
         return criteria.list();
     }
 
@@ -84,10 +87,18 @@ public class HibernateTrackedEntityDataValueAuditStore
         List<ProgramStageInstance> programStageInstances, AuditType auditType, int first, int max )
     {
         Criteria criteria = getTrackedEntityDataValueAuditCriteria( dataElements, programStageInstances, auditType );
+        criteria.addOrder( Order.desc( "created" ) );
         criteria.setFirstResult( first );
         criteria.setMaxResults( max );
 
         return criteria.list();
+    }
+
+    @Override
+    public int countTrackedEntityDataValueAudits( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances, AuditType auditType )
+    {
+        return ((Number) getTrackedEntityDataValueAuditCriteria( dataElements, programStageInstances, auditType )
+            .setProjection( Projections.countDistinct( "id" ) ).uniqueResult()).intValue();
     }
 
     private Criteria getTrackedEntityDataValueAuditCriteria( List<DataElement> dataElements, List<ProgramStageInstance> programStageInstances,
@@ -110,8 +121,6 @@ public class HibernateTrackedEntityDataValueAuditStore
         {
             criteria.add( Restrictions.eq( "auditType", auditType ) );
         }
-
-        criteria.addOrder( Order.desc( "created" ) );
 
         return criteria;
     }

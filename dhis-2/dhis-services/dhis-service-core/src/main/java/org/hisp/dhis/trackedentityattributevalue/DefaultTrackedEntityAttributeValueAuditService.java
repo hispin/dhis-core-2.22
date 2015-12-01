@@ -64,4 +64,11 @@ public class DefaultTrackedEntityAttributeValueAuditService
         return trackedEntityAttributeValueAuditStore.getTrackedEntityAttributeValueAudits( trackedEntityAttributes, trackedEntityInstances,
             auditType, first, max );
     }
+
+    @Override
+    public int countTrackedEntityAttributeValueAudits( List<TrackedEntityAttribute> trackedEntityAttributes,
+        List<TrackedEntityInstance> trackedEntityInstances, AuditType auditType )
+    {
+        return trackedEntityAttributeValueAuditStore.countTrackedEntityAttributeValueAudits( trackedEntityAttributes, trackedEntityInstances, auditType );
+    }
 }
