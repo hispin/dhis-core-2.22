@@ -1,5 +1,5 @@
 
-<h3>$encoder.htmlEncode( $organisationUnit.name )</h3>
+<h3>$encoder.htmlEncode( $organisationUnit.displayName )</h3>
 
 <table>
 
@@ -58,7 +58,7 @@
 
 #foreach( $groupSet in $groupSets )
 <tr>
-<td><label>$!encoder.htmlEncode( $groupSet.name ):</label></td>
+<td><label>$!encoder.htmlEncode( $groupSet.displayName ):</label></td>
 <td>$!encoder.htmlEncode( $!organisationUnit.getGroupNameInGroupSet( $groupSet ) )</td>
 </tr>
 #end
