@@ -2,6 +2,7 @@
     <a href="javascript:dhis2.leftBar.showAnimated()" title="$i18n.getString('show_menu' )"><i class="fa fa-arrow-right leftBarIcon"></i></a>
 </span>
 
+i just write somehitn
 <div id="leftBar">
     
     <d2-left-bar></d2-left-bar>
@@ -61,6 +62,7 @@
                     </div>
                 </div>
                 <div class="row col-sm-12 small-vertical-spacing" ng-if="selectedProgram" ng-repeat="category in selectedCategories">
+                    it is here
                     <div class="col-sm-4">
                         {{category.name}}
                     </div>
@@ -116,13 +118,17 @@
         <form name="outerForm" novalidate>
             <div ng-if="editingEventInFull || eventRegistration">
                 <h3>
-                    <span ng-if="editingEventInFull">{{'event_details'| translate}}</span>                       
-                    <span ng-if="eventRegistration">{{'new_event'| translate}}</span>                            
+                    <span ng-if="editingEventInFull">{{'event_details'| translate}}</span>
+                    <span ng-if="eventRegistration">{{'new_event'| translate}}</span>
                 </h3>
                 <div class="col-sm-8">
                     <div class="bordered-div">
                         <div ng-if="displayCustomForm" ng-include="'views/ec-custom-form.html'"></div>  
                         <div ng-if="!displayCustomForm" ng-include="'views/defaultForm.html'"></div>
+                        <div class="row">
+                            <div class="col-sm-1">Completed</div>
+                            <input type="checkbox" ng-model="currentEvent.status" style="margin-left: 50px;">
+                        </div>
                         <div ng-include="'views/comments-section.html'"></div>
                         <div ng-include="'views/buttons-section.html'"></div>
                     </div>                    
