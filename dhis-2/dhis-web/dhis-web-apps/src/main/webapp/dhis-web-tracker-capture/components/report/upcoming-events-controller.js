@@ -115,9 +115,8 @@ trackerCapture.controller('UpcomingEventsController',
 
                     upcomingEvent.dueDate = DateUtils.formatFromApiToUser(row.dueDate);
                     upcomingEvent.event = row.event;
-                    upcomingEvent.eventName = $scope.programStages[row.programStage].name;
-                    upcomingEvent.eventOrgUnitName = row.eventOrgUnitName;
-                    upcomingEvent.orgUnitName = row.eventOrgUnitName;
+                    upcomingEvent.eventName = $scope.programStages[row.programStage].name;                    
+                    upcomingEvent.orgUnitName = row.orgUnitName; 
                     upcomingEvent.followup = row.followup;
                     upcomingEvent.program = row.program;
                     upcomingEvent.programStage = row.programStage;

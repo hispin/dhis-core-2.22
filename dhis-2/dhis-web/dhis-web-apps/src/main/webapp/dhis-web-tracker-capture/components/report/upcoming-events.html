@@ -227,10 +227,10 @@
                                 ng-click="showDashboard(upcomingEvent.trackedEntityInstance)"
                                 title="{{'go_to_dashboard'| translate}}">
                                 <td ng-repeat="gridColumn in gridColumns | filter:{show: true, eventCol: false}" 
-                                    ng-if='displayMode.onlyMarkedFollowup ? overdueEvent.followup:true'>                                                
+                                    ng-if='displayMode.onlyMarkedFollowup ? upcomingEvent.followup:true'>                                                
                                     {{upcomingEvent[gridColumn.id]}}
                                 </td>
-                                <td ng-repeat="gridColumn in gridColumns | filter:{show: true, eventCol: true}" ng-if='displayMode.onlyMarkedFollowup ? overdueEvent.followup:true'>                                                
+                                <td ng-repeat="gridColumn in gridColumns | filter:{show: true, eventCol: true}" ng-if='displayMode.onlyMarkedFollowup ? upcomingEvent.followup:true'>                                                
                                     {{upcomingEvent[gridColumn.id]}}
                                 </td>                               
                             </tr>
