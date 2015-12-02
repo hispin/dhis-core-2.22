@@ -218,16 +218,6 @@ public class SqlView
         return regex.append( ")(\\s|$).*$" ).toString();
     }
     
-    public SqlView cleanSqlQuery()
-    {
-        sqlQuery = sqlQuery.
-            replaceAll( "\\s*;\\s+", ";" ).
-            replaceAll( ";+", ";" ).
-            replaceAll( "\\s+", " " ).trim();
-        
-        return this;
-    }
-
     /**
      * Indicates whether this SQL view is a query.
      */
