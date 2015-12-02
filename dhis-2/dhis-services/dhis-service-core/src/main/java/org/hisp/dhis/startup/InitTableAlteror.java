@@ -29,6 +29,7 @@ package org.hisp.dhis.startup;
  */
 
 import org.amplecode.quick.StatementManager;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.jdbc.StatementBuilder;
@@ -54,10 +55,10 @@ public class InitTableAlteror
     private StatementBuilder statementBuilder;
 
     @Resource( name = "stringEncryptor" )
-    PBEStringEncryptor oldPBEStringEncryptor;
+    private PBEStringEncryptor oldPBEStringEncryptor;
 
     @Resource( name = "strongStringEncryptor" )
-    PBEStringEncryptor newPBEStringEncryptor;
+    private PBEStringEncryptor newPBEStringEncryptor;
 
     // -------------------------------------------------------------------------
     // Execute
@@ -104,15 +105,20 @@ public class InitTableAlteror
     {
         try
         {
-            String smtpPassword = oldPBEStringEncryptor.decrypt( statementManager.getHolder().
-                queryForString( "SELECT smptpassword FROM configuration" ) );
-            String remoteServerPassword = oldPBEStringEncryptor.decrypt( statementManager.getHolder()
-                .queryForString( "SELECT remoteserverpassword FROM configuration" ) );
+            String smtpPassword = statementManager.getHolder().queryForString( "SELECT smptpassword FROM configuration" );
+            String remoteServerPassword = statementManager.getHolder().queryForString( "SELECT remoteserverpassword FROM configuration" );
 
-            executeSql( "UPDATE configuration SET smtppassword = '" + newPBEStringEncryptor.encrypt( smtpPassword ) + "'" );
-            executeSql( "UPDATE configuration SET remotepassword = '" + newPBEStringEncryptor.encrypt( remoteServerPassword ) + "'" );
-            executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
-            executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverpassword" );
+            if ( StringUtils.isNotBlank( smtpPassword ) )
+            {
+                executeSql( "UPDATE configuration SET smtppassword = '" + newPBEStringEncryptor.encrypt( oldPBEStringEncryptor.decrypt( smtpPassword ) ) + "'" );
+                executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
+            }
+            
+            if ( StringUtils.isNotBlank( remoteServerPassword ) )
+            {
+                executeSql( "UPDATE configuration SET remotepassword = '" + newPBEStringEncryptor.encrypt( oldPBEStringEncryptor.decrypt( remoteServerPassword ) ) + "'" );
+                executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverpassword" );
+            }
         }
         catch ( Exception ex )
         {
