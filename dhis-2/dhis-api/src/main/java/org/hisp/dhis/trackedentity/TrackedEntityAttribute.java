@@ -408,7 +408,6 @@ public class TrackedEntityAttribute
                 unique = trackedEntityAttribute.isUnique();
                 orgunitScope = trackedEntityAttribute.getOrgunitScope();
                 programScope = trackedEntityAttribute.getProgramScope();
-                confidential = trackedEntityAttribute.getConfidential();
                 optionSet = trackedEntityAttribute.getOptionSet();
             }
             else if ( strategy.isMerge() )
@@ -425,7 +424,6 @@ public class TrackedEntityAttribute
                 unique = trackedEntityAttribute.isUnique() == null ? unique : trackedEntityAttribute.isUnique();
                 orgunitScope = trackedEntityAttribute.getOrgunitScope() == null ? orgunitScope : trackedEntityAttribute.getOrgunitScope();
                 programScope = trackedEntityAttribute.getProgramScope() == null ? programScope : trackedEntityAttribute.getProgramScope();
-                confidential = trackedEntityAttribute.getConfidential() == null ? confidential : trackedEntityAttribute.getConfidential();
                 optionSet = trackedEntityAttribute.getOptionSet() == null ? optionSet : trackedEntityAttribute.getOptionSet();
             }
         }

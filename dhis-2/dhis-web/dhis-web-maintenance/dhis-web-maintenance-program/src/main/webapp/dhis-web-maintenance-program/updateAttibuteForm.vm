@@ -73,10 +73,10 @@
 	</tr>
 	
 	<tr>
-		<td><label for="confidential">$i18n.getString( "confidential" )</label></td>
+		<td><label for="confidential">$i18n.getString( "confidential" ) <br /><span class="tipText">(Confidential attributes can not be used in search and analytics.)</span></label></td>
 		<td>
-			<input type='checkbox' id="confidential" name="confidential" value='true' #if( $attribute.confidential ) checked #end>
-		</td>		
+			<input type='checkbox' id="confidential" name="confidential" value='true' #if( $attribute.confidential ) checked #end disabled="disabled">
+        </td>
 		<td></td>				
 	</tr>
         
