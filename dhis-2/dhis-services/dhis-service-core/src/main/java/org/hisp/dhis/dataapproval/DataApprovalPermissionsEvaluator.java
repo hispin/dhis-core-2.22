@@ -201,8 +201,6 @@ class DataApprovalPermissionsEvaluator
                 ( ( userLevel >= dataLevel || mayViewLowerLevelUnapprovedData )
                     && organisationUnitService.isInUserHierarchy( da.getOrganisationUnit() ) );
 
-        log.debug( "Org unit " + da.getOrganisationUnit().getName() + " in hierarchy: " + organisationUnitService.isInUserHierarchy( da.getOrganisationUnit() ) );
-
         log.debug( "getPermissions orgUnit " + ( da.getOrganisationUnit() == null ? "(null)" : da.getOrganisationUnit().getName() )
             + " workflow " + workflow.getName()
             + " combo " + da.getAttributeOptionCombo().getName() + " state " + s.name()
