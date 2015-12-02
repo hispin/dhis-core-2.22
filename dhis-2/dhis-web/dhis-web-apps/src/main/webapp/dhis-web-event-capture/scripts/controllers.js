@@ -149,7 +149,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.updateSuccess = false;
         $scope.currentGridColumnId = '';           
         $scope.displayCustomForm = false;
-        console.log("displayCustomForm set to false");
         
         if (angular.isObject($scope.selectedOrgUnit)) {
             ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
