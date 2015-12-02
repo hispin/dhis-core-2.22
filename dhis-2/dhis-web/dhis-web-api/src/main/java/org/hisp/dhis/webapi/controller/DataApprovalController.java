@@ -29,6 +29,7 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.dataapproval.DataApproval;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
@@ -79,8 +80,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.AbstractMap.SimpleEntry;
-
 
 /**
  * This controller uses both /dataApprovals and /dataAcceptances.
@@ -266,18 +265,21 @@ public class DataApprovalController
 
         OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( ou );
 
-        Set<SimpleEntry<DataApprovalWorkflow, DataElementCategoryCombo>> pairs = new HashSet<>();
+        SetMap<DataApprovalWorkflow, DataElementCategoryCombo> workflowCategoryComboMap = new SetMap<>();
 
         for ( DataSet dataSet : dataSets )
         {
-            pairs.add( new SimpleEntry<>( dataSet.getWorkflow(), dataSet.getCategoryCombo() ) );
+            workflowCategoryComboMap.putValue( dataSet.getWorkflow(), dataSet.getCategoryCombo() );
         }
 
         List<DataApprovalStatus> statusList = new ArrayList<>();
 
-        for ( SimpleEntry<DataApprovalWorkflow, DataElementCategoryCombo> pair : pairs )
+        for ( DataApprovalWorkflow workflow : workflowCategoryComboMap.keySet() )
         {
-            statusList.addAll( dataApprovalService.getUserDataApprovalsAndPermissions( pair.getKey(), period, orgUnit, pair.getValue() ) );
+            for ( DataElementCategoryCombo attributeCombo : workflowCategoryComboMap.get( workflow ) )
+            {
+                statusList.addAll( dataApprovalService.getUserDataApprovalsAndPermissions( workflow, period, orgUnit, attributeCombo ) );
+            }
         }
 
         List<Map<String, Object>> list = new ArrayList<>();
