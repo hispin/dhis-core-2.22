@@ -226,9 +226,6 @@ public class UpdateAttributeAction
         inherit = inherit != null;
         trackedEntityAttribute.setInherit( inherit );
 
-        confidential = confidential != null;
-        trackedEntityAttribute.setConfidential( confidential );
-
         if ( unique )
         {
             boolean orgunitScope = false;
