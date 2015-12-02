@@ -47,18 +47,16 @@ trackerCapture.controller('UpcomingEventsController',
     $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};
     
     //watch for selection of org unit from tree
-    $scope.$watch('selectedOrgUnit', function() {      
-        $scope.selectedProgram = null;
+    $scope.$watch('selectedOrgUnit', function() {
         if( angular.isObject($scope.selectedOrgUnit)){            
-            $scope.loadPrograms($scope.selectedOrgUnit);
+            $scope.loadPrograms();
         }
     });
     
     //load programs associated with the selected org unit.
-    $scope.loadPrograms = function(orgUnit) {        
-        $scope.selectedOrgUnit = orgUnit;        
+    $scope.loadPrograms = function() {
         if (angular.isObject($scope.selectedOrgUnit)){
-            ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
+            ProgramFactory.getAllForUser($scope.selectedProgram).then(function(response){
                 $scope.programs = response.programs;
                 $scope.selectedProgram = response.selectedProgram;
             });

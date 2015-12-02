@@ -51,18 +51,16 @@ trackerCapture.controller('OverdueEventsController',
     //watch for selection of org unit from tree
     $scope.$watch('selectedOrgUnit', function() {
         $scope.reportFinished = false;
-        $scope.reportStarted = false;
-        $scope.selectedProgram = null;
-        if( angular.isObject($scope.selectedOrgUnit)){            
-            $scope.loadPrograms($scope.selectedOrgUnit);
+        $scope.reportStarted = false;        
+        if( angular.isObject($scope.selectedOrgUnit)){
+            $scope.loadPrograms();
         }
     });
     
     //load programs associated with the selected org unit.
-    $scope.loadPrograms = function(orgUnit) {        
-        $scope.selectedOrgUnit = orgUnit;        
+    $scope.loadPrograms = function() {
         if (angular.isObject($scope.selectedOrgUnit)){
-            ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
+            ProgramFactory.getAllForUser($scope.selectedProgram).then(function(response){
                 $scope.programs = response.programs;
                 $scope.selectedProgram = response.selectedProgram;
             });
