@@ -56,32 +56,18 @@
     </div> 
 
     <div ng-show="selectedOrgUnit">
-
+        
         <!-- top bar begins -->
         <div class="row top-bar">        
-            <div class="col-sm-12">            
-                <span ng-if='!showRegistrationDiv'>
-                    {{selectedProgram.trackedEntity.name}} {{searchLabel}}                    
-                    <span class="btn-group horizonal-spacing" ng-show="selectedProgram">
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{allEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-list mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{activeEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-circle-o mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{completedEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
-                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'CANCELLED'" title="{{cancelledEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("CANCELLED")'><i class="fa fa-times mouse-pointer"></i></label>
-                    </span>
-                    <span class="small-horizonal-spacing" ng-if="teiFetched && pager.total">
-                        ({{'total'| translate}}:  {{pager.total}})
-                    </span>
-                </span>
-                <span ng-if='showRegistrationDiv'>
-                    {{selectedProgram.trackedEntity.name}} {{'register'| translate}}
-                </span>
+            <div class="col-sm-12">                
+                {{trackerCaptureLabel}}
                 <div class="pull-right hideInPrint">
                     <div class="btn-group" dropdown is-open="status.isopen">
                         <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="trackedEntityList.rows.length <= 0">
                             <i class="fa fa-cog" title="{{settingsLabel}}"></i>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li ng-if="trackedEntityList.rows.length > 0"><a href ng-click="showHideColumns()">{{showHideLabel}}</a></li>
+                            <li><a href ng-click="showDisplayMode()">{{displayModeLabel}}</a></li>
                         </ul>
                     </div>
                 </div>            
@@ -103,22 +89,19 @@
             </div>
         </div>
         <div class="row">
+            
             <!-- program selection begins -->
-            <div id="selectDropDownParent" class="input-group col-md-4">            
-                <button type="button" class="select-dropdown-button form-control" ng-show="programs.length > 0">{{selectedProgram ? selectedProgram.name : 'please_select_a_program'| translate}}</button>
-                <button type="button" class="select-dropdown-button form-control" ng-show="programs.length < 1" ng-disabled="true">{{programs.length > 0 ? 'please_select_a_program' : 'no_program_exists'| translate}}</button>
-                <div class="input-group-btn program-drop-down">
-                    <button class="btn btn-default select-dropdown-caret" type="button" title="{{listProgramsLabel}}" data-toggle="dropdown" ng-disabled="programs.length < 1"><i class="fa fa-caret-down"></i></button>
-                    <ul id="selectDropDown" class="dropdown-menu dropdown-menu-right">
-                        <li>
-                            <a href ng-click="getProgramAttributes(null)">{{programSelectLabel}}</a>
-                        </li>
-                        <li ng-repeat="program in programs| orderBy: 'name'">
-                            <a href ng-click="getProgramAttributes(program)">{{program.name}}</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <div class="col-md-4 small-vertical-spacing">
+                <ui-select ng-model="availablePrograms.selectedProgram" 
+                        theme="select2" 
+                        on-select="getProgramAttributes(availablePrograms.selectedProgram)"
+                        style="width:100%;">
+                    <ui-select-match allow-clear="true" class="form-control-ui-select" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
+                    <ui-select-choices  repeat="program in programs | orderBy: 'name' | filter: $select.search | limitTo:maxOptionSize">
+                        <span ng-bind-html="program.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>            
             <!-- program selection ends -->
 
             <!-- simple/advanced search begins -->
@@ -176,7 +159,31 @@
         <!-- entity grid begins -->
         <i ng-if="!teiFetched && showTrackedEntityDiv" class="fa fa-spinner fa-spin fa-2x"></i>
         <div class="row">
-             <div class="col-sm-12" ng-if="!showRegistrationDiv" ng-include="'views/tei.html'"></div>
+            <div class="col-sm-12">
+                <span ng-if='!showRegistrationDiv'>
+                    <span class="btn-group" ng-show="selectedProgram">
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{allEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-list mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{activeEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-circle-o mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{completedEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'CANCELLED'" title="{{cancelledEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("CANCELLED")'><i class="fa fa-times mouse-pointer"></i></label>
+                    </span>
+                    <span ng-if="teiFetched && pager.total">
+                        {{'total'| translate}}:  {{pager.total}}
+                    </span>
+                </span>
+                
+                <div class="pull-right hideInPrint" ng-if="trackedEntityList.rows.length > 0 && !showRegistrationDiv">
+                    <button class="btn btn-info"
+                            type="button"                             
+                            ng-click="showHideColumns()">
+                        {{showHideLabel}}
+                    </button>                    
+                </div>
+                
+            </div>
+        </div>
+        <div class="row">            
+            <div class="col-sm-12" ng-if="!showRegistrationDiv" ng-include="'views/tei.html'"></div>
         </div>
         <!-- entity grid ends -->
     </div>
