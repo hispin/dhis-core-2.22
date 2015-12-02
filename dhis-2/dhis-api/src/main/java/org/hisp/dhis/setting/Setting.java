@@ -108,7 +108,8 @@ public enum Setting
     DATE_FORMAT( "keyDateFormat", "yyyy-MM-dd", String.class ),
     APP_FOLDER_PATH( "appFolderPath" ),
     APP_BASE_URL( "appBaseUrl" ),
-    APP_STORE_URL( "appStoreUrl", "http://www.dhis2.org/appstore", String.class ),
+    APP_STORE_URL( "appStoreUrl", "https://www.dhis2.org/appstore", String.class ),
+    APP_STORE_INDEX_URL( "appStoreIndexUrl", "https://s3-eu-west-1.amazonaws.com/dhis2-appstore/appstore.json", String.class ),
     STYLE( "currentStyle", "light_blue/light_blue.css", String.class );
     
     private final String name;
