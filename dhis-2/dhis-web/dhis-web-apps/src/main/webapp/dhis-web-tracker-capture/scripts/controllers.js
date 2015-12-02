@@ -28,6 +28,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 TEIService) {  
     
     $scope.maxOptionSize = 30;
+    $scope.availablePrograms = {};
     
     //Selection
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
@@ -97,6 +98,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             }
             
             //Labels
+            $scope.trackerCaptureLabel = $translate.instant('tracker_capture');
             $scope.orgUnitLabel = $translate.instant('org_unit');
             $scope.listAllLabel = $translate.instant('list_all');
             $scope.registerLabel = $translate.instant('register');
@@ -115,6 +117,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.showHideLabel = $translate.instant('show_hide_columns');
             $scope.listProgramsLabel = $translate.instant('list_programs');
             $scope.settingsLabel = $translate.instant('settings');
+            $scope.displayModeLabel = $translate.instant('display_mode');
             
             $scope.loadPrograms($scope.selectedOrgUnit);
         }
@@ -335,6 +338,17 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.showTrackedEntityDiv = true;
         }
     };    
+    
+    $scope.showDisplayMode = function(){        
+        
+        var modalInstance = $modal.open({
+            templateUrl: 'views/display-mode-modal.html',
+            controller: 'DisplayModeController'           
+        });
+
+        modalInstance.result.then(function () {           
+        }, function () {});
+    };
     
     $scope.showHideColumns = function(){
         $scope.hiddenGridColumns = 0;
