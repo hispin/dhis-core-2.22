@@ -28,11 +28,11 @@
     <many-to-one name="indicatorType" class="org.hisp.dhis.indicator.IndicatorType" column="indicatortypeid"
       foreign-key="fk_indicator_indicatortypeid" not-null="true" />
 
-    <property name="numerator" column="numerator" type="text" />
+    <property name="numerator" column="numerator" type="text" not-null="true" />
 
     <property name="numeratorDescription" column="numeratordescription" type="text" />
 
-    <property name="denominator" column="denominator" type="text" />
+    <property name="denominator" column="denominator" type="text" not-null="true" />
 
     <property name="denominatorDescription" column="denominatordescription" type="text" />
 
