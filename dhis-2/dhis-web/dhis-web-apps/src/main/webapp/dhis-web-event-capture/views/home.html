@@ -125,10 +125,17 @@ i just write somehitn
                     <div class="bordered-div">
                         <div ng-if="displayCustomForm" ng-include="'views/ec-custom-form.html'"></div>  
                         <div ng-if="!displayCustomForm" ng-include="'views/defaultForm.html'"></div>
-                        <div class="row">
-                            <div class="col-sm-1">Completed</div>
-                            <input type="checkbox" ng-model="currentEvent.status" style="margin-left: 50px;">
-                        </div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th colspan="2">The form completion status</th>
+                                </tr>
+                                <tr>
+                                    <td>Form Completed</td>
+                                    <td><input type="checkbox" ng-model="currentEvent.status" style="margin-left: 50px;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <div ng-include="'views/comments-section.html'"></div>
                         <div ng-include="'views/buttons-section.html'"></div>
                     </div>                    
