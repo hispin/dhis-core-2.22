@@ -290,6 +290,49 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             
             return def.promise;            
         },
+        getAllForUser: function(selectedProgram){
+            var roles = SessionStorageService.get('USER_ROLES');
+            var userRoles = roles && roles.userCredentials && roles.userCredentials.userRoles ? roles.userCredentials.userRoles : [];
+            var def = $q.defer();
+            
+            TCStorageService.currentStore.open().done(function(){
+                TCStorageService.currentStore.getAll('programs').done(function(prs){
+                    var programs = [];
+                    angular.forEach(prs, function(pr){                            
+                        if(userHasValidRole(pr, userRoles)){
+                            programs.push(pr);
+                        }
+                    });
+                    
+                    if(programs.length === 0){
+                        selectedProgram = null;
+                    }
+                    else if(programs.length === 1){
+                        selectedProgram = programs[0];
+                    } 
+                    else{
+                        if(selectedProgram){
+                            var continueLoop = true;
+                            for(var i=0; i<programs.length && continueLoop; i++){
+                                if(programs[i].id === selectedProgram.id){                                
+                                    selectedProgram = programs[i];
+                                    continueLoop = false;
+                                }
+                            }
+                            if(continueLoop){
+                                selectedProgram = null;
+                            }
+                        }
+                    }
+                    
+                    $rootScope.$apply(function(){
+                        def.resolve({programs: programs, selectedProgram: selectedProgram});
+                    });                      
+                });
+            });
+            
+            return def.promise;
+        },
         get: function(uid){
             
             var def = $q.defer();
@@ -345,7 +388,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
             
             return def.promise;
-        }          
+        }
     };
 })
 
