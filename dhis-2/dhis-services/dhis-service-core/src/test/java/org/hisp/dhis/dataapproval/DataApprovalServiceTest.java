@@ -348,6 +348,15 @@ public class DataApprovalServiceTest
         setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
         setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
         setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setDependency( dataApprovalStore, "currentUserService", currentUserService, CurrentUserService.class );
+    }
+
+    private void setCurrentUserServiceDependencies( CurrentUserService mockCurrentUserService )
+    {
+        setDependency( dataApprovalService, "currentUserService", mockCurrentUserService, CurrentUserService.class );
+        setDependency( dataApprovalLevelService, "currentUserService", mockCurrentUserService, CurrentUserService.class );
+        setDependency( organisationUnitService, "currentUserService", mockCurrentUserService, CurrentUserService.class );
+        setDependency( dataApprovalStore, "currentUserService", mockCurrentUserService, CurrentUserService.class );
     }
 
     // ---------------------------------------------------------------------
@@ -471,9 +480,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
         DataApproval dataApprovalA = new DataApproval( level1, workflow12A, periodA, organisationUnitA, defaultCombo, NOT_ACCEPTED, date, userA );
@@ -550,9 +557,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
         DataApproval dataApprovalA = new DataApproval( level1, workflow12, periodA, organisationUnitA, defaultCombo, NOT_ACCEPTED, date, userA );
@@ -569,9 +574,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
         DataApproval dataApprovalA = new DataApproval( level1, workflow12, periodA, organisationUnitA, defaultCombo, NOT_ACCEPTED, date, userA );
@@ -600,9 +603,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         // No levels defined.
         assertEquals( DataApprovalState.UNAPPROVABLE, dataApprovalService.getDataApprovalStatus( workflow0, periodA, organisationUnitA, defaultCombo ).getState() );
@@ -696,9 +697,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -716,9 +715,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -767,9 +764,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         assertEquals( DataApprovalState.UNAPPROVED_WAITING, dataApprovalService.getDataApprovalStatus( workflow1234, periodA, organisationUnitA, defaultCombo ).getState() );
         assertEquals( DataApprovalState.UNAPPROVED_READY, dataApprovalService.getDataApprovalStatus( workflow1234, periodA, organisationUnitD, defaultCombo ).getState() );
@@ -786,9 +781,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -883,9 +876,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE_LOWER_LEVELS, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -950,9 +941,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1007,9 +996,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1033,9 +1020,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1092,9 +1077,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE_LOWER_LEVELS, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1151,9 +1134,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_ACCEPT_LOWER_LEVELS, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1209,9 +1190,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitB );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1274,9 +1253,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1403,9 +1380,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS, AUTH_APPR_LEVEL );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
@@ -1561,9 +1536,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitA );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, AUTH_APPR_LEVEL, DataApproval.AUTH_APPROVE, DataApproval.AUTH_APPROVE_LOWER_LEVELS, DataApproval.AUTH_ACCEPT_LOWER_LEVELS );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         optionA.setOrganisationUnits( newHashSet( organisationUnitC ) );
         optionB.setOrganisationUnits( newHashSet( organisationUnitE ) );
@@ -1612,9 +1585,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitC );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, AUTH_APPR_LEVEL, DataApproval.AUTH_APPROVE );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         assertEquals( "UNAPPROVED_WAITING level=null approve=F unapprove=F accept=F unaccept=F read=T", statusAndPermissions( workflow1234, periodA, organisationUnitC, defaultCombo ) );
         assertEquals( "UNAPPROVED_ABOVE level=null approve=F unapprove=F accept=F unaccept=F read=T", statusAndPermissions( workflow12, periodA, organisationUnitC, defaultCombo ) );
@@ -1637,9 +1608,7 @@ public class DataApprovalServiceTest
         Set<OrganisationUnit> units = newHashSet( organisationUnitC );
 
         CurrentUserService currentUserService = new MockCurrentUserService( units, null, AUTH_APPR_LEVEL, DataApproval.AUTH_APPROVE );
-        setDependency( dataApprovalService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( dataApprovalLevelService, "currentUserService", currentUserService, CurrentUserService.class );
-        setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
+        setCurrentUserServiceDependencies( currentUserService );
 
         Date date = new Date();
 
