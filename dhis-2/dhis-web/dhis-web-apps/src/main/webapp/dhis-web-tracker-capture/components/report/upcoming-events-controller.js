@@ -66,7 +66,7 @@ trackerCapture.controller('UpcomingEventsController',
     };
     
     //watch for selection of program
-    $scope.$watch('selectedProgram', function() {   
+    $scope.$watchCollection('[selectedProgram, selectedOuMode]', function () {
         $scope.reportFinished = false;
         $scope.reportStarted = false;
         
@@ -155,21 +155,20 @@ trackerCapture.controller('UpcomingEventsController',
             
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
                 var grid = TEIGridService.generateGridColumns(atts, $scope.selectedOuMode);
-                $scope.gridColumns = grid.columns;
+                
+                $scope.gridColumns = [];
+                $scope.gridColumns.push({name: $translate.instant('due_date'), id: 'dueDate', valueType: 'DATE', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
+                $scope.gridColumns.push({name: $translate.instant('event_name'), id: 'eventName', valueType: 'TEXT', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
+                $scope.gridColumns = $scope.gridColumns.concat(grid.columns);
+                
+                $scope.filterTypes['eventName'] = 'TEXT';                
+                $scope.filterTypes['dueDate'] = 'DATE';
+                $scope.filterText['dueDate']= {};
                 
                 angular.forEach($scope.gridColumns, function(col){
                     col.eventCol = false;
-                });
-                
-                $scope.gridColumns.push({name: $translate.instant('event_orgunit_name'), id: 'orgUnitName', valueType: 'TEXT', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
-                $scope.filterTypes['orgUnitName'] = 'TEXT';
-                $scope.gridColumns.push({name: $translate.instant('event_name'), id: 'eventName', valueType: 'TEXT', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
-                $scope.filterTypes['eventName'] = 'TEXT';
-                $scope.gridColumns.push({name: $translate.instant('due_date'), id: 'dueDate', valueType: 'DATE', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
-                $scope.filterTypes['dueDate'] = 'DATE';
-                $scope.filterText['dueDate']= {};                
-            });
-            
+                });                
+            });            
         }      
     };
     

@@ -1535,13 +1535,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         generateGridColumns: function(attributes, ouMode){
             
             var filterTypes = {}, filterText = {};
-            var columns = attributes ? angular.copy(attributes) : [];
+            var columns = [];
        
             //also add extra columns which are not part of attributes (orgunit for example)
             columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'TEXT', displayInListNoProgram: false});
             columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'DATE', displayInListNoProgram: false});
             columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'BOOLEAN', displayInListNoProgram: false});
-
+            columns = columns.concat(attributes ? angular.copy(attributes) : []);
+            
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
                 column.show = false;                
