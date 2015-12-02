@@ -51,6 +51,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -80,6 +81,9 @@ public class AppController
 
     @Autowired
     private LocationManager locationManager;
+    
+    @Autowired
+    private RestTemplate restTemplate;
 
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
@@ -278,6 +282,12 @@ public class AppController
         appManager.setAppBaseUrl( appBaseUrl );
     }
 
+    @RequestMapping( value = "/appStore", method = RequestMethod.GET, produces = "application/json" )
+    public @ResponseBody String getAppStoreUrl()
+    {
+        return restTemplate.getForObject( Setting.APP_STORE_INDEX_URL.getDefaultValue().toString(), String.class );
+    }
+    
     //--------------------------------------------------------------------------
     // Helpers
     //--------------------------------------------------------------------------
