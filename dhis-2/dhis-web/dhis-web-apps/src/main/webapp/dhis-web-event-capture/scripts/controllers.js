@@ -60,6 +60,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.currentEvent = {};
     $scope.currentEventOriginialValue = {}; 
     $scope.displayCustomForm = false;
+            console.log("displayCustomForm set to false");
     $scope.currentElement = {id: '', update: false};
     $scope.optionSets = [];
     $scope.proceedSelection = true;
@@ -149,6 +150,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.updateSuccess = false;
         $scope.currentGridColumnId = '';           
         $scope.displayCustomForm = false;
+        console.log("displayCustomForm set to false");
         
         if (angular.isObject($scope.selectedOrgUnit)) {
             ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
@@ -369,6 +371,12 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                             event['uid'] = event.event;                                
                             event.eventDate = DateUtils.formatFromApiToUser(event.eventDate);                                
                             event['eventDate'] = event.eventDate;
+                            if(event.status === "ACTIVE") {
+                                event.status = false;
+                            } else if(event.status === "COMPLETED") {
+                                event.status = true;
+                            }
+
 
                             delete event.dataValues;
                         }
@@ -520,7 +528,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.showEventRegistration = function(){        
-        $scope.displayCustomForm = $scope.customForm ? true:false;        
+        $scope.displayCustomForm = $scope.customForm ? true:false;
+        console.log("displayCustomForm set to "+$scope.displayCustomForm);
         $scope.currentEvent = {};
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
@@ -549,6 +558,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.showEditEventInFull = function(){       
         $scope.note = {};
         $scope.displayCustomForm = $scope.customForm ? true:false;
+        console.log("displayCustomForm set to "+$scope.displayCustomForm);
 
         $scope.currentEvent = ContextMenuSelectedItem.getSelectedItem();
         $scope.editingEventInFull = !$scope.editingEventInFull;   
@@ -571,6 +581,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.switchDataEntryForm = function(){
         $scope.displayCustomForm = !$scope.displayCustomForm;
+        console.log("displayCustomForm set to "+$scope.displayCustomForm);
+
     };
     
     $scope.addEvent = function(addingAnotherEvent){                
@@ -622,7 +634,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 program: $scope.selectedProgram.id,
                 programStage: $scope.selectedProgramStage.id,
                 orgUnit: $scope.selectedOrgUnit.id,
-                status: 'ACTIVE',            
+                status: $scope.currentEvent.status ? 'COMPLETED' : 'ACTIVE',
                 eventDate: DateUtils.formatFromUserToApi(newEvent.eventDate),
                 dataValues: dataValues
         }; 
@@ -735,7 +747,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                             program: $scope.currentEvent.program,
                             programStage: $scope.currentEvent.programStage,
                             orgUnit: $scope.currentEvent.orgUnit,
-                            status: 'ACTIVE',                                        
+                            status: $scope.currentEvent.status ? 'COMPLETED' : 'ACTIVE',
                             eventDate: DateUtils.formatFromUserToApi($scope.currentEvent.eventDate),
                             event: $scope.currentEvent.event, 
                             dataValues: dataValues
