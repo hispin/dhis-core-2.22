@@ -153,22 +153,6 @@ public class SqlViewServiceTest
     }
 
     @Test
-    public void testCleanSqlQuery()
-    {
-        SqlView sqlViewA = createSqlView( 'A', sqlA );
-
-        sqlViewA.cleanSqlQuery();
-        
-        int idA = sqlViewService.saveSqlView( sqlViewA );
-
-        assertEquals( sqlViewService.getSqlView( "SqlViewA" ).getId(), idA );
-
-        SqlView sqlViewB = sqlViewService.getSqlView( idA );
-
-        assertEq( 'A', sqlViewB, "SELECT * FROM _categorystructure;" );
-    }
-
-    @Test
     public void testSetUpViewTableName()
     {
         SqlView sqlViewC = createSqlView( 'C', sqlC );

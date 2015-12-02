@@ -101,7 +101,7 @@ public class UpdateSqlViewAction
             sqlView.setCacheStrategy( cacheStrategy != null ? cacheStrategy : SqlView.DEFAULT_CACHE_STRATEGY );
         }
 
-        sqlViewService.updateSqlView( sqlView.cleanSqlQuery() );
+        sqlViewService.updateSqlView( sqlView );
 
         return SUCCESS;
     }

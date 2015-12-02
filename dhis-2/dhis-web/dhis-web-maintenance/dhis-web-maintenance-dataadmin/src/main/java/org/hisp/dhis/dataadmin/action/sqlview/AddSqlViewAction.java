@@ -114,7 +114,7 @@ public class AddSqlViewAction
             sqlView.setCacheStrategy( SqlView.DEFAULT_CACHE_STRATEGY );
         }
 
-        sqlViewService.saveSqlView( sqlView.cleanSqlQuery() );
+        sqlViewService.saveSqlView( sqlView );
 
         return SUCCESS;
     }
