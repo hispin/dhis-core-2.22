@@ -228,8 +228,6 @@ class DataApprovalPermissionsEvaluator
 
         final DataApprovalWorkflow dataApprovalWorkflow = workflow;
 
-        String key = user.getId() + "-" + workflow.getId() + "-" + da.getOrganisationUnit().getId();
-
         try
         {
             userApprovalLevel = USER_APPROVAL_LEVEL_CACHE.get( user.getId() + "-" + da.getOrganisationUnit().getId(),
