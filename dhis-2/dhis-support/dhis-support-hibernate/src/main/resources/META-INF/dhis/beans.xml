@@ -135,7 +135,7 @@
   </bean>
 
   <bean id="strongStringEncryptor" class="org.jasypt.encryption.pbe.PooledPBEStringEncryptor">
-    <property name="algorithm" value="PBEWITHSHA256AND256BITAES-CBC-BC" />
+    <property name="algorithm" value="PBEWITHSHA256AND128BITAES-CBC-BC" />
     <property name="password" ref="encryptionPassword" />
     <property name="saltGenerator" ref="org.jasypt.salt.RandomSaltGenerator" />
     <property name="poolSize" value="4" />
