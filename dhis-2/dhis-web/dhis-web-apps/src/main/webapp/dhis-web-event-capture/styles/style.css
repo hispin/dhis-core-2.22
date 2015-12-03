@@ -408,6 +408,16 @@ div#orgUnitTree {
     word-wrap: break-word;
 }
 
+.default-form-completed {
+    width: 100%;
+}
+
+.custom-form-completed {
+    width: 35%
+}
+
+
+
 /*.file-input input[readonly] {
     background-color: white !important;
     cursor: text !important;
