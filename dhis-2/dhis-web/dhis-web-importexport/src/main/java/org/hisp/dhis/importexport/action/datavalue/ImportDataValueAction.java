@@ -28,10 +28,7 @@ package org.hisp.dhis.importexport.action.datavalue;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.IdentifiableProperty;
@@ -48,7 +45,9 @@ import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * @author Lars Helge Overland
@@ -60,7 +59,7 @@ public class ImportDataValueAction
 
     @Autowired
     private DataValueSetService dataValueSetService;
-    
+
     @Autowired
     private AdxDataService adxDataService;
 
@@ -97,7 +96,7 @@ public class ImportDataValueAction
     {
         this.strategy = ImportStrategy.valueOf( stgy );
     }
-    
+
     private IdentifiableProperty idScheme;
 
     public void setIdScheme( IdentifiableProperty idScheme )
@@ -134,7 +133,7 @@ public class ImportDataValueAction
     }
 
     private boolean preheatCache = true;
-    
+
     public void setPreheatCache( boolean preheatCache )
     {
         this.preheatCache = preheatCache;
@@ -158,10 +157,14 @@ public class ImportDataValueAction
 
         in = StreamUtils.wrapAndCheckCompressionFormat( in );
 
-        ImportOptions options = new ImportOptions().
-            setIdScheme( idScheme ).setDataElementIdScheme( dataElementIdScheme ).setOrgUnitIdScheme( orgUnitIdScheme ).
-            setDryRun( dryRun ).setPreheatCache( preheatCache ).setStrategy( strategy ).setSkipExistingCheck( skipExistingCheck );
-        
+        ImportOptions options = new ImportOptions().setDryRun( dryRun )
+            .setPreheatCache( preheatCache ).setStrategy( strategy ).setSkipExistingCheck( skipExistingCheck );
+
+        options.getIdSchemes()
+            .setIdScheme( idScheme.toString() )
+            .setDataElementIdScheme( dataElementIdScheme.toString() )
+            .setOrgUnitIdScheme( orgUnitIdScheme.toString() );
+
         log.info( options );
 
         scheduler.executeTask( new ImportDataValueTask( dataValueSetService, adxDataService, in, options, taskId, importFormat ) );

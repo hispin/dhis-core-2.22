@@ -28,24 +28,7 @@ package org.hisp.dhis.dxf2.datavalueset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.common.IdentifiableProperty.UUID;
-import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
-import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
-import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
-import static org.hisp.dhis.system.util.DateUtils.parseDate;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
+import com.csvreader.CsvReader;
 import org.amplecode.quick.BatchHandler;
 import org.amplecode.quick.BatchHandlerFactory;
 import org.amplecode.staxwax.factory.XMLFactory;
@@ -100,7 +83,23 @@ import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.csvreader.CsvReader;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.trimToNull;
+import static org.hisp.dhis.common.IdentifiableProperty.UUID;
+import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
+import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
+import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
+import static org.hisp.dhis.system.util.DateUtils.parseDate;
 
 /**
  * @author Lars Helge Overland
@@ -114,7 +113,7 @@ public class DefaultDataValueSetService
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
-    
+
     @Autowired
     private DataElementService dataElementService;
 
@@ -138,10 +137,10 @@ public class DefaultDataValueSetService
 
     @Autowired
     private DataValueSetStore dataValueSetStore;
-    
+
     @Autowired
     private SystemSettingManager systemSettingManager;
-    
+
     @Autowired
     private I18nManager i18nManager;
 
@@ -149,7 +148,7 @@ public class DefaultDataValueSetService
     private Notifier notifier;
 
     // Set methods for test purposes
-    
+
     public void setBatchHandlerFactory( BatchHandlerFactory batchHandlerFactory )
     {
         this.batchHandlerFactory = batchHandlerFactory;
@@ -165,16 +164,16 @@ public class DefaultDataValueSetService
     //--------------------------------------------------------------------------
 
     @Override
-    public DataExportParams getFromUrl( Set<String> dataSets, Set<String> periods, Date startDate, Date endDate, 
+    public DataExportParams getFromUrl( Set<String> dataSets, Set<String> periods, Date startDate, Date endDate,
         Set<String> organisationUnits, boolean includeChildren, Date lastUpdated, Integer limit, IdSchemes idSchemes )
     {
         DataExportParams params = new DataExportParams();
-        
+
         if ( dataSets != null )
         {
             params.getDataSets().addAll( identifiableObjectManager.getByUid( DataSet.class, dataSets ) );
         }
-        
+
         if ( periods != null && !periods.isEmpty() )
         {
             params.getPeriods().addAll( periodService.reloadIsoPeriods( new ArrayList<>( periods ) ) );
@@ -184,7 +183,7 @@ public class DefaultDataValueSetService
             params.setStartDate( startDate );
             params.setEndDate( endDate );
         }
-        
+
         if ( organisationUnits != null )
         {
             params.getOrganisationUnits().addAll( identifiableObjectManager.getByUid( OrganisationUnit.class, organisationUnits ) );
@@ -194,49 +193,49 @@ public class DefaultDataValueSetService
         params.setLastUpdated( lastUpdated );
         params.setLimit( limit );
         params.setIdSchemes( idSchemes );
-        
+
         return params;
     }
-    
+
     @Override
     public void validate( DataExportParams params )
     {
         String violation = null;
-        
+
         if ( params == null )
         {
             throw new IllegalArgumentException( "Params cannot be null" );
         }
-        
+
         if ( params.getDataSets().isEmpty() )
         {
             violation = "At least one valid data set must be specified";
         }
-        
-        if ( params.getPeriods().isEmpty() && !params.hasStartEndDate() ) 
+
+        if ( params.getPeriods().isEmpty() && !params.hasStartEndDate() )
         {
             violation = "At least one valid period or start/end dates must be specified";
         }
-        
+
         if ( params.hasStartEndDate() && params.getStartDate().after( params.getEndDate() ) )
         {
             violation = "Start date must be before end date";
         }
-        
+
         if ( params.getOrganisationUnits().isEmpty() )
         {
             violation = "At least one valid organisation unit must be specified";
         }
-        
+
         if ( params.hasLimit() && params.getLimit() < 0 )
         {
             violation = "Limit cannot be less than zero: " + params.getLimit();
         }
-        
+
         if ( violation != null )
         {
             log.warn( "Validation failed: " + violation );
-            
+
             throw new IllegalArgumentException( violation );
         }
     }
@@ -252,7 +251,7 @@ public class DefaultDataValueSetService
             }
         }
     }
-    
+
     //--------------------------------------------------------------------------
     // Write
     //--------------------------------------------------------------------------
@@ -265,7 +264,7 @@ public class DefaultDataValueSetService
 
         dataValueSetStore.writeDataValueSetXml( params, getCompleteDate( params ), out );
     }
-    
+
     @Override
     public void writeDataValueSetJson( DataExportParams params, OutputStream out )
     {
@@ -277,7 +276,7 @@ public class DefaultDataValueSetService
 
     @Override
     public void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes )
-    {        
+    {
         dataValueSetStore.writeDataValueSetJson( lastUpdated, outputStream, idSchemes );
     }
 
@@ -286,7 +285,7 @@ public class DefaultDataValueSetService
     {
         decideAccess( params );
         validate( params );
-        
+
         dataValueSetStore.writeDataValueSetCsv( params, getCompleteDate( params ), writer );
     }
 
@@ -295,13 +294,13 @@ public class DefaultDataValueSetService
         if ( params.isSingleDataValueSet() )
         {
             DataElementCategoryOptionCombo optionCombo = categoryService.getDefaultDataElementCategoryOptionCombo(); //TODO
-    
+
             CompleteDataSetRegistration registration = registrationService
                 .getCompleteDataSetRegistration( params.getFirstDataSet(), params.getFirstPeriod(), params.getFirstOrganisationUnit(), optionCombo );
-    
+
             return registration != null ? registration.getDate() : null;
         }
-        
+
         return null;
     }
 
@@ -516,15 +515,15 @@ public class DefaultDataValueSetService
      * a generic id scheme for all objects. The specific id schemes will take
      * precedence over the generic id scheme. The generic id scheme also applies
      * to data set and category option combo.
-     * <p/>
+     * <p>
      * The id schemes uses the following order of precedence:
-     * <p/>
+     * <p>
      * <ul>
      * <li>Id scheme from the data value set</li>
      * <li>Id scheme from the import options</li>
      * <li>Default id scheme which is UID</li>
      * <ul>
-     * <p/>
+     * <p>
      * If id scheme is specific in the data value set, any id schemes in the import
      * options will be ignored.
      *
@@ -537,7 +536,7 @@ public class DefaultDataValueSetService
     {
         Clock clock = new Clock( log ).startClock().logTime( "Starting data value import, options: " + importOptions );
         notifier.clear( id ).notify( id, "Process started" );
-        
+
         ImportSummary summary = new ImportSummary();
 
         I18n i18n = i18nManager.getI18n();
@@ -556,9 +555,9 @@ public class DefaultDataValueSetService
 
         log.info( "Data value set scheme: " + dvSetIdScheme + ", data element scheme: " + dvSetDataElementIdScheme + ", org unit scheme: " + dvSetOrgUnitIdScheme );
 
-        IdentifiableProperty idScheme = dvSetIdScheme != null ? dvSetIdScheme : importOptions.getIdScheme();
-        IdentifiableProperty dataElementIdScheme = dvSetDataElementIdScheme != null ? dvSetDataElementIdScheme : importOptions.getDataElementIdScheme();
-        IdentifiableProperty orgUnitIdScheme = dvSetOrgUnitIdScheme != null ? dvSetOrgUnitIdScheme : importOptions.getOrgUnitIdScheme();
+        IdentifiableProperty idScheme = dvSetIdScheme != null ? dvSetIdScheme : importOptions.getIdSchemes().getIdScheme();
+        IdentifiableProperty dataElementIdScheme = dvSetDataElementIdScheme != null ? dvSetDataElementIdScheme : importOptions.getIdSchemes().getDataElementIdScheme();
+        IdentifiableProperty orgUnitIdScheme = dvSetOrgUnitIdScheme != null ? dvSetOrgUnitIdScheme : importOptions.getIdSchemes().getOrgUnitIdScheme();
 
         log.info( "Scheme: " + idScheme + ", data element scheme: " + dataElementIdScheme + ", org unit scheme: " + orgUnitIdScheme );
 
@@ -566,14 +565,14 @@ public class DefaultDataValueSetService
             ImportStrategy.valueOf( dataValueSet.getStrategy() ) : importOptions.getImportStrategy();
 
         boolean dryRun = dataValueSet.getDryRun() != null ? dataValueSet.getDryRun() : importOptions.isDryRun();
-        boolean skipExistingCheck = importOptions.isSkipExistingCheck();        
+        boolean skipExistingCheck = importOptions.isSkipExistingCheck();
         boolean strictPeriods = importOptions.isStrictPeriods() || (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_PERIODS );
         boolean strictCategoryOptionCombos = importOptions.isStrictCategoryOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS );
         boolean strictAttrOptionCombos = importOptions.isStrictAttributeOptionCombos() || (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_ATTRIBUTE_OPTION_COMBOS );
         boolean strictOrgUnits = importOptions.isStrictOrganisationUnits() || (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_ORGANISATION_UNITS );
         boolean requireCategoryOptionCombo = importOptions.isRequireCategoryOptionCombo() || (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO );
         boolean requireAttrOptionCombo = importOptions.isRequireAttributeOptionCombo() || (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_REQUIRE_ATTRIBUTE_OPTION_COMBO );
-        
+
         //----------------------------------------------------------------------
         // Create meta-data maps
         //----------------------------------------------------------------------
@@ -598,25 +597,25 @@ public class DefaultDataValueSetService
         {
             notifier.notify( id, "Loading data elements and organisation units" );
             dataElementMap.putAll( identifiableObjectManager.getIdMap( DataElement.class, dataElementIdScheme ) );
-            orgUnitMap.putAll( getOrgUnitMap( orgUnitIdScheme ) );            
+            orgUnitMap.putAll( getOrgUnitMap( orgUnitIdScheme ) );
             clock.logTime( "Preheated data element and organisation unit caches" );
         }
-        
-        IdentifiableObjectCallable<DataElement> dataElementCallable = new IdentifiableObjectCallable<>( 
+
+        IdentifiableObjectCallable<DataElement> dataElementCallable = new IdentifiableObjectCallable<>(
             identifiableObjectManager, DataElement.class, dataElementIdScheme, null );
-        IdentifiableObjectCallable<OrganisationUnit> orgUnitCallable = new IdentifiableObjectCallable<>( 
+        IdentifiableObjectCallable<OrganisationUnit> orgUnitCallable = new IdentifiableObjectCallable<>(
             identifiableObjectManager, OrganisationUnit.class, orgUnitIdScheme, trimToNull( dataValueSet.getOrgUnit() ) );
-        IdentifiableObjectCallable<DataElementCategoryOptionCombo> optionComboCallable = new CategoryOptionComboAclCallable( 
+        IdentifiableObjectCallable<DataElementCategoryOptionCombo> optionComboCallable = new CategoryOptionComboAclCallable(
             categoryService, idScheme, null );
-        IdentifiableObjectCallable<Period> periodCallable = new PeriodCallable( 
+        IdentifiableObjectCallable<Period> periodCallable = new PeriodCallable(
             periodService, null, trimToNull( dataValueSet.getPeriod() ) );
-        
+
         //----------------------------------------------------------------------
         // Get outer meta-data
         //----------------------------------------------------------------------
 
         DataSet dataSet = dataValueSet.getDataSet() != null ? identifiableObjectManager.getObject( DataSet.class, idScheme, dataValueSet.getDataSet() ) : null;
-        
+
         Date completeDate = getDefaultDate( dataValueSet.getCompleteDate() );
 
         Period outerPeriod = periodMap.get( trimToNull( dataValueSet.getPeriod() ), periodCallable );
@@ -625,7 +624,7 @@ public class DefaultDataValueSetService
 
         DataElementCategoryOptionCombo fallbackCategoryOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
 
-        DataElementCategoryOptionCombo outerAttrOptionCombo = dataValueSet.getAttributeOptionCombo() != null ? 
+        DataElementCategoryOptionCombo outerAttrOptionCombo = dataValueSet.getAttributeOptionCombo() != null ?
             optionComboMap.get( trimToNull( dataValueSet.getAttributeOptionCombo() ), optionComboCallable.setId( trimToNull( dataValueSet.getAttributeOptionCombo() ) ) ) : null;
 
         // ---------------------------------------------------------------------
@@ -670,7 +669,7 @@ public class DefaultDataValueSetService
 
         final String currentUser = currentUserService.getCurrentUsername();
         final Set<OrganisationUnit> currentOrgUnits = currentUserService.getCurrentUserOrganisationUnits();
-        
+
         BatchHandler<DataValue> batchHandler = batchHandlerFactory.createBatchHandler( DataValueBatchHandler.class ).init();
 
         int importCount = 0;
@@ -692,13 +691,13 @@ public class DefaultDataValueSetService
 
             totalCount++;
 
-            final DataElement dataElement = 
+            final DataElement dataElement =
                 dataElementMap.get( trimToNull( dataValue.getDataElement() ), dataElementCallable.setId( trimToNull( dataValue.getDataElement() ) ) );
-            final Period period = outerPeriod != null ? outerPeriod : 
+            final Period period = outerPeriod != null ? outerPeriod :
                 periodMap.get( trimToNull( dataValue.getPeriod() ), periodCallable.setId( trimToNull( dataValue.getPeriod() ) ) );
-            final OrganisationUnit orgUnit = outerOrgUnit != null ? outerOrgUnit : 
+            final OrganisationUnit orgUnit = outerOrgUnit != null ? outerOrgUnit :
                 orgUnitMap.get( trimToNull( dataValue.getOrgUnit() ), orgUnitCallable.setId( trimToNull( dataValue.getOrgUnit() ) ) );
-            DataElementCategoryOptionCombo categoryOptionCombo = optionComboMap.get( trimToNull( dataValue.getCategoryOptionCombo() ), 
+            DataElementCategoryOptionCombo categoryOptionCombo = optionComboMap.get( trimToNull( dataValue.getCategoryOptionCombo() ),
                 optionComboCallable.setId( trimToNull( dataValue.getCategoryOptionCombo() ) ) );
             DataElementCategoryOptionCombo attrOptionCombo = outerAttrOptionCombo != null ? outerAttrOptionCombo :
                 optionComboMap.get( trimToNull( dataValue.getAttributeOptionCombo() ), optionComboCallable.setId( trimToNull( dataValue.getAttributeOptionCombo() ) ) );
@@ -718,7 +717,7 @@ public class DefaultDataValueSetService
                 summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), "Period not valid" ) );
                 continue;
             }
-            
+
             if ( orgUnit == null )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getOrgUnit(), "Organisation unit not found or not accessible" ) );
@@ -737,18 +736,18 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            boolean inUserHierarchy = orgUnitInHierarchyMap.get( orgUnit.getUid(), 
+            boolean inUserHierarchy = orgUnitInHierarchyMap.get( orgUnit.getUid(),
                 () -> organisationUnitService.isInUserHierarchy( orgUnit.getUid(), currentOrgUnits ) );
-            
+
             if ( !inUserHierarchy )
             {
                 summary.getConflicts().add( new ImportConflict( orgUnit.getUid(), "Organisation unit not in hierarchy of current user: " + currentUser ) );
                 continue;
             }
-            
+
             boolean invalidFuturePeriod = period.isFuture() && dataElementOpenFuturePeriodsMap.get( dataElement.getUid(),
                 () -> dataElementService.isOpenFuturePeriods( dataElement.getId() ) );
-            
+
             if ( invalidFuturePeriod )
             {
                 summary.getConflicts().add( new ImportConflict( period.getIsoDate(), "Data element does not allow for future periods through data sets: " + dataElement.getUid() ) );
@@ -776,15 +775,15 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            Optional<Set<String>> optionCodes = dataElementOptionsMap.get( dataElement.getUid(), 
+            Optional<Set<String>> optionCodes = dataElementOptionsMap.get( dataElement.getUid(),
                 () -> dataElementService.getOptionCodesAsSet( dataElement.getId() ) );
-            
+
             if ( optionCodes.isPresent() && !optionCodes.get().contains( dataValue.getValue() ) )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getValue(), "Data value is not a valid option of the data element option set: " + dataElement.getUid() ) );
                 continue;
             }
-            
+
             // -----------------------------------------------------------------
             // Constraints
             // -----------------------------------------------------------------
@@ -814,23 +813,23 @@ public class DefaultDataValueSetService
                     attrOptionCombo = fallbackCategoryOptionCombo;
                 }
             }
-            
-            if ( strictPeriods && !dataElementPeriodTypesMap.get( dataElement.getUid(), 
+
+            if ( strictPeriods && !dataElementPeriodTypesMap.get( dataElement.getUid(),
                 () -> dataElement.getPeriodTypes() ).contains( period.getPeriodType() ) )
             {
-                summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(), 
+                summary.getConflicts().add( new ImportConflict( dataValue.getPeriod(),
                     "Period type of period: " + period.getIsoDate() + " not valid for data element: " + dataElement.getUid() ) );
                 continue;
             }
-            
+
             if ( strictCategoryOptionCombos && !dataElementCategoryOptionComboMap.get( dataElement.getUid(),
                 () -> dataElement.getCategoryCombo().getOptionCombos() ).contains( categoryOptionCombo ) )
             {
-                summary.getConflicts().add( new ImportConflict( categoryOptionCombo.getUid(), 
+                summary.getConflicts().add( new ImportConflict( categoryOptionCombo.getUid(),
                     "Category option combo: " + categoryOptionCombo.getUid() + " must be part of category combo of data element: " + dataElement.getUid() ) );
                 continue;
             }
-            
+
             if ( strictAttrOptionCombos && !dataElementAttrOptionComboMap.get( dataElement.getUid(),
                 () -> dataElement.getDataSetCategoryOptionCombos() ).contains( attrOptionCombo ) )
             {
@@ -838,7 +837,7 @@ public class DefaultDataValueSetService
                     "Attribute option combo: " + attrOptionCombo.getUid() + " must be part of category combo of data sets of data element: " + dataElement.getUid() ) );
                 continue;
             }
-            
+
             if ( strictOrgUnits && BooleanUtils.isFalse( dataElementOrgUnitMap.get( dataElement.getUid() + orgUnit.getUid(),
                 () -> dataElement.hasDataSetOrganisationUnit( orgUnit ) ) ) )
             {
@@ -862,7 +861,7 @@ public class DefaultDataValueSetService
                 summary.getConflicts().add( new ImportConflict( dataValue.getStoredBy(), i18n.getString( storedByValid ) ) );
                 continue;
             }
-            
+
             String storedBy = dataValue.getStoredBy() == null || dataValue.getStoredBy().trim().isEmpty() ? currentUser : dataValue.getStoredBy();
 
             // -----------------------------------------------------------------
@@ -983,8 +982,8 @@ public class DefaultDataValueSetService
 
     private Map<String, OrganisationUnit> getOrgUnitMap( IdentifiableProperty orgUnitIdScheme )
     {
-        return UUID.equals( orgUnitIdScheme ) ? 
-            organisationUnitService.getUuidOrganisationUnitMap() : 
-                identifiableObjectManager.getIdMap( OrganisationUnit.class, orgUnitIdScheme );
+        return UUID.equals( orgUnitIdScheme ) ?
+            organisationUnitService.getUuidOrganisationUnitMap() :
+            identifiableObjectManager.getIdMap( OrganisationUnit.class, orgUnitIdScheme );
     }
 }
