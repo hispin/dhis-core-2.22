@@ -3189,19 +3189,26 @@ Ext.onReady( function() {
 
                 // init
                 var defaultKeyUiLocale = 'en',
-                    defaultKeyAnalysisDisplayProperty = 'name',
+                    defaultKeyAnalysisDisplayProperty = 'displayName',
+                    displayPropertyMap = {
+                        'name': 'displayName',
+                        'displayName': 'displayName',
+                        'shortName': 'displayShortName',
+                        'displayShortName': 'displayShortName'
+                    },
                     namePropertyUrl,
                     contextPath,
                     keyUiLocale;
 
                 init.userAccount.settings.keyUiLocale = init.userAccount.settings.keyUiLocale || defaultKeyUiLocale;
-                init.userAccount.settings.keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty || defaultKeyAnalysisDisplayProperty;
+                init.userAccount.settings.keyAnalysisDisplayProperty = displayPropertyMap[init.userAccount.settings.keyAnalysisDisplayProperty] || defaultKeyAnalysisDisplayProperty;
 
                 // local vars
                 contextPath = init.contextPath;
                 keyUiLocale = init.userAccount.settings.keyUiLocale;
                 keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty;
-                namePropertyUrl = keyAnalysisDisplayProperty === defaultKeyAnalysisDisplayProperty ? keyAnalysisDisplayProperty : keyAnalysisDisplayProperty + '|rename(' + defaultKeyAnalysisDisplayProperty + ')';
+                namePropertyUrl = keyAnalysisDisplayProperty + '|rename(name)';
+                dateFormat = init.systemInfo.dateFormat;
 
                 init.namePropertyUrl = namePropertyUrl;
 
@@ -3243,7 +3250,7 @@ Ext.onReady( function() {
 
         // dimensions
 		requests.push({
-			url: init.contextPath + '/api/dimensions.' + type + '?fields=id,name&paging=false',
+			url: init.contextPath + '/api/dimensions.' + type + '?fields=id,displayName|rename(name)&paging=false',
             disableCaching: false,
 			success: function(r) {
 				init.dimensions = r.responseText ? Ext.decode(r.responseText).dimensions : r.dimensions;
@@ -3253,7 +3260,7 @@ Ext.onReady( function() {
 
         // legend sets
         requests.push({
-            url: init.contextPath + '/api/legendSets.json?fields=id,name,legends[id,name,startValue,endValue,color]&paging=false',
+            url: init.contextPath + '/api/legendSets.json?fields=id,displayName|rename(name),legends[id,displayName|rename(name),startValue,endValue,color]&paging=false',
             success: function(r) {
                 init.legendSets = Ext.decode(r.responseText).legendSets || [];
                 fn();
