@@ -240,6 +240,20 @@ public class DefaultIdentifiableObjectManager
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> T getByAttributeValue( Class<T> clazz, Attribute attribute, String value )
+    {
+        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( clazz );
+
+        if ( store == null )
+        {
+            return null;
+        }
+
+        return (T) store.getByAttributeValue( attribute, value );
+    }
+
+    @Override
     public <T extends IdentifiableObject> T search( Class<T> clazz, String query )
     {
         T object = get( clazz, query );
