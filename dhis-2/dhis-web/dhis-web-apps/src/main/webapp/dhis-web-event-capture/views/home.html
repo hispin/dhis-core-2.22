@@ -62,7 +62,6 @@
                     </div>
                 </div>
                 <div class="row col-sm-12 small-vertical-spacing" ng-if="selectedProgram" ng-repeat="category in selectedCategories">
-
                     <div class="col-sm-4">
                         {{category.name}}
                     </div>
@@ -114,7 +113,7 @@
         <div ng-include="'views/eventList.html'"></div>
         <!-- event grid ends -->
 
-        <!-- event update in full / registration begins-->            
+        <!-- event update in full / registration begins-->
         <form name="outerForm" novalidate>
             <div ng-if="editingEventInFull || eventRegistration">
                 <h3>
@@ -126,6 +125,7 @@
                         <div ng-if="displayCustomForm" ng-include="'views/ec-custom-form.html'"></div>  
                         <div ng-if="!displayCustomForm" ng-include="'views/defaultForm.html'"></div>
                         <div ng-include="'views/completedForm.html'"></div>
+
                         <div ng-include="'views/comments-section.html'"></div>
                         <div ng-include="'views/buttons-section.html'"></div>
                     </div>                    
