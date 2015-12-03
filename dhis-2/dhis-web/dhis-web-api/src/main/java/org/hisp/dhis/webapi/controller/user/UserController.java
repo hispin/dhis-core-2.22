@@ -50,7 +50,6 @@ import org.hisp.dhis.security.RestoreOptions;
 import org.hisp.dhis.security.SecurityService;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.User;
-import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserInvitationStatus;
@@ -75,8 +74,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -513,16 +510,6 @@ public class UserController
         }
 
         credentials.setUserInfo( user );
-
-        List<UserAuthorityGroup> userRoles = userService.getUserRolesByUid( getUids( credentials.getUserAuthorityGroups() ) );
-
-        for ( UserAuthorityGroup role : userRoles )
-        {
-            if ( role != null && role.hasCriticalAuthorities() )
-            {
-                throw new WebMessageException( WebMessageUtils.conflict( "User cannot be invited with user role which has critical authorities: " + role ) );
-            }
-        }
 
         String valid = securityService.validateInvite( user.getUserCredentials() );
 
