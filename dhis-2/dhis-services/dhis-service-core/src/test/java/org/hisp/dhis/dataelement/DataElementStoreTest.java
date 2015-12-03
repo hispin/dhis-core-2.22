@@ -505,4 +505,43 @@ public class DataElementStoreTest
         values = dataElementStore.getAttributeValueByAttributeAndValue( attribute, "ANOTHER VALUE" );
         assertEquals( 1, values.size() );
     }
+
+    @Test
+    public void testDataElementByAttributeValue() throws NonUniqueAttributeValueException
+    {
+        Attribute attribute = new Attribute( "cid", ValueType.TEXT );
+        attribute.setDataElementAttribute( true );
+        attribute.setUnique( true );
+        attributeService.addAttribute( attribute );
+
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+        DataElement dataElementC = createDataElement( 'C' );
+
+        dataElementStore.save( dataElementA );
+        dataElementStore.save( dataElementB );
+        dataElementStore.save( dataElementC );
+
+        AttributeValue attributeValueA = new AttributeValue( "CID1", attribute );
+        AttributeValue attributeValueB = new AttributeValue( "CID2", attribute );
+        AttributeValue attributeValueC = new AttributeValue( "CID3", attribute );
+
+        attributeService.addAttributeValue( dataElementA, attributeValueA );
+        attributeService.addAttributeValue( dataElementB, attributeValueB );
+        attributeService.addAttributeValue( dataElementC, attributeValueC );
+
+        dataElementStore.update( dataElementA );
+        dataElementStore.update( dataElementB );
+        dataElementStore.update( dataElementC );
+
+        assertNotNull( dataElementStore.getByAttributeValue( attribute, "CID1" ) );
+        assertNotNull( dataElementStore.getByAttributeValue( attribute, "CID2" ) );
+        assertNotNull( dataElementStore.getByAttributeValue( attribute, "CID3" ) );
+        assertNull( dataElementStore.getByAttributeValue( attribute, "CID4" ) );
+        assertNull( dataElementStore.getByAttributeValue( attribute, "CID5" ) );
+
+        assertEquals( "DataElementA", dataElementStore.getByAttributeValue( attribute, "CID1" ).getName() );
+        assertEquals( "DataElementB", dataElementStore.getByAttributeValue( attribute, "CID2" ).getName() );
+        assertEquals( "DataElementC", dataElementStore.getByAttributeValue( attribute, "CID3" ).getName() );
+    }
 }

@@ -28,6 +28,8 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.attribute.Attribute;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -79,6 +81,8 @@ public interface GenericIdentifiableObjectStore<T>
      */
     T getByCode( String code );
 
+    T getByAttributeValue( Attribute attribute, String value );
+
     /**
      * Retrieves a List of all objects (sorted on name).
      *
@@ -113,7 +117,7 @@ public interface GenericIdentifiableObjectStore<T>
 
     /**
      * Return the number of objects where the name is equal the given name.
-     * <p/>
+     * <p>
      * This count is _unfiltered_ (no ACL!), so this is not the same as
      * getAllEqName().size().
      *
@@ -150,7 +154,7 @@ public interface GenericIdentifiableObjectStore<T>
      * @return a List of objects.
      */
     List<T> getAllLikeName( Set<String> words, int first, int max );
-    
+
     /**
      * The returned list is ordered by the last updated property descending.
      *
@@ -191,7 +195,7 @@ public interface GenericIdentifiableObjectStore<T>
      * @return a list of objects.
      */
     List<T> getById( Collection<Integer> ids );
-    
+
     /**
      * Retrieves a list of objects referenced by the given collection of uids.
      *
@@ -266,10 +270,10 @@ public interface GenericIdentifiableObjectStore<T>
      * @return All objects equal or newer than given date.
      */
     List<T> getAllGeLastUpdatedOrderedName( Date lastUpdated );
-    
+
     /**
      * Returns the date of the last updated object.
-     * 
+     *
      * @return a Date / time stamp.
      */
     Date getLastUpdated();
