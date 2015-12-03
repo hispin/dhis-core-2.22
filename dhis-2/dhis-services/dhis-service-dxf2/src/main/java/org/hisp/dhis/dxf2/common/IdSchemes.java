@@ -76,6 +76,11 @@ public class IdSchemes
         return idScheme;
     }
 
+    public String getIdSchemeAttribute()
+    {
+        return idSchemeAttribute;
+    }
+
     public void setIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
@@ -91,6 +96,11 @@ public class IdSchemes
     public IdentifiableProperty getDataElementIdScheme()
     {
         return getScheme( dataElementIdScheme );
+    }
+
+    public String getDataElementIdSchemeAttribute()
+    {
+        return dataElementIdSchemeAttribute;
     }
 
     public void setDataElementIdScheme( String idScheme )
@@ -110,6 +120,11 @@ public class IdSchemes
         return getScheme( categoryOptionComboIdScheme );
     }
 
+    public String getCategoryOptionComboIdSchemeAttribute()
+    {
+        return categoryOptionComboIdSchemeAttribute;
+    }
+
     public void setCategoryOptionComboIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
@@ -125,6 +140,11 @@ public class IdSchemes
     public IdentifiableProperty getOrgUnitIdScheme()
     {
         return getScheme( orgUnitIdScheme );
+    }
+
+    public String getOrgUnitIdSchemeAttribute()
+    {
+        return orgUnitIdSchemeAttribute;
     }
 
     public void setOrgUnitIdScheme( String idScheme )
@@ -144,6 +164,11 @@ public class IdSchemes
         return getScheme( programIdScheme );
     }
 
+    public String getProgramIdSchemeAttribute()
+    {
+        return programIdSchemeAttribute;
+    }
+
     public void setProgramIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
@@ -159,6 +184,11 @@ public class IdSchemes
     public IdentifiableProperty getProgramStageIdScheme()
     {
         return getScheme( programStageIdScheme );
+    }
+
+    public String getProgramStageIdSchemeAttribute()
+    {
+        return programStageIdSchemeAttribute;
     }
 
     public void setProgramStageIdScheme( String idScheme )
