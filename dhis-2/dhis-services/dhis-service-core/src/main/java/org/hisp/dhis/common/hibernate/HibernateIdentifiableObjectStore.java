@@ -43,6 +43,7 @@ import org.hisp.dhis.common.GenericDimensionalObjectStore;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.hibernate.HibernateGenericStore;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -176,7 +177,7 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
     @SuppressWarnings( "unchecked" )
     public T getByAttributeValue( Attribute attribute, String value )
     {
-        if ( !attribute.isUnique() )
+        if ( attribute == null || StringUtils.isEmpty( value ) || !attribute.isUnique() )
         {
             return null;
         }
