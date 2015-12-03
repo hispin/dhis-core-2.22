@@ -28,8 +28,10 @@ package org.hisp.dhis.dxf2.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableProperty;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -38,18 +40,35 @@ public class IdSchemes
 {
     private IdentifiableProperty idScheme;
 
+    private String idSchemeAttribute;
+
     private IdentifiableProperty dataElementIdScheme = IdentifiableProperty.UID;
+
+    private String dataElementIdSchemeAttribute;
 
     private IdentifiableProperty categoryOptionComboIdScheme = IdentifiableProperty.UID;
 
+    private String categoryOptionComboIdSchemeAttribute;
+
     private IdentifiableProperty orgUnitIdScheme = IdentifiableProperty.UID;
+
+    private String orgUnitIdSchemeAttribute;
 
     private IdentifiableProperty programIdScheme = IdentifiableProperty.UID;
 
+    private String programIdSchemeAttribute;
+
     private IdentifiableProperty programStageIdScheme = IdentifiableProperty.UID;
+
+    private String programStageIdSchemeAttribute;
 
     public IdSchemes()
     {
+    }
+
+    public IdentifiableProperty getScheme( IdentifiableProperty identifiableProperty )
+    {
+        return idScheme != null ? idScheme : identifiableProperty;
     }
 
     public IdentifiableProperty getIdScheme()
@@ -57,64 +76,101 @@ public class IdSchemes
         return idScheme;
     }
 
-    public IdentifiableProperty getIdentifiableProperty( IdentifiableProperty identifiableProperty )
+    public void setIdScheme( String idScheme )
     {
-        return idScheme != null ? idScheme : identifiableProperty;
-    }
+        if ( isAttribute( idScheme ) )
+        {
+            this.idScheme = IdentifiableProperty.ATTRIBUTE;
+            this.idSchemeAttribute = idScheme.substring( 10 );
+            return;
+        }
 
-    public void setIdScheme( IdentifiableProperty idScheme )
-    {
-        this.idScheme = idScheme;
+        this.idScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
     }
 
     public IdentifiableProperty getDataElementIdScheme()
     {
-        return getIdentifiableProperty( dataElementIdScheme );
+        return getScheme( dataElementIdScheme );
     }
 
-    public void setDataElementIdScheme( IdentifiableProperty dataElementIdScheme )
+    public void setDataElementIdScheme( String idScheme )
     {
-        this.dataElementIdScheme = dataElementIdScheme;
+        if ( isAttribute( idScheme ) )
+        {
+            this.dataElementIdScheme = IdentifiableProperty.ATTRIBUTE;
+            this.dataElementIdSchemeAttribute = idScheme.substring( 10 );
+            return;
+        }
+
+        this.dataElementIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
     }
 
     public IdentifiableProperty getCategoryOptionComboIdScheme()
     {
-        return getIdentifiableProperty( categoryOptionComboIdScheme );
+        return getScheme( categoryOptionComboIdScheme );
     }
 
-    public void setCategoryOptionComboIdScheme( IdentifiableProperty categoryOptionComboIdScheme )
+    public void setCategoryOptionComboIdScheme( String idScheme )
     {
-        this.categoryOptionComboIdScheme = categoryOptionComboIdScheme;
+        if ( isAttribute( idScheme ) )
+        {
+            this.categoryOptionComboIdScheme = IdentifiableProperty.ATTRIBUTE;
+            this.categoryOptionComboIdSchemeAttribute = idScheme.substring( 10 );
+            return;
+        }
+
+        this.categoryOptionComboIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
     }
 
     public IdentifiableProperty getOrgUnitIdScheme()
     {
-        return getIdentifiableProperty( orgUnitIdScheme );
+        return getScheme( orgUnitIdScheme );
     }
 
-    public void setOrgUnitIdScheme( IdentifiableProperty orgUnitIdScheme )
+    public void setOrgUnitIdScheme( String idScheme )
     {
-        this.orgUnitIdScheme = orgUnitIdScheme;
+        if ( isAttribute( idScheme ) )
+        {
+            this.orgUnitIdScheme = IdentifiableProperty.ATTRIBUTE;
+            this.orgUnitIdSchemeAttribute = idScheme.substring( 10 );
+            return;
+        }
+
+        this.orgUnitIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
     }
 
     public IdentifiableProperty getProgramIdScheme()
     {
-        return getIdentifiableProperty( programIdScheme );
+        return getScheme( programIdScheme );
     }
 
-    public void setProgramIdScheme( IdentifiableProperty programIdScheme )
+    public void setProgramIdScheme( String idScheme )
     {
-        this.programIdScheme = programIdScheme;
+        if ( isAttribute( idScheme ) )
+        {
+            this.programIdScheme = IdentifiableProperty.ATTRIBUTE;
+            this.programIdSchemeAttribute = idScheme.substring( 10 );
+            return;
+        }
+
+        this.programIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
     }
 
     public IdentifiableProperty getProgramStageIdScheme()
     {
-        return getIdentifiableProperty( programStageIdScheme );
+        return getScheme( programStageIdScheme );
     }
 
-    public void setProgramStageIdScheme( IdentifiableProperty programStageIdScheme )
+    public void setProgramStageIdScheme( String idScheme )
     {
-        this.programStageIdScheme = programStageIdScheme;
+        if ( isAttribute( idScheme ) )
+        {
+            this.programStageIdScheme = IdentifiableProperty.ATTRIBUTE;
+            this.programStageIdSchemeAttribute = idScheme.substring( 10 );
+            return;
+        }
+
+        this.programStageIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
     }
 
     public static String getValue( String uid, String code, IdentifiableProperty identifiableProperty )
@@ -122,6 +178,7 @@ public class IdSchemes
         boolean idScheme = IdentifiableProperty.ID.equals( identifiableProperty ) || IdentifiableProperty.UID.equals( identifiableProperty );
         return idScheme ? uid : code;
     }
+
 
     public static String getValue( IdentifiableObject identifiableObject, IdentifiableProperty identifiableProperty )
     {
@@ -141,5 +198,29 @@ public class IdSchemes
         }
 
         return null;
+    }
+
+    public static boolean isAttribute( String str )
+    {
+        return !StringUtils.isEmpty( str ) && str.toUpperCase().startsWith( "ATTRIBUTE:" ) && str.length() == 21;
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this )
+            .add( "idScheme", idScheme )
+            .add( "idSchemeAttribute", idSchemeAttribute )
+            .add( "dataElementIdScheme", dataElementIdScheme )
+            .add( "dataElementIdSchemeAttribute", dataElementIdSchemeAttribute )
+            .add( "categoryOptionComboIdScheme", categoryOptionComboIdScheme )
+            .add( "categoryOptionComboIdSchemeAttribute", categoryOptionComboIdSchemeAttribute )
+            .add( "orgUnitIdScheme", orgUnitIdScheme )
+            .add( "orgUnitIdSchemeAttribute", orgUnitIdSchemeAttribute )
+            .add( "programIdScheme", programIdScheme )
+            .add( "programIdSchemeAttribute", programIdSchemeAttribute )
+            .add( "programStageIdScheme", programStageIdScheme )
+            .add( "programStageIdSchemeAttribute", programStageIdSchemeAttribute )
+            .toString();
     }
 }
