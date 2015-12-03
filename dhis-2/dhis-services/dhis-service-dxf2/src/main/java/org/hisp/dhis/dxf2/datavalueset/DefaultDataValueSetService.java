@@ -745,7 +745,7 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            boolean invalidFuturePeriod = period.isFuture() && dataElementOpenFuturePeriodsMap.get( dataElement.getUid(),
+            boolean invalidFuturePeriod = period.isFuture() && !dataElementOpenFuturePeriodsMap.get( dataElement.getUid(),
                 () -> dataElementService.isOpenFuturePeriods( dataElement.getId() ) );
 
             if ( invalidFuturePeriod )
