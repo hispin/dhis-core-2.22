@@ -169,6 +169,7 @@ trackerCapture.controller('RegistrationController',
                 
                 if( $scope.registrationMode === 'PROFILE' ){
                     reloadProfileWidget();
+                    $rootScope.$broadcast('teiupdated', {});          
                 }
                 else{
                     if( $scope.selectedProgram ){

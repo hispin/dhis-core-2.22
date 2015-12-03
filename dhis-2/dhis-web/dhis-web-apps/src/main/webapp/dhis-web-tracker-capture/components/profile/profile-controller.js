@@ -26,7 +26,7 @@ trackerCapture.controller('ProfileController',
         $scope.enrollmentEditing = args.enrollmentEditing;
     });
     
-    var listenToBroadCast = function(){     
+    var listenToBroadCast = function(){
         $scope.editingDisabled = true;
         selections = CurrentSelection.get();
         $scope.selectedTei = angular.copy(selections.tei);
