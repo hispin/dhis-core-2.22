@@ -362,6 +362,8 @@ trackerCapture.controller('DashboardController',
     };
     
     $scope.back = function(){
+        //reload OU tree
+        selection.load();
         $location.path('/').search({program: $scope.selectedProgramId});        
     };
     
