@@ -3208,7 +3208,6 @@ Ext.onReady( function() {
                 keyUiLocale = init.userAccount.settings.keyUiLocale;
                 keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty;
                 namePropertyUrl = keyAnalysisDisplayProperty + '|rename(name)';
-                dateFormat = init.systemInfo.dateFormat;
 
                 init.namePropertyUrl = namePropertyUrl;
 
