@@ -38,7 +38,7 @@ import org.springframework.util.StringUtils;
  */
 public class IdSchemes
 {
-    private IdentifiableProperty idScheme;
+    private IdentifiableProperty idScheme = IdentifiableProperty.UID;
 
     private String idSchemeAttribute;
 
@@ -81,16 +81,17 @@ public class IdSchemes
         return idSchemeAttribute;
     }
 
-    public void setIdScheme( String idScheme )
+    public IdSchemes setIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
         {
             this.idScheme = IdentifiableProperty.ATTRIBUTE;
             this.idSchemeAttribute = idScheme.substring( 10 );
-            return;
+            return this;
         }
 
         this.idScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
+        return this;
     }
 
     public IdentifiableProperty getDataElementIdScheme()
@@ -103,16 +104,17 @@ public class IdSchemes
         return dataElementIdSchemeAttribute;
     }
 
-    public void setDataElementIdScheme( String idScheme )
+    public IdSchemes setDataElementIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
         {
             this.dataElementIdScheme = IdentifiableProperty.ATTRIBUTE;
             this.dataElementIdSchemeAttribute = idScheme.substring( 10 );
-            return;
+            return this;
         }
 
         this.dataElementIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
+        return this;
     }
 
     public IdentifiableProperty getCategoryOptionComboIdScheme()
@@ -125,16 +127,17 @@ public class IdSchemes
         return categoryOptionComboIdSchemeAttribute;
     }
 
-    public void setCategoryOptionComboIdScheme( String idScheme )
+    public IdSchemes setCategoryOptionComboIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
         {
             this.categoryOptionComboIdScheme = IdentifiableProperty.ATTRIBUTE;
             this.categoryOptionComboIdSchemeAttribute = idScheme.substring( 10 );
-            return;
+            return this;
         }
 
         this.categoryOptionComboIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
+        return this;
     }
 
     public IdentifiableProperty getOrgUnitIdScheme()
@@ -147,16 +150,17 @@ public class IdSchemes
         return orgUnitIdSchemeAttribute;
     }
 
-    public void setOrgUnitIdScheme( String idScheme )
+    public IdSchemes setOrgUnitIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
         {
             this.orgUnitIdScheme = IdentifiableProperty.ATTRIBUTE;
             this.orgUnitIdSchemeAttribute = idScheme.substring( 10 );
-            return;
+            return this;
         }
 
         this.orgUnitIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
+        return this;
     }
 
     public IdentifiableProperty getProgramIdScheme()
@@ -169,16 +173,17 @@ public class IdSchemes
         return programIdSchemeAttribute;
     }
 
-    public void setProgramIdScheme( String idScheme )
+    public IdSchemes setProgramIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
         {
             this.programIdScheme = IdentifiableProperty.ATTRIBUTE;
             this.programIdSchemeAttribute = idScheme.substring( 10 );
-            return;
+            return this;
         }
 
         this.programIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
+        return this;
     }
 
     public IdentifiableProperty getProgramStageIdScheme()
@@ -191,16 +196,17 @@ public class IdSchemes
         return programStageIdSchemeAttribute;
     }
 
-    public void setProgramStageIdScheme( String idScheme )
+    public IdSchemes setProgramStageIdScheme( String idScheme )
     {
         if ( isAttribute( idScheme ) )
         {
             this.programStageIdScheme = IdentifiableProperty.ATTRIBUTE;
             this.programStageIdSchemeAttribute = idScheme.substring( 10 );
-            return;
+            return this;
         }
 
         this.programStageIdScheme = IdentifiableProperty.valueOf( idScheme.toUpperCase() );
+        return this;
     }
 
     public static String getValue( String uid, String code, IdentifiableProperty identifiableProperty )

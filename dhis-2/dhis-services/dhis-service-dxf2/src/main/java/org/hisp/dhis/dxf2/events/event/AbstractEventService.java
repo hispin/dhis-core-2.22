@@ -30,7 +30,6 @@ package org.hisp.dhis.dxf2.events.event;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -398,7 +397,7 @@ public abstract class AbstractEventService
             }
         }
 
-        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getOrgUnitIdScheme(), event.getOrgUnit() );
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes().getOrgUnitIdScheme(), event.getOrgUnit() );
 
         if ( organisationUnit == null )
         {
@@ -511,7 +510,7 @@ public abstract class AbstractEventService
         EventStatus status, Date lastUpdated, DataElementCategoryOptionCombo attributeCoc, IdSchemes idSchemes, Integer page, Integer pageSize, boolean totalPages, boolean skipPaging, boolean includeAttributes )
     {
         UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
-        
+
         EventSearchParams params = new EventSearchParams();
 
         Program pr = programService.getProgram( program );
@@ -534,24 +533,24 @@ public abstract class AbstractEventService
         {
             throw new IllegalQueryException( "Org unit is specified but does not exist: " + orgUnit );
         }
-        
-        if( ou != null && !organisationUnitService.isInUserHierarchy( ou ) )
-        {                
-            if( !userCredentials.isSuper() && !userCredentials.isAuthorized( "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS" ) ) 
+
+        if ( ou != null && !organisationUnitService.isInUserHierarchy( ou ) )
+        {
+            if ( !userCredentials.isSuper() && !userCredentials.isAuthorized( "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS" ) )
             {
                 throw new IllegalQueryException( "User has no access to organisation unit: " + ou.getUid() );
             }
         }
-        
-        if( pr != null && !userCredentials.isSuper() && userCredentials.getAllPrograms().size() == 0 )
+
+        if ( pr != null && !userCredentials.isSuper() && userCredentials.getAllPrograms().size() == 0 )
         {
-            throw new IllegalQueryException( "User has no access to programs");
+            throw new IllegalQueryException( "User has no access to programs" );
         }
-        
-        if( pr != null && !userCredentials.getAllPrograms().contains( pr ) )
+
+        if ( pr != null && !userCredentials.getAllPrograms().contains( pr ) )
         {
             throw new IllegalQueryException( "User has no access to program: " + pr.getUid() );
-        }        
+        }
 
         TrackedEntityInstance tei = entityInstanceService.getTrackedEntityInstance( trackedEntityInstance );
 
@@ -662,7 +661,7 @@ public abstract class AbstractEventService
             importOptions = new ImportOptions();
         }
 
-        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getOrgUnitIdScheme(), event.getOrgUnit() );
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes().getOrgUnitIdScheme(), event.getOrgUnit() );
 
         if ( organisationUnit == null )
         {
@@ -737,9 +736,9 @@ public abstract class AbstractEventService
 
         Set<TrackedEntityDataValue> dataValues = new HashSet<>( dataValueService.getTrackedEntityDataValues( programStageInstance ) );
         Map<String, TrackedEntityDataValue> existingDataValues = getDataElementDataValueMap( dataValues );
-        
+
         for ( DataValue value : event.getDataValues() )
-        {        	        		
+        {
             DataElement dataElement = getDataElement( value.getDataElement() );
             TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue( programStageInstance, dataElement );
 
@@ -750,11 +749,11 @@ public abstract class AbstractEventService
 
             if ( dataValue != null )
             {
-            	if ( StringUtils.isEmpty( value.getValue() ) && dataElement.isFileType() && !StringUtils.isEmpty( dataValue.getValue() ) )
+                if ( StringUtils.isEmpty( value.getValue() ) && dataElement.isFileType() && !StringUtils.isEmpty( dataValue.getValue() ) )
                 {
-            		fileResourceService.deleteFileResource( dataValue.getValue() );
+                    fileResourceService.deleteFileResource( dataValue.getValue() );
                 }
-            	
+
                 dataValue.setValue( value.getValue() );
                 dataValue.setProvidedElsewhere( value.getProvidedElsewhere() );
                 dataValueService.updateTrackedEntityDataValue( dataValue );
@@ -897,30 +896,30 @@ public abstract class AbstractEventService
         event.setCompletedDate( DateUtils.getLongDateString( programStageInstance.getCompletedDate() ) );
 
         UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
-        
+
         OrganisationUnit ou = programStageInstance.getOrganisationUnit();
-        
+
         if ( ou != null )
-        {             
-            if( !organisationUnitService.isInUserHierarchy( ou ) )
-            {                
-                if( !userCredentials.isSuper()  && !userCredentials.isAuthorized( "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS" ) ) 
+        {
+            if ( !organisationUnitService.isInUserHierarchy( ou ) )
+            {
+                if ( !userCredentials.isSuper() && !userCredentials.isAuthorized( "F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS" ) )
                 {
                     throw new IllegalQueryException( "User has no access to organisation unit: " + ou.getUid() );
                 }
             }
-            
+
             event.setOrgUnit( ou.getUid() );
         }
-        
+
         Program program = programStageInstance.getProgramInstance().getProgram();
-        
-        if( !userCredentials.isSuper() && !userCredentials.getAllPrograms().contains( program ) )
+
+        if ( !userCredentials.isSuper() && !userCredentials.getAllPrograms().contains( program ) )
         {
             throw new IllegalQueryException( "User has no access to program: " + program.getUid() );
         }
-        
-        event.setProgram( program.getUid() );        
+
+        event.setProgram( program.getUid() );
         event.setEnrollment( programStageInstance.getProgramInstance().getUid() );
         event.setProgramStage( programStageInstance.getProgramStage().getUid() );
 
@@ -1329,5 +1328,5 @@ public abstract class AbstractEventService
     private DataElement getDataElement( String dataElementId )
     {
         return dataElementCache.get( dataElementId, new IdentifiableObjectCallable<>( manager, DataElement.class, dataElementId ) );
-    }    
+    }
 }
