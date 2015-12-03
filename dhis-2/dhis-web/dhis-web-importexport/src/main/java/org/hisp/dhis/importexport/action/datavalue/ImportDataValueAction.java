@@ -158,9 +158,7 @@ public class ImportDataValueAction
         in = StreamUtils.wrapAndCheckCompressionFormat( in );
 
         ImportOptions options = new ImportOptions().setDryRun( dryRun )
-            .setPreheatCache( preheatCache ).setStrategy( strategy ).setSkipExistingCheck( skipExistingCheck );
-
-        options.getIdSchemes()
+            .setPreheatCache( preheatCache ).setStrategy( strategy ).setSkipExistingCheck( skipExistingCheck )
             .setIdScheme( idScheme.toString() )
             .setDataElementIdScheme( dataElementIdScheme.toString() )
             .setOrgUnitIdScheme( orgUnitIdScheme.toString() );
