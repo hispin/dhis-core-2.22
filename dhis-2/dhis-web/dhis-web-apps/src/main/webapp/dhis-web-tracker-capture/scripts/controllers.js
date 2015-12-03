@@ -169,10 +169,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.processAttributes = function(){
         $scope.sortColumn = {};
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){
-            $scope.attributes = AttributesFactory.generateAttributeFilters(atts);
-            var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
-            $scope.gridColumns = grid.columns;
-            
+            $scope.attributes = AttributesFactory.generateAttributeFilters(atts);            
             if($scope.showRegistrationDiv){
                 $scope.doSearch = false;
             }
@@ -208,6 +205,9 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
    
     //$scope.searchParam = {bools: []};
     $scope.search = function(mode){        
+        var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
+        $scope.gridColumns = grid.columns;
+            
         $scope.selectedSearchMode = mode;
         $scope.emptySearchText = false;
         $scope.emptySearchAttribute = false;
