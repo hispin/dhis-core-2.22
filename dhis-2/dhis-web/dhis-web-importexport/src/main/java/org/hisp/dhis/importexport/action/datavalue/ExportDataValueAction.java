@@ -1,6 +1,24 @@
 package org.hisp.dhis.importexport.action.datavalue;
 
+import com.opensymphony.xwork2.Action;
+import org.apache.struts2.ServletActionContext;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
+import org.hisp.dhis.common.IdentifiableProperty;
+import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
+import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
+import org.hisp.dhis.oust.manager.SelectionTreeManager;
+import org.hisp.dhis.util.ContextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStreamWriter;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
+import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
+import static org.hisp.dhis.util.ContextUtils.*;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,30 +47,6 @@ import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import static org.hisp.dhis.system.util.DateUtils.getMediumDate;
-import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_CSV;
-import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_JSON;
-import static org.hisp.dhis.util.ContextUtils.CONTENT_TYPE_XML;
-import static org.hisp.dhis.util.ContextUtils.getZipOut;
-
-import java.io.OutputStreamWriter;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.common.IdentifiableProperty;
-import org.hisp.dhis.dxf2.common.IdSchemes;
-import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
-import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
-import org.hisp.dhis.oust.manager.SelectionTreeManager;
-import org.hisp.dhis.util.ContextUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.Action;
 
 /**
  * @author Lars Helge Overland
@@ -141,17 +135,17 @@ public class ExportDataValueAction
         //TODO re-implement using Web API
 
         IdSchemes idSchemes = new IdSchemes();
-        idSchemes.setDataElementIdScheme( dataElementIdScheme );
-        idSchemes.setOrgUnitIdScheme( orgUnitIdScheme );
-        idSchemes.setCategoryOptionComboIdScheme( categoryOptionComboIdScheme );
+        idSchemes.setDataElementIdScheme( dataElementIdScheme.toString() );
+        idSchemes.setOrgUnitIdScheme( orgUnitIdScheme.toString() );
+        idSchemes.setCategoryOptionComboIdScheme( categoryOptionComboIdScheme.toString() );
 
         Set<String> orgUnits = new HashSet<>( IdentifiableObjectUtils.getUids( selectionTreeManager.getSelectedOrganisationUnits() ) );
 
         HttpServletResponse response = ServletActionContext.getResponse();
 
-        DataExportParams params = dataValueSetService.getFromUrl( selectedDataSets, null, 
+        DataExportParams params = dataValueSetService.getFromUrl( selectedDataSets, null,
             getMediumDate( startDate ), getMediumDate( endDate ), orgUnits, true, null, null, idSchemes );
-        
+
         if ( FORMAT_CSV.equals( exportFormat ) )
         {
             ContextUtils.configureResponse( response, CONTENT_TYPE_CSV, true, getFileName( EXTENSION_CSV_ZIP ), true );
