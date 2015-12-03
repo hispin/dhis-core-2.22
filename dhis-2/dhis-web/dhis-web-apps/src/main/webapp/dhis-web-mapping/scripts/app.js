@@ -5018,7 +5018,7 @@ Ext.onReady( function() {
 					format: 'json',
 					noCache: false,
 					extraParams: {
-						fields: 'children[id,' + nameProperty + '|rename(text),children::isNotEmpty|rename(hasChildren)&paging=false'
+						fields: 'children[id,' + gis.init.namePropertyUrl + ',children::isNotEmpty|rename(hasChildren)&paging=false'
 					},
 					url: gis.init.contextPath + '/api/organisationUnits',
 					reader: {
