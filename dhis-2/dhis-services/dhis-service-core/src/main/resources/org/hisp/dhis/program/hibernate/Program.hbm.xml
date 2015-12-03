@@ -51,6 +51,8 @@
     <property name="onlyEnrollOnce" />
     
     <property name="skipOffline" />
+    
+    <property name="displayFrontPageList" column="displayfrontpagelist" />
 
     <list name="programAttributes" cascade="all-delete-orphan">
       <key column="programid" />

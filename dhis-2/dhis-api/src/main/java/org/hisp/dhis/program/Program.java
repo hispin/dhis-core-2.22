@@ -139,6 +139,8 @@ public class Program
      * The approval workflow (if any) for this program.
      */
     private DataApprovalWorkflow workflow;
+    
+    private Boolean displayFrontPageList = false;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -697,6 +699,19 @@ public class Program
     {
         this.skipOffline = skipOffline;
     }
+    
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Boolean getDisplayFrontPageList()
+    {
+        return displayFrontPageList;
+    }
+
+    public void setDisplayFrontPageList( Boolean displayFrontPageList )
+    {
+        this.displayFrontPageList = displayFrontPageList;
+    }
 
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
@@ -769,5 +784,5 @@ public class Program
             instanceReminders.clear();
             instanceReminders.addAll( program.getInstanceReminders() );
         }
-    }
+    }    
 }

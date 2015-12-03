@@ -294,6 +294,13 @@ public class UpdateProgramAction
     {
         this.workflowId = workflowId;
     }
+    
+    private boolean displayFrontPageList;
+
+    public void setDisplayFrontPageList( boolean displayFrontPageList )
+    {
+        this.displayFrontPageList = displayFrontPageList;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -326,6 +333,7 @@ public class UpdateProgramAction
         program.setSelectIncidentDatesInFuture( selectIncidentDatesInFuture );
         program.setDataEntryMethod( dataEntryMethod );
         program.setSkipOffline( skipOffline );
+        program.setDisplayFrontPageList( displayFrontPageList ); 
 
         if ( program.isRegistration() )
         {
