@@ -3,6 +3,7 @@ trackerCapture.controller('LeftBarMenuController',
         function($scope,
                 $location) {
     $scope.showHome = function(){
+        selection.load();
         $location.path('/').search();
     }; 
     
