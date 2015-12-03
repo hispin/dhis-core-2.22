@@ -182,13 +182,6 @@ public class UpdateAttributeAction
         this.scope = scope;
     }
 
-    private Boolean confidential;
-
-    public void setConfidential( Boolean confidential )
-    {
-        this.confidential = confidential;
-    }
-
     private List<String> jsonAttributeValues;
 
     public void setJsonAttributeValues( List<String> jsonAttributeValues )

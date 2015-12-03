@@ -28,9 +28,6 @@ package org.hisp.dhis.system.filter;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Arrays;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.commons.filter.Filter;
 
@@ -48,6 +45,6 @@ public class NonCriticalUserAuthorityGroupFilter
             return false;
         }
         
-        return !CollectionUtils.containsAny( userRole.getAuthorities(), Arrays.asList( UserAuthorityGroup.CRITICAL_AUTHS ) );
+        return !userRole.hasCriticalAuthorities();
     }
 }

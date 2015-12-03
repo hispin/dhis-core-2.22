@@ -119,7 +119,7 @@ public class Program
     private Program relatedProgram;
 
     private Boolean dataEntryMethod = false;
-
+    
     private TrackedEntity trackedEntity;
 
     private DataEntryForm dataEntryForm;
