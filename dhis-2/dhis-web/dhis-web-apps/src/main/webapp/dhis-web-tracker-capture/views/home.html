@@ -123,7 +123,7 @@
             <div class="col-md-4 trim hideInPrint">            
                 <button type="button" 
                         class="btn btn-success"
-                        ng-if="trackerCapture.displayMode === 'LIST'"
+                        ng-if="selectedProgram && selectedProgram.displayFrontPageList"
                         ng-disabled="showRegistrationDiv"
                         ng-click="search(searchMode.listAll)">
                     {{listAllLabel}}

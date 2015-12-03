@@ -30,8 +30,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.maxOptionSize = 30;
     $scope.model = {};
     
-    $scope.trackerCapture = {displayMode: 'SEARCH'};
-    
     //Selection
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
     $scope.selectedOuMode = $scope.ouModes[0];    
@@ -183,7 +181,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 $scope.doSearch = false;
             }
 
-            if($scope.doSearch && $scope.trackerCapture.displayMode === 'LIST'){
+            if($scope.doSearch && $scope.selectedProgram && $scope.selectedProgram.displayFrontPageList){
                 $scope.search($scope.searchMode);
             } 
         });
@@ -336,7 +334,12 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         
         var modalInstance = $modal.open({
             templateUrl: 'views/display-mode-modal.html',
-            controller: 'DisplayModeController'           
+            controller: 'DisplayModeController',
+            resolve: {
+                programs: function(){
+                    return $scope.programs;
+                }                
+            }
         });
 
         modalInstance.result.then(function () {           
