@@ -202,13 +202,6 @@ public class SystemController
         return "pong";
     }
 
-    @RequestMapping( value = "/scheme", method = RequestMethod.GET, produces = "text/plain" )
-    public @ResponseBody String scheme( IdSchemes idSchemes )
-    {
-        System.err.println( "id: " + idSchemes );
-        return "pong";
-    }
-
     @RequestMapping( value = "/flags", method = RequestMethod.GET, produces = { "application/json" } )
     public @ResponseBody List<StyleObject> getFlags()
     {
