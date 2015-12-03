@@ -803,34 +803,51 @@ public class DefaultIdentifiableObjectManager
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String id )
+    public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String value )
+    {
+        return getObject( clazz, property, null, value );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String aid, String value )
     {
         GenericIdentifiableObjectStore<T> store = (GenericIdentifiableObjectStore<T>) getIdentifiableObjectStore( clazz );
+        Attribute attribute = null;
 
-        if ( id != null )
+        if ( aid != null )
         {
-            if ( property == null || IdentifiableProperty.ID.equals( property ) )
+            attribute = get( Attribute.class, aid );
+        }
+
+        if ( value != null )
+        {
+            if ( IdentifiableProperty.UID == property )
             {
-                if ( Integer.valueOf( id ) > 0 )
-                {
-                    return store.get( Integer.valueOf( id ) );
-                }
+                return store.getByUid( value );
             }
-            else if ( IdentifiableProperty.UID.equals( property ) )
+            else if ( IdentifiableProperty.CODE == property )
             {
-                return store.getByUid( id );
+                return store.getByCode( value );
+            }
+            else if ( IdentifiableProperty.NAME == property )
+            {
+                return store.getByName( value );
+            }
+            else if ( IdentifiableProperty.ATTRIBUTE == property )
+            {
+                return store.getByAttributeValue( attribute, value );
+            }
+            else if ( property == null || IdentifiableProperty.ID == property )
+            {
+                if ( Integer.valueOf( value ) > 0 )
+                {
+                    return store.get( Integer.valueOf( value ) );
+                }
             }
             else if ( IdentifiableProperty.UUID.equals( property ) && OrganisationUnit.class.isAssignableFrom( clazz ) )
             {
-                return (T) organisationUnitService.getOrganisationUnitByUuid( id );
-            }
-            else if ( IdentifiableProperty.CODE.equals( property ) )
-            {
-                return store.getByCode( id );
-            }
-            else if ( IdentifiableProperty.NAME.equals( property ) )
-            {
-                return store.getByName( id );
+                return (T) organisationUnitService.getOrganisationUnitByUuid( value );
             }
 
             throw new InvalidIdentifierReferenceException( "Invalid identifiable property / class combination: " + property );

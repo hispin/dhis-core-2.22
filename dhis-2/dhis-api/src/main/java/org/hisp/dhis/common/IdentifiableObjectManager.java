@@ -125,7 +125,9 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> List<T> getObjects( Class<T> clazz, Collection<Integer> identifiers );
 
-    <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String id );
+    <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String value );
+
+    <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String aid, String value );
 
     IdentifiableObject getObject( String uid, String simpleClassName );
 
