@@ -136,7 +136,7 @@ public class ImportEventAction
 
         ImportOptions importOptions = new ImportOptions();
         importOptions.setDryRun( dryRun );
-        importOptions.getIdSchemes().setOrgUnitIdScheme( orgUnitIdScheme.toString() );
+        importOptions.setOrgUnitIdScheme( orgUnitIdScheme.toString() );
 
         if ( FORMAT_CSV.equals( payloadFormat ) )
         {
