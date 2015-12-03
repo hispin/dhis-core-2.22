@@ -523,7 +523,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.showEventRegistration = function(){        
         $scope.displayCustomForm = $scope.customForm ? true:false;
-        console.log("displayCustomForm set to "+$scope.displayCustomForm);
         $scope.currentEvent = {};
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
@@ -552,7 +551,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.showEditEventInFull = function(){       
         $scope.note = {};
         $scope.displayCustomForm = $scope.customForm ? true:false;
-        console.log("displayCustomForm set to "+$scope.displayCustomForm);
 
         $scope.currentEvent = ContextMenuSelectedItem.getSelectedItem();
         $scope.editingEventInFull = !$scope.editingEventInFull;   
@@ -575,8 +573,6 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.switchDataEntryForm = function(){
         $scope.displayCustomForm = !$scope.displayCustomForm;
-        console.log("displayCustomForm set to "+$scope.displayCustomForm);
-
     };
     
     $scope.addEvent = function(addingAnotherEvent){                
