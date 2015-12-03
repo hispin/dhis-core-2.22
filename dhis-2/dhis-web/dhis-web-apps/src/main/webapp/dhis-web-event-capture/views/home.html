@@ -42,7 +42,8 @@ i just write somehitn
                         {{registeringUnitLabel}}
                     </div>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" selected-org-unit ng-model="selectedOrgUnit.name" value="{{selectedOrgUnit.name|| pleaseSelectLabel}}" disabled=""></td>
+                        <input type="text" class="form-control" selected-org-unit ng-model="selectedOrgUnit.name"
+                               value="{{selectedOrgUnit.name|| pleaseSelectLabel}}" disabled="">
                     </div>
                 </div>
                 <div class="row col-sm-12 small-vertical-spacing">
@@ -62,7 +63,7 @@ i just write somehitn
                     </div>
                 </div>
                 <div class="row col-sm-12 small-vertical-spacing" ng-if="selectedProgram" ng-repeat="category in selectedCategories">
-                    it is here
+
                     <div class="col-sm-4">
                         {{category.name}}
                     </div>
@@ -125,17 +126,7 @@ i just write somehitn
                     <div class="bordered-div">
                         <div ng-if="displayCustomForm" ng-include="'views/ec-custom-form.html'"></div>  
                         <div ng-if="!displayCustomForm" ng-include="'views/defaultForm.html'"></div>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th colspan="2">The form completion status</th>
-                                </tr>
-                                <tr>
-                                    <td>Form Completed</td>
-                                    <td><input type="checkbox" ng-model="currentEvent.status" style="margin-left: 50px;"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div ng-include="'views/completedForm.html'"></div>
                         <div ng-include="'views/comments-section.html'"></div>
                         <div ng-include="'views/buttons-section.html'"></div>
                     </div>                    
