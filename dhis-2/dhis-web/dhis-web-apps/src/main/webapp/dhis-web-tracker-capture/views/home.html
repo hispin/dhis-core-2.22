@@ -92,9 +92,9 @@
             
             <!-- program selection begins -->
             <div class="col-md-4 small-vertical-spacing">
-                <ui-select ng-model="availablePrograms.selectedProgram" 
+                <ui-select ng-model="model.selectedProgram" 
                         theme="select2" 
-                        on-select="getProgramAttributes(availablePrograms.selectedProgram)"
+                        on-select="getProgramAttributes(model.selectedProgram)"
                         style="width:100%;">
                     <ui-select-match allow-clear="true" class="form-control-ui-select" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
                     <ui-select-choices  repeat="program in programs | orderBy: 'name' | filter: $select.search | limitTo:maxOptionSize">

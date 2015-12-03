@@ -28,7 +28,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 TEIService) {  
     
     $scope.maxOptionSize = 30;
-    $scope.availablePrograms = {};
+    $scope.model = {};
     
     //Selection
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
@@ -153,6 +153,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             ProgramFactory.getProgramsByOu($scope.selectedOrgUnit, $scope.selectedProgram).then(function(response){
                 $scope.programs = response.programs;
                 $scope.selectedProgram = response.selectedProgram;
+                $scope.model.selectedProgram = $scope.selectedProgram;
                 $scope.trackedEntityList = null;
                 $scope.selectedSearchMode = $scope.searchMode.listAll;
                 $scope.processAttributes();
