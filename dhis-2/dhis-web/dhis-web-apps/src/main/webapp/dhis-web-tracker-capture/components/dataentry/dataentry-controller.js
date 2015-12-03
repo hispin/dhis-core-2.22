@@ -81,6 +81,12 @@ trackerCapture.controller('DataEntryController',
     $scope.$on('eventcreated', function (event, args) {
         $scope.addNewEvent(args.event);
     });
+    
+    $scope.$on('teiupdated', function(event, args){
+        var selections = CurrentSelection.get();
+        $scope.selectedTei = selections.tei;
+        $scope.executeRules();
+    });
 
     //listen for rule effect changes
     $scope.$on('ruleeffectsupdated', function (event, args) {
@@ -652,6 +658,7 @@ trackerCapture.controller('DataEntryController',
             eventToSave.statusColor = EventUtils.getEventStatusColor(eventToSave); 
             sortEventsByStage('UPDATE');
             $scope.validatedDateSetForEvent = {date: eventToSave.eventDate, event: eventToSave};
+            $scope.executeRules();
         });
     };
 
