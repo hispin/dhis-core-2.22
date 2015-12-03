@@ -208,7 +208,7 @@ Ext.onReady( function() {
 
 			conf.layout = {
 				west_width: 424,
-				west_fieldset_width: 418,
+				west_fieldset_width: 420,
 				west_width_padding: 2,
 				west_fill: 2,
 				west_fill_accordion_indicator: 81,
@@ -283,11 +283,11 @@ Ext.onReady( function() {
             conf.url = {
                 analysisFields: [
                     '*',
-                    'program[id,name]',
-                    'programStage[id,name]',
-                    'columns[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'rows[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
-                    'filters[dimension,filter,items[id,' + init.namePropertyUrl + ']]',
+                    'program[id,displayName|rename(name)]',
+                    'programStage[id,displayName|rename(name)]',
+                    'columns[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
+                    'rows[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
+                    'filters[dimension,filter,items[dimensionItem|rename(id),' + init.namePropertyUrl + ']]',
                     '!lastUpdated',
                     '!href',
                     '!created',
@@ -2117,7 +2117,14 @@ Ext.onReady( function() {
 					dx = dimConf.indicator.dimensionName,
 					co = dimConf.category.dimensionName,
                     aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
-                    displayProperty = xLayout.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name';
+                    propertyMap = {
+                        'name': 'name',
+                        'displayName': 'name',
+                        'shortName': 'shortName',
+                        'displayShortName': 'shortName'
+                    },
+                    keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty,
+                    displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[xLayout.displayProperty] || 'name';
 
 				for (var i = 0, dimName, items; i < axisDimensionNames.length; i++) {
 					dimName = axisDimensionNames[i];
