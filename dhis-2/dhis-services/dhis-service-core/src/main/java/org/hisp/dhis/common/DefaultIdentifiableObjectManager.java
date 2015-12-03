@@ -802,7 +802,6 @@ public class DefaultIdentifiableObjectManager
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String value )
     {
         return getObject( clazz, property, null, value );
