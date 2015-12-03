@@ -10,8 +10,7 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-
-            selection.load();
+            
             $("#orgUnitTree").one("ouwtLoaded", function (event, ids, names) {
                 if (dhis2.tc && dhis2.tc.metaDataCached) {
                     $timeout(function () {
