@@ -30,8 +30,14 @@ package org.hisp.dhis.dxf2.datavalueset;
 
 import com.google.common.collect.Sets;
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.attribute.AttributeValue;
+import org.hisp.dhis.attribute.exception.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdSchemes;
+import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
+import org.hisp.dhis.common.ValueType;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
@@ -101,6 +107,11 @@ public class DataValueSetServiceTest
     @Autowired
     private IdentifiableObjectManager idObjectManager;
 
+    @Autowired
+    private AttributeService attributeService;
+
+    private Attribute attribute;
+
     private DataElementCategoryOptionCombo ocDef;
     private DataElementCategoryOption categoryOptionA;
     private DataElementCategoryOption categoryOptionB;
@@ -130,6 +141,21 @@ public class DataValueSetServiceTest
     private MockBatchHandler<DataValue> mockDataValueBatchHandler = null;
     private MockBatchHandlerFactory mockBatchHandlerFactory = null;
 
+    private AttributeValue addAttributeValue( IdentifiableObject identifiableObject, Attribute attribute, String value )
+    {
+        AttributeValue attributeValue = new AttributeValue( value, attribute );
+
+        try
+        {
+            attributeService.addAttributeValue( identifiableObject, attributeValue );
+        }
+        catch ( NonUniqueAttributeValueException ignored )
+        {
+        }
+
+        return attributeValue;
+    }
+
     @Override
     public void setUpTest()
     {
@@ -137,6 +163,12 @@ public class DataValueSetServiceTest
         mockBatchHandlerFactory = new MockBatchHandlerFactory();
         mockBatchHandlerFactory.registerBatchHandler( DataValueBatchHandler.class, mockDataValueBatchHandler );
         setDependency( dataValueSetService, "batchHandlerFactory", mockBatchHandlerFactory );
+
+        attribute = new Attribute( "CUSTOM_ID", ValueType.TEXT );
+        attribute.setUnique( true );
+        attribute.setOrganisationUnitAttribute( true );
+        attribute.setDataElementAttribute( true );
+        idObjectManager.save( attribute );
 
         categoryOptionA = createCategoryOption( 'A' );
         categoryOptionB = createCategoryOption( 'B' );
@@ -195,9 +227,13 @@ public class DataValueSetServiceTest
         categoryService.addDataElementCategoryOptionCombo( ocA );
         categoryService.addDataElementCategoryOptionCombo( ocB );
 
+        addAttributeValue( deA, attribute, "DE1" );
         dataElementService.addDataElement( deA );
+        addAttributeValue( deB, attribute, "DE2" );
         dataElementService.addDataElement( deB );
+        addAttributeValue( deC, attribute, "DE3" );
         dataElementService.addDataElement( deC );
+        addAttributeValue( deD, attribute, "DE4" );
         dataElementService.addDataElement( deD );
 
         idObjectManager.save( osA );
@@ -207,8 +243,11 @@ public class DataValueSetServiceTest
         dsA.addDataElement( deC );
         dsA.addDataElement( deD );
 
+        addAttributeValue( ouA, attribute, "OU1" );
         organisationUnitService.addOrganisationUnit( ouA );
+        addAttributeValue( ouB, attribute, "OU2" );
         organisationUnitService.addOrganisationUnit( ouB );
+        addAttributeValue( ouC, attribute, "OU3" );
         organisationUnitService.addOrganisationUnit( ouC );
 
         dsA.addOrganisationUnit( ouA );
@@ -316,6 +355,29 @@ public class DataValueSetServiceTest
             .setIdScheme( "CODE" )
             .setDataElementIdScheme( "CODE" )
             .setOrgUnitIdScheme( "CODE" );
+
+        ImportSummary summary = dataValueSetService.saveDataValueSet( in, importOptions );
+
+        assertEquals( summary.getConflicts().toString(), 0, summary.getConflicts().size() );
+        assertEquals( 12, summary.getImportCount().getImported() );
+        assertEquals( 0, summary.getImportCount().getUpdated() );
+        assertEquals( 0, summary.getImportCount().getDeleted() );
+        assertEquals( 0, summary.getImportCount().getIgnored() );
+        assertEquals( ImportStatus.SUCCESS, summary.getStatus() );
+
+        assertImportDataValues( summary );
+    }
+
+    @Test
+    public void testImportDataValuesXmlWithAttributeB()
+        throws Exception
+    {
+        in = new ClassPathResource( "datavalueset/dataValueSetBattribute.xml" ).getInputStream();
+
+        ImportOptions importOptions = new ImportOptions()
+            .setIdScheme( "ATTRIBUTE:" + attribute.getUid() )
+            .setDataElementIdScheme( "ATTRIBUTE:" + attribute.getUid() )
+            .setOrgUnitIdScheme( "ATTRIBUTE:" + attribute.getUid() );
 
         ImportSummary summary = dataValueSetService.saveDataValueSet( in, importOptions );
 
