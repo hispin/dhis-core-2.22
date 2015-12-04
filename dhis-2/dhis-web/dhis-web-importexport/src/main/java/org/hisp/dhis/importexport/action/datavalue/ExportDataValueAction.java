@@ -1,9 +1,10 @@
 package org.hisp.dhis.importexport.action.datavalue;
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
@@ -103,23 +104,23 @@ public class ExportDataValueAction
         this.exportFormat = exportFormat;
     }
 
-    private IdentifiableProperty dataElementIdScheme;
+    private String dataElementIdScheme;
 
-    public void setDataElementIdScheme( IdentifiableProperty dataElementIdScheme )
+    public void setDataElementIdScheme( String dataElementIdScheme )
     {
         this.dataElementIdScheme = dataElementIdScheme;
     }
 
-    private IdentifiableProperty orgUnitIdScheme;
+    private String orgUnitIdScheme;
 
-    public void setOrgUnitIdScheme( IdentifiableProperty orgUnitIdScheme )
+    public void setOrgUnitIdScheme( String orgUnitIdScheme )
     {
         this.orgUnitIdScheme = orgUnitIdScheme;
     }
 
-    private IdentifiableProperty categoryOptionComboIdScheme;
+    private String categoryOptionComboIdScheme;
 
-    public void setCategoryOptionComboIdScheme( IdentifiableProperty categoryOptionComboIdScheme )
+    public void setCategoryOptionComboIdScheme( String categoryOptionComboIdScheme )
     {
         this.categoryOptionComboIdScheme = categoryOptionComboIdScheme;
     }
@@ -135,9 +136,9 @@ public class ExportDataValueAction
         //TODO re-implement using Web API
 
         IdSchemes idSchemes = new IdSchemes();
-        idSchemes.setDataElementIdScheme( dataElementIdScheme.toString() );
-        idSchemes.setOrgUnitIdScheme( orgUnitIdScheme.toString() );
-        idSchemes.setCategoryOptionComboIdScheme( categoryOptionComboIdScheme.toString() );
+        idSchemes.setDataElementIdScheme( StringUtils.trimToNull( dataElementIdScheme ) );
+        idSchemes.setOrgUnitIdScheme( StringUtils.trimToNull( orgUnitIdScheme ) );
+        idSchemes.setCategoryOptionComboIdScheme( StringUtils.trimToNull( categoryOptionComboIdScheme ) );
 
         Set<String> orgUnits = new HashSet<>( IdentifiableObjectUtils.getUids( selectionTreeManager.getSelectedOrganisationUnits() ) );
 
