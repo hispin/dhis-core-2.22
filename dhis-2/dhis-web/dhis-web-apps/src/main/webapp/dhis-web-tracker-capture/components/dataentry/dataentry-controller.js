@@ -334,7 +334,7 @@ trackerCapture.controller('DataEntryController',
     };
 
     var setEventEditing = function (dhis2Event, stage) {
-        return dhis2Event.editingNotAllowed = dhis2Event.orgUnit !== $scope.selectedOrgUnit.id || (stage.blockEntryForm && dhis2Event.status === 'COMPLETED') || $scope.selectedEntity.inactive;
+        return dhis2Event.editingNotAllowed = dhis2Event.orgUnit !== $scope.selectedOrgUnit.id && dhis2Event.eventDate || (stage.blockEntryForm && dhis2Event.status === 'COMPLETED') || $scope.selectedEntity.inactive;
     };
 
     $scope.enableRescheduling = function () {
@@ -704,7 +704,7 @@ trackerCapture.controller('DataEntryController',
             if (e.eventDate && !$scope.currentEvent.eventDate && $scope.currentStage.periodType) {
                 $scope.currentEvent.eventDate = $scope.currentEvent.dueDate;
             }
-
+            
             $scope.currentEvent.sortingDate = $scope.currentEvent.dueDate;
             $scope.currentEvent.statusColor = EventUtils.getEventStatusColor($scope.currentEvent);
             $scope.schedulingEnabled = !$scope.schedulingEnabled;

@@ -81,12 +81,10 @@ trackerCapture.controller('EnrollmentController',
         
         if($scope.selectedEnrollment.enrollment && $scope.selectedEnrollment.orgUnit){
             if($scope.selectedEnrollment.orgUnit !== $scope.selectedOrgUnit.id) {
-                OrgUnitService.open().then(function(){
-                    OrgUnitService.get($scope.selectedEnrollment.orgUnit).then(function(ou){
-                        if(ou){
-                            $scope.selectedEnrollment.orgUnitName = $scope.selectedOrgUnit.name;
-                        }                                                       
-                    });           
+                OrgUnitService.get($scope.selectedEnrollment.orgUnit).then(function(ou){
+                    if(ou){
+                        $scope.selectedEnrollment.orgUnitName = $scope.selectedOrgUnit.name;
+                    }                                                       
                 });
             }
             else{
