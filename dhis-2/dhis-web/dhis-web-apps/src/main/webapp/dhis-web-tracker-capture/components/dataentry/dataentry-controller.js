@@ -95,7 +95,19 @@ trackerCapture.controller('DataEntryController',
         }
     });
 
-    
+    $scope.model= {};
+
+    $scope.printDiv = function( divName ) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+        $scope.model.print_mode = true;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        $scope.model.print_mode = false;
+    }
+
+
     var processRuleEffect = function(event){
         //Establish which event was affected:
         var affectedEvent = $scope.currentEvent;
