@@ -79,6 +79,13 @@ public interface DataValueStore
     void deleteDataValue( DataValue dataValue );
     
     /**
+     * Deletes all data values for the given organisation unit.
+     * 
+     * @param organisationUnit the organisation unit.
+     */
+    void deleteDataValues( OrganisationUnit organisationUnit );
+    
+    /**
      * Returns a DataValue.
      * 
      * @param dataElement the DataElement of the DataValue.
