@@ -159,7 +159,7 @@ trackerCapture.controller('DataEntryController',
                     if (effect.ineffect) {
                         if(effect.dataElement) {
                             var message = effect.content + (effect.data ? effect.data : "");
-                            $scope.warningMessages[effect.dataElement.id] = effect.content + message;
+                            $scope.warningMessages[effect.dataElement.id] = message;
                             $scope.warningMessages.push($translate.instant($scope.prStDes[effect.dataElement.id].dataElement.name) + ": " + message);
                         } else {
                             $scope.warningMessages.push(message);
