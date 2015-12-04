@@ -51,7 +51,7 @@ d2Directives.directive('d2NumberValidator', function() {
         require: "ngModel",         
         link: function(scope, element, attrs, ngModel) {
         	
-        	var isRequired = attrs.ngRequired === 'true';
+            var isRequired = attrs.ngRequired === 'true';
         	
             ngModel.$validators.dateValidator = function(value) {
                 if(!value){
@@ -83,30 +83,34 @@ d2Directives.directive('d2NumberValidator', function() {
         restrict: "A",         
         require: "ngModel",         
         link: function(scope, element, attrs, ngModel) {
-        	
-        	var isRequired = attrs.ngRequired === 'true';
-        	
-            ngModel.$validators.latitudeValidator = function(value) {
-                if(!value){
-                    return !isRequired;
-                }
-                var isNumber = dhis2.validation.isNumber(value);
-                if(!isNumber){
-                    return isNumber;
-                }
-                return value >= -90 && value <= 90;
-            };
             
-            ngModel.$validators.longitudeValidator = function(value) {
-                if(!value){
-                    return !isRequired;
-                }
-                var isNumber = dhis2.validation.isNumber(value);
-                if(!isNumber){
-                    return isNumber;
-                }
-                return value >= -180 && value <= 180;
-            };
+            var isRequired = attrs.ngRequired === 'true';
+            
+            if(attrs.name === 'latitude'){
+                ngModel.$validators.latitudeValidator = function(value) {
+                    if(!value){
+                        return !isRequired;
+                    }
+                    var isNumber = dhis2.validation.isNumber(value);
+                    if(!isNumber){
+                        return isNumber;
+                    }
+                    return value >= -90 && value <= 90;
+                };
+            }
+            
+            if(attrs.name === 'longitude'){
+                ngModel.$validators.longitudeValidator = function(value) {
+                    if(!value){
+                        return !isRequired;
+                    }
+                    var isNumber = dhis2.validation.isNumber(value);
+                    if(!isNumber){
+                        return isNumber;
+                    }
+                    return value >= -180 && value <= 180;
+                };
+            }            
         }
     };
 })
