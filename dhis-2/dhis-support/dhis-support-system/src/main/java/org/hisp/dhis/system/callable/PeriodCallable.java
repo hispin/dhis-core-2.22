@@ -28,11 +28,11 @@ package org.hisp.dhis.system.callable;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.concurrent.ExecutionException;
-
-import org.hisp.dhis.common.IdentifiableProperty;
+import org.hisp.dhis.common.IdScheme;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Lars Helge Overland
@@ -41,20 +41,20 @@ public class PeriodCallable
     extends IdentifiableObjectCallable<Period>
 {
     private PeriodService periodService;
-    
-    public PeriodCallable( PeriodService periodService, IdentifiableProperty property, String id )
+
+    public PeriodCallable( PeriodService periodService, IdScheme idScheme, String id )
     {
-        super( null, Period.class, property, id );
+        super( null, Period.class, idScheme, id );
         this.periodService = periodService;
     }
-    
+
     @Override
     public Period call()
         throws ExecutionException
     {
         return periodService.reloadIsoPeriod( id );
     }
-    
+
     @Override
     public PeriodCallable setId( String id )
     {

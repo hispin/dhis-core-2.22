@@ -34,7 +34,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
+import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.common.CodeGenerator;
+import org.hisp.dhis.common.IdScheme;
+import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IllegalQueryException;
@@ -48,7 +51,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dbms.DbmsManager;
-import org.hisp.dhis.dxf2.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
 import org.hisp.dhis.dxf2.events.report.EventRow;
@@ -1271,7 +1273,7 @@ public abstract class AbstractEventService
         }
     }
 
-    private OrganisationUnit getOrganisationUnit( IdentifiableProperty scheme, String value )
+    private OrganisationUnit getOrganisationUnit( IdScheme idScheme, String value )
     {
         OrganisationUnit organisationUnit = null;
 
@@ -1285,15 +1287,15 @@ public abstract class AbstractEventService
             return organisationUnitCache.get( value );
         }
 
-        if ( IdentifiableProperty.UUID.equals( scheme ) )
+        if ( idScheme.is( IdentifiableProperty.UUID ) )
         {
             organisationUnit = organisationUnitService.getOrganisationUnitByUuid( value );
         }
-        else if ( IdentifiableProperty.CODE.equals( scheme ) )
+        else if ( idScheme.is( IdentifiableProperty.CODE ) )
         {
             organisationUnit = organisationUnitService.getOrganisationUnitByCode( value );
         }
-        else if ( IdentifiableProperty.NAME.equals( scheme ) )
+        else if ( idScheme.is( IdentifiableProperty.NAME ) )
         {
             List<OrganisationUnit> organisationUnitByName = organisationUnitService.getOrganisationUnitByName( value );
 
@@ -1301,6 +1303,11 @@ public abstract class AbstractEventService
             {
                 organisationUnit = organisationUnitByName.get( 0 );
             }
+        }
+        else if ( idScheme.is( IdentifiableProperty.ATTRIBUTE ) )
+        {
+            Attribute attribute = manager.get( Attribute.class, idScheme.getAttribute() );
+            organisationUnit = manager.getByAttributeValue( OrganisationUnit.class, attribute, value );
         }
         else
         {

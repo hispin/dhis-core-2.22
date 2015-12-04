@@ -41,6 +41,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.user.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -677,8 +678,14 @@ public class DefaultIdentifiableObjectManager
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public <T extends IdentifiableObject> Map<String, T> getIdMap( Class<T> clazz, IdentifiableProperty property )
+    {
+        return getIdMap( clazz, IdScheme.from( property ) );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> Map<String, T> getIdMap( Class<T> clazz, IdScheme idScheme )
     {
         Map<String, T> map = new HashMap<>();
 
@@ -691,12 +698,18 @@ public class DefaultIdentifiableObjectManager
 
         List<T> objects = store.getAll();
 
-        return IdentifiableObjectUtils.getMap( objects, property );
+        return IdentifiableObjectUtils.getMap( objects, idScheme );
+    }
+
+    @Override
+    public <T extends IdentifiableObject> Map<String, T> getIdMapNoAcl( Class<T> clazz, IdentifiableProperty property )
+    {
+        return getIdMapNoAcl( clazz, IdScheme.from( property ) );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> Map<String, T> getIdMapNoAcl( Class<T> clazz, IdentifiableProperty property )
+    public <T extends IdentifiableObject> Map<String, T> getIdMapNoAcl( Class<T> clazz, IdScheme idScheme )
     {
         Map<String, T> map = new HashMap<>();
 
@@ -709,7 +722,7 @@ public class DefaultIdentifiableObjectManager
 
         List<T> objects = store.getAllNoAcl();
 
-        return IdentifiableObjectUtils.getMap( objects, property );
+        return IdentifiableObjectUtils.getMap( objects, idScheme );
     }
 
     @Override
@@ -804,52 +817,52 @@ public class DefaultIdentifiableObjectManager
     @Override
     public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String value )
     {
-        return getObject( clazz, property, null, value );
+        return getObject( clazz, IdScheme.from( property ), value );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdentifiableProperty property, String aid, String value )
+    public <T extends IdentifiableObject> T getObject( Class<T> clazz, IdScheme idScheme, String value )
     {
         GenericIdentifiableObjectStore<T> store = (GenericIdentifiableObjectStore<T>) getIdentifiableObjectStore( clazz );
         Attribute attribute = null;
 
-        if ( aid != null )
+        if ( idScheme.isAttribute() )
         {
-            attribute = get( Attribute.class, aid );
+            attribute = get( Attribute.class, idScheme.getAttribute() );
         }
 
-        if ( value != null )
+        if ( !StringUtils.isEmpty( value ) )
         {
-            if ( IdentifiableProperty.UID == property )
+            if ( idScheme.isNull() || idScheme.is( IdentifiableProperty.UID ) )
             {
                 return store.getByUid( value );
             }
-            else if ( IdentifiableProperty.CODE == property )
+            if ( idScheme.is( IdentifiableProperty.CODE ) )
             {
                 return store.getByCode( value );
             }
-            else if ( IdentifiableProperty.NAME == property )
+            if ( idScheme.is( IdentifiableProperty.NAME ) )
             {
                 return store.getByName( value );
             }
-            else if ( IdentifiableProperty.ATTRIBUTE == property )
+            if ( idScheme.is( IdentifiableProperty.ATTRIBUTE ) )
             {
                 return store.getByAttributeValue( attribute, value );
             }
-            else if ( property == null || IdentifiableProperty.ID == property )
+            else if ( idScheme.is( IdentifiableProperty.ID ) )
             {
                 if ( Integer.valueOf( value ) > 0 )
                 {
                     return store.get( Integer.valueOf( value ) );
                 }
             }
-            else if ( IdentifiableProperty.UUID.equals( property ) && OrganisationUnit.class.isAssignableFrom( clazz ) )
+            else if ( idScheme.is( IdentifiableProperty.UUID ) && OrganisationUnit.class.isAssignableFrom( clazz ) )
             {
                 return (T) organisationUnitService.getOrganisationUnitByUuid( value );
             }
 
-            throw new InvalidIdentifierReferenceException( "Invalid identifiable property / class combination: " + property );
+            throw new InvalidIdentifierReferenceException( "Invalid identifiable property / class combination: " + idScheme );
         }
 
         return null;

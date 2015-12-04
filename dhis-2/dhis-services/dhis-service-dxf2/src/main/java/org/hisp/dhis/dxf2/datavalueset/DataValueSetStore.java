@@ -32,7 +32,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Date;
 
-import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.common.IdSchemes;
 
 /**
  * @author Lars Helge Overland

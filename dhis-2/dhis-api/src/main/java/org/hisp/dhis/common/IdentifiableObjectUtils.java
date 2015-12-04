@@ -28,6 +28,18 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.calendar.Calendar;
+import org.hisp.dhis.calendar.DateTimeUnit;
+import org.hisp.dhis.dataelement.DataElementCategory;
+import org.hisp.dhis.dataelement.DataElementCategoryCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryOption;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.period.Period;
+import org.hisp.dhis.period.PeriodType;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,19 +51,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.calendar.Calendar;
-import org.hisp.dhis.calendar.DateTimeUnit;
-import org.hisp.dhis.dataelement.DataElementCategory;
-import org.hisp.dhis.dataelement.DataElementCategoryCombo;
-import org.hisp.dhis.dataelement.DataElementCategoryOption;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.period.Period;
-import org.hisp.dhis.period.PeriodType;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-
 /**
  * @author Lars Helge Overland
  */
@@ -62,9 +61,9 @@ public class IdentifiableObjectUtils
     private static final SimpleDateFormat LONG_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
     public static final Map<String, String> CLASS_ALIAS = ImmutableMap.<String, String>builder().
-    	put( "CategoryOption", DataElementCategoryOption.class.getSimpleName() ).
-    	put( "Category", DataElementCategory.class.getSimpleName() ).
-    	put( "CategoryCombo", DataElementCategoryCombo.class.getSimpleName()).build();
+        put( "CategoryOption", DataElementCategoryOption.class.getSimpleName() ).
+        put( "Category", DataElementCategory.class.getSimpleName() ).
+        put( "CategoryCombo", DataElementCategoryCombo.class.getSimpleName() ).build();
 
     /**
      * Joins the names of the IdentifiableObjects in the given list and separates
@@ -258,14 +257,14 @@ public class IdentifiableObjectUtils
     }
 
     /**
-     * Returns a mapping between the uid and the display name of the given 
+     * Returns a mapping between the uid and the display name of the given
      * identifiable objects.
      *
      * @param objects the identifiable objects.
      * @return mapping between the uid and the display name of the given objects.
      */
     public static Map<String, String> getUidNameMap( Collection<? extends IdentifiableObject> objects )
-    {        
+    {
         return objects.stream().collect( Collectors.toMap( IdentifiableObject::getUid, IdentifiableObject::getDisplayName ) );
     }
 
@@ -283,16 +282,17 @@ public class IdentifiableObjectUtils
 
     /**
      * Returns a map of identifiable properties and objects.
-     * 
-     * @param objects the objects.
-     * @param property the identifiable property.
+     *
+     * @param objects  the objects.
+     * @param idScheme the id scheme to use.
      * @return a map.
      */
     @SuppressWarnings( "unchecked" )
-    public static <T extends IdentifiableObject> Map<String, T> getMap( List<T> objects, IdentifiableProperty property )
+    public static <T extends IdentifiableObject> Map<String, T> getMap( List<T> objects, IdScheme idScheme )
     {
         Map<String, T> map = new HashMap<>();
-        
+        IdentifiableProperty property = idScheme.getIdentifiableProperty();
+
         for ( T object : objects )
         {
             if ( IdentifiableProperty.ID.equals( property ) )
@@ -333,7 +333,7 @@ public class IdentifiableObjectUtils
                 }
             }
         }
-        
+
         return map;
     }
 }
