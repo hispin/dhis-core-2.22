@@ -249,16 +249,16 @@ public abstract class AbstractEventService
 
     protected ImportSummary addEvent( Event event, User user, ImportOptions importOptions )
     {
-        Program program = getProgram( event.getProgram() );
-        ProgramStage programStage = getProgramStage( event.getProgramStage() );
-
-        ProgramInstance programInstance;
-        ProgramStageInstance programStageInstance = null;
-
         if ( importOptions == null )
         {
             importOptions = new ImportOptions();
         }
+
+        Program program = getProgram( importOptions.getIdSchemes().getProgramIdScheme(), event.getProgram() );
+        ProgramStage programStage = getProgramStage( importOptions.getIdSchemes().getProgramStageIdScheme(), event.getProgramStage() );
+
+        ProgramInstance programInstance;
+        ProgramStageInstance programStageInstance = null;
 
         if ( program == null )
         {
@@ -741,7 +741,7 @@ public abstract class AbstractEventService
 
         for ( DataValue value : event.getDataValues() )
         {
-            DataElement dataElement = getDataElement( value.getDataElement() );
+            DataElement dataElement = getDataElement( importOptions.getIdSchemes().getDataElementIdScheme(), value.getDataElement() );
             TrackedEntityDataValue dataValue = dataValueService.getTrackedEntityDataValue( programStageInstance, dataElement );
 
             if ( !validateDataValue( dataElement, value.getValue(), importSummary ) )
@@ -1164,7 +1164,13 @@ public abstract class AbstractEventService
 
         ImportSummary importSummary = new ImportSummary();
         importSummary.setStatus( ImportStatus.SUCCESS );
-        boolean dryRun = importOptions != null && importOptions.isDryRun();
+
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
+        boolean dryRun = importOptions.isDryRun();
 
         Date eventDate = DateUtils.parseDate( event.getEventDate() );
 
@@ -1215,7 +1221,7 @@ public abstract class AbstractEventService
             }
             else
             {
-                dataElement = getDataElement( dataValue.getDataElement() );
+                dataElement = getDataElement( importOptions.getIdSchemes().getDataElementIdScheme(), dataValue.getDataElement() );
             }
 
             if ( dataElement != null )
@@ -1322,18 +1328,18 @@ public abstract class AbstractEventService
         return organisationUnit;
     }
 
-    private Program getProgram( String programId )
+    private Program getProgram( IdScheme idScheme, String id )
     {
-        return programCache.get( programId, new IdentifiableObjectCallable<>( manager, Program.class, programId ) );
+        return programCache.get( id, new IdentifiableObjectCallable<>( manager, Program.class, idScheme, id ) );
     }
 
-    private ProgramStage getProgramStage( String programStageId )
+    private ProgramStage getProgramStage( IdScheme idScheme, String id )
     {
-        return programStageCache.get( programStageId, new IdentifiableObjectCallable<>( manager, ProgramStage.class, programStageId ) );
+        return programStageCache.get( id, new IdentifiableObjectCallable<>( manager, ProgramStage.class, idScheme, id ) );
     }
 
-    private DataElement getDataElement( String dataElementId )
+    private DataElement getDataElement( IdScheme idScheme, String id )
     {
-        return dataElementCache.get( dataElementId, new IdentifiableObjectCallable<>( manager, DataElement.class, dataElementId ) );
+        return dataElementCache.get( id, new IdentifiableObjectCallable<>( manager, DataElement.class, idScheme, id ) );
     }
 }
