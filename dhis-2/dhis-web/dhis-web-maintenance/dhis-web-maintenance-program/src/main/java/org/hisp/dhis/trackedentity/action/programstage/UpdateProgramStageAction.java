@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentity.action.programstage;
  */
 
 import com.opensymphony.xwork2.Action;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -38,6 +39,8 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementService;
+import org.hisp.dhis.program.ProgramStageSection;
+import org.hisp.dhis.program.ProgramStageSectionService;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.user.UserGroup;
@@ -96,6 +99,9 @@ public class UpdateProgramStageAction
 
     @Autowired
     private AttributeService attributeService;
+    
+    @Autowired
+    private ProgramStageSectionService programStageSectionService;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -433,10 +439,8 @@ public class UpdateProgramStageAction
         Set<ProgramStageDataElement> programStageDataElements = new HashSet<>(
             programStage.getProgramStageDataElements() );
         
-        programStage.getProgramStageDataElements().clear();
-        
         for ( int i = 0; i < this.selectedDataElementsValidator.size(); i++ )
-        {
+        {            
             DataElement dataElement = dataElementService.getDataElement( selectedDataElementsValidator.get( i ) );
             Boolean allowed = allowProvidedElsewhere.get( i ) == null ? false : allowProvidedElsewhere.get( i );
             Boolean displayInReport = displayInReports.get( i ) == null ? false : displayInReports.get( i );
@@ -462,20 +466,23 @@ public class UpdateProgramStageAction
                 programStageDataElement.setDisplayInReports( displayInReport );
                 programStageDataElement.setAllowFutureDate( allowDate );
                 programStageDataElementService.updateProgramStageDataElement( programStageDataElement );
-
                 programStageDataElements.remove( programStageDataElement );
-            }
-            
-            programStage.getProgramStageDataElements().add( programStageDataElement );
+            }            
+        }
+        
+        for ( ProgramStageSection section : programStage.getProgramStageSections() )
+        {
+            section.getProgramStageDataElements().removeAll( programStageDataElements );            
+            programStageSectionService.updateProgramStageSection( section );
         }        
         
-        programStageService.updateProgramStage( programStage );
-        
         for ( ProgramStageDataElement psdeDelete : programStageDataElements )
-        {            
+        {   
+            programStage.getProgramStageDataElements().remove( psdeDelete );
             programStageDataElementService.deleteProgramStageDataElement( psdeDelete );
         }
         
+        programStageService.updateProgramStage( programStage );
         programId = programStage.getProgram().getId();
 
         return SUCCESS;
