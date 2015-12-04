@@ -29,6 +29,8 @@ package org.hisp.dhis.common;
  */
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -43,6 +45,14 @@ public class IdScheme
     public static final IdScheme CODE = new IdScheme( IdentifiableProperty.CODE );
     public static final IdScheme NAME = new IdScheme( IdentifiableProperty.NAME );
 
+    public static final ImmutableMap<IdentifiableProperty, IdScheme> IDPROPERTY_IDSCHEME_MAP = 
+        ImmutableMap.<IdentifiableProperty, IdScheme>builder().
+        put( IdentifiableProperty.ID, IdScheme.ID ).
+        put( IdentifiableProperty.UID, IdScheme.UID ).
+        put( IdentifiableProperty.UUID, IdScheme.UUID ).
+        put( IdentifiableProperty.CODE, IdScheme.CODE ).
+        put( IdentifiableProperty.NAME, IdScheme.NAME ).build();
+    
     private IdentifiableProperty identifiableProperty;
 
     private String attribute;
@@ -78,22 +88,9 @@ public class IdScheme
         {
             return IdScheme.NULL;
         }
-
-        switch ( property )
-        {
-            case ID:
-                return IdScheme.ID;
-            case UID:
-                return IdScheme.UID;
-            case UUID:
-                return IdScheme.UUID;
-            case CODE:
-                return IdScheme.CODE;
-            case NAME:
-                return IdScheme.NAME;
-        }
-
-        return new IdScheme( property );
+        
+        return IDPROPERTY_IDSCHEME_MAP.containsKey( property ) ? 
+            IDPROPERTY_IDSCHEME_MAP.get( property ) : new IdScheme( property );
     }
 
     private IdScheme( IdentifiableProperty identifiableProperty )
@@ -151,7 +148,6 @@ public class IdScheme
     {
         return IdentifiableProperty.ATTRIBUTE == identifiableProperty && !StringUtils.isEmpty( attribute );
     }
-
 
     public static boolean isAttribute( String str )
     {
