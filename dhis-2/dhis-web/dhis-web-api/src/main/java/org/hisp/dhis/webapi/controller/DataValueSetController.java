@@ -30,7 +30,7 @@ import org.hisp.dhis.dxf2.adx.AdxDataService;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;

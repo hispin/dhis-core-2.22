@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.common;
  */
 
 import com.google.common.base.MoreObjects;
+import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.importexport.ImportStrategy;
 
@@ -173,73 +174,43 @@ public class ImportOptions
 
     public ImportOptions setProgramStageIdScheme( String idScheme )
     {
-        if ( this.idSchemes == null )
-        {
-            this.idSchemes = new IdSchemes();
-        }
-
         idSchemes.setProgramStageIdScheme( idScheme );
         return this;
     }
 
     public ImportOptions setProgramIdScheme( String idScheme )
     {
-        if ( this.idSchemes == null )
-        {
-            this.idSchemes = new IdSchemes();
-        }
-
         idSchemes.setProgramIdScheme( idScheme );
         return this;
     }
 
     public ImportOptions setOrgUnitIdScheme( String idScheme )
     {
-        if ( this.idSchemes == null )
-        {
-            this.idSchemes = new IdSchemes();
-        }
-
         idSchemes.setOrgUnitIdScheme( idScheme );
         return this;
     }
 
     public ImportOptions setCategoryOptionComboIdScheme( String idScheme )
     {
-        if ( this.idSchemes == null )
-        {
-            this.idSchemes = new IdSchemes();
-        }
-
         idSchemes.setCategoryOptionComboIdScheme( idScheme );
         return this;
     }
 
     public ImportOptions setDataElementIdScheme( String idScheme )
     {
-        if ( this.idSchemes == null )
-        {
-            this.idSchemes = new IdSchemes();
-        }
-
         idSchemes.setDataElementIdScheme( idScheme );
         return this;
     }
 
     public ImportOptions setIdScheme( String idScheme )
     {
-        if ( this.idSchemes == null )
-        {
-            this.idSchemes = new IdSchemes();
-        }
-
         idSchemes.setIdScheme( idScheme );
         return this;
     }
 
     public void setIdSchemes( IdSchemes idSchemes )
     {
-        this.idSchemes = idSchemes;
+        this.idSchemes = idSchemes == null ? new IdSchemes() : idSchemes;
     }
 
     public ImportOptions setDryRun( boolean dryRun )

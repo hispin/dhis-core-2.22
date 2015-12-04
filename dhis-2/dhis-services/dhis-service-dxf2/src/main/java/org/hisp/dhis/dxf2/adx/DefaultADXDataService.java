@@ -205,7 +205,7 @@ public class DefaultAdxDataService
         dxfWriter.writeStartElement( "dataValueSet" );
         dxfWriter.writeDefaultNamespace( "http://dhis2.org/schema/dxf/2.0" );
 
-        IdentifiableProperty dataElementIdScheme = importOptions.getIdSchemes().getDataElementIdScheme();
+        IdentifiableProperty dataElementIdScheme = importOptions.getIdSchemes().getDataElementIdScheme().getIdentifiableProperty();
 
         Map<String, String> groupAttributes = adxReader.readAttributes();
 
@@ -288,7 +288,7 @@ public class DefaultAdxDataService
             throw new AdxException( AdxDataService.VALUE + " attribute is required on 'dataValue'" );
         }
 
-        IdentifiableProperty dataElementIdScheme = importOptions.getIdSchemes().getDataElementIdScheme();
+        IdentifiableProperty dataElementIdScheme = importOptions.getIdSchemes().getDataElementIdScheme().getIdentifiableProperty();
 
         DataElement dataElement = identifiableObjectManager.getObject( DataElement.class, dataElementIdScheme, dvAttributes.get( AdxDataService.DATAELEMENT ) );
 

@@ -28,25 +28,15 @@ package org.hisp.dhis.dxf2.gml;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
+import com.google.common.base.Strings;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.impl.io.MalformedByteSequenceException;
+import org.hisp.dhis.common.IdScheme;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
@@ -67,9 +57,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 import org.xml.sax.SAXParseException;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Maps;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Import geospatial data from GML documents and merge into OrganisationUnits.
@@ -264,7 +263,7 @@ public class DefaultGmlImportService
         for ( OrganisationUnit orgUnit : sourceList ) // Identifier Matching priority: uid, code, name
         {
             // Only matches if UID is actually in DB as an empty UID on input will be replaced by auto-generated value
-            
+
             if ( !Strings.isNullOrEmpty( orgUnit.getUid() ) && idObjectManager.exists( OrganisationUnit.class, orgUnit.getUid() ) )
             {
                 uidMap.put( orgUnit.getUid(), orgUnit );
@@ -283,8 +282,7 @@ public class DefaultGmlImportService
     private Map<String, OrganisationUnit> getMatchingPersistedOrgUnits( Collection<String> identifiers, final IdentifiableProperty property )
     {
         List<OrganisationUnit> orgUnits = idObjectManager.getObjects( OrganisationUnit.class, property, identifiers );
-
-        return IdentifiableObjectUtils.getMap( orgUnits, property );
+        return IdentifiableObjectUtils.getMap( orgUnits, IdScheme.from( property ) );
     }
 
     private void mergeNonGeoData( OrganisationUnit source, OrganisationUnit target )

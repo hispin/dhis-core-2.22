@@ -28,12 +28,12 @@ package org.hisp.dhis.system.callable;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-
+import org.hisp.dhis.common.IdScheme;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.IdentifiableProperty;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Lars Helge Overland
@@ -43,9 +43,9 @@ public class IdentifiableObjectCallable<T extends IdentifiableObject>
 {
     protected IdentifiableObjectManager manager;
     protected Class<T> clazz;
-    protected IdentifiableProperty property;
+    protected IdScheme idScheme = IdScheme.UID;
     protected String id;
-    
+
     public IdentifiableObjectCallable( IdentifiableObjectManager manager, Class<T> clazz, String id )
     {
         this.manager = manager;
@@ -53,28 +53,21 @@ public class IdentifiableObjectCallable<T extends IdentifiableObject>
         this.id = id;
     }
 
-    public IdentifiableObjectCallable( IdentifiableObjectManager manager, Class<T> clazz, IdentifiableProperty property, String id )
+    public IdentifiableObjectCallable( IdentifiableObjectManager manager, Class<T> clazz, IdScheme idScheme, String id )
     {
         this.manager = manager;
         this.clazz = clazz;
-        this.property = property;
+        this.idScheme = idScheme;
         this.id = id;
     }
-    
+
     @Override
     public T call()
         throws ExecutionException
     {
-        if ( property == null )
-        {
-            return manager.get( clazz, id );
-        }
-        else
-        {
-            return manager.getObject( clazz, property, id );
-        }
+        return manager.getObject( clazz, idScheme, id );
     }
-    
+
     public IdentifiableObjectCallable<T> setId( String id )
     {
         this.id = id;

@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.datavalue.DataValueService;
-import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportSummaryResponseExtractor;
 import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;

@@ -4,7 +4,7 @@ import com.opensymphony.xwork2.Action;
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IdentifiableProperty;
-import org.hisp.dhis.dxf2.common.IdSchemes;
+import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
