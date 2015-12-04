@@ -6063,7 +6063,7 @@ console.log(table);
 							return;
 						}
 
-						path = '/dimensions/' + dimension.id + '/items.json' + (filter ? '?filter=' + nameProperty + ':ilike:' + filter : '');
+						path = '/dimensions/' + dimension.id + '/items.json?fields=id,' + namePropertyUrl + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 
 						if (noPaging) {
 							params.paging = false;
