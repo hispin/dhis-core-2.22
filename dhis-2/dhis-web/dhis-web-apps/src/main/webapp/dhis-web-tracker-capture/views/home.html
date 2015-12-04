@@ -1,14 +1,4 @@
 <script>
-    $(".select-dropdown-button").on('click', function (e) {
-        $("#selectDropDown").width($("#selectDropDownParent").width());
-        e.stopPropagation();
-        $("#selectDropDown").dropdown('toggle');
-    });
-    $(".select-dropdown-caret").on('click', function (e) {
-        $("#selectDropDown").width($("#selectDropDownParent").width());
-        e.stopPropagation();
-        $("#selectDropDown").dropdown('toggle');
-    });
     $(".search-dropdown-button").on('click', function () {
         $("#searchDropDown").width($("#searchDropDownParent").width());
     });
@@ -22,7 +12,6 @@
     });
 
     $(window).resize(function () {
-        $("#selectDropDown").width($("#selectDropDownParent").width());
         $("#searchDropDown").width($("#searchDropDownParent").width());
     });
 </script>
@@ -60,17 +49,7 @@
         <!-- top bar begins -->
         <div class="row top-bar">        
             <div class="col-sm-12">                
-                {{trackerCaptureLabel}}
-                <div class="pull-right hideInPrint">
-                    <div class="btn-group" dropdown is-open="status.isopen">
-                        <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="trackedEntityList.rows.length <= 0">
-                            <i class="fa fa-cog" title="{{settingsLabel}}"></i>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href ng-click="showDisplayMode()">{{displayModeLabel}}</a></li>
-                        </ul>
-                    </div>
-                </div>            
+                {{trackerCaptureLabel}}                
             </div>        
         </div>
         <!-- top bar ends -->

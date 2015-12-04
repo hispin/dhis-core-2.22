@@ -1445,6 +1445,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.sortedTeiIds = [];
     this.selectedTeiEvents = null;
     this.relationshipOwner = {};
+    this.selectedTeiEvents = [];
     
     this.set = function(currentSelection){  
         this.currentSelection = currentSelection;        
