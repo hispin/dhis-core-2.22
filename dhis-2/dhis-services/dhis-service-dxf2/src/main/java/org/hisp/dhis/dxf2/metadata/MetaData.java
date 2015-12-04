@@ -84,6 +84,7 @@ import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageSection;
+import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.program.ProgramValidation;
 import org.hisp.dhis.programrule.ProgramRule;
 import org.hisp.dhis.programrule.ProgramRuleAction;
@@ -232,6 +233,8 @@ public class MetaData
 
     private List<ProgramStageSection> programStageSections = new ArrayList<>();
 
+    private List<ProgramTrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
+
     private List<RelationshipType> relationshipTypes = new ArrayList<>();
 
     private List<ValidationCriteria> validationCriterias = new ArrayList<>();
@@ -312,7 +315,7 @@ public class MetaData
     @JsonProperty
     @JacksonXmlElementWrapper( localName = "dataApprovalWorkflows", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "dataApprovalWorkflow", namespace = DxfNamespaces.DXF_2_0 )
-    public List<DataApprovalWorkflow> getdataApprovalWorkflows()
+    public List<DataApprovalWorkflow> getDataApprovalWorkflows()
     {
         return dataApprovalWorkflows;
     }
@@ -957,6 +960,19 @@ public class MetaData
     public void setProgramStageSections( List<ProgramStageSection> programStageSections )
     {
         this.programStageSections = programStageSections;
+    }
+
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "programTrackedEntityAttributes", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "programTrackedEntityAttribute", namespace = DxfNamespaces.DXF_2_0 )
+    public List<ProgramTrackedEntityAttribute> getProgramTrackedEntityAttributes()
+    {
+        return programTrackedEntityAttributes;
+    }
+
+    public void setProgramTrackedEntityAttributes( List<ProgramTrackedEntityAttribute> programTrackedEntityAttributes )
+    {
+        this.programTrackedEntityAttributes = programTrackedEntityAttributes;
     }
 
     @JsonProperty
