@@ -93,6 +93,7 @@ public class Program
 
     private Boolean ignoreOverdueEvents = false;
 
+    @Scanned
     private List<ProgramTrackedEntityAttribute> programAttributes = new ArrayList<>();
 
     @Scanned
