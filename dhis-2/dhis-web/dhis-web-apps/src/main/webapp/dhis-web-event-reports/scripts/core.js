@@ -2478,7 +2478,15 @@ Ext.onReady( function() {
                     dimensions = Ext.Array.clean([].concat(view.columns || [], view.rows || [])),
                     ignoreKeys = ['dy', 'longitude', 'latitude'],
                     dataTypeMap = {},
-                    nameItemsMap;
+                    nameItemsMap,
+                    propertyMap = {
+                        'name': 'name',
+                        'displayName': 'name',
+                        'shortName': 'shortName',
+                        'displayShortName': 'shortName'
+                    },
+                    keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty,
+                    displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[xLayout.displayProperty] || 'name';
 
                 dataTypeMap[conf.finals.dataType.aggregated_values] = 'aggregate';
                 dataTypeMap[conf.finals.dataType.individual_cases] = 'query';
@@ -2601,7 +2609,7 @@ Ext.onReady( function() {
                 }
 
                 // display property
-                paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
                 // collapse data items
                 if (view.collapseDataDimensions) {

@@ -1017,7 +1017,7 @@ Ext.onReady( function() {
 
                 // sortOrder: number
 
-                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_IEVTANCE', 'ENROLLMENT'
+                // outputType: string ('EVENT') - 'EVENT', 'TRACKED_ENTITY_INSTANCE', 'ENROLLMENT'
 
                 // rangeAxisMaxValue: number
 
@@ -3117,7 +3117,15 @@ Ext.onReady( function() {
                     dataTypeMap = {
                         'aggregated_values': 'aggregate'
                     },
-                    nameItemsMap;
+                    nameItemsMap,
+                    propertyMap = {
+                        'name': 'name',
+                        'displayName': 'name',
+                        'shortName': 'shortName',
+                        'displayShortName': 'shortName'
+                    },
+                    keyAnalysisDisplayProperty = init.userAccount.settings.keyAnalysisDisplayProperty,
+                    displayProperty = propertyMap[keyAnalysisDisplayProperty] || propertyMap[xLayout.displayProperty] || 'name';
 
                 paramString = '/api/analytics/events/aggregate/' + layout.program.id + '.' + (format || 'json') + '?';
 
@@ -3214,7 +3222,7 @@ Ext.onReady( function() {
 				}
                 
                 // display property
-                paramString += '&displayProperty=' + init.userAccount.settings.keyAnalysisDisplayProperty.toUpperCase();
+                paramString += '&displayProperty=' + displayProperty.toUpperCase();
 
                 // collapse data items
                 if (layout.collapseDataDimensions) {
