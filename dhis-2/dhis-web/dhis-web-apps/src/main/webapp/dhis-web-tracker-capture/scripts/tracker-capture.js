@@ -271,7 +271,7 @@ function getProgram( id )
         return $.ajax( {
             url: '../api/programs/' + id + '.json',
             type: 'GET',
-            data: 'fields=id,name,type,version,displayFrontPageList,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,excecutionDateLabel,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],dataEntryForm[name,style,htmlCode,format],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
+            data: 'fields=id,name,type,version,displayFrontPageList,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,version,minDaysFromStart,standardInterval,periodType,generatedByEnrollmentDate,excecutionDateLabel,repeatable,autoGenerateEvent,openAfterEnrollment,reportDateToUse],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]'
         }).done( function( program ){            
             var ou = {};
             if(program.organisationUnits){
@@ -317,7 +317,7 @@ function getProgramStages( programs )
                     var p = d.promise();
                     dhis2.tc.store.get('programStages', programStage.id).done(function(obj) {
                         if(!obj || obj.version !== programStage.version) {
-                            promise = promise.then( getD2Object( programStage.id, 'programStages', '../api/programStages', 'fields=id,name,sortOrder,version,dataEntryForm,captureCoordinates,blockEntryForm,autoGenerateEvent,allowGenerateNextVisit,generatedByEnrollmentDate,remindCompleted,excecutionDateLabel,minDaysFromStart,repeatable,openAfterEnrollment,standardInterval,periodType,reportDateToUse,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,code,name,description,formName,valueType,optionSetValue,optionSet[id]]]', 'idb' ) );
+                            promise = promise.then( getD2Object( programStage.id, 'programStages', '../api/programStages', 'fields=id,name,sortOrder,version,dataEntryForm[id,name,style,htmlCode,format],captureCoordinates,blockEntryForm,autoGenerateEvent,allowGenerateNextVisit,generatedByEnrollmentDate,remindCompleted,excecutionDateLabel,minDaysFromStart,repeatable,openAfterEnrollment,standardInterval,periodType,reportDateToUse,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,code,name,description,formName,valueType,optionSetValue,optionSet[id]]]', 'idb' ) );
                         }
                         d.resolve();
                     });
