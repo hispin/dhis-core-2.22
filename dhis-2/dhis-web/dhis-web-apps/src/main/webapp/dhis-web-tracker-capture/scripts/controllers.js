@@ -212,7 +212,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
    
     //$scope.searchParam = {bools: []};
     $scope.search = function(mode){  
-        resetParams()
+        resetParams();
         var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
         $scope.gridColumns = grid.columns;
             
@@ -223,22 +223,26 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         }        
         
         //check search mode
-        if( $scope.selectedSearchMode === $scope.searchMode.freeText ){     
-
-            if(!$scope.searchText){                
-                $scope.emptySearchText = true;
-                $scope.teiFetched = false;
-                return;
-            }       
+        if( $scope.selectedSearchMode === $scope.searchMode.freeText ){
             
-            $scope.queryUrl = 'query=LIKE:' + $scope.searchText;            
+            if($scope.searchText){
+                $scope.queryUrl = 'query=LIKE:' + $scope.searchText;
+            }
+            else{
+                if(!$scope.selectedProgram || !$scope.selectedProgram.displayFrontPageList){
+                    $scope.emptySearchText = true;
+                    $scope.teiFetched = false;
+                    return;
+                }
+            }            
+            
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
             $scope.searchingOrgUnit = $scope.selectedOrgUnit;
         }
         
         if( $scope.selectedSearchMode === $scope.searchMode.attributeBased ){
             
-            $scope.searchText = '';
+            $scope.searchText = null;
             
             $scope.attributeUrl = EntityQueryFactory.getAttributesQuery($scope.attributes, $scope.enrollment);
             
@@ -252,7 +256,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         }
         
         if( $scope.selectedSearchMode === $scope.searchMode.listAll ){
-            $scope.searchText = '';            
+            $scope.searchText = null;            
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
             $scope.searchingOrgUnit = $scope.selectedOrgUnit;
         }
