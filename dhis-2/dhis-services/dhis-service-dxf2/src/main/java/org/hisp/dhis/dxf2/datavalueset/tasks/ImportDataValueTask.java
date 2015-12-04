@@ -29,6 +29,8 @@ package org.hisp.dhis.dxf2.datavalueset.tasks;
  */
 
 import org.hisp.dhis.security.SecurityContextRunnable;
+import org.hibernate.SessionFactory;
+import org.hisp.dhis.dbms.DbmsUtils;
 import org.hisp.dhis.dxf2.adx.AdxDataService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
@@ -52,6 +54,8 @@ public class ImportDataValueTask
 
     private AdxDataService adxDataService;
     
+    private SessionFactory sessionFactory;
+    
     private InputStream inputStream;
 
     private final ImportOptions importOptions;
@@ -60,11 +64,14 @@ public class ImportDataValueTask
 
     private final String format;
 
-    public ImportDataValueTask( DataValueSetService dataValueSetService, AdxDataService adxDataService,
+    // TODO: Re-factor as bean to avoid injecting session factory / dependencies
+    
+    public ImportDataValueTask( DataValueSetService dataValueSetService, AdxDataService adxDataService, SessionFactory sessionFactory,
         InputStream inputStream, ImportOptions importOptions, TaskId taskId, String format )
     {
         this.dataValueSetService = dataValueSetService;
         this.adxDataService = adxDataService;
+        this.sessionFactory = sessionFactory;
         this.inputStream = inputStream;
         this.importOptions = importOptions;
         this.taskId = taskId;
@@ -94,5 +101,17 @@ public class ImportDataValueTask
         {
             dataValueSetService.saveDataValueSet( inputStream, importOptions, taskId );
         }
+    }
+    
+    @Override
+    public void before()
+    {
+        DbmsUtils.bindSessionToThread( sessionFactory );
+    }
+    
+    @Override
+    public void after()
+    {
+        DbmsUtils.unbindSessionFromThread( sessionFactory );
     }
 }

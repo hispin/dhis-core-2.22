@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dxf2.adx.AdxDataService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -66,6 +67,9 @@ public class ImportDataValueAction
 
     @Autowired
     private CurrentUserService currentUserService;
+    
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Autowired
     private Scheduler scheduler;
@@ -166,7 +170,8 @@ public class ImportDataValueAction
 
         log.info( options );
 
-        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, adxDataService, in, options, taskId, importFormat ) );
+        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, 
+            adxDataService, sessionFactory, in, options, taskId, importFormat ) );
 
         return SUCCESS;
     }

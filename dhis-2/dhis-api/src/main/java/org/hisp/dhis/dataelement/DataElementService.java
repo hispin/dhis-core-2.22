@@ -38,7 +38,6 @@ import org.hisp.dhis.period.PeriodType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -111,15 +110,6 @@ public interface DataElementService
      * @return the DataElement with the given name, or null if no match.
      */
     DataElement getDataElementByName( String name );
-
-    /**
-     * Indicates whether this data element allows for data entry for future periods
-     * through its data set assignments.
-     * 
-     * @param id the data element id.
-     * @return true or false.
-     */
-    boolean isOpenFuturePeriods( int id );
 
     /**
      * Returns List of DataElements with a given key.
@@ -311,16 +301,6 @@ public interface DataElementService
 
     Map<String, Integer> getDataElementUidIdMap();
     
-    /**
-     * Returns all option codes of the option set associated with the data element
-     * with the given identifier. Returns empty if the data element does not exist
-     * or if the data element does not have an option set.
-     * 
-     * @param id the data element identifier.
-     * @return a set of option codes.
-     */
-    Optional<Set<String>> getOptionCodesAsSet( int id );
-
     // -------------------------------------------------------------------------
     // DataElementGroup
     // -------------------------------------------------------------------------

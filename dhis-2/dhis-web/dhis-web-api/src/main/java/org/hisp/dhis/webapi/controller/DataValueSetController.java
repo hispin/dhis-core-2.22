@@ -63,6 +63,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.hibernate.SessionFactory;
 
 import static org.hisp.dhis.webapi.utils.ContextUtils.*;
 
@@ -89,6 +90,9 @@ public class DataValueSetController
     
     @Autowired
     private Scheduler scheduler;
+    
+    @Autowired
+    private SessionFactory sessionFactory;
 
     // -------------------------------------------------------------------------
     // Get
@@ -250,7 +254,7 @@ public class DataValueSetController
         InputStream inputStream = saveTmp( request.getInputStream() );
 
         TaskId taskId = new TaskId( TaskCategory.DATAVALUE_IMPORT, currentUserService.getCurrentUser() );
-        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, adxDataService, inputStream, importOptions, taskId, format ) );
+        scheduler.executeTask( new ImportDataValueTask( dataValueSetService, adxDataService, sessionFactory, inputStream, importOptions, taskId, format ) );
 
         response.setHeader( "Location", ContextUtils.getRootPath( request ) + "/system/tasks/" + TaskCategory.DATAVALUE_IMPORT );
         response.setStatus( HttpServletResponse.SC_ACCEPTED );
