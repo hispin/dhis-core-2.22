@@ -123,16 +123,16 @@ public class SpringDataValueSetStore
 
         final String sql =
             "select de." + deScheme + " as deid, pe.startdate as pestart, pt.name as ptname, ou." + ouScheme + " as ouid, " +
-                "coc." + ocScheme + " as cocid, aoc." + ocScheme + " as aocid, " +
-                "dv.value, dv.storedby, dv.created, dv.lastupdated, dv.comment, dv.followup " +
-                "from datavalue dv " +
-                "join dataelement de on (dv.dataelementid=de.dataelementid) " +
-                "join period pe on (dv.periodid=pe.periodid) " +
-                "join periodtype pt on (pe.periodtypeid=pt.periodtypeid) " +
-                "join organisationunit ou on (dv.sourceid=ou.organisationunitid) " +
-                "join categoryoptioncombo coc on (dv.categoryoptioncomboid=coc.categoryoptioncomboid) " +
-                "join categoryoptioncombo aoc on (dv.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
-                "where dv.lastupdated >= '" + DateUtils.getLongDateString( lastUpdated ) + "'";
+            "coc." + ocScheme + " as cocid, aoc." + ocScheme + " as aocid, " +
+            "dv.value, dv.storedby, dv.created, dv.lastupdated, dv.comment, dv.followup " +
+            "from datavalue dv " +
+            "join dataelement de on (dv.dataelementid=de.dataelementid) " +
+            "join period pe on (dv.periodid=pe.periodid) " +
+            "join periodtype pt on (pe.periodtypeid=pt.periodtypeid) " +
+            "join organisationunit ou on (dv.sourceid=ou.organisationunitid) " +
+            "join categoryoptioncombo coc on (dv.categoryoptioncomboid=coc.categoryoptioncomboid) " +
+            "join categoryoptioncombo aoc on (dv.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
+            "where dv.lastupdated >= '" + DateUtils.getLongDateString( lastUpdated ) + "'";
 
         writeDataValueSet( sql, new DataExportParams(), null, dataValueSet );
     }
@@ -189,16 +189,16 @@ public class SpringDataValueSetStore
 
         String sql =
             "select de." + deScheme + " as deid, pe.startdate as pestart, pt.name as ptname, ou." + ouScheme + " as ouid, " +
-                "coc." + ocScheme + " as cocid, aoc." + ocScheme + " as aocid, " +
-                "dv.value, dv.storedby, dv.created, dv.lastupdated, dv.comment, dv.followup " +
-                "from datavalue dv " +
-                "join dataelement de on (dv.dataelementid=de.dataelementid) " +
-                "join period pe on (dv.periodid=pe.periodid) " +
-                "join periodtype pt on (pe.periodtypeid=pt.periodtypeid) " +
-                "join organisationunit ou on (dv.sourceid=ou.organisationunitid) " +
-                "join categoryoptioncombo coc on (dv.categoryoptioncomboid=coc.categoryoptioncomboid) " +
-                "join categoryoptioncombo aoc on (dv.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
-                "where de.dataelementid in (" + getCommaDelimitedString( getIdentifiers( getDataElements( params.getDataSets() ) ) ) + ") ";
+            "coc." + ocScheme + " as cocid, aoc." + ocScheme + " as aocid, " +
+            "dv.value, dv.storedby, dv.created, dv.lastupdated, dv.comment, dv.followup " +
+            "from datavalue dv " +
+            "join dataelement de on (dv.dataelementid=de.dataelementid) " +
+            "join period pe on (dv.periodid=pe.periodid) " +
+            "join periodtype pt on (pe.periodtypeid=pt.periodtypeid) " +
+            "join organisationunit ou on (dv.sourceid=ou.organisationunitid) " +
+            "join categoryoptioncombo coc on (dv.categoryoptioncomboid=coc.categoryoptioncomboid) " +
+            "join categoryoptioncombo aoc on (dv.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
+            "where de.dataelementid in (" + getCommaDelimitedString( getIdentifiers( getDataElements( params.getDataSets() ) ) ) + ") ";
 
         if ( params.isIncludeChildren() )
         {
