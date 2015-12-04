@@ -28,16 +28,15 @@ package org.hisp.dhis.dxf2.datavalueset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hisp.dhis.dataset.DataSet;
+import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.IdSchemes;
+import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 
-import com.google.common.base.MoreObjects;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland
@@ -45,21 +44,21 @@ import com.google.common.base.MoreObjects;
 public class DataExportParams
 {
     private Set<DataSet> dataSets = new HashSet<>();
-    
+
     private Set<Period> periods = new HashSet<>();
-    
+
     private Date startDate;
-    
+
     private Date endDate;
-    
+
     private Set<OrganisationUnit> organisationUnits = new HashSet<>();
 
     private boolean includeChildren;
-    
+
     private Date lastUpdated;
-    
+
     private Integer limit;
-    
+
     private IdSchemes idSchemes;
 
     // -------------------------------------------------------------------------
@@ -78,32 +77,32 @@ public class DataExportParams
     {
         return dataSets != null && !dataSets.isEmpty() ? dataSets.iterator().next() : null;
     }
-    
+
     public Period getFirstPeriod()
     {
         return periods != null && !periods.isEmpty() ? periods.iterator().next() : null;
     }
-    
+
     public boolean hasStartEndDate()
     {
         return startDate != null && endDate != null;
     }
-    
+
     public OrganisationUnit getFirstOrganisationUnit()
     {
         return organisationUnits != null && !organisationUnits.isEmpty() ? organisationUnits.iterator().next() : null;
     }
-    
+
     public boolean hasLastUpdated()
     {
         return lastUpdated != null;
     }
-    
+
     public boolean hasLimit()
     {
         return limit != null;
     }
-    
+
     /**
      * Indicates whether this parameters represents a single data value set, implying
      * that it contains exactly one of data sets, periods and organisation units.
@@ -112,7 +111,7 @@ public class DataExportParams
     {
         return dataSets.size() == 1 && periods.size() == 1 && organisationUnits.size() == 1;
     }
-    
+
     @Override
     public String toString()
     {
@@ -121,9 +120,9 @@ public class DataExportParams
             add( "periods", periods ).
             add( "org units", organisationUnits ).
             add( "children", includeChildren ).
-            add( "id schemes", idSchemes ).toString();            
+            add( "id schemes", idSchemes ).toString();
     }
-    
+
     // -------------------------------------------------------------------------
     // Get and set methods
     // -------------------------------------------------------------------------

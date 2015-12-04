@@ -112,6 +112,11 @@ public class IdScheme
         return identifiableProperty;
     }
 
+    public String getIdentifiableString()
+    {
+        return identifiableProperty != null ? identifiableProperty.toString() : null;
+    }
+
     public void setIdentifiableProperty( IdentifiableProperty identifiableProperty )
     {
         this.identifiableProperty = identifiableProperty;
