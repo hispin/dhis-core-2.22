@@ -43,6 +43,10 @@ import org.hisp.dhis.api.mobile.model.PatientAttribute;
 public class Program
     extends Model
 {
+    public static final String WITH_REGISTRATION = "with_registration";
+
+    public static final String WITHOUT_REGISTRATION = "without_registration";
+
     // Work as Program and ProgramInstance
     private String clientVersion;
 
@@ -52,12 +56,12 @@ public class Program
     // single event with registration: 2
     // single event without registration: 3
 
-    private String type;
+    private Integer type;
 
-    private String dateOfEnrollmentDescription = "Date of Enrollment";
+    private String dateOfEnrollmentDescription = "Enrollment Date";
 
-    private String dateOfIncidentDescription = "Date of Incident";
-    
+    private String dateOfIncidentDescription = "Incident Date";
+
     private String trackedEntityName = "Tracked Entity";
 
     private List<ProgramStage> programStages = new ArrayList<>();
@@ -102,14 +106,26 @@ public class Program
         this.clientVersion = clientVersion;
     }
 
-    public String getType()
+    public Integer getType()
     {
         return type;
     }
 
-    public void setType( String type )
+    public void setType( Integer type )
     {
         this.type = type;
+    }
+
+    public void setType( String type )
+    {
+        if ( type.equalsIgnoreCase( WITH_REGISTRATION ) )
+        {
+            this.setType( 1 );
+        }
+        else
+        {
+            this.setType( 3 );
+        }
     }
 
     public String getDateOfEnrollmentDescription()
@@ -119,7 +135,10 @@ public class Program
 
     public void setDateOfEnrollmentDescription( String dateOfEnrollmentDescription )
     {
-        this.dateOfEnrollmentDescription = dateOfEnrollmentDescription;
+        if ( dateOfEnrollmentDescription != null )
+        {
+            this.dateOfEnrollmentDescription = dateOfEnrollmentDescription;
+        }
     }
 
     public String getDateOfIncidentDescription()
@@ -129,14 +148,17 @@ public class Program
 
     public void setDateOfIncidentDescription( String dateOfIncidentDescription )
     {
-        this.dateOfIncidentDescription = dateOfIncidentDescription;
+        if ( dateOfIncidentDescription != null )
+        {
+            this.dateOfIncidentDescription = dateOfIncidentDescription;
+        }
     }
-    
+
     public String getTrackedEntityName()
     {
         return trackedEntityName;
     }
-    
+
     public void setTrackedEntityName( String trackedEntityName )
     {
         this.trackedEntityName = trackedEntityName;
@@ -176,7 +198,7 @@ public class Program
     {
         return relationshipType;
     }
-    
+
     public void setRelationshipType( int relationshipType )
     {
         this.relationshipType = relationshipType;
@@ -188,7 +210,7 @@ public class Program
     {
         super.serialize( dout );
         dout.writeInt( getVersion() );
-        dout.writeUTF( this.getType() );
+        dout.writeInt( this.getType() );
         dout.writeUTF( getDateOfEnrollmentDescription() );
         dout.writeUTF( getDateOfIncidentDescription() );
         dout.writeUTF( getTrackedEntityName() );
@@ -206,9 +228,9 @@ public class Program
         {
             pa.serialize( dout );
         }
-        
+
         String relationshipText = getRelationshipText();
-        if(relationshipText == null)
+        if ( relationshipText == null )
         {
             dout.writeUTF( "" );
         }
@@ -218,6 +240,7 @@ public class Program
         }
         dout.writeInt( getRelatedProgramId() );
         dout.writeInt( relationshipType );
+
     }
 
     @Override
@@ -226,7 +249,7 @@ public class Program
     {
         super.deSerialize( dataInputStream );
         this.setVersion( dataInputStream.readInt() );
-        this.setType( dataInputStream.readUTF() );
+        this.setType( dataInputStream.readInt() );
         this.setDateOfEnrollmentDescription( dataInputStream.readUTF() );
         this.setDateOfIncidentDescription( dataInputStream.readUTF() );
         this.setTrackedEntityName( dataInputStream.readUTF() );
