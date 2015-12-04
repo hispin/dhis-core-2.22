@@ -34,9 +34,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
-
-import static org.hisp.dhis.common.DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_PLAIN_SEP;
-
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -48,6 +45,8 @@ import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+
+import static org.hisp.dhis.common.DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_PLAIN_SEP;
 
 /**
  * @author Chau Thu Tran
@@ -102,19 +101,19 @@ public class ProgramTrackedEntityAttribute
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-    
+
     @Override
     public String getName()
     {
-        return program.getDisplayName() + " " + attribute.getDisplayName();
+        return (program != null ? program.getDisplayName() + " " : "") + (attribute != null ? attribute.getDisplayName() : "");
     }
 
     @Override
     public String getShortName()
     {
-        return program.getDisplayShortName() + " " + attribute.getDisplayShortName();
+        return (program != null ? program.getDisplayShortName() + " " : "") + (attribute != null ? attribute.getDisplayShortName() : "");
     }
-    
+
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -122,29 +121,29 @@ public class ProgramTrackedEntityAttribute
     {
         return attribute.getValueType();
     }
-    
+
     // -------------------------------------------------------------------------
     // DimensionalItemObject
     // -------------------------------------------------------------------------
-    
+
     @Override
     public String getDimensionItem()
     {
         return program.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + attribute.getUid();
     }
-    
+
     @Override
     public LegendSet getLegendSet()
     {
         return attribute.getLegendSet();
     }
-    
+
     @Override
     public AggregationType getAggregationType()
     {
         return attribute.getAggregationType();
     }
-    
+
     // -------------------------------------------------------------------------
     // Getters && Setters
     // -------------------------------------------------------------------------
