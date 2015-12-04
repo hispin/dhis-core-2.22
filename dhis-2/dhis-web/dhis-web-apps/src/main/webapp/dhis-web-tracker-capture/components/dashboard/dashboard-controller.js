@@ -216,6 +216,14 @@ trackerCapture.controller('DashboardController',
                                     }                                
                                 });
                                 
+                                //filter those enrollments that belong to available programs
+                                var len = enrollments.length;
+                                while(len--){
+                                    if(enrollments[len].program && !$scope.programNames[enrollments[len].program]){
+                                        enrollments.splice(len,1);
+                                    }
+                                }
+                                
                                 DHIS2EventFactory.getEventsByProgram($scope.selectedTeiId, null).then(function(events){                                        
                                     //prepare selected items for broadcast
                                     CurrentSelection.setSelectedTeiEvents(events);                                        
