@@ -29,9 +29,10 @@ package org.hisp.dhis.importexport.action.datavalue;
  */
 
 import com.opensymphony.xwork2.Action;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dxf2.adx.AdxDataService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -97,23 +98,23 @@ public class ImportDataValueAction
         this.strategy = ImportStrategy.valueOf( stgy );
     }
 
-    private IdentifiableProperty idScheme;
+    private String idScheme;
 
-    public void setIdScheme( IdentifiableProperty idScheme )
+    public void setIdScheme( String idScheme )
     {
         this.idScheme = idScheme;
     }
 
-    private IdentifiableProperty dataElementIdScheme;
+    private String dataElementIdScheme;
 
-    public void setDataElementIdScheme( IdentifiableProperty dataElementIdScheme )
+    public void setDataElementIdScheme( String dataElementIdScheme )
     {
         this.dataElementIdScheme = dataElementIdScheme;
     }
 
-    private IdentifiableProperty orgUnitIdScheme;
+    private String orgUnitIdScheme;
 
-    public void setOrgUnitIdScheme( IdentifiableProperty orgUnitIdScheme )
+    public void setOrgUnitIdScheme( String orgUnitIdScheme )
     {
         this.orgUnitIdScheme = orgUnitIdScheme;
     }
@@ -159,9 +160,9 @@ public class ImportDataValueAction
 
         ImportOptions options = new ImportOptions().setDryRun( dryRun )
             .setPreheatCache( preheatCache ).setStrategy( strategy ).setSkipExistingCheck( skipExistingCheck )
-            .setIdScheme( idScheme.toString() )
-            .setDataElementIdScheme( dataElementIdScheme.toString() )
-            .setOrgUnitIdScheme( orgUnitIdScheme.toString() );
+            .setIdScheme( StringUtils.trimToNull( idScheme ) )
+            .setDataElementIdScheme( StringUtils.trimToNull( dataElementIdScheme ) )
+            .setOrgUnitIdScheme( StringUtils.trimToNull( orgUnitIdScheme ) );
 
         log.info( options );
 
