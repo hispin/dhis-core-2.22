@@ -46,7 +46,6 @@ import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
-import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.CompleteDataSetRegistration;
 import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
 import org.hisp.dhis.dataset.DataSet;
@@ -114,9 +113,6 @@ public class DefaultDataValueSetService
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
-
-    @Autowired
-    private DataElementService dataElementService;
 
     @Autowired
     private DataElementCategoryService categoryService;
@@ -735,8 +731,7 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            boolean inUserHierarchy = orgUnitInHierarchyMap.get( orgUnit.getUid(),
-                () -> organisationUnitService.isInUserHierarchy( orgUnit.getUid(), currentOrgUnits ) );
+            boolean inUserHierarchy = orgUnitInHierarchyMap.get( orgUnit.getUid(), () -> orgUnit.isDescendant( currentOrgUnits ) );
 
             if ( !inUserHierarchy )
             {
@@ -744,8 +739,7 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            boolean invalidFuturePeriod = period.isFuture() && !dataElementOpenFuturePeriodsMap.get( dataElement.getUid(),
-                () -> dataElementService.isOpenFuturePeriods( dataElement.getId() ) );
+            boolean invalidFuturePeriod = period.isFuture() && !dataElementOpenFuturePeriodsMap.get( dataElement.getUid(), () -> dataElement.getOpenFuturePeriods() > 0 );
 
             if ( invalidFuturePeriod )
             {
@@ -774,9 +768,9 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            Optional<Set<String>> optionCodes = dataElementOptionsMap.get( dataElement.getUid(),
-                () -> dataElementService.getOptionCodesAsSet( dataElement.getId() ) );
-
+            Optional<Set<String>> optionCodes = dataElementOptionsMap.get( dataElement.getUid(), () -> dataElement.hasOptionSet() ? 
+                Optional.of( dataElement.getOptionSet().getOptionCodesAsSet() ) : Optional.empty() );
+            
             if ( optionCodes.isPresent() && !optionCodes.get().contains( dataValue.getValue() ) )
             {
                 summary.getConflicts().add( new ImportConflict( dataValue.getValue(), "Data value is not a valid option of the data element option set: " + dataElement.getUid() ) );

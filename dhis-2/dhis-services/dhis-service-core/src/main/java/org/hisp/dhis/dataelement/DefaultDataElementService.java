@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -131,14 +130,6 @@ public class DefaultDataElementService
         return i18n( i18nService, dataElementStore.getByCode( code ) );
     }
 
-    @Override
-    public boolean isOpenFuturePeriods( int id )
-    {
-        DataElement dataElement = getDataElement( id );
-        
-        return dataElement != null && dataElement.getOpenFuturePeriods() >= 0;
-    }
-    
     @Override
     public List<DataElement> getAllDataElements()
     {
@@ -387,15 +378,6 @@ public class DefaultDataElementService
         return i18n( i18nService, dataElementStore.get( dataSet, key, max ) );
     }
 
-    @Override
-    public Optional<Set<String>> getOptionCodesAsSet( int id )
-    {
-        DataElement dataElement = getDataElement( id );
-        
-        return dataElement != null && dataElement.hasOptionSet() ? 
-            Optional.of( dataElement.getOptionSet().getOptionCodesAsSet() ) : Optional.empty();
-    }
-    
     // -------------------------------------------------------------------------
     // DataElementGroup
     // -------------------------------------------------------------------------
