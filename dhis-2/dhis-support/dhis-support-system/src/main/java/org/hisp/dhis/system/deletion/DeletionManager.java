@@ -28,19 +28,12 @@ package org.hisp.dhis.system.deletion;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Collection;
-
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public interface DeletionManager
 {
     String ID = DeletionManager.class.getName();
-    
-    void addDeletionHandler( DeletionHandler handler );
-    
-    void addDeletionHandlers( Collection<DeletionHandler> handlers );
     
     void execute( Object object );
 }
