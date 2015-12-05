@@ -28,9 +28,10 @@ package org.hisp.dhis.maintenance;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public interface MaintenanceService
 {
@@ -48,6 +49,15 @@ public interface MaintenanceService
      * Deletes periods which do not have data values associated with them.
      */
     void prunePeriods();
+    
+    /**
+     * Prunes complete data set registrations, data approvals, data value audits
+     * and data values for the given organisation unit.
+     * 
+     * @param organisationUnit the organisation unit.
+     * @return true if the data pruning took place, false if not permitted.
+     */
+    boolean pruneData( OrganisationUnit organisationUnit );
     
     /**
      * Deletes user accounts representing expired account invitations.

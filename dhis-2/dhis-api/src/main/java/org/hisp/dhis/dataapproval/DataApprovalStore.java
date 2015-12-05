@@ -72,6 +72,13 @@ public interface DataApprovalStore
     void deleteDataApproval( DataApproval dataApproval );
 
     /**
+     * Deletes DataApprovals for the given organisation unit.
+     * 
+     * @param organisationUnit the organisation unit.
+     */
+    void deleteDataApprovals( OrganisationUnit organisationUnit );
+
+    /**
      * Returns the DataApproval object (if any) matching the properties
      * of a (non-Hibernate) DataApproval object.
      *

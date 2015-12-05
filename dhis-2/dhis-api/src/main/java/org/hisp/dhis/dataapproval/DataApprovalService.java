@@ -112,4 +112,11 @@ public interface DataApprovalService
      */
     List<DataApprovalStatus> getUserDataApprovalsAndPermissions( DataApprovalWorkflow workflow,
         Period period, OrganisationUnit orgUnit, DataElementCategoryCombo attributeCombo );
+    
+    /**
+     * Deletes DataApprovals for the given organisation unit.
+     * 
+     * @param organisationUnit the organisation unit.
+     */
+    void deleteDataApprovals( OrganisationUnit organisationUnit );
 }
