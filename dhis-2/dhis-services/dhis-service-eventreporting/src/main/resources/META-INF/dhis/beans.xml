@@ -99,23 +99,10 @@
 	
 	<!-- DeletionManager -->
 
-	<bean
-		id="org.hisp.dhis.caseaggregation.CaseAggregationConditionDeletionHandler"
+	<bean id="org.hisp.dhis.caseaggregation.CaseAggregationConditionDeletionHandler"
 		class="org.hisp.dhis.caseaggregation.CaseAggregationConditionDeletionHandler">
 		<property name="aggregationConditionService"
 			ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
 	</bean>
-
-	<bean
-		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="targetObject" ref="deletionManager" />
-		<property name="targetMethod" value="addDeletionHandlers" />
-		<property name="arguments">
-			<list>
-				<list>
-					<ref bean="org.hisp.dhis.caseaggregation.CaseAggregationConditionDeletionHandler" />
-				</list>
-			</list>
-		</property>
-	</bean>
+	
 </beans>

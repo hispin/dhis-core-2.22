@@ -238,24 +238,6 @@
   <bean id="org.hisp.dhis.interpretation.InterpretationDeletionHandler"
     class="org.hisp.dhis.interpretation.InterpretationDeletionHandler" />
 
-  <!-- DeletionManager -->
-
-  <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-    <property name="targetObject" ref="deletionManager" />
-    <property name="targetMethod" value="addDeletionHandlers" />
-    <property name="arguments">
-      <list>
-        <list>
-          <ref bean="org.hisp.dhis.report.ReportDeletionHandler" />
-          <ref bean="org.hisp.dhis.reporttable.ReportTableDeletionHandler" />
-          <ref bean="org.hisp.dhis.chart.ChartDeletionHandler" />
-          <ref bean="org.hisp.dhis.interpretation.InterpretationDeletionHandler" />
-          <ref bean="org.hisp.dhis.dashboard.impl.DashboardItemDeletionHandler" />
-        </list>
-      </list>
-    </property>
-  </bean>
-
   <!-- AOP definitions -->
 
   <aop:config>
