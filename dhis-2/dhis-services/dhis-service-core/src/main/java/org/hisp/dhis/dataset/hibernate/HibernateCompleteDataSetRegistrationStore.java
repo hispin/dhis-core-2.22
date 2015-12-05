@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
@@ -190,11 +189,8 @@ public class HibernateCompleteDataSetRegistrationStore
     {
         String hql = "delete from CompleteDataSetRegistration c where c.dataSet = :dataSet";
         
-        Query query = sessionFactory.getCurrentSession().createQuery( hql );
-        
-        query.setEntity( "dataSet", dataSet );
-        
-        query.executeUpdate();
+        sessionFactory.getCurrentSession().createQuery( hql ).
+            setEntity( "dataSet", dataSet ).executeUpdate();
     }
     
     @Override
@@ -202,10 +198,7 @@ public class HibernateCompleteDataSetRegistrationStore
     {
         String hql = "delete from CompleteDataSetRegistration c where c.source = :source";
 
-        Query query = sessionFactory.getCurrentSession().createQuery( hql );
-        
-        query.setEntity( "source", unit );
-        
-        query.executeUpdate();
+        sessionFactory.getCurrentSession().createQuery( hql ).
+            setEntity( "source", unit ).executeUpdate();
     }
 }

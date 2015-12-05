@@ -72,29 +72,20 @@ public class DataValueServiceTest
     // -------------------------------------------------------------------------
 
     private DataElement dataElementA;
-
     private DataElement dataElementB;
-
     private DataElement dataElementC;
-
     private DataElement dataElementD;
 
     private DataElementCategoryOptionCombo optionCombo;
     
     private Period periodA;
-
     private Period periodB;
-
     private Period periodC;
-
     private Period periodD;
 
     private OrganisationUnit sourceA;
-
     private OrganisationUnit sourceB;
-
     private OrganisationUnit sourceC;
-
     private OrganisationUnit sourceD;
 
     // -------------------------------------------------------------------------
