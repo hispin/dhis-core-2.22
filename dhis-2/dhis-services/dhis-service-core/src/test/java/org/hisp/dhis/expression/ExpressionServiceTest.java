@@ -382,7 +382,7 @@ public class ExpressionServiceTest
         assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionE ) );
         assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionH ) );
 
-        expressionA = "#{NonExistingUid" + SEPARATOR + categoryOptionCombo.getUid() + "} + 12";
+        expressionA = "#{nonExisting" + SEPARATOR + categoryOptionCombo.getUid() + "} + 12";
 
         assertEquals( ExpressionService.DATAELEMENT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
 
@@ -399,11 +399,11 @@ public class ExpressionServiceTest
 
         assertEquals( ExpressionService.EXPRESSION_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
         
-        expressionA = "12 + C{999999}";
+        expressionA = "12 + C{nonExisting}";
 
         assertEquals( ExpressionService.CONSTANT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
         
-        expressionA = "12 + OUG{999999}";
+        expressionA = "12 + OUG{nonExisting}";
         
         assertEquals( ExpressionService.OU_GROUP_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
     }
