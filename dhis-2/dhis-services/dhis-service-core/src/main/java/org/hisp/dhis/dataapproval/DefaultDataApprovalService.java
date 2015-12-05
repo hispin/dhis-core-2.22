@@ -409,6 +409,12 @@ public class DefaultDataApprovalService
 
         return statusList;
     }
+    
+    @Override
+    public void deleteDataApprovals( OrganisationUnit organisationUnit )
+    {
+        dataApprovalStore.deleteDataApprovals( organisationUnit );
+    }
 
     // -------------------------------------------------------------------------
     // Supportive methods

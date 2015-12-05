@@ -37,8 +37,12 @@ import org.hisp.dhis.dxf2.metadata.ExportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.schema.SchemaValidator;
+import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.validation.ValidationViolation;
+import org.hisp.dhis.webapi.service.WebMessageService;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.maintenance.MaintenanceService;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.resourcetable.ResourceTableService;
 import org.hisp.dhis.schema.Property;
@@ -48,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -68,6 +73,9 @@ public class MaintenanceController
 {
     public static final String RESOURCE_PATH = "/maintenance";
 
+    @Autowired
+    private WebMessageService webMessageService;
+    
     @Autowired
     private MaintenanceService maintenanceService;
 
@@ -111,6 +119,26 @@ public class MaintenanceController
     {
         maintenanceService.prunePeriods();
     }
+    
+    @RequestMapping( value = "/dataPruning/organisationUnits/{uid}", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @PreAuthorize( "hasRole('ALL')" )
+    public void pruneDataByOrganisationUnit( @PathVariable String uid, HttpServletResponse response )
+        throws Exception
+    {
+        OrganisationUnit organisationUnit = organisationUnitService.getOrganisationUnit( uid );
+        
+        if ( organisationUnit == null )
+        {
+            webMessageService.sendJson( WebMessageUtils.conflict( "Organisation unit does not exist: " + uid ), response );
+            return;
+        }
+        
+        boolean result = maintenanceService.pruneData( organisationUnit );
+        
+        WebMessage message = result ? WebMessageUtils.ok( "Data was pruned successfully" ) : WebMessageUtils.conflict( "Data could not be pruned" );
+        
+        webMessageService.sendJson( message, response );
+    }    
 
     @RequestMapping( value = "/zeroDataValueRemoval", method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )

@@ -154,6 +154,15 @@ public class HibernateDataApprovalStore
         dataApproval.setPeriod( periodService.reloadPeriod( dataApproval.getPeriod() ) );
 
         delete( dataApproval );
+    }    
+
+    @Override
+    public void deleteDataApprovals( OrganisationUnit organisationUnit )
+    {
+        String hql = "delete from DataApproval d where d.organisationUnit = :unit";
+        
+        sessionFactory.getCurrentSession().createQuery( hql ).
+            setEntity( "unit", organisationUnit ).executeUpdate();
     }
 
     @Override

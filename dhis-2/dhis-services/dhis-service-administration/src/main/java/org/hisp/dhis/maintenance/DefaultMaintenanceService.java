@@ -9,10 +9,18 @@ import org.hisp.dhis.common.DeleteNotAllowedException;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.commons.util.PageRange;
+import org.hisp.dhis.dataapproval.DataApprovalService;
+import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
+import org.hisp.dhis.datavalue.DataValueAuditService;
+import org.hisp.dhis.datavalue.DataValueService;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserInvitationStatus;
 import org.hisp.dhis.user.UserQueryParams;
 import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -74,6 +82,21 @@ public class DefaultMaintenanceService
     {
         this.userService = userService;
     }
+    
+    @Autowired
+    private CurrentUserService currentUserService;
+    
+    @Autowired
+    private DataValueService dataValueService;
+    
+    @Autowired
+    private DataValueAuditService dataValueAuditService;
+    
+    @Autowired
+    private CompleteDataSetRegistrationService completeRegistrationService;
+    
+    @Autowired
+    private DataApprovalService dataApprovalService;
 
     // -------------------------------------------------------------------------
     // MaintenanceService implementation
@@ -103,6 +126,25 @@ public class DefaultMaintenanceService
                 log.debug( "Period has associated objects and could not be deleted: " + periodId );
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public boolean pruneData( OrganisationUnit organisationUnit )
+    {
+        User user = currentUserService.getCurrentUser();
+        
+        if ( user == null || !user.isSuper() )
+        {
+            return false;
+        }
+        
+        dataApprovalService.deleteDataApprovals( organisationUnit );
+        completeRegistrationService.deleteCompleteDataSetRegistrations( organisationUnit );
+        dataValueAuditService.deleteDataValueAudits( organisationUnit );
+        dataValueService.deleteDataValues( organisationUnit );
+        
+        return true;
     }
 
     @Override
