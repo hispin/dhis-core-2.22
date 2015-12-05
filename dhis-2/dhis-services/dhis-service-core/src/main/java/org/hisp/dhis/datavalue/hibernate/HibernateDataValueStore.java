@@ -137,10 +137,8 @@ public class HibernateDataValueStore
     {
         String hql = "delete from DataValue d where d.source = :source";
         
-        Query query = sessionFactory.getCurrentSession().createQuery( hql );
-        query.setEntity( "source", organisationUnit );
-        
-        query.executeUpdate();
+        sessionFactory.getCurrentSession().createQuery( hql ).
+            setEntity( "source", organisationUnit ).executeUpdate();
     }
     
     @Override

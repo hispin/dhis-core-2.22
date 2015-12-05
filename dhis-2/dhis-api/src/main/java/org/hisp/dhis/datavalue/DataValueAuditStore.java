@@ -50,7 +50,14 @@ public interface DataValueAuditStore
      * @param dataValueAudit the DataValueAudit to add.
      */
     void addDataValueAudit( DataValueAudit dataValueAudit );
-
+    
+    /**
+     * Deletes all data value audits for the given organisation unit.
+     * 
+     * @param organisationUnit the organisation unit.
+     */
+    void deleteDataValueAudits( OrganisationUnit organisationUnit );
+    
     /**
      * Returns all DataValueAudits which match the DataElement, Period, OrganisationUnit
      * and DataElementCategoryOptionCombo of the given DataValue.

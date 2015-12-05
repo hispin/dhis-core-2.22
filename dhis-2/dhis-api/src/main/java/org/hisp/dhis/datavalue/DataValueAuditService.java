@@ -53,6 +53,13 @@ public interface DataValueAuditService
     void addDataValueAudit( DataValueAudit dataValueAudit );
 
     /**
+     * Deletes all data value audits for the given organisation unit.
+     * 
+     * @param organisationUnit the organisation unit.
+     */
+    void deleteDataValueAudits( OrganisationUnit organisationUnit );
+    
+    /**
      * Returns all DataValueAudits for the given DataValue.
      *
      * @param dataValue the DataValue to get DataValueAudits for.

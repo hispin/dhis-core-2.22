@@ -29,6 +29,8 @@ package org.hisp.dhis.system.deletion;
  */
 
 import javassist.util.proxy.ProxyObject;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DeleteNotAllowedException;
@@ -102,7 +104,7 @@ public class DefaultDeletionManager
                 {
                     String hint = String.valueOf( allow );
 
-                    String message = handler.getClassName() + (hint.isEmpty() ? "" : (" (" + hint + ")"));
+                    String message = handler.getClassName() + ( hint.isEmpty() ? hint : ( " (" + hint + ")" ) );
 
                     log.info( "Delete was not allowed by " + currentHandler + ": " + message );
                     

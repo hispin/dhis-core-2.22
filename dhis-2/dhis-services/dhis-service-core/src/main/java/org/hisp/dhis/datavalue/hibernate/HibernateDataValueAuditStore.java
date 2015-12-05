@@ -84,6 +84,14 @@ public class HibernateDataValueAuditStore
         session.save( dataValueAudit );
     }
 
+    @Override
+    public void deleteDataValueAudits( OrganisationUnit organisationUnit )
+    {
+        String hql = "delete from DataValueAudit d where d.organisationUnit = :unit";
+        
+        sessionFactory.getCurrentSession().createQuery( hql ).
+            setEntity( "unit", organisationUnit ).executeUpdate();
+    }
 
     @Override
     public List<DataValueAudit> getDataValueAudits( DataValue dataValue )
