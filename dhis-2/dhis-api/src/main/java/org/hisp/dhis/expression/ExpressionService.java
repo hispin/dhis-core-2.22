@@ -72,12 +72,12 @@ public interface ExpressionService
     String NULL_REPLACEMENT = "0";
     String SPACE = " ";
 
-    String OPERAND_EXPRESSION = "#\\{(\\w+)\\.?(\\w*)\\}";
-    String OPERAND_UID_EXPRESSION = "(\\w+)\\.?(\\w*)";
-    String DATA_ELEMENT_TOTAL_EXPRESSION = "#\\{(\\w+)\\}";
-    String OPTION_COMBO_OPERAND_EXPRESSION = "#\\{(\\w+)\\.(\\w+)\\}";
-    String CONSTANT_EXPRESSION = "C\\{(\\w+)\\}";
-    String OU_GROUP_EXPRESSION = "OUG\\{(\\w+)\\}";
+    String OPERAND_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\.?(\\w*)\\}";
+    String OPERAND_UID_EXPRESSION = "([a-zA-Z]\\w{10})\\.?(\\w*)";
+    String DATA_ELEMENT_TOTAL_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\}";
+    String OPTION_COMBO_OPERAND_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})\\}";
+    String CONSTANT_EXPRESSION = "C\\{([a-zA-Z]\\w{10})\\}";
+    String OU_GROUP_EXPRESSION = "OUG\\{([a-zA-Z]\\w{10})\\}";
     String DAYS_EXPRESSION = "\\[days\\]";
 
     Pattern OPERAND_PATTERN = Pattern.compile( OPERAND_EXPRESSION );
