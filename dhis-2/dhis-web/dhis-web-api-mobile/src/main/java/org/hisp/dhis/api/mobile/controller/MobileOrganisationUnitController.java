@@ -315,14 +315,13 @@ public class MobileOrganisationUnitController
     public org.hisp.dhis.api.mobile.model.LWUITmodel.MobileModel getAllDataForOrgUnitLWUIT(
         @PathVariable String clientVersion, @PathVariable int id )
     {
-		System.out.println("Start getting model");
         org.hisp.dhis.api.mobile.model.LWUITmodel.MobileModel mobileModel = new org.hisp.dhis.api.mobile.model.LWUITmodel.MobileModel();
         mobileModel.setClientVersion( clientVersion );
         OrganisationUnit unit = getUnit( id );
         mobileModel.setPrograms( programService.getProgramsLWUIT( unit ) );
         mobileModel.setServerCurrentDate( new Date() );
         mobileModel.setRelationshipTypes( programService.getAllRelationshipTypes() );
-		System.out.println("Finish all data");
+        
         return mobileModel;
     }
 

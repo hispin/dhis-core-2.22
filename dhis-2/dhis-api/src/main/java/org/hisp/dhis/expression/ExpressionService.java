@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
@@ -49,8 +50,12 @@ import org.hisp.dhis.validation.ValidationRule;
  * <ul>
  * <li>Data element operands on the form #{dataelementuid.categoryoptioncombouid}</li>
  * <li>Data element totals on the form #{dataelementuid}</li>
+ * <li>Program data elements on the form D{programuid.dataelementuid}</li>
+ * <li>Program tracked entity attribute on the form A{programuid.attributeuid}</li>
+ * <li>Program indicators on the form I{programindicatoruid}</li>
  * <li>Constants on the form C{constantuid}</li>
- * <li>Days in aggregation period as the symbol D{}</li>
+ * <li>Organisation unit group member counts on the form OUG{orgunitgroupuid}</li>
+ * <li>Days in aggregation period as the symbol [days]</li>
  * </ul>
  *
  * @author Margrethe Store
@@ -71,8 +76,11 @@ public interface ExpressionService
     String DAYS_DESCRIPTION = "[Number of days]";
     String NULL_REPLACEMENT = "0";
     String SPACE = " ";
+    String DAYS_SYMBOL = "[days]";
 
+    String VARIABLE_EXPRESSION = "(#|D|A|I)\\{(([a-zA-Z]\\w{10})\\.?(\\w*))\\}";
     String OPERAND_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\.?(\\w*)\\}";
+    String PROGRAM_DATA_ELEMENT_EXPRESSION = "D\\{([a-zA-Z]\\w{10})\\.?([a-zA-Z]\\w{10})\\}";
     String OPERAND_UID_EXPRESSION = "([a-zA-Z]\\w{10})\\.?(\\w*)";
     String DATA_ELEMENT_TOTAL_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\}";
     String OPTION_COMBO_OPERAND_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})\\}";
@@ -80,15 +88,15 @@ public interface ExpressionService
     String OU_GROUP_EXPRESSION = "OUG\\{([a-zA-Z]\\w{10})\\}";
     String DAYS_EXPRESSION = "\\[days\\]";
 
+    Pattern VARIABLE_PATTERN = Pattern.compile( VARIABLE_EXPRESSION );
     Pattern OPERAND_PATTERN = Pattern.compile( OPERAND_EXPRESSION );
     Pattern OPERAND_UID_PATTERN = Pattern.compile( OPERAND_UID_EXPRESSION );
+    Pattern PROGRAM_DATA_ELEMENT_PATTERN = Pattern.compile( PROGRAM_DATA_ELEMENT_EXPRESSION );
     Pattern DATA_ELEMENT_TOTAL_PATTERN = Pattern.compile( DATA_ELEMENT_TOTAL_EXPRESSION );
     Pattern OPTION_COMBO_OPERAND_PATTERN = Pattern.compile( OPTION_COMBO_OPERAND_EXPRESSION );
     Pattern CONSTANT_PATTERN = Pattern.compile( CONSTANT_EXPRESSION );
     Pattern OU_GROUP_PATTERN = Pattern.compile( OU_GROUP_EXPRESSION );
     Pattern DAYS_PATTERN = Pattern.compile( DAYS_EXPRESSION );
-
-    String DAYS_SYMBOL = "[days]";
     
     /**
      * Adds a new Expression to the database.
@@ -138,7 +146,7 @@ public interface ExpressionService
      * @param orgUnitCountMap the map of organisation unit counts.
      * @return the calculated value as a double.
      */
-    Double getIndicatorValue( Indicator indicator, Period period, Map<DataElementOperand, Double> valueMap, 
+    Double getIndicatorValue( Indicator indicator, Period period, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap );
     
     /**
@@ -155,7 +163,7 @@ public interface ExpressionService
      * @param days the number of days to use in the calculation.
      * @return the calculated value as a double.
      */
-    Double getExpressionValue( Expression expression, Map<DataElementOperand, Double> valueMap, 
+    Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days );
     
     /**
@@ -175,7 +183,7 @@ public interface ExpressionService
      *        not all children had a value.)
      * @return the calculated value as a double.
      */
-    Double getExpressionValue( Expression expression, Map<DataElementOperand, Double> valueMap, 
+    Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, Set<DataElementOperand> incompleteValues );
     
     /**
@@ -360,7 +368,7 @@ public interface ExpressionService
      * @param missingValueStrategy the strategy to use when data values are missing
      *        when calculating the expression. Strategy defaults to NEVER_SKIP if null.
      */
-    String generateExpression( String expression, Map<DataElementOperand, Double> valueMap, 
+    String generateExpression( String expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, MissingValueStrategy missingValueStrategy );
     
     /**
