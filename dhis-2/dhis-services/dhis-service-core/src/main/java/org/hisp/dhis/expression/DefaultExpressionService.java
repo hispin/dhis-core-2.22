@@ -46,10 +46,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
@@ -70,6 +72,8 @@ import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Sets;
 
 /**
  * The expression is a string describing a formula containing data element ids
@@ -167,7 +171,7 @@ public class DefaultExpressionService
     // -------------------------------------------------------------------------
     
     @Override
-    public Double getIndicatorValue( Indicator indicator, Period period, Map<DataElementOperand, Double> valueMap,
+    public Double getIndicatorValue( Indicator indicator, Period period, Map<? extends DimensionalItemObject, Double> valueMap,
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap )
     {
         if ( indicator == null || indicator.getExplodedNumeratorFallback() == null || indicator.getExplodedDenominatorFallback() == null )
@@ -210,14 +214,14 @@ public class DefaultExpressionService
     }
 
     @Override
-    public Double getExpressionValue( Expression expression, Map<DataElementOperand, Double> valueMap,
+    public Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap,
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days )
     {
         return getExpressionValue( expression, valueMap, constantMap, orgUnitCountMap, days, null );
     }
 
     @Override
-    public Double getExpressionValue( Expression expression, Map<DataElementOperand, Double> valueMap,
+    public Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap,
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, Set<DataElementOperand> incompleteValues )
     {
         String expressionString = generateExpression( expression.getExplodedExpressionFallback(), valueMap, constantMap, 
@@ -863,28 +867,34 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public String generateExpression( String expression, Map<DataElementOperand, Double> valueMap, 
+    public String generateExpression( String expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, MissingValueStrategy missingValueStrategy )
     {
     	return generateExpression( expression, valueMap, constantMap, orgUnitCountMap, days, missingValueStrategy, null );
     }
 
-    private String generateExpression( String expression, Map<DataElementOperand, Double> valueMap, 
+    private String generateExpression( String expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, MissingValueStrategy missingValueStrategy, Set<DataElementOperand> incompleteValues )
     {
         if ( expression == null || expression.isEmpty() )
         {
             return null;
         }
+
+        Map<String, Double> dimensionItemValueMap = valueMap.entrySet().stream().
+            collect( Collectors.toMap( e -> e.getKey().getDimensionItem(), e -> e.getValue() ) );
+        
+        Set<String> incompleteItems = incompleteValues != null ? incompleteValues.
+            stream().map( i -> i.getDimensionItem() ).collect( Collectors.toSet() ) : Sets.newHashSet();
         
         missingValueStrategy = missingValueStrategy == null ? NEVER_SKIP : missingValueStrategy;
         
         // ---------------------------------------------------------------------
-        // Operands
+        // DimensionalItemObjects
         // ---------------------------------------------------------------------
         
         StringBuffer sb = new StringBuffer();
-        Matcher matcher = OPERAND_PATTERN.matcher( expression );
+        Matcher matcher = VARIABLE_PATTERN.matcher( expression );
         
         int matchCount = 0;
         int valueCount = 0;
@@ -893,11 +903,11 @@ public class DefaultExpressionService
         {
             matchCount++;
             
-            DataElementOperand operand = DataElementOperand.getOperand( matcher.group() );
-
-            final Double value = valueMap.get( operand );
+            String dimItem = matcher.group( 2 );
             
-            boolean missingValue = value == null || ( incompleteValues != null && incompleteValues.contains( operand ) );
+            final Double value = dimensionItemValueMap.get( dimItem );
+            
+            boolean missingValue = value == null || incompleteItems.contains( dimItem );
             
             if ( missingValue && SKIP_IF_ANY_VALUE_MISSING.equals( missingValueStrategy ) )
             {

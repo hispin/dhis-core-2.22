@@ -709,16 +709,14 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         for ( String s : approvalStrings )
         {
-            System.out.println( "                \"" + s + "\"" + ( ++count < approvalStrings.length ? "," : " }," ) );
+            System.out.println( "\"" + s + "\"" + ( ++count < approvalStrings.length ? "," : " }," ) );
         }
 
         String username = mockUserService.getCurrentUsername();
 
-        System.out.println( "            userApprovalsAndPermissions( "
+        System.out.println( "userApprovalsAndPermissions( "
             + username.substring( 0, 1 ).toLowerCase() + username.substring( 1, username.length() )
             + ", workflowAll, periodA, null ) );" );
-
-        System.out.println();
     }
 
     @SuppressWarnings("unused")

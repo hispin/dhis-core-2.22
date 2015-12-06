@@ -379,7 +379,6 @@ public abstract class AbstractEnrollmentService
             }
             else if ( EnrollmentStatus.COMPLETED == enrollment.getStatus() )
             {
-                System.out.println("It is completed...");
                 programInstanceService.completeProgramInstanceStatus( programInstance );
             }
             else

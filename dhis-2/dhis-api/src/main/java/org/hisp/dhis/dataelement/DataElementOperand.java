@@ -159,7 +159,18 @@ public class DataElementOperand
     @Override
     public String getDimensionItem()
     {
-        return dataElement.getUid() + SEPARATOR + categoryOptionCombo.getUid();
+        String item = null;
+
+        if ( dataElement != null )
+        {
+            item = dataElement.getUid() + ( categoryOptionCombo != null ? ( SEPARATOR + categoryOptionCombo.getUid() ) : StringUtils.EMPTY );
+        }
+        else if ( dataElementId != null )
+        {
+            item = dataElementId + ( optionComboId != null ? ( SEPARATOR + optionComboId ) : StringUtils.EMPTY );
+        }
+        
+        return item;
     }
     
     // -------------------------------------------------------------------------

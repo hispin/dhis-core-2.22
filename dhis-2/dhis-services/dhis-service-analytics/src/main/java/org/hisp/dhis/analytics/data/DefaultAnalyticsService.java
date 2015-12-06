@@ -270,7 +270,7 @@ public class DefaultAnalyticsService
                 {
                     String permKey = DimensionItem.asItemKey( dimensionItems );
 
-                    Map<DataElementOperand, Double> valueMap = permutationOperandValueMap.get( permKey );
+                    Map<? extends DimensionalItemObject, Double> valueMap = permutationOperandValueMap.get( permKey );
 
                     if ( valueMap == null )
                     {
