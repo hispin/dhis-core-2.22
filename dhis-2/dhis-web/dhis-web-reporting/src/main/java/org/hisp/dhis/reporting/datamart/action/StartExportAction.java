@@ -29,7 +29,6 @@ package org.hisp.dhis.reporting.datamart.action;
  */
 
 import org.hisp.dhis.analytics.table.scheduling.AnalyticsTableTask;
-import org.hisp.dhis.scheduling.ScheduledTasks;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.notification.Notifier;
@@ -85,13 +84,9 @@ public class StartExportAction
         
         notifier.clear( taskId );
         
-        ScheduledTasks tasks = new ScheduledTasks();
-     
         analyticsTableTask.setTaskId( taskId );
         
-        tasks.addTask( analyticsTableTask );
-        
-        scheduler.executeTask( tasks );
+        scheduler.executeTask( analyticsTableTask );
         
         return SUCCESS;
     }
