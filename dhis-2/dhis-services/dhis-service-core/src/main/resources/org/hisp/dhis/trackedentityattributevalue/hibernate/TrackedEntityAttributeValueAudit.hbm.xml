@@ -11,10 +11,10 @@
     </id>
 
     <many-to-one name="entityInstance" class="org.hisp.dhis.trackedentity.TrackedEntityInstance" column="trackedentityinstanceid"
-      foreign-key="fk_attributevalue_trackedentityinstanceid" />
+      foreign-key="fk_attributevalueaudit_trackedentityinstanceid" />
 
     <many-to-one name="attribute" class="org.hisp.dhis.trackedentity.TrackedEntityAttribute" column="trackedentityattributeid"
-      foreign-key="fk_attributevalue_trackedentityattributeid" />
+      foreign-key="fk_attributevalueaudit_trackedentityattributeid" />
 
     <property name="value" length="50000" />
 
