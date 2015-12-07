@@ -111,6 +111,7 @@ trackerCapture.controller('DataEntryController',
         //Establish which event was affected:
         var affectedEvent = $scope.currentEvent;
         //In most cases the updated effects apply to the current event. In case the affected event is not the current event, fetch the correct event to affect:
+        if(event==='registration') return;
         if (event !== affectedEvent.event) {
             angular.forEach($scope.currentStageEvents, function (searchedEvent) {
                 if (searchedEvent.event === event) {
@@ -123,7 +124,7 @@ trackerCapture.controller('DataEntryController',
         $scope.hiddenSections = [];
         $scope.warningMessages = [];
         $scope.errorMessages = [];
-        
+        $scope.hiddenFields = [];
         angular.forEach($rootScope.ruleeffects[event], function (effect) {
             if (effect.dataElement) {
                 //in the data entry controller we only care about the "hidefield", showerror and showwarning actions
@@ -144,8 +145,9 @@ trackerCapture.controller('DataEntryController',
                             affectedEvent[effect.dataElement.id] = "";
                             $scope.saveDatavalueForEvent($scope.prStDes[effect.dataElement.id], null, affectedEvent);
                         }
-
-                        $scope.hiddenFields[effect.dataElement.id] = effect.ineffect;
+                        if(effect.ineffect) {
+                            $scope.hiddenFields[effect.dataElement.id] = true;
+                        }
                     }
                     else {
                         $log.warn("ProgramRuleAction " + effect.id + " is of type HIDEFIELD, bot does not have a dataelement defined");
