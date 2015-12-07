@@ -69,6 +69,8 @@
     <property name="reportDateToUse" />
 
     <property name="preGenerateUID" />
+    
+    <property name="hideDueDate" />
 
     <property name="sortOrder" column="sort_order" />
 

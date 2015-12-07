@@ -337,6 +337,13 @@ public class UpdateProgramStageAction
     {
         this.jsonAttributeValues = jsonAttributeValues;
     }
+    
+    private Boolean hideDueDate;
+
+    public void setHideDueDate( Boolean hideDueDate )
+    {
+        this.hideDueDate = hideDueDate;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -359,6 +366,7 @@ public class UpdateProgramStageAction
         allowGenerateNextVisit = (allowGenerateNextVisit == null) ? false : allowGenerateNextVisit;
         openAfterEnrollment = (openAfterEnrollment == null) ? false : openAfterEnrollment;
         preGenerateUID = (preGenerateUID == null) ? false : preGenerateUID;
+        hideDueDate = (hideDueDate == null) ? false : hideDueDate;
 
         ProgramStage programStage = programStageService.getProgramStage( id );
 
@@ -377,6 +385,7 @@ public class UpdateProgramStageAction
         programStage.setOpenAfterEnrollment( openAfterEnrollment );
         programStage.setReportDateToUse( reportDateToUse );
         programStage.setPreGenerateUID( preGenerateUID );
+        programStage.setHideDueDate( hideDueDate );
 
         periodTypeName = StringUtils.trimToNull( periodTypeName );
 

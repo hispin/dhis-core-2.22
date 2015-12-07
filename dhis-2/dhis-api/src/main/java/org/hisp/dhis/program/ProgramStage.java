@@ -115,6 +115,8 @@ public class ProgramStage
     private Integer sortOrder;
 
     private PeriodType periodType;
+    
+    private Boolean hideDueDate = false;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -481,6 +483,19 @@ public class ProgramStage
     {
         this.periodType = periodType;
     }
+    
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Boolean getHideDueDate()
+    {
+        return hideDueDate;
+    }
+
+    public void setHideDueDate( Boolean hideDueDate )
+    {
+        this.hideDueDate = hideDueDate;
+    }
 
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
@@ -513,6 +528,7 @@ public class ProgramStage
                 openAfterEnrollment = programStage.getOpenAfterEnrollment();
                 reportDateToUse = programStage.getReportDateToUse();
                 preGenerateUID = programStage.getPreGenerateUID();
+                hideDueDate = programStage.getHideDueDate();
             }
             else if ( strategy.isMerge() )
             {
@@ -544,6 +560,7 @@ public class ProgramStage
                     .getReportDateToUse();
                 preGenerateUID = programStage.getPreGenerateUID() == null ? preGenerateUID : programStage
                     .getPreGenerateUID();
+                hideDueDate = programStage.getHideDueDate() == null ? hideDueDate : programStage.getHideDueDate();
             }
 
             programStageDataElements.clear();

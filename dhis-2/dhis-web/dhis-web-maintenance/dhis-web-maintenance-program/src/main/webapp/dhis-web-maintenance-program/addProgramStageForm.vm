@@ -203,6 +203,7 @@
 		<td></td>
 	</tr>
 	
+	#if($program.programType.value=="with_registration")
 	<tr>
 		<td><label for="remindCompleted">$i18n.getString( "ask_user_to_complete_program_when_stage_complete" )</label></td>
 		<td><input type="checkbox" id="remindCompleted" name="remindCompleted" value='true' ></td>
@@ -215,10 +216,15 @@
 		<td></td>
 	</tr>
 	
-	#if($program.programType.value=="with_registration")
 	<tr>
 		<td><label for="generatedByEnrollmentDate">$i18n.getString( "generate_events_based_on_enrollment_date" ) <span class="tipText">($i18n.getString( "not_incident_date" ))</label></td>
 		<td><input type="checkbox" id="generatedByEnrollmentDate" name="generatedByEnrollmentDate" value='true'></td>
+		<td></td>
+	</tr>
+	
+	<tr>
+		<td><label for="hideDueDate">$i18n.getString( "hide_due_date" )</label></td>
+		<td><input type="checkbox" id="hideDueDate" name="hideDueDate" value='true' ></td>
 		<td></td>
 	</tr>
 	#end
