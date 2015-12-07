@@ -100,7 +100,7 @@ public class Validator
         
         try
         {
-            executor.awaitTermination( 23, TimeUnit.HOURS );
+            executor.awaitTermination( 6, TimeUnit.HOURS );
         }
         catch ( InterruptedException e )
         {
