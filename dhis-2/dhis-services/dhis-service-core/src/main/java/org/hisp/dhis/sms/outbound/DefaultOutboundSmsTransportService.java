@@ -434,19 +434,17 @@ public class DefaultOutboundSmsTransportService
             outboundMessage.setFrom( longNumber );
         }
 
-        boolean sent = false;
-
         try
         {
             log.info( "Sending message " + sms );
 
             if ( gatewayId == null || gatewayId.isEmpty() )
             {
-                sent = getService().sendMessage( outboundMessage );
+                getService().sendMessage( outboundMessage );
             }
             else
             {
-                sent = getService().sendMessage( outboundMessage, gatewayId );
+                getService().sendMessage( outboundMessage, gatewayId );
             }
         }
         catch ( SMSLibException e )

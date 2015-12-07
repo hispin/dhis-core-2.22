@@ -31,7 +31,6 @@ package org.hisp.dhis.dataapproval;
 import static com.google.common.collect.Sets.newHashSet;
 
 import org.hisp.dhis.DhisSpringTest;
-import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.period.PeriodType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -56,9 +53,6 @@ public class DataApprovalWorkflowServiceTest
 
     @Autowired
     private DataApprovalLevelService dataApprovalLevelService;
-
-    @Autowired
-    private DataSetService dataSetService;
 
     // -------------------------------------------------------------------------
     // Supporting data
