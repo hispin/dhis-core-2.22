@@ -180,6 +180,7 @@ public class TableAlteror
         executeSql( "UPDATE program SET dataEntryMethod=false WHERE dataEntryMethod is null" );
         executeSql( "UPDATE programstage SET allowGenerateNextVisit=false WHERE allowGenerateNextVisit is null" );
         executeSql( "update programstage set openAfterEnrollment=false where openAfterEnrollment is null" );
+        executeSql( "update programstage set hideduedate=false where hideduedate is null" );
 
         executeSql( "update programstageinstance set status=0 where status is null" );
         executeSql( "ALTER TABLE program DROP COLUMN facilityLB" );

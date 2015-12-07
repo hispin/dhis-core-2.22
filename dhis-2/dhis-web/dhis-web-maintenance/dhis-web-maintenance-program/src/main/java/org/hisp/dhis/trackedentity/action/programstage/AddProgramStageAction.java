@@ -339,6 +339,13 @@ public class AddProgramStageAction
     {
         this.jsonAttributeValues = jsonAttributeValues;
     }
+    
+    private Boolean hideDueDate;
+
+    public void setHideDueDate( Boolean hideDueDate )
+    {
+        this.hideDueDate = hideDueDate;
+    }
 
     // -------------------------------------------------------------------------
     // Action implementation
@@ -361,6 +368,7 @@ public class AddProgramStageAction
         allowGenerateNextVisit = (allowGenerateNextVisit == null) ? false : allowGenerateNextVisit;
         openAfterEnrollment = (openAfterEnrollment == null) ? false : openAfterEnrollment;
         preGenerateUID = (preGenerateUID == null) ? false : preGenerateUID;
+        hideDueDate = (hideDueDate == null) ? false : hideDueDate;
 
         ProgramStage programStage = new ProgramStage();
         Program program = programService.getProgram( id );
@@ -405,6 +413,7 @@ public class AddProgramStageAction
         programStage.setReportDateToUse( reportDateToUse );
         programStage.setPreGenerateUID( preGenerateUID );
         programStage.setSortOrder( program.getProgramStages().size() + 1 );
+        programStage.setHideDueDate( hideDueDate );
 
         // SMS Reminder
 
