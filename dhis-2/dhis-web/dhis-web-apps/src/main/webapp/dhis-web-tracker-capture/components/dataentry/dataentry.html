@@ -84,7 +84,7 @@
                 <!-- event dates/scheduling begin -->
                 <div class="row" ng-if="(displayCustomForm !== 'TABLE') && !currentStage.periodType">
 
-                    <div class="col-md-6">
+                    <div ng-class="{true: 'col-md-12', false: 'col-md-6'} [currentStage.hideDueDate]">
                         {{currentEvent.excecutionDateLabel}}
                         <input type="text"
                                placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
@@ -99,7 +99,7 @@
                                blur-or-change="saveEventDate()"/>
                         <span ng-if="invalidDate" class="error">{{'date_required'| translate}}</span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" ng-if="!currentStage.hideDueDate">
                         <span ng-if="currentEvent.eventDate || currentEvent.status === 'SKIPPED' || currentEvent.dueDate">
                             {{'due_date'| translate}}
                         </span>
