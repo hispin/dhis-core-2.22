@@ -37,6 +37,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.program.ProgramIndicator;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -73,6 +74,15 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
         return ((Long) query.uniqueResult()).intValue();
     }
 
+    @Override
+    public int countProgramIndicatorAnalyticalObject( ProgramIndicator programIndicator )
+    {
+        Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.programIndicator = :programIndicator" );
+        query.setEntity( "dataSet", programIndicator );
+
+        return ((Long) query.uniqueResult()).intValue();
+    }
+    
     @Override
     public int countPeriodAnalyticalObject( Period period )
     {
