@@ -239,7 +239,7 @@
           <version>1.7</version>
           <executions>
             <execution>
-              <phase>generate-resources</phase>
+              <phase>prepare-package</phase>
               <configuration>
                 <target>
                   <tstamp>

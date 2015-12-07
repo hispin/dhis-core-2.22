@@ -130,8 +130,6 @@ public class DataApprovalServiceTest
     private Period periodW; // Weekly
     private Period periodW4; // Weekly
     private Period periodW5; // Weekly
-    private Period periodW50; // Weekly
-    private Period periodW51; // Weekly
     private Period periodY; // Yearly
 
     private OrganisationUnit organisationUnitA;
@@ -230,8 +228,6 @@ public class DataApprovalServiceTest
         periodW = createPeriod( "2014W1" ); // Weekly, Monday 2013-12-30 to Sunday 2014-01-05
         periodW4 = createPeriod( "2014W4" ); // Weekly, Monday 2014-01-20 to Sunday 2014-01-26
         periodW5 = createPeriod( "2014W5" ); // Weekly, Monday 2014-01-27 to Sunday 2014-02-02
-        periodW50 = createPeriod( "2014W50" ); // Weekly, Monday 2014-12-22 to Sunday 2014-12-28
-        periodW51 = createPeriod( "2014W51" ); // Weekly, Monday 2014-12-29 to Sunday 2015-01-04
 
         periodY = createPeriod( "2014" ); // Yearly
 
