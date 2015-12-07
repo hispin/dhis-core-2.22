@@ -162,13 +162,13 @@ trackerCapture.controller('EnrollmentController',
         $scope.broadCastSelections('mainDashboard'); 
     };
     
-    $scope.terminateEnrollment = function(){        
+    $scope.cancelEnrollment = function(){        
 
         var modalOptions = {
-            closeButtonText: 'cancel',
-            actionButtonText: 'terminate',
-            headerText: 'terminate_enrollment',
-            bodyText: 'are_you_sure_to_terminate_enrollment'
+            closeButtonText: 'no',
+            actionButtonText: 'yes',
+            headerText: 'cancel_enrollment',
+            bodyText: 'are_you_sure_to_cancel_enrollment'
         };
 
         ModalService.showModal({}, modalOptions).then(function(result){            
