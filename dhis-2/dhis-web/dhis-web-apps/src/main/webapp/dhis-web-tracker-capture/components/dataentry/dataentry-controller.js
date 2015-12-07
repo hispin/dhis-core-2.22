@@ -98,13 +98,15 @@ trackerCapture.controller('DataEntryController',
     $scope.model= {};
 
     $scope.printDiv = function( divName ) {
-        var printContents = document.getElementById(divName).innerHTML;
-        var originalContents = document.body.innerHTML;
-        $scope.model.print_mode = true;
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
-        $scope.model.print_mode = false;
+        var elements = document.getElementsByClassName(divName);
+        var printContents = "";
+        for (var index = 0; index < elements.length; index++) {
+            printContents += elements[index].innerHTML;
+        }
+        var popupWin = window.open('', '_blank', 'width=800,height=800');
+        popupWin.document.open();
+        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</html>');
+        popupWin.document.close();
     }
 
 
