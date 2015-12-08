@@ -52,7 +52,7 @@ public class DefaultUserSettingService
      * Cache for user settings. Does not accept nulls. Key is "name-username".
      */
     private static Cache<String, Optional<Serializable>> SETTING_CACHE = CacheBuilder.newBuilder()
-        .expireAfterAccess( 15, TimeUnit.MINUTES )
+        .expireAfterAccess( 1, TimeUnit.HOURS )
         .initialCapacity( 200 )
         .maximumSize( 10000 )
         .build();
@@ -117,7 +117,7 @@ public class DefaultUserSettingService
         
         saveUserSetting( name, value, currentUser );
     }
-
+    
     @Override
     public void saveUserSetting( String name, Serializable value, User user )
     {
