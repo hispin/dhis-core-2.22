@@ -30,7 +30,7 @@ package org.hisp.dhis.email;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.message.MessageSender;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
@@ -94,7 +94,7 @@ public class DefaultEmailService
     @Override
     public void sendTestEmail()
     {
-        String instanceName = (String) systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE );
+        String instanceName = (String) systemSettingManager.getSystemSetting( SettingKey.APPLICATION_TITLE );
         
         Email email = new Email( TEST_EMAIL_SUBJECT, TEST_EMAIL_TEXT + instanceName, null, Sets.newHashSet( currentUserService.getCurrentUser() ) );
         
@@ -104,8 +104,8 @@ public class DefaultEmailService
     @Override
     public boolean sendSystemEmail( Email email )
     {
-        String recipient = (String) systemSettingManager.getSystemSetting( Setting.SYSTEM_NOTIFICATIONS_EMAIL );
-        String appTitle = (String) systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE );
+        String recipient = (String) systemSettingManager.getSystemSetting( SettingKey.SYSTEM_NOTIFICATIONS_EMAIL );
+        String appTitle = (String) systemSettingManager.getSystemSetting( SettingKey.APPLICATION_TITLE );
 
         if ( recipient == null || !ValidationUtils.emailIsValid( recipient ) )
         {

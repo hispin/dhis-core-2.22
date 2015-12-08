@@ -38,7 +38,7 @@ import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
@@ -249,9 +249,9 @@ public class AppController
             throw new WebMessageException( WebMessageUtils.conflict( "No config specified" ) );
         }
 
-        String appBaseUrl = StringUtils.trimToNull( config.get( Setting.APP_BASE_URL.getName() ) );
-        String appFolderPath = StringUtils.trimToNull( config.get( Setting.APP_FOLDER_PATH.getName() ) );
-        String appStoreUrl = StringUtils.trimToNull( config.get( Setting.APP_STORE_URL.getName() ) );
+        String appBaseUrl = StringUtils.trimToNull( config.get( SettingKey.APP_BASE_URL.getName() ) );
+        String appFolderPath = StringUtils.trimToNull( config.get( SettingKey.APP_FOLDER_PATH.getName() ) );
+        String appStoreUrl = StringUtils.trimToNull( config.get( SettingKey.APP_STORE_URL.getName() ) );
 
         if ( appBaseUrl != null )
         {
@@ -285,7 +285,7 @@ public class AppController
     @RequestMapping( value = "/appStore", method = RequestMethod.GET, produces = "application/json" )
     public @ResponseBody String getAppStoreUrl()
     {
-        return restTemplate.getForObject( Setting.APP_STORE_INDEX_URL.getDefaultValue().toString(), String.class );
+        return restTemplate.getForObject( SettingKey.APP_STORE_INDEX_URL.getDefaultValue().toString(), String.class );
     }
     
     //--------------------------------------------------------------------------

@@ -50,7 +50,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.datavalue.DefaultDataValueService;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -282,7 +282,7 @@ public class DefaultAppManager
     @Override
     public String getAppFolderPath()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( Setting.APP_FOLDER_PATH ) );
+        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( SettingKey.APP_FOLDER_PATH ) );
     }
 
     @Override
@@ -304,31 +304,31 @@ public class DefaultAppManager
             }
         }
 
-        appSettingManager.saveSystemSetting( Setting.APP_FOLDER_PATH, appFolderPath );
+        appSettingManager.saveSystemSetting( SettingKey.APP_FOLDER_PATH, appFolderPath );
     }
 
     @Override
     public String getAppBaseUrl()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( Setting.APP_BASE_URL ) );
+        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( SettingKey.APP_BASE_URL ) );
     }
 
     @Override
     public void setAppBaseUrl( String appBaseUrl )
     {
-        appSettingManager.saveSystemSetting( Setting.APP_BASE_URL, appBaseUrl );
+        appSettingManager.saveSystemSetting( SettingKey.APP_BASE_URL, appBaseUrl );
     }
 
     @Override
     public String getAppStoreUrl()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( Setting.APP_STORE_URL ) );
+        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( SettingKey.APP_STORE_URL ) );
     }
 
     @Override
     public void setAppStoreUrl( String appStoreUrl )
     {
-        appSettingManager.saveSystemSetting( Setting.APP_STORE_URL, appStoreUrl );
+        appSettingManager.saveSystemSetting( SettingKey.APP_STORE_URL, appStoreUrl );
     }
 
     // -------------------------------------------------------------------------

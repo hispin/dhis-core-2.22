@@ -40,7 +40,7 @@ import org.hisp.dhis.sms.config.SmsConfiguration;
 /**
  * @author Lars Helge Overland
  */
-public enum Setting
+public enum SettingKey
 {
     APPLICATION_TITLE( "applicationTitle", "DHIS 2", String.class ), 
     APPLICATION_INTRO( "keyApplicationIntro" ),
@@ -122,21 +122,21 @@ public enum Setting
     // Constructors
     // -------------------------------------------------------------------------
 
-    private Setting( String name )
+    private SettingKey( String name )
     {
         this.name = name;
         this.defaultValue = null;
         this.clazz = String.class;
     }
     
-    private Setting( String name, Class<?> clazz )
+    private SettingKey( String name, Class<?> clazz )
     {
         this.name = name;
         this.defaultValue = null;
         this.clazz = clazz;
     }
     
-    private Setting( String name, Serializable defaultValue, Class<?> clazz )
+    private SettingKey( String name, Serializable defaultValue, Class<?> clazz )
     {
         this.name = name;
         this.defaultValue = defaultValue;
@@ -147,9 +147,9 @@ public enum Setting
     // Logic
     // -------------------------------------------------------------------------
 
-    public static Optional<Setting> getByName( String name )
+    public static Optional<SettingKey> getByName( String name )
     {
-        for ( Setting setting : Setting.values() )
+        for ( SettingKey setting : SettingKey.values() )
         {
             if ( setting.getName().equals( name ) )
             {
@@ -162,7 +162,7 @@ public enum Setting
 
     public static Serializable getAsRealClass( String name, String value )
     {
-        Optional<Setting> setting = getByName( name );
+        Optional<SettingKey> setting = getByName( name );
                 
         if ( setting.isPresent() )
         {            

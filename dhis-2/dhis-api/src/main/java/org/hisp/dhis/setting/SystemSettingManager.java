@@ -41,17 +41,17 @@ public interface SystemSettingManager
 {
     void saveSystemSetting( String name, Serializable value );
     
-    void saveSystemSetting( Setting setting, Serializable value );
+    void saveSystemSetting( SettingKey setting, Serializable value );
 
     void deleteSystemSetting( String name );
     
-    void deleteSystemSetting( Setting setting );
+    void deleteSystemSetting( SettingKey setting );
 
     Serializable getSystemSetting( String name );
 
-    Serializable getSystemSetting( Setting setting );
+    Serializable getSystemSetting( SettingKey setting );
     
-    Serializable getSystemSetting( Setting setting, Serializable defaultValue );
+    Serializable getSystemSetting( SettingKey setting, Serializable defaultValue );
     
     List<SystemSetting> getAllSystemSettings();
 
@@ -59,7 +59,7 @@ public interface SystemSettingManager
     
     Map<String, Serializable> getSystemSettingsAsMap( Set<String> names );
     
-    Map<String, Serializable> getSystemSettings( Collection<Setting> settings );
+    Map<String, Serializable> getSystemSettings( Collection<SettingKey> settings );
     
     void invalidateCache();
     

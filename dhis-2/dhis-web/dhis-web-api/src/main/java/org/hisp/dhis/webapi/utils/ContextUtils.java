@@ -46,7 +46,7 @@ import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.cache.CacheStrategy;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.system.util.DateUtils;
@@ -104,7 +104,7 @@ public class ContextUtils
 
         if ( cacheStrategy.equals( CacheStrategy.RESPECT_SYSTEM_SETTING ) )
         {
-            String strategy = trimToNull( (String) systemSettingManager.getSystemSetting( Setting.CACHE_STRATEGY ) );
+            String strategy = trimToNull( (String) systemSettingManager.getSystemSetting( SettingKey.CACHE_STRATEGY ) );
 
             cacheStrategy = strategy != null ? CacheStrategy.valueOf( strategy ) : CacheStrategy.NO_CACHE;
         }

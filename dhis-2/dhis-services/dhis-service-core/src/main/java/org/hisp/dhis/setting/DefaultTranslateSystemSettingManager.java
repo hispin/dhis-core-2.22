@@ -59,10 +59,10 @@ public class DefaultTranslateSystemSettingManager
     {
         Map<String, String> translations = new Hashtable<>();
 
-        translations.put( Setting.APPLICATION_TITLE.getDefaultValue().toString(), getSystemSettingWithFallbacks( Setting.APPLICATION_TITLE.getDefaultValue().toString(), localeStr, Setting.APPLICATION_TITLE.getDefaultValue().toString() ) );        
-        translations.put( Setting.APPLICATION_INTRO.getDefaultValue().toString(), getSystemSettingWithFallbacks( Setting.APPLICATION_INTRO.getDefaultValue().toString(), localeStr, "" ) );
-        translations.put( Setting.APPLICATION_NOTIFICATION.getDefaultValue().toString(), getSystemSettingWithFallbacks( Setting.APPLICATION_NOTIFICATION.getDefaultValue().toString(), localeStr, "" ) );
-        translations.put( Setting.APPLICATION_FOOTER.getDefaultValue().toString(), getSystemSettingWithFallbacks( Setting.APPLICATION_FOOTER.getDefaultValue().toString(), localeStr, "" ) );
+        translations.put( SettingKey.APPLICATION_TITLE.getDefaultValue().toString(), getSystemSettingWithFallbacks( SettingKey.APPLICATION_TITLE.getDefaultValue().toString(), localeStr, SettingKey.APPLICATION_TITLE.getDefaultValue().toString() ) );        
+        translations.put( SettingKey.APPLICATION_INTRO.getDefaultValue().toString(), getSystemSettingWithFallbacks( SettingKey.APPLICATION_INTRO.getDefaultValue().toString(), localeStr, "" ) );
+        translations.put( SettingKey.APPLICATION_NOTIFICATION.getDefaultValue().toString(), getSystemSettingWithFallbacks( SettingKey.APPLICATION_NOTIFICATION.getDefaultValue().toString(), localeStr, "" ) );
+        translations.put( SettingKey.APPLICATION_FOOTER.getDefaultValue().toString(), getSystemSettingWithFallbacks( SettingKey.APPLICATION_FOOTER.getDefaultValue().toString(), localeStr, "" ) );
                 
         return translations;
     }
@@ -72,14 +72,14 @@ public class DefaultTranslateSystemSettingManager
     {
         Map<String, String> translations = new Hashtable<>();
 
-        translations.put( Setting.APPLICATION_TITLE.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
-            systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE.getDefaultValue().toString() + localeStr ), Setting.APPLICATION_TITLE.getDefaultValue().toString() ).toString() );        
-        translations.put( Setting.APPLICATION_INTRO.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
-            systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO.getDefaultValue().toString() + localeStr ), "" ).toString() );
-        translations.put( Setting.APPLICATION_NOTIFICATION.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
-            systemSettingManager.getSystemSetting( Setting.APPLICATION_NOTIFICATION.getDefaultValue().toString() + localeStr ), "" ).toString() );
-        translations.put( Setting.APPLICATION_FOOTER.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
-            systemSettingManager.getSystemSetting( Setting.APPLICATION_FOOTER.getDefaultValue().toString() + localeStr ), "" ).toString() );
+        translations.put( SettingKey.APPLICATION_TITLE.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
+            systemSettingManager.getSystemSetting( SettingKey.APPLICATION_TITLE.getDefaultValue().toString() + localeStr ), SettingKey.APPLICATION_TITLE.getDefaultValue().toString() ).toString() );        
+        translations.put( SettingKey.APPLICATION_INTRO.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
+            systemSettingManager.getSystemSetting( SettingKey.APPLICATION_INTRO.getDefaultValue().toString() + localeStr ), "" ).toString() );
+        translations.put( SettingKey.APPLICATION_NOTIFICATION.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
+            systemSettingManager.getSystemSetting( SettingKey.APPLICATION_NOTIFICATION.getDefaultValue().toString() + localeStr ), "" ).toString() );
+        translations.put( SettingKey.APPLICATION_FOOTER.getDefaultValue().toString(), ObjectUtils.firstNonNull( 
+            systemSettingManager.getSystemSetting( SettingKey.APPLICATION_FOOTER.getDefaultValue().toString() + localeStr ), "" ).toString() );
                 
         return translations;
     }

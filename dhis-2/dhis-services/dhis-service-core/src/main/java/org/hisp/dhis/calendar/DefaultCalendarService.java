@@ -38,7 +38,7 @@ import javax.annotation.PostConstruct;
 import org.hisp.dhis.calendar.impl.Iso8601Calendar;
 import org.hisp.dhis.period.Cal;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -99,8 +99,8 @@ public class DefaultCalendarService
     @Override
     public Calendar getSystemCalendar()
     {
-        String calendarKey = (String) settingManager.getSystemSetting( Setting.CALENDAR );
-        String dateFormat = (String) settingManager.getSystemSetting( Setting.DATE_FORMAT );
+        String calendarKey = (String) settingManager.getSystemSetting( SettingKey.CALENDAR );
+        String dateFormat = (String) settingManager.getSystemSetting( SettingKey.DATE_FORMAT );
 
         Calendar calendar = null;
 
@@ -121,7 +121,7 @@ public class DefaultCalendarService
     @Override
     public DateFormat getSystemDateFormat()
     {
-        String dateFormatKey = (String) settingManager.getSystemSetting( Setting.DATE_FORMAT );
+        String dateFormatKey = (String) settingManager.getSystemSetting( SettingKey.DATE_FORMAT );
 
         for ( DateFormat dateFormat : dateFormats )
         {

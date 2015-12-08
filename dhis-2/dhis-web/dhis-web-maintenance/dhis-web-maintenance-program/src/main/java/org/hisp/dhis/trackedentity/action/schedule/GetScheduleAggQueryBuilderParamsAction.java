@@ -29,7 +29,7 @@ package org.hisp.dhis.trackedentity.action.schedule;
  */
 
 import org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 
@@ -92,7 +92,7 @@ public class GetScheduleAggQueryBuilderParamsAction
     public String execute()
         throws Exception
     {
-        taskStrategy = (String) systemSettingManager.getSystemSetting( Setting.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY );
+        taskStrategy = (String) systemSettingManager.getSystemSetting( SettingKey.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY );
 
         status = schedulingManager.getTaskStatus();
 

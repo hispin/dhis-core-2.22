@@ -38,7 +38,7 @@ import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.message.MessageSender;
 import org.hisp.dhis.period.Cal;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.system.velocity.VelocityManager;
@@ -210,7 +210,7 @@ public class DefaultSecurityService
 
         RestoreType restoreType = restoreOptions.getRestoreType();
 
-        String applicationTitle = (String) systemSettingManager.getSystemSetting( Setting.APPLICATION_TITLE );
+        String applicationTitle = (String) systemSettingManager.getSystemSetting( SettingKey.APPLICATION_TITLE );
 
         if ( applicationTitle == null || applicationTitle.isEmpty() )
         {
@@ -493,7 +493,7 @@ public class DefaultSecurityService
     @Override
     public boolean canView( String type )
     {
-        boolean requireAddToView = (Boolean) systemSettingManager.getSystemSetting( Setting.REQUIRE_ADD_TO_VIEW );
+        boolean requireAddToView = (Boolean) systemSettingManager.getSystemSetting( SettingKey.REQUIRE_ADD_TO_VIEW );
 
         return !requireAddToView || (canCreatePrivate( type ) || canCreatePublic( type ));
     }

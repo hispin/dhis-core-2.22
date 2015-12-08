@@ -60,7 +60,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.hisp.dhis.user.CurrentUserService;
@@ -137,10 +137,10 @@ public class DataValueController
         @RequestParam( required = false ) boolean followUp, HttpServletResponse response )
         throws WebMessageException
     {
-        boolean strictPeriods = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_PERIODS );
-        boolean strictCategoryOptionCombos = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS );
-        boolean strictOrgUnits = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_STRICT_ORGANISATION_UNITS );
-        boolean requireCategoryOptionCombo = (Boolean) systemSettingManager.getSystemSetting( Setting.DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO );
+        boolean strictPeriods = (Boolean) systemSettingManager.getSystemSetting( SettingKey.DATA_IMPORT_STRICT_PERIODS );
+        boolean strictCategoryOptionCombos = (Boolean) systemSettingManager.getSystemSetting( SettingKey.DATA_IMPORT_STRICT_CATEGORY_OPTION_COMBOS );
+        boolean strictOrgUnits = (Boolean) systemSettingManager.getSystemSetting( SettingKey.DATA_IMPORT_STRICT_ORGANISATION_UNITS );
+        boolean requireCategoryOptionCombo = (Boolean) systemSettingManager.getSystemSetting( SettingKey.DATA_IMPORT_REQUIRE_CATEGORY_OPTION_COMBO );
         
         // ---------------------------------------------------------------------
         // Input validation

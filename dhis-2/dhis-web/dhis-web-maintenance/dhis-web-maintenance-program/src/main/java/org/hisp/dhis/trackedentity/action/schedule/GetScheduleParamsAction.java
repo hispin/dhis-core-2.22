@@ -29,7 +29,7 @@ package org.hisp.dhis.trackedentity.action.schedule;
  */
 
 import org.hisp.dhis.scheduling.ProgramSchedulingManager;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 
@@ -94,7 +94,7 @@ public class GetScheduleParamsAction
     public String execute()
         throws Exception
     {
-        timeSendingMessage = (String)systemSettingManager.getSystemSetting( Setting.TIME_FOR_SENDING_MESSAGE );
+        timeSendingMessage = (String)systemSettingManager.getSystemSetting( SettingKey.TIME_FOR_SENDING_MESSAGE );
         
         status = schedulingManager.getTaskStatus();
         running = ScheduledTaskStatus.RUNNING.equals( status );

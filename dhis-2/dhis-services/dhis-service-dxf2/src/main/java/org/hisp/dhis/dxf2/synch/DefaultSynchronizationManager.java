@@ -46,7 +46,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.user.CurrentUserService;
@@ -236,7 +236,7 @@ public class DefaultSynchronizationManager
     @Override
     public Date getLastSynchSuccess()
     {
-        return (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_DATA_SYNC );
+        return (Date) systemSettingManager.getSystemSetting( SettingKey.LAST_SUCCESSFUL_DATA_SYNC );
     }
 
     @Override
@@ -278,7 +278,7 @@ public class DefaultSynchronizationManager
     {
         Date fallback = new DateTime().minusDays( 3 ).toDate();
 
-        return (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_DATA_SYNC, fallback );
+        return (Date) systemSettingManager.getSystemSetting( SettingKey.LAST_SUCCESSFUL_DATA_SYNC, fallback );
     }
 
     /**
@@ -286,7 +286,7 @@ public class DefaultSynchronizationManager
      */
     private void setLastSynchSuccess( Date time )
     {
-        systemSettingManager.saveSystemSetting( Setting.LAST_SUCCESSFUL_DATA_SYNC, time );
+        systemSettingManager.saveSystemSetting( SettingKey.LAST_SUCCESSFUL_DATA_SYNC, time );
     }
 
     /**

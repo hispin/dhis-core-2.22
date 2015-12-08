@@ -35,7 +35,7 @@ import org.hisp.dhis.scheduling.ProgramSchedulingManager;
 import org.hisp.dhis.scheduling.SendScheduledMessageTask;
 import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
@@ -137,7 +137,7 @@ public class ScheduleSendMessageTasksAction
         notifier.clear( taskId );
         sendMessageScheduled.setTaskId( taskId );
 
-        systemSettingManager.saveSystemSetting( Setting.TIME_FOR_SENDING_MESSAGE, timeSendingMessage );
+        systemSettingManager.saveSystemSetting( SettingKey.TIME_FOR_SENDING_MESSAGE, timeSendingMessage );
 
         if ( execute )
         {
@@ -152,7 +152,7 @@ public class ScheduleSendMessageTasksAction
             else
             {
                 Map<String, String> keyCronMap = new HashMap<>();
-                String time = (String) systemSettingManager.getSystemSetting( Setting.TIME_FOR_SENDING_MESSAGE );
+                String time = (String) systemSettingManager.getSystemSetting( SettingKey.TIME_FOR_SENDING_MESSAGE );
 
                 // Schedule for sending messages
                 String[] infor = time.split( ":" );
@@ -170,8 +170,8 @@ public class ScheduleSendMessageTasksAction
                 
                 String cron = "0 " + Integer.parseInt( minute ) + " " + Integer.parseInt( hour ) + " ? * *";
 
-                keyCronMap.put( Setting.SEND_MESSAGE_SCHEDULED_TASKS.getName(), cron );
-                keyCronMap.put( Setting.SCHEDULE_MESSAGE_TASKS.getName(), "0 0 0 * * ?" );
+                keyCronMap.put( SettingKey.SEND_MESSAGE_SCHEDULED_TASKS.getName(), cron );
+                keyCronMap.put( SettingKey.SCHEDULE_MESSAGE_TASKS.getName(), "0 0 0 * * ?" );
 
                 schedulingManager.scheduleTasks( keyCronMap );
             }

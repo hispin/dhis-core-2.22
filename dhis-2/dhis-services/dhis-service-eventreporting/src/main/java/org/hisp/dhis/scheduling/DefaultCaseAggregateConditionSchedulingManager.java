@@ -31,7 +31,7 @@ package org.hisp.dhis.scheduling;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.hisp.dhis.system.scheduling.Scheduler;
@@ -94,7 +94,7 @@ public class DefaultCaseAggregateConditionSchedulingManager
     @Override
     public void scheduleTasks( Map<String, String> keyCronMap )
     {
-        systemSettingManager.saveSystemSetting( Setting.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASKS,
+        systemSettingManager.saveSystemSetting( SettingKey.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASKS,
             new HashMap<>( keyCronMap ) );
 
         scheduleTasks();
@@ -103,7 +103,7 @@ public class DefaultCaseAggregateConditionSchedulingManager
     @Override
     public void stopTasks()
     {
-        systemSettingManager.saveSystemSetting( Setting.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASKS , null );
+        systemSettingManager.saveSystemSetting( SettingKey.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASKS , null );
 
         scheduler.stopAllTasks();
     }
@@ -128,7 +128,7 @@ public class DefaultCaseAggregateConditionSchedulingManager
     @SuppressWarnings( "unchecked" )
     public Map<String, String> getScheduledTasks()
     {
-        return (Map<String, String>) systemSettingManager.getSystemSetting( Setting.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASKS,
+        return (Map<String, String>) systemSettingManager.getSystemSetting( SettingKey.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASKS,
             new HashMap<String, String>() );
     }
 

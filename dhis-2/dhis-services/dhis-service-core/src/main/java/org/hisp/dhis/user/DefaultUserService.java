@@ -48,7 +48,7 @@ import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.security.PasswordManager;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.filter.UserAuthorityGroupCanIssueFilter;
 import org.hisp.dhis.system.util.DateUtils;
@@ -242,7 +242,7 @@ public class DefaultUserService
 
     private void handleUserQueryParams( UserQueryParams params )
     {
-        boolean canGrantOwnRoles = (Boolean) systemSettingManager.getSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS );
+        boolean canGrantOwnRoles = (Boolean) systemSettingManager.getSystemSetting( SettingKey.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS );
         params.setDisjointRoles( !canGrantOwnRoles );
 
         if ( params.getUser() == null )
@@ -500,7 +500,7 @@ public class DefaultUserService
     {
         User user = currentUserService.getCurrentUser();
 
-        boolean canGrantOwnUserAuthorityGroups = (Boolean) systemSettingManager.getSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS );
+        boolean canGrantOwnUserAuthorityGroups = (Boolean) systemSettingManager.getSystemSetting( SettingKey.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS );
 
         FilterUtils.filter( userRoles, new UserAuthorityGroupCanIssueFilter( user, canGrantOwnUserAuthorityGroups ) );
     }
