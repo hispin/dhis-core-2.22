@@ -88,19 +88,19 @@ public class DefaultStyleManager
     @Override
     public void setSystemStyle( String style )
     {
-        systemSettingManager.saveSystemSetting( Setting.STYLE.getName(), style );
+        systemSettingManager.saveSystemSetting( SettingKey.STYLE.getName(), style );
     }
     
     @Override
     public void setUserStyle( String style )
     {
-        userSettingService.saveUserSetting( Setting.STYLE.getName(), style );
+        userSettingService.saveUserSetting( SettingKey.STYLE.getName(), style );
     }
 
     @Override
     public String getCurrentStyle()
     {
-        String style = (String) userSettingService.getUserSetting( Setting.STYLE.getName() );
+        String style = (String) userSettingService.getUserSetting( SettingKey.STYLE.getName() );
         
         if ( style != null )
         {
@@ -113,7 +113,7 @@ public class DefaultStyleManager
     @Override
     public String getSystemStyle()
     {
-        return (String) systemSettingManager.getSystemSetting( Setting.STYLE );
+        return (String) systemSettingManager.getSystemSetting( SettingKey.STYLE );
     }
 
     @Override

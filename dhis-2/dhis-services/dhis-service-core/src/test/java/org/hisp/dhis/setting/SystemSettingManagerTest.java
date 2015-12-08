@@ -41,6 +41,8 @@ import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.hisp.dhis.setting.SettingKey.*;
+
 /**
  * @author Stian Strandli
  * @author Lars Helge Overland
@@ -70,41 +72,41 @@ public class SystemSettingManagerTest
     @Test
     public void testSaveGetSetting()
     {
-        systemSettingManager.saveSystemSetting( Setting.APPLICATION_INTRO, "valueA" );
-        systemSettingManager.saveSystemSetting( Setting.APPLICATION_NOTIFICATION, "valueB" );
+        systemSettingManager.saveSystemSetting( APPLICATION_INTRO, "valueA" );
+        systemSettingManager.saveSystemSetting( APPLICATION_NOTIFICATION, "valueB" );
 
-        assertEquals( "valueA", systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
-        assertEquals( "valueB", systemSettingManager.getSystemSetting( Setting.APPLICATION_NOTIFICATION ) );
+        assertEquals( "valueA", systemSettingManager.getSystemSetting( APPLICATION_INTRO ) );
+        assertEquals( "valueB", systemSettingManager.getSystemSetting( APPLICATION_NOTIFICATION ) );
     }
 
     @Test
     public void testSaveGetSettingWithDefault()
     {
-        assertEquals( Setting.APP_STORE_URL.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.APP_STORE_URL ) );
-        assertEquals( Setting.EMAIL_PORT.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.EMAIL_PORT ) );
+        assertEquals( APP_STORE_URL.getDefaultValue(), systemSettingManager.getSystemSetting( APP_STORE_URL ) );
+        assertEquals( EMAIL_PORT.getDefaultValue(), systemSettingManager.getSystemSetting( EMAIL_PORT ) );
     }
 
     @Test
     public void testSaveGetDeleteSetting()
     {
-        assertNull( systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
-        assertEquals( Setting.HELP_PAGE_LINK.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
+        assertNull( systemSettingManager.getSystemSetting( APPLICATION_INTRO ) );
+        assertEquals( HELP_PAGE_LINK.getDefaultValue(), systemSettingManager.getSystemSetting( HELP_PAGE_LINK ) );
         
-        systemSettingManager.saveSystemSetting( Setting.APPLICATION_INTRO, "valueA" );
-        systemSettingManager.saveSystemSetting( Setting.HELP_PAGE_LINK, "valueB" );
+        systemSettingManager.saveSystemSetting( APPLICATION_INTRO, "valueA" );
+        systemSettingManager.saveSystemSetting( HELP_PAGE_LINK, "valueB" );
 
-        assertEquals( "valueA", systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
-        assertEquals( "valueB", systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
+        assertEquals( "valueA", systemSettingManager.getSystemSetting( APPLICATION_INTRO ) );
+        assertEquals( "valueB", systemSettingManager.getSystemSetting( HELP_PAGE_LINK ) );
         
-        systemSettingManager.deleteSystemSetting( Setting.APPLICATION_INTRO );
+        systemSettingManager.deleteSystemSetting( APPLICATION_INTRO );
 
-        assertNull( systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
-        assertEquals( "valueB", systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );
+        assertNull( systemSettingManager.getSystemSetting( APPLICATION_INTRO ) );
+        assertEquals( "valueB", systemSettingManager.getSystemSetting( HELP_PAGE_LINK ) );
 
-        systemSettingManager.deleteSystemSetting( Setting.HELP_PAGE_LINK );
+        systemSettingManager.deleteSystemSetting( HELP_PAGE_LINK );
         
-        assertNull( systemSettingManager.getSystemSetting( Setting.APPLICATION_INTRO ) );
-        assertEquals( Setting.HELP_PAGE_LINK.getDefaultValue(), systemSettingManager.getSystemSetting( Setting.HELP_PAGE_LINK ) );        
+        assertNull( systemSettingManager.getSystemSetting( APPLICATION_INTRO ) );
+        assertEquals( HELP_PAGE_LINK.getDefaultValue(), systemSettingManager.getSystemSetting( HELP_PAGE_LINK ) );        
     }
 
     @Test

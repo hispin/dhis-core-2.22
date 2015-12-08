@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hisp.dhis.scheduling.CaseAggregateConditionSchedulingManager;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.hisp.dhis.system.scheduling.Scheduler;
@@ -121,7 +121,7 @@ public class ScheduleCaseAggregateConditionAction
             }
             else
             {
-                systemSettingManager.saveSystemSetting( Setting.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY,
+                systemSettingManager.saveSystemSetting( SettingKey.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY,
                     taskStrategy );
 
                 Map<String, String> keyCronMap = new HashMap<>();

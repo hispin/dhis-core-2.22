@@ -31,7 +31,7 @@ package org.hisp.dhis.about.action;
 import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -60,7 +60,7 @@ public class RedirectAction
     public String execute()
         throws Exception
     {
-        String startModule = (String) systemSettingManager.getSystemSetting( Setting.START_MODULE );
+        String startModule = (String) systemSettingManager.getSystemSetting( SettingKey.START_MODULE );
 
         if ( startModule != null && !startModule.trim().isEmpty() )
         {

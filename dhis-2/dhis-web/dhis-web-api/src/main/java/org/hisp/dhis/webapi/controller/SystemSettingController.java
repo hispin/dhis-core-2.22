@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.util.ObjectUtils;
 import org.hisp.dhis.webapi.service.WebMessageService;
@@ -96,7 +96,7 @@ public class SystemSettingController
 
         value = ObjectUtils.firstNonNull( value, valuePayload );
         
-        Serializable valueObject = Setting.getAsRealClass( key, value );
+        Serializable valueObject = SettingKey.getAsRealClass( key, value );
         
         systemSettingManager.saveSystemSetting( key, valueObject );
 

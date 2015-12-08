@@ -61,7 +61,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -518,8 +518,8 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         systemSettingManager.invalidateCache();
         
-        systemSettingManager.saveSystemSetting( Setting.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, true );
-        systemSettingManager.saveSystemSetting( Setting.ACCEPTANCE_REQUIRED_FOR_APPROVAL, true );
+        systemSettingManager.saveSystemSetting( SettingKey.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, true );
+        systemSettingManager.saveSystemSetting( SettingKey.ACCEPTANCE_REQUIRED_FOR_APPROVAL, true );
     }
 
     @Override
@@ -537,8 +537,8 @@ public class DataApprovalServiceCategoryOptionGroupTest
         setDependency( organisationUnitService, "currentUserService", currentUserService, CurrentUserService.class );
         setDependency( hibernateCategoryOptionGroupStore, "currentUserService", currentUserService, CurrentUserService.class );
 
-        systemSettingManager.saveSystemSetting( Setting.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, false );
-        systemSettingManager.saveSystemSetting( Setting.ACCEPTANCE_REQUIRED_FOR_APPROVAL, false );
+        systemSettingManager.saveSystemSetting( SettingKey.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, false );
+        systemSettingManager.saveSystemSetting( SettingKey.ACCEPTANCE_REQUIRED_FOR_APPROVAL, false );
     }
 
     // -------------------------------------------------------------------------

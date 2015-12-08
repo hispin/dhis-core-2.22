@@ -117,7 +117,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public void saveSystemSetting( Setting setting, Serializable value )
+    public void saveSystemSetting( SettingKey setting, Serializable value )
     {        
         saveSystemSetting( setting.getName(), value );
     }
@@ -136,7 +136,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public void deleteSystemSetting( Setting setting )
+    public void deleteSystemSetting( SettingKey setting )
     {
         deleteSystemSetting( setting.getName() );
     }
@@ -150,7 +150,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public Serializable getSystemSetting( Setting setting )
+    public Serializable getSystemSetting( SettingKey setting )
     {
         try
         {
@@ -165,7 +165,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public Serializable getSystemSetting( Setting setting, Serializable defaultValue )
+    public Serializable getSystemSetting( SettingKey setting, Serializable defaultValue )
     {
         return getSystemSettingOptional( setting.getName(), defaultValue ).orElse( null );
     }
@@ -196,7 +196,7 @@ public class DefaultSystemSettingManager
             
             if ( settingValue == null )
             {
-                Optional<Setting> setting = Setting.getByName( systemSetting.getName() );
+                Optional<SettingKey> setting = SettingKey.getByName( systemSetting.getName() );
                 
                 if ( setting.isPresent() )
                 {
@@ -221,7 +221,7 @@ public class DefaultSystemSettingManager
 
             if ( settingValue == null )
             {
-                Optional<Setting> setting = Setting.getByName( name );
+                Optional<SettingKey> setting = SettingKey.getByName( name );
                 
                 if ( setting.isPresent() )
                 {
@@ -239,11 +239,11 @@ public class DefaultSystemSettingManager
     }
 
     @Override
-    public Map<String, Serializable> getSystemSettings( Collection<Setting> settings )
+    public Map<String, Serializable> getSystemSettings( Collection<SettingKey> settings )
     {
         Map<String, Serializable> map = new HashMap<>();
         
-        for ( Setting setting : settings )
+        for ( SettingKey setting : settings )
         {
             Serializable value = getSystemSetting( setting );
             
@@ -296,7 +296,7 @@ public class DefaultSystemSettingManager
     @Override
     public String getFlagImage()
     {
-        String flag = (String) getSystemSetting( Setting.FLAG );
+        String flag = (String) getSystemSetting( SettingKey.FLAG );
 
         return flag != null ? flag + ".png" : null;
     }
@@ -304,49 +304,49 @@ public class DefaultSystemSettingManager
     @Override
     public String getEmailHostName()
     {
-        return StringUtils.trimToNull( (String) getSystemSetting( Setting.EMAIL_HOST_NAME ) );
+        return StringUtils.trimToNull( (String) getSystemSetting( SettingKey.EMAIL_HOST_NAME ) );
     }
 
     @Override
     public int getEmailPort()
     {
-        return (Integer) getSystemSetting( Setting.EMAIL_PORT );
+        return (Integer) getSystemSetting( SettingKey.EMAIL_PORT );
     }
 
     @Override
     public String getEmailUsername()
     {
-        return StringUtils.trimToNull( (String) getSystemSetting( Setting.EMAIL_USERNAME ) );
+        return StringUtils.trimToNull( (String) getSystemSetting( SettingKey.EMAIL_USERNAME ) );
     }
 
     @Override
     public boolean getEmailTls()
     {
-        return (Boolean) getSystemSetting( Setting.EMAIL_TLS );
+        return (Boolean) getSystemSetting( SettingKey.EMAIL_TLS );
     }
 
     @Override
     public String getEmailSender()
     {
-        return StringUtils.trimToNull( (String) getSystemSetting( Setting.EMAIL_SENDER ) );
+        return StringUtils.trimToNull( (String) getSystemSetting( SettingKey.EMAIL_SENDER ) );
     }
 
     @Override
     public String getInstanceBaseUrl()
     {
-        return StringUtils.trimToNull( (String) getSystemSetting( Setting.INSTANCE_BASE_URL ) );
+        return StringUtils.trimToNull( (String) getSystemSetting( SettingKey.INSTANCE_BASE_URL ) );
     }
 
     @Override
     public boolean accountRecoveryEnabled()
     {
-        return (Boolean) getSystemSetting( Setting.ACCOUNT_RECOVERY );
+        return (Boolean) getSystemSetting( SettingKey.ACCOUNT_RECOVERY );
     }
 
     @Override
     public boolean selfRegistrationNoRecaptcha()
     {
-        return (Boolean) getSystemSetting( Setting.SELF_REGISTRATION_NO_RECAPTCHA );
+        return (Boolean) getSystemSetting( SettingKey.SELF_REGISTRATION_NO_RECAPTCHA );
     }
 
     @Override
@@ -358,7 +358,7 @@ public class DefaultSystemSettingManager
     @Override
     public boolean systemNotificationEmailValid()
     {
-        String address = (String) getSystemSetting( Setting.SYSTEM_NOTIFICATIONS_EMAIL );
+        String address = (String) getSystemSetting( SettingKey.SYSTEM_NOTIFICATIONS_EMAIL );
 
         return address != null && ValidationUtils.emailIsValid( address );
     }
@@ -366,24 +366,24 @@ public class DefaultSystemSettingManager
     @Override
     public boolean hideUnapprovedDataInAnalytics()
     {
-        return (Boolean) getSystemSetting( Setting.HIDE_UNAPPROVED_DATA_IN_ANALYTICS );
+        return (Boolean) getSystemSetting( SettingKey.HIDE_UNAPPROVED_DATA_IN_ANALYTICS );
     }
 
     @Override
     public boolean isOpenIdConfigured()
     {
-        return getSystemSetting( Setting.OPENID_PROVIDER ) != null && getSystemSetting( Setting.OPENID_PROVIDER_LABEL ) != null;
+        return getSystemSetting( SettingKey.OPENID_PROVIDER ) != null && getSystemSetting( SettingKey.OPENID_PROVIDER_LABEL ) != null;
     }
 
     @Override
     public String googleAnalyticsUA()
     {
-        return StringUtils.trimToNull( (String) getSystemSetting( Setting.GOOGLE_ANALYTICS_UA ) );
+        return StringUtils.trimToNull( (String) getSystemSetting( SettingKey.GOOGLE_ANALYTICS_UA ) );
     }
 
     @Override
     public Integer credentialsExpires()
     {
-        return (Integer) getSystemSetting( Setting.CREDENTIALS_EXPIRES );
+        return (Integer) getSystemSetting( SettingKey.CREDENTIALS_EXPIRES );
     }
 }

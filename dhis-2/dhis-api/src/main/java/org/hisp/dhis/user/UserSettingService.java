@@ -41,8 +41,6 @@ public interface UserSettingService
 {
     String ID = UserSettingService.class.getName();
 
-    String AUTO_SAVE_DATA_ENTRY_FORM = "autoSaveDataEntryForm";
-    String KEY_CURRENT_DOMAIN_TYPE = "currentDomainType";
     String KEY_STYLE = "stylesheet";
     String KEY_STYLE_DIRECTORY = "stylesheetDirectory";
     String KEY_MESSAGE_EMAIL_NOTIFICATION = "keyMessageEmailNotification";
@@ -50,8 +48,10 @@ public interface UserSettingService
     String KEY_UI_LOCALE = "keyUiLocale";
     String KEY_DB_LOCALE = "keyDbLocale";
     String KEY_ANALYSIS_DISPLAY_PROPERTY = "keyAnalysisDisplayProperty";
+    String KEY_CURRENT_DOMAIN_TYPE = "currentDomainType";
     String AUTO_SAVE_CASE_ENTRY_FORM = "autoSaveCaseEntryForm";
     String AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM = "autoSavetTrackedEntityForm";
+    String AUTO_SAVE_DATA_ENTRY_FORM = "autoSaveDataEntryForm";
     
     String DEFAULT_ANALYSIS_DISPLAY_PROPERTY = "name";
     

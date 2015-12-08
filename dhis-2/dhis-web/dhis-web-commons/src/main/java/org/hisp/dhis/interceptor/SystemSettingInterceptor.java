@@ -36,7 +36,7 @@ import java.util.Set;
 
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.configuration.ConfigurationService;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,12 +53,12 @@ public class SystemSettingInterceptor
     private static final String DATE_FORMAT = "dateFormat";
     private static final String SYSPROP_PORTAL = "runningAsPortal";
 
-    private static final Set<Setting> SETTINGS = Sets.newHashSet( Setting.APPLICATION_TITLE, Setting.APPLICATION_INTRO,
-        Setting.APPLICATION_NOTIFICATION, Setting.APPLICATION_FOOTER, Setting.APPLICATION_RIGHT_FOOTER,
-        Setting.FLAG, Setting.START_MODULE, Setting.MULTI_ORGANISATION_UNIT_FORMS, Setting.ACCOUNT_RECOVERY,
-        Setting.APP_BASE_URL, Setting.INSTANCE_BASE_URL, Setting.GOOGLE_ANALYTICS_UA, Setting.OPENID_PROVIDER,
-        Setting.OPENID_PROVIDER_LABEL, Setting.HELP_PAGE_LINK, Setting.REQUIRE_ADD_TO_VIEW, Setting.ALLOW_OBJECT_ASSIGNMENT,
-        Setting.CALENDAR, Setting.DATE_FORMAT );
+    private static final Set<SettingKey> SETTINGS = Sets.newHashSet( SettingKey.APPLICATION_TITLE, SettingKey.APPLICATION_INTRO,
+        SettingKey.APPLICATION_NOTIFICATION, SettingKey.APPLICATION_FOOTER, SettingKey.APPLICATION_RIGHT_FOOTER,
+        SettingKey.FLAG, SettingKey.START_MODULE, SettingKey.MULTI_ORGANISATION_UNIT_FORMS, SettingKey.ACCOUNT_RECOVERY,
+        SettingKey.APP_BASE_URL, SettingKey.INSTANCE_BASE_URL, SettingKey.GOOGLE_ANALYTICS_UA, SettingKey.OPENID_PROVIDER,
+        SettingKey.OPENID_PROVIDER_LABEL, SettingKey.HELP_PAGE_LINK, SettingKey.REQUIRE_ADD_TO_VIEW, SettingKey.ALLOW_OBJECT_ASSIGNMENT,
+        SettingKey.CALENDAR, SettingKey.DATE_FORMAT );
     
     // -------------------------------------------------------------------------
     // Dependencies
@@ -102,10 +102,10 @@ public class SystemSettingInterceptor
         Map<String, Object> map = new HashMap<>();
         
         map.put( DATE_FORMAT, calendarService.getSystemDateFormat() );
-        map.put( Setting.CONFIGURATION.getName(), configurationService.getConfiguration() );
-        map.put( Setting.FLAG_IMAGE.getName(), systemSettingManager.getFlagImage() );
-        map.put( Setting.CREDENTIALS_EXPIRES.getName(), systemSettingManager.credentialsExpires() );
-        map.put( Setting.SELF_REGISTRATION_NO_RECAPTCHA.getName(), systemSettingManager.selfRegistrationNoRecaptcha() );
+        map.put( SettingKey.CONFIGURATION.getName(), configurationService.getConfiguration() );
+        map.put( SettingKey.FLAG_IMAGE.getName(), systemSettingManager.getFlagImage() );
+        map.put( SettingKey.CREDENTIALS_EXPIRES.getName(), systemSettingManager.credentialsExpires() );
+        map.put( SettingKey.SELF_REGISTRATION_NO_RECAPTCHA.getName(), systemSettingManager.selfRegistrationNoRecaptcha() );
         map.put( SYSPROP_PORTAL, defaultIfEmpty( System.getProperty( SYSPROP_PORTAL ), String.valueOf( false ) ) );
         
         map.putAll( systemSettingManager.getSystemSettings( SETTINGS ) );

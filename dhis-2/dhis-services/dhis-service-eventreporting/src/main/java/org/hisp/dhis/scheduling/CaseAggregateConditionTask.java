@@ -35,7 +35,7 @@ import java.util.List;
 
 import org.hisp.dhis.caseaggregation.CaseAggregateSchedule;
 import org.hisp.dhis.caseaggregation.CaseAggregationConditionService;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.notification.Notifier;
 import org.hisp.dhis.system.util.Clock;
@@ -101,7 +101,7 @@ public class CaseAggregateConditionTask
             "Aggregate process started, number of CPU cores: " + cpuCores + ", " + SystemUtils.getMemoryString() );
         notifier.clear( taskId ).notify( taskId, "Aggregate process started" );
 
-        String taskStrategy = (String) systemSettingManager.getSystemSetting( Setting.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY );
+        String taskStrategy = (String) systemSettingManager.getSystemSetting( SettingKey.SCHEDULE_AGGREGATE_QUERY_BUILDER_TASK_STRATEGY );
 
         String sql = "select cagg.caseaggregationconditionid as caseaggregationconditionid, cagg.name as caseaggregationconditionname, pt.name as periodtypename ";
         sql += "from caseaggregationcondition cagg inner join datasetmembers dm  ";

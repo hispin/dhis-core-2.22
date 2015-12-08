@@ -42,7 +42,7 @@ import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.external.location.LocationManagerException;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.StyleManager;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
@@ -79,9 +79,9 @@ public class StaticContentController
     private static final String LOGO_BANNER = "logo_banner";
     private static final String LOGO_FRONT = "logo_front";
 
-    private static final Map<String, Setting> KEY_WHITELIST_MAP = ImmutableMap.<String, Setting>builder().
-        put( LOGO_BANNER, Setting.USE_CUSTOM_LOGO_BANNER ).
-        put( LOGO_FRONT, Setting.USE_CUSTOM_LOGO_FRONT ).build();
+    private static final Map<String, SettingKey> KEY_WHITELIST_MAP = ImmutableMap.<String, SettingKey>builder().
+        put( LOGO_BANNER, SettingKey.USE_CUSTOM_LOGO_BANNER ).
+        put( LOGO_FRONT, SettingKey.USE_CUSTOM_LOGO_FRONT ).build();
 
     /**
      * Serves the PNG associated with the key. If custom logo is not used the

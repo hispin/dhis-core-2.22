@@ -41,12 +41,13 @@ import java.util.Set;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.setting.Setting;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Sets;
+
+import static org.hisp.dhis.setting.SettingKey.*;
 
 /**
  * @author Lars Helge Overland
@@ -166,7 +167,7 @@ public class UserServiceTest
     @Test
     public void testManagedGroups()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         // TODO find way to override in parameters
         
@@ -226,7 +227,7 @@ public class UserServiceTest
     @Test
     public void testGetByPhoneNumber()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -257,7 +258,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroups()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -347,7 +348,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsLessAuthorities()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -430,7 +431,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsLessAuthoritiesDisjointRoles()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, false );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, false );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -518,7 +519,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsSearch()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -562,7 +563,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsSelfRegistered()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -602,7 +603,7 @@ public class UserServiceTest
     @Test
     public void testGetManagedGroupsOrganisationUnit()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );
@@ -645,7 +646,7 @@ public class UserServiceTest
     @Test
     public void testGetInvitations()
     {
-        systemSettingManager.saveSystemSetting( Setting.CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
+        systemSettingManager.saveSystemSetting( CAN_GRANT_OWN_USER_AUTHORITY_GROUPS, true );
         
         User userA = createUser( 'A' );
         User userB = createUser( 'B' );

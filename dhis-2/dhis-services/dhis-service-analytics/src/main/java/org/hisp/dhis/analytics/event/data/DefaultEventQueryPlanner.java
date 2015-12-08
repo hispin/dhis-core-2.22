@@ -47,7 +47,7 @@ import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramIndicator;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -199,7 +199,7 @@ public class DefaultEventQueryPlanner
     @Override
     public int getMaxLimit()
     {
-        return (Integer) systemSettingManager.getSystemSetting( Setting.ANALYTICS_MAX_LIMIT );
+        return (Integer) systemSettingManager.getSystemSetting( SettingKey.ANALYTICS_MAX_LIMIT );
     }
     
     // -------------------------------------------------------------------------

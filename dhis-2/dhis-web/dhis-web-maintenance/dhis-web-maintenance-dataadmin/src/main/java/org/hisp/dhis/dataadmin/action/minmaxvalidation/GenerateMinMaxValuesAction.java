@@ -40,7 +40,7 @@ import org.hisp.dhis.minmax.MinMaxDataElementService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 
 import com.opensymphony.xwork2.Action;
@@ -152,7 +152,7 @@ public class GenerateMinMaxValuesAction
         Collection<OrganisationUnit> orgUnits = organisationUnitService.getOrganisationUnitWithChildren( unit.getId() );
         
         Double factor = (Double) systemSettingManager.
-            getSystemSetting( Setting.FACTOR_OF_DEVIATION );
+            getSystemSetting( SettingKey.FACTOR_OF_DEVIATION );
 
         Collection<DataElement> dataElements = new HashSet<>();
         

@@ -29,7 +29,7 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -76,7 +76,7 @@ public class FileController
     {
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JAVASCRIPT, CacheStrategy.CACHE_TWO_WEEKS );
 
-        String content = (String) systemSettingManager.getSystemSetting( Setting.CUSTOM_JS, StringUtils.EMPTY );
+        String content = (String) systemSettingManager.getSystemSetting( SettingKey.CUSTOM_JS, StringUtils.EMPTY );
 
         writer.write( content );
     }
@@ -87,7 +87,7 @@ public class FileController
     {
         if ( content != null )
         {
-            systemSettingManager.saveSystemSetting( Setting.CUSTOM_JS, content );
+            systemSettingManager.saveSystemSetting( SettingKey.CUSTOM_JS, content );
             webMessageService.send( WebMessageUtils.ok( "Custom script created" ), response, request );
         }
     }
@@ -96,7 +96,7 @@ public class FileController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_INSERT_CUSTOM_JS_CSS')" )
     public void removeCustomScript( HttpServletResponse response )
     {
-        systemSettingManager.deleteSystemSetting( Setting.CUSTOM_JS );
+        systemSettingManager.deleteSystemSetting( SettingKey.CUSTOM_JS );
     }
 
     // -------------------------------------------------------------------------
@@ -112,7 +112,7 @@ public class FileController
     {
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_CSS, CacheStrategy.CACHE_TWO_WEEKS );
 
-        String content = (String) systemSettingManager.getSystemSetting( Setting.CUSTOM_CSS, StringUtils.EMPTY );
+        String content = (String) systemSettingManager.getSystemSetting( SettingKey.CUSTOM_CSS, StringUtils.EMPTY );
 
         writer.write( content );
     }
@@ -123,7 +123,7 @@ public class FileController
     {
         if ( content != null )
         {
-            systemSettingManager.saveSystemSetting( Setting.CUSTOM_CSS, content );
+            systemSettingManager.saveSystemSetting( SettingKey.CUSTOM_CSS, content );
             webMessageService.send( WebMessageUtils.ok( "Custom style created" ), response, request );
         }
     }
@@ -132,6 +132,6 @@ public class FileController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_INSERT_CUSTOM_JS_CSS')" )
     public void removeCustomStyle( HttpServletResponse response )
     {
-        systemSettingManager.deleteSystemSetting( Setting.CUSTOM_CSS );
+        systemSettingManager.deleteSystemSetting( SettingKey.CUSTOM_CSS );
     }
 }

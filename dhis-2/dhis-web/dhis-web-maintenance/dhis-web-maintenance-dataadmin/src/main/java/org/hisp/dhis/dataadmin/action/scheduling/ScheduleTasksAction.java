@@ -49,7 +49,7 @@ import org.hisp.dhis.dxf2.synch.SynchronizationManager;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.scheduling.SchedulingManager;
-import org.hisp.dhis.setting.Setting;
+import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.scheduling.ScheduledTaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -315,9 +315,9 @@ public class ScheduleTasksAction
 
         levels = organisationUnitService.getOrganisationUnitLevels();
 
-        lastResourceTableSuccess = (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE );
-        lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
-        lastMonitoringSuccess = (Date) systemSettingManager.getSystemSetting( Setting.LAST_SUCCESSFUL_MONITORING );
+        lastResourceTableSuccess = (Date) systemSettingManager.getSystemSetting( SettingKey.LAST_SUCCESSFUL_RESOURCE_TABLES_UPDATE );
+        lastAnalyticsTableSuccess = (Date) systemSettingManager.getSystemSetting( SettingKey.LAST_SUCCESSFUL_ANALYTICS_TABLES_UPDATE );
+        lastMonitoringSuccess = (Date) systemSettingManager.getSystemSetting( SettingKey.LAST_SUCCESSFUL_MONITORING );
         lastDataSyncSuccess = synchronizationManager.getLastSynchSuccess();
 
         log.info( "Status: " + status );
