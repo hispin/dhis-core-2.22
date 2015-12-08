@@ -858,7 +858,7 @@ public class DefaultExpressionService
     }
 
     @Override
-    @Transactional
+    @Transactional //TODO remove?
     public String generateExpression( String expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, MissingValueStrategy missingValueStrategy )
     {
