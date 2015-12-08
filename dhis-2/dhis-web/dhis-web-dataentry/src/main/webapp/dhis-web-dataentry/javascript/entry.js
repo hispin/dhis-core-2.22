@@ -262,11 +262,11 @@ function saveVal( dataElementId, optionComboId, fieldId, feedbackId )
     }
 }
 
-function saveBoolean( dataElementId, optionComboId, fieldId )
+function saveBoolean( dataElementId, optionComboId, _fieldId )
 {
-    fieldId = '#' + fieldId;
+    var fieldId = '#' + _fieldId;
     
-    var value = $( fieldId + ' option:selected' ).val();
+    var value = $('input[id=' + _fieldId + ']:checked').val();
 
     $( fieldId ).css( 'background-color', dhis2.de.cst.colorYellow );
 
