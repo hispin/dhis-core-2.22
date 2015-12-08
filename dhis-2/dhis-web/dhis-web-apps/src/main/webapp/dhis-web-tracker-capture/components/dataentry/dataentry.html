@@ -1,4 +1,4 @@
-<div class="panel panel-info" ng-controller="DataEntryController">
+<div id='printSection' class="panel panel-info" ng-controller="DataEntryController">
     <div class="panel-heading handle bold">
         {{dataentryWidget.title| translate}}        
         <span class="pull-right widget-link print-div">
@@ -25,7 +25,7 @@
             </table>
         </div>
 
-        <div class="table-responsive" ng-if="selectedEnrollment && selectedEnrollment.enrollment">
+        <div class="table-responsive hideInPrint" ng-if="selectedEnrollment && selectedEnrollment.enrollment">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -183,7 +183,7 @@
                     <a href ng-click="deleteEvent()" 
                        ng-disabled="currentEvent.enrollmentStatus === 'COMPLETED' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id"
                        class="btn btn-danger">{{'delete'| translate}}</a>
-                    <a href class="btn btn-primary" ng-click="printDiv('print-div');">{{'print_form'| translate}}</a>
+                    <a href class="btn btn-primary" ng-click="print('printSection');">{{'print_form'| translate}}</a>
                 </div>
                 <!-- data entry/event buttons ends -->
 
