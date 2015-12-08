@@ -103,6 +103,12 @@ public class ProgramTrackedEntityAttribute
     // -------------------------------------------------------------------------
 
     @Override
+    public boolean haveUniqueNames()
+    {
+        return false;
+    }
+
+    @Override
     public String getName()
     {
         return (program != null ? program.getDisplayName() + " " : "") + (attribute != null ? attribute.getDisplayName() : "");
