@@ -65,14 +65,6 @@ public interface ExpressionService
 {
     String ID = ExpressionService.class.getName();
     
-    String VALID = "valid";
-    String EXPRESSION_IS_EMPTY = "expression_is_empty";
-    String DATAELEMENT_DOES_NOT_EXIST = "data_element_does_not_exist";
-    String CATEGORYOPTIONCOMBO_DOES_NOT_EXIST = "category_option_combo_does_not_exist";
-    String CONSTANT_DOES_NOT_EXIST = "constant_does_not_exist";
-    String OU_GROUP_DOES_NOT_EXIST = "org_unit_group_does_not_exist";
-    String EXPRESSION_NOT_WELL_FORMED = "expression_not_well_formed";
-
     String DAYS_DESCRIPTION = "[Number of days]";
     String NULL_REPLACEMENT = "0";
     String SPACE = " ";
@@ -279,14 +271,9 @@ public interface ExpressionService
      * expression is valid, or a negative value if not.
      * 
      * @param formula the expression formula.
-     * @return VALID if the expression is valid.
-     * 	       EXPRESSION_IS_EMPTY if the expression is empty.
-     * 	       DATAELEMENT_DOES_NOT_EXIST if the data element does not exist.
-     *         CATEGORYOPTIONCOMBO_DOES_NOT_EXIST if the category option combo does not exist.
-     *         CONSTANT_DOES_NOT_EXIST if the constant does not exist.
-     *         EXPRESSION_NOT_WELL_FORMED if the expression is not well-formed.
+     * @return the ExpressionValidationOutcome of the validation.
      */
-    String expressionIsValid( String formula );
+    ExpressionValidationOutcome expressionIsValid( String formula );
 
     /**
      * Creates an expression string containing DataElement names and the names of

@@ -29,14 +29,13 @@ package org.hisp.dhis.validationrule.action;
  */
 
 import org.hisp.dhis.expression.ExpressionService;
+import org.hisp.dhis.expression.ExpressionValidationOutcome;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationRuleService;
 
 import com.opensymphony.xwork2.Action;
-
-import static org.hisp.dhis.expression.ExpressionService.VALID;
 
 /**
  * @author Margrethe Store
@@ -120,11 +119,11 @@ public class GetValidationRuleAction
         String leftSideFormula = validationRule.getLeftSide().getExpression();
         String rightSideFormula = validationRule.getRightSide().getExpression();
         
-        String leftSideResult = expressionService.expressionIsValid( leftSideFormula );
-        String rightSideResult = expressionService.expressionIsValid( rightSideFormula );
+        ExpressionValidationOutcome leftSideResult = expressionService.expressionIsValid( leftSideFormula );
+        ExpressionValidationOutcome rightSideResult = expressionService.expressionIsValid( rightSideFormula );
         
-        leftSideTextualExpression = VALID.equals( leftSideResult ) ? expressionService.getExpressionDescription( leftSideFormula ) : i18n.getString( leftSideResult );
-        rightSideTextualExpression = VALID.equals( rightSideResult ) ? expressionService.getExpressionDescription( rightSideFormula ) : i18n.getString( rightSideResult );
+        leftSideTextualExpression = leftSideResult.isValid() ? expressionService.getExpressionDescription( leftSideFormula ) : i18n.getString( leftSideResult.getKey() );
+        rightSideTextualExpression = rightSideResult.isValid() ? expressionService.getExpressionDescription( rightSideFormula ) : i18n.getString( rightSideResult.getKey() );
         
         periodType = validationRule.getPeriodType();
         
