@@ -35,7 +35,6 @@ import org.hisp.dhis.common.SetMap;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.commons.filter.Filter;
 import org.hisp.dhis.commons.filter.FilterUtils;
-import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
@@ -75,7 +74,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 import static org.hisp.dhis.commons.collection.ListUtils.getDuplicates;
 
 /**
@@ -161,13 +159,6 @@ public class DefaultDataIntegrityService
     public void setCategoryService( DataElementCategoryService categoryService )
     {
         this.categoryService = categoryService;
-    }
-
-    private ConstantService constantService;
-
-    public void setConstantService( ConstantService constantService )
-    {
-        this.constantService = constantService;
     }
 
     private PeriodService periodService;
@@ -419,14 +410,9 @@ public class DefaultDataIntegrityService
     {
         SortedMap<Indicator, String> invalids = new TreeMap<>( IdentifiableObjectNameComparator.INSTANCE );
 
-        Set<String> dataElements = new HashSet<>( getUids( dataElementService.getAllDataElements() ) );
-        Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
-        Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
-        Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-
         for ( Indicator indicator : indicatorService.getAllIndicators() )
         {
-            String result = expressionService.expressionIsValid( indicator.getNumerator(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
+            String result = expressionService.expressionIsValid( indicator.getNumerator() );
 
             if ( !result.equals( ExpressionService.VALID ) )
             {
@@ -442,14 +428,9 @@ public class DefaultDataIntegrityService
     {
         SortedMap<Indicator, String> invalids = new TreeMap<>( IdentifiableObjectNameComparator.INSTANCE );
 
-        Set<String> dataElements = new HashSet<>( getUids( dataElementService.getAllDataElements() ) );
-        Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
-        Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
-        Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-
         for ( Indicator indicator : indicatorService.getAllIndicators() )
         {
-            String result = expressionService.expressionIsValid( indicator.getDenominator(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
+            String result = expressionService.expressionIsValid( indicator.getDenominator() );
 
             if ( !result.equals( ExpressionService.VALID ) )
             {
@@ -635,14 +616,9 @@ public class DefaultDataIntegrityService
         SortedMap<ValidationRule, String> invalids = new TreeMap<>(
             IdentifiableObjectNameComparator.INSTANCE );
 
-        Set<String> dataElements = new HashSet<>( getUids( dataElementService.getAllDataElements() ) );
-        Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
-        Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
-        Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-
         for ( ValidationRule rule : validationRuleService.getAllValidationRules() )
         {
-            String result = expressionService.expressionIsValid( rule.getLeftSide().getExpression(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
+            String result = expressionService.expressionIsValid( rule.getLeftSide().getExpression() );
 
             if ( !result.equals( ExpressionService.VALID ) )
             {
@@ -659,14 +635,9 @@ public class DefaultDataIntegrityService
         SortedMap<ValidationRule, String> invalids = new TreeMap<>(
             IdentifiableObjectNameComparator.INSTANCE );
 
-        Set<String> dataElements = new HashSet<>( getUids( dataElementService.getAllDataElements() ) );
-        Set<String> categoryOptionCombos = new HashSet<>( getUids( categoryService.getAllDataElementCategoryOptionCombos() ) );
-        Set<String> constants = new HashSet<>( getUids( constantService.getAllConstants() ) );
-        Set<String> orgUnitGroups = new HashSet<>( getUids( organisationUnitGroupService.getAllOrganisationUnitGroups() ) );
-
         for ( ValidationRule rule : validationRuleService.getAllValidationRules() )
         {
-            String result = expressionService.expressionIsValid( rule.getRightSide().getExpression(), dataElements, categoryOptionCombos, constants, orgUnitGroups );
+            String result = expressionService.expressionIsValid( rule.getRightSide().getExpression() );
 
             if ( !result.equals( ExpressionService.VALID ) )
             {

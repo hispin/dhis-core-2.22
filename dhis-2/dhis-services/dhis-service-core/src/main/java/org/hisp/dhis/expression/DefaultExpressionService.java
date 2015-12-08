@@ -479,14 +479,7 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public String expressionIsValid( String formula )
-    {
-        return expressionIsValid( formula, null, null, null, null );
-    }
-
-    @Override
-    @Transactional
-    public String expressionIsValid( String expression, Set<String> dataElements, Set<String> categoryOptionCombos, Set<String> orgUnitGroups, Set<String> constants )
+    public String expressionIsValid( String expression )
     {
         if ( expression == null || expression.isEmpty() )
         {
@@ -505,13 +498,12 @@ public class DefaultExpressionService
             String de = matcher.group( 1 );
             String coc = matcher.group( 2 );
             
-            if ( dataElements != null ? !dataElements.contains( de ) : dataElementService.getDataElement( de ) == null )
+            if ( dataElementService.getDataElement( de ) == null )
             {
                 return DATAELEMENT_DOES_NOT_EXIST;
             }
 
-            if ( !operandIsTotal( matcher ) && ( 
-                categoryOptionCombos != null ? !categoryOptionCombos.contains( coc ) : categoryService.getDataElementCategoryOptionCombo( coc ) == null ) )
+            if ( !operandIsTotal( matcher ) && categoryService.getDataElementCategoryOptionCombo( coc ) == null )
             {
                 return CATEGORYOPTIONCOMBO_DOES_NOT_EXIST;
             }
@@ -532,7 +524,7 @@ public class DefaultExpressionService
         {
             String constant = matcher.group( 1 );
             
-            if ( constants != null ? !constants.contains( constant ) : constantService.getConstant( constant ) == null )
+            if ( constantService.getConstant( constant ) == null )
             {
                 return CONSTANT_DOES_NOT_EXIST;
             }
@@ -553,7 +545,7 @@ public class DefaultExpressionService
         {
             String group = matcher.group( 1 );
             
-            if ( orgUnitGroups != null ? !orgUnitGroups.contains( group ) : organisationUnitGroupService.getOrganisationUnitGroup( group ) == null )
+            if ( organisationUnitGroupService.getOrganisationUnitGroup( group ) == null )
             {
                 return OU_GROUP_DOES_NOT_EXIST;
             }
