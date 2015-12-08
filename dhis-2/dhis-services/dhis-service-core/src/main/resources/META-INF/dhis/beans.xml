@@ -632,6 +632,8 @@
 
   <!-- Service definitions -->
 
+  <bean id="org.hisp.dhis.dimension.DimensionService" class="org.hisp.dhis.dimension.DefaultDimensionService" />
+
   <bean id="org.hisp.dhis.fileresource.FileResourceService" class="org.hisp.dhis.fileresource.DefaultFileResourceService">
     <property name="fileResourceStore" ref="org.hisp.dhis.fileresource.FileResourceStore" />
     <property name="fileResourceContentStore" ref="org.hisp.dhis.fileresource.FileResourceContentStore" />

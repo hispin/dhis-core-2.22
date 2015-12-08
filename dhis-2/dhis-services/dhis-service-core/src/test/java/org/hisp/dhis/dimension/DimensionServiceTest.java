@@ -1,4 +1,4 @@
-package org.hisp.dhis.analytics.dimension;
+package org.hisp.dhis.dimension;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
