@@ -106,10 +106,6 @@ public abstract class BaseAnalyticalObject
     extends BaseIdentifiableObject
     implements AnalyticalObject
 {
-    public static final String NUMBER_FORMATTING_COMMA = "comma";
-    public static final String NUMBER_FORMATTING_SPACE = "space";
-    public static final String NUMBER_FORMATTING_NONE = "none";
-
     public static final int ASC = -1;
     public static final int DESC = 1;
     public static final int NONE = 0;
