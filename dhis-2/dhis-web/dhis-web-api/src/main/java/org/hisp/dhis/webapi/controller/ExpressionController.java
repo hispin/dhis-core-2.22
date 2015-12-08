@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
 import org.hisp.dhis.expression.ExpressionService;
+import org.hisp.dhis.expression.ExpressionValidationOutcome;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.webapi.service.WebMessageService;
@@ -67,13 +68,13 @@ public class ExpressionController
     {
         I18n i18n = i18nManager.getI18n();
 
-        String result = expressionService.expressionIsValid( expression );
+        ExpressionValidationOutcome result = expressionService.expressionIsValid( expression );
         
         DescriptiveWebMessage message = new DescriptiveWebMessage();
-        message.setStatus( ExpressionService.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
-        message.setMessage( i18n.getString( result ) );
+        message.setStatus( result.isValid() ? WebMessageStatus.OK : WebMessageStatus.ERROR );
+        message.setMessage( i18n.getString( result.getKey() ) );
         
-        if ( result.equals( ExpressionService.VALID ) )
+        if ( result.isValid() )
         {
             message.setDescription( expressionService.getExpressionDescription( expression ) );
         }

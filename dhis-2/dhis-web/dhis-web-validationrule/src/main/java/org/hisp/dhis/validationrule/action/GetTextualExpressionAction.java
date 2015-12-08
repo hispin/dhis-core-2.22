@@ -29,6 +29,7 @@ package org.hisp.dhis.validationrule.action;
  */
 
 import org.hisp.dhis.expression.ExpressionService;
+import org.hisp.dhis.expression.ExpressionValidationOutcome;
 import org.hisp.dhis.i18n.I18n;
 
 import com.opensymphony.xwork2.Action;
@@ -86,15 +87,15 @@ public class GetTextualExpressionAction
     {
         if ( expression != null )
         {
-            String result = expressionService.expressionIsValid( expression );
+            ExpressionValidationOutcome result = expressionService.expressionIsValid( expression );
             
-            if ( result.equals( ExpressionService.VALID ) )
+            if ( result.isValid() )
             {
                 textualExpression = expressionService.getExpressionDescription( expression );
             }
             else
             {
-                textualExpression = i18n.getString( result );
+                textualExpression = i18n.getString( result.getKey() );
             }
         }
         

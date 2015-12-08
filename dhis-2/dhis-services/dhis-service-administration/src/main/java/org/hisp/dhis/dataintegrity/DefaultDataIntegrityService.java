@@ -48,6 +48,7 @@ import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.dataset.Section;
 import org.hisp.dhis.dataset.SectionService;
 import org.hisp.dhis.expression.ExpressionService;
+import org.hisp.dhis.expression.ExpressionValidationOutcome;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.indicator.IndicatorGroupSet;
@@ -412,11 +413,11 @@ public class DefaultDataIntegrityService
 
         for ( Indicator indicator : indicatorService.getAllIndicators() )
         {
-            String result = expressionService.expressionIsValid( indicator.getNumerator() );
+            ExpressionValidationOutcome result = expressionService.expressionIsValid( indicator.getNumerator() );
 
-            if ( !result.equals( ExpressionService.VALID ) )
+            if ( !result.isValid() )
             {
-                invalids.put( indicator, result );
+                invalids.put( indicator, result.getKey() );
             }
         }
 
@@ -430,11 +431,11 @@ public class DefaultDataIntegrityService
 
         for ( Indicator indicator : indicatorService.getAllIndicators() )
         {
-            String result = expressionService.expressionIsValid( indicator.getDenominator() );
+            ExpressionValidationOutcome result = expressionService.expressionIsValid( indicator.getDenominator() );
 
-            if ( !result.equals( ExpressionService.VALID ) )
+            if ( !result.isValid() )
             {
-                invalids.put( indicator, result );
+                invalids.put( indicator, result.getKey() );
             }
         }
 
@@ -618,11 +619,11 @@ public class DefaultDataIntegrityService
 
         for ( ValidationRule rule : validationRuleService.getAllValidationRules() )
         {
-            String result = expressionService.expressionIsValid( rule.getLeftSide().getExpression() );
+            ExpressionValidationOutcome result = expressionService.expressionIsValid( rule.getLeftSide().getExpression() );
 
-            if ( !result.equals( ExpressionService.VALID ) )
+            if ( !result.isValid() )
             {
-                invalids.put( rule, result );
+                invalids.put( rule, result.getKey() );
             }
         }
 
@@ -637,11 +638,11 @@ public class DefaultDataIntegrityService
 
         for ( ValidationRule rule : validationRuleService.getAllValidationRules() )
         {
-            String result = expressionService.expressionIsValid( rule.getRightSide().getExpression() );
+            ExpressionValidationOutcome result = expressionService.expressionIsValid( rule.getRightSide().getExpression() );
 
-            if ( !result.equals( ExpressionService.VALID ) )
+            if ( !result.isValid() )
             {
-                invalids.put( rule, result );
+                invalids.put( rule, result.getKey() );
             }
         }
 

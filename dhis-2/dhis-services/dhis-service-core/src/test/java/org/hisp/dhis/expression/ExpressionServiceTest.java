@@ -375,37 +375,37 @@ public class ExpressionServiceTest
     @Test
     public void testExpressionIsValid()
     {
-        assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionA ) );
-        assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionB ) );
-        assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionC ) );
-        assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionD ) );
-        assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionE ) );
-        assertEquals( ExpressionService.VALID, expressionService.expressionIsValid( expressionH ) );
+        assertTrue( expressionService.expressionIsValid( expressionA ).isValid() );
+        assertTrue( expressionService.expressionIsValid( expressionB ).isValid() );
+        assertTrue( expressionService.expressionIsValid( expressionC ).isValid() );
+        assertTrue( expressionService.expressionIsValid( expressionD ).isValid() );
+        assertTrue( expressionService.expressionIsValid( expressionE ).isValid() );
+        assertTrue( expressionService.expressionIsValid( expressionH ).isValid() );
 
         expressionA = "#{nonExisting" + SEPARATOR + categoryOptionCombo.getUid() + "} + 12";
 
-        assertEquals( ExpressionService.DATAELEMENT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
+        assertEquals( ExpressionValidationOutcome.DATAELEMENT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
 
         expressionA = "#{" + dataElementA.getUid() + SEPARATOR + 999 + "} + 12";
 
-        assertEquals( ExpressionService.CATEGORYOPTIONCOMBO_DOES_NOT_EXIST, expressionService
+        assertEquals( ExpressionValidationOutcome.CATEGORYOPTIONCOMBO_DOES_NOT_EXIST, expressionService
             .expressionIsValid( expressionA ) );
 
         expressionA = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "} + ( 12";
 
-        assertEquals( ExpressionService.EXPRESSION_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
+        assertEquals( ExpressionValidationOutcome.EXPRESSION_IS_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
 
         expressionA = "12 x 4";
 
-        assertEquals( ExpressionService.EXPRESSION_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
+        assertEquals( ExpressionValidationOutcome.EXPRESSION_IS_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
         
         expressionA = "12 + C{nonExisting}";
 
-        assertEquals( ExpressionService.CONSTANT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
+        assertEquals( ExpressionValidationOutcome.CONSTANT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
         
         expressionA = "12 + OUG{nonExisting}";
         
-        assertEquals( ExpressionService.OU_GROUP_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
+        assertEquals( ExpressionValidationOutcome.ORG_UNIT_GROUP_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
     }
 
     @Test

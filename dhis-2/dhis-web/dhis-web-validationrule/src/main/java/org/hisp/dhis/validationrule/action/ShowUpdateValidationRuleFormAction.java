@@ -28,12 +28,11 @@ package org.hisp.dhis.validationrule.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.expression.ExpressionService.VALID;
-
 import java.util.Collection;
 import java.util.List;
 
 import org.hisp.dhis.expression.ExpressionService;
+import org.hisp.dhis.expression.ExpressionValidationOutcome;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -166,13 +165,13 @@ public class ShowUpdateValidationRuleFormAction
         String leftSideFormula = validationRule.getLeftSide().getExpression();
         String rightSideFormula = validationRule.getRightSide().getExpression();
 
-        String leftSideResult = expressionService.expressionIsValid( leftSideFormula );
-        String rightSideResult = expressionService.expressionIsValid( rightSideFormula );
+        ExpressionValidationOutcome leftSideResult = expressionService.expressionIsValid( leftSideFormula );
+        ExpressionValidationOutcome rightSideResult = expressionService.expressionIsValid( rightSideFormula );
 
-        leftSideTextualExpression = VALID.equals( leftSideResult ) ? expressionService
-            .getExpressionDescription( leftSideFormula ) : i18n.getString( leftSideResult );
-        rightSideTextualExpression = VALID.equals( rightSideResult ) ? expressionService
-            .getExpressionDescription( rightSideFormula ) : i18n.getString( rightSideResult );
+        leftSideTextualExpression = leftSideResult.isValid() ? expressionService
+            .getExpressionDescription( leftSideFormula ) : i18n.getString( leftSideResult.getKey() );
+        rightSideTextualExpression = rightSideResult.isValid() ? expressionService
+            .getExpressionDescription( rightSideFormula ) : i18n.getString( rightSideResult.getKey() );
 
         return SUCCESS;
     }

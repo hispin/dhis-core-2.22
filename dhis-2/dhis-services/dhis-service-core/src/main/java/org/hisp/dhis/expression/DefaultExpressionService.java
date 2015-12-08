@@ -467,8 +467,8 @@ public class DefaultExpressionService
             {
                 Indicator indicator = iterator.next();
                 
-                if ( !expressionIsValid( indicator.getNumerator() ).equals( VALID ) ||
-                    !expressionIsValid( indicator.getDenominator() ).equals( VALID ) )
+                if ( !expressionIsValid( indicator.getNumerator() ).isValid() ||
+                    !expressionIsValid( indicator.getDenominator() ).isValid() )
                 {
                     iterator.remove();
                     log.warn( "Indicator is invalid: " + indicator + ", " + indicator.getNumerator() + ", " + indicator.getDenominator() );
@@ -479,11 +479,11 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public String expressionIsValid( String expression )
+    public ExpressionValidationOutcome expressionIsValid( String expression )
     {
         if ( expression == null || expression.isEmpty() )
         {
-            return EXPRESSION_IS_EMPTY;
+            return ExpressionValidationOutcome.EXPRESSION_IS_EMPTY;
         }
 
         // ---------------------------------------------------------------------
@@ -500,12 +500,12 @@ public class DefaultExpressionService
             
             if ( dataElementService.getDataElement( de ) == null )
             {
-                return DATAELEMENT_DOES_NOT_EXIST;
+                return ExpressionValidationOutcome.DATAELEMENT_DOES_NOT_EXIST;
             }
 
             if ( !operandIsTotal( matcher ) && categoryService.getDataElementCategoryOptionCombo( coc ) == null )
             {
-                return CATEGORYOPTIONCOMBO_DOES_NOT_EXIST;
+                return ExpressionValidationOutcome.CATEGORYOPTIONCOMBO_DOES_NOT_EXIST;
             }
                     
             matcher.appendReplacement( sb, "1.1" );
@@ -526,7 +526,7 @@ public class DefaultExpressionService
             
             if ( constantService.getConstant( constant ) == null )
             {
-                return CONSTANT_DOES_NOT_EXIST;
+                return ExpressionValidationOutcome.CONSTANT_DOES_NOT_EXIST;
             }
             
             matcher.appendReplacement( sb, "1.1" );
@@ -547,7 +547,7 @@ public class DefaultExpressionService
             
             if ( organisationUnitGroupService.getOrganisationUnitGroup( group ) == null )
             {
-                return OU_GROUP_DOES_NOT_EXIST;
+                return ExpressionValidationOutcome.ORG_UNIT_GROUP_DOES_NOT_EXIST;
             }
 
             matcher.appendReplacement( sb, "1.1" );
@@ -567,10 +567,10 @@ public class DefaultExpressionService
 
         if ( MathUtils.expressionHasErrors( expression ) )
         {
-            return EXPRESSION_NOT_WELL_FORMED;
+            return ExpressionValidationOutcome.EXPRESSION_IS_NOT_WELL_FORMED;
         }
 
-        return VALID;
+        return ExpressionValidationOutcome.VALID;
     }
 
     @Override
