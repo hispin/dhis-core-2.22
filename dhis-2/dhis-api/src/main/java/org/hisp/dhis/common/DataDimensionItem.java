@@ -57,8 +57,8 @@ import com.google.common.collect.ImmutableSet;
 public class DataDimensionItem
 {    
     public static final Set<Class<? extends IdentifiableObject>> DATA_DIMENSION_CLASSES = ImmutableSet.<Class<? extends IdentifiableObject>>builder().
-        add( Indicator.class ).add( DataElement.class ).add( DataElementOperand.class ).
-        add( DataSet.class ).add( ProgramIndicator.class ).add( ProgramDataElement.class ).add( ProgramTrackedEntityAttribute.class ).build();
+        add( Indicator.class ).add( DataElement.class ).add( DataElementOperand.class ).add( DataSet.class ).
+        add( ProgramIndicator.class ).add( ProgramDataElement.class ).add( ProgramTrackedEntityAttribute.class ).build();
     
     public static final Map<DataDimensionItemType, Class<? extends NameableObject>> DATA_DIMENSION_TYPE_CLASS_MAP = ImmutableMap.<DataDimensionItemType, Class<? extends NameableObject>>builder().
         put( DataDimensionItemType.INDICATOR, Indicator.class ).put( DataDimensionItemType.AGGREGATE_DATA_ELEMENT, DataElement.class ).

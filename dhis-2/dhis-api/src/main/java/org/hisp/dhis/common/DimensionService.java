@@ -54,4 +54,12 @@ public interface DimensionService
     void mergeAnalyticalObject( BaseAnalyticalObject object );
     
     void mergeEventAnalyticalObject( EventAnalyticalObject object );
+
+    /**
+     * Gets a dimension item object which are among the data dimension item objects.
+     * 
+     * @param dimensionItem the dimension item identifier.
+     * @return a dimensional item object.
+     */
+    DimensionalItemObject getDataDimensionalItemObject( String dimensionItem );
 }

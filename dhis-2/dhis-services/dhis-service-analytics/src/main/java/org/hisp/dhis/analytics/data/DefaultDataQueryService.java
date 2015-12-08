@@ -48,13 +48,11 @@ import static org.hisp.dhis.common.DimensionalObjectUtils.asList;
 import static org.hisp.dhis.common.DimensionalObjectUtils.asTypedList;
 import static org.hisp.dhis.common.DimensionalObjectUtils.getDimensionalItemIds;
 import static org.hisp.dhis.commons.collection.ListUtils.sort;
-import static org.hisp.dhis.commons.util.TextUtils.splitSafe;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_LEVEL;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_ORGUNIT_GROUP;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT_CHILDREN;
 import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT_GRANDCHILDREN;
-import static org.hisp.dhis.common.DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_ESCAPED_SEP;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +69,7 @@ import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.AnalyticalObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.CodeGenerator;
-import org.hisp.dhis.common.DataDimensionItem;
+import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
@@ -83,8 +81,6 @@ import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.comparator.IdentifiableObjectNameComparator;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementGroup;
-import org.hisp.dhis.dataelement.DataElementOperand;
-import org.hisp.dhis.dataelement.DataElementOperandService;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -94,11 +90,7 @@ import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.RelativePeriodEnum;
 import org.hisp.dhis.period.RelativePeriods;
 import org.hisp.dhis.period.comparator.AscendingPeriodEndDateComparator;
-import org.hisp.dhis.program.ProgramDataElement;
-import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.system.util.ReflectionUtils;
-import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,13 +108,7 @@ public class DefaultDataQueryService
     private OrganisationUnitService organisationUnitService;
 
     @Autowired
-    private DataElementOperandService operandService;
-
-    @Autowired
-    private ProgramService programService;
-    
-    @Autowired
-    private TrackedEntityAttributeService attributeService;
+    private DimensionService dimensionService;
     
     @Autowired
     private CurrentUserService currentUserService;
@@ -260,35 +246,13 @@ public class DefaultDataQueryService
                         dataDimensionItems.addAll( group.getMembers() );
                     }
                 }
-                else if ( DimensionalObjectUtils.isCompositeDimensionalObject( uid ) )
+                else
                 {
-                    String id0 = splitSafe( uid, COMPOSITE_DIM_OBJECT_ESCAPED_SEP, 0 );
-                    String id1 = splitSafe( uid, COMPOSITE_DIM_OBJECT_ESCAPED_SEP, 1 );
+                    DimensionalItemObject dimItemObject = dimensionService.getDataDimensionalItemObject( uid );
                     
-                    DataElementOperand operand = null;
-                    ProgramDataElement programDataElement = null;                    
-                    ProgramTrackedEntityAttribute programAttribute = null;
-                    
-                    if ( ( operand = operandService.getDataElementOperand( id0, id1 ) ) != null )
+                    if ( dimItemObject != null )
                     {
-                        dataDimensionItems.add( operand );
-                    }                    
-                    else if ( ( programDataElement = programService.getProgramDataElement( id0, id1 ) ) != null )
-                    {
-                        dataDimensionItems.add( programDataElement );
-                    }
-                    else if ( ( programAttribute = attributeService.getProgramTrackedEntityAttribute( id0, id1 ) ) != null )
-                    {
-                        dataDimensionItems.add( programAttribute );
-                    }
-                }
-                else if ( CodeGenerator.isValidCode( uid ) )
-                {
-                    DimensionalItemObject item = idObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, uid );
-                    
-                    if ( item != null )
-                    {
-                        dataDimensionItems.add( item );
+                        dataDimensionItems.add( dimItemObject );
                     }
                 }
             }
