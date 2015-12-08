@@ -33,6 +33,7 @@ import static org.hisp.dhis.organisationunit.OrganisationUnit.KEY_USER_ORGUNIT;
 import static org.hisp.dhis.period.RelativePeriodEnum.LAST_12_MONTHS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.common.BaseDimensionalItemObject;
@@ -41,6 +42,8 @@ import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.DimensionalObjectUtils;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -49,7 +52,9 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.program.Program;
 import org.hisp.dhis.reporttable.ReportTable;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,6 +68,10 @@ public class DimensionServiceTest
 {
     private DataElement deA;
     private DataElement deB;
+    
+    private Program prA;
+    
+    private TrackedEntityAttribute atA;
     
     private Period peA;
     private Period peB;
@@ -94,6 +103,9 @@ public class DimensionServiceTest
     private OrganisationUnitGroupService organisationUnitGroupService;
     
     @Autowired
+    private IdentifiableObjectManager idObjectManager;
+    
+    @Autowired
     private DimensionService dimensionService;
     
     @Override
@@ -104,6 +116,14 @@ public class DimensionServiceTest
         
         dataElementService.addDataElement( deA );
         dataElementService.addDataElement( deB );
+        
+        prA = createProgram( 'A' );
+        
+        idObjectManager.save( prA );
+        
+        atA = createTrackedEntityAttribute( 'A' );
+        
+        idObjectManager.save( atA );
         
         peA = createPeriod( "201201" );
         peB = createPeriod( "201202" );
@@ -238,5 +258,19 @@ public class DimensionServiceTest
         assertEquals( 2, reportTable.getDataDimensionItems().size() );
         assertEquals( 2, reportTable.getPeriods().size() );
         assertEquals( 3, reportTable.getOrganisationUnitGroups().size() );
-    }    
+    }
+    
+    @Test
+    public void testGetDimensionalItemObject()
+    {
+        String idA = deA.getUid();
+        String idB = prA.getUid() + DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_PLAIN_SEP + deA.getUid();
+        String idC = prA.getUid() + DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_PLAIN_SEP + atA.getUid();
+        
+        assertNotNull( dimensionService.getDataDimensionalItemObject( idA ) );
+        assertNotNull( dimensionService.getDataDimensionalItemObject( idB ) );
+        assertNotNull( dimensionService.getDataDimensionalItemObject( idC ) );
+        
+        assertEquals( deA, dimensionService.getDataDimensionalItemObject( idA ) );
+    }
 }

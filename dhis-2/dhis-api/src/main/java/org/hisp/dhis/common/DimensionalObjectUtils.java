@@ -58,7 +58,8 @@ public class DimensionalObjectUtils
     public static final String COMPOSITE_DIM_OBJECT_ESCAPED_SEP = "\\.";
     public static final String COMPOSITE_DIM_OBJECT_PLAIN_SEP = ".";
     public static final String TITLE_ITEM_SEP = ", ";
-    public static final String NULL_REPLACEMENT = "[n/a]";
+    
+    private static final String NULL_REPLACEMENT = "[n/a]";
 
     private static final Pattern INT_PATTERN = Pattern.compile( "^(0|-?[1-9]\\d*)$" );
     private static final Pattern COMPOSITE_DIM_OBJECT_PATTERN = Pattern.compile( "([a-zA-Z]\\w{10})\\.([a-zA-Z]\\w{10})" );
