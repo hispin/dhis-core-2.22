@@ -346,15 +346,22 @@ public class DefaultDataEntryFormService
 
                 if ( ValueType.BOOLEAN == valueType )
                 {
-                    inputHtml = inputHtml.replace( "input", "select" );
-                    inputHtml = inputHtml.replaceAll( "value=\".*?\"", "" );
-
-                    appendCode += " name=\"entryselect\" class=\"entryselect\" tabindex=\"" + i++ + "\">";
-
-                    appendCode += "<option value=\"\">" + i18n.getString( "no_value" ) + "</option>";
-                    appendCode += "<option value=\"true\">" + i18n.getString( "yes" ) + "</option>";
-                    appendCode += "<option value=\"false\">" + i18n.getString( "no" ) + "</option>";
-                    appendCode += "</select>";
+                    inputHtml = inputHtml.replaceAll(inputHtml, TAG_CLOSE);
+                    
+                    appendCode += "<label>";
+                    appendCode += "<input type=\"radio\" class=\"entryselect\" name=\"" + dataElementId + "-" + optionComboId + "-val\"  id=\"" + dataElementId + "-" + optionComboId + "-val\" tabindex=\"" + i++ + "\" value=\"\">";
+                    appendCode += i18n.getString( "no_value" );
+                    appendCode += "</label>";
+                    
+                    appendCode += "<label>";
+                    appendCode += "<input type=\"radio\" class=\"entryselect\" name=\"" + dataElementId + "-" + optionComboId + "-val\"  id=\"" + dataElementId + "-" + optionComboId + "-val\" tabindex=\"" + i++ + "\" value=\"true\">";
+                    appendCode += i18n.getString( "yes" );
+                    appendCode += "</label>";
+                    
+                    appendCode += "<label>";
+                    appendCode += "<input type=\"radio\" class=\"entryselect\" name=\"" + dataElementId + "-" + optionComboId + "-val\"  id=\"" + dataElementId + "-" + optionComboId + "-val\" tabindex=\"" + i++ + "\" value=\"false\">";
+                    appendCode += i18n.getString( "no" );
+                    appendCode += "</label>";
                 }
                 else if ( ValueType.TRUE_ONLY == valueType )
                 {

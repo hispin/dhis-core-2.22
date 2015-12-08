@@ -565,12 +565,12 @@ dhis2.de.addEventListeners = function()
         var dataElementId = split.dataElementId;
         var optionComboId = split.optionComboId;
 
-        $( this ).unbind( 'focus' );
+        /*$( this ).unbind( 'focus' );
         $( this ).unbind( 'change' );
 
         $( this ).focus( valueFocus );
 
-        $( this ).blur( valueBlur );
+        $( this ).blur( valueBlur );*/
 
         $( this ).change( function()
         {
@@ -1553,7 +1553,7 @@ function getAndInsertDataValues()
     // Clear existing values and colors, grey disabled fields
 
     $( '.entryfield' ).val( '' );
-    $( '.entryselect' ).val( '' );
+    $( '.entryselect' ).removeAttr( 'checked' );
     $( '.entrytrueonly' ).removeAttr( 'checked' );
     $( '.entryoptionset' ).val( '' );
 
@@ -1674,6 +1674,22 @@ function insertDataValues( json )
             else if ( $( fieldId ).attr( 'name' ) == 'entryoptionset' )
             {
                 dhis2.de.setOptionNameInField( fieldId, value );
+            }
+            else if ( $( fieldId ).attr( 'class' ) == 'entryselect' )
+            {                
+                var fId = fieldId.substring(1, fieldId.length);
+    
+                if( value.val == 'true' )
+                {
+                    $('input[id=' + fId + ']')[1].checked = true;
+                }
+                else if ( value.val == 'false')
+                {
+                    $('input[id=' + fId + ']')[2].checked = true;
+                }
+                else{
+                    $('input[id=' + fId + ']')[0].checked = true;
+                }
             }
             else if ( $( fieldId ).attr( 'class' ) == 'entryfileresource' )
             {
