@@ -289,20 +289,6 @@ public interface ExpressionService
     String expressionIsValid( String formula );
 
     /**
-     * Tests whether the expression is valid. Returns a positive value if the
-     * expression is valid, or a negative value if not.
-     * 
-     * @param formula the expression formula.
-     * @return VALID if the expression is valid.
-     *         EXPRESSION_IS_EMPTY if the expression is empty.
-     *         DATAELEMENT_DOES_NOT_EXIST if the data element does not exist.
-     *         CATEGORYOPTIONCOMBO_DOES_NOT_EXIST if the category option combo does not exist.
-     *         CONSTANT_DOES_NOT_EXIST if the constant does not exist.
-     *         EXPRESSION_NOT_WELL_FORMED if the expression is not well-formed.
-     */
-    String expressionIsValid( String formula, Set<String> dataElements, Set<String> categoryOptionCombos, Set<String> constants, Set<String> orgUnitGroups );
-    
-    /**
      * Creates an expression string containing DataElement names and the names of
      * the CategoryOptions in the CategoryOptionCombo from a string consisting
      * of identifiers.
