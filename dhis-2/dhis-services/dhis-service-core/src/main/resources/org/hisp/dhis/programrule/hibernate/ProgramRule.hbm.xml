@@ -30,7 +30,7 @@
       <one-to-many class="org.hisp.dhis.programrule.ProgramRuleAction" />
     </set>
 
-    <property name="condition" type="text" not-null="true" />
+    <property name="condition" column="rulecondition" type="text" not-null="false" />
 
     <property name="priority" />
 

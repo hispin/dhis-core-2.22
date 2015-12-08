@@ -771,7 +771,11 @@ public class TableAlteror
 
         //update programruleaction:
         executeSql( "ALTER TABLE programruleaction DROP COLUMN name" );
-
+        
+        //update programrule
+        executeSql( "UPDATE programrule SET rulecondition = condition WHERE rulecondition IS NULL" );
+        executeSql( "ALTER TABLE programrule DROP COLUMN condition" );
+        
         // data approval
         executeSql( "UPDATE dataapproval SET accepted=false WHERE accepted IS NULL" );
         executeSql( "ALTER TABLE dataapproval ALTER COLUMN accepted SET NOT NULL" );
