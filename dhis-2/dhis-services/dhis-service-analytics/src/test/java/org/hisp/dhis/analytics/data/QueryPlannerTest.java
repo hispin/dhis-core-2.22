@@ -252,7 +252,7 @@ public class QueryPlannerTest
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
 
-        MapMap<String, DataElementOperand, Double> permutationMap = new MapMap<>();
+        MapMap<String, DimensionalItemObject, Double> permutationMap = new MapMap<>();
 
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedDataMap, true );
 
@@ -263,10 +263,10 @@ public class QueryPlannerTest
         String ouBQ1Key = ouB.getUid() + DIMENSION_SEP + "2000Q1";
         String ouBQ2Key = ouB.getUid() + DIMENSION_SEP + "2000Q2";
 
-        Map<DataElementOperand, Double> ouAQ1 = permutationMap.get( ouAQ1Key );
-        Map<DataElementOperand, Double> ouAQ2 = permutationMap.get( ouAQ2Key );
-        Map<DataElementOperand, Double> ouBQ1 = permutationMap.get( ouBQ1Key );
-        Map<DataElementOperand, Double> ouBQ2 = permutationMap.get( ouBQ2Key );
+        Map<DimensionalItemObject, Double> ouAQ1 = permutationMap.get( ouAQ1Key );
+        Map<DimensionalItemObject, Double> ouAQ2 = permutationMap.get( ouAQ2Key );
+        Map<DimensionalItemObject, Double> ouBQ1 = permutationMap.get( ouBQ1Key );
+        Map<DimensionalItemObject, Double> ouBQ2 = permutationMap.get( ouBQ2Key );
 
         assertEquals( 2, ouAQ1.size() );
         assertEquals( 2, ouAQ2.size() );
@@ -311,7 +311,7 @@ public class QueryPlannerTest
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "200101", 7d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "200102", 8d );
 
-        MapMap<String, DataElementOperand, Double> permutationMap = new MapMap<>();
+        MapMap<String, DimensionalItemObject, Double> permutationMap = new MapMap<>();
 
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedDataMap, false );
 
@@ -322,10 +322,10 @@ public class QueryPlannerTest
         String ouBM1Key = ouB.getUid() + DIMENSION_SEP + "200101";
         String ouBM2Key = ouB.getUid() + DIMENSION_SEP + "200102";
 
-        Map<DataElementOperand, Double> ouAM1 = permutationMap.get( ouAM1Key );
-        Map<DataElementOperand, Double> ouAM2 = permutationMap.get( ouAM2Key );
-        Map<DataElementOperand, Double> ouBM1 = permutationMap.get( ouBM1Key );
-        Map<DataElementOperand, Double> ouBM2 = permutationMap.get( ouBM2Key );
+        Map<DimensionalItemObject, Double> ouAM1 = permutationMap.get( ouAM1Key );
+        Map<DimensionalItemObject, Double> ouAM2 = permutationMap.get( ouAM2Key );
+        Map<DimensionalItemObject, Double> ouBM1 = permutationMap.get( ouBM1Key );
+        Map<DimensionalItemObject, Double> ouBM2 = permutationMap.get( ouBM2Key );
 
         assertEquals( 2, ouAM1.size() );
         assertEquals( 2, ouAM2.size() );
@@ -372,7 +372,7 @@ public class QueryPlannerTest
         aggregatedCocDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
         aggregatedCocDataMap.put( deB.getUid() + DIMENSION_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
 
-        MapMap<String, DataElementOperand, Double> permutationMap = new MapMap<>();
+        MapMap<String, DimensionalItemObject, Double> permutationMap = new MapMap<>();
 
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedTotalsDataMap, false );
         DataQueryParams.putPermutationOperandValueMap( permutationMap, aggregatedCocDataMap, true );
@@ -384,10 +384,10 @@ public class QueryPlannerTest
         String ouBQ1Key = ouB.getUid() + DIMENSION_SEP + "2000Q1";
         String ouBQ2Key = ouB.getUid() + DIMENSION_SEP + "2000Q2";
 
-        Map<DataElementOperand, Double> ouAQ1 = permutationMap.get( ouAQ1Key );
-        Map<DataElementOperand, Double> ouAQ2 = permutationMap.get( ouAQ2Key );
-        Map<DataElementOperand, Double> ouBQ1 = permutationMap.get( ouBQ1Key );
-        Map<DataElementOperand, Double> ouBQ2 = permutationMap.get( ouBQ2Key );
+        Map<DimensionalItemObject, Double> ouAQ1 = permutationMap.get( ouAQ1Key );
+        Map<DimensionalItemObject, Double> ouAQ2 = permutationMap.get( ouAQ2Key );
+        Map<DimensionalItemObject, Double> ouBQ1 = permutationMap.get( ouBQ1Key );
+        Map<DimensionalItemObject, Double> ouBQ2 = permutationMap.get( ouBQ2Key );
 
         assertEquals( 2, ouAQ1.size() );
         assertEquals( 2, ouAQ2.size() );

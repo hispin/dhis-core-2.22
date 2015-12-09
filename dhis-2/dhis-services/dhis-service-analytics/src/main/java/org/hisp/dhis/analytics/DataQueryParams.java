@@ -1022,7 +1022,7 @@ public class DataQueryParams
      * @param cocEnabled indicates whether the given aggregated data map includes
      *        a category option combination dimension.
      */
-    public static void putPermutationOperandValueMap( MapMap<String, DataElementOperand, Double> permutationMap, 
+    public static void putPermutationOperandValueMap( MapMap<String, DimensionalItemObject, Double> permutationMap, 
         Map<String, Double> aggregatedDataMap, boolean cocEnabled )
     {
         for ( String key : aggregatedDataMap.keySet() )
