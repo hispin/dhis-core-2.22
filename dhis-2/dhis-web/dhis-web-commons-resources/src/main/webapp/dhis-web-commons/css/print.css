@@ -14,3 +14,13 @@ div#mainPage
   margin-left: 20px;
   margin-top: 10px;
 }
+
+.not-for-screen {
+  display: none;
+}
+
+@media print {
+  .not-for-screen {
+    display: block;
+  }
+}
