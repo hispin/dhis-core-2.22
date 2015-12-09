@@ -250,7 +250,7 @@ public class DataElementCategoryOptionCombo
 
     public boolean isDefault()
     {
-        return categoryCombo != null && categoryCombo.getName().equals( DEFAULT_NAME );
+        return categoryCombo != null && DEFAULT_NAME.equals( categoryCombo.getName() );
     }
 
     /**
