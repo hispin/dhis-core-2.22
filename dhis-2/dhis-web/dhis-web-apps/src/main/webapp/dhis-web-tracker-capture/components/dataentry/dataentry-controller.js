@@ -99,7 +99,8 @@ trackerCapture.controller('DataEntryController',
 
     $scope.print = function(divName){
         $scope.showProgramReportDetailsDiv = false;
-        var printContents = document.getElementById(divName).innerHTML;
+        var elements =  document.getElementsByClassName(divName);
+        var printContents =  elements[1].innerHTML + elements[0].innerHTML;
         var popupWin = window.open('', '_blank', 'fullscreen=1');
         popupWin.document.open();
         popupWin.document.write('<html>\n\
