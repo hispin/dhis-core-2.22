@@ -1,7 +1,15 @@
 @media print {
-
   a[href]:after {
     content: none;
   }
+}
 
+.not-for-screen {
+  display: none;
+}
+
+@media print {
+  .not-for-screen {
+    display: block;
+  }
 }
