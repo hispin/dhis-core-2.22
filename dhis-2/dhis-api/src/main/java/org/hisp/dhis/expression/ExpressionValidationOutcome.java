@@ -35,9 +35,7 @@ public enum ExpressionValidationOutcome
 {
     VALID( "expression_is_empty" ), 
     EXPRESSION_IS_EMPTY( "data_element_does_not_exist"),
-    DIMENSIONA_ITEM_OBJECT_DOES_NOT_EXIST( "dimensional_item_object_does_not_exist" ),
-    DATAELEMENT_DOES_NOT_EXIST( "data_element_does_not_exist" ),
-    CATEGORYOPTIONCOMBO_DOES_NOT_EXIST( "category_option_combo_does_not_exist"),
+    DIMENSIONAL_ITEM_OBJECT_DOES_NOT_EXIST( "dimensional_item_object_does_not_exist" ),
     CONSTANT_DOES_NOT_EXIST( "constant_does_not_exist"),
     ORG_UNIT_GROUP_DOES_NOT_EXIST( "org_unit_group_does_not_exist"),
     EXPRESSION_IS_NOT_WELL_FORMED( "expression_is_not_well_formed");

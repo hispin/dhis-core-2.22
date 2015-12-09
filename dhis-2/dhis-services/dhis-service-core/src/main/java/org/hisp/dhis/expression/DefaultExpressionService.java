@@ -51,6 +51,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.common.ListMap;
@@ -125,6 +126,13 @@ public class DefaultExpressionService
     public void setOrganisationUnitGroupService( OrganisationUnitGroupService organisationUnitGroupService )
     {
         this.organisationUnitGroupService = organisationUnitGroupService;
+    }
+    
+    private DimensionService dimensionService;
+
+    public void setDimensionService( DimensionService dimensionService )
+    {
+        this.dimensionService = dimensionService;
     }
 
     // -------------------------------------------------------------------------
@@ -491,23 +499,17 @@ public class DefaultExpressionService
         // ---------------------------------------------------------------------
         
         StringBuffer sb = new StringBuffer();
-        Matcher matcher = OPERAND_PATTERN.matcher( expression );
+        Matcher matcher = VARIABLE_PATTERN.matcher( expression );
 
         while ( matcher.find() )
         {
-            String de = matcher.group( 1 );
-            String coc = matcher.group( 2 );
+            String dimensionItem = matcher.group( 2 );
             
-            if ( dataElementService.getDataElement( de ) == null )
+            if ( dimensionService.getDataDimensionalItemObject( dimensionItem ) == null )
             {
-                return ExpressionValidationOutcome.DATAELEMENT_DOES_NOT_EXIST;
+                return ExpressionValidationOutcome.DIMENSIONAL_ITEM_OBJECT_DOES_NOT_EXIST;
             }
-
-            if ( !operandIsTotal( matcher ) && categoryService.getDataElementCategoryOptionCombo( coc ) == null )
-            {
-                return ExpressionValidationOutcome.CATEGORYOPTIONCOMBO_DOES_NOT_EXIST;
-            }
-                    
+                                
             matcher.appendReplacement( sb, "1.1" );
         }
         
@@ -587,27 +589,20 @@ public class DefaultExpressionService
         // ---------------------------------------------------------------------
         
         StringBuffer sb = new StringBuffer();
-        Matcher matcher = OPERAND_PATTERN.matcher( expression );
+        Matcher matcher = VARIABLE_PATTERN.matcher( expression );
         
         while ( matcher.find() )
         {
-            String de = matcher.group( 1 );
-            String coc = matcher.group( 2 );
+            String dimensionItem = matcher.group( 2 );
             
-            DataElement dataElement = dataElementService.getDataElement( de );
-            DataElementCategoryOptionCombo categoryOptionCombo = categoryService.getDataElementCategoryOptionCombo( coc );
+            DimensionalItemObject dimensionItemObject = dimensionService.getDataDimensionalItemObject( dimensionItem );
             
-            if ( dataElement == null )
+            if ( dimensionItemObject == null )
             {
-                throw new InvalidIdentifierReferenceException( "Identifier does not reference a data element: " + de );
-            }
-
-            if ( !operandIsTotal( matcher ) && categoryOptionCombo == null )
-            {
-                throw new InvalidIdentifierReferenceException( "Identifier does not reference a category option combo: " + coc );
+                throw new InvalidIdentifierReferenceException( "Identifier does not reference a dimensional item object: " + dimensionItem );
             }
             
-            matcher.appendReplacement( sb, Matcher.quoteReplacement( DataElementOperand.getPrettyName( dataElement, categoryOptionCombo ) ) );
+            matcher.appendReplacement( sb, Matcher.quoteReplacement( dimensionItemObject.getDisplayName() ) );
         }
         
         expression = TextUtils.appendTail( matcher, sb );
