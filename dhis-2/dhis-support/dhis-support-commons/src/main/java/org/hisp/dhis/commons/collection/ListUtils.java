@@ -81,7 +81,7 @@ public class ListUtils
      * 
      * @param <T> type.
      * @param list the list to operate on.
-     * @param indexes the list to remove elements from.
+     * @param indexes the indexes to remove elements in the list from.
      */
     public static <T> void removeAll( List<T> list, Integer... indexes )
     {

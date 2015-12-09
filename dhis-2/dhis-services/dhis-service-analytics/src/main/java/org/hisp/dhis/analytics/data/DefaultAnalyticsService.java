@@ -262,7 +262,7 @@ public class DefaultAnalyticsService
 
             List<List<DimensionItem>> dimensionItemPermutations = dataSourceParams.getDimensionItemPermutations();
 
-            Map<String, Map<DataElementOperand, Double>> permutationOperandValueMap = getPermutationOperandValueMap( dataSourceParams );
+            Map<String, Map<DimensionalItemObject, Double>> permutationOperandValueMap = getPermutationOperandValueMap( dataSourceParams );
 
             for ( Indicator indicator : indicators )
             {
@@ -867,12 +867,12 @@ public class DefaultAnalyticsService
      * 
      * @param params the data query parameters.
      */
-    private Map<String, Map<DataElementOperand, Double>> getPermutationOperandValueMap( DataQueryParams params )
+    private Map<String, Map<DimensionalItemObject, Double>> getPermutationOperandValueMap( DataQueryParams params )
     {
         Map<String, Double> aggregatedDataTotalsMap = getAggregatedDataValueMapTotals( params );
         Map<String, Double> aggregatedDataOptionCombosMap = getAggregatedDataValueMapOptionCombos( params );
         
-        MapMap<String, DataElementOperand, Double> permOperandValueMap = new MapMap<>();
+        MapMap<String, DimensionalItemObject, Double> permOperandValueMap = new MapMap<>();
 
         DataQueryParams.putPermutationOperandValueMap( permOperandValueMap, aggregatedDataTotalsMap, false );
         DataQueryParams.putPermutationOperandValueMap( permOperandValueMap, aggregatedDataOptionCombosMap, true );
