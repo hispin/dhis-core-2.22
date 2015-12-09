@@ -190,7 +190,7 @@
 
                 <!-- data entry/event buttons begins -->                
                 
-                <div class="form-group" ng-if="displayCustomForm !== 'TABLE'">
+                <div class="form-group hideInPrint" ng-if="displayCustomForm !== 'TABLE'">
                     <div class='row'><hr></div>
                     <a href ng-click="completeIncompleteEvent()" 
                        class="btn btn-warning" 
@@ -223,14 +223,14 @@
                 <div class='row'><hr></div>
                 <div class="add-default-padding">
                     <textarea class="form-control" rows="3" ng-model="note.value" placeholder="{{'add_new_note_here'| translate}}"></textarea> 
-                    <div class="vertical-spacing">
+                    <div class="vertical-spacing hideInPrint">
                         <button type="button" 
                                 class="btn btn-primary"
                                 ng-click="addNote()">
                             {{'add'| translate}}
                         </button>        
                         <button type="button" 
-                                class="btn btn-default small-horizonal-spacing" 
+                                class="btn btn-default small-horizonal-spacing hideInPrint"
                                 ng-click="clearNote()">
                             {{'clear'| translate}}
                         </button>
