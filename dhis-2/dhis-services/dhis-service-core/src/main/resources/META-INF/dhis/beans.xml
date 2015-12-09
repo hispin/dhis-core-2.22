@@ -740,6 +740,7 @@
     <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
     <property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
     <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
+    <property name="dimensionService" ref="org.hisp.dhis.dimension.DimensionService" />
   </bean>
 
   <bean id="org.hisp.dhis.validation.ValidationRuleService" class="org.hisp.dhis.validation.DefaultValidationRuleService">

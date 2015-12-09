@@ -384,11 +384,11 @@ public class ExpressionServiceTest
 
         expressionA = "#{nonExisting" + SEPARATOR + categoryOptionCombo.getUid() + "} + 12";
 
-        assertEquals( ExpressionValidationOutcome.DATAELEMENT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
+        assertEquals( ExpressionValidationOutcome.DIMENSIONAL_ITEM_OBJECT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
 
         expressionA = "#{" + dataElementA.getUid() + SEPARATOR + 999 + "} + 12";
 
-        assertEquals( ExpressionValidationOutcome.CATEGORYOPTIONCOMBO_DOES_NOT_EXIST, expressionService
+        assertEquals( ExpressionValidationOutcome.DIMENSIONAL_ITEM_OBJECT_DOES_NOT_EXIST, expressionService
             .expressionIsValid( expressionA ) );
 
         expressionA = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "} + ( 12";

@@ -198,7 +198,7 @@ public class DataElementOperand
             name = dataElement.getName();
         }
 
-        if ( categoryOptionCombo != null )
+        if ( categoryOptionCombo != null && !categoryOptionCombo.isDefault() )
         {
             name += SPACE + categoryOptionCombo.getName();
         }
