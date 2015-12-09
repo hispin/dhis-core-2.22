@@ -68,6 +68,7 @@ import org.hisp.dhis.mapping.Map;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.minmax.MinMaxDataElement;
 import org.hisp.dhis.security.oauth2.OAuth2Client;
+import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -713,6 +714,15 @@ public abstract class DeletionHandler
     }
 
     public void deleteOptionSet( OptionSet optionSet )
+    {
+    }
+
+    public String allowDeleteOption( Option option )
+    {
+        return null;
+    }
+
+    public void deleteOption( Option optionSet )
     {
     }
 
