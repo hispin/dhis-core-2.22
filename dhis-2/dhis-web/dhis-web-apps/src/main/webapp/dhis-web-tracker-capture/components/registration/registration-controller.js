@@ -145,6 +145,8 @@ trackerCapture.controller('RegistrationController',
                     bodyText: 'registration_complete'
                 };
             DialogService.showDialog({}, dialogOptions);
+            $scope.selectedTei = {};
+            $scope.tei = {};
         }
     };
     
