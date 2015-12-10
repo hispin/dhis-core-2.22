@@ -7,6 +7,7 @@
             | <a href ng-click="loadEnrollmentDetails(currentEnrollment)" title="{{'current'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [showEnrollmentDiv]">{{'current'| translate}}</span></a>
         </span>
         <span class="nav-pills" ng-show="selectedProgram && !currentEnrollment && !selectedTei.inactive">
+        	| <a href ng-click="showNewEnrollment()" title="{{'new'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [showEnrollmentDiv]">{{'new'| translate}}</span></a>
         </span>
         <span class="nav-pills" ng-show="hasEnrollmentHistory">
             | <a href ng-click="showEnrollmentHistory()" title="{{'history'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [showEnrollmentHistoryDiv]">{{'history'| translate}}</span></a>
