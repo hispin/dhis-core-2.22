@@ -252,7 +252,7 @@ public class DefaultExpressionService
     
     private Set<DataElement> getDataElementsInExpressionInternal( Pattern pattern, String expression )
     {
-        Set<DataElement> dataElements = new HashSet<>();;
+        Set<DataElement> dataElements = new HashSet<>();
 
         if ( expression != null )
         {
@@ -369,18 +369,8 @@ public class DefaultExpressionService
         
         for ( Indicator indicator : indicators )
         {
-            Set<DataElement> numerator = getDataElementsInExpression( indicator.getNumerator() );
-            Set<DataElement> denominator = getDataElementsInExpression( indicator.getDenominator() );
-            
-            if ( numerator != null )
-            {
-                dataElements.addAll( numerator );
-            }
-            
-            if ( denominator != null )
-            {
-                dataElements.addAll( denominator );
-            }
+            dataElements.addAll( getDataElementsInExpression( indicator.getNumerator() ) );
+            dataElements.addAll( getDataElementsInExpression( indicator.getDenominator() ) );
         }
         
         return dataElements;
@@ -394,18 +384,8 @@ public class DefaultExpressionService
         
         for ( Indicator indicator : indicators )
         {
-            Set<DataElement> numerator = getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, indicator.getNumerator() );
-            Set<DataElement> denominator = getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, indicator.getDenominator() );
-            
-            if ( numerator != null )
-            {
-                dataElements.addAll( numerator );
-            }
-            
-            if ( denominator != null )
-            {
-                dataElements.addAll( denominator );
-            }
+            dataElements.addAll( getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, indicator.getNumerator() ) );
+            dataElements.addAll( getDataElementsInExpressionInternal( DATA_ELEMENT_TOTAL_PATTERN, indicator.getDenominator() ) );
         }
         
         return dataElements;
@@ -419,18 +399,8 @@ public class DefaultExpressionService
         
         for ( Indicator indicator : indicators )
         {
-            Set<DataElement> numerator = getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, indicator.getNumerator() );
-            Set<DataElement> denominator = getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, indicator.getDenominator() );
-            
-            if ( numerator != null )
-            {
-                dataElements.addAll( numerator );
-            }
-            
-            if ( denominator != null )
-            {
-                dataElements.addAll( denominator );
-            }
+            dataElements.addAll( getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, indicator.getNumerator() ) );
+            dataElements.addAll( getDataElementsInExpressionInternal( OPTION_COMBO_OPERAND_PATTERN, indicator.getDenominator() ) );
         }
         
         return dataElements;
