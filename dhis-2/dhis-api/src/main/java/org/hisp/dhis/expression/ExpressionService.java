@@ -179,7 +179,8 @@ public interface ExpressionService
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, Set<DataElementOperand> incompleteValues );
     
     /**
-     * Returns all data elements included in the given expression string.
+     * Returns all data elements included in the given expression string. Returns
+     * an empty set if the given expression is null.
      * 
      * @param expression the expression string.
      * @return a set of data elements included in the expression string.
@@ -188,7 +189,7 @@ public interface ExpressionService
 
     /**
      * Returns all OrganisationUnitGroups in the numerator and denominator
-     * expressions in the given Indicators. Returns an empty list if the given
+     * expressions in the given Indicators. Returns an empty set if the given
      * indicators are null or empty.
      * 
      * @param indicators the set of indicators.
@@ -198,7 +199,7 @@ public interface ExpressionService
     
     /**
      * Returns all OrganisationUnitGroups in the given expression string. Returns 
-     * an empty list if the given indicators are null or empty.
+     * an set list if the given indicators are null or empty.
      * 
      * @param expression the expression string.
      * @return a Set of OrganisationUnitGroups included in the expression string.
@@ -207,7 +208,8 @@ public interface ExpressionService
     
     /**
      * Returns all CategoryOptionCombos in the given expression string. Only 
-     * operands with a category option combo will be included.
+     * operands with a category option combo will be included. Returns an empty
+     * set if the given expression is null.
      * 
      * @param expression the expression string.
      * @return a Set of CategoryOptionCombos included in the expression string.
@@ -218,7 +220,8 @@ public interface ExpressionService
      * Returns all operands included in an expression string. The operand is on
      * the form #{data-element-id.category-option combo-id}. Only operands with
      * a category option combo will be included. Requires that the expression 
-     * has been exploded in order to handle data element totals.
+     * has been exploded in order to handle data element totals. Returns an
+     * empty set if the given expression is null.
      * 
      * @param expression The expression string.
      * @return A Set of Operands.
