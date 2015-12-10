@@ -367,6 +367,47 @@ public class DefaultExpressionService
     }
 
     @Override
+    public Set<DimensionalItemObject> getDimensionalItemObjectsInExpression( String expression )
+    {
+        Set<DimensionalItemObject> dimensionItems = Sets.newHashSet();
+        
+        if ( expression == null || expression.isEmpty() )
+        {
+            return dimensionItems;
+        }
+
+        Matcher matcher = VARIABLE_PATTERN.matcher( expression );
+        
+        while ( matcher.find() )
+        {
+            String dimensionItem = matcher.group( 2 );
+            
+            DimensionalItemObject dimensionItemObject = dimensionService.getDataDimensionalItemObject( dimensionItem );
+            
+            if ( dimensionItemObject != null )
+            {
+                dimensionItems.add( dimensionItemObject );
+            }
+        }
+        
+        return dimensionItems;
+    }
+
+    @Override
+    public Set<DimensionalItemObject> getDimensionalItemObjectsInIndicators( Collection<Indicator> indicators )
+    {
+        Set<DimensionalItemObject> items = Sets.newHashSet();
+        
+        for ( Indicator indicator : indicators )
+        {
+            items.addAll( getDimensionalItemObjectsInExpression( indicator.getNumerator() ) );
+            items.addAll( getDimensionalItemObjectsInExpression( indicator.getDenominator() ) );
+        }
+        
+        return items;
+    }
+    
+    @Override
     public Set<OrganisationUnitGroup> getOrganisationUnitGroupsInExpression( String expression )
     {
         Set<OrganisationUnitGroup> groupsInExpression = new HashSet<>();

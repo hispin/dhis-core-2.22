@@ -237,6 +237,23 @@ public interface ExpressionService
     Set<DataElement> getDataElementWithOptionCombosInIndicators( Collection<Indicator> indicators );
 
     /**
+     * Returns all dimensional item objects which are present in the given expression.
+     * 
+     * @param expression the expression.
+     * @return a set of dimensional item objects.
+     */
+    Set<DimensionalItemObject> getDimensionalItemObjectsInExpression( String expression );
+
+    /**
+     * Returns all dimensional item objects which are present in numerator and
+     * denominator of the given indicators.
+     * 
+     * @param indicators the collection of indicators.
+     * @return a set of dimensional item objects.
+     */
+    Set<DimensionalItemObject> getDimensionalItemObjectsInIndicators( Collection<Indicator> indicators );
+    
+    /**
      * Returns all OrganisationUnitGroups in the given expression string. Returns 
      * an set list if the given indicators are null or empty.
      * 
