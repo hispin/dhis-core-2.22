@@ -1512,7 +1512,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             invalidTeis = !invalidTeis ? [] : invalidTeis;
             if(!grid || !grid.rows){
                 return;
-            }
+            }            
             
             //grid.headers[0-5] = Instance, Created, Last updated, Org unit, Tracked entity, Inactive
             //grid.headers[6..] = Attribute, Attribute,.... 
@@ -1532,6 +1532,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
                     entity.id = row[0];
                     entity.created = DateUtils.formatFromApiToUser( row[1] );
+                    
                     entity.orgUnit = row[3];                              
                     entity.type = row[4];
                     entity.inactive = row[5] !== "" ? row[5] : false;
@@ -1578,22 +1579,26 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         generateGridColumns: function(attributes, ouMode){
             
+            if( ouMode === null ){
+                ouMode = 'SELECTED';
+            }
             var filterTypes = {}, filterText = {};
             var columns = [];
        
             //also add extra columns which are not part of attributes (orgunit for example)
-            columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'TEXT', displayInListNoProgram: false});
-            columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'DATE', displayInListNoProgram: false});
-            columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'BOOLEAN', displayInListNoProgram: false});
+            columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'TEXT', displayInListNoProgram: false, attribute: false});
+            columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'DATE', displayInListNoProgram: false, attribute: false});
+            columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'BOOLEAN', displayInListNoProgram: false, attribute: false});
             columns = columns.concat(attributes ? angular.copy(attributes) : []);
             
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
-                column.show = false;                
+                column.attribute = angular.isUndefined(column.attribute) ? true : false;
+                column.show = false;                    
                 if( (column.id === 'orgUnitName' && ouMode !== 'SELECTED') ||
                     column.displayInListNoProgram || 
                     column.displayInList){
-                    column.show = true;    
+                    column.show = true;
                 }                
                 column.showFilter = false;                
                 filterTypes[column.id] = column.valueType;
