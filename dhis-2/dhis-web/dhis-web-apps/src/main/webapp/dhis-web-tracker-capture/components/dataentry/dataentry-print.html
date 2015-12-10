@@ -1,10 +1,10 @@
-<div class="not-for-screen">
+<div id="print-div" class="not-for-screen">
   <table class="table table-bordered table-compact">
-    <tr ng-repeat="attribute in selectedTei.attributes" ng-show="attribute.show">
-      <td class="bold">
+    <tr class="col-md-12" ng-repeat="attribute in selectedTei.attributes" ng-show="attribute.show">
+      <td class="col-md-6 bold">
         {{attribute.displayName}}
       </td>
-      <td>
+      <td class="col-md-6">
      <span ng-switch="attribute.type">
         <span ng-switch-when="bool">
           <span ng-if="attribute.value === 'true'">{{'yes' | translate}}</span>
@@ -35,7 +35,7 @@
         {{selectedProgram.enrollmentDateLabel}}
       </td>
       <td class="col-md-6">
-        <input type="text" value={{selectedEnrollment.enrollmentDate}} ng-disabled="true"/>
+        {{selectedEnrollment.enrollmentDate}}
       </td>
     </tr>
     <tr class="col-md-12" ng-if="selectedProgram.displayIncidentDate">
@@ -43,7 +43,7 @@
         {{selectedProgram.incidentDateLabel}}
       </td>
       <td class="col-md-6">
-        <input type="text" value={{selectedEnrollment.incidentDate}} ng-disabled="true"/>
+        {{selectedEnrollment.incidentDate}}
       </td>
     </tr>
   </table>
