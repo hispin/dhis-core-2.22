@@ -1,0 +1,61 @@
+<div class="not-for-screen">
+  <table class="table table-bordered table-compact">
+    <tr ng-repeat="attribute in selectedTei.attributes" ng-show="attribute.show">
+      <td class="bold">
+        {{attribute.displayName}}
+      </td>
+      <td>
+     <span ng-switch="attribute.type">
+        <span ng-switch-when="bool">
+          <span ng-if="attribute.value === 'true'">{{'yes' | translate}}</span>
+          <span ng-if="attribute.value === 'false'">{{ 'no' | translate}}</span>
+        </span>
+        <span ng-switch-when="trueOnly">
+            <span ng-if="attribute.value">
+                <i class="fa fa-check"></i>
+            </span>
+        </span>
+        <span ng-switch-default>{{attribute.value}}</span>
+        </span>
+      </td>
+    </tr>
+  </table>
+
+  <table class="table table-bordered table-compact">
+    <tr class="col-md-12">
+      <td class="col-md-6 bold">
+        {{'enrolling_orgunit' | translate}}
+      </td>
+      <td class="col-md-6">
+        {{selectedEnrollment.orgUnitName}}
+      </td>
+    </tr>
+    <tr class="col-md-12">
+      <td class="col-md-6 bold">
+        {{selectedProgram.enrollmentDateLabel}}
+      </td>
+      <td class="col-md-6">
+        <input type="text" value={{selectedEnrollment.enrollmentDate}} ng-disabled="true"/>
+      </td>
+    </tr>
+    <tr class="col-md-12" ng-if="selectedProgram.displayIncidentDate">
+      <td class="col-md-6 bold">
+        {{selectedProgram.incidentDateLabel}}
+      </td>
+      <td class="col-md-6">
+        <input type="text" value={{selectedEnrollment.incidentDate}} ng-disabled="true"/>
+      </td>
+    </tr>
+  </table>
+
+  <table class="table table-bordered table-compact">
+    <tr ng-repeat="dataValue in currentEvent.dataValues">
+      <td class="bold">
+        {{prStDes[dataValue.dataElement].dataElement.formname?prStDes[dataValue.dataElement].dataElement.formname:prStDes[dataValue.dataElement].dataElement.name}}
+      </td>
+      <td>
+        {{dataValue.value}}
+      </td>
+    </tr>
+  </table>
+</div>
