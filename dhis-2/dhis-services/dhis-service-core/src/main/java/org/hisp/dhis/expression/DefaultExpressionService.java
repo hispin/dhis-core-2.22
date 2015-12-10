@@ -252,12 +252,10 @@ public class DefaultExpressionService
     
     private Set<DataElement> getDataElementsInExpressionInternal( Pattern pattern, String expression )
     {
-        Set<DataElement> dataElements = null;
+        Set<DataElement> dataElements = new HashSet<>();;
 
         if ( expression != null )
         {
-            dataElements = new HashSet<>();
-
             final Matcher matcher = pattern.matcher( expression );
 
             while ( matcher.find() )
@@ -318,12 +316,10 @@ public class DefaultExpressionService
     @Transactional
     public Set<DataElementCategoryOptionCombo> getOptionCombosInExpression( String expression )
     {
-        Set<DataElementCategoryOptionCombo> optionCombosInExpression = null;
+        Set<DataElementCategoryOptionCombo> optionCombosInExpression = new HashSet<>();
 
         if ( expression != null )
         {
-            optionCombosInExpression = new HashSet<>();
-
             final Matcher matcher = OPTION_COMBO_OPERAND_PATTERN.matcher( expression );
 
             while ( matcher.find() )
@@ -345,12 +341,10 @@ public class DefaultExpressionService
     @Transactional
     public Set<DataElementOperand> getOperandsInExpression( String expression )
     {
-        Set<DataElementOperand> operandsInExpression = null;
+        Set<DataElementOperand> operandsInExpression = new HashSet<>();
 
         if ( expression != null )
         {
-            operandsInExpression = new HashSet<>();
-
             final Matcher matcher = OPTION_COMBO_OPERAND_PATTERN.matcher( expression );
 
             while ( matcher.find() )
