@@ -43,8 +43,8 @@ public interface AnalyticsManager
     /**
      * Retrieves aggregated data values for the given query. The data is returned
      * as a mapping where the key is concatenated from the dimension options for
-     * all dimensions, and the value is the data value. This method is invoked
-     * asynchronously. The value class can be Double or String.
+     * all dimensions separated by "-", and the value is the data value. This 
+     * method is invoked asynchronously. The value class can be Double or String.
      * 
      * @param params the query to retrieve aggregated data for.
      * @param maxLimit the max number of records to retrieve.
