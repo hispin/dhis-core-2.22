@@ -687,7 +687,7 @@ public class DefaultAnalyticsService
     {
         Set<OrganisationUnitGroup> orgUnitGroups = expressionService.getOrganisationUnitGroupsInIndicators( indicators );
 
-        if ( orgUnitGroups == null || orgUnitGroups.isEmpty() )
+        if ( orgUnitGroups.isEmpty() )
         {
             return null;
         }
