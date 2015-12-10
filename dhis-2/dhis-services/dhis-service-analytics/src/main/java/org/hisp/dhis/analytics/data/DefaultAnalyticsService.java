@@ -33,7 +33,6 @@ import static org.hisp.dhis.analytics.AnalyticsTableManager.COMPLETENESS_TABLE_N
 import static org.hisp.dhis.analytics.AnalyticsTableManager.COMPLETENESS_TARGET_TABLE_NAME;
 import static org.hisp.dhis.analytics.AnalyticsTableManager.ORGUNIT_TARGET_TABLE_NAME;
 import static org.hisp.dhis.analytics.DataQueryParams.COMPLETENESS_DIMENSION_TYPES;
-import static org.hisp.dhis.analytics.DataQueryParams.CO_INDEX;
 import static org.hisp.dhis.analytics.DataQueryParams.DISPLAY_NAME_DATA_X;
 import static org.hisp.dhis.analytics.DataQueryParams.DX_INDEX;
 import static org.hisp.dhis.common.DimensionalObject.CATEGORYOPTIONCOMBO_DIM_ID;
@@ -262,7 +261,7 @@ public class DefaultAnalyticsService
 
             List<List<DimensionItem>> dimensionItemPermutations = dataSourceParams.getDimensionItemPermutations();
 
-            Map<String, Map<DimensionalItemObject, Double>> permutationOperandValueMap = getPermutationOperandValueMap( dataSourceParams );
+            Map<String, Map<DimensionalItemObject, Double>> permutationDimensionalItemValueMap = getPermutationDimensionalItemValueMap( dataSourceParams );
 
             for ( Indicator indicator : indicators )
             {
@@ -270,7 +269,7 @@ public class DefaultAnalyticsService
                 {
                     String permKey = DimensionItem.asItemKey( dimensionItems );
 
-                    Map<? extends DimensionalItemObject, Double> valueMap = permutationOperandValueMap.get( permKey );
+                    Map<DimensionalItemObject, Double> valueMap = permutationDimensionalItemValueMap.get( permKey );
 
                     if ( valueMap == null )
                     {
@@ -356,20 +355,13 @@ public class DefaultAnalyticsService
             dataSourceParams.addDimension( new BaseDimensionalObject( CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, categoryOptionCombos ) );
 
             Map<String, Object> aggregatedDataMap = getAggregatedDataValueMapObjectTyped( dataSourceParams );
+            
+            aggregatedDataMap = AnalyticsUtils.convertDxToOperand( aggregatedDataMap );
 
             for ( Map.Entry<String, Object> entry : aggregatedDataMap.entrySet() )
             {
-                // -------------------------------------------------------------
-                // Merge data element and option combo into operand column
-                // -------------------------------------------------------------
-                                
-                List<String> values = Lists.newArrayList( entry.getKey().split( DIMENSION_SEP ) );
-                String operand = values.get( DX_INDEX ) + DataElementOperand.SEPARATOR + values.get( CO_INDEX );
-                values.remove( CO_INDEX );
-                values.set( DX_INDEX, operand );
-                
                 grid.addRow();
-                grid.addValues( values.toArray() );
+                grid.addValues( entry.getKey().split( DIMENSION_SEP ) );
                 grid.addValue( dataSourceParams.isSkipRounding() ? entry.getValue() : getRounded( entry.getValue() ) );
             }
         }
@@ -867,15 +859,15 @@ public class DefaultAnalyticsService
      * 
      * @param params the data query parameters.
      */
-    private Map<String, Map<DimensionalItemObject, Double>> getPermutationOperandValueMap( DataQueryParams params )
+    private Map<String, Map<DimensionalItemObject, Double>> getPermutationDimensionalItemValueMap( DataQueryParams params )
     {
         Map<String, Double> aggregatedDataTotalsMap = getAggregatedDataValueMapTotals( params );
         Map<String, Double> aggregatedDataOptionCombosMap = getAggregatedDataValueMapOptionCombos( params );
-        
+                
         MapMap<String, DimensionalItemObject, Double> permOperandValueMap = new MapMap<>();
 
-        DataQueryParams.putPermutationOperandValueMap( permOperandValueMap, aggregatedDataTotalsMap, false );
-        DataQueryParams.putPermutationOperandValueMap( permOperandValueMap, aggregatedDataOptionCombosMap, true );
+        DataQueryParams.putPermutationDimensionalItemValueMap( permOperandValueMap, aggregatedDataTotalsMap, false );
+        DataQueryParams.putPermutationDimensionalItemValueMap( permOperandValueMap, aggregatedDataOptionCombosMap, true );
         
         return permOperandValueMap;
     }
@@ -926,8 +918,10 @@ public class DefaultAnalyticsService
                 DATA_X_DIM_ID, DimensionType.DATA_X, dataElements ) );
             dataSourceParams.getDimensions().add( DataQueryParams.CO_INDEX, new BaseDimensionalObject( 
                 CATEGORYOPTIONCOMBO_DIM_ID, DimensionType.CATEGORY_OPTION_COMBO, new ArrayList<>() ) );
-    
-            return getAggregatedDataValueMap( dataSourceParams );
+                
+            Map<String, Double> aggregatedDataMap = getAggregatedDataValueMap( dataSourceParams );
+            
+            return AnalyticsUtils.convertDxToOperand( aggregatedDataMap );
         }
         
         return new HashMap<>();

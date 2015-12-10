@@ -62,5 +62,6 @@ public interface AnalyticsManager
      * @param dataPeriodAggregationPeriodMap the mapping between data periods and
      *        aggregation periods for this query.
      */
-    void replaceDataPeriodsWithAggregationPeriods( Map<String, Object> dataValueMap, DataQueryParams params, ListMap<DimensionalItemObject, DimensionalItemObject> dataPeriodAggregationPeriodMap );
+    void replaceDataPeriodsWithAggregationPeriods( Map<String, Object> dataValueMap, 
+        DataQueryParams params, ListMap<DimensionalItemObject, DimensionalItemObject> dataPeriodAggregationPeriodMap );
 }

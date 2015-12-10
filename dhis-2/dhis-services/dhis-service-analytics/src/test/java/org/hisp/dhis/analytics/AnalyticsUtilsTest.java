@@ -41,7 +41,9 @@ import org.hisp.dhis.program.ProgramIndicator;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hisp.dhis.DhisConvenienceTest.*;
 
@@ -67,5 +69,20 @@ public class AnalyticsUtilsTest
         assertEquals( Lists.newArrayList( pdeA, pdeB ), AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_DATA_ELEMENT, list ) );
         assertEquals( Lists.newArrayList( piA ), AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_INDICATOR, list ) );
         assertEquals( Lists.newArrayList(), AnalyticsUtils.getByDataDimensionType( DataDimensionItemType.PROGRAM_ATTRIBUTE, list ) );
+    }
+    
+    @Test
+    public void testConvertDxToOperand()
+    {
+        Map<String, Double> map = new HashMap<>();
+        map.put( "GauDLAiXPKT-kC1OT9Q1n1j-R9U8q7X1aJG", 10d );
+        map.put( "YkRvCLedQa4-h1dJ9W4dWor-Zrd4DAf8M99", 11d );
+        map.put( "PcfRp1HETO8-zqXKIEycBck-KBJBZopYMPV", 12d );
+        
+        Map<String, Double> convertedMap = AnalyticsUtils.convertDxToOperand( map );
+        
+        assertTrue( convertedMap.containsKey( "GauDLAiXPKT.kC1OT9Q1n1j-R9U8q7X1aJG" ) );
+        assertTrue( convertedMap.containsKey( "YkRvCLedQa4.h1dJ9W4dWor-Zrd4DAf8M99" ) );
+        assertTrue( convertedMap.containsKey( "PcfRp1HETO8.zqXKIEycBck-KBJBZopYMPV" ) );
     }
 }
