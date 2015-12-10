@@ -25,7 +25,6 @@
                     </ui-select>
                 </span>
                 <span ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
-                    <!-- ng-value is added for the input fields which are required to be present in the print form.-->
                     <span ng-switch-when="DATE">
                         <input type="text" 
                                placeholder="{{dhis2CalendarFormat.keyDateFormat}}" 
@@ -34,8 +33,7 @@
                                d2-date
                                d2-date-validator 
                                max-date="attribute.allowFutureDate ? '' : 0"
-                               ng-model="selectedTei[attribute.id]"
-                               ng-value="selectedTei[attribute.id]"
+                               ng-model="selectedTei[attribute.id]"                               
                                ng-model-options="{ updateOn: 'default blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
@@ -104,8 +102,7 @@
                         <input type="number" 
                                name="foo" 
                                class="form-control" 
-                               ng-model="selectedTei[attribute.id]" 
-                               ng-value="selectedTei[attribute.id]"
+                               ng-model="selectedTei[attribute.id]"
                                ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
@@ -122,7 +119,6 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]"
-                               ng-value="selectedTei[attribute.id]"
                                ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
@@ -174,7 +170,6 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-value="selectedTei[attribute.id]"
                                ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator
                                attribute-data={{attribute}}
