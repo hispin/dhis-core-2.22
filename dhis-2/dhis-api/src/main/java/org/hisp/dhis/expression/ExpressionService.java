@@ -179,14 +179,6 @@ public interface ExpressionService
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, Set<DataElementOperand> incompleteValues );
     
     /**
-     * Returns the uids of the data element totals in the given expression.
-     * 
-     * @param expression the expression.
-     * @return a set of data element uids.
-     */
-    Set<String> getDataElementTotalUids( String expression );
-    
-    /**
      * Returns all data elements included in the given expression string.
      * 
      * @param expression the expression string.

@@ -38,7 +38,7 @@ public interface AnalyticsSecurityManager
     /**
      * Decides whether the current user has privileges to execute the given query.
      * 
-     * @param params the data query params.
+     * @param params the data query parameters.
      * @throws IllegalQueryException if the current user does not have privileges
      *         to execute the given query.
      */
@@ -48,19 +48,23 @@ public interface AnalyticsSecurityManager
      * Adds relevant data approval levels to the given query if system is configured
      * to hide unapproved data from analytics and if there are relevant approval
      * levels for current user. Populates the approvalLevels property of the given
-     * query and sets the level poperty of each related organisation unit.
+     * query and sets the level property of each related organisation unit.
      * 
-     * @param params the data query params.
+     * @param params the data query parameters.
+     * @throws IllegalQueryException is the specified approval level does not exist.
      */
     void applyDataApprovalConstraints( DataQueryParams params );
     
     /**
-     * Applies dimension constraints to the given params. Dimension constraints
+     * Applies dimension constraints to the given parameters. Dimension constraints
      * with all accessible dimension items will be added as filters to this query.
      * If current user has no dimension constraints, no action is taken. If the 
      * constraint dimensions are already specified with accessible items in the 
      * query, no action is taken. If the current user does not have accessible 
      * items in any dimension constraint, an IllegalQueryException is thrown.
+     * 
+     * @param pamrams the data query parameters.
+     * @throws IllegalQueryException is the specified approval level does not exist.
      */
     void applyDimensionConstraints( DataQueryParams params );
 }

@@ -55,6 +55,7 @@ import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.common.ListMap;
+import org.hisp.dhis.common.RegexUtils;
 import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
@@ -316,25 +317,7 @@ public class DefaultExpressionService
         
         return groupsInExpression;
     }
-
-    @Override
-    public Set<String> getDataElementTotalUids( String expression )
-    {
-        Set<String> uids = new HashSet<>();
-        
-        if ( expression != null )
-        {
-            final Matcher matcher = DATA_ELEMENT_TOTAL_PATTERN.matcher( expression );
-            
-            while ( matcher.find() )
-            {
-                uids.add( matcher.group( 1 ) );
-            }
-        }
-        
-        return uids;
-    }
-    
+   
     @Override
     @Transactional
     public Set<DataElementCategoryOptionCombo> getOptionCombosInExpression( String expression )
@@ -694,8 +677,8 @@ public class DefaultExpressionService
             
             for ( ValidationRule rule : validationRules )
             {
-                dataElementTotals.addAll( getDataElementTotalUids( rule.getLeftSide().getExpression() ) );
-                dataElementTotals.addAll( getDataElementTotalUids( rule.getRightSide().getExpression() ) );
+                dataElementTotals.addAll( RegexUtils.getMatches( DATA_ELEMENT_TOTAL_PATTERN, rule.getLeftSide().getExpression(), 1 ) );
+                dataElementTotals.addAll( RegexUtils.getMatches( DATA_ELEMENT_TOTAL_PATTERN, rule.getRightSide().getExpression(), 1 ) );
             }
 
             if ( !dataElementTotals.isEmpty() )
@@ -713,7 +696,7 @@ public class DefaultExpressionService
             }            
         }
     }
-
+    
     private String explodeExpression( String expression, ListMap<String, String> dataElementOptionComboMap )
     {
         if ( expression == null || expression.isEmpty() )
@@ -991,8 +974,7 @@ public class DefaultExpressionService
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
-    
-    
+        
     private boolean operandIsTotal( Matcher matcher )
     {
         return matcher != null && StringUtils.trimToEmpty( matcher.group( 2 ) ).isEmpty();
