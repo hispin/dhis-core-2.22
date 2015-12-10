@@ -273,46 +273,6 @@ public class DefaultExpressionService
     }
     
     @Override
-    public Set<OrganisationUnitGroup> getOrganisationUnitGroupsInIndicators( Collection<Indicator> indicators )
-    {
-        Set<OrganisationUnitGroup> groups = new HashSet<>();
-        
-        if ( indicators != null )
-        {   
-            for ( Indicator indicator : indicators )
-            {
-                groups.addAll( getOrganisationUnitGroupsInExpression( indicator.getNumerator() ) );
-                groups.addAll( getOrganisationUnitGroupsInExpression( indicator.getDenominator() ) );
-            }
-        }
-        
-        return groups;
-    }
-    
-    @Override
-    public Set<OrganisationUnitGroup> getOrganisationUnitGroupsInExpression( String expression )
-    {
-        Set<OrganisationUnitGroup> groupsInExpression = new HashSet<>();
-        
-        if ( expression != null )
-        {            
-            final Matcher matcher = OU_GROUP_PATTERN.matcher( expression );
-            
-            while ( matcher.find() )
-            {
-                final OrganisationUnitGroup group = organisationUnitGroupService.getOrganisationUnitGroup( matcher.group( 1 ) );
-                
-                if ( group != null )
-                {
-                    groupsInExpression.add( group );
-                }
-            }
-        }
-        
-        return groupsInExpression;
-    }
-   
-    @Override
     @Transactional
     public Set<DataElementCategoryOptionCombo> getOptionCombosInExpression( String expression )
     {
@@ -406,6 +366,46 @@ public class DefaultExpressionService
         return dataElements;
     }
 
+    @Override
+    public Set<OrganisationUnitGroup> getOrganisationUnitGroupsInExpression( String expression )
+    {
+        Set<OrganisationUnitGroup> groupsInExpression = new HashSet<>();
+        
+        if ( expression != null )
+        {            
+            final Matcher matcher = OU_GROUP_PATTERN.matcher( expression );
+            
+            while ( matcher.find() )
+            {
+                final OrganisationUnitGroup group = organisationUnitGroupService.getOrganisationUnitGroup( matcher.group( 1 ) );
+                
+                if ( group != null )
+                {
+                    groupsInExpression.add( group );
+                }
+            }
+        }
+        
+        return groupsInExpression;
+    }
+    
+    @Override
+    public Set<OrganisationUnitGroup> getOrganisationUnitGroupsInIndicators( Collection<Indicator> indicators )
+    {
+        Set<OrganisationUnitGroup> groups = new HashSet<>();
+        
+        if ( indicators != null )
+        {   
+            for ( Indicator indicator : indicators )
+            {
+                groups.addAll( getOrganisationUnitGroupsInExpression( indicator.getNumerator() ) );
+                groups.addAll( getOrganisationUnitGroupsInExpression( indicator.getDenominator() ) );
+            }
+        }
+        
+        return groups;
+    }
+    
     @Override
     @Transactional
     public void filterInvalidIndicators( List<Indicator> indicators )
