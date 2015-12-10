@@ -62,6 +62,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         $scope.teiFetched = false;        
         $scope.queryUrl = null;
         $scope.programUrl = null;
+        $scope.enrollmentStatus = 'ALL'; 
         $scope.attributeUrl = {url: null, hasValue: false};
         $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};
     }
@@ -75,7 +76,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             
             SessionStorageService.set('SELECTED_OU', $scope.selectedOrgUnit);
             
-            $scope.trackedEntityList = null;
+            $scope.trackedEntityList = null;            
+            $scope.searchText = null;
             
             $scope.optionSets = CurrentSelection.getOptionSets();
             
@@ -170,6 +172,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         resetParams();
         $scope.selectedProgram = program;
         $scope.trackedEntityList = null;
+        $scope.searchText = null;
         $scope.processAttributes();              
     };
     
@@ -211,7 +214,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };
    
     //$scope.searchParam = {bools: []};
-    $scope.search = function(mode){  
+    $scope.search = function(mode){
         resetParams();
         var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
         $scope.gridColumns = grid.columns;

@@ -141,7 +141,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <span ng-if='!showRegistrationDiv'>
-                    <span class="btn-group" ng-if="selectedProgram && trackedEntityList.rows.length > 0 ">
+                    <span class="btn-group" ng-if="selectedProgram && teiFetched">
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{allEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-list mouse-pointer"></i></label>
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{activeEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-circle-o mouse-pointer"></i></label>
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{completedEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
