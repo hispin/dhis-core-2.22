@@ -1173,7 +1173,6 @@ input, button, select, textarea {
     line-height:1.0; 
     padding: 20px 6px;
     border-radius: 4px;
-    background-color: red;
 }
 
 .select2-container .select2-choice {
