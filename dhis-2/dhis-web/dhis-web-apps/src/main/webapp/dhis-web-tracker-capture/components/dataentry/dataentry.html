@@ -1,32 +1,7 @@
-<div class="panel panel-info print-section" ng-controller="DataEntryController">
+<div id="print-div" class="panel panel-info" ng-controller="DataEntryController">
 
-    <table class="table-borderless table-striped not-for-screen">
-        <tr class="col-md-12">
-            <td class="col-md-6">
-                {{'enrolling_orgunit' | translate}}
-            </td>
-            <td class="col-md-6">
-                <input type="text" class="form-control" value={{selectedEnrollment.orgUnitName}} ng-disabled="true"/>
-            </td>
-        </tr>
-        <tr class="col-md-12">
-            <td class="col-md-6">
-                {{selectedProgram.enrollmentDateLabel}}
-            </td>
-            <td class="col-md-6">
-                <input type="text" value={{selectedEnrollment.enrollmentDate}} ng-disabled="true"/>
-            </td>
-        </tr>
-        <tr class="col-md-12" ng-if="selectedProgram.displayIncidentDate">
-            <td class="col-md-6">
-                {{selectedProgram.incidentDateLabel}}
-            </td>
-            <td class="col-md-6">
-                <input type="text" value={{selectedEnrollment.incidentDate}} ng-disabled="true"/>
-            </td>
-        </tr>
-    </table>
-
+    <div ng-include="'components/dataentry/dataentry-print.html'">
+    </div>
     <div class="panel-heading handle bold">
         {{dataentryWidget.title| translate}}        
         <span class="pull-right widget-link">
@@ -211,7 +186,7 @@
                     <a href ng-click="deleteEvent()" 
                        ng-disabled="currentEvent.enrollmentStatus === 'COMPLETED' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id"
                        class="btn btn-danger">{{'delete'| translate}}</a>
-                    <a href class="btn btn-primary" ng-click="print('print-section');">{{'print_form'| translate}}</a>
+                    <a href class="btn btn-primary" ng-click="print('print-div');">{{'print_form'| translate}}</a>
                 </div>
                 <!-- data entry/event buttons ends -->
 
