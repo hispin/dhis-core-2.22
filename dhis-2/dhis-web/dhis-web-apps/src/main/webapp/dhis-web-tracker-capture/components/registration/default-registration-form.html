@@ -25,6 +25,7 @@
                     </ui-select>
                 </span>
                 <span ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
+                    <!-- ng-value is added for the input fields which are required to be present in the print form.-->
                     <span ng-switch-when="DATE">
                         <input type="text" 
                                placeholder="{{dhis2CalendarFormat.keyDateFormat}}" 
@@ -34,6 +35,7 @@
                                d2-date-validator 
                                max-date="attribute.allowFutureDate ? '' : 0"
                                ng-model="selectedTei[attribute.id]"
+                               ng-value="selectedTei[attribute.id]"
                                ng-model-options="{ updateOn: 'default blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
@@ -103,7 +105,8 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
+                               ng-value="selectedTei[attribute.id]"
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
                                selected-program-id={{selectedProgram.id}}  
@@ -118,8 +121,9 @@
                         <input type="email" 
                                name="foo" 
                                class="form-control" 
-                               ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
+                               ng-model="selectedTei[attribute.id]"
+                               ng-value="selectedTei[attribute.id]"
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
                                selected-program-id={{selectedProgram.id}}  
@@ -148,7 +152,7 @@
                                name="foo" 
                                class="form-control-trimmed" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
                                d2-attribute-validator 
                                attribute-data={{attribute}}
                                selected-program-id={{selectedProgram.id}}  
@@ -170,8 +174,9 @@
                                name="foo" 
                                class="form-control" 
                                ng-model="selectedTei[attribute.id]" 
-                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }" 
-                               d2-attribute-validator 
+                               ng-value="selectedTei[attribute.id]"
+                               ng-model-options="{ updateOn: 'blur', allowInvalid: true }"
+                               d2-attribute-validator
                                attribute-data={{attribute}}
                                selected-program-id={{selectedProgram.id}}  
                                selected-tei-id={{selectedTei.trackedEntityInstance}}  
@@ -180,7 +185,7 @@
                                ng-required="attribute.mandatory || attribute.unique"/>                                    
                     </span>
                 </span>
-                <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required hideInPrint" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">
                     <div class="alert alert-warning alert-dismissible" role="alert" ng-if="warningMessages[attribute.id]">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         {{warningMessages[attribute.id]}}
