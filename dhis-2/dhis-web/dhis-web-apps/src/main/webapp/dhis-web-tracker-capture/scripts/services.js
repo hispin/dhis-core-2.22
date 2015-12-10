@@ -1094,10 +1094,10 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };    
 })
 
-.factory('OperatorFactory', function(){
+.factory('OperatorFactory', function($translate){
     
-    var defaultOperators = ['IS', 'RANGE' ];
-    var boolOperators = ['yes', 'no'];
+    var defaultOperators = [$translate.instant('IS'), $translate.instant('RANGE') ];
+    var boolOperators = [$translate.instant('yes'), $translate.instant('no')];
     return{
         defaultOperators: defaultOperators,
         boolOperators: boolOperators
