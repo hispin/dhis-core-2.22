@@ -188,7 +188,8 @@ public interface ExpressionService
 
     /**
      * Returns all OrganisationUnitGroups in the numerator and denominator
-     * expressions in the given Indicators.
+     * expressions in the given Indicators. Returns an empty list if the given
+     * indicators are null or empty.
      * 
      * @param indicators the set of indicators.
      * @return a Set of OrganisationUnitGroups.
@@ -196,7 +197,8 @@ public interface ExpressionService
     Set<OrganisationUnitGroup> getOrganisationUnitGroupsInIndicators( Collection<Indicator> indicators );
     
     /**
-     * Returns all OrganisationUnitGroups in the given expression string.
+     * Returns all OrganisationUnitGroups in the given expression string. Returns 
+     * an empty list if the given indicators are null or empty.
      * 
      * @param expression the expression string.
      * @return a Set of OrganisationUnitGroups included in the expression string.

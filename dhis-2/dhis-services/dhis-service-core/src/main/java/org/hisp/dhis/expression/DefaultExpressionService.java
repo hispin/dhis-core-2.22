@@ -277,12 +277,10 @@ public class DefaultExpressionService
     @Override
     public Set<OrganisationUnitGroup> getOrganisationUnitGroupsInIndicators( Collection<Indicator> indicators )
     {
-        Set<OrganisationUnitGroup> groups = null;
+        Set<OrganisationUnitGroup> groups = new HashSet<>();
         
         if ( indicators != null )
-        {
-            groups = new HashSet<>();
-            
+        {   
             for ( Indicator indicator : indicators )
             {
                 groups.addAll( getOrganisationUnitGroupsInExpression( indicator.getNumerator() ) );
@@ -296,12 +294,10 @@ public class DefaultExpressionService
     @Override
     public Set<OrganisationUnitGroup> getOrganisationUnitGroupsInExpression( String expression )
     {
-        Set<OrganisationUnitGroup> groupsInExpression = null;
+        Set<OrganisationUnitGroup> groupsInExpression = new HashSet<>();
         
         if ( expression != null )
-        {
-            groupsInExpression = new HashSet<>();
-            
+        {            
             final Matcher matcher = OU_GROUP_PATTERN.matcher( expression );
             
             while ( matcher.find() )

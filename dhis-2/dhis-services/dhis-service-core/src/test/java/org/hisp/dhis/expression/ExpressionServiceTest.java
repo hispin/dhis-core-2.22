@@ -567,4 +567,21 @@ public class ExpressionServiceTest
         assertTrue( expressions.contains( exprA ) );
         assertTrue( expressions.contains( exprB ) );
     }
+    
+    @Test
+    public void testGetOrganisationUnitGroupsInExpression()
+    {
+        String expression = "OUG{" + groupA.getUid() + "} + 10";
+        
+        Set<OrganisationUnitGroup> groups = expressionService.getOrganisationUnitGroupsInExpression( expression );
+        
+        assertNotNull( groups );
+        assertEquals( 1, groups.size() );
+        assertTrue( groups.contains( groupA ) );
+
+        groups = expressionService.getOrganisationUnitGroupsInExpression( null );
+        
+        assertNotNull( groups );
+        assertEquals( 0, groups.size() );        
+    }
 }
