@@ -127,7 +127,6 @@ import java.util.Set;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public abstract class DhisConvenienceTest
 {

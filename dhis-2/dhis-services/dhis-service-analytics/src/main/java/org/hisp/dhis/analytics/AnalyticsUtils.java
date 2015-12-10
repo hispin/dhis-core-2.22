@@ -33,10 +33,14 @@ import static org.hisp.dhis.system.util.DateUtils.getMediumDateString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.DataDimensionItemType;
 import org.hisp.dhis.common.DimensionalItemObject;
+import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.NameableObjectUtils;
@@ -152,5 +156,18 @@ public class AnalyticsUtils
         {
             return MathUtils.getRounded( value );
         }
-    }    
+    }
+    
+    /**
+     * Converts the data and option combo identifiers to an operand identifier,
+     * i.e. "deuid-cocuid" to "deuid.cocuid".
+     * 
+     * @param valueMap the value map to convert.
+     * @return a value map.
+     */
+    public static <T> Map<String, T> convertDxToOperand( Map<String, T> valueMap )
+    {
+        return valueMap.entrySet().stream().collect( Collectors.toMap( e -> e.getKey().replaceFirst( 
+            DimensionalObject.DIMENSION_SEP, DimensionalObjectUtils.COMPOSITE_DIM_OBJECT_PLAIN_SEP ), e -> e.getValue() ) );
+    }
 }
