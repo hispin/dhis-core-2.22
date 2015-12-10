@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.DimensionalItemObject;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.constant.ConstantService;
 import org.hisp.dhis.dataelement.DataElement;
@@ -60,10 +62,16 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.program.ProgramDataElement;
+import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * @author Lars Helge Overland
@@ -91,6 +99,9 @@ public class ExpressionServiceTest
 
     @Autowired
     private OrganisationUnitGroupService organisationUnitGroupService;
+    
+    @Autowired
+    private IdentifiableObjectManager idObjectManager;
 
     private DataElementCategoryOption categoryOptionA;
     private DataElementCategoryOption categoryOptionB;
@@ -102,19 +113,26 @@ public class ExpressionServiceTest
 
     private DataElementCategoryCombo categoryCombo;
 
-    private DataElement dataElementA;
-    private DataElement dataElementB;
-    private DataElement dataElementC;
-    private DataElement dataElementD;
-    private DataElement dataElementE;
+    private DataElement deA;
+    private DataElement deB;
+    private DataElement deC;
+    private DataElement deD;
+    private DataElement deE;
+    private DataElementOperand opA;
+    private DataElementOperand opB;
 
+    private TrackedEntityAttribute teaA;
+    private ProgramTrackedEntityAttribute pteaA;
+    private ProgramDataElement pdeA;
+    private ProgramIndicator piA;
+    
     private Period period;
 
     private OrganisationUnit unitA;
     private OrganisationUnit unitB;
     private OrganisationUnit unitC;
 
-    private DataElementCategoryOptionCombo categoryOptionCombo;
+    private DataElementCategoryOptionCombo coc;
     
     private Constant constantA;
     
@@ -128,6 +146,7 @@ public class ExpressionServiceTest
     private String expressionF;
     private String expressionG;
     private String expressionH;
+    private String expressionI;
 
     private String descriptionA;
     private String descriptionB;
@@ -171,25 +190,45 @@ public class ExpressionServiceTest
 
         categoryService.addDataElementCategoryCombo( categoryCombo );
 
-        dataElementA = createDataElement( 'A' );
-        dataElementB = createDataElement( 'B' );
-        dataElementC = createDataElement( 'C' );
-        dataElementD = createDataElement( 'D' );
-        dataElementE = createDataElement( 'E', categoryCombo );
+        deA = createDataElement( 'A' );
+        deB = createDataElement( 'B' );
+        deC = createDataElement( 'C' );
+        deD = createDataElement( 'D' );
+        deE = createDataElement( 'E', categoryCombo );
 
-        dataElementService.addDataElement( dataElementA );
-        dataElementService.addDataElement( dataElementB );
-        dataElementService.addDataElement( dataElementC );
-        dataElementService.addDataElement( dataElementD );
-        dataElementService.addDataElement( dataElementE );
+        dataElementService.addDataElement( deA );
+        dataElementService.addDataElement( deB );
+        dataElementService.addDataElement( deC );
+        dataElementService.addDataElement( deD );
+        dataElementService.addDataElement( deE );
 
-        categoryOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();
+        coc = categoryService.getDefaultDataElementCategoryOptionCombo();
 
-        categoryOptionCombo.getId();
-        optionCombos.add( categoryOptionCombo );
+        coc.getId();
+        optionCombos.add( coc );
 
+        opA = new DataElementOperand( deA, coc );
+        opB = new DataElementOperand( deB, coc );
+        
+        idObjectManager.save( opA );
+        idObjectManager.save( opB );
+        
         period = createPeriod( getDate( 2000, 1, 1 ), getDate( 2000, 2, 1 ) );
 
+        Program prA = createProgram( 'A' );
+        
+        idObjectManager.save( prA );
+        
+        teaA = createTrackedEntityAttribute( 'A' );        
+        pteaA = new ProgramTrackedEntityAttribute( prA, teaA );        
+        pdeA = new ProgramDataElement( prA, deA );
+        piA = createProgramIndicator( 'A', prA, null, null );
+
+        idObjectManager.save( teaA );
+        idObjectManager.save( pteaA );
+        idObjectManager.save( pdeA );
+        idObjectManager.save( piA );
+        
         unitA = createOrganisationUnit( 'A' );
         unitB = createOrganisationUnit( 'B' );
         unitC = createOrganisationUnit( 'C' );
@@ -209,28 +248,29 @@ public class ExpressionServiceTest
         
         organisationUnitGroupService.addOrganisationUnitGroup( groupA );
         
-        expressionA = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}+#{" + dataElementB.getUid() + SEPARATOR
-            + categoryOptionCombo.getUid() + "}";
-        expressionB = "#{" + dataElementC.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}-#{" + dataElementD.getUid() + SEPARATOR
-            + categoryOptionCombo.getUid() + "}";
-        expressionC = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}+#{" + dataElementE.getUid() + "}-10";
-        expressionD = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}+" + DAYS_SYMBOL;
-        expressionE = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}*C{" + constantA.getUid() + "}";
-        expressionF = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}";
-        expressionG = expressionF + "+#{" + dataElementB.getUid() + "}-#{" + dataElementC.getUid() + "}";
-        expressionH = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}*OUG{" + groupA.getUid() + "}";
+        expressionA = "#{" + opA.getDimensionItem() + "}+#{" + opB.getDimensionItem() + "}";
+        expressionB = "#{" + deC.getUid() + SEPARATOR + coc.getUid() + "}-#{" + deD.getUid() + SEPARATOR
+            + coc.getUid() + "}";
+        expressionC = "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "}+#{" + deE.getUid() + "}-10";
+        expressionD = "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "}+" + DAYS_SYMBOL;
+        expressionE = "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "}*C{" + constantA.getUid() + "}";
+        expressionF = "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "}";
+        expressionG = expressionF + "+#{" + deB.getUid() + "}-#{" + deC.getUid() + "}";
+        expressionH = "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "}*OUG{" + groupA.getUid() + "}";        
+        expressionI = "#{" + opA.getDimensionItem() + "}*" + "#{" + deB.getDimensionItem() + "}+" + "C{" + constantA.getUid() + "}+5-" +
+            "D{" + pdeA.getDimensionItem() + "}+" + "A{" + pteaA.getDimensionItem() + "}-10+" + "I{" + piA.getDimensionItem() + "}";            
 
         descriptionA = "Expression A";
         descriptionB = "Expression B";
 
-        dataElements.add( dataElementA );
-        dataElements.add( dataElementB );
-        dataElements.add( dataElementC );
-        dataElements.add( dataElementD );
-        dataElements.add( dataElementE );
+        dataElements.add( deA );
+        dataElements.add( deB );
+        dataElements.add( deC );
+        dataElements.add( deD );
+        dataElements.add( deE );
 
-        dataValueService.addDataValue( createDataValue( dataElementA, period, unitA, "10", categoryOptionCombo, categoryOptionCombo ) );
-        dataValueService.addDataValue( createDataValue( dataElementB, period, unitA, "5", categoryOptionCombo, categoryOptionCombo ) );
+        dataValueService.addDataValue( createDataValue( deA, period, unitA, "10", coc, coc ) );
+        dataValueService.addDataValue( createDataValue( deB, period, unitA, "5", coc, coc ) );
     }
 
     // -------------------------------------------------------------------------
@@ -246,11 +286,11 @@ public class ExpressionServiceTest
 
         Set<DataElementCategoryOptionCombo> categoryOptionCombos = categoryCombo.getOptionCombos();
 
-        assertTrue( actual.contains( "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}" ) );
+        assertTrue( actual.contains( "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "}" ) );
 
         for ( DataElementCategoryOptionCombo categoryOptionCombo : categoryOptionCombos )
         {
-            assertTrue( actual.contains( "#{" + dataElementE.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}" ) );
+            assertTrue( actual.contains( "#{" + deE.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "}" ) );
         }
     }
 
@@ -262,20 +302,53 @@ public class ExpressionServiceTest
     }
 
     @Test
+    public void testGetDimensionalItemObjectsInExpression()
+    {
+        Set<DimensionalItemObject> items = expressionService.getDimensionalItemObjectsInExpression( expressionI );
+        
+        assertEquals( 5, items.size() );
+        assertTrue( items.contains( opA ) );
+        assertTrue( items.contains( deB ) );
+        assertTrue( items.contains( pdeA ) );
+        assertTrue( items.contains( pteaA ) );
+        assertTrue( items.contains( piA ) );
+    }
+
+    @Test
+    public void testGetDimensionalItemObjectsInIndicators()
+    {
+        Indicator indicator = createIndicator( 'A', null );
+        indicator.setNumerator( expressionI );
+        indicator.setDenominator( expressionA );
+        
+        Set<Indicator> indicators = Sets.newHashSet( indicator );
+        
+        Set<DimensionalItemObject> items = expressionService.getDimensionalItemObjectsInIndicators( indicators );
+        
+        assertEquals( 6, items.size() );
+        assertTrue( items.contains( opA ) );
+        assertTrue( items.contains( opB ) );
+        assertTrue( items.contains( deB ) );
+        assertTrue( items.contains( pdeA ) );
+        assertTrue( items.contains( pteaA ) );
+        assertTrue( items.contains( piA ) );
+    }
+    
+    @Test
     public void testGetDataElementsInExpression()
     {
         Set<DataElement> dataElements = expressionService.getDataElementsInExpression( expressionA );
 
         assertTrue( dataElements.size() == 2 );
-        assertTrue( dataElements.contains( dataElementA ) );
-        assertTrue( dataElements.contains( dataElementB ) );
+        assertTrue( dataElements.contains( deA ) );
+        assertTrue( dataElements.contains( deB ) );
         
         dataElements = expressionService.getDataElementsInExpression( expressionG );
 
         assertEquals( 3, dataElements.size() );
-        assertTrue( dataElements.contains( dataElementA ) );
-        assertTrue( dataElements.contains( dataElementB ) );
-        assertTrue( dataElements.contains( dataElementC ) );
+        assertTrue( dataElements.contains( deA ) );
+        assertTrue( dataElements.contains( deB ) );
+        assertTrue( dataElements.contains( deC ) );
     }
 
     @Test
@@ -287,8 +360,8 @@ public class ExpressionServiceTest
         Set<DataElement> dataElements = expressionService.getDataElementsInIndicators( Lists.newArrayList( inA ) );
 
         assertTrue( dataElements.size() == 2 );
-        assertTrue( dataElements.contains( dataElementA ) );
-        assertTrue( dataElements.contains( dataElementB ) );
+        assertTrue( dataElements.contains( deA ) );
+        assertTrue( dataElements.contains( deB ) );
 
         Indicator inG = createIndicator( 'G', null );
         inG.setNumerator( expressionG );
@@ -296,9 +369,9 @@ public class ExpressionServiceTest
         dataElements = expressionService.getDataElementsInIndicators( Lists.newArrayList( inG ) );
 
         assertEquals( 3, dataElements.size() );
-        assertTrue( dataElements.contains( dataElementA ) );
-        assertTrue( dataElements.contains( dataElementB ) );
-        assertTrue( dataElements.contains( dataElementC ) );
+        assertTrue( dataElements.contains( deA ) );
+        assertTrue( dataElements.contains( deB ) );
+        assertTrue( dataElements.contains( deC ) );
     }
 
     @Test
@@ -310,8 +383,8 @@ public class ExpressionServiceTest
         Set<DataElement> dataElements = expressionService.getDataElementTotalsInIndicators( Lists.newArrayList( inG ) );
 
         assertEquals( 2, dataElements.size() );
-        assertTrue( dataElements.contains( dataElementB ) );
-        assertTrue( dataElements.contains( dataElementC ) );
+        assertTrue( dataElements.contains( deB ) );
+        assertTrue( dataElements.contains( deC ) );
     }
 
     @Test
@@ -323,7 +396,7 @@ public class ExpressionServiceTest
         Set<DataElement> dataElements = expressionService.getDataElementWithOptionCombosInIndicators( Lists.newArrayList( inG ) );
 
         assertEquals( 1, dataElements.size() );
-        assertTrue( dataElements.contains( dataElementA ) );
+        assertTrue( dataElements.contains( deA ) );
     }
 
     @Test
@@ -334,8 +407,8 @@ public class ExpressionServiceTest
         assertNotNull( operands );
         assertEquals( 2, operands.size() );
 
-        DataElementOperand operandA = new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() );
-        DataElementOperand operandB = new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() );
+        DataElementOperand operandA = new DataElementOperand( deA.getUid(), coc.getUid() );
+        DataElementOperand operandB = new DataElementOperand( deB.getUid(), coc.getUid() );
 
         assertTrue( operands.contains( operandA ) );
         assertTrue( operands.contains( operandB ) );
@@ -356,7 +429,7 @@ public class ExpressionServiceTest
         assertNotNull( optionCombos );
         assertEquals( 1, optionCombos.size() );
 
-        assertTrue( optionCombos.contains( categoryOptionCombo ) );
+        assertTrue( optionCombos.contains( coc ) );
     }
 
     @Test
@@ -369,16 +442,16 @@ public class ExpressionServiceTest
         assertTrue( expressionService.expressionIsValid( expressionE ).isValid() );
         assertTrue( expressionService.expressionIsValid( expressionH ).isValid() );
 
-        expressionA = "#{nonExisting" + SEPARATOR + categoryOptionCombo.getUid() + "} + 12";
+        expressionA = "#{nonExisting" + SEPARATOR + coc.getUid() + "} + 12";
 
         assertEquals( ExpressionValidationOutcome.DIMENSIONAL_ITEM_OBJECT_DOES_NOT_EXIST, expressionService.expressionIsValid( expressionA ) );
 
-        expressionA = "#{" + dataElementA.getUid() + SEPARATOR + 999 + "} + 12";
+        expressionA = "#{" + deA.getUid() + SEPARATOR + 999 + "} + 12";
 
         assertEquals( ExpressionValidationOutcome.DIMENSIONAL_ITEM_OBJECT_DOES_NOT_EXIST, expressionService
             .expressionIsValid( expressionA ) );
 
-        expressionA = "#{" + dataElementA.getUid() + SEPARATOR + categoryOptionCombo.getUid() + "} + ( 12";
+        expressionA = "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "} + ( 12";
 
         assertEquals( ExpressionValidationOutcome.EXPRESSION_IS_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
 
@@ -419,8 +492,8 @@ public class ExpressionServiceTest
     public void testGenerateExpressionMap()
     {
         Map<DataElementOperand, Double> valueMap = new HashMap<>();
-        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), 12d );
-        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), 34d );
+        valueMap.put( new DataElementOperand( deA.getUid(), coc.getUid() ), 12d );
+        valueMap.put( new DataElementOperand( deB.getUid(), coc.getUid() ), 34d );
         
         Map<String, Double> constantMap = new HashMap<>();
         constantMap.put( constantA.getUid(), 2.0 );
@@ -455,8 +528,8 @@ public class ExpressionServiceTest
         Expression expH = createExpression( 'H', expressionH, null, null );
         
         Map<DataElementOperand, Double> valueMap = new HashMap<>();
-        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), 12d );
-        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), 34d );
+        valueMap.put( new DataElementOperand( deA.getUid(), coc.getUid() ), 12d );
+        valueMap.put( new DataElementOperand( deB.getUid(), coc.getUid() ), 34d );
         
         Map<String, Double> constantMap = new HashMap<>();
         constantMap.put( constantA.getUid(), 2.0 );
@@ -479,8 +552,8 @@ public class ExpressionServiceTest
         indicatorA.setDenominator( expressionF );
 
         Map<DataElementOperand, Double> valueMap = new HashMap<>();
-        valueMap.put( new DataElementOperand( dataElementA.getUid(), categoryOptionCombo.getUid() ), 12d );
-        valueMap.put( new DataElementOperand( dataElementB.getUid(), categoryOptionCombo.getUid() ), 34d );
+        valueMap.put( new DataElementOperand( deA.getUid(), coc.getUid() ), 12d );
+        valueMap.put( new DataElementOperand( deB.getUid(), coc.getUid() ), 34d );
         
         Map<String, Double> constantMap = new HashMap<>();
         constantMap.put( constantA.getUid(), 2.0 );
@@ -570,10 +643,8 @@ public class ExpressionServiceTest
     
     @Test
     public void testGetOrganisationUnitGroupsInExpression()
-    {
-        String expression = "OUG{" + groupA.getUid() + "} + 10";
-        
-        Set<OrganisationUnitGroup> groups = expressionService.getOrganisationUnitGroupsInExpression( expression );
+    {        
+        Set<OrganisationUnitGroup> groups = expressionService.getOrganisationUnitGroupsInExpression( expressionH );
         
         assertNotNull( groups );
         assertEquals( 1, groups.size() );
