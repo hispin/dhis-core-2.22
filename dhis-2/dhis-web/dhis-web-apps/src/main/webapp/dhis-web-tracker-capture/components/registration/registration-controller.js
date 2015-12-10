@@ -18,6 +18,7 @@ trackerCapture.controller('RegistrationController',
                 RegistrationService,
                 DateUtils,
                 SessionStorageService,
+                TEIGridService,
                 TrackerRulesFactory,
                 TrackerRulesExecutionService) {
     
@@ -113,7 +114,7 @@ trackerCapture.controller('RegistrationController',
     $scope.getAttributes = function(_mode){        
         var mode = _mode ? _mode : 'ENROLLMENT';
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
-            $scope.attributes = atts;
+            $scope.attributes = TEIGridService.generateGridColumns(atts, null).columns;
             $scope.customFormExists = false;
             if($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedProgram.dataEntryForm && $scope.selectedProgram.dataEntryForm.htmlCode){
                 $scope.customFormExists = true;
