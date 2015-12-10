@@ -16,10 +16,6 @@ html, body {
     }
 }
 
-.print-section {
-    display: block;
-}
-
 h1 {    
     font-size: 1.8em;
 }
