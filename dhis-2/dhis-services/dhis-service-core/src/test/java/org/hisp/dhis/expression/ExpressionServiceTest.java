@@ -327,19 +327,6 @@ public class ExpressionServiceTest
     }
 
     @Test
-    public void testGetDataElementTotalUids()
-    {
-        Set<String> uids = new HashSet<>();
-        Set<String> empty = new HashSet<>();
-        
-        uids.add( dataElementB.getUid() );
-        uids.add( dataElementC.getUid() );
-        
-        assertEquals( uids, expressionService.getDataElementTotalUids( expressionG ) );
-        assertEquals( empty, expressionService.getDataElementTotalUids( expressionA ) );
-    }
-    
-    @Test
     public void testGetOperandsInExpression()
     {
         Set<DataElementOperand> operands = expressionService.getOperandsInExpression( expressionA );

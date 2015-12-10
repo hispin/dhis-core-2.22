@@ -181,7 +181,18 @@ public class DefaultAnalyticsService
         queryPlanner.validate( params );
 
         params.conform();
-
+        
+        return getAggregatedDataValueGridInternal( params );
+    }
+    
+    /**
+     * Returns a grid with aggregated data.
+     * 
+     * @param params the data query parameters.
+     * @return a grid with aggregated data.
+     */
+    private Grid getAggregatedDataValueGridInternal( DataQueryParams params )
+    {
         // ---------------------------------------------------------------------
         // Headers
         // ---------------------------------------------------------------------
