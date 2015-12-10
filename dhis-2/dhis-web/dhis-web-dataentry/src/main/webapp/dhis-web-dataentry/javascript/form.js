@@ -563,14 +563,7 @@ dhis2.de.addEventListeners = function()
         var split = dhis2.de.splitFieldId( id );
 
         var dataElementId = split.dataElementId;
-        var optionComboId = split.optionComboId;
-
-        /*$( this ).unbind( 'focus' );
-        $( this ).unbind( 'change' );
-
-        $( this ).focus( valueFocus );
-
-        $( this ).blur( valueBlur );*/
+        var optionComboId = split.optionComboId;       
 
         $( this ).change( function()
         {
@@ -605,13 +598,7 @@ dhis2.de.addEventListeners = function()
 
         var dataElementId = split.dataElementId;
         var optionComboId = split.optionComboId;
-
-        $( this ).unbind( 'focus' );
-        $( this ).unbind( 'change' );
-
-        $( this ).focus( valueFocus );
-        $( this ).blur( valueBlur );
-
+        
         $( this ).change( function()
         {
             saveVal( dataElementId, optionComboId, id );
@@ -1555,13 +1542,11 @@ function getAndInsertDataValues()
     $( '.entryfield' ).val( '' );
     $( '.entryselect' ).removeAttr( 'checked' );
     $( '.entrytrueonly' ).removeAttr( 'checked' );
-    $( '.entryoptionset' ).val( '' );
 
     $( '.entryfield' ).css( 'background-color', dhis2.de.cst.colorWhite ).css( 'border', '1px solid ' + dhis2.de.cst.colorBorder );
     $( '.entryselect' ).css( 'background-color', dhis2.de.cst.colorWhite ).css( 'border', '1px solid ' + dhis2.de.cst.colorBorder );
     $( '.indicator' ).css( 'background-color', dhis2.de.cst.colorWhite ).css( 'border', '1px solid ' + dhis2.de.cst.colorBorder );
     $( '.entrytrueonly' ).css( 'background-color', dhis2.de.cst.colorWhite );
-    $( '.entryoptionset' ).css( 'background-color', dhis2.de.cst.colorWhite );
 
     clearFileEntryFields();
 
@@ -1646,14 +1631,12 @@ function insertDataValues( json )
 	if ( json.locked )
 	{
         $( '#contentDiv input').attr( 'readonly', 'readonly' );
-        $( '.entryoptionset').autocomplete( 'disable' );
         $( '.sectionFilter').removeAttr( 'disabled' );
         $( '#completenessDiv' ).hide();
 		setHeaderDelayMessage( i18n_dataset_is_locked );
 	}
 	else
 	{
-        $( '.entryoptionset' ).autocomplete( 'enable' );
         $( '#contentDiv input' ).removeAttr( 'readonly' );
 		$( '#completenessDiv' ).show();
 	}
@@ -2913,7 +2896,9 @@ dhis2.de.setOptionNameInField = function( fieldId, value )
 		if ( obj && obj.optionSet && obj.optionSet.options ) {			
 			$.each( obj.optionSet.options, function( inx, option ) {
 				if ( option && option.code == value.val ) {
-					$( fieldId ).val( option.name );
+                                        option.id = option.code;
+                                        option.text = option.name;					
+                                        $( fieldId ).select2("val", option.text );
 					return false;
 				}
 			} );
@@ -3050,18 +3035,40 @@ dhis2.de.insertOptionSets = function()
 {
     $( '.entryoptionset').each( function( idx, item ) {
     	var optionSetKey = dhis2.de.splitFieldId( item.id );
-
+        var s2prefix = 's2id_';        
+        optionSetKey.dataElementId = optionSetKey.dataElementId.indexOf(s2prefix) != -1 ? optionSetKey.dataElementId.substring(s2prefix.length, optionSetKey.dataElementId.length) : optionSetKey.dataElementId;
+        
         if ( dhis2.de.multiOrganisationUnit ) {
         	item = optionSetKey.organisationUnitId + '-' + optionSetKey.dataElementId + '-' + optionSetKey.optionComboId;
         } 
         else {
         	item = optionSetKey.dataElementId + '-' + optionSetKey.optionComboId;
         }
-
+        
         item = item + '-val';
         optionSetKey = optionSetKey.dataElementId + '-' + optionSetKey.optionComboId;
         var optionSetUid = dhis2.de.optionSets[optionSetKey].uid;
-        dhis2.de.autocompleteOptionSetField( item, optionSetUid );
+        //dhis2.de.autocompleteOptionSetField( item, optionSetUid );
+        
+        DAO.store.get( 'optionSets', optionSetUid ).done( function( obj ) {		
+		if ( obj && obj.optionSet && obj.optionSet.options ) {
+                    
+                    $.each( obj.optionSet.options, function( inx, option ) {
+                        option.text = option.name;
+                        option.id = option.code;
+                    } );
+                    
+                    $("#" + item).select2({
+                        placeholder: i18n_select_option ,
+                        allowClear: true,
+                        dataType: 'json',
+                        data: obj.optionSet.options
+                    }).on("select2:unselecting", function (e) {
+                        $(this).select2("val", "");
+                        e.preventDefault();
+                    });
+		}		
+	} );        
     } );
 };
 

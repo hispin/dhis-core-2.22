@@ -140,6 +140,11 @@
   border: 1px solid #aaa;
 }
 
+.entryoptionset {
+    width: 85%;
+    max-height: 400px;
+}
+
 .entryselect
 {
   padding: 4px 1px;
@@ -400,4 +405,17 @@
     display: inline-block;
     position: absolute;
     top: 16px;
+}
+
+.select2-container .select2-choice {
+    border-radius: 0;
+}
+
+
+.select2-container .select2-choice .select2-arrow {
+    border-radius: 0;
+}
+
+.select2-chosen {
+    padding-top: 6px;
 }

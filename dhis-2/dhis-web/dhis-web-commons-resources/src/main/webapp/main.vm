@@ -15,6 +15,7 @@
     <link type="text/css" rel="stylesheet" media="print" href="../dhis-web-commons/css/print.css?_rev=$!{buildRevision}" />
     <link type="text/css" rel="stylesheet" media="screen" href="../dhis-web-commons/css/menu.css?_rev=$!{buildRevision}" />
     <link type="text/css" rel="stylesheet" media="screen" href="../dhis-web-commons/javascripts/jQuery/calendars/css/jquery.calendars.picker.css?_rev=$!{buildRevision}" />
+	<link type="text/css" rel="stylesheet" media="screen" href="../dhis-web-commons/select2/select2.css?_rev=$!{buildRevision}" />
     #foreach ( $style in $stylesheets )
     <link type="text/css" rel="stylesheet" href="${style}?_rev=$!{buildRevision}">
     #end
@@ -62,6 +63,7 @@
     <script type="text/javascript" src="../dhis-web-commons/javascripts/dhis2/dhis2.select.js?_rev=$!{buildRevision}"></script>
     <script type="text/javascript" src="../dhis-web-commons/javascripts/jQuery/calendars/jquery.calendars.min.js?_rev=$!{buildRevision}"></script>
     <script type="text/javascript" src="../dhis-web-commons/javascripts/jQuery/calendars/jquery.calendars.plus.min.js?_rev=$!{buildRevision}"></script>
+	<script type="text/javascript" src="../dhis-web-commons/select2/select2.min.js?_rev=$!{buildRevision}"></script>
     #if( $keyCalendar == "coptic" || $keyCalendar == "ethiopian" || $keyCalendar == "islamic"  || $keyCalendar == "julian" || $keyCalendar == "nepali" || $keyCalendar == "thai" )
     <script type="text/javascript" src="../dhis-web-commons/javascripts/jQuery/calendars/jquery.calendars.${keyCalendar}.min.js?_rev=$!{buildRevision}"></script>
     #end
