@@ -11,10 +11,10 @@
     </id>
 
     <many-to-one name="programIndicator" class="org.hisp.dhis.program.ProgramIndicator" 
-        column="programindicatorid" foreign-key="fk_programindicatordimension_programindicatorid" />
+        column="programindicatorid" foreign-key="fk_teprogramindicatordimension_programindicatorid" />
 
 	<many-to-one name="legendSet" class="org.hisp.dhis.legend.LegendSet"
-		column="legendsetid" foreign-key="fk_programindicatordimension_legendsetid" />
+		column="legendsetid" foreign-key="fk_teprogramindicatordimension_legendsetid" />
 
     <property name="filter" />
 
