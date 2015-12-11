@@ -73,7 +73,7 @@ public class JdbcResourceTableStore
         final String createTableSql = resourceTable.getCreateTempTableStatement();
         final Optional<String> populateTableSql = resourceTable.getPopulateTempTableStatement();
         final Optional<List<Object[]>> populateTableContent = resourceTable.getPopulateTempTableContent();
-        final Optional<String> createIndexSql = resourceTable.getCreateIndexStatement();
+        final List<String> createIndexSql = resourceTable.getCreateIndexStatements();
 
         // ---------------------------------------------------------------------
         // Create table
@@ -108,14 +108,14 @@ public class JdbcResourceTableStore
         }
 
         // ---------------------------------------------------------------------
-        // Create index
+        // Create indexes
         // ---------------------------------------------------------------------
 
-        if ( createIndexSql.isPresent() )
+        for ( final String sql : createIndexSql )
         {
-            log.info( "Create index SQL: " + createIndexSql.get() );
+            log.info( "Create index SQL: " + sql );
             
-            jdbcTemplate.execute( createIndexSql.get() );
+            jdbcTemplate.execute( sql );
         }
         
         // ---------------------------------------------------------------------

@@ -39,6 +39,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.resourcetable.ResourceTable;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -130,12 +132,12 @@ public class OrganisationUnitStructureResourceTable
     }
 
     @Override
-    public Optional<String> getCreateIndexStatement()
+    public List<String> getCreateIndexStatements()
     {
         String name = "in_orgunitstructure_organisationunituid_" + getRandomSuffix();
         
         String sql = "create unique index " + name + " on " + getTempTableName() + "(organisationunituid)";
         
-        return Optional.of( sql );
+        return Lists.newArrayList( sql );
     }
 }

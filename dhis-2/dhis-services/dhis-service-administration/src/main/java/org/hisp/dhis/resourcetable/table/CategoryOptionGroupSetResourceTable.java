@@ -37,6 +37,8 @@ import org.hisp.dhis.dataelement.CategoryOptionGroupSet;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.resourcetable.ResourceTable;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -107,8 +109,8 @@ public class CategoryOptionGroupSetResourceTable
     }
 
     @Override
-    public Optional<String> getCreateIndexStatement()
+    public List<String> getCreateIndexStatements()
     {
-        return Optional.empty();
+        return Lists.newArrayList();
     }
 }

@@ -39,6 +39,8 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.resourcetable.ResourceTable;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -119,12 +121,12 @@ public class PeriodResourceTable
     }
 
     @Override
-    public Optional<String> getCreateIndexStatement()
+    public List<String> getCreateIndexStatements()
     {
         String name = "in_periodstructure_iso_" + getRandomSuffix();
         
         String sql = "create unique index " + name + " on " + getTempTableName() + "(iso)";
         
-        return Optional.of( sql );
+        return Lists.newArrayList( sql );
     }
 }
