@@ -159,7 +159,7 @@ public class JdbcEventAnalyticsTableManager
         
         log.debug( "Create SQL: " + sqlCreate );
         
-        executeSilently( sqlCreate );
+        jdbcTemplate.execute( sqlCreate );
     }
 
     @Async
@@ -407,7 +407,7 @@ public class JdbcEventAnalyticsTableManager
         }
         else
         {
-            return "character varying(50000)";
+            return "text";
         }
     }
     

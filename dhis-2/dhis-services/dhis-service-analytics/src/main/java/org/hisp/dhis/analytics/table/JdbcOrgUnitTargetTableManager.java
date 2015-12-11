@@ -101,7 +101,7 @@ public class JdbcOrgUnitTargetTableManager
         
         log.debug( "Create SQL: " + sqlCreate );
         
-        executeSilently( sqlCreate );
+        jdbcTemplate.execute( sqlCreate );
     }
 
     @Override

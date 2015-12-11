@@ -102,7 +102,7 @@ public class JdbcCompletenessTargetTableManager
         
         log.debug( "Create SQL: " + sqlCreate );
         
-        executeSilently( sqlCreate );
+        jdbcTemplate.execute( sqlCreate );
     }
 
     @Override
