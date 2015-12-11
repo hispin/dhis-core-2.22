@@ -684,7 +684,6 @@ function Selection()
                         selection.setPartialOrganisationUnits( all ).done(function() {
                             $.extend( organisationUnits, data.organisationUnits );
                             selection.findByName();
-                            $( '#searchField' ).css( 'background-color', '#ffc5c5' );
                         });
                     });
                 }
