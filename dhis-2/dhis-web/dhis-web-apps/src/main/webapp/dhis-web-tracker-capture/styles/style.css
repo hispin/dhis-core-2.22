@@ -47,6 +47,12 @@ div#orgUnitTree {
     color: #585D61;
 }
 
+.title {
+    font-size: 14pt;
+    font-weight: normal;
+    color: #585D61;
+}
+
 .dashboard-top-bar {
     padding-right: 15px;
     padding-left: 15px;
@@ -1224,4 +1230,7 @@ input, button, select, textarea {
     word-wrap: break-word;
 }
 
+.border-right {
+    border-right: 1px dotted #3a87ad;
+}
 

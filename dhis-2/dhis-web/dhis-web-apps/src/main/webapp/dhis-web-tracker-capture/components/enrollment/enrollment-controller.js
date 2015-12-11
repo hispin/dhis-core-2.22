@@ -3,6 +3,7 @@
 trackerCapture.controller('EnrollmentController',
         function($rootScope,
                 $scope,  
+                $route,
                 $location,
                 $timeout,
                 DateUtils,
@@ -40,6 +41,13 @@ trackerCapture.controller('EnrollmentController',
         $scope.programNames = selections.prNames;
         $scope.programStageNames = selections.prStNames;
         $scope.attributesById = CurrentSelection.getAttributesById();
+        
+        $scope.activeEnrollments =  [];
+        angular.forEach(selections.enrollments, function(en){
+            if(en.status === "ACTIVE" && $scope.selectedProgram && $scope.selectedProgram.id !== en.program){
+                $scope.activeEnrollments.push(en);                           
+            }
+        });
         
         if($scope.selectedProgram){
             
@@ -200,5 +208,15 @@ trackerCapture.controller('EnrollmentController',
         $scope.selectedEnrollment.followup = !$scope.selectedEnrollment.followup; 
         EnrollmentService.update($scope.selectedEnrollment).then(function(data){         
         });
+    };
+    
+    $scope.changeProgram = function(program){
+        var pr = $location.search().program;
+        if(pr && pr === program){
+            $route.reload();            
+        }
+        else{
+            $location.path('/dashboard').search({tei: $scope.selectedTeiId, program: program});
+        }
     };
 });
