@@ -92,9 +92,11 @@ trackerCapture.controller('DashboardController',
             $scope.stickyDisabled = selectedLayout.stickRightSide ? !selectedLayout.stickRightSide : true;
 
             angular.forEach(selectedLayout.widgets, function(widget){
-                $rootScope[widget.title +'Widget'] = widget;
-                $rootScope.dashboardWidgets.push( $rootScope[widget.title +'Widget'] );
-                $scope.dashboardStatus[widget.title] = angular.copy(widget);
+                if(widget.title !== "activePrograms"){
+                    $rootScope[widget.title +'Widget'] = widget;
+                    $rootScope.dashboardWidgets.push( $rootScope[widget.title +'Widget'] );
+                    $scope.dashboardStatus[widget.title] = angular.copy(widget);
+                }                
             });
             
             angular.forEach(defaultLayout.widgets, function(w){
