@@ -34,6 +34,8 @@ import java.util.Optional;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.resourcetable.ResourceTable;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -85,12 +87,12 @@ public class CategoryOptionComboResourceTable
     }
 
     @Override
-    public Optional<String> getCreateIndexStatement()
+    public List<String> getCreateIndexStatements()
     {
         String name = "in_dataelementcategoryoptioncombo_" + getRandomSuffix();
         
         String sql = "create index " + name + " on " + getTempTableName() + "(dataelementuid, categoryoptioncombouid)";
         
-        return Optional.of( sql );
+        return Lists.newArrayList( sql );
     }
 }

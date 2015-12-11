@@ -35,6 +35,8 @@ import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.resourcetable.ResourceTable;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -107,8 +109,8 @@ public class DataElementGroupSetResourceTable
     }
 
     @Override
-    public Optional<String> getCreateIndexStatement()
+    public List<String> getCreateIndexStatements()
     {
-        return Optional.empty();
+        return Lists.newArrayList();
     }
 }

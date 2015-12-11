@@ -39,6 +39,8 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.resourcetable.ResourceTable;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -113,14 +115,12 @@ public class DataElementResourceTable
     }
 
     @Override
-    public Optional<String> getCreateIndexStatement()
+    public List<String> getCreateIndexStatements()
     {
-        String sql =
-            "create unique index in_dataelementstructure_dataelementuid_" + getRandomSuffix() + " on " + getTempTableName() + "(dataelementuid);" +
-            "create index in_dataelementstructure_datasetid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetid);" +
-            "create index in_dataelementstructure_datasetuid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetuid);" +
-            "create index in_dataelementstructure_periodtypeid_" + getRandomSuffix() + " on " + getTempTableName() + "(periodtypeid);";
-        
-        return Optional.of( sql );
+        return Lists.newArrayList(
+            "create unique index in_dataelementstructure_dataelementuid_" + getRandomSuffix() + " on " + getTempTableName() + "(dataelementuid);",
+            "create index in_dataelementstructure_datasetid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetid);",
+            "create index in_dataelementstructure_datasetuid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetuid);",
+            "create index in_dataelementstructure_periodtypeid_" + getRandomSuffix() + " on " + getTempTableName() + "(periodtypeid);" );
     }
 }

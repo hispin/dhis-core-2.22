@@ -35,6 +35,8 @@ import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.resourcetable.ResourceTable;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Lars Helge Overland
  */
@@ -99,7 +101,7 @@ public class DataApprovalMinLevelResourceTable
     }
 
     @Override
-    public Optional<String> getCreateIndexStatement()
+    public List<String> getCreateIndexStatements()
     {
         String sql = 
             "create index in_dataapprovalminlevel_datasetid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetid);" +
@@ -107,6 +109,6 @@ public class DataApprovalMinLevelResourceTable
             "create index in_dataapprovalminlevel_organisationunitid_" + getRandomSuffix() + " on " + getTempTableName() + "(organisationunitid);" +
             "create index in_dataapprovalminlevel_attributeoptioncomboid_" + getRandomSuffix() + " on " + getTempTableName() + "(attributeoptioncomboid);";
         
-        return Optional.of( sql );        
+        return Lists.newArrayList( sql );        
     }
 }
