@@ -26,7 +26,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 CurrentSelection,
                 TEIGridService,
                 TEIService) {  
-    
+
+    var tmp=null;
     $scope.maxOptionSize = 30;
     $scope.model = {};
     
