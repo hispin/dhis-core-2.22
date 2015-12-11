@@ -141,7 +141,7 @@ public class JdbcAnalyticsTableManager
             sqlCreate += col[0] + " " + col[1] + ",";
         }
 
-        sqlCreate += "daysxvalue " + dbl + ", daysno integer not null, value " + dbl + ", textvalue varchar(50000)) ";
+        sqlCreate += "daysxvalue " + dbl + ", daysno integer not null, value " + dbl + ", textvalue text) ";
 
         sqlCreate += statementBuilder.getTableOptions( false );
 
@@ -149,7 +149,7 @@ public class JdbcAnalyticsTableManager
 
         log.debug( "Create SQL: " + sqlCreate );
 
-        executeSilently( sqlCreate );
+        jdbcTemplate.execute( sqlCreate );
     }
 
     @Override
