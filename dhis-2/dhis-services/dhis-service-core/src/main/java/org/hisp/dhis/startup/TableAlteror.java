@@ -275,6 +275,10 @@ public class TableAlteror
 
         executeSql( "ALTER TABLE minmaxdataelement RENAME minvalue TO minimumvalue" );
         executeSql( "ALTER TABLE minmaxdataelement RENAME maxvalue TO maximumvalue" );
+        
+        executeSql( "update minmaxdataelement set generatedvalue = generated where generatedvalue is null" );
+        executeSql( "alter table minmaxdataelement drop column generated" );
+        executeSql( "alter table minmaxdataelement alter column generatedvalue set not null" );
 
         // orgunit shortname uniqueness
         executeSql( "ALTER TABLE organisationunit DROP CONSTRAINT organisationunit_shortname_key" );
