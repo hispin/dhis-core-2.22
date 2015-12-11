@@ -42,8 +42,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 /**
  * @author Kristian Nordal
- * @version $Id: HibernateMinMaxDataElementStore.java 6216 2008-11-06 18:06:42Z
- *          eivindwa $
  */
 public class HibernateMinMaxDataElementStore
     extends HibernateGenericStore<MinMaxDataElement>
