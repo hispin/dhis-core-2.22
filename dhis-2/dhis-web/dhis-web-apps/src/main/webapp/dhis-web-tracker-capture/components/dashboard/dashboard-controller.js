@@ -413,12 +413,7 @@ trackerCapture.controller('DashboardController',
     };
     
     $scope.stickUnstick = function(){        
-        $scope.stickyDisabled = !$scope.stickyDisabled;        
-        var layout = getCurrentDashboardLayout();        
-        var layoutKey = $scope.selectedProgram && $scope.selectedProgram.id ? $scope.selectedProgram.id : 'DEFAULT';        
-        layout[layoutKey].stickRightSide = !$scope.stickyDisabled;        
-        DashboardLayoutService.saveLayout(layout, false).then(function(){
-        });        
+        $scope.stickyDisabled = !$scope.stickyDisabled;
     };
     
     $scope.showHideWidgets = function(){
