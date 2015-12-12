@@ -349,6 +349,6 @@ public class DefaultTrackedEntityAttributeService
             return null;
         }
         
-        return programAttributeStore.get( program, attribute );
+        return new ProgramTrackedEntityAttribute( program, attribute );
     }
 }

@@ -385,6 +385,44 @@ public class DefaultDimensionService
         return null;
     }
 
+    @Override
+    public DimensionalItemObject getDataDimensionalItemObject( String dimensionItem )
+    {
+        if ( DimensionalObjectUtils.isCompositeDimensionalObject( dimensionItem ) )
+        {
+            String id0 = splitSafe( dimensionItem, COMPOSITE_DIM_OBJECT_ESCAPED_SEP, 0 );
+            String id1 = splitSafe( dimensionItem, COMPOSITE_DIM_OBJECT_ESCAPED_SEP, 1 );
+
+            DataElementOperand operand = null;
+            ProgramDataElement programDataElement = null;                    
+            ProgramTrackedEntityAttribute programAttribute = null;
+            
+            if ( ( operand = operandService.getDataElementOperand( id0, id1 ) ) != null )
+            {
+                return operand;
+            }
+            else if ( ( programDataElement = programService.getProgramDataElement( id0, id1 ) ) != null )
+            {
+                return programDataElement;
+            }
+            else if ( ( programAttribute = attributeService.getProgramTrackedEntityAttribute( id0, id1 ) ) != null )
+            {
+                return programAttribute;
+            }
+        }
+        else if ( CodeGenerator.isValidCode( dimensionItem ) )
+        {
+            DimensionalItemObject itemObject = identifiableObjectManager.get( DataDimensionItem.DATA_DIMENSION_CLASSES, dimensionItem );
+            
+            if ( itemObject != null )
+            {
+                return itemObject;
+            }
+        }
+        
+        return null;
+    }
+
     //--------------------------------------------------------------------------
     // Supportive methods
     //--------------------------------------------------------------------------

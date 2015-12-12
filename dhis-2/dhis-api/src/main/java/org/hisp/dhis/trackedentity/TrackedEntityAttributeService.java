@@ -220,7 +220,9 @@ public interface TrackedEntityAttributeService
     ProgramTrackedEntityAttribute getOrAddProgramTrackedEntityAttribute( String programUid, String attributeUid );
     
     /**
-     * Returns a program tracked entity attribute.
+     * Returns a program tracked entity attribute. The program tracked entity
+     * attribute itself will be transient and the associated program and tracked
+     * entity attribute will be persistent.
      * 
      * @param programUid the program identifier.
      * @param attributeUid the tracked entity attribute identifier.
