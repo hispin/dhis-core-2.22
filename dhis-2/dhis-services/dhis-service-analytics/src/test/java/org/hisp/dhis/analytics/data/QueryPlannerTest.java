@@ -254,9 +254,7 @@ public class QueryPlannerTest
         aggregatedDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
         aggregatedDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
 
-        MapMap<String, DimensionalItemObject, Double> permutationMap = new MapMap<>();
-
-        DataQueryParams.putPermutationDimensionalItemValueMap( permutationMap, aggregatedDataMap, true );
+        MapMap<String, DimensionalItemObject, Double> permutationMap = DataQueryParams.getPermutationDimensionalItemValueMap( aggregatedDataMap );
 
         assertNotNull( permutationMap );
 
@@ -313,10 +311,8 @@ public class QueryPlannerTest
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "200101", 7d );
         aggregatedDataMap.put( deB.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "200102", 8d );
 
-        MapMap<String, DimensionalItemObject, Double> permutationMap = new MapMap<>();
-
-        DataQueryParams.putPermutationDimensionalItemValueMap( permutationMap, aggregatedDataMap, false );
-
+        MapMap<String, DimensionalItemObject, Double> permutationMap = DataQueryParams.getPermutationDimensionalItemValueMap( aggregatedDataMap );
+        
         assertNotNull( permutationMap );
 
         String ouAM1Key = ouA.getUid() + DIMENSION_SEP + "200101";
@@ -362,22 +358,18 @@ public class QueryPlannerTest
     @Test
     public void testGetPermutationDimensionalItemValueMap()
     {
-        Map<String, Double> aggregatedTotalsDataMap = new HashMap<>();
-        aggregatedTotalsDataMap.put( deA.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1", 1d );
-        aggregatedTotalsDataMap.put( deA.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 2d );
-        aggregatedTotalsDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 3d );
-        aggregatedTotalsDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 4d );
+        Map<String, Double> aggregatedDataMap = new HashMap<>();
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1", 1d );
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 2d );
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 3d );
+        aggregatedDataMap.put( deA.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 4d );
 
-        Map<String, Double> aggregatedCocDataMap = new HashMap<>();
-        aggregatedCocDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1", 5d );
-        aggregatedCocDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 6d );
-        aggregatedCocDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
-        aggregatedCocDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
+        aggregatedDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q1", 5d );
+        aggregatedDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouA.getUid() + DIMENSION_SEP + "2000Q2", 6d );
+        aggregatedDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q1", 7d );
+        aggregatedDataMap.put( deB.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + coc.getUid() + DIMENSION_SEP + ouB.getUid() + DIMENSION_SEP + "2000Q2", 8d );
 
-        MapMap<String, DimensionalItemObject, Double> permutationMap = new MapMap<>();
-
-        DataQueryParams.putPermutationDimensionalItemValueMap( permutationMap, aggregatedTotalsDataMap, false );
-        DataQueryParams.putPermutationDimensionalItemValueMap( permutationMap, aggregatedCocDataMap, true );
+        MapMap<String, DimensionalItemObject, Double> permutationMap = DataQueryParams.getPermutationDimensionalItemValueMap( aggregatedDataMap );
 
         assertNotNull( permutationMap );
 
