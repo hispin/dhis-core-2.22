@@ -348,7 +348,7 @@ public class DefaultDimensionService
     }
 
     @Override
-    public DimensionalItemObject getDataDimensionalItemObject( String dimensionItem )
+    public DimensionalItemObject getOrAddDataDimensionalItemObject( String dimensionItem )
     {
         if ( DimensionalObjectUtils.isCompositeDimensionalObject( dimensionItem ) )
         {
@@ -424,7 +424,7 @@ public class DefaultDimensionService
                 {
                     for ( String uid : uids )
                     {
-                        DimensionalItemObject dimItemObject = getDataDimensionalItemObject( uid );
+                        DimensionalItemObject dimItemObject = getOrAddDataDimensionalItemObject( uid );
                         
                         if ( dimItemObject != null )
                         {
