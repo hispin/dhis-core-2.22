@@ -382,7 +382,7 @@ public class DefaultExpressionService
         {
             String dimensionItem = matcher.group( 2 );
             
-            DimensionalItemObject dimensionItemObject = dimensionService.getOrAddDataDimensionalItemObject( dimensionItem );
+            DimensionalItemObject dimensionItemObject = dimensionService.getDataDimensionalItemObject( dimensionItem );
             
             if ( dimensionItemObject != null )
             {
@@ -489,7 +489,7 @@ public class DefaultExpressionService
         {
             String dimensionItem = matcher.group( 2 );
             
-            if ( dimensionService.getOrAddDataDimensionalItemObject( dimensionItem ) == null )
+            if ( dimensionService.getDataDimensionalItemObject( dimensionItem ) == null )
             {
                 return ExpressionValidationOutcome.DIMENSIONAL_ITEM_OBJECT_DOES_NOT_EXIST;
             }
@@ -579,7 +579,7 @@ public class DefaultExpressionService
         {
             String dimensionItem = matcher.group( 2 );
             
-            DimensionalItemObject dimensionItemObject = dimensionService.getOrAddDataDimensionalItemObject( dimensionItem );
+            DimensionalItemObject dimensionItemObject = dimensionService.getDataDimensionalItemObject( dimensionItem );
             
             if ( dimensionItemObject == null )
             {

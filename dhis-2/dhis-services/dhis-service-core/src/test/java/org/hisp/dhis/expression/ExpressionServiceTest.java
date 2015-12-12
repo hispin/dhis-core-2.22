@@ -127,6 +127,8 @@ public class ExpressionServiceTest
     private ProgramIndicator piA;
     
     private Period period;
+    
+    private Program prA;
 
     private OrganisationUnit unitA;
     private OrganisationUnit unitB;
@@ -215,7 +217,7 @@ public class ExpressionServiceTest
         
         period = createPeriod( getDate( 2000, 1, 1 ), getDate( 2000, 2, 1 ) );
 
-        Program prA = createProgram( 'A' );
+        prA = createProgram( 'A' );
         
         idObjectManager.save( prA );
         
@@ -309,8 +311,8 @@ public class ExpressionServiceTest
         assertEquals( 5, items.size() );
         assertTrue( items.contains( opA ) );
         assertTrue( items.contains( deB ) );
-        assertTrue( items.contains( pdeA ) );
-        assertTrue( items.contains( pteaA ) );
+        assertTrue( items.contains( new ProgramDataElement( prA, deA ) ) );
+        assertTrue( items.contains( new ProgramTrackedEntityAttribute( prA, teaA ) ) );
         assertTrue( items.contains( piA ) );
     }
 
@@ -329,8 +331,8 @@ public class ExpressionServiceTest
         assertTrue( items.contains( opA ) );
         assertTrue( items.contains( opB ) );
         assertTrue( items.contains( deB ) );
-        assertTrue( items.contains( pdeA ) );
-        assertTrue( items.contains( pteaA ) );
+        assertTrue( items.contains( new ProgramDataElement( prA, deA ) ) );
+        assertTrue( items.contains( new ProgramTrackedEntityAttribute( prA, teaA ) ) );
         assertTrue( items.contains( piA ) );
     }
     
