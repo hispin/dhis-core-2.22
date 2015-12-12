@@ -248,7 +248,7 @@ public class DefaultDataQueryService
                 }
                 else
                 {
-                    DimensionalItemObject dimItemObject = dimensionService.getDataDimensionalItemObject( uid );
+                    DimensionalItemObject dimItemObject = dimensionService.getOrAddDataDimensionalItemObject( uid );
                     
                     if ( dimItemObject != null )
                     {
@@ -265,8 +265,6 @@ public class DefaultDataQueryService
             DimensionalObject object = new BaseDimensionalObject( dimension, DimensionType.DATA_X, null, DISPLAY_NAME_DATA_X, dataDimensionItems );
             
             return object;
-            
-            //TODO proper handling of operands and option combinations
         }
         
         else if ( CATEGORYOPTIONCOMBO_DIM_ID.equals( dimension ) )
