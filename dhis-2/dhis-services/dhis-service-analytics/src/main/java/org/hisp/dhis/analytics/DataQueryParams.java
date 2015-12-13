@@ -151,6 +151,11 @@ public class DataQueryParams
      * Indicates if the data part of the query response should be omitted.
      */
     protected boolean skipData;
+    
+    /**
+     * Indicates if the headers of the query response should be omitted.
+     */
+    protected boolean skipHeaders;
 
     /**
      * Indicates that full precision should be provided for values.
@@ -272,6 +277,7 @@ public class DataQueryParams
         params.measureCriteria = this.measureCriteria;
         params.skipMeta = this.skipMeta;
         params.skipData = this.skipData;
+        params.skipHeaders = this.skipHeaders;
         params.skipRounding = this.skipRounding;
         params.completedOnly = this.completedOnly;
         params.hierarchyMeta = this.hierarchyMeta;
@@ -1285,6 +1291,16 @@ public class DataQueryParams
     public void setSkipData( boolean skipData )
     {
         this.skipData = skipData;
+    }
+
+    public boolean isSkipHeaders()
+    {
+        return skipHeaders;
+    }
+
+    public void setSkipHeaders( boolean skipHeaders )
+    {
+        this.skipHeaders = skipHeaders;
     }
 
     public boolean isSkipRounding()

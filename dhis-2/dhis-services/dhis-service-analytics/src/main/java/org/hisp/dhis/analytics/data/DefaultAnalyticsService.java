@@ -231,7 +231,7 @@ public class DefaultAnalyticsService
      */
     private void addHeaders( DataQueryParams params, Grid grid )
     {
-        if ( !params.isSkipData() )
+        if ( !params.isSkipData() && !params.isSkipHeaders() )
         {
             for ( DimensionalObject col : params.getDimensions() )
             {
@@ -896,6 +896,8 @@ public class DefaultAnalyticsService
         DataQueryParams dataSourceParams = params.instance();
         dataSourceParams.removeDimension( DimensionalObject.DATA_X_DIM_ID );
         dataSourceParams.addDimension( dimension );
+        dataSourceParams.setSkipHeaders( true );
+        dataSourceParams.setSkipMeta( true );
         
         Grid grid = getAggregatedDataValueGridInternal( dataSourceParams );
         
