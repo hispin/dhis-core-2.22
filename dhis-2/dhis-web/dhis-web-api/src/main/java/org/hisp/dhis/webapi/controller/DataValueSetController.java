@@ -118,6 +118,26 @@ public class DataValueSetController
         dataValueSetService.writeDataValueSetXml( params, response.getOutputStream() );
     }
 
+    @RequestMapping( method = RequestMethod.GET, produces = CONTENT_TYPE_XML_ADX )
+    public void getDataValueSetXmlAdx(
+        @RequestParam Set<String> dataSet,
+        @RequestParam( required = false ) Set<String> period,
+        @RequestParam( required = false ) Date startDate,
+        @RequestParam( required = false ) Date endDate,
+        @RequestParam Set<String> orgUnit,
+        @RequestParam( required = false ) boolean children,
+        @RequestParam( required = false ) Date lastUpdated,
+        @RequestParam( required = false ) Integer limit,
+        IdSchemes idSchemes, HttpServletResponse response ) throws IOException
+    {
+        response.setContentType( CONTENT_TYPE_XML_ADX );
+
+        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period,
+            startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
+
+        adxDataService.writeDataValueSet( params, response.getOutputStream() );
+    }
+
     @RequestMapping( method = RequestMethod.GET, produces = CONTENT_TYPE_JSON )
     public void getDataValueSetJson(
         @RequestParam Set<String> dataSet,
@@ -181,7 +201,7 @@ public class DataValueSetController
         }
     }
 
-    @RequestMapping( method = RequestMethod.POST, consumes = "application/xml+adx" )
+    @RequestMapping( method = RequestMethod.POST, consumes = CONTENT_TYPE_XML_ADX )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_DATAVALUE_ADD')" )
     public void postAdxDataValueSet( ImportOptions importOptions,
         HttpServletRequest request, HttpServletResponse response ) throws IOException
