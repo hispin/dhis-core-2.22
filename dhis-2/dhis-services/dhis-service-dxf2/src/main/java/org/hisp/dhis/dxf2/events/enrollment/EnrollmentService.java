@@ -81,6 +81,12 @@ public interface EnrollmentService
     ImportSummary updateEnrollment( Enrollment enrollment );
     
     ImportSummary updateEnrollmentForNote( Enrollment enrollment );
+    
+    void cancelEnrollment( String uid );
+
+    void completeEnrollment( String uid );
+    
+    void incompleteEnrollment( String uid );
 
     // -------------------------------------------------------------------------
     // DELETE
@@ -89,8 +95,5 @@ public interface EnrollmentService
     ImportSummary deleteEnrollment( String uid );
 
     ImportSummaries deleteEnrollments( List<String> uids );
-
-    void cancelEnrollment( String uid );
-
-    void completeEnrollment( String uid );
+    
 }

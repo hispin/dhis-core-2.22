@@ -368,4 +368,12 @@ public interface ProgramInstanceService
      * @param programInstance ProgramInstance
      */
     void cancelProgramInstanceStatus( ProgramInstance programInstance );
+    
+    /**
+     * Incomplete a program instance. This is is possible only if there is
+     * no other program instance with active status.
+     *
+     * @param programInstance ProgramInstance
+     */
+    void incompleteProgramInstanceStatus( ProgramInstance programInstance );
 }

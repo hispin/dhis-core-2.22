@@ -617,6 +617,29 @@ public class DefaultProgramInstanceService
             }
         }
     }
+    
+    @Override
+    public void incompleteProgramInstanceStatus( ProgramInstance programInstance )
+    {        
+        Program program = programInstance.getProgram();
+        
+        TrackedEntityInstance tei = programInstance.getEntityInstance();
+        
+        if( getProgramInstances( tei, program, ProgramStatus.ACTIVE).size() > 0 )
+        {
+            log.warn( "Program has another active enrollment going on. Not possible to incomplete" );
+
+            throw new IllegalQueryException( "Program has another active enrollment going on. Not possible to incomplete" );
+        }
+        
+        // -----------------------------------------------------------------
+        // Update program-instance
+        // -----------------------------------------------------------------
+
+        programInstance.setStatus( ProgramStatus.ACTIVE );
+        
+        updateProgramInstance( programInstance );
+    }
 
     // -------------------------------------------------------------------------
     // Supportive methods
