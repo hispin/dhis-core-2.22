@@ -667,7 +667,7 @@ trackerCapture.controller('DataEntryController',
             status: eventToSave.status === 'SCHEDULE' ? 'ACTIVE' : eventToSave.status,
             program: eventToSave.program,
             programStage: eventToSave.programStage,
-            orgUnit: eventToSave.dataValues && eventToSave.length > 0 ? eventToSave.orgUnit : $scope.selectedOrgUnit.id,
+            orgUnit: eventToSave.dataValues && eventToSave.dataValues.length > 0 ? eventToSave.orgUnit : $scope.selectedOrgUnit.id,
             eventDate: DateUtils.formatFromUserToApi(eventToSave.eventDate),
             trackedEntityInstance: eventToSave.trackedEntityInstance
         };
