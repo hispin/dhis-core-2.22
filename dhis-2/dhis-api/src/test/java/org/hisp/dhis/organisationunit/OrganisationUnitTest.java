@@ -104,7 +104,7 @@ public class OrganisationUnitTest
         
         List<OrganisationUnit> expected = new ArrayList<>( Arrays.asList( unitA, unitB, unitC ) );
         
-        assertEquals( expected, unitD.getAncestors() );
+        assertEquals( expected, unitD.getParents() );
     }
 
     @Test
