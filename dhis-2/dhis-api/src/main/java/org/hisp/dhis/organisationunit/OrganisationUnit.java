@@ -560,7 +560,7 @@ public class OrganisationUnit
 
     public String getAncestorNames()
     {
-        List<OrganisationUnit> units = getParents();
+        List<OrganisationUnit> units = getAncestors();
 
         StringBuilder builder = new StringBuilder();
 
@@ -581,7 +581,7 @@ public class OrganisationUnit
     @JsonView( { DetailedView.class } )
     @JacksonXmlElementWrapper( localName = "parents", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "organisationUnit", namespace = DxfNamespaces.DXF_2_0 )
-    public List<OrganisationUnit> getParents()
+    public List<OrganisationUnit> getAncestors()
     {
         List<OrganisationUnit> units = new ArrayList<>();
 

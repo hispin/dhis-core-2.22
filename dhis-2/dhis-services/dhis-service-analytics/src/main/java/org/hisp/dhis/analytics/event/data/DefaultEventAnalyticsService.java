@@ -384,7 +384,7 @@ public class DefaultEventAnalyticsService
                 if ( hierarchy )
                 {
                     OrganisationUnit unit = (OrganisationUnit) object;
-                    objects.addAll( unit.getParents() );
+                    objects.addAll( unit.getAncestors() );
                 }
                 
                 map.putAll( NameableObjectUtils.getUidDisplayPropertyMap( objects, displayProperty ) );
