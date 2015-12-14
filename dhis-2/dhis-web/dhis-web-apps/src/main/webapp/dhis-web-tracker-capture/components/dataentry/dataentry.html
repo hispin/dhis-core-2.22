@@ -174,10 +174,6 @@
                        class="btn btn-warning"
                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed && currentEvent.status !== 'COMPLETED' || currentEvent.orgUnit !== selectedOrgUnit.id"
                        ng-if="currentEvent.eventDate && currentEvent.status === 'COMPLETED'">{{'incomplete'| translate}}</a>
-                    <a href ng-click="validateEvent()" 
-                       class="btn btn-info" 
-                       ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id" 
-                       ng-if="currentEvent.eventDate">{{'validate'| translate}}</a>                        
                     <a href ng-click="skipUnskipEvent()" 
                        class="btn btn-warning" 
                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id"
@@ -185,7 +181,7 @@
                     <a href ng-click="deleteEvent()" 
                        ng-disabled="selectedEnrollment.status === 'COMPLETED' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id"
                        class="btn btn-danger">{{'delete'| translate}}</a>
-                    <a href class="btn btn-primary" ng-click="print('print-div');">{{'print_form'| translate}}</a>
+                    <a href class="btn btn-info" ng-click="print('print-div');">{{'print_form'| translate}}</a>
                 </div>
                 <!-- data entry/event buttons ends -->
 
