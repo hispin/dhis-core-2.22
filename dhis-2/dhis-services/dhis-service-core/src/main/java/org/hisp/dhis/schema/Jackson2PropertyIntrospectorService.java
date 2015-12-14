@@ -78,7 +78,7 @@ public class Jackson2PropertyIntrospectorService
         List<String> classFieldNames = ReflectionUtils.getAllFieldNames( clazz );
 
         // TODO this is quite nasty, should find a better way of exposing properties at class-level
-        if ( clazz.isAnnotationPresent( JacksonXmlRootElement.class ) )
+        if ( AnnotationUtils.findAnnotation( clazz, JacksonXmlRootElement.class ) != null )
         {
             Property property = new Property();
 

@@ -37,6 +37,7 @@ import org.hisp.dhis.system.util.ReflectionUtils;
 import org.hisp.dhis.translation.TranslationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.OrderComparator;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -152,9 +153,9 @@ public class DefaultSchemaService implements SchemaService
 
     private String getName( Class<?> klass )
     {
-        if ( klass.isAnnotationPresent( JacksonXmlRootElement.class ) )
+        if ( AnnotationUtils.findAnnotation( klass, JacksonXmlRootElement.class ) != null )
         {
-            JacksonXmlRootElement rootElement = klass.getAnnotation( JacksonXmlRootElement.class );
+            JacksonXmlRootElement rootElement = AnnotationUtils.findAnnotation( klass, JacksonXmlRootElement.class );
 
             if ( !StringUtils.isEmpty( rootElement.localName() ) )
             {
