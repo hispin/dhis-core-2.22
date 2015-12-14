@@ -28,23 +28,11 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import org.hisp.dhis.common.Pager;
-import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramService;
-import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.TrackedEntityAttributeSchemaDescriptor;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
-import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.webdomain.WebMetaData;
-import org.hisp.dhis.webapi.webdomain.WebOptions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -54,53 +42,4 @@ import java.util.List;
 public class TrackedEntityAttributeController
     extends AbstractCrudController<TrackedEntityAttribute>
 {
-    @Autowired
-    private TrackedEntityAttributeService trackedEntityAttributeService;
-
-    @Autowired
-    private ProgramService programService;
-
-    @Override
-    protected List<TrackedEntityAttribute> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
-    {
-        List<TrackedEntityAttribute> entityList = new ArrayList<>();
-
-        boolean withoutPrograms = options.getOptions().containsKey( "withoutPrograms" )
-            && Boolean.parseBoolean( options.getOptions().get( "withoutPrograms" ) );
-
-        if ( withoutPrograms )
-        {
-            entityList = new ArrayList<>( trackedEntityAttributeService.getTrackedEntityAttributesWithoutProgram() );
-        }
-        else if ( options.getOptions().containsKey( "query" ) )
-        {
-            entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
-        }
-        else if ( options.getOptions().containsKey( "program" ) )
-        {
-            String programId = options.getOptions().get( "program" );
-            Program program = programService.getProgram( programId );
-
-            if ( program != null )
-            {
-                entityList = new ArrayList<>( program.getTrackedEntityAttributes() );
-            }
-        }
-        else if ( options.hasPaging() )
-        {
-            int count = manager.getCount( getEntityClass() );
-
-            Pager pager = new Pager( options.getPage(), count, options.getPageSize() );
-            metaData.setPager( pager );
-
-            entityList = new ArrayList<>( manager.getBetweenSorted( getEntityClass(),
-                pager.getOffset(), pager.getPageSize() ) );
-        }
-        else
-        {
-            entityList = new ArrayList<>( trackedEntityAttributeService.getAllTrackedEntityAttributes() );
-        }
-
-        return entityList;
-    }
 }
