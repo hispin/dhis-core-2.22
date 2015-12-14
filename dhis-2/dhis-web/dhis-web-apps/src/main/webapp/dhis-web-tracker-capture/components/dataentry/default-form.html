@@ -144,7 +144,7 @@
                                     ng-blur="saveDatavalue(prStDe, innerForm.foo)" 
                                     name="foo"/>                            
                         </div>
-                        <div ng-switch-when="BOOLEAN">
+                        <div ng-switch-when="BOOLEAN" class="form-control">
                             <label class="radio-inline">
                                 <input  type="radio" 
                                         ng-model="currentEvent[prStDe.dataElement.id]" 
@@ -366,7 +366,7 @@
                                                    ng-blur="saveDatavalue(prStDes[de.dataElement.id], innerForm.foo)" 
                                                    name="foo"/>
                                         </div>
-                                        <div ng-switch-when="BOOLEAN">
+                                        <div ng-switch-when="BOOLEAN" class="form-control">
                                             <label class="radio-inline">
                                                 <input  type="radio"
                                                         ng-model="currentEvent[prStDes[de.dataElement.id].dataElement.id]" 

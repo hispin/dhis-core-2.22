@@ -57,7 +57,7 @@
                                ng-change="teiValueUpdated(selectedTei, attribute.id)"
                                ng-required="attribute.mandatory || attribute.unique"/>
                     </span>
-                    <span ng-switch-when="BOOLEAN">
+                    <span ng-switch-when="BOOLEAN" class="form-control">
                         <label class="radio-inline">
                             <input  type="radio"
                                     ng-model="selectedTei[attribute.id]" 
