@@ -28,18 +28,8 @@ package org.hisp.dhis.dxf2.metadata;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-
+import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.proxy.HibernateProxy;
@@ -64,9 +54,19 @@ import org.hisp.dhis.system.util.ReflectionUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.collect.Sets;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
 
 /**
  * @author Ovidiu Rosu <rosu.ovi@gmail.com>
@@ -76,12 +76,12 @@ public class DefaultMetaDataDependencyService
 {
     private static final Log log = LogFactory.getLog( DefaultMetaDataDependencyService.class );
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private final Set<Class<? extends BaseIdentifiableObject>> SPECIAL_CASE_CLASSES = Sets.newHashSet( DataElement.class, DataElementCategoryCombo.class, Indicator.class, OrganisationUnit.class, ValidationRule.class );
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private final Set<Class<User>> SKIP_DEPENDENCY_CHECK_CLASSES = Sets.newHashSet( User.class );
-    
+
     //-------------------------------------------------------------------------------------------------------
     // Dependencies
     //-------------------------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ public class DefaultMetaDataDependencyService
         Map<String, List<IdentifiableObject>> identifiableObjectMap = new HashMap<>();
 
         List<Schema> schemas = schemaService.getMetadataSchemas();
-        
+
         for ( Map.Entry<String, Object> identifiableObjectUidEntry : identifiableObjectUidMap.entrySet() )
         {
             String className = identifiableObjectUidEntry.getKey();
@@ -155,7 +155,7 @@ public class DefaultMetaDataDependencyService
         Set<IdentifiableObject> dependencySet = getDependencySet( identifiableObjects );
 
         List<Schema> schemas = schemaService.getMetadataSchemas();
-        
+
         for ( IdentifiableObject dependency : dependencySet )
         {
             for ( Schema schema : schemas )
@@ -218,7 +218,7 @@ public class DefaultMetaDataDependencyService
     private List<IdentifiableObject> computeAllDependencies( IdentifiableObject identifiableObject )
     {
         List<IdentifiableObject> finalDependencies = new ArrayList<>();
-        
+
         List<IdentifiableObject> dependencies = getDependencies( identifiableObject );
 
         if ( dependencies.isEmpty() )
@@ -244,16 +244,16 @@ public class DefaultMetaDataDependencyService
     private List<IdentifiableObject> getDependencies( IdentifiableObject identifiableObject )
     {
         List<IdentifiableObject> dependencies = new ArrayList<>();
-        
+
         if ( identifiableObject == null || SKIP_DEPENDENCY_CHECK_CLASSES.contains( identifiableObject.getClass() ) )
         {
             return dependencies;
         }
-        
+
         List<Field> fields = ReflectionUtils.getAllFields( identifiableObject.getClass() );
-        
+
         List<Schema> schemas = schemaService.getMetadataSchemas();
-        
+
         for ( Field field : fields )
         {
             for ( Schema schema : schemas )
@@ -417,9 +417,9 @@ public class DefaultMetaDataDependencyService
 
     public boolean isExportView( Method method )
     {
-        if ( method.isAnnotationPresent( JsonView.class ) )
+        if ( AnnotationUtils.findAnnotation( method, JsonView.class ) != null )
         {
-            Class<?>[] viewClasses = method.getAnnotation( JsonView.class ).value();
+            Class<?>[] viewClasses = AnnotationUtils.findAnnotation( method, JsonView.class ).value();
 
             for ( Class<?> viewClass : viewClasses )
             {
