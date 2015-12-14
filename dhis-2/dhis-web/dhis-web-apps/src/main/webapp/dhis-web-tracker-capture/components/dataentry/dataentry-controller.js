@@ -382,7 +382,7 @@ trackerCapture.controller('DataEntryController',
     };
 
     $scope.stageNeedsEvent = function (stage) {
-
+        
         //In case the event is a table, we sould always allow adding more events(rows)
         if (stage.displayEventsInTable) {
             return true;
@@ -931,7 +931,7 @@ trackerCapture.controller('DataEntryController',
         };
 
         ModalService.showModal({}, modalOptions).then(function (result) {
-            EnrollmentService.complete($scope.selectedEnrollment).then(function (data) {
+            EnrollmentService.completeIncomplete($scope.selectedEnrollment, 'completed').then(function (data) {
                 $scope.selectedEnrollment.status = 'COMPLETED';
             });
         });

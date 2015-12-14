@@ -11,6 +11,7 @@ trackerCapture.controller('EnrollmentController',
                 CurrentSelection,
                 OrgUnitService,
                 EnrollmentService,
+                DialogService,
                 ModalService) {
     
     $scope.today = DateUtils.getToday();
@@ -192,15 +193,31 @@ trackerCapture.controller('EnrollmentController',
 
         var modalOptions = {
             closeButtonText: 'cancel',
-            actionButtonText: 'complete',
-            headerText: 'complete_enrollment',
-            bodyText: 'are_you_sure_to_complete_enrollment'
+            actionButtonText: $scope.selectedEnrollment.status === 'ACTIVE' ? 'complete' : 'incomplete',
+            headerText: $scope.selectedEnrollment.status === 'ACTIVE' ? 'complete_enrollment' : 'incomplete_enrollment',
+            bodyText: $scope.selectedEnrollment.status === 'ACTIVE' ? 'are_you_sure_to_complete_enrollment' : 'are_you_sure_to_incomplete_enrollment'
         };
 
         ModalService.showModal({}, modalOptions).then(function(result){            
-            EnrollmentService.complete($scope.selectedEnrollment).then(function(data){                
-                $scope.selectedEnrollment.status = 'COMPLETED';
+            
+            var status = 'completed';            
+            
+            if($scope.selectedEnrollment.status === 'COMPLETED'){
+                status = 'incompleted';
+            }
+            
+            EnrollmentService.completeIncomplete($scope.selectedEnrollment, status).then(function(data){                                
+                $scope.selectedEnrollment.status = $scope.selectedEnrollment.status === 'ACTIVE' ? 'COMPLETED' : 'ACTIVE';
                 $scope.loadEnrollmentDetails($scope.selectedEnrollment);                
+            }, function(response){
+                if(response && response.data && response.data.status === "ERROR"){
+                    //notify user
+                    var dialogOptions = {
+                            headerText: response.data.status,
+                            bodyText: response.data.message
+                        };
+                    DialogService.showDialog({}, dialogOptions);
+                }
             });
         });
     };
@@ -219,5 +236,19 @@ trackerCapture.controller('EnrollmentController',
         else{
             $location.path('/dashboard').search({tei: $scope.selectedTeiId, program: program});
         }
+    };
+    
+    $scope.canUseEnrollment = function(){
+        
+        if($scope.selectedTei.inactive){
+            return false;
+        }
+        
+        if($scope.currentEnrollment && $scope.selectedEnrollment.enrollment !== $scope.currentEnrollment.enrollment){
+            if($scope.currentEnrollment.status === 'ACTIVE'){
+                return false;
+            }
+        }        
+        return true;        
     };
 });
