@@ -270,6 +270,19 @@ public class EnrollmentController
 
         enrollmentService.completeEnrollment( id );
     }
+    
+    @RequestMapping( value = "/{id}/incompleted", method = RequestMethod.PUT )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void incompleteEnrollment( @PathVariable String id ) throws NotFoundException, WebMessageException
+    {
+        if ( !programInstanceService.programInstanceExists( id ) )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "Enrollment not found for ID " + id ) );
+        }
+
+        enrollmentService.incompleteEnrollment( id );
+    }
 
     // -------------------------------------------------------------------------
     // DELETE

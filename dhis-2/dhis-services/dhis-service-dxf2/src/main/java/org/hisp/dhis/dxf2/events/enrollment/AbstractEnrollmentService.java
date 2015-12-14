@@ -475,6 +475,13 @@ public abstract class AbstractEnrollmentService
         ProgramInstance programInstance = programInstanceService.getProgramInstance( uid );
         programInstanceService.completeProgramInstanceStatus( programInstance );
     }
+    
+    @Override
+    public void incompleteEnrollment( String uid )
+    {
+        ProgramInstance programInstance = programInstanceService.getProgramInstance( uid );
+        programInstanceService.incompleteProgramInstanceStatus( programInstance );
+    }
 
     // -------------------------------------------------------------------------
     // HELPERS

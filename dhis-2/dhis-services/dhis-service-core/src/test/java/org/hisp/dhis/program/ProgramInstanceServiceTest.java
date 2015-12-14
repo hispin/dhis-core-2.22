@@ -414,6 +414,22 @@ public class ProgramInstanceServiceTest
         assertEquals( ProgramStatus.COMPLETED, programInstanceService.getProgramInstance( idA ).getStatus() );
         assertEquals( ProgramStatus.COMPLETED, programInstanceService.getProgramInstance( idD ).getStatus() );
     }
+    
+    @Test
+    public void testIncompleteProgramInstanceStatus()
+    {   
+        programInstanceA.setStatus( ProgramStatus.COMPLETED );
+        programInstanceD.setStatus( ProgramStatus.COMPLETED );
+        
+        int idA = programInstanceService.addProgramInstance( programInstanceA );
+        int idD = programInstanceService.addProgramInstance( programInstanceD );
+        
+        programInstanceService.incompleteProgramInstanceStatus( programInstanceA );
+        programInstanceService.incompleteProgramInstanceStatus( programInstanceD );
+        
+        assertEquals( ProgramStatus.ACTIVE, programInstanceService.getProgramInstance( idA ).getStatus() );
+        assertEquals( ProgramStatus.ACTIVE, programInstanceService.getProgramInstance( idD ).getStatus() );
+    }
 
     @Test
     public void testCancelProgramInstanceStatus()
