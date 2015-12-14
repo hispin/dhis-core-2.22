@@ -818,7 +818,9 @@ public abstract class AbstractEventService
             programStageInstance.setStatus( EventStatus.VISITED );
         }
 
-        OrganisationUnit organisationUnit = getOrganisationUnit( null, event.getOrgUnit() );
+        ImportOptions importOptions = new ImportOptions();
+        
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes().getOrgUnitIdScheme(), event.getOrgUnit() );
 
         if ( organisationUnit == null )
         {
