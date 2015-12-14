@@ -60,17 +60,20 @@
                     <div class="vertical-spacing">
                         <button type="button" 
                                 class="btn btn-primary"
+                                ng-disabled="!canUseEnrollment()"
                                 ng-click="completeEnrollment()">
-                            {{'complete'| translate}}
+                            {{selectedEnrollment.status === 'ACTIVE' ? 'complete' : 'incomplete' | translate}}
                         </button>
                         <button type="button" 
                                 class="btn btn-warning"
+                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || selectedTei.inactive"
                                 ng-click="cancelEnrollment()">
                             {{'cancel'| translate}}
                         </button>
                         <button type="button"
                                 title="{{selectedEnrollment.followup ? 'unmark_for_followup' : 'mark_for_followup' | translate}}"
                                 ng-class="{true: 'btn btn-danger', false: 'btn btn-default'} [selectedEnrollment.followup]"
+                                ng-disabled="selectedEnrollment.status !== 'ACTIVE' || selectedTei.inactive"
                                 ng-click="markForFollowup()">
                             <i class="fa fa-exclamation-triangle"></i>
                         </button>
@@ -142,6 +145,6 @@
         <!-- new enrollment registration form begins -->
         <div ng-if="showEnrollmentDiv" ng-include="'components/registration/registration.html'"></div>
         <!-- new enrollment registration form ends -->
-
+        
     </div>
 </div>

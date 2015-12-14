@@ -624,11 +624,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
             return promise;           
         },
-        complete: function(enrollment){
-            var promise = $http.put('../api/enrollments/' + enrollment.enrollment + '/completed').then(function(response){
+        completeIncomplete: function(enrollment, status){
+            var promise = $http.put('../api/enrollments/' + enrollment.enrollment + '/' + status).then(function(response){
                 return response.data;               
             });
-            return promise;           
+            return promise; 
         }
     };   
 })
