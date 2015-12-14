@@ -104,12 +104,6 @@ public class Jackson2PropertyIntrospectorService
             Method getterMethod = property.getGetterMethod();
             JsonProperty jsonProperty = AnnotationUtils.findAnnotation( getterMethod, JsonProperty.class );
 
-            if ( jsonProperty == null )
-            {
-                System.err.println( "NO JSON PROPERTY on Property : " + property.getName() + ", method: " + getterMethod );
-                continue;
-            }
-
             String fieldName = getFieldName( getterMethod );
             property.setName( !StringUtils.isEmpty( jsonProperty.value() ) ? jsonProperty.value() : fieldName );
 
