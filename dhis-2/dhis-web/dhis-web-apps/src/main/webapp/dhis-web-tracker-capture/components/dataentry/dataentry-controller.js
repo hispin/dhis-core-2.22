@@ -1073,9 +1073,6 @@ trackerCapture.controller('DataEntryController',
         }
     };
 
-    $scope.validateEvent = function () {
-    };
-
     $scope.deleteEvent = function () {
 
         var modalOptions = {
