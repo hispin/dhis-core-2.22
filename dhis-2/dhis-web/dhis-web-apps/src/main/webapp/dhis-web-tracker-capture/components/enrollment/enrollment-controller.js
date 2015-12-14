@@ -57,6 +57,17 @@ trackerCapture.controller('EnrollmentController',
             });
             
             angular.forEach($scope.enrollments, function(enrollment){
+                if(enrollment.orgUnit !== $scope.selectedOrgUnit.id) {
+                    OrgUnitService.get(enrollment.orgUnit).then(function(ou){
+                        if(ou){
+                            enrollment.orgUnitName = $scope.selectedOrgUnit.name;
+                        }                                                       
+                    });
+                }
+                else{
+                    enrollment.orgUnitName = $scope.selectedOrgUnit.name;
+                }
+                
                 if(enrollment.program === $scope.selectedProgram.id ){
                     if(enrollment.status === 'ACTIVE'){
                         selectedEnrollment = enrollment;
@@ -87,17 +98,7 @@ trackerCapture.controller('EnrollmentController',
         $scope.showEnrollmentHistoryDiv = false;
         $scope.selectedEnrollment = enrollment;
         
-        if($scope.selectedEnrollment.enrollment && $scope.selectedEnrollment.orgUnit){
-            if($scope.selectedEnrollment.orgUnit !== $scope.selectedOrgUnit.id) {
-                OrgUnitService.get($scope.selectedEnrollment.orgUnit).then(function(ou){
-                    if(ou){
-                        $scope.selectedEnrollment.orgUnitName = $scope.selectedOrgUnit.name;
-                    }                                                       
-                });
-            }
-            else{
-                $scope.selectedEnrollment.orgUnitName = $scope.selectedOrgUnit.name;
-            }
+        if($scope.selectedEnrollment.enrollment && $scope.selectedEnrollment.orgUnit){            
             $scope.broadCastSelections('dashboardWidgets');
         }
     };

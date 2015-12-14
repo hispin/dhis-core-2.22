@@ -15,7 +15,7 @@
         
         <!-- operations on selected enrollment begins -->
         <div class="row equal-height-columns">
-            <div class="col-sm-6 border-right">                
+            <div class="col-sm-6">                
                 <div class="title small-vertical-spacing">
                     {{'for_selected_program'| translate}}
                     
@@ -117,6 +117,9 @@
                             <th ng-if="selectedProgram.displayIncidentDate">
                                 {{selectedProgram.incidentDateLabel}}
                             </th>
+                            <th>
+                                {{'enrolling_orgunit' | translate}}
+                            </th>
                         </tr>
                         <tr ng-click="loadEnrollmentDetails(en)" ng-repeat="en in historicalEnrollments" title="{{'details'| translate}}">
                             <td>
@@ -125,12 +128,15 @@
                             <td ng-if="selectedProgram.displayIncidentDate">
                                 {{en.incidentDate}}
                             </td>
+                            <td>
+                                {{en.orgUnitName}}
+                            </td>
                         </tr>
                     </table>
                 </div>
                 <!-- operations on historical enrollment ends -->
             </div>
-            <div class="col-sm-6" ng-if="!showEnrollmentDiv">
+            <div class="col-sm-6 border-left" ng-if="!showEnrollmentDiv">
                 <div class="title small-vertical-spacing">{{'for_other_programs'| translate}}</div>                
                 <div ng-if="activeEnrollments.length > 0">
                     <table class="table table-striped dhis2-table-hover table-bordered">
