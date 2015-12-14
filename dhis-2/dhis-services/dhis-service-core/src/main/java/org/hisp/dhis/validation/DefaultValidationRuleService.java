@@ -525,7 +525,7 @@ public class DefaultValidationRuleService
     {
         for ( OrganisationUnit o : user.getOrganisationUnits() )
         {
-            if ( source == o || source.getAncestors().contains( o ) )
+            if ( source == o || source.getParents().contains( o ) )
             {
                 return true;
             }

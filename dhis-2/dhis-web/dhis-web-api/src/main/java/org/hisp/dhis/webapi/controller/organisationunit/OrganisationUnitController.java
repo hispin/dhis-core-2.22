@@ -159,7 +159,7 @@ public class OrganisationUnitController
         {
             options.getOptions().put( "useWrapper", "true" );
             organisationUnits.add( organisationUnit );
-            List<OrganisationUnit> ancestors = organisationUnit.getAncestors();
+            List<OrganisationUnit> ancestors = organisationUnit.getParents();
             Collections.reverse( ancestors );
             organisationUnits.addAll( ancestors );
         }
