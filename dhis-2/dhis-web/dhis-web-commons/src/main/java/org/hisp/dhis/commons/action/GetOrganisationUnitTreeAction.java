@@ -218,7 +218,7 @@ public class GetOrganisationUnitTreeAction
                 organisationUnits.add( leaf );
                 organisationUnits.addAll( leaf.getChildren() );
 
-                for ( OrganisationUnit organisationUnit : leaf.getParents() )
+                for ( OrganisationUnit organisationUnit : leaf.getAncestors() )
                 {
                     organisationUnits.add( organisationUnit );
                     organisationUnits.addAll( organisationUnit.getChildren() );
