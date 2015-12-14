@@ -77,5 +77,15 @@ public interface AdxDataService
      */
     ImportSummaries saveDataValueSet( InputStream in, ImportOptions importOptions, TaskId id );
 
+    /**
+     * Get data. Writes adx export data to output stream.
+     * 
+     * @param in the InputStream.
+     * @param importOptions the importOptions.
+     * @param id the task id, can be null.
+     * 
+     * @return an ImportSummaries collection of ImportSummary for each DataValueSet.
+     */
     void writeDataValueSet( DataExportParams params, OutputStream out );
+
 }
