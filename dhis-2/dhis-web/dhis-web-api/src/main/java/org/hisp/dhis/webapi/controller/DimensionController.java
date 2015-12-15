@@ -87,9 +87,24 @@ public class DimensionController
     // -------------------------------------------------------------------------
 
     @Override
-    protected List<DimensionalObject> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    @SuppressWarnings( "unchecked" )
+    protected List<DimensionalObject> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
     {
-        return dimensionService.getAllDimensions();
+        List<DimensionalObject> entityList;
+        Query query = queryService.getQueryFromUrl( DimensionalObject.class, filters, orders );
+        query.setDefaultOrder();
+        query.setObjects( dimensionService.getAllDimensions() );
+
+        if ( options.getOptions().containsKey( "query" ) )
+        {
+            entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
+        }
+        else
+        {
+            entityList = (List<DimensionalObject>) queryService.query( query );
+        }
+
+        return entityList;
     }
 
     @Override
