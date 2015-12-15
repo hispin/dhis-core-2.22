@@ -28,15 +28,15 @@ package org.hisp.dhis.webapi.controller.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.hisp.dhis.commons.collection.CollectionUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
+import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.schema.descriptors.DataElementOperandSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
@@ -45,24 +45,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
 @Controller
 @RequestMapping( value = DataElementOperandSchemaDescriptor.API_ENDPOINT )
-public class DataElementOperandController 
+public class DataElementOperandController
     extends AbstractCrudController<DataElementOperand>
 {
     @Autowired
     private DataElementCategoryService dataElementCategoryService;
 
     @Override
-    protected List<DataElementOperand> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    @SuppressWarnings( "unchecked" )
+    protected List<DataElementOperand> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
     {
-        List<DataElementOperand> dataElementOperands = Lists.newArrayList();
-        
+        List<DataElementOperand> dataElementOperands = new ArrayList<>();
+
         if ( options.isTrue( "persisted" ) )
         {
             dataElementOperands = Lists.newArrayList( manager.getAll( DataElementOperand.class ) );
@@ -70,7 +72,7 @@ public class DataElementOperandController
         else
         {
             boolean totals = options.isTrue( "totals" );
-            
+
             String deGroup = CollectionUtils.popStartsWith( filters, "dataElement.dataElementGroups.id:eq:" );
             deGroup = deGroup != null ? deGroup.substring( "dataElement.dataElementGroups.id:eq:".length() ) : null;
 
@@ -85,6 +87,12 @@ public class DataElementOperandController
                 dataElementOperands = new ArrayList<>( dataElementCategoryService.getOperands( dataElements, totals ) );
             }
         }
+
+        Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
+        query.setDefaultOrder();
+        query.setObjects( dataElementOperands );
+
+        dataElementOperands = (List<DataElementOperand>) queryService.query( query );
 
         return dataElementOperands;
     }
