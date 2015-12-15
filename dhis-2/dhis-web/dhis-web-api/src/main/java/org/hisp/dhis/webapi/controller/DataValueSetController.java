@@ -1,7 +1,5 @@
 package org.hisp.dhis.webapi.controller;
 
-import org.hisp.dhis.dxf2.adx.AdxDataService;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -49,6 +47,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import org.hisp.dhis.dxf2.adx.AdxDataService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
