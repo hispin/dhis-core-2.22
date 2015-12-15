@@ -413,11 +413,7 @@ trackerCapture.controller('DashboardController',
             return;
         });
     };
-    
-    $scope.stickUnstick = function(){        
-        $scope.stickyDisabled = !$scope.stickyDisabled;
-    };
-    
+        
     $scope.showHideWidgets = function(){
         var modalInstance = $modal.open({
             templateUrl: "components/dashboard/dashboard-widgets.html",
