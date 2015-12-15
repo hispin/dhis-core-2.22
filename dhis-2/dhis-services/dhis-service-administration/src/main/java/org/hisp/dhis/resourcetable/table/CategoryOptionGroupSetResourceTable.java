@@ -68,7 +68,7 @@ public class CategoryOptionGroupSetResourceTable
         
         for ( CategoryOptionGroupSet groupSet : objects )
         {
-            statement += columnQuote + groupSet.getName() + columnQuote + " varchar(160), ";
+            statement += columnQuote + groupSet.getName() + columnQuote + " varchar(230), ";
             statement += columnQuote + groupSet.getUid() + columnQuote + " character(11), ";
         }
         
