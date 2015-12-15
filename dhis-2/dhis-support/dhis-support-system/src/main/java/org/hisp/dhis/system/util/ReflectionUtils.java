@@ -28,6 +28,8 @@ package org.hisp.dhis.system.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import javassist.util.proxy.ProxyFactory;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.springframework.util.StringUtils;
@@ -42,12 +44,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Lars Helge Overland
@@ -331,7 +332,6 @@ public class ReflectionUtils
     public static boolean isType( Field field, Class<?> clazz )
     {
         Class<?> type = field.getType();
-
         return clazz.isAssignableFrom( type );
     }
 
@@ -380,14 +380,7 @@ public class ReflectionUtils
     public static List<String> getAllFieldNames( Class<?> klass )
     {
         List<Field> fields = getAllFields( klass );
-        List<String> fieldNames = new ArrayList<>();
-
-        for ( Field field : fields )
-        {
-            fieldNames.add( field.getName() );
-        }
-
-        return fieldNames;
+        return fields.stream().map( Field::getName ).collect( Collectors.toList() );
     }
 
     private static Method _findMethod( Class<?> clazz, String name )
@@ -415,34 +408,6 @@ public class ReflectionUtils
         }
 
         return null;
-    }
-
-    public static Map<String, Method> getMethodMap( Class<?> klass )
-    {
-        Map<String, Method> methodMap = new HashMap<>();
-        List<Method> methods = getAllMethods( klass );
-
-        for ( Method method : methods )
-        {
-            methodMap.put( method.getName(), method );
-        }
-
-        return methodMap;
-    }
-
-    public static List<Method> getAllMethods( Class<?> clazz )
-    {
-        Class<?> searchType = clazz;
-        List<Method> methods = new ArrayList<>();
-
-        while ( searchType != null )
-        {
-            Method[] methodArray = (searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods());
-            methods.addAll( Arrays.asList( methodArray ) );
-            searchType = searchType.getSuperclass();
-        }
-
-        return methods;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -522,5 +487,29 @@ public class ReflectionUtils
         }
 
         return klass;
+    }
+
+    /**
+     * Get all uniquely declared methods on a given Class, if methods are overriden only the topmost method is returned.
+     *
+     * @param klass Class
+     * @return List of uniquely declared methods
+     */
+    public static List<Method> getMethods( Class<?> klass )
+    {
+        return Arrays.asList( org.springframework.util.ReflectionUtils.getUniqueDeclaredMethods( klass ) );
+    }
+
+    /**
+     * Returns a multimap of the mapping method-name -> [methods]. Useful to find overloaded methods in a class hierarchy.
+     *
+     * @param klass Class
+     * @return Multimap of method-name -> [methods]
+     */
+    public static Multimap<String, Method> getMethodsMultimap( Class<?> klass )
+    {
+        Multimap<String, Method> methods = ArrayListMultimap.create();
+        getMethods( klass ).forEach( method -> methods.put( method.getName(), method ) );
+        return methods;
     }
 }

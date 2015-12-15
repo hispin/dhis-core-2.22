@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Primitives;
@@ -50,15 +49,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static org.springframework.util.ReflectionUtils.getUniqueDeclaredMethods;
 
 /**
  * Default PropertyIntrospectorService implementation that uses Reflection and Jackson annotations
@@ -274,16 +270,9 @@ public class Jackson2PropertyIntrospectorService
         return StringUtils.uncapitalize( name );
     }
 
-    private Multimap<String, Method> getMultimap( Class<?> klass )
-    {
-        Multimap<String, Method> methods = ArrayListMultimap.create();
-        Arrays.asList( getUniqueDeclaredMethods( klass ) ).forEach( method -> methods.put( method.getName(), method ) );
-        return methods;
-    }
-
     private List<Property> collectProperties( Class<?> klass )
     {
-        Multimap<String, Method> multimap = getMultimap( klass );
+        Multimap<String, Method> multimap = ReflectionUtils.getMethodsMultimap( klass );
         List<Property> properties = new ArrayList<>();
 
         Map<String, Method> methodMap = multimap.keySet().stream()
