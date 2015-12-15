@@ -67,7 +67,7 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> T getByName( Class<T> clazz, String name );
 
-    <T extends IdentifiableObject> T getByAttributeValue( Class<T> clazz, Attribute attribute, String value );
+    <T extends IdentifiableObject> T getByUniqueAttributeValue( Class<T> clazz, Attribute attribute, String value );
 
     <T extends IdentifiableObject> T search( Class<T> clazz, String query );
 

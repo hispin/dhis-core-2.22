@@ -534,15 +534,15 @@ public class DataElementStoreTest
         dataElementStore.update( dataElementB );
         dataElementStore.update( dataElementC );
 
-        assertNotNull( dataElementStore.getByAttributeValue( attribute, "CID1" ) );
-        assertNotNull( dataElementStore.getByAttributeValue( attribute, "CID2" ) );
-        assertNotNull( dataElementStore.getByAttributeValue( attribute, "CID3" ) );
-        assertNull( dataElementStore.getByAttributeValue( attribute, "CID4" ) );
-        assertNull( dataElementStore.getByAttributeValue( attribute, "CID5" ) );
+        assertNotNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID1" ) );
+        assertNotNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID2" ) );
+        assertNotNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID3" ) );
+        assertNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID4" ) );
+        assertNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID5" ) );
 
-        assertEquals( "DataElementA", dataElementStore.getByAttributeValue( attribute, "CID1" ).getName() );
-        assertEquals( "DataElementB", dataElementStore.getByAttributeValue( attribute, "CID2" ).getName() );
-        assertEquals( "DataElementC", dataElementStore.getByAttributeValue( attribute, "CID3" ).getName() );
+        assertEquals( "DataElementA", dataElementStore.getByUniqueAttributeValue( attribute, "CID1" ).getName() );
+        assertEquals( "DataElementB", dataElementStore.getByUniqueAttributeValue( attribute, "CID2" ).getName() );
+        assertEquals( "DataElementC", dataElementStore.getByUniqueAttributeValue( attribute, "CID3" ).getName() );
     }
 
     @Test
@@ -572,8 +572,8 @@ public class DataElementStoreTest
         dataElementStore.update( dataElementB );
         dataElementStore.update( dataElementC );
 
-        assertNull( dataElementStore.getByAttributeValue( attribute, "CID1" ) );
-        assertNull( dataElementStore.getByAttributeValue( attribute, "CID2" ) );
-        assertNull( dataElementStore.getByAttributeValue( attribute, "CID3" ) );
+        assertNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID1" ) );
+        assertNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID2" ) );
+        assertNull( dataElementStore.getByUniqueAttributeValue( attribute, "CID3" ) );
     }
 }

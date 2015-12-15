@@ -175,7 +175,7 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public T getByAttributeValue( Attribute attribute, String value )
+    public T getByUniqueAttributeValue( Attribute attribute, String value )
     {
         if ( attribute == null || StringUtils.isEmpty( value ) || !attribute.isUnique() )
         {

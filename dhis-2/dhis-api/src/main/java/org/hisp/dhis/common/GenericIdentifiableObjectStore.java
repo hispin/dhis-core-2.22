@@ -81,7 +81,7 @@ public interface GenericIdentifiableObjectStore<T>
      */
     T getByCode( String code );
 
-    T getByAttributeValue( Attribute attribute, String value );
+    T getByUniqueAttributeValue( Attribute attribute, String value );
 
     /**
      * Retrieves a List of all objects (sorted on name).

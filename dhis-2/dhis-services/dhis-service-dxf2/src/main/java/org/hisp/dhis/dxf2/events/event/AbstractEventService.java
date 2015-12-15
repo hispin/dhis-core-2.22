@@ -1315,7 +1315,7 @@ public abstract class AbstractEventService
         else if ( idScheme.is( IdentifiableProperty.ATTRIBUTE ) )
         {
             Attribute attribute = manager.get( Attribute.class, idScheme.getAttribute() );
-            organisationUnit = manager.getByAttributeValue( OrganisationUnit.class, attribute, value );
+            organisationUnit = manager.getByUniqueAttributeValue( OrganisationUnit.class, attribute, value );
         }
         else
         {
