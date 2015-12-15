@@ -1,4 +1,4 @@
-package org.hisp.dhis.schema;
+package org.hisp.dhis.system.util;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -31,6 +31,8 @@ package org.hisp.dhis.schema;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Primitives;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.schema.Property;
+import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
