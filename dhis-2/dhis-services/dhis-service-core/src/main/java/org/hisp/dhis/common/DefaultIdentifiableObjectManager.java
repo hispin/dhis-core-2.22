@@ -242,7 +242,7 @@ public class DefaultIdentifiableObjectManager
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends IdentifiableObject> T getByAttributeValue( Class<T> clazz, Attribute attribute, String value )
+    public <T extends IdentifiableObject> T getByUniqueAttributeValue( Class<T> clazz, Attribute attribute, String value )
     {
         GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( clazz );
 
@@ -251,7 +251,7 @@ public class DefaultIdentifiableObjectManager
             return null;
         }
 
-        return (T) store.getByAttributeValue( attribute, value );
+        return (T) store.getByUniqueAttributeValue( attribute, value );
     }
 
     @Override
@@ -848,7 +848,7 @@ public class DefaultIdentifiableObjectManager
             }
             if ( idScheme.is( IdentifiableProperty.ATTRIBUTE ) )
             {
-                return store.getByAttributeValue( attribute, value );
+                return store.getByUniqueAttributeValue( attribute, value );
             }
             else if ( idScheme.is( IdentifiableProperty.ID ) )
             {
