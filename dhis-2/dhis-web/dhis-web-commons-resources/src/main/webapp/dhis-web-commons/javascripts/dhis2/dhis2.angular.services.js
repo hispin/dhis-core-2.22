@@ -272,8 +272,12 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                     obj.valueType === 'INTEGER_POSITIVE' ||
                     obj.valueType === 'INTEGER_NEGATIVE' ||
                     obj.valueType === 'INTEGER_ZERO_OR_POSITIVE'){
-                if( dhis2.validation.isNumber(val)  ){                            
-                    val = parseInt(val);
+                if( dhis2.validation.isNumber(val)){
+                    if(obj.valueType === 'NUMBER'){
+                        val = parseFloat(val);
+                    }else{
+                        val = parseInt(val);
+                    }
                 }
             }
             if(val && obj.optionSetValue && obj.optionSet && obj.optionSet.id && optionSets[obj.optionSet.id].options  ){
