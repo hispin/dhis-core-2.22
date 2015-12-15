@@ -114,7 +114,7 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
             enrollments.add( fromJson );
         }
 
-        return addEnrollments( enrollments, importOptions );
+        return addEnrollmentList( enrollments, importOptions );
     }
 
     @Override
@@ -134,10 +134,10 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
             enrollments.add( fromXml );
         }
 
-        return addEnrollments( enrollments, importOptions );
+        return addEnrollmentList( enrollments, importOptions );
     }
 
-    private ImportSummaries addEnrollments( List<Enrollment> enrollments, ImportOptions importOptions )
+    private ImportSummaries addEnrollmentList( List<Enrollment> enrollments, ImportOptions importOptions )
     {
         ImportSummaries importSummaries = new ImportSummaries();
 
@@ -179,8 +179,8 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
             delete.addAll( enrollments.stream().map( Enrollment::getEnrollment ).collect( Collectors.toList() ) );
         }
 
-        importSummaries.addImportSummaries( addEnrollments( create ) );
-        importSummaries.addImportSummaries( updateEnrollments( update ) );
+        importSummaries.addImportSummaries( addEnrollments( create, importOptions ) );
+        importSummaries.addImportSummaries( updateEnrollments( update, importOptions ) );
         importSummaries.addImportSummaries( deleteEnrollments( delete ) );
 
         return importSummaries;
@@ -191,14 +191,14 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
     // -------------------------------------------------------------------------
 
     @Override
-    public ImportSummary updateEnrollmentJson( String id, InputStream inputStream ) throws IOException
+    public ImportSummary updateEnrollmentJson( String id, InputStream inputStream, ImportOptions importOptions ) throws IOException
     {
         Enrollment enrollment = fromJson( inputStream, Enrollment.class );
         enrollment.setEnrollment( id );
 
-        return updateEnrollment( enrollment );
+        return updateEnrollment( enrollment, importOptions );
     }
-    
+
     @Override
     public ImportSummary updateEnrollmentForNoteJson( String id, InputStream inputStream ) throws IOException
     {
@@ -209,11 +209,11 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
     }
 
     @Override
-    public ImportSummary updateEnrollmentXml( String id, InputStream inputStream ) throws IOException
+    public ImportSummary updateEnrollmentXml( String id, InputStream inputStream, ImportOptions importOptions ) throws IOException
     {
         Enrollment enrollment = fromXml( inputStream, Enrollment.class );
         enrollment.setEnrollment( id );
 
-        return updateEnrollment( enrollment );
+        return updateEnrollment( enrollment, importOptions );
     }
 }

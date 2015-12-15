@@ -114,7 +114,7 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
             trackedEntityInstances.add( fromXml );
         }
 
-        return addTrackedEntityInstance( trackedEntityInstances, importOptions );
+        return addTrackedEntityInstanceList( trackedEntityInstances, importOptions );
     }
 
     @Override
@@ -134,10 +134,10 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
             trackedEntityInstances.add( fromJson );
         }
 
-        return addTrackedEntityInstance( trackedEntityInstances, importOptions );
+        return addTrackedEntityInstanceList( trackedEntityInstances, importOptions );
     }
 
-    private ImportSummaries addTrackedEntityInstance( List<TrackedEntityInstance> trackedEntityInstances, ImportOptions importOptions )
+    private ImportSummaries addTrackedEntityInstanceList( List<TrackedEntityInstance> trackedEntityInstances, ImportOptions importOptions )
     {
         ImportSummaries importSummaries = new ImportSummaries();
 
@@ -179,8 +179,8 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
             delete.addAll( trackedEntityInstances.stream().map( TrackedEntityInstance::getTrackedEntityInstance ).collect( Collectors.toList() ) );
         }
 
-        importSummaries.addImportSummaries( addTrackedEntityInstances( create ) );
-        importSummaries.addImportSummaries( updateTrackedEntityInstances( update ) );
+        importSummaries.addImportSummaries( addTrackedEntityInstances( create, importOptions ) );
+        importSummaries.addImportSummaries( updateTrackedEntityInstances( update, importOptions ) );
         importSummaries.addImportSummaries( deleteTrackedEntityInstances( delete ) );
 
         return importSummaries;
@@ -191,20 +191,20 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
     // -------------------------------------------------------------------------
 
     @Override
-    public ImportSummary updateTrackedEntityInstanceXml( String id, InputStream inputStream ) throws IOException
+    public ImportSummary updateTrackedEntityInstanceXml( String id, InputStream inputStream, ImportOptions importOptions ) throws IOException
     {
         TrackedEntityInstance trackedEntityInstance = fromXml( inputStream, TrackedEntityInstance.class );
         trackedEntityInstance.setTrackedEntityInstance( id );
 
-        return updateTrackedEntityInstance( trackedEntityInstance );
+        return updateTrackedEntityInstance( trackedEntityInstance, importOptions );
     }
 
     @Override
-    public ImportSummary updateTrackedEntityInstanceJson( String id, InputStream inputStream ) throws IOException
+    public ImportSummary updateTrackedEntityInstanceJson( String id, InputStream inputStream, ImportOptions importOptions ) throws IOException
     {
         TrackedEntityInstance trackedEntityInstance = fromJson( inputStream, TrackedEntityInstance.class );
         trackedEntityInstance.setTrackedEntityInstance( id );
 
-        return updateTrackedEntityInstance( trackedEntityInstance );
+        return updateTrackedEntityInstance( trackedEntityInstance, importOptions );
     }
 }

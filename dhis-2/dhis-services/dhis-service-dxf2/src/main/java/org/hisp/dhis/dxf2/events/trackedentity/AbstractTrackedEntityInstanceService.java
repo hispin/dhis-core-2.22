@@ -33,6 +33,7 @@ import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
@@ -213,14 +214,19 @@ public abstract class AbstractTrackedEntityInstanceService
     // -------------------------------------------------------------------------
 
     @Override
-    public ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances )
+    public ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummaries importSummaries = new ImportSummaries();
         int counter = 0;
 
         for ( TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
         {
-            importSummaries.addImportSummary( addTrackedEntityInstance( trackedEntityInstance ) );
+            importSummaries.addImportSummary( addTrackedEntityInstance( trackedEntityInstance, importOptions ) );
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
@@ -234,8 +240,13 @@ public abstract class AbstractTrackedEntityInstanceService
     }
 
     @Override
-    public ImportSummary addTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance )
+    public ImportSummary addTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummary importSummary = new ImportSummary();
 
         trackedEntityInstance.trimValuesToNull();
@@ -272,14 +283,19 @@ public abstract class AbstractTrackedEntityInstanceService
     // -------------------------------------------------------------------------
 
     @Override
-    public ImportSummaries updateTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances )
+    public ImportSummaries updateTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummaries importSummaries = new ImportSummaries();
         int counter = 0;
 
         for ( TrackedEntityInstance trackedEntityInstance : trackedEntityInstances )
         {
-            importSummaries.addImportSummary( updateTrackedEntityInstance( trackedEntityInstance ) );
+            importSummaries.addImportSummary( updateTrackedEntityInstance( trackedEntityInstance, importOptions ) );
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
@@ -293,8 +309,13 @@ public abstract class AbstractTrackedEntityInstanceService
     }
 
     @Override
-    public ImportSummary updateTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance )
+    public ImportSummary updateTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummary importSummary = new ImportSummary();
 
         trackedEntityInstance.trimValuesToNull();
@@ -303,7 +324,8 @@ public abstract class AbstractTrackedEntityInstanceService
         importConflicts.addAll( checkRelationships( trackedEntityInstance ) );
         importConflicts.addAll( checkAttributes( trackedEntityInstance ) );
 
-        org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = manager.get( org.hisp.dhis.trackedentity.TrackedEntityInstance.class, trackedEntityInstance.getTrackedEntityInstance() );
+        org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = manager.get( org.hisp.dhis.trackedentity.TrackedEntityInstance.class,
+            trackedEntityInstance.getTrackedEntityInstance() );
 
         if ( entityInstance == null )
         {

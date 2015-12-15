@@ -30,12 +30,12 @@ package org.hisp.dhis.dxf2.events.enrollment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dbms.DbmsManager;
+import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.event.Note;
 import org.hisp.dhis.dxf2.events.trackedentity.Attribute;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
@@ -200,14 +200,19 @@ public abstract class AbstractEnrollmentService
     // -------------------------------------------------------------------------
 
     @Override
-    public ImportSummaries addEnrollments( List<Enrollment> enrollments )
+    public ImportSummaries addEnrollments( List<Enrollment> enrollments, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummaries importSummaries = new ImportSummaries();
         int counter = 0;
 
         for ( Enrollment enrollment : enrollments )
         {
-            importSummaries.addImportSummary( addEnrollment( enrollment ) );
+            importSummaries.addImportSummary( addEnrollment( enrollment, importOptions ) );
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
@@ -221,8 +226,13 @@ public abstract class AbstractEnrollmentService
     }
 
     @Override
-    public ImportSummary addEnrollment( Enrollment enrollment )
+    public ImportSummary addEnrollment( Enrollment enrollment, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummary importSummary = new ImportSummary();
 
         org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = getTrackedEntityInstance( enrollment.getTrackedEntityInstance() );
@@ -312,14 +322,19 @@ public abstract class AbstractEnrollmentService
     // -------------------------------------------------------------------------
 
     @Override
-    public ImportSummaries updateEnrollments( List<Enrollment> enrollments )
+    public ImportSummaries updateEnrollments( List<Enrollment> enrollments, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummaries importSummaries = new ImportSummaries();
         int counter = 0;
 
         for ( Enrollment enrollment : enrollments )
         {
-            importSummaries.addImportSummary( updateEnrollment( enrollment ) );
+            importSummaries.addImportSummary( updateEnrollment( enrollment, importOptions ) );
 
             if ( counter % FLUSH_FREQUENCY == 0 )
             {
@@ -333,8 +348,13 @@ public abstract class AbstractEnrollmentService
     }
 
     @Override
-    public ImportSummary updateEnrollment( Enrollment enrollment )
+    public ImportSummary updateEnrollment( Enrollment enrollment, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummary importSummary = new ImportSummary();
 
         if ( enrollment == null || enrollment.getEnrollment() == null )
@@ -397,7 +417,7 @@ public abstract class AbstractEnrollmentService
 
         return importSummary;
     }
-    
+
     @Override
     public ImportSummary updateEnrollmentForNote( Enrollment enrollment )
     {
@@ -475,7 +495,7 @@ public abstract class AbstractEnrollmentService
         ProgramInstance programInstance = programInstanceService.getProgramInstance( uid );
         programInstanceService.completeProgramInstanceStatus( programInstance );
     }
-    
+
     @Override
     public void incompleteEnrollment( String uid )
     {
