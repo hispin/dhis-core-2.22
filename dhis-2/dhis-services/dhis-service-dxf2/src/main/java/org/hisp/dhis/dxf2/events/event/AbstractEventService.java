@@ -498,7 +498,6 @@ public abstract class AbstractEventService
 
         EventRows eventRows = new EventRows();
 
-
         List<EventRow> eventRowList = eventStore.getEventRows( params, organisationUnits );
 
         eventRows.setEventRows( eventRowList );
@@ -649,6 +648,11 @@ public abstract class AbstractEventService
 
     private ImportSummary updateEvent( Event event, User user, boolean singleValue, ImportOptions importOptions )
     {
+        if ( importOptions == null )
+        {
+            importOptions = new ImportOptions();
+        }
+
         ImportSummary importSummary = new ImportSummary();
         ProgramStageInstance programStageInstance = programStageInstanceService.getProgramStageInstance( event.getEvent() );
 
@@ -656,11 +660,6 @@ public abstract class AbstractEventService
         {
             importSummary.getConflicts().add( new ImportConflict( "Invalid Event ID.", event.getEvent() ) );
             return importSummary.incrementIgnored();
-        }
-
-        if ( importOptions == null )
-        {
-            importOptions = new ImportOptions();
         }
 
         OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes().getOrgUnitIdScheme(), event.getOrgUnit() );

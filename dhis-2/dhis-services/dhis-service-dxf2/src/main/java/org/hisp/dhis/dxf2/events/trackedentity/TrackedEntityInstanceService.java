@@ -64,21 +64,21 @@ public interface TrackedEntityInstanceService
 
     ImportSummaries addTrackedEntityInstanceJson( InputStream inputStream, ImportOptions importOptions ) throws IOException;
 
-    ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances );
+    ImportSummaries addTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances, ImportOptions importOptions );
 
-    ImportSummary addTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance );
+    ImportSummary addTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, ImportOptions importOptions );
 
     // -------------------------------------------------------------------------
     // UPDATE
     // -------------------------------------------------------------------------
 
-    ImportSummary updateTrackedEntityInstanceXml( String id, InputStream inputStream ) throws IOException;
+    ImportSummary updateTrackedEntityInstanceXml( String id, InputStream inputStream, ImportOptions importOptions ) throws IOException;
 
-    ImportSummary updateTrackedEntityInstanceJson( String id, InputStream inputStream ) throws IOException;
+    ImportSummary updateTrackedEntityInstanceJson( String id, InputStream inputStream, ImportOptions importOptions ) throws IOException;
 
-    ImportSummaries updateTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances );
+    ImportSummaries updateTrackedEntityInstances( List<TrackedEntityInstance> trackedEntityInstances, ImportOptions importOptions );
 
-    ImportSummary updateTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance );
+    ImportSummary updateTrackedEntityInstance( TrackedEntityInstance trackedEntityInstance, ImportOptions importOptions );
 
     // -------------------------------------------------------------------------
     // DELETE

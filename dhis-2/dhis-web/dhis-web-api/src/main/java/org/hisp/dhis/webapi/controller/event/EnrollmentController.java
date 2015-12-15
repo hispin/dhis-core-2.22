@@ -29,7 +29,6 @@ package org.hisp.dhis.webapi.controller.event;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -68,7 +67,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -223,24 +221,24 @@ public class EnrollmentController
 
     @RequestMapping( value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
-    public void updateEnrollmentXml( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    public void updateEnrollmentXml( @PathVariable String id, ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
-        ImportSummary importSummary = enrollmentService.updateEnrollmentXml( id, request.getInputStream() );
+        ImportSummary importSummary = enrollmentService.updateEnrollmentXml( id, request.getInputStream(), importOptions );
         webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
-    public void updateEnrollmentJson( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    public void updateEnrollmentJson( @PathVariable String id, ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
-        ImportSummary importSummary = enrollmentService.updateEnrollmentJson( id, request.getInputStream() );
+        ImportSummary importSummary = enrollmentService.updateEnrollmentJson( id, request.getInputStream(), importOptions );
         webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
-    
+
     @RequestMapping( value = "/{id}/addNote", method = RequestMethod.PUT, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
     public void updateEnrollmentForNoteJson( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws IOException
-    {        
+    {
         ImportSummary importSummary = enrollmentService.updateEnrollmentForNoteJson( id, request.getInputStream() );
         webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
@@ -270,7 +268,7 @@ public class EnrollmentController
 
         enrollmentService.completeEnrollment( id );
     }
-    
+
     @RequestMapping( value = "/{id}/incompleted", method = RequestMethod.PUT )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
     @ResponseStatus( HttpStatus.NO_CONTENT )
