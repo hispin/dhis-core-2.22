@@ -50,11 +50,11 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
+import org.hisp.dhis.system.util.AnnotationUtils;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -417,9 +417,9 @@ public class DefaultMetaDataDependencyService
 
     public boolean isExportView( Method method )
     {
-        if ( AnnotationUtils.findAnnotation( method, JsonView.class ) != null )
+        if ( AnnotationUtils.isAnnotationPresent( method, JsonView.class ) )
         {
-            Class<?>[] viewClasses = AnnotationUtils.findAnnotation( method, JsonView.class ).value();
+            Class<?>[] viewClasses = AnnotationUtils.getAnnotation( method, JsonView.class ).value();
 
             for ( Class<?> viewClass : viewClasses )
             {

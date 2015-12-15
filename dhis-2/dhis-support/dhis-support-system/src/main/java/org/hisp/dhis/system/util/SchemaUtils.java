@@ -34,7 +34,6 @@ import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.PropertyRange;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
@@ -64,14 +63,14 @@ public final class SchemaUtils
 
         if ( property.isWritable() )
         {
-            if ( AnnotationUtils.findAnnotation( property.getGetterMethod(), org.hisp.dhis.schema.annotation.Property.class ) != null )
+            if ( AnnotationUtils.isAnnotationPresent( property.getGetterMethod(), org.hisp.dhis.schema.annotation.Property.class ) )
             {
-                property.setPropertyType( AnnotationUtils.findAnnotation( property.getGetterMethod(), org.hisp.dhis.schema.annotation.Property.class ).value() );
+                property.setPropertyType( AnnotationUtils.getAnnotation( property.getGetterMethod(), org.hisp.dhis.schema.annotation.Property.class ).value() );
             }
 
-            if ( AnnotationUtils.findAnnotation( property.getGetterMethod(), PropertyRange.class ) != null )
+            if ( AnnotationUtils.isAnnotationPresent( property.getGetterMethod(), PropertyRange.class ) )
             {
-                PropertyRange propertyRange = AnnotationUtils.findAnnotation( property.getGetterMethod(), PropertyRange.class );
+                PropertyRange propertyRange = AnnotationUtils.getAnnotation( property.getGetterMethod(), PropertyRange.class );
 
                 if ( property.getMax() == null || propertyRange.max() <= property.getMax() )
                 {

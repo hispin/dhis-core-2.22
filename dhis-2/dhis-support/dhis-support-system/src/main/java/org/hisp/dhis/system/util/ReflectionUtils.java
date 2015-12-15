@@ -523,24 +523,4 @@ public class ReflectionUtils
 
         return klass;
     }
-
-    public static boolean isAnnotationPresent( Class<?> klass, Class<? extends Annotation> annotationType )
-    {
-        return org.springframework.core.annotation.AnnotationUtils.findAnnotation( klass, annotationType ) != null;
-    }
-
-    public static boolean isAnnotationPresent( Method method, Class<? extends Annotation> annotationType )
-    {
-        return org.springframework.core.annotation.AnnotationUtils.findAnnotation( method, annotationType ) != null;
-    }
-
-    public static <A extends Annotation> A getAnnotation( Class<?> klass, Class<A> annotationType )
-    {
-        return org.springframework.core.annotation.AnnotationUtils.findAnnotation( klass, annotationType );
-    }
-
-    public static <A extends Annotation> A getAnnotation( Method method, Class<A> annotationType )
-    {
-        return org.springframework.core.annotation.AnnotationUtils.findAnnotation( method, annotationType );
-    }
 }
