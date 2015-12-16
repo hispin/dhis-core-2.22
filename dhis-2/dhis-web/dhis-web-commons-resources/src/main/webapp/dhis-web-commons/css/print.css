@@ -21,6 +21,8 @@ div#mainPage
 
 @media print {
   .not-for-screen {
-    display: block;
+    margin-top:0%;
+    display:block;
+    height:100%
   }
 }

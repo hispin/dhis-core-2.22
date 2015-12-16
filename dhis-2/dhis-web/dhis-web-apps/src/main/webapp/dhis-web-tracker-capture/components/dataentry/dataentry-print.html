@@ -1,61 +1,120 @@
 <div id="print-div" class="not-for-screen">
-  <table class="table table-bordered table-compact">
-    <tr class="col-md-12" ng-repeat="attribute in selectedTei.attributes" ng-show="attribute.show">
-      <td class="col-md-6 bold">
-        {{attribute.displayName}}
-      </td>
-      <td class="col-md-6">
-     <span ng-switch="attribute.type">
-        <span ng-switch-when="bool">
-          <span ng-if="attribute.value === 'true'">{{'yes' | translate}}</span>
-          <span ng-if="attribute.value === 'false'">{{ 'no' | translate}}</span>
-        </span>
-        <span ng-switch-when="trueOnly">
-            <span ng-if="attribute.value">
-                <i class="fa fa-check"></i>
-            </span>
-        </span>
-        <span ng-switch-default>{{attribute.value}}</span>
-        </span>
-      </td>
-    </tr>
-  </table>
 
-  <table class="table table-bordered table-compact">
-    <tr class="col-md-12">
-      <td class="col-md-6 bold">
-        {{'enrolling_orgunit' | translate}}
-      </td>
-      <td class="col-md-6">
-        {{selectedEnrollment.orgUnitName}}
-      </td>
-    </tr>
-    <tr class="col-md-12">
-      <td class="col-md-6 bold">
-        {{selectedProgram.enrollmentDateLabel}}
-      </td>
-      <td class="col-md-6">
-        {{selectedEnrollment.enrollmentDate}}
-      </td>
-    </tr>
-    <tr class="col-md-12" ng-if="selectedProgram.displayIncidentDate">
-      <td class="col-md-6 bold">
-        {{selectedProgram.incidentDateLabel}}
-      </td>
-      <td class="col-md-6">
-        {{selectedEnrollment.incidentDate}}
-      </td>
-    </tr>
-  </table>
 
-  <table class="table table-bordered table-compact">
-    <tr ng-repeat="dataValue in currentEvent.dataValues">
-      <td class="bold">
-        {{prStDes[dataValue.dataElement].dataElement.formname?prStDes[dataValue.dataElement].dataElement.formname:prStDes[dataValue.dataElement].dataElement.name}}
+  <!-- For personal data-->
+  <div style="overflow:visible">
+
+    <div class="section">Personal Details</div>
+
+    <table class="table table-bordered">
+      <tbody>
+        <tr ng-repeat="attribute in selectedTei.attributes" ng-show="attribute.show">
+          <td class="bold attritbute-name">
+            {{attribute.displayName}}
+          </td>
+          <td>
+            <input type="text" value={{attribute.value}} class="form-control">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- For personal data -->
+
+
+  <!-- For Enrollment-->
+
+    <div style="overflow:visible">
+
+      <div class="section">Enrollment</div>
+
+      <table class="table table-bordered">
+
+        <tbody>
+        <tr>
+          <td class="bold attritbute-name">
+            {{'enrolling_orgunit' | translate}}
+          </td>
+          <td>
+            <input type="text" value={{selectedEnrollment.orgUnitName}} class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td class="bold attritbute-name">
+            {{selectedProgram.enrollmentDateLabel}}
+          </td>
+          <td>
+            <input type="text" value= {{selectedEnrollment.enrollmentDate}} class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td class="bold attritbute-name">
+            {{selectedProgram.incidentDateLabel}}
+          </td>
+          <td>
+            <input type="text" value={{selectedEnrollment.incidentDate}} class="form-control">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  <!-- For Enrollment-->
+
+  <table class="table table-bordered" ng-if='currentEvent && !currentStage.programStageSections.length'>
+    <thead>
+    <tr>
+      <th ng-bind="dataElementLabel">
+      </th>
+      <th class="align-center" ng-bind="valueLabel">
+      </th>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="prStDe in currentStage.programStageDataElements">
+      <td class="bold attritbute-name">
+        {{prStDe.dataElement.formname ? prStDe.dataElement.formname : prStDe.dataElement.name}}
       </td>
       <td>
-        {{dataValue.value}}
+        <input type="text" value={{currentEvent[prStDe.dataElement.id]}} class="form-control">
       </td>
     </tr>
+    </tbody>
   </table>
+
+  <div ng-if='currentEvent && currentStage.programStageSections.length'>
+
+      <div ng-repeat='section in currentStage.programStageSections'
+                       ng-if="!hiddenSections[section.id]" style="overflow:visible">
+
+        <div class="section">{{section.name}}</div>
+
+          <table class="table table-bordered" ng-if="section.programStageDataElements && section.programStageDataElements.length > 0">
+          <thead>
+            <tr>
+              <th ng-bind="dataElementLabel">
+              </th>
+              <th class="align-center" ng-bind="valueLabel">
+              </th>
+              <th class="align-center" ng-if="allowProvidedElsewhereExists[currentStage.id]" ng-bind="providedElsewhereLabel">
+              </th>
+            </tr>
+          </thead>
+          <tbody id="list">
+            <tr ng-repeat="de in section.programStageDataElements">
+              <td class="bold attritbute-name">
+                {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}
+              </td>
+              <td>
+                <input type="text" value={{currentEvent[prStDes[de.dataElement.id].dataElement.id]}} class="form-control">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+    </div>
+    </div>
+  </div>
 </div>
