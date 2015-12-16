@@ -55,7 +55,7 @@ public class Coordinate
     }
 
     @JsonProperty( required = true )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0, isAttribute = true )
+    @JacksonXmlProperty( isAttribute = true )
     public Double getLatitude()
     {
         return latitude;
@@ -67,7 +67,7 @@ public class Coordinate
     }
 
     @JsonProperty( required = true )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0, isAttribute = true )
+    @JacksonXmlProperty( isAttribute = true )
     public Double getLongitude()
     {
         return longitude;

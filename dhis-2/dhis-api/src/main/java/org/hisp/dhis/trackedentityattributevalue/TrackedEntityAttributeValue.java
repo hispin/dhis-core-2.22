@@ -42,6 +42,7 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * TODO index on attribute and instance
@@ -61,6 +62,10 @@ public class TrackedEntityAttributeValue
 
     private TrackedEntityInstance entityInstance;
 
+    private Date created;
+
+    private Date lastUpdated;
+
     private String encryptedValue;
 
     private String plainValue;
@@ -68,7 +73,7 @@ public class TrackedEntityAttributeValue
     /**
      * This value is only used to store values from setValue when we don't know
      * if attribute is set or not.
-    */
+     */
     private String value;
 
 
@@ -86,12 +91,23 @@ public class TrackedEntityAttributeValue
         setEntityInstance( entityInstance );
     }
 
-    public TrackedEntityAttributeValue( TrackedEntityAttribute attribute, TrackedEntityInstance entityInstance,
-        String value )
+    public TrackedEntityAttributeValue( TrackedEntityAttribute attribute, TrackedEntityInstance entityInstance, String value )
     {
         setAttribute( attribute );
         setEntityInstance( entityInstance );
         setValue( value );
+    }
+
+    public void setAutoFields()
+    {
+        Date date = new Date();
+
+        if ( created == null )
+        {
+            created = date;
+        }
+
+        setLastUpdated( date );
     }
 
     // -------------------------------------------------------------------------
@@ -178,11 +194,35 @@ public class TrackedEntityAttributeValue
     // Getters and setters
     // -------------------------------------------------------------------------
 
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated( Date created )
+    {
+        this.created = created;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public Date getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( Date lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
+    }
+
     /**
-     * Retrieves the encrypted value if the attribute is confidential. If the 
+     * Retrieves the encrypted value if the attribute is confidential. If the
      * value is not confidential, returns old value. Should be null unless it was
      * confidential at an earlier stage.
-     * 
+     *
      * @return String with decrypted value or null.
      */
     @JsonIgnore
@@ -197,10 +237,10 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Retrieves the plain-text value is the attribute isn't confidential. If 
-     * the value is confidential, this value should be null, unless it was 
+     * Retrieves the plain-text value is the attribute isn't confidential. If
+     * the value is confidential, this value should be null, unless it was
      * non-confidential at an earlier stage.
-     * 
+     *
      * @return String with plain-text value or null.
      */
     @JsonIgnore
@@ -215,9 +255,9 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Returns the encrypted or the plain-text value, based on the attribute's 
+     * Returns the encrypted or the plain-text value, based on the attribute's
      * confidential value.
-     * 
+     *
      * @return String with value, either plain-text or decrypted.
      */
     @JsonProperty
@@ -229,10 +269,10 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Since we never can be 100% certain Attribute is not null, we store the 
-     * value in a temporary variable. The getEncrypted and getPlaintext methods 
+     * Since we never can be 100% certain Attribute is not null, we store the
+     * value in a temporary variable. The getEncrypted and getPlaintext methods
      * will handle this value when requested.
-     * 
+     *
      * @param value the value to be stored
      */
     public void setValue( String value )

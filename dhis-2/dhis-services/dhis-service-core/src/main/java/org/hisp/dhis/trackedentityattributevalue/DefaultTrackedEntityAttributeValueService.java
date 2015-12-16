@@ -111,6 +111,8 @@ public class DefaultTrackedEntityAttributeValueService
     @Override
     public void addTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
+        attributeValue.setAutoFields();
+
         if ( attributeValue.getValue() != null )
         {
             attributeValueStore.saveVoid( attributeValue );
@@ -120,6 +122,8 @@ public class DefaultTrackedEntityAttributeValueService
     @Override
     public void updateTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
+        attributeValue.setAutoFields();
+
         if ( StringUtils.isEmpty( attributeValue.getValue() ) )
         {
             attributeValueStore.delete( attributeValue );
