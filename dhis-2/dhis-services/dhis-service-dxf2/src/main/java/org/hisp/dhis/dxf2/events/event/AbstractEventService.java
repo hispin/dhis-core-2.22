@@ -34,12 +34,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
-import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdScheme;
 import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.common.IdentifiableObjectManager;
-import org.hisp.dhis.common.IdentifiableProperty;
 import org.hisp.dhis.common.IllegalQueryException;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.Pager;
@@ -399,7 +397,7 @@ public abstract class AbstractEventService
             }
         }
 
-        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes().getOrgUnitIdScheme(), event.getOrgUnit() );
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes(), event.getOrgUnit() );
 
         if ( organisationUnit == null )
         {
@@ -662,7 +660,7 @@ public abstract class AbstractEventService
             return importSummary.incrementIgnored();
         }
 
-        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes().getOrgUnitIdScheme(), event.getOrgUnit() );
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes(), event.getOrgUnit() );
 
         if ( organisationUnit == null )
         {
@@ -818,8 +816,8 @@ public abstract class AbstractEventService
         }
 
         ImportOptions importOptions = new ImportOptions();
-        
-        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes().getOrgUnitIdScheme(), event.getOrgUnit() );
+
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes(), event.getOrgUnit() );
 
         if ( organisationUnit == null )
         {
@@ -1280,53 +1278,9 @@ public abstract class AbstractEventService
         }
     }
 
-    private OrganisationUnit getOrganisationUnit( IdScheme idScheme, String value )
+    private OrganisationUnit getOrganisationUnit( IdSchemes idSchemes, String id )
     {
-        OrganisationUnit organisationUnit = null;
-
-        if ( StringUtils.isEmpty( value ) )
-        {
-            return null;
-        }
-
-        if ( organisationUnitCache.containsKey( value ) )
-        {
-            return organisationUnitCache.get( value );
-        }
-
-        if ( idScheme.is( IdentifiableProperty.UUID ) )
-        {
-            organisationUnit = organisationUnitService.getOrganisationUnitByUuid( value );
-        }
-        else if ( idScheme.is( IdentifiableProperty.CODE ) )
-        {
-            organisationUnit = organisationUnitService.getOrganisationUnitByCode( value );
-        }
-        else if ( idScheme.is( IdentifiableProperty.NAME ) )
-        {
-            List<OrganisationUnit> organisationUnitByName = organisationUnitService.getOrganisationUnitByName( value );
-
-            if ( organisationUnitByName.size() == 1 )
-            {
-                organisationUnit = organisationUnitByName.get( 0 );
-            }
-        }
-        else if ( idScheme.is( IdentifiableProperty.ATTRIBUTE ) )
-        {
-            Attribute attribute = manager.get( Attribute.class, idScheme.getAttribute() );
-            organisationUnit = manager.getByUniqueAttributeValue( OrganisationUnit.class, attribute, value );
-        }
-        else
-        {
-            organisationUnit = organisationUnitService.getOrganisationUnit( value );
-        }
-
-        if ( organisationUnit != null )
-        {
-            organisationUnitCache.put( value, organisationUnit );
-        }
-
-        return organisationUnit;
+        return organisationUnitCache.get( id, new IdentifiableObjectCallable<>( manager, OrganisationUnit.class, idSchemes.getOrgUnitIdScheme(), id ) );
     }
 
     private Program getProgram( IdScheme idScheme, String id )

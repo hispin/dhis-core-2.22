@@ -239,7 +239,7 @@ public abstract class AbstractEnrollmentService
         org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = getTrackedEntityInstance( enrollment.getTrackedEntityInstance() );
         TrackedEntityInstance trackedEntityInstance = trackedEntityInstanceService.getTrackedEntityInstance( entityInstance );
 
-        Program program = getProgram( enrollment.getProgram(), importOptions.getIdSchemes() );
+        Program program = getProgram( importOptions.getIdSchemes(), enrollment.getProgram() );
 
         ProgramInstanceQueryParams params = new ProgramInstanceQueryParams();
         params.setOrganisationUnitMode( OrganisationUnitSelectionMode.ALL );
@@ -291,7 +291,7 @@ public abstract class AbstractEnrollmentService
             return importSummary;
         }
 
-        OrganisationUnit organisationUnit = getOrganisationUnit( enrollment.getOrgUnit(), importOptions.getIdSchemes() );
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes(), enrollment.getOrgUnit() );
 
         ProgramInstance programInstance = programInstanceService.enrollTrackedEntityInstance( entityInstance, program,
             enrollment.getEnrollmentDate(), enrollment.getIncidentDate(), organisationUnit, enrollment.getEnrollment() );
@@ -384,7 +384,7 @@ public abstract class AbstractEnrollmentService
         }
 
         org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = getTrackedEntityInstance( enrollment.getTrackedEntityInstance() );
-        Program program = getProgram( enrollment.getProgram(), importOptions.getIdSchemes() );
+        Program program = getProgram( importOptions.getIdSchemes(), enrollment.getProgram() );
 
         programInstance.setProgram( program );
         programInstance.setEntityInstance( entityInstance );
@@ -512,7 +512,7 @@ public abstract class AbstractEnrollmentService
     {
         List<ImportConflict> importConflicts = new ArrayList<>();
 
-        Program program = getProgram( enrollment.getProgram(), importOptions.getIdSchemes() );
+        Program program = getProgram( importOptions.getIdSchemes(), enrollment.getProgram() );
         org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance = teiService.getTrackedEntityInstance(
             enrollment.getTrackedEntityInstance() );
 
@@ -613,7 +613,7 @@ public abstract class AbstractEnrollmentService
 
         for ( String key : attributeValueMap.keySet() )
         {
-            TrackedEntityAttribute attribute = getTrackedEntityAttribute( key, importOptions.getIdSchemes() );
+            TrackedEntityAttribute attribute = getTrackedEntityAttribute( importOptions.getIdSchemes(), key );
 
             if ( attribute != null )
             {
@@ -643,7 +643,7 @@ public abstract class AbstractEnrollmentService
     private List<ImportConflict> validateAttributeType( Attribute attribute, ImportOptions importOptions )
     {
         List<ImportConflict> importConflicts = Lists.newArrayList();
-        TrackedEntityAttribute teAttribute = getTrackedEntityAttribute( attribute.getAttribute(), importOptions.getIdSchemes() );
+        TrackedEntityAttribute teAttribute = getTrackedEntityAttribute( importOptions.getIdSchemes(), attribute.getAttribute() );
 
         if ( teAttribute == null )
         {
@@ -680,17 +680,17 @@ public abstract class AbstractEnrollmentService
         }
     }
 
-    private OrganisationUnit getOrganisationUnit( String id, IdSchemes idSchemes )
+    private OrganisationUnit getOrganisationUnit( IdSchemes idSchemes, String id )
     {
         return organisationUnitCache.get( id, new IdentifiableObjectCallable<>( manager, OrganisationUnit.class, idSchemes.getOrgUnitIdScheme(), id ) );
     }
 
-    private Program getProgram( String id, IdSchemes idSchemes )
+    private Program getProgram( IdSchemes idSchemes, String id )
     {
         return programCache.get( id, new IdentifiableObjectCallable<>( manager, Program.class, idSchemes.getProgramIdScheme(), id ) );
     }
 
-    private TrackedEntityAttribute getTrackedEntityAttribute( String id, IdSchemes idSchemes )
+    private TrackedEntityAttribute getTrackedEntityAttribute( IdSchemes idSchemes, String id )
     {
         return trackedEntityAttributeCache.get( id, new IdentifiableObjectCallable<>( manager, TrackedEntityAttribute.class, idSchemes.getTrackedEntityAttributeIdScheme(), id ) );
     }
