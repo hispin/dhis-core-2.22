@@ -172,33 +172,9 @@ public class ImportOptions
     // Set methods
     //--------------------------------------------------------------------------
 
-    public ImportOptions setProgramStageIdScheme( String idScheme )
+    public ImportOptions setIdSchemes( IdSchemes idSchemes )
     {
-        idSchemes.setProgramStageIdScheme( idScheme );
-        return this;
-    }
-
-    public ImportOptions setProgramIdScheme( String idScheme )
-    {
-        idSchemes.setProgramIdScheme( idScheme );
-        return this;
-    }
-
-    public ImportOptions setOrgUnitIdScheme( String idScheme )
-    {
-        idSchemes.setOrgUnitIdScheme( idScheme );
-        return this;
-    }
-
-    public ImportOptions setCategoryOptionComboIdScheme( String idScheme )
-    {
-        idSchemes.setCategoryOptionComboIdScheme( idScheme );
-        return this;
-    }
-
-    public ImportOptions setDataElementIdScheme( String idScheme )
-    {
-        idSchemes.setDataElementIdScheme( idScheme );
+        this.idSchemes = idSchemes;
         return this;
     }
 
@@ -208,9 +184,40 @@ public class ImportOptions
         return this;
     }
 
-    public void setIdSchemes( IdSchemes idSchemes )
+    public ImportOptions setDataElementIdScheme( String idScheme )
     {
-        this.idSchemes = idSchemes == null ? new IdSchemes() : idSchemes;
+        idSchemes.setDataElementIdScheme( idScheme );
+        return this;
+    }
+
+    public ImportOptions setCategoryOptionComboIdScheme( String idScheme )
+    {
+        idSchemes.setCategoryOptionComboIdScheme( idScheme );
+        return this;
+    }
+
+    public ImportOptions setOrgUnitIdScheme( String idScheme )
+    {
+        idSchemes.setOrgUnitIdScheme( idScheme );
+        return this;
+    }
+
+    public ImportOptions setProgramIdScheme( String idScheme )
+    {
+        idSchemes.setProgramIdScheme( idScheme );
+        return this;
+    }
+
+    public ImportOptions setProgramStageIdScheme( String idScheme )
+    {
+        idSchemes.setProgramStageIdScheme( idScheme );
+        return this;
+    }
+
+    public ImportOptions setTrackedEntityAttribute( String idScheme )
+    {
+        idSchemes.setTrackedEntityAttribute( idScheme );
+        return this;
     }
 
     public ImportOptions setDryRun( boolean dryRun )
