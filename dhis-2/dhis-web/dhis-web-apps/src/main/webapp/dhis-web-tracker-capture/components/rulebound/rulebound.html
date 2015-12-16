@@ -10,21 +10,28 @@
         </span>        
     </div>        
     <div ng-show="this.widget.expand" class="panel-body dashboard-widget-container">        
-        <div class="panel-body" ng-if="showKeyDataSection">
-            <div ng-repeat="(key,item) in displayKeyDataEffects" ng-show="item.ineffect"  class="info-container">
-                <div class="info-container-heading">{{item.content | trimquotes }}</div>
-                <div class="info-container-text">{{item.data | trimquotes}}</div>          
-            </div>
-        </div>   
-        <table class="table table-striped dashboard-element-container" ng-if="showTextSection">
-            <tr ng-repeat="(key,item) in displayTextEffects" ng-if="item.ineffect">
-                <td>
-                    <div>
-                        {{item.content | trimquotes}}{{item.data | trimquotes}}
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <div ng-show="!showKeyDataSection && !showTextSection" class="alert alert-warning">{{widgetTitleLabel === "Indicators" ? emptyIndicatorListLabel : emptyFeedbackListLabel}}</div> 
+        <div ng-if="!dashboardReady">
+            <img id="ouwt_loader" src="../images/ajax-loader-bar.gif" alt="{{'loading'| translate}}"/>
+        </div>
+        
+        <div ng-if="dashboardReady">
+            <div class="panel-body" ng-if="showKeyDataSection">
+                <div ng-repeat="(key,item) in displayKeyDataEffects" ng-show="item.ineffect"  class="info-container">
+                    <div class="info-container-heading">{{item.content | trimquotes }}</div>
+                    <div class="info-container-text">{{item.data | trimquotes}}</div>          
+                </div>
+            </div>   
+            <table class="table table-striped dashboard-element-container" ng-if="showTextSection">
+                <tr ng-repeat="(key,item) in displayTextEffects" ng-if="item.ineffect">
+                    <td>
+                        <div>
+                            {{item.content | trimquotes}}{{item.data | trimquotes}}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div ng-show="!showKeyDataSection && !showTextSection" class="alert alert-warning">{{widgetTitleLabel === "Indicators" ? emptyIndicatorListLabel : emptyFeedbackListLabel}}</div> 
+        </div>        
+        
     </div>
 </div>

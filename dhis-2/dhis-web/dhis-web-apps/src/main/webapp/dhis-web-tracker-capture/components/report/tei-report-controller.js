@@ -13,6 +13,7 @@ trackerCapture.controller('TeiReportController',
                 EnrollmentService) {  
     $scope.showProgramReportDetailsDiv = false;
     $scope.enrollmentsByProgram = [];
+    $scope.dashboardReady = false;
 
     $scope.$on('dashboardWidgets', function(event, args) {
         $scope.showProgramReportDetailsDiv = false;
@@ -25,6 +26,7 @@ trackerCapture.controller('TeiReportController',
         $scope.programs = selections.prs;
         $scope.programNames = selections.prNames;  
         $scope.programStageNames = selections.prStNames;
+        $scope.dashboardReady = true;
     
         angular.forEach(selections.enrollments, function(en){            
             $scope.enrollmentsByProgram[en.program] = en;

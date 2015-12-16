@@ -26,6 +26,7 @@ trackerCapture.controller('DataEntryController',
                 TrackerRulesFactory) {
 
     $scope.maxOptionSize = 30;
+    $scope.dashboardReady = false;
     
     //Data entry form
     $scope.outerForm = {};
@@ -247,6 +248,7 @@ trackerCapture.controller('DataEntryController',
 
     //listen for the selected items
     $scope.$on('dashboardWidgets', function () {
+        $scope.dashboardReady = true;
         $scope.showDataEntryDiv = false;
         $scope.showEventCreationDiv = false;
         $scope.currentEvent = null;
@@ -302,7 +304,7 @@ trackerCapture.controller('DataEntryController',
                 }
                 
                 TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-                    $scope.allProgramRules = rules;
+                    $scope.allProgramRules = rules;                    
                     $scope.getEvents();
                 });           
             });

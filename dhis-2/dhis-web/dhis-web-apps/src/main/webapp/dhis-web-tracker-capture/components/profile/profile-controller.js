@@ -5,7 +5,7 @@ trackerCapture.controller('ProfileController',
                 $scope,
                 $timeout,
                 CurrentSelection) {    
-    
+    $scope.dashboardReady = false;
     $scope.editingDisabled = true;
     $scope.enrollmentEditing = false;
     $scope.widget = 'PROFILE';
@@ -27,6 +27,7 @@ trackerCapture.controller('ProfileController',
     });
     
     var listenToBroadCast = function(){
+        $scope.dashboardReady = true;
         $scope.editingDisabled = true;
         selections = CurrentSelection.get();
         $scope.selectedTei = angular.copy(selections.tei);
