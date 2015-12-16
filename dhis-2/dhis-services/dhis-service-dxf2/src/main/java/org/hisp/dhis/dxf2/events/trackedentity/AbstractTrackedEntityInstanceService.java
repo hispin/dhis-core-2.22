@@ -198,11 +198,11 @@ public abstract class AbstractTrackedEntityInstanceService
 
         org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = new org.hisp.dhis.trackedentity.TrackedEntityInstance();
 
-        OrganisationUnit organisationUnit = getOrganisationUnit( trackedEntityInstance.getOrgUnit(), importOptions.getIdSchemes() );
+        OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes(), trackedEntityInstance.getOrgUnit() );
         Assert.notNull( organisationUnit );
         entityInstance.setOrganisationUnit( organisationUnit );
 
-        TrackedEntity trackedEntity = getTrackedEntity( trackedEntityInstance.getTrackedEntity(), importOptions.getIdSchemes() );
+        TrackedEntity trackedEntity = getTrackedEntity( importOptions.getIdSchemes(), trackedEntityInstance.getTrackedEntity() );
         entityInstance.setTrackedEntity( trackedEntity );
         entityInstance.setUid( CodeGenerator.isValidCode( trackedEntityInstance.getTrackedEntityInstance() ) ?
             trackedEntityInstance.getTrackedEntityInstance() : CodeGenerator.generateCode() );
@@ -461,17 +461,17 @@ public abstract class AbstractTrackedEntityInstanceService
         teiService.updateTrackedEntityInstance( entityInstance );
     }
 
-    private OrganisationUnit getOrganisationUnit( String id, IdSchemes idSchemes )
+    private OrganisationUnit getOrganisationUnit( IdSchemes idSchemes, String id )
     {
         return organisationUnitCache.get( id, new IdentifiableObjectCallable<>( manager, OrganisationUnit.class, idSchemes.getOrgUnitIdScheme(), id ) );
     }
 
-    private TrackedEntity getTrackedEntity( String id, IdSchemes idSchemes )
+    private TrackedEntity getTrackedEntity( IdSchemes idSchemes, String id )
     {
         return trackedEntityCache.get( id, new IdentifiableObjectCallable<>( manager, TrackedEntity.class, idSchemes.getTrackedEntityIdScheme(), id ) );
     }
 
-    private TrackedEntityAttribute getTrackedEntityAttribute( String id, IdSchemes idSchemes )
+    private TrackedEntityAttribute getTrackedEntityAttribute( IdSchemes idSchemes, String id )
     {
         return trackedEntityAttributeCache.get( id, new IdentifiableObjectCallable<>( manager, TrackedEntityAttribute.class, idSchemes.getTrackedEntityAttributeIdScheme(), id ) );
     }
@@ -489,7 +489,7 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        TrackedEntityAttribute trackedEntityAttribute = getTrackedEntityAttribute( attribute.getAttribute(), importOptions.getIdSchemes() );
+        TrackedEntityAttribute trackedEntityAttribute = getTrackedEntityAttribute( importOptions.getIdSchemes(), attribute.getAttribute() );
 
         if ( trackedEntityAttribute == null )
         {
@@ -567,7 +567,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
         for ( Attribute attribute : trackedEntityInstance.getAttributes() )
         {
-            TrackedEntityAttribute entityAttribute = getTrackedEntityAttribute( attribute.getAttribute(), importOptions.getIdSchemes() );
+            TrackedEntityAttribute entityAttribute = getTrackedEntityAttribute( importOptions.getIdSchemes(), attribute.getAttribute() );
 
             if ( entityAttribute == null )
             {
@@ -577,7 +577,7 @@ public abstract class AbstractTrackedEntityInstanceService
 
             if ( entityAttribute.isUnique() )
             {
-                OrganisationUnit organisationUnit = getOrganisationUnit( trackedEntityInstance.getOrgUnit(), importOptions.getIdSchemes() );
+                OrganisationUnit organisationUnit = getOrganisationUnit( importOptions.getIdSchemes(), trackedEntityInstance.getOrgUnit() );
                 org.hisp.dhis.trackedentity.TrackedEntityInstance tei = teiService.getTrackedEntityInstance( trackedEntityInstance.getTrackedEntityInstance() );
                 importConflicts.addAll( checkScope( tei, entityAttribute, attribute.getValue(), organisationUnit ) );
             }
@@ -598,7 +598,7 @@ public abstract class AbstractTrackedEntityInstanceService
             return importConflicts;
         }
 
-        TrackedEntity trackedEntity = getTrackedEntity( trackedEntityInstance.getTrackedEntity(), importOptions.getIdSchemes() );
+        TrackedEntity trackedEntity = getTrackedEntity( importOptions.getIdSchemes(), trackedEntityInstance.getTrackedEntity() );
 
         if ( trackedEntity == null )
         {
