@@ -12,14 +12,16 @@
       <key-many-to-one name="dataElement" class="org.hisp.dhis.dataelement.DataElement" column="dataelementid"
         foreign-key="fk_entityinstancedatavalue_dataelementid" />
     </composite-id>
-    
+
     <property name="value" length="50000" />
 
-    <property name="timestamp" type="timestamp" />
-    
+    <property name="created" type="timestamp" />
+
+    <property name="lastUpdated" type="timestamp" />
+
     <property name="providedElsewhere" />
-	
+
     <property name="storedBy" column="storedby" />
-    
+
   </class>
 </hibernate-mapping>

@@ -165,6 +165,8 @@ public class JdbcEventStore
             if ( rowSet.getString( "pdv_value" ) != null && rowSet.getString( "de_uid" ) != null )
             {
                 DataValue dataValue = new DataValue();
+                dataValue.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_created" ) ) );
+                dataValue.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_lastupdated" ) ) );
                 dataValue.setValue( rowSet.getString( "pdv_value" ) );
                 dataValue.setProvidedElsewhere( rowSet.getBoolean( "pdv_providedelsewhere" ) );
                 dataValue.setDataElement( IdSchemes.getValue( rowSet.getString( "de_uid" ), rowSet.getString( "de_code" ), idSchemes.getDataElementIdScheme() ) );
@@ -260,6 +262,8 @@ public class JdbcEventStore
             if ( rowSet.getString( "pdv_value" ) != null && rowSet.getString( "de_uid" ) != null )
             {
                 DataValue dataValue = new DataValue();
+                dataValue.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_created" ) ) );
+                dataValue.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_lastupdated" ) ) );
                 dataValue.setValue( rowSet.getString( "pdv_value" ) );
                 dataValue.setProvidedElsewhere( rowSet.getBoolean( "pdv_providedelsewhere" ) );
                 dataValue.setDataElement( IdSchemes.getValue( rowSet.getString( "de_uid" ),
@@ -470,7 +474,7 @@ public class JdbcEventStore
     private String getDataValueQuery()
     {
         String sql =
-            "select pdv.programstageinstanceid as pdv_id, pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
+            "select pdv.programstageinstanceid as pdv_id, pdv.created as pdv_created, pdv.lastupdated as pdv_lastupdated, pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
                 "de.uid as de_uid, de.code as de_code " +
                 "from trackedentitydatavalue pdv " +
                 "inner join dataelement de on pdv.dataelementid=de.dataelementid ";

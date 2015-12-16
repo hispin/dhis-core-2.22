@@ -30,7 +30,6 @@ package org.hisp.dhis.webapi.utils;
 
 import com.lowagie.text.pdf.AcroFields;
 import com.lowagie.text.pdf.PdfReader;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -226,7 +225,7 @@ public class PdfDataEntryFormImportUtil
         {
             // LOG.debug( "Adding TrackedEntityDataValue, value added" );
 
-            dataValue = new TrackedEntityDataValue( programStageInstance, dataElement, new Date(), value );
+            dataValue = new TrackedEntityDataValue( programStageInstance, dataElement, value );
             dataValue.setStoredBy( storedBy );
             // dataValue.setProvidedElsewhere( providedElsewhere );
 
@@ -240,7 +239,7 @@ public class PdfDataEntryFormImportUtil
         else if ( dataValue != null )
         {
             dataValue.setValue( value );
-            dataValue.setTimestamp( new Date() );
+            dataValue.setLastUpdated( new Date() );
             dataValue.setStoredBy( storedBy );
 
             dataValueService.updateTrackedEntityDataValue( dataValue );
