@@ -214,9 +214,15 @@ public class ImportOptions
         return this;
     }
 
-    public ImportOptions setTrackedEntityAttribute( String idScheme )
+    public ImportOptions setTrackedEntityIdScheme( String idScheme )
     {
-        idSchemes.setTrackedEntityAttribute( idScheme );
+        idSchemes.setTrackedEntityIdScheme( idScheme );
+        return this;
+    }
+
+    public ImportOptions setTrackedEntityAttributeIdScheme( String idScheme )
+    {
+        idSchemes.setTrackedEntityAttributeIdScheme( idScheme );
         return this;
     }
 

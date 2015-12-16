@@ -692,6 +692,6 @@ public abstract class AbstractEnrollmentService
 
     private TrackedEntityAttribute getTrackedEntityAttribute( String id, IdSchemes idSchemes )
     {
-        return trackedEntityAttributeCache.get( id, new IdentifiableObjectCallable<>( manager, TrackedEntityAttribute.class, idSchemes.getTrackedEntityAttribute(), id ) );
+        return trackedEntityAttributeCache.get( id, new IdentifiableObjectCallable<>( manager, TrackedEntityAttribute.class, idSchemes.getTrackedEntityAttributeIdScheme(), id ) );
     }
 }
