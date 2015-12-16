@@ -136,6 +136,8 @@ public class InitTableAlteror
         executeSql( "alter table trackedentitydatavalue drop column timestamp" );
 
         executeSql( "alter table trackedentityattributevalueaudit rename column timestamp to created" );
+        executeSql( "update trackedentityattributevalue set created=now() where created is null" );
+        executeSql( "update trackedentityattributevalue set lastupdated=now() where lastupdated is null" );
     }
 
     private void updateProgramStatus()

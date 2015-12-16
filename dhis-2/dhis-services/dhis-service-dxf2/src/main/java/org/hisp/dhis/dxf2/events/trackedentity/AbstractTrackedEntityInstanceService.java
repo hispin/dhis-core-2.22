@@ -44,6 +44,7 @@ import org.hisp.dhis.relationship.Relationship;
 import org.hisp.dhis.relationship.RelationshipService;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.system.callable.IdentifiableObjectCallable;
+import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.trackedentity.TrackedEntity;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeService;
@@ -180,6 +181,8 @@ public abstract class AbstractTrackedEntityInstanceService
         {
             Attribute attribute = new Attribute();
 
+            attribute.setCreated( DateUtils.getLongGmtDateString( attributeValue.getCreated() ) );
+            attribute.setLastUpdated( DateUtils.getLongGmtDateString( attributeValue.getLastUpdated() ) );
             attribute.setDisplayName( attributeValue.getAttribute().getDisplayName() );
             attribute.setAttribute( attributeValue.getAttribute().getUid() );
             attribute.setValueType( attributeValue.getAttribute().getValueType() );

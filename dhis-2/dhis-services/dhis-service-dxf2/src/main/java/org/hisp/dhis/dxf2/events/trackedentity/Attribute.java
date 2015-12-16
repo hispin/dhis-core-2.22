@@ -44,6 +44,10 @@ public class Attribute
 
     private String attribute;
 
+    private String created;
+
+    private String lastUpdated;
+
     private ValueType valueType;
 
     private String code;
@@ -88,6 +92,30 @@ public class Attribute
     public void setAttribute( String attribute )
     {
         this.attribute = attribute;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated( String created )
+    {
+        this.created = created;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( String lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
     }
 
     @JsonProperty

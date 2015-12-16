@@ -251,6 +251,8 @@ public class JdbcEventStore
                 String valueType = rowSet.getString( "ta_valuetype" );
 
                 Attribute attribute = new Attribute();
+                attribute.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "pav_created" ) ) );
+                attribute.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "pav_lastupdated" ) ) );
                 attribute.setValue( rowSet.getString( "pav_value" ) );
                 attribute.setDisplayName( rowSet.getString( "ta_name" ) );
                 attribute.setValueType( valueType != null ? ValueType.valueOf( valueType.toUpperCase() ) : null );
@@ -495,7 +497,7 @@ public class JdbcEventStore
 
     private String getAttributeValueQuery()
     {
-        String sql = "select pav.trackedentityinstanceid as pav_id, pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype "
+        String sql = "select pav.trackedentityinstanceid as pav_id, pav.created as pav_created, pav.lastupdated as pav_lastupdated, pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype "
             + "from trackedentityattributevalue pav "
             + "inner join trackedentityattribute ta on pav.trackedentityattributeid=ta.trackedentityattributeid ";
 
