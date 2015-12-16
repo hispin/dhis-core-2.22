@@ -10,13 +10,21 @@
         </span>        
     </div>    
     <div ng-show="current_selectionsWidget.expand" class="panel-body dashboard-element-container">
-        <div class="row" ng-repeat="selection in selections">
-            <div class="col-sm-6">
-                {{selection.title| translate}}
+        
+        <div ng-if="!dashboardReady">
+            <img id="ouwt_loader" src="../images/ajax-loader-bar.gif" alt="{{'loading'| translate}}"/>
+        </div>
+        
+        <div ng-if="dashboardReady">
+            <div class="row" ng-repeat="selection in selections">
+                <div class="col-sm-6">
+                    {{selection.title| translate}}
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" value="{{selection.value| translate}}" ng-disabled="true"/>                
+                </div>
             </div>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" value="{{selection.value| translate}}" ng-disabled="true"/>                
-            </div>
-        </div>        
+        </div>
+                
     </div>
 </div>

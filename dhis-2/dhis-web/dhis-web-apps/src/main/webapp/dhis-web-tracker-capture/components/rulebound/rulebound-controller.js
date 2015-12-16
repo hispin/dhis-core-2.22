@@ -1,10 +1,12 @@
+/* global angular, trackerCapture */
+
 trackerCapture.controller('RuleBoundController',
         function(
                 $rootScope,
                 $scope,
                 $translate,
                 $log) {
-    
+    $scope.dashboardReady = true;
     $scope.widget = $scope.$parent.$parent.biggerWidget ? $scope.$parent.$parent.biggerWidget
     : $scope.$parent.$parent.smallerWidget ? $scope.$parent.$parent.smallerWidget : null;
     $scope.widgetTitle = $scope.widget.title;    

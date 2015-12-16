@@ -11,6 +11,7 @@ trackerCapture.controller('RelationshipController',
                 RelationshipFactory,
                 ModalService,
                 DialogService) {
+    $scope.dashboardReady = false;
     $rootScope.showAddRelationshipDiv = false;    
     $scope.relatedProgramRelationship = false;
     
@@ -42,6 +43,7 @@ trackerCapture.controller('RelationshipController',
                 $scope.relationships[rel.id] = rel;
             });
             
+            $scope.dashboardReady = true;
             setRelationships();            
         });
     });

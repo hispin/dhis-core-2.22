@@ -1,10 +1,13 @@
+/* global trackerCapture */
+
 trackerCapture.controller('SelectedInfoController',
         function($scope,                
                 SessionStorageService,
                 CurrentSelection) {
+    $scope.dashboardReady = false;                
     //listen for the selected items
     $scope.$on('selectedItems', function(event, args) {
-        
+        $scope.dashboardReady = true;
         var selections = CurrentSelection.get();
         $scope.selectedEntity = selections.tei; 
         $scope.selectedProgram = selections.pr; 

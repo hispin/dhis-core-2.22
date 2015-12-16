@@ -15,7 +15,8 @@ trackerCapture.controller('EnrollmentController',
                 ModalService) {
     
     $scope.today = DateUtils.getToday();
-    $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU');    
+    $scope.selectedOrgUnit = SessionStorageService.get('SELECTED_OU'); 
+    $scope.dashboardReady = false;
     
     //listen for the selected items
     var selections = {};
@@ -144,6 +145,7 @@ trackerCapture.controller('EnrollmentController',
     $scope.broadCastSelections = function(listeners){
         var selections = CurrentSelection.get();
         var tei = selections.tei;
+        $scope.dashboardReady = true;
         
         CurrentSelection.set({tei: tei, te: $scope.selectedEntity, prs: $scope.programs, pr: $scope.selectedProgram, prNames: $scope.programNames, prStNames: $scope.programStageNames, enrollments: $scope.enrollments, selectedEnrollment: $scope.selectedEnrollment, optionSets: $scope.optionSets});
         $timeout(function() { 
