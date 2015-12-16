@@ -354,16 +354,8 @@ public class JdbcEventStore
                 "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
                 "inner join program p on p.programid=pi.programid " +
                 "inner join programstage ps on ps.programstageid=psi.programstageid " +
-                "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid ";
-
-        if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
-        {
-            sql += "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
-        }
-        else
-        {
-            sql += "left join organisationunit ou on (tei.organisationunitid=ou.organisationunitid) ";
-        }
+                "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
+                "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
 
         if ( params.getTrackedEntityInstance() != null )
         {
@@ -399,14 +391,14 @@ public class JdbcEventStore
         {
             sql += hlp.whereAnd() + " psi.attributeoptioncomboid = " + params.getCategoryOptionCombo().getId() + " ";
         }
+        
+        if ( orgUnitIds != null && !orgUnitIds.isEmpty() )
+        {
+            sql += hlp.whereAnd() + " psi.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
+        }
 
         if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
         {
-            if ( orgUnitIds != null && !orgUnitIds.isEmpty() )
-            {
-                sql += hlp.whereAnd() + " psi.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
-            }
-
             if ( params.getStartDate() != null )
             {
                 sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' "
@@ -421,11 +413,6 @@ public class JdbcEventStore
         }
         else
         {
-            if ( orgUnitIds != null && !orgUnitIds.isEmpty() )
-            {
-                sql += hlp.whereAnd() + " tei.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
-            }
-
             if ( params.getStartDate() != null )
             {
                 sql += hlp.whereAnd() + " psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "' ";
