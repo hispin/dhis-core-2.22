@@ -39,6 +39,10 @@ import org.hisp.dhis.common.DxfNamespaces;
 @JacksonXmlRootElement( localName = "dataValue", namespace = DxfNamespaces.DXF_2_0 )
 public class DataValue
 {
+    private String created;
+
+    private String lastUpdated;
+
     private String value;
 
     private String dataElement;
@@ -55,6 +59,30 @@ public class DataValue
     {
         this.dataElement = dataElement;
         this.value = value;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated( String created )
+    {
+        this.created = created;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( String lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
     }
 
     @JsonProperty

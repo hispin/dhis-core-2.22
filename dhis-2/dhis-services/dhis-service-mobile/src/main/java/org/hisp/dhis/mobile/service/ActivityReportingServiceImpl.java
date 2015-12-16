@@ -516,7 +516,7 @@ public class ActivityReportingServiceImpl
 
                 patientDataValue.setValue( value );
                 patientDataValue.setProgramStageInstance( programStageInstance );
-                patientDataValue.setTimestamp( new Date() );
+                patientDataValue.setLastUpdated( new Date() );
                 dataValueService.saveTrackedEntityDataValue( patientDataValue );
 
             }
@@ -558,14 +558,13 @@ public class ActivityReportingServiceImpl
 
                     if ( previousPatientDataValue == null )
                     {
-                        TrackedEntityDataValue patientDataValue = new TrackedEntityDataValue( programStageInstance,
-                            dataElement, new Date(), value );
+                        TrackedEntityDataValue patientDataValue = new TrackedEntityDataValue( programStageInstance, dataElement, value );
                         dataValueService.saveTrackedEntityDataValue( patientDataValue );
                     }
                     else
                     {
                         previousPatientDataValue.setValue( value );
-                        previousPatientDataValue.setTimestamp( new Date() );
+                        previousPatientDataValue.setLastUpdated( new Date() );
                         previousPatientDataValue.setProvidedElsewhere( false );
                         dataValueService.updateTrackedEntityDataValue( previousPatientDataValue );
                     }
@@ -793,7 +792,7 @@ public class ActivityReportingServiceImpl
             {
                 org.hisp.dhis.api.mobile.model.PatientAttribute patientAttribute = new org.hisp.dhis.api.mobile.model.PatientAttribute(
                     value.getAttribute().getName(), value.getValue(), null, false, value.getAttribute()
-                        .getDisplayInListNoProgram(), new OptionSet() );
+                    .getDisplayInListNoProgram(), new OptionSet() );
                 patientAttribute.setType( value.getAttribute().getValueType() );
 
                 patientAtts.add( patientAttribute );
@@ -1352,7 +1351,7 @@ public class ActivityReportingServiceImpl
                         programStageInstanceService.updateProgramStageInstance( programStageInstance );
                     }
 
-                    dataValue = new TrackedEntityDataValue( programStageInstance, dataElement, new Date(), value );
+                    dataValue = new TrackedEntityDataValue( programStageInstance, dataElement, value );
 
                     dataValueService.saveTrackedEntityDataValue( dataValue );
                 }
@@ -1366,7 +1365,7 @@ public class ActivityReportingServiceImpl
                 }
 
                 dataValue.setValue( value );
-                dataValue.setTimestamp( new Date() );
+                dataValue.setLastUpdated( new Date() );
 
                 dataValueService.updateTrackedEntityDataValue( dataValue );
             }
@@ -1499,7 +1498,7 @@ public class ActivityReportingServiceImpl
                 {
                     errorMsg = "Duplicate value of "
                         + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) )
-                            .getDisplayName();
+                        .getDisplayName();
                 }
                 else
                 {
@@ -2047,7 +2046,7 @@ public class ActivityReportingServiceImpl
 
                 trackedEntityDataValue.setProvidedElsewhere( false );
 
-                trackedEntityDataValue.setTimestamp( new Date() );
+                trackedEntityDataValue.setLastUpdated( new Date() );
 
                 dataValueService.saveTrackedEntityDataValue( trackedEntityDataValue );
             }
@@ -2548,7 +2547,7 @@ public class ActivityReportingServiceImpl
                 {
                     errorMsg = "Duplicate value of "
                         + attributeService.getTrackedEntityAttribute( Integer.parseInt( errorCode[1] ) )
-                            .getDisplayName();
+                        .getDisplayName();
                 }
                 else
                 {

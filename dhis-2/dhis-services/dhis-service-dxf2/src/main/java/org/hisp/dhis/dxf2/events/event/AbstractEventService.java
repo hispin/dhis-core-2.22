@@ -963,6 +963,8 @@ public abstract class AbstractEventService
         for ( TrackedEntityDataValue dataValue : dataValues )
         {
             DataValue value = new DataValue();
+            value.setCreated( DateUtils.getLongGmtDateString( dataValue.getCreated() ) );
+            value.setLastUpdated( DateUtils.getLongGmtDateString( dataValue.getLastUpdated() ) );
             value.setDataElement( dataValue.getDataElement().getUid() );
             value.setValue( dataValue.getValue() );
             value.setProvidedElsewhere( dataValue.getProvidedElsewhere() );
@@ -1061,7 +1063,7 @@ public abstract class AbstractEventService
         {
             if ( dataValue == null )
             {
-                dataValue = new TrackedEntityDataValue( programStageInstance, dataElement, new Date(), value );
+                dataValue = new TrackedEntityDataValue( programStageInstance, dataElement, value );
                 dataValue.setStoredBy( storedBy );
                 dataValue.setProvidedElsewhere( providedElsewhere );
 
@@ -1075,7 +1077,6 @@ public abstract class AbstractEventService
             else
             {
                 dataValue.setValue( value );
-                dataValue.setTimestamp( new Date() );
                 dataValue.setStoredBy( storedBy );
                 dataValue.setProvidedElsewhere( providedElsewhere );
 

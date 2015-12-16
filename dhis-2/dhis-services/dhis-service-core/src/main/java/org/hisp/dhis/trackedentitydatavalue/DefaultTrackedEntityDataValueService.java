@@ -66,37 +66,41 @@ public class DefaultTrackedEntityDataValueService
     // -------------------------------------------------------------------------
 
     @Override
-    public void saveTrackedEntityDataValue( TrackedEntityDataValue dataValue )
+    public void saveTrackedEntityDataValue( TrackedEntityDataValue trackedEntityDataValue )
     {
-        if ( !StringUtils.isEmpty( dataValue.getValue() ) )
+        trackedEntityDataValue.setAutoFields();
+
+        if ( !StringUtils.isEmpty( trackedEntityDataValue.getValue() ) )
         {
-            if ( StringUtils.isEmpty( dataValue.getStoredBy() ) )
+            if ( StringUtils.isEmpty( trackedEntityDataValue.getStoredBy() ) )
             {
-                dataValue.setStoredBy( currentUserService.getCurrentUsername() );
+                trackedEntityDataValue.setStoredBy( currentUserService.getCurrentUsername() );
             }
 
-            dataValueStore.saveVoid( dataValue );
+            dataValueStore.saveVoid( trackedEntityDataValue );
         }
     }
 
     @Override
-    public void updateTrackedEntityDataValue( TrackedEntityDataValue dataValue )
+    public void updateTrackedEntityDataValue( TrackedEntityDataValue trackedEntityDataValue )
     {
-        if ( StringUtils.isEmpty( dataValue.getValue() ) )
+        trackedEntityDataValue.setAutoFields();
+
+        if ( StringUtils.isEmpty( trackedEntityDataValue.getValue() ) )
         {
-            dataValueStore.delete( dataValue );
+            dataValueStore.delete( trackedEntityDataValue );
         }
         else
         {
-            if ( StringUtils.isEmpty( dataValue.getStoredBy() ) )
+            if ( StringUtils.isEmpty( trackedEntityDataValue.getStoredBy() ) )
             {
-                dataValue.setStoredBy( currentUserService.getCurrentUsername() );
+                trackedEntityDataValue.setStoredBy( currentUserService.getCurrentUsername() );
             }
 
-            TrackedEntityDataValueAudit dataValueAudit = new TrackedEntityDataValueAudit( dataValue, dataValue.getValue(), dataValue.getStoredBy(), AuditType.UPDATE );
+            TrackedEntityDataValueAudit dataValueAudit = new TrackedEntityDataValueAudit( trackedEntityDataValue, trackedEntityDataValue.getValue(), trackedEntityDataValue.getStoredBy(), AuditType.UPDATE );
 
             dataValueAuditService.addTrackedEntityDataValueAudit( dataValueAudit );
-            dataValueStore.update( dataValue );
+            dataValueStore.update( trackedEntityDataValue );
         }
     }
 

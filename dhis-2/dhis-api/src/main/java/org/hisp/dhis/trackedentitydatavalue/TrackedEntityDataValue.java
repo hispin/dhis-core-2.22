@@ -52,7 +52,9 @@ public class TrackedEntityDataValue
 
     private ProgramStageInstance programStageInstance;
 
-    private Date timestamp;
+    private Date created = new Date();
+
+    private Date lastUpdated = new Date();
 
     private String value;
 
@@ -66,22 +68,26 @@ public class TrackedEntityDataValue
 
     public TrackedEntityDataValue()
     {
+
     }
 
     public TrackedEntityDataValue( ProgramStageInstance programStageInstance, DataElement dataElement, String value )
     {
         this.dataElement = dataElement;
         this.programStageInstance = programStageInstance;
-        this.timestamp = new Date();
         this.value = value;
     }
 
-    public TrackedEntityDataValue( ProgramStageInstance programStageInstance, DataElement dataElement, Date timeStamp, String value )
+    public void setAutoFields()
     {
-        this.programStageInstance = programStageInstance;
-        this.dataElement = dataElement;
-        this.timestamp = timeStamp;
-        this.value = value;
+        Date date = new Date();
+
+        if ( created == null )
+        {
+            created = date;
+        }
+
+        setLastUpdated( date );
     }
 
     // -------------------------------------------------------------------------
@@ -149,7 +155,7 @@ public class TrackedEntityDataValue
     public String toString()
     {
         return "TrackedEntityDataValue{" + "dataElement=" + dataElement + ", programStageInstance=" + programStageInstance
-            + ", timestamp=" + timestamp + ", value='" + value + '\'' + ", providedElsewhere=" + providedElsewhere
+            + ", lastUpdated=" + lastUpdated + ", value='" + value + '\'' + ", providedElsewhere=" + providedElsewhere
             + ", storedBy='" + storedBy + '\'' + '}';
     }
 
@@ -187,14 +193,24 @@ public class TrackedEntityDataValue
         return dataElement;
     }
 
-    public Date getTimestamp()
+    public Date getCreated()
     {
-        return timestamp;
+        return created;
     }
 
-    public void setTimestamp( Date timestamp )
+    public void setCreated( Date created )
     {
-        this.timestamp = timestamp;
+        this.created = created;
+    }
+
+    public Date getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( Date lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
     }
 
     public void setValue( String value )

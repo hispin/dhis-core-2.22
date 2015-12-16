@@ -86,7 +86,7 @@ public class InitTableAlteror
         updateValidationRuleEnums();
         updateProgramStatus();
         reEncryptConfigurationPasswords();
-        updateAuditTimestamps();
+        updateTimestamps();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
@@ -113,7 +113,7 @@ public class InitTableAlteror
                 executeSql( "UPDATE configuration SET smtppassword = '" + newPBEStringEncryptor.encrypt( oldPBEStringEncryptor.decrypt( smtpPassword ) ) + "'" );
                 executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
             }
-            
+
             if ( StringUtils.isNotBlank( remoteServerPassword ) )
             {
                 executeSql( "UPDATE configuration SET remotepassword = '" + newPBEStringEncryptor.encrypt( oldPBEStringEncryptor.decrypt( remoteServerPassword ) ) + "'" );
@@ -126,10 +126,15 @@ public class InitTableAlteror
         }
     }
 
-    private void updateAuditTimestamps()
+    private void updateTimestamps()
     {
         executeSql( "alter table datavalueaudit rename column timestamp to created" );
         executeSql( "alter table trackedentitydatavalueaudit rename column timestamp to created" );
+
+        executeSql( "update trackedentitydatavalue set created=timestamp where created is null" );
+        executeSql( "update trackedentitydatavalue set lastupdated=timestamp where lastupdated is null" );
+        executeSql( "alter table trackedentitydatavalue drop column timestamp" );
+
         executeSql( "alter table trackedentityattributevalueaudit rename column timestamp to created" );
     }
 
@@ -162,8 +167,7 @@ public class InitTableAlteror
     private void updateFeatureTypes()
     {
         executeSql( "update organisationunit set featuretype='NONE' where featuretype='None'" );
-        executeSql(
-            "update organisationunit set featuretype='MULTI_POLYGON' where featuretype='MultiPolygon'" );
+        executeSql( "update organisationunit set featuretype='MULTI_POLYGON' where featuretype='MultiPolygon'" );
         executeSql( "update organisationunit set featuretype='POLYGON' where featuretype='Polygon'" );
         executeSql( "update organisationunit set featuretype='POINT' where featuretype='Point'" );
         executeSql( "update organisationunit set featuretype='SYMBOL' where featuretype='Symbol'" );
@@ -176,10 +180,8 @@ public class InitTableAlteror
 
         executeSql( "update dataelement set aggregationtype='SUM' where aggregationtype='sum'" );
         executeSql( "update dataelement set aggregationtype='AVERAGE' where aggregationtype='avg'" );
-        executeSql(
-            "update dataelement set aggregationtype='AVERAGE_SUM_ORG_UNIT' where aggregationtype='avg_sum_org_unit'" );
-        executeSql(
-            "update dataelement set aggregationtype='AVERAGE_SUM_ORG_UNIT' where aggregationtype='average'" );
+        executeSql( "update dataelement set aggregationtype='AVERAGE_SUM_ORG_UNIT' where aggregationtype='avg_sum_org_unit'" );
+        executeSql( "update dataelement set aggregationtype='AVERAGE_SUM_ORG_UNIT' where aggregationtype='average'" );
         executeSql( "update dataelement set aggregationtype='COUNT' where aggregationtype='count'" );
         executeSql( "update dataelement set aggregationtype='STDDEV' where aggregationtype='stddev'" );
         executeSql( "update dataelement set aggregationtype='VARIANCE' where aggregationtype='variance'" );
@@ -207,7 +209,7 @@ public class InitTableAlteror
         executeSql( "update dataelement set valuetype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
         executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int' and numbertype is null" );
         executeSql( "alter table dataelement drop column numbertype" );
-        
+
         executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype='text'" );
         executeSql( "update dataelement set valuetype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
         executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype is null" );
@@ -257,8 +259,8 @@ public class InitTableAlteror
 
             String insertSql =
                 "insert into programstagedataelement(programstagedataelementid,programstageid,dataelementid,compulsory,allowprovidedelsewhere," +
-                "sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order) " + "select " + autoIncr + 
-                ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order from programstage_dataelements";
+                    "sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order) " + "select " + autoIncr +
+                    ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order from programstage_dataelements";
 
             executeSql( insertSql );
 
