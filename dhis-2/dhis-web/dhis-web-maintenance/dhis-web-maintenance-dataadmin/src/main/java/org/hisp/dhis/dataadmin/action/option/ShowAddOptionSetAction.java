@@ -29,65 +29,38 @@ package org.hisp.dhis.dataadmin.action.option;
  */
 
 import com.opensymphony.xwork2.Action;
-import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
-import org.hisp.dhis.common.ValueType;
-import org.hisp.dhis.option.OptionService;
+import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
 import org.hisp.dhis.option.OptionSet;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Chau Thu Tran
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class AddOptionSetAction
+public class ShowAddOptionSetAction
     implements Action
 {
     // -------------------------------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------------------------------
 
-    private OptionService optionService;
-
-    public void setOptionService( OptionService optionService )
-    {
-        this.optionService = optionService;
-    }
-
     @Autowired
     private AttributeService attributeService;
 
     // -------------------------------------------------------------------------------------------------
-    // Input
+    // Input/Output
     // -------------------------------------------------------------------------------------------------
 
-    private String name;
+    private List<Attribute> attributes;
 
-    public void setName( String name )
+    public List<Attribute> getAttributes()
     {
-        this.name = name;
-    }
-
-    private String code;
-
-    public void setCode( String code )
-    {
-        this.code = code;
-    }
-
-    private String valueType;
-
-    public void setValueType( String valueType )
-    {
-        this.valueType = valueType;
-    }
-
-    private List<String> jsonAttributeValues;
-
-    public void setJsonAttributeValues( List<String> jsonAttributeValues )
-    {
-        this.jsonAttributeValues = jsonAttributeValues;
+        return attributes;
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -98,17 +71,8 @@ public class AddOptionSetAction
     public String execute()
         throws Exception
     {
-        OptionSet optionSet = new OptionSet( StringUtils.trimToNull( name ) );
-        optionSet.setCode( StringUtils.trimToNull( code ) );
-        optionSet.setValueType( ValueType.valueOf( valueType ) );
-        optionSet.setVersion( 1 );
-
-        if ( jsonAttributeValues != null )
-        {
-            attributeService.updateAttributeValues( optionSet, jsonAttributeValues );
-        }
-
-        optionService.saveOptionSet( optionSet );
+        attributes = new ArrayList<>( attributeService.getAttributes( OptionSet.class ) );
+        Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
 
         return SUCCESS;
     }

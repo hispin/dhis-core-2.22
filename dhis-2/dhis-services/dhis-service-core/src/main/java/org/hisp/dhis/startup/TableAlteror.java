@@ -767,6 +767,7 @@ public class TableAlteror
         executeSql( "UPDATE attribute SET categoryoptiongroupattribute=false WHERE categoryoptiongroupattribute IS NULL" );
         executeSql( "UPDATE attribute SET documentattribute=false WHERE documentattribute IS NULL" );
         executeSql( "UPDATE attribute SET optionattribute=false WHERE optionattribute IS NULL" );
+        executeSql( "UPDATE attribute SET optionsetattribute=false WHERE optionsetattribute IS NULL" );
 
         executeSql( "ALTER TABLE trackedentityattributedimension DROP COLUMN operator" );
         executeSql( "ALTER TABLE trackedentitydataelementdimension DROP COLUMN operator" );
