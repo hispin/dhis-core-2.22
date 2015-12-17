@@ -20,7 +20,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 /* Service to fetch/store dasboard widgets */
 .service('DashboardLayoutService', function($http) {
     
-    
+    var ButtonIds = { Complete: "Complete", Incomplete: "Incomplete", Validate: "Validate", Delete: "Delete", Skip: "Skip", Unskip: "Unskip", Note: "Note" };
+      
     var w = {};
     w.enrollmentWidget = {title: 'enrollment', view: "components/enrollment/enrollment.html", show: true, expand: true, parent: 'biggerWidget', order: 0};
     w.indicatorWidget = {title: 'indicators', view: "components/rulebound/rulebound.html", show: true, expand: true, parent: 'biggerWidget', order: 1};
@@ -471,8 +472,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
 /* Factory for fetching OrgUnit */
 .factory('OrgUnitFactory', function($http, SessionStorageService) {    
-    var orgUnit, orgUnitPromise, rootOrgUnitPromise;
-    var roles = SessionStorageService.get('USER_ROLES');
+    var orgUnit, orgUnitPromise, rootOrgUnitPromise, orgUnitWithGroupsPromise, orgUnitWithParent;
     return {
         get: function(uid){            
             if( orgUnit !== uid ){
@@ -482,26 +482,41 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 });
             }
             return orgUnitPromise;
-        },    
+        },
+        getWithGroups: function(uid){
+            orgUnitWithGroupsPromise = $http.get( '../api/organisationUnits.json?filter=id:eq:' + uid + '&fields=id,name,children[id,name,organisationUnitGroups[shortName],children[id,name, organisationUnitGroups[shortName]],organisationUnitGroups[shortName]]&paging=false' ).then(function(response){
+                orgUnit = response.data.id;
+                return response.data;
+            });
+            return orgUnitWithGroupsPromise;
+        },
+        getWithParents: function(uid){
+            orgUnitWithParent = $http.get( '../api/organisationUnits.json?filter=id:eq:' + uid + '&fields=id,name,parent[id,name,parent[id,name,parent[id,name,parent[id,name]]]&paging=false' ).then(function(response){
+                orgUnit = response.data.id;
+                return response.data;
+            });
+            return orgUnitWithParent;
+        },
         getSearchTreeRoot: function(){
-           if(!rootOrgUnitPromise){
-               var url = '../api/me.json?fields=organisationUnits[id,name,children[id,name,children[id,name]]]&paging=false';
-               if( roles && roles.userCredentials && roles.userCredentials.userRoles){
-                   var userRoles = roles.userCredentials.userRoles;
-                   for(var i=0; i<userRoles.length; i++){
-                       if(userRoles[i].authorities.indexOf('ALL') !== -1 || 
-                         userRoles[i].authorities.indexOf('F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS') !== -1 ){                        
-                         url = '../api/organisationUnits.json?filter=level:eq:1&fields=id,name,children[id,name,children[id,name]]&paging=false';
-                         i=userRoles.length;
-                       }
-                   }  
-               }             
-               rootOrgUnitPromise = $http.get( url ).then(function(response){
-                   return response.data;
-               });
-           }
-           return rootOrgUnitPromise;
-       }
+            var roles = SessionStorageService.get('USER_ROLES');
+            if(!rootOrgUnitPromise){
+                var url = '../api/me.json?fields=organisationUnits[id,name,children[id,name,children[id,name]]]&paging=false';
+                if( roles && roles.userCredentials && roles.userCredentials.userRoles){
+                    var userRoles = roles.userCredentials.userRoles;
+                    for(var i=0; i<userRoles.length; i++){
+                        if(userRoles[i].authorities.indexOf('ALL') !== -1 || 
+                          userRoles[i].authorities.indexOf('F_TRACKED_ENTITY_INSTANCE_SEARCH_IN_ALL_ORGUNITS') !== -1 ){                        
+                          url = '../api/organisationUnits.json?filter=level:eq:1&fields=id,name,children[id,name,children[id,name]]&paging=false';
+                          i=userRoles.length;
+                        }
+                    }  
+                }             
+                rootOrgUnitPromise = $http.get( url ).then(function(response){
+                    return response.data;
+                });
+            }
+            return rootOrgUnitPromise;
+        }
     }; 
 })
 
@@ -982,6 +997,16 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 return response.data.events;
             });            
             return promise;
+        },
+        getEventsByProgramStage: function(entity, programStage){
+          var url = '../api/events.json?ouMode=ACCESSIBLE&' + 'trackedEntityInstance=' + entity + '&paging=false'; 
+          if(programStage){
+              url += '&programStage='+programStage;
+          }
+          var promise = $http.get(url).then(function(response){
+             return response.data.events;
+          });
+          return promise;
         },
         getByOrgUnitAndProgram: function(orgUnit, ouMode, program, startDate, endDate){
             var url;
@@ -1864,4 +1889,31 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         }
     };
     
+})
+
+.service('EventCreationService', function($modal){
+            
+        this.showModal = function(stage, dummyEvent,eventCreationAction, autoCreate){
+            var modalInstance = $modal.open({
+                templateUrl: 'components/dataentry/new-event.html',
+                controller: 'EventCreationController',
+                resolve: {                    
+                    dummyEvent: function () {
+                        return dummyEvent;
+                    },
+                    autoCreate: function () {
+                        //In case the programstage is a table, autocreate
+                        return autoCreate;
+                    },
+                    eventCreationAction: function() {
+                        return eventCreationAction;
+                    },                    
+                    stage: function(){
+                        return stage;
+                    }
+                }
+            });
+            return modalInstance;
+        };
+        this.eventCreationActions = { add: 'ADD',  schedule: 'SCHEDULE', referral: 'REFERRAL'};
 });
