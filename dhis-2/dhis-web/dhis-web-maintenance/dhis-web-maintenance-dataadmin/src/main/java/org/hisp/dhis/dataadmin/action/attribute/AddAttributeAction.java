@@ -211,6 +211,13 @@ public class AddAttributeAction
         this.documentAttribute = documentAttribute;
     }
 
+    private boolean optionAttribute;
+
+    public void setOptionAttribute( boolean optionAttribute )
+    {
+        this.optionAttribute = optionAttribute;
+    }
+
     private String optionSetUid;
 
     public void setOptionSetUid( String optionSetUid )
@@ -250,6 +257,7 @@ public class AddAttributeAction
         attribute.setCategoryOptionAttribute( categoryOptionAttribute );
         attribute.setCategoryOptionGroupAttribute( categoryOptionGroupAttribute );
         attribute.setDocumentAttribute( documentAttribute );
+        attribute.setOptionAttribute( optionAttribute );
 
         attributeService.addAttribute( attribute );
 
