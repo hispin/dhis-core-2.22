@@ -39,6 +39,7 @@ import org.hisp.dhis.document.Document;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.option.Option;
+import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
@@ -78,6 +79,7 @@ public interface AttributeStore
         .put( CategoryOptionGroup.class, "categoryOptionGroupAttribute" )
         .put( Document.class, "documentAttribute" )
         .put( Option.class, "optionAttribute" )
+        .put( OptionSet.class, "optionSetAttribute" )
         .build();
 
     /**

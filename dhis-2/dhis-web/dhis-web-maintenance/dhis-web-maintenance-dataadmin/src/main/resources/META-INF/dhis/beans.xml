@@ -315,6 +315,9 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
   <!-- OptionSet -->
 
+  <bean id="org.hisp.dhis.dataadmin.action.option.ShowAddOptionSetAction"
+    class="org.hisp.dhis.dataadmin.action.option.ShowAddOptionSetAction" />
+
   <bean id="org.hisp.dhis.dataadmin.action.option.GetOptionSetListAction"
     class="org.hisp.dhis.dataadmin.action.option.GetOptionSetListAction"
     scope="prototype">
@@ -352,6 +355,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   </bean>
 
   <!-- Option -->
+
+  <bean id="org.hisp.dhis.dataadmin.action.option.ShowAddOptionAction" class="org.hisp.dhis.dataadmin.action.option.ShowAddOptionAction">
+    <property name="optionService" ref="org.hisp.dhis.option.OptionService" />
+  </bean>
 
   <bean id="org.hisp.dhis.dataadmin.action.option.AddOptionAction"
     class="org.hisp.dhis.dataadmin.action.option.AddOptionAction"

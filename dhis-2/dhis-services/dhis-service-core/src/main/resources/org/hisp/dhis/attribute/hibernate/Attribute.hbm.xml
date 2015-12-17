@@ -65,6 +65,8 @@
 
     <property name="optionAttribute" not-null="false" />
 
+    <property name="optionSetAttribute" not-null="false" />
+
     <property name="sortOrder" />
 
     <set name="attributeValues" inverse="true" lazy="true">

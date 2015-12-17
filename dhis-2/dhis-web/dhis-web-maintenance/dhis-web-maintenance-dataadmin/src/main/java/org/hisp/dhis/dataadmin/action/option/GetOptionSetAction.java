@@ -32,9 +32,9 @@ import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
-import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
+import org.hisp.dhis.system.util.AttributeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -109,7 +109,9 @@ public class GetOptionSetAction
     {
         optionSet = optionService.getOptionSet( id );
 
-        attributes = new ArrayList<>( attributeService.getAttributes( Option.class ) );
+        attributeValues = AttributeUtils.getAttributeValueMap( optionSet.getAttributeValues() );
+
+        attributes = new ArrayList<>( attributeService.getAttributes( OptionSet.class ) );
         Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
 
         return SUCCESS;

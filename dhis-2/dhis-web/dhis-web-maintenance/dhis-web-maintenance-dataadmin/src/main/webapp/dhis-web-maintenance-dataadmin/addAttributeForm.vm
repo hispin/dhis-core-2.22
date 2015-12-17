@@ -72,6 +72,7 @@
 			<input type="checkbox" id="categoryOptionGroupAttribute" name="categoryOptionGroupAttribute" value="true" /><label for="categoryOptionGroupAttribute">$i18n.getString( 'category_option_group' )</label> <br />
 			<input type="checkbox" id="documentAttribute" name="documentAttribute" value="true" /><label for="documentAttribute">$i18n.getString( 'document' )</label> <br />
 			<input type="checkbox" id="optionAttribute" name="optionAttribute" value="true" /><label for="optionAttribute">$i18n.getString( 'option' )</label> <br />
+			<input type="checkbox" id="optionSetAttribute" name="optionSetAttribute" value="true" /><label for="optionSetAttribute">$i18n.getString( 'option_set' )</label> <br />
 		</td>
 	</tr>
 

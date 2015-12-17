@@ -109,6 +109,8 @@ public class Attribute
 
     private boolean optionAttribute;
 
+    private boolean optionSetAttribute;
+
     private boolean mandatory;
 
     private boolean unique;
@@ -452,6 +454,19 @@ public class Attribute
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isOptionSetAttribute()
+    {
+        return optionSetAttribute;
+    }
+
+    public void setOptionSetAttribute( boolean optionSetAttribute )
+    {
+        this.optionSetAttribute = optionSetAttribute;
+    }
+
+    @JsonProperty
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public OptionSet getOptionSet()
     {
         return optionSet;
@@ -497,6 +512,7 @@ public class Attribute
         if ( trackedEntityAttributeAttribute ) klasses.add( TrackedEntityAttribute.class );
         if ( documentAttribute ) klasses.add( Document.class );
         if ( optionAttribute ) klasses.add( Option.class );
+        if ( optionSetAttribute ) klasses.add( OptionSet.class );
 
         return klasses;
     }
@@ -527,6 +543,9 @@ public class Attribute
             trackedEntityAttributeAttribute = attribute.isTrackedEntityAttributeAttribute();
             categoryOptionAttribute = attribute.isCategoryOptionAttribute();
             categoryOptionGroupAttribute = attribute.isCategoryOptionGroupAttribute();
+            documentAttribute = attribute.isDocumentAttribute();
+            optionAttribute = attribute.isOptionAttribute();
+            optionSetAttribute = attribute.isOptionSetAttribute();
             mandatory = attribute.isMandatory();
 
             if ( strategy.isReplace() )

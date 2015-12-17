@@ -522,7 +522,7 @@
       <param name="requiredAuthorities">F_OPTIONSET_MANAGEMENT</param>
     </action>
 
-    <action name="showAddOptionSetForm" class="org.hisp.dhis.dataadmin.action.NoAction">
+    <action name="showAddOptionSetForm" class="org.hisp.dhis.dataadmin.action.option.ShowAddOptionSetAction">
       <result name="success" type="velocity">/main.vm</result>
       <param name="page">/dhis-web-maintenance-dataadmin/addOptionSetForm.vm</param>
       <param name="javascripts">javascript/optionSet.js</param>
@@ -573,7 +573,7 @@
 		<param name="requiredAuthorities">F_OPTIONSET_MANAGEMENT</param>
 	</action>
 
-	<action name="showAddOptionForm" class="org.hisp.dhis.dataadmin.action.option.GetOptionSetAction">
+	<action name="showAddOptionForm" class="org.hisp.dhis.dataadmin.action.option.ShowAddOptionAction">
 		<result name="success" type="velocity">/main.vm</result>
 		<param name="page">/dhis-web-maintenance-dataadmin/addOptionForm.vm</param>
 		<param name="javascripts">javascript/option.js</param>
