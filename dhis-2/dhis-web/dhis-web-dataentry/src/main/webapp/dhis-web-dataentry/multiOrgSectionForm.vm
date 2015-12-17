@@ -37,7 +37,7 @@
     <tr>
         <td rowspan="$rowSpan"></td>
         #foreach( $dataElement in $section.dataElements )
-        <th colspan="$colCount">$dataElement.displayName</th>
+        <th colspan="$colCount">$dataElement.getFormNameFallback()</th>
         #end
     </tr>
 
@@ -154,7 +154,7 @@
         #set( $count = $count + 1 )
         #if( $isDefaultCategory )
         <tr>
-            <td rowspan="$colCount" #if( $mark == 1 )class="alt"#else class="reg"#end>${encoder.htmlEncode( $dataElement.displayName )}</td>
+            <td rowspan="$colCount" #if( $mark == 1 )class="alt"#else class="reg"#end>${encoder.htmlEncode( $dataElement.getFormNameFallback() )}</td>
 
             #foreach( $organisationUnit in $organisationUnits )
                 <span class="hidden" id="${dataElement.uid}-dataelement">${encoder.htmlEncode( $dataElement.getFormNameFallback() )}</span>
@@ -195,7 +195,7 @@
         #set( $categoryOptions2 = $optionsMap.get( $category2.id ) )
         <tr>
             #if( $velocityCount == 1 )
-                <td rowspan="$colCount" #if( $mark == 1 )class="alt"#else class="reg"#end>${encoder.htmlEncode( $dataElement.displayName )}</td>
+                <td rowspan="$colCount" #if( $mark == 1 )class="alt"#else class="reg"#end>${encoder.htmlEncode( $dataElement.getFormNameFallback() )}</td>
             #end
 
             #set( $catRowSpan = $colCount / 2)
