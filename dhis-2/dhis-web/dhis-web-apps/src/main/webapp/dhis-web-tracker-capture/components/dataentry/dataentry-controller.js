@@ -8,7 +8,6 @@ trackerCapture.controller('DataEntryController',
                 $log,
                 $timeout,
                 $translate,
-                Paginator,
                 CommonUtils,
                 DateUtils,
                 EventUtils,
@@ -27,8 +26,11 @@ trackerCapture.controller('DataEntryController',
                 EventCreationService,
                 $q) {
 
+    $scope.eventPageSize = 4;
     $scope.maxOptionSize = 30;
     $scope.dashboardReady = false;
+    $scope.eventPagingStart = 0;
+    $scope.eventPagingEnd = $scope.eventPageSize;
     
     //Data entry form
     $scope.outerForm = {};
@@ -267,7 +269,7 @@ trackerCapture.controller('DataEntryController',
         }
         allSorted = orderByFilter(allSorted, '-sortingDate').reverse();
         
-        var evs = {all: allSorted, byStage: $scope.eventsByStageAsc};
+        var evs = {all: $scope.allEventsSorted, byStage: $scope.eventsByStageAsc};
         var flag = {debug: true, verbose: true};
 
         //If the events is displayed in a table, it is necessary to run the rules for all visible events.        
@@ -353,6 +355,7 @@ trackerCapture.controller('DataEntryController',
 
     $scope.getEvents = function () {
 
+        $scope.allEventsSorted = [];
         var events = CurrentSelection.getSelectedTeiEvents();
         events = $filter('filter')(events, {program: $scope.selectedProgram.id});
         if (angular.isObject(events)) {
@@ -404,9 +407,13 @@ trackerCapture.controller('DataEntryController',
                             $scope.currentEvent = dhis2Event;
                         }
                     }
+                    
+                    $scope.allEventsSorted.push(dhis2Event);
                 }
             });
-
+            
+            $scope.allEventsSorted = orderByFilter($scope.allEventsSorted, '-sortingDate').reverse();
+            console.log('the event:  ', $scope.allEventsSorted);
             sortEventsByStage(null);
             $scope.showDataEntry($scope.currentEvent, true);
         }
@@ -454,24 +461,46 @@ trackerCapture.controller('DataEntryController',
         }
     }
 
-    $scope.stageNeedsEvent = function (stage) {
-        //In case the event is a table, we sould always allow adding more events(rows)
-        if (stage.displayEventsInTable) {
-            return true;
-        }
-
-        if ($scope.eventsByStage[stage.id].length < 1) {
-            return true;
-        }
-
-        if (stage.repeatable) {
-            for (var j = 0; j < $scope.eventsByStage[stage.id].length; j++) {
-                if (!$scope.eventsByStage[stage.id][j].eventDate && $scope.eventsByStage[stage.id][j].status !== 'SKIPPED') {
-                    return false;
+    $scope.stageNeedsEvent = function (stage) {        
+        if($scope.selectedEnrollment && $scope.selectedEnrollment.status === 'ACTIVE'){
+            if(!stage){            
+                if(!$scope.allEventsSorted || $scope.allEventsSorted.length === 0){
+                    return true;
                 }
+                
+                for(var key in $scope.eventsByStage){
+                    stage = $scope.stagesById[key];
+                    if(stage && stage.repeatable){
+                        for (var j = 0; j < $scope.eventsByStage[stage.id].length; j++) {
+                            if (!$scope.eventsByStage[stage.id][j].eventDate && $scope.eventsByStage[stage.id][j].status !== 'SKIPPED') {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                }
+                return false;
             }
-            return true;
+
+            //In case the event is a table, we sould always allow adding more events(rows)
+            if (stage.displayEventsInTable) {
+                return true;
+            }
+
+            if ($scope.eventsByStage[stage.id].length === 0) {
+                return true;
+            }
+
+            if (stage.repeatable) {
+                for (var j = 0; j < $scope.eventsByStage[stage.id].length; j++) {
+                    if (!$scope.eventsByStage[stage.id][j].eventDate && $scope.eventsByStage[stage.id][j].status !== 'SKIPPED') {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
+
         return false;
     };
     
@@ -485,6 +514,7 @@ trackerCapture.controller('DataEntryController',
     };
 
     $scope.showCreateEvent = function (stage,eventCreationAction) {
+
         var dummyEvent = EventUtils.createDummyEvent($scope.eventsByStage[stage.id], $scope.selectedEntity, $scope.selectedProgram, stage, $scope.selectedOrgUnit, $scope.selectedEnrollment);
         
         var modalInstance = $modal.open({
@@ -536,13 +566,6 @@ trackerCapture.controller('DataEntryController',
 
     $scope.showDataEntry = function (event, rightAfterEnrollment) {
         if (event) {
-            
-            Paginator.setItemCount($scope.eventsByStage[event.programStage].length);
-            Paginator.setPage($scope.eventsByStage[event.programStage].indexOf(event));
-            Paginator.setPageCount(Paginator.getItemCount());
-            Paginator.setPageSize(1);
-            Paginator.setToolBarDisplay(5);
-
             if ($scope.currentEvent && !rightAfterEnrollment && $scope.currentEvent.event === event.event) {
                 //clicked on the same stage, do toggling
                 $scope.currentEvent = null;
@@ -1525,19 +1548,24 @@ trackerCapture.controller('DataEntryController',
             }
         }
         
-        $scope.allEventsSorted = CurrentSelection.getSelectedTeiEvents();
-        
         if (operation) {
             if (operation === 'ADD') {
                 var ev = EventUtils.reconstruct(newEvent, $scope.currentStage, $scope.optionSets);                
                 ev.enrollment = newEvent.enrollment;
                 ev.visited = newEvent.visited;
+                ev.orgUnitName = newEvent.orgUnitName;
+                ev.name = newEvent.name;
+                ev.sortingDate =newEvent.sortingDate;
+                
                 $scope.allEventsSorted.push(ev);
             }
             if (operation === 'UPDATE') {
                 var ev = EventUtils.reconstruct($scope.currentEvent, $scope.currentStage, $scope.optionSets);
                 ev.enrollment = $scope.currentEvent.enrollment;
                 ev.visited = $scope.currentEvent.visited;
+                ev.orgUnitName = $scope.currentEvent.orgUnitName;
+                ev.name = $scope.currentEvent.name;
+                ev.sortingDate = $scope.currentEvent.sortingDate;
                 var index = -1;
                 for (var i = 0; i < $scope.allEventsSorted.length && index === -1; i++) {
                     if ($scope.allEventsSorted[i].event === $scope.currentEvent.event) {
@@ -1560,14 +1588,11 @@ trackerCapture.controller('DataEntryController',
                 }
             }
 
-            CurrentSelection.setSelectedTeiEvents($scope.allEventsSorted);
-
             $timeout(function () {
                 $rootScope.$broadcast('tei-report-widget', {});
             }, 200);
-        }
-        
-        $scope.allEventsSorted = orderByFilter($scope.allEventsSorted, '-sortingDate').reverse();
+        }        
+        $scope.allEventsSorted = orderByFilter($scope.allEventsSorted, '-sortingDate').reverse();         
     };
 
     $scope.showLastEventInStage = function (stageId) {
@@ -1629,7 +1654,19 @@ trackerCapture.controller('DataEntryController',
         }
         return status;
     };
-    
+
+    $scope.getEventPage = function(direction){
+        if(direction === 'FORWARD'){
+            $scope.eventPagingStart += $scope.eventPageSize;
+            $scope.eventPagingEnd += $scope.eventPageSize;
+        }
+        
+        if(direction === 'BACKWARD'){
+            $scope.eventPagingStart -= $scope.eventPageSize;
+            $scope.eventPagingEnd -= $scope.eventPageSize;
+        }        
+    };    
+
     $scope.deselectCurrent = function(id){        
         
         if($scope.currentEvent.event === id){

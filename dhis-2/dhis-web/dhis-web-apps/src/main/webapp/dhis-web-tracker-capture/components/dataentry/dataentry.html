@@ -2,7 +2,23 @@
     <div ng-include="'components/dataentry/dataentry-print.html'">
     </div>
     <div class="panel-heading handle bold">
-        {{dataentryWidget.title| translate}}        
+        {{dataentryWidget.title| translate}}  
+        <span ng-if="currentStage && stageNeedsEvent(currentStage) && selectedEnrollment.status === 'ACTIVE'">
+            <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.add)" style="vertical-align:middle">
+                {{'add'|translate}}
+            </a>
+            |
+            <a href title="{{'schedule_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.schedule)" style="vertical-align:middle">
+                {{'schedule'|translate}}
+            </a>
+            |
+            <a href title="Make referral" ng-click="showCreateEvent(stage, eventCreationActions.referral)" style="vertical-align: middle" ng-if="showReferral">
+                Referral
+            </a>
+        </span>
+        <!--<span class="nav-pills" ng-if="stageNeedsEvent(null)">
+            | <a href ng-click="showCreateEvent(currentStage)" title="{{'add_new_event'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [!editingDisabled]">{{'add_new_event'| translate}}</span></a>
+        </span>-->
         <span class="pull-right widget-link">
             <a href ng-click="toggleTableEditMode()" title="{{tableEditMode === tableEditModes.form ? 'use combined table edit mode' : 'use form only table edit mode'}}"><span ng-if="tableEditMode === tableEditModes.form"><i class="fa fa-clipboard vertical-center"></i></span><span ng-if="tableEditMode !== tableEditModes.form"><i class="fa fa-external-link vertical-center"></i></span></a>
             <a href ng-click="toggleEventsTableDisplay()" title="{{showEventsAsTables ? 'toggle_table_view_off' : 'toggle_table_view_on'| translate}}" ng-show="stagesCanBeShownAsTable"><span ng-if="!showEventsAsTables"><i class="fa fa-bars vertical-center"></i></span><span ng-if="showEventsAsTables"><i class="fa fa-square vertical-center"></i></span></a>
@@ -32,8 +48,8 @@
                     </tr>
                 </table>
             </div>
-            <!--TREE-->
-            <div class="table-responsive hideInPrint" ng-if="selectedEnrollment && selectedEnrollment.enrollment">
+            
+            <div class="hideInPrint" ng-if="selectedEnrollment && selectedEnrollment.enrollment">
                 <div ng-include="'components/dataentry/event-layout.html'"></div>
             </div>
 

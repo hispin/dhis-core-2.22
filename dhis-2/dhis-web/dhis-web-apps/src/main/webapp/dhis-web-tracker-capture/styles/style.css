@@ -147,18 +147,29 @@ textarea {
 }
 
 .event-container {
+    display: inline-block;
     cursor: pointer;
     opacity: 1.0;
     text-align: center;
-    margin: 2px;
+    margin: 5px;
     padding: 5px;
     border: 2px dotted;
-    border-radius: 4px;    
+    border-radius: 4px;  
+    width: 130px;
+    height: 70px;
+    overflow: hidden;
+    float: left;
 }
 
 .event-container:hover {
     border: 2px solid;
     font-weight: bold;
+}
+
+.arrow-container {
+    display: inline-block;
+    float: left;
+    padding-top: 30px;
 }
 
 .stage-completed {
@@ -1138,52 +1149,6 @@ ul.tree ul li:last-child:before {
 .form-horizontal .control-label {
     display: table-cell;
     vertical-align: middle;
-}
-
-div.event-paging 
-{ 
-    width:100%;
-    background-color: #ebf0f6;
-    float:left;
-    text-align: left;
-    height:16px; 
-    margin-top: 5px;
-    border-radius: 4px;
-}
-
-div.event-paging span, div.event-paging a 
-{
-    font-weight: bold;
-    padding: 0 5px;
-    font-size: 12px;
-}
-
-div.event-paging a
-{
-    text-decoration: none; 
-    color: #FF9900;
-}
-
-div.event-paging a.active
-{
-    text-decoration: none; 
-    color: #000;
-    cursor: default;
-}
-
-div.event-paging a:hover
-{
-    color: #000;
-}
-
-div.event-paging span.page 
-{
-    color:#000;
-}
-
-div.event-paging span.seperator 
-{
-    display:none;
 }
 
 input, button, select, textarea {
