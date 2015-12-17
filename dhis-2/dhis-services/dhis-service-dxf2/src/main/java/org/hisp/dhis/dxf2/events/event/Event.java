@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.common.BaseLinkableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
@@ -83,13 +82,13 @@ public class Event
     private String created;
 
     private String lastUpdated;
-    
+
     private String attributeCategoryOptions;
-    
+
     private String completedUser;
 
     private String completedDate;
-    
+
     public Event()
     {
     }
@@ -311,7 +310,7 @@ public class Event
     {
         this.lastUpdated = lastUpdated;
     }
-    
+
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getAttributeCategoryOptions()
@@ -322,7 +321,7 @@ public class Event
     public void setAttributeCategoryOptions( String attributeCategoryOptions )
     {
         this.attributeCategoryOptions = attributeCategoryOptions;
-    }    
+    }
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -386,5 +385,5 @@ public class Event
             ", completedUser=" + completedUser +
             ", completedDate=" + completedDate +
             '}';
-    }       
+    }
 }

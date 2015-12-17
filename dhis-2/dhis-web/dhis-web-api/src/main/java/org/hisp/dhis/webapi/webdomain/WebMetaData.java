@@ -58,7 +58,7 @@ public class WebMetaData
     }
 
     @JsonProperty
-    @JacksonXmlProperty( isAttribute = true, namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( isAttribute = true )
     public String getLink()
     {
         if ( linkableObject == null )
