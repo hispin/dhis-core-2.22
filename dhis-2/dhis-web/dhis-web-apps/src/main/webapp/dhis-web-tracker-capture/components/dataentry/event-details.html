@@ -14,9 +14,9 @@
                ng-disabled="currentEvent.status === 'SKIPPED' || selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed"    
                ng-required="true"
                blur-or-change="saveEventDate()"/>
-        <span ng-if="invalidDate" class="error">{{'date_required'| translate}}</span>
+        <span ng-if="invalidDate === currentEvent.event" class="error">{{'date_required'| translate}}</span>
     </div>
-    <div class="col-md-6" ng-if="!currentStage.hideDueDate">
+    <div ng-if="!currentEvent.eventDate && currentEvent.status !== 'SKIPPED'"  class="col-md-6">
         <span ng-if="currentEvent.eventDate || currentEvent.status === 'SKIPPED' || currentEvent.dueDate">
             {{'due_date'| translate}}
         </span>
@@ -30,9 +30,9 @@
                d2-date                                
                ng-model="currentEvent.dueDate"
                blur-or-change="saveDueDate()" 
-               ng-disabled="currentEvent.eventDate || !schedulingEnabled || selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed"/>
-        <span ng-if="invalidDate" class="error">{{'date_required'| translate}}</span>
-    </div>                        
+               ng-disabled="currentEvent.eventDate || !schedulingEnabled || currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed"/>
+        <span ng-if="invalidDueDate === currentEvent.event" class="error">{{'date_required'| translate}}</span>
+    </div>
 </div>
 <!-- event dates/scheduling end -->
 

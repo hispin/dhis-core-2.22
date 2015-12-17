@@ -2,13 +2,23 @@
     <thead>
         <tr>
             <th class="active" style="vertical-align:middle" ng-repeat="stage in programStages">                            
-                {{stage.name}}
+                {{stage.name}}  
 
                 <!-- event add/filter icon begins -->
                 <span class='pull-right'>
 
                     <span ng-if="stageNeedsEvent(stage) && selectedEnrollment.status === 'ACTIVE'">
-                        <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage)" style="vertical-align:middle"><i class="fa fa-plus"></i></a>
+                        <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.add)" style="vertical-align:middle">
+                            {{'add'|translate}}
+                        </a>
+                        |
+                        <a href title="{{'schedule_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.schedule)" style="vertical-align:middle">
+                            {{'schedule'|translate}}
+                        </a>
+                        |
+                        <a href title="Make referral" ng-click="showCreateEvent(stage, eventCreationActions.referral)" style="vertical-align: middle" ng-if="showReferral">
+                            Referral
+                        </a>
                     </span>
                 </span>
                 <!-- event add/filter icon ends -->
@@ -26,14 +36,14 @@
                          ng-click="showDataEntry(dhis2Event, false)">
                         {{dhis2Event.orgUnitName}}<br/>
                         {{dhis2Event.sortingDate}}<br>
-                        <span ng-if="eventsByStage[stage.id].length > 1 && !filterEvents">[{{eventsByStage[stage.id].length - $index}}]</span>
+                        <span ng-if="eventsByStage[stage.id].length > 1 && !filterEvents">[{{$index + 1}}]</span>
                     </div>
                 </div>
                 <span ng-if="eventsByStage[stage.id].length > 1 && filterEvents">
                     <span ng-if="currentEvent.programStage !== stage.id">
                         <div class="event-paging">
                             <a href class="event-paging" ng-click="showDataEntryForEvent(eventsByStage[stage.id][0])">{{'show_more'| translate}}</a>
-                        </div>                                    
+                        </div>
                     </span>
                     <event-paginator ng-if="stage.id === currentEvent.programStage"></event-paginator>                             
                 </span>
