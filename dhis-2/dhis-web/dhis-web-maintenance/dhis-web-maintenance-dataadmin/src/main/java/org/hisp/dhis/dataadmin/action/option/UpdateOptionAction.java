@@ -28,15 +28,17 @@ package org.hisp.dhis.dataadmin.action.option;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.List;
 
 /**
  * @author Chau Thu Tran
- *
  * @version $ UpdateOptionAction.java Jul 28, 2014 8:41:52 PM $
  */
 public class UpdateOptionAction
@@ -52,6 +54,9 @@ public class UpdateOptionAction
     {
         this.optionService = optionService;
     }
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------------------------------
     // Input
@@ -83,6 +88,13 @@ public class UpdateOptionAction
         this.name = name;
     }
 
+    private List<String> jsonAttributeValues;
+
+    public void setJsonAttributeValues( List<String> jsonAttributeValues )
+    {
+        this.jsonAttributeValues = jsonAttributeValues;
+    }
+
     // -------------------------------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------------------------------
@@ -93,6 +105,12 @@ public class UpdateOptionAction
     {
         Option option = optionService.getOption( optionId );
         option.setName( StringUtils.trimToNull( name ) );
+
+        if ( jsonAttributeValues != null )
+        {
+            attributeService.updateAttributeValues( option, jsonAttributeValues );
+        }
+
         optionService.updateOption( option );
 
         return SUCCESS;

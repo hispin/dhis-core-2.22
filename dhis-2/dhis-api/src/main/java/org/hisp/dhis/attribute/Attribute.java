@@ -48,6 +48,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.document.Document;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorGroup;
+import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroup;
@@ -495,6 +496,7 @@ public class Attribute
         if ( trackedEntityAttribute ) klasses.add( TrackedEntity.class );
         if ( trackedEntityAttributeAttribute ) klasses.add( TrackedEntityAttribute.class );
         if ( documentAttribute ) klasses.add( Document.class );
+        if ( optionAttribute ) klasses.add( Option.class );
 
         return klasses;
     }

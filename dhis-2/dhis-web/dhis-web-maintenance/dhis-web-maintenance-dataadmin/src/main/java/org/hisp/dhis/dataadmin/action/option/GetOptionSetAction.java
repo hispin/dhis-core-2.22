@@ -29,12 +29,22 @@ package org.hisp.dhis.dataadmin.action.option;
  */
 
 import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
+import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
- * @version $GetOptionSetAction.java Feb 3, 2012 9:28:11 PM$
  */
 public class GetOptionSetAction
     implements Action
@@ -45,6 +55,9 @@ public class GetOptionSetAction
 
     private OptionService optionService;
 
+    @Autowired
+    private AttributeService attributeService;
+
     // -------------------------------------------------------------------------------------------------
     // Input/Output
     // -------------------------------------------------------------------------------------------------
@@ -52,6 +65,10 @@ public class GetOptionSetAction
     private Integer id;
 
     private OptionSet optionSet;
+
+    private List<Attribute> attributes;
+
+    private Map<Integer, String> attributeValues = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------
     // Getters && Setters
@@ -72,6 +89,16 @@ public class GetOptionSetAction
         this.id = id;
     }
 
+    public List<Attribute> getAttributes()
+    {
+        return attributes;
+    }
+
+    public Map<Integer, String> getAttributeValues()
+    {
+        return attributeValues;
+    }
+
     // -------------------------------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------------------------------
@@ -82,7 +109,9 @@ public class GetOptionSetAction
     {
         optionSet = optionService.getOptionSet( id );
 
+        attributes = new ArrayList<>( attributeService.getAttributes( Option.class ) );
+        Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
+
         return SUCCESS;
     }
-
 }
