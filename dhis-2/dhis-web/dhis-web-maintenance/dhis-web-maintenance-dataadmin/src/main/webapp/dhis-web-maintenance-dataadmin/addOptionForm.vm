@@ -15,6 +15,7 @@
       var valueType = '$optionSet.valueType';
 
       if( dhis2.validation.isValidValueType(value, valueType) ) {
+        #tblDynamicAttributesJavascript()
         form.submit();
       }
     });
@@ -45,6 +46,11 @@
       <td><label for='code'>$i18n.getString( "code" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
       <td><input type="text" id="code" name="code" class="{validate:{required:true}}"/></td>
     </tr>
+  </table>
+
+  #tblDynamicAttributes( { "attributes": $attributes, "attributeValues": $attributeValues } )
+
+  <table>
     <tr>
       <td></td>
       <td colspan="2">

@@ -28,16 +28,24 @@ package org.hisp.dhis.dataadmin.action.option;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.opensymphony.xwork2.Action;
+import org.hisp.dhis.attribute.Attribute;
+import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
+import org.hisp.dhis.system.util.AttributeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.Action;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chau Thu Tran
- *
- * @version $ GetOptionAction.java Jul 28, 2014 8:41:52 PM $
  */
 public class GetOptionAction
     implements Action
@@ -52,6 +60,9 @@ public class GetOptionAction
     {
         this.optionService = optionService;
     }
+
+    @Autowired
+    private AttributeService attributeService;
 
     // -------------------------------------------------------------------------------------------------
     // Input
@@ -85,6 +96,20 @@ public class GetOptionAction
         return option;
     }
 
+    private List<Attribute> attributes;
+
+    public List<Attribute> getAttributes()
+    {
+        return attributes;
+    }
+
+    private Map<Integer, String> attributeValues = new HashMap<>();
+
+    public Map<Integer, String> getAttributeValues()
+    {
+        return attributeValues;
+    }
+
     // -------------------------------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------------------------------
@@ -96,6 +121,11 @@ public class GetOptionAction
         optionSet = optionService.getOptionSet( optionSetId );
 
         option = optionService.getOption( optionId );
+
+        attributeValues = AttributeUtils.getAttributeValueMap( option.getAttributeValues() );
+
+        attributes = new ArrayList<>( attributeService.getAttributes( Option.class ) );
+        Collections.sort( attributes, AttributeSortOrderComparator.INSTANCE );
 
         return SUCCESS;
     }

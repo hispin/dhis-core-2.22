@@ -13,13 +13,22 @@
     <id name="id" column="optionvalueid">
       <generator class="native" />
     </id>
-    
+
     <property name="uid" column="uid" unique="true" length="11" />
-    <property name="code" column="code" not-null="false" unique="false" length="230" /> <!-- Length for legacy support -->
-    <property name="created" type="timestamp"/>
-    <property name="lastUpdated" type="timestamp"/>
+    <property name="code" column="code" not-null="false" unique="false" length="230" />
+
+    <!-- Length for legacy support -->
+    <property name="created" type="timestamp" />
+    <property name="lastUpdated" type="timestamp" />
 
     <property name="name" column="name" not-null="true" length="230" />
-	
+
+    <!-- Dynamic attribute values -->
+    <set name="attributeValues" table="optionattributevalues" cascade="delete-orphan">
+      <cache usage="read-write" />
+      <key column="optionvalueid" />
+      <many-to-many class="org.hisp.dhis.attribute.AttributeValue" column="attributevalueid" unique="true" />
+    </set>
+
   </class>
 </hibernate-mapping>
