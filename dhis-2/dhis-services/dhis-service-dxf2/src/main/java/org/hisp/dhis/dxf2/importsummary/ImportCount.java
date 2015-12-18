@@ -33,7 +33,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.DxfNamespaces;
 
-@JacksonXmlRootElement(localName = "count", namespace = DxfNamespaces.DXF_2_0)
+@JacksonXmlRootElement( localName = "count", namespace = DxfNamespaces.DXF_2_0 )
 public class ImportCount
 {
     private int imported;
@@ -57,7 +57,7 @@ public class ImportCount
     }
 
     @JsonProperty
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty( isAttribute = true )
     public int getImported()
     {
         return imported;
@@ -69,7 +69,7 @@ public class ImportCount
     }
 
     @JsonProperty
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty( isAttribute = true )
     public int getUpdated()
     {
         return updated;
@@ -81,7 +81,7 @@ public class ImportCount
     }
 
     @JsonProperty
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty( isAttribute = true )
     public int getIgnored()
     {
         return ignored;
@@ -93,7 +93,7 @@ public class ImportCount
     }
 
     @JsonProperty
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty( isAttribute = true )
     public int getDeleted()
     {
         return deleted;
