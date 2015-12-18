@@ -67,6 +67,7 @@ public class MathUtils
     private static IntegerValidator INT_VALIDATOR = new IntegerValidator();
     
     private static final double TOLERANCE = 0.01;
+    private static final int NUMBER_MAX_LENGTH = 250;
     
     public static final String NUMERIC_REGEXP = "^(-?0|-?[1-9]\\d*)(\\.\\d+)?$";
     public static final String NUMERIC_LENIENT_REGEXP = "^(-?[0-9]+)(\\.[0-9]+)?$";
@@ -355,7 +356,8 @@ public class MathUtils
      */
     public static boolean isNumeric( String value )
     {
-        return value != null && DOUBLE_VALIDATOR.isValid( value, LOCALE ) && NUMERIC_PATTERN.matcher( value ).matches();
+        return value != null && DOUBLE_VALIDATOR.isValid( value, LOCALE ) && 
+            NUMERIC_PATTERN.matcher( value ).matches() && value.length() < NUMBER_MAX_LENGTH;
     }
 
     /**
