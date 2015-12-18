@@ -54,7 +54,7 @@
     
     <property name="displayFrontPageList" column="displayfrontpagelist" />
 
-    <list name="programAttributes" cascade="all-delete-orphan">
+    <list name="programAttributes" cascade="all">
       <key column="programid" />
       <list-index column="sort_order" base="1" />
       <one-to-many class="org.hisp.dhis.program.ProgramTrackedEntityAttribute" />
