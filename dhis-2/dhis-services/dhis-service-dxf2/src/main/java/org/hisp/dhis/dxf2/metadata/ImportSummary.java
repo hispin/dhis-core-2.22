@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@JacksonXmlRootElement(localName = "importSummary", namespace = DxfNamespaces.DXF_2_0)
+@JacksonXmlRootElement( localName = "importSummary", namespace = DxfNamespaces.DXF_2_0 )
 public class ImportSummary
 {
     private ImportCount importCount = new ImportCount();
@@ -54,7 +54,7 @@ public class ImportSummary
     }
 
     @JsonProperty
-    @JacksonXmlProperty(namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public ImportCount getImportCount()
     {
         return importCount;
@@ -66,8 +66,8 @@ public class ImportSummary
     }
 
     @JsonProperty
-    @JacksonXmlElementWrapper(localName = "typeSummaries", namespace = DxfNamespaces.DXF_2_0)
-    @JacksonXmlProperty(localName = "typeSummary", namespace = DxfNamespaces.DXF_2_0)
+    @JacksonXmlElementWrapper( localName = "typeSummaries", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "typeSummary", namespace = DxfNamespaces.DXF_2_0 )
     public List<ImportTypeSummary> getImportTypeSummaries()
     {
         return importTypeSummaries;
@@ -88,26 +88,6 @@ public class ImportSummary
         this.importCount.incrementUpdated( importCount.getUpdated() );
         this.importCount.incrementIgnored( importCount.getIgnored() );
         this.importCount.incrementDeleted( importCount.getDeleted() );
-    }
-
-    public void incrementImported( int n )
-    {
-        importCount.incrementImported( n );
-    }
-
-    public void incrementUpdated( int n )
-    {
-        importCount.incrementUpdated( n );
-    }
-
-    public void incrementIgnored( int n )
-    {
-        importCount.incrementIgnored( n );
-    }
-
-    public void incrementDeleted( int n )
-    {
-        importCount.incrementDeleted( n );
     }
 
     @Override
