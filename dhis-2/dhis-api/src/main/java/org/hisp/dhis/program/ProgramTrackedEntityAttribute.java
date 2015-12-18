@@ -71,10 +71,12 @@ public class ProgramTrackedEntityAttribute
 
     public ProgramTrackedEntityAttribute()
     {
+        setAutoFields();
     }
 
     public ProgramTrackedEntityAttribute( Program program, TrackedEntityAttribute attribute )
     {
+        this();
         this.program = program;
         this.attribute = attribute;
     }
@@ -82,8 +84,7 @@ public class ProgramTrackedEntityAttribute
     public ProgramTrackedEntityAttribute( Program program, TrackedEntityAttribute attribute, boolean displayInList,
         Boolean mandatory )
     {
-        this.program = program;
-        this.attribute = attribute;
+        this( program, attribute );
         this.displayInList = displayInList;
         this.mandatory = mandatory;
     }
@@ -91,10 +92,7 @@ public class ProgramTrackedEntityAttribute
     public ProgramTrackedEntityAttribute( Program program, TrackedEntityAttribute attribute, boolean displayInList,
         Boolean mandatory, Boolean allowFutureDate )
     {
-        this.program = program;
-        this.attribute = attribute;
-        this.displayInList = displayInList;
-        this.mandatory = mandatory;
+        this( program, attribute, displayInList, mandatory );
         this.allowFutureDate = allowFutureDate;
     }
 
