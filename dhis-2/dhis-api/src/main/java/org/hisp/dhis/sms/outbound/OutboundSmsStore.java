@@ -33,18 +33,18 @@ import java.util.List;
 public interface OutboundSmsStore
 {
     int saveOutboundSms( OutboundSms sms );
-    
+
     List<OutboundSms> getAllOutboundSms();
-    
+
     List<OutboundSms> getAllOutboundSms( Integer min, Integer max );
 
     OutboundSms getOutboundSmsbyId( int id );
-    
+
     List<OutboundSms> get( OutboundSmsStatus status );
-    
+
     List<OutboundSms> get( OutboundSmsStatus status, Integer min, Integer max );
-    
+
     void updateOutboundSms( OutboundSms sms );
-    
+
     void deleteOutboundSms( OutboundSms sms );
 }

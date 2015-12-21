@@ -44,68 +44,41 @@ import org.hisp.dhis.sms.incoming.IncomingSmsService;
 import org.hisp.dhis.sms.incoming.SmsMessageStatus;
 import org.hisp.dhis.sms.parse.ParserType;
 import org.hisp.dhis.sms.parse.SMSParserException;
+import org.hisp.dhis.system.util.SmsUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DHISMessageAlertListener
     implements IncomingSmsListener
 {
+
+    // -------------------------------------------------------------------------
+    // Dependencies
+    // -------------------------------------------------------------------------
+
+    @Autowired
     private SMSCommandService smsCommandService;
 
-    public void setSmsCommandService( SMSCommandService smsCommandService )
-    {
-        this.smsCommandService = smsCommandService;
-    }
-
+    @Autowired
     private UserService userService;
 
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
+    @Autowired
     private MessageService messageService;
 
-    public void setMessageService( MessageService messageService )
-    {
-        this.messageService = messageService;
-    }
-
+    @Autowired
     private SmsMessageSender smsMessageSender;
 
-    public void setSmsMessageSender( SmsMessageSender smsMessageSender )
-    {
-        this.smsMessageSender = smsMessageSender;
-    }
-    
+    @Autowired
     private IncomingSmsService incomingSmsService;
-
-    public void setIncomingSmsService( IncomingSmsService incomingSmsService )
-    {
-        this.incomingSmsService = incomingSmsService;
-    }
 
     @Transactional
     @Override
     public boolean accept( IncomingSms sms )
     {
-        String message = sms.getText();
-        String commandString = null;
-
-        for ( int i = 0; i < message.length(); i++ )
-        {
-            String c = String.valueOf( message.charAt( i ) );
-            if ( c.matches( "\\W" ) )
-            {
-                commandString = message.substring( 0, i );
-                message = message.substring( commandString.length() + 1 );
-                break;
-            }
-        }
-
-        return smsCommandService.getSMSCommand( commandString, ParserType.ALERT_PARSER ) != null;
+        return smsCommandService.getSMSCommand( SmsUtils.getCommandString( sms ), ParserType.ALERT_PARSER ) != null;
     }
 
     @Transactional
@@ -113,20 +86,8 @@ public class DHISMessageAlertListener
     public void receive( IncomingSms sms )
     {
         String message = sms.getText();
-        String commandString = null;
-
-        for ( int i = 0; i < message.length(); i++ )
-        {
-            String c = String.valueOf( message.charAt( i ) );
-            if ( c.matches( "\\W" ) )
-            {
-                commandString = message.substring( 0, i );
-                message = message.substring( commandString.length() + 1 );
-                break;
-            }
-        }
-
-        SMSCommand smsCommand = smsCommandService.getSMSCommand( commandString, ParserType.ALERT_PARSER );
+        SMSCommand smsCommand = smsCommandService.getSMSCommand( SmsUtils.getCommandString( sms ),
+            ParserType.ALERT_PARSER );
         UserGroup userGroup = smsCommand.getUserGroup();
         String senderPhoneNumber = StringUtils.replace( sms.getOriginator(), "+", "" );
 
@@ -157,11 +118,8 @@ public class DHISMessageAlertListener
                 User sender = users.iterator().next();
 
                 Set<User> receivers = new HashSet<>( userGroup.getMembers() );
-
-                // forward to user group by SMS,Dhis2 message, Email
                 messageService.sendMessage( smsCommand.getName(), message, null, receivers, sender, false, false );
 
-                // confirm SMS was received and forwarded completely
                 Set<User> feedbackList = new HashSet<>();
                 feedbackList.add( sender );
 

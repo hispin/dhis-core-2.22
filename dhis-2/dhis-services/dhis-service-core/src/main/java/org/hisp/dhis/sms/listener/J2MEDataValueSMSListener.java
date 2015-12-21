@@ -30,7 +30,6 @@ package org.hisp.dhis.sms.listener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.ValueType;
-import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataset.CompleteDataSetRegistration;
@@ -54,66 +53,46 @@ import org.hisp.dhis.sms.incoming.IncomingSms;
 import org.hisp.dhis.sms.incoming.IncomingSmsListener;
 import org.hisp.dhis.sms.parse.ParserType;
 import org.hisp.dhis.sms.parse.SMSParserException;
+import org.hisp.dhis.system.util.SmsUtils;
 import org.hisp.dhis.system.util.ValidationUtils;
-import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 public class J2MEDataValueSMSListener
     implements IncomingSmsListener
 {
+
+    // -------------------------------------------------------------------------
+    // Dependencies
+    // -------------------------------------------------------------------------
+
+    @Autowired
     private DataValueService dataValueService;
 
-    public void setDataValueService( DataValueService dataValueService )
-    {
-        this.dataValueService = dataValueService;
-    }
-
+    @Autowired
     private DataElementCategoryService dataElementCategoryService;
 
-    public void setDataElementCategoryService( DataElementCategoryService dataElementCategoryService )
-    {
-        this.dataElementCategoryService = dataElementCategoryService;
-    }
-
+    @Autowired
     private SMSCommandService smsCommandService;
 
-    public void setSmsCommandService( SMSCommandService smsCommandService )
-    {
-        this.smsCommandService = smsCommandService;
-    }
-
+    @Autowired
     private UserService userService;
 
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
+    @Autowired
     private CompleteDataSetRegistrationService registrationService;
 
-    public void setRegistrationService( CompleteDataSetRegistrationService registrationService )
-    {
-        this.registrationService = registrationService;
-    }
-
+    @Autowired
     private SmsSender smsSender;
-
-    public void setSmsSender( SmsSender smsSender )
-    {
-        this.smsSender = smsSender;
-    }
 
     // -------------------------------------------------------------------------
     // IncomingSmsListener implementation
@@ -123,20 +102,7 @@ public class J2MEDataValueSMSListener
     @Override
     public boolean accept( IncomingSms sms )
     {
-        String message = sms.getText();
-        String commandString = null;
-
-        if ( message.indexOf( TextUtils.SPACE ) > 0 )
-        {
-            commandString = message.substring( 0, message.indexOf( " " ) );
-            message = message.substring( commandString.length() );
-        }
-        else
-        {
-            commandString = message;
-        }
-
-        return smsCommandService.getSMSCommand( commandString, ParserType.J2ME_PARSER ) != null;
+        return smsCommandService.getSMSCommand( SmsUtils.getCommandString( sms ), ParserType.J2ME_PARSER ) != null;
     }
 
     @Transactional
@@ -144,22 +110,16 @@ public class J2MEDataValueSMSListener
     public void receive( IncomingSms sms )
     {
         String message = sms.getText();
-        String commandString = null;
-        if ( message.indexOf( " " ) > 0 )
-        {
-            commandString = message.substring( 0, message.indexOf( " " ) );
-            message = message.substring( commandString.length() );
-        }
-        else
-        {
-            commandString = message;
-        }
 
-        SMSCommand smsCommand = smsCommandService.getSMSCommand( commandString, ParserType.J2ME_PARSER );
+        SMSCommand smsCommand = smsCommandService.getSMSCommand( SmsUtils.getCommandString( sms ),
+            ParserType.J2ME_PARSER );
+
         String token[] = message.split( "!" );
         Map<String, String> parsedMessage = this.parse( token[1], smsCommand );
+
         String senderPhoneNumber = StringUtils.replace( sms.getOriginator(), "+", "" );
-        Collection<OrganisationUnit> orgUnits = getOrganisationUnitsByPhoneNumber( senderPhoneNumber );
+        Collection<OrganisationUnit> orgUnits = SmsUtils.getOrganisationUnitsByPhoneNumber( senderPhoneNumber,
+            userService.getUsersByPhoneNumber( senderPhoneNumber ) );
 
         if ( orgUnits == null || orgUnits.size() == 0 )
         {
@@ -173,7 +133,7 @@ public class J2MEDataValueSMSListener
             }
         }
 
-        OrganisationUnit orgUnit = this.selectOrganisationUnit( orgUnits, parsedMessage, smsCommand );
+        OrganisationUnit orgUnit = SmsUtils.selectOrganisationUnit( orgUnits, parsedMessage, smsCommand );
         Period period = this.getPeriod( token[0].trim(), smsCommand.getDataset().getPeriodType() );
         boolean valueStored = false;
 
@@ -233,15 +193,16 @@ public class J2MEDataValueSMSListener
     {
         String upperCaseCode = code.getCode().toUpperCase();
 
-        String storedBy = getUser( sender, command ).getUsername();
+        String storedBy = SmsUtils.getUser( sender, command, userService.getUsersByPhoneNumber( sender ) )
+            .getUsername();
 
         if ( StringUtils.isBlank( storedBy ) )
         {
             storedBy = "[unknown] from [" + sender + "]";
         }
 
-        DataElementCategoryOptionCombo optionCombo = dataElementCategoryService.getDataElementCategoryOptionCombo( code
-            .getOptionId() );
+        DataElementCategoryOptionCombo optionCombo = dataElementCategoryService
+            .getDataElementCategoryOptionCombo( code.getOptionId() );
 
         DataValue dv = dataValueService.getDataValue( code.getDataElement(), period, orgUnit, optionCombo );
 
@@ -292,94 +253,6 @@ public class J2MEDataValueSMSListener
         }
     }
 
-    private OrganisationUnit selectOrganisationUnit( Collection<OrganisationUnit> orgUnits,
-        Map<String, String> parsedMessage, SMSCommand smsCommand )
-    {
-        OrganisationUnit orgUnit = null;
-
-        for ( OrganisationUnit o : orgUnits )
-        {
-            if ( orgUnits.size() == 1 )
-            {
-                orgUnit = o;
-            }
-            if ( parsedMessage.containsKey( "ORG" ) && o.getCode().equals( parsedMessage.get( "ORG" ) ) )
-            {
-                orgUnit = o;
-                break;
-            }
-        }
-
-        if ( orgUnit == null && orgUnits.size() > 1 )
-        {
-            String messageListingOrgUnits = smsCommand.getMoreThanOneOrgUnitMessage();
-
-            for ( Iterator<OrganisationUnit> i = orgUnits.iterator(); i.hasNext(); )
-            {
-                OrganisationUnit o = i.next();
-                messageListingOrgUnits += " " + o.getName() + ":" + o.getCode();
-                if ( i.hasNext() )
-                {
-                    messageListingOrgUnits += ",";
-                }
-            }
-            throw new SMSParserException( messageListingOrgUnits );
-        }
-
-        return orgUnit;
-    }
-
-    private Collection<OrganisationUnit> getOrganisationUnitsByPhoneNumber( String sender )
-    {
-        Collection<OrganisationUnit> orgUnits = new ArrayList<>();
-        Collection<User> users = userService.getUsersByPhoneNumber( sender );
-
-        for ( User u : users )
-        {
-            if ( u.getOrganisationUnits() != null )
-            {
-                orgUnits.addAll( u.getOrganisationUnits() );
-            }
-        }
-
-        return orgUnits;
-    }
-
-    private User getUser( String sender, SMSCommand smsCommand )
-    {
-        OrganisationUnit orgunit = null;
-        User user = null;
-
-        for ( User u : userService.getUsersByPhoneNumber( sender ) )
-        {
-            OrganisationUnit ou = u.getOrganisationUnit();
-
-            // Might be undefined if the user has more than one org.units
-            // "attached"
-            if ( orgunit == null )
-            {
-                orgunit = ou;
-            }
-            else if ( orgunit.getId() == ou.getId() )
-            {
-                // same orgunit, no problem...
-            }
-            else
-            {
-                if ( StringUtils.isEmpty( smsCommand.getMoreThanOneOrgUnitMessage() ) )
-                {
-                    throw new SMSParserException( SMSCommand.MORE_THAN_ONE_ORGUNIT_MESSAGE );
-                }
-                else
-                {
-                    throw new SMSParserException( smsCommand.getMoreThanOneOrgUnitMessage() );
-                }
-            }
-            user = u;
-        }
-        return user;
-    }
-
     private void registerCompleteDataSet( DataSet dataSet, Period period, OrganisationUnit organisationUnit,
         String storedBy )
     {
@@ -388,7 +261,8 @@ public class J2MEDataValueSMSListener
         DataElementCategoryOptionCombo optionCombo = dataElementCategoryService
             .getDefaultDataElementCategoryOptionCombo(); // TODO
 
-        if ( registrationService.getCompleteDataSetRegistration( dataSet, period, organisationUnit, optionCombo ) == null )
+        if ( registrationService.getCompleteDataSetRegistration( dataSet, period, organisationUnit,
+            optionCombo ) == null )
         {
             registration.setDataSet( dataSet );
             registration.setPeriod( period );
@@ -462,17 +336,17 @@ public class J2MEDataValueSMSListener
             String pattern = "yyyy-MM-dd";
             SimpleDateFormat formatter = new SimpleDateFormat( pattern );
             Date date = null;
-            
+
             try
             {
                 date = formatter.parse( periodName );
             }
             catch ( ParseException e )
             {
-                throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName()
-                    + " and name " + periodName, e );
+                throw new IllegalArgumentException(
+                    "Couldn't make a period of type " + periodType.getName() + " and name " + periodName, e );
             }
-            
+
             return periodType.createPeriod( date );
         }
 
@@ -488,8 +362,8 @@ public class J2MEDataValueSMSListener
             }
             catch ( ParseException e )
             {
-                throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName()
-                    + " and name " + periodName, e );
+                throw new IllegalArgumentException(
+                    "Couldn't make a period of type " + periodType.getName() + " and name " + periodName, e );
             }
 
             return periodType.createPeriod( date );
@@ -527,7 +401,7 @@ public class J2MEDataValueSMSListener
             Calendar cal = Calendar.getInstance();
 
             int month = 0;
-            
+
             if ( periodName.substring( 0, periodName.indexOf( " " ) ).equals( "Jan" ) )
             {
                 month = 1;
@@ -556,6 +430,7 @@ public class J2MEDataValueSMSListener
             }
         }
 
-        throw new IllegalArgumentException( "Couldn't make a period of type " + periodType.getName() + " and name " + periodName );
+        throw new IllegalArgumentException(
+            "Couldn't make a period of type " + periodType.getName() + " and name " + periodName );
     }
 }

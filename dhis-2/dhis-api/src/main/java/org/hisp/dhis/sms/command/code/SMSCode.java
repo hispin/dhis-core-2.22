@@ -38,11 +38,11 @@ public class SMSCode
     private String code;
 
     private DataElement dataElement;
-    
+
     private TrackedEntityAttribute trackedEntityAttribute;
 
     private int optionId;
-    
+
     private String formula;
 
     public SMSCode( String code, DataElement dataElement, int optionId )
@@ -51,8 +51,8 @@ public class SMSCode
         this.dataElement = dataElement;
         this.optionId = optionId;
     }
-    
-    public SMSCode( String code, TrackedEntityAttribute trackedEntityAttribute)
+
+    public SMSCode( String code, TrackedEntityAttribute trackedEntityAttribute )
     {
         this.code = code;
         this.trackedEntityAttribute = trackedEntityAttribute;

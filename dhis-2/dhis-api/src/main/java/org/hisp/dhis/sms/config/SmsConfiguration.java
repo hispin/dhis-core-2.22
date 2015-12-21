@@ -97,7 +97,7 @@ public class SmsConfiguration
     @XmlElements( { @XmlElement( name = "bulksms", type = BulkSmsGatewayConfig.class ),
         @XmlElement( name = "clickatell", type = ClickatellGatewayConfig.class ),
         @XmlElement( name = "http", type = GenericHttpGatewayConfig.class ),
-        @XmlElement( name = "modem", type = ModemGatewayConfig.class ) } )
+        @XmlElement( name = "modem", type = ModemGatewayConfig.class ) })
     public List<SmsGatewayConfig> getGateways()
     {
         return gateways;
@@ -117,17 +117,17 @@ public class SmsConfiguration
     {
         this.pollingInterval = pollingInterval;
     }
-    
+
     public SmsGatewayConfig getDefaultGateway()
     {
         for ( SmsGatewayConfig gw : gateways )
-        {   
+        {
             if ( gw.isDefault() )
             {
                 return gw;
             }
         }
-        
+
         return null;
     }
 }

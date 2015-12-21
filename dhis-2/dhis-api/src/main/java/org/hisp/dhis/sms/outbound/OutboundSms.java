@@ -35,13 +35,13 @@ import java.util.Set;
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
 
-public class OutboundSms 
+public class OutboundSms
     extends BaseIdentifiableObject
 {
     public static final String DHIS_SYSTEM_SENDER = "DHIS-System";
 
     private String sender;
-    
+
     private Set<String> recipients;
 
     private Date date;

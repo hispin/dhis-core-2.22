@@ -30,21 +30,21 @@ package org.hisp.dhis.sms.incoming;
 
 import java.util.List;
 
-/** 
+/**
  * Store for incoming SMS messages.
  */
 public interface IncomingSmsStore
 {
     String ID = IncomingSmsStore.class.getName();
-    
+
     int save( IncomingSms incomingSms );
-    
-    void update ( IncomingSms incomingSms );
+
+    void update( IncomingSms incomingSms );
 
     IncomingSms get( int id );
 
     List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword );
-    
+
     List<IncomingSms> getSmsByStatus( SmsMessageStatus status, String keyword, Integer min, Integer max );
 
     List<IncomingSms> getSmsByOriginator( String originator );
@@ -52,8 +52,8 @@ public interface IncomingSmsStore
     long getSmsCount();
 
     List<IncomingSms> getAllSmses();
-    
-    void delete( IncomingSms incomingSms);
-    
+
+    void delete( IncomingSms incomingSms );
+
     List<IncomingSms> getAllUnparsedSmses();
 }

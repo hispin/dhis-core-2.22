@@ -102,7 +102,7 @@ public class DefaultOutboundSmsTransportService
     {
         this.smsPublisher = smsPublisher;
     }
-
+    
     // -------------------------------------------------------------------------
     // OutboundSmsTransportService implementation
     // -------------------------------------------------------------------------
@@ -472,7 +472,7 @@ public class DefaultOutboundSmsTransportService
             if ( recipients.size() > 1 )
             {
                 removeGroup( recipient );
-            }            
+            }
         }
 
         if ( outboundMessage.getMessageStatus() == MessageStatuses.SENT )

@@ -93,7 +93,7 @@ public class DefaultMessageService
     }
 
     private EmailService emailService;
-    
+
     public void setEmailService( EmailService emailService )
     {
         this.emailService = emailService;
@@ -129,7 +129,7 @@ public class DefaultMessageService
 
         log.info( "Found the following message senders: " + messageSenders );
     }
-    
+
     // -------------------------------------------------------------------------
     // MessageService implementation
     // -------------------------------------------------------------------------
@@ -141,8 +141,8 @@ public class DefaultMessageService
     }
 
     @Override
-    public int sendMessage( String subject, String text, String metaData, Set<User> users_,
-        User sender, boolean includeFeedbackRecipients, boolean forceNotifications )
+    public int sendMessage( String subject, String text, String metaData, Set<User> users_, User sender,
+        boolean includeFeedbackRecipients, boolean forceNotifications )
     {
         Set<User> users = new HashSet<>( users_ );
 
@@ -163,7 +163,7 @@ public class DefaultMessageService
         if ( sender == null )
         {
             sender = currentUserService.getCurrentUser();
-            
+
             if ( sender != null )
             {
                 users.add( sender );
@@ -205,12 +205,12 @@ public class DefaultMessageService
     {
         return sendMessage( subject, text, metaData, new HashSet<User>(), null, true, false );
     }
-    
+
     @Override
     public int sendSystemNotification( String subject, String text )
     {
         emailService.sendSystemEmail( new Email( subject, text ) );
-        
+
         return sendFeedback( subject, text, null );
     }
 
@@ -225,7 +225,8 @@ public class DefaultMessageService
 
         updateMessageConversation( conversation );
 
-        invokeMessageSenders( conversation.getSubject(), text, null, sender, new HashSet<>( conversation.getUsers() ), false );
+        invokeMessageSenders( conversation.getSubject(), text, null, sender, new HashSet<>( conversation.getUsers() ),
+            false );
     }
 
     @Override
@@ -273,8 +274,9 @@ public class DefaultMessageService
         if ( !conversation.getUserMessages().isEmpty() )
         {
             int id = saveMessageConversation( conversation );
-            
-            invokeMessageSenders( COMPLETE_SUBJECT, text, null, sender, new HashSet<>( conversation.getUsers() ), false );
+
+            invokeMessageSenders( COMPLETE_SUBJECT, text, null, sender, new HashSet<>( conversation.getUsers() ),
+                false );
 
             return id;
         }
@@ -333,7 +335,8 @@ public class DefaultMessageService
     @Override
     public List<MessageConversation> getMessageConversations()
     {
-        return messageConversationStore.getMessageConversations( currentUserService.getCurrentUser(), false, false, null, null );
+        return messageConversationStore.getMessageConversations( currentUserService.getCurrentUser(), false, false,
+            null, null );
     }
 
     @Override
@@ -354,7 +357,8 @@ public class DefaultMessageService
     @Override
     public List<MessageConversation> getMessageConversations( User user, String[] messageConversationUids )
     {
-        List<MessageConversation> conversations = messageConversationStore.getMessageConversations( messageConversationUids );
+        List<MessageConversation> conversations = messageConversationStore
+            .getMessageConversations( messageConversationUids );
 
         // Set transient properties
 
@@ -370,7 +374,8 @@ public class DefaultMessageService
     @Override
     public int getMessageConversationCount()
     {
-        return messageConversationStore.getMessageConversationCount( currentUserService.getCurrentUser(), false, false );
+        return messageConversationStore.getMessageConversationCount( currentUserService.getCurrentUser(), false,
+            false );
     }
 
     @Override
@@ -393,35 +398,40 @@ public class DefaultMessageService
     {
         return messageConversationStore.getLastRecipients( currentUserService.getCurrentUser(), first, max );
     }
-    
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void invokeMessageSenders( String subject, String text, String footer, User sender, Set<User> users, boolean forceSend )
+    private void invokeMessageSenders( String subject, String text, String footer, User sender, Set<User> users,
+        boolean forceSend )
     {
         for ( MessageSender messageSender : messageSenders )
         {
             log.debug( "Invoking message sender: " + messageSender.getClass().getSimpleName() );
-            
+
             messageSender.sendMessage( subject, text, footer, sender, new HashSet<>( users ), forceSend );
         }
     }
 
-    private String getMessageFooter( MessageConversation conversation ) {
+    private String getMessageFooter( MessageConversation conversation )
+    {
         HashMap<String, Object> values = new HashMap<>( 2 );
         String baseUrl = systemSettingManager.getInstanceBaseUrl();
 
         if ( baseUrl == null )
         {
-            return ""; // No base url is configured for this instance. Cannot create a reply link.
+            return ""; // No base url is configured for this instance. Cannot
+                       // create a reply link.
         }
 
-        values.put( "responseUrl", baseUrl + "/dhis-web-dashboard-integration/readMessage.action?id=" + conversation.getUid() );
+        values.put( "responseUrl",
+            baseUrl + "/dhis-web-dashboard-integration/readMessage.action?id=" + conversation.getUid() );
 
-        Locale locale = (Locale) userSettingService.getUserSetting( UserSettingService.KEY_UI_LOCALE, LocaleManager.DEFAULT_LOCALE, conversation.getUser() );
+        Locale locale = (Locale) userSettingService.getUserSetting( UserSettingService.KEY_UI_LOCALE,
+            LocaleManager.DEFAULT_LOCALE, conversation.getUser() );
         values.put( "i18n", i18nManager.getI18n( locale ) );
 
-        return new VelocityManager().render( values , MESSAGE_EMAIL_FOOTER_TEMPLATE );
+        return new VelocityManager().render( values, MESSAGE_EMAIL_FOOTER_TEMPLATE );
     }
 }

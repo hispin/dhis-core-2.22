@@ -33,7 +33,7 @@ import java.util.Date;
 
 public class IncomingSms
     implements Serializable
-{    
+{
     private static final long serialVersionUID = 3954710607630454226L;
 
     private Integer id;
@@ -61,7 +61,7 @@ public class IncomingSms
     private SmsMessageStatus status = SmsMessageStatus.INCOMING;
 
     private String statusMessage;
-    
+
     private boolean parsed = false;
 
     /**
@@ -143,7 +143,7 @@ public class IncomingSms
     {
         if ( bytes != null )
         {
-            throw new IllegalArgumentException("Text and bytes cannot both be set on incoming sms");
+            throw new IllegalArgumentException( "Text and bytes cannot both be set on incoming sms" );
         }
         this.text = text;
     }
@@ -157,7 +157,7 @@ public class IncomingSms
     {
         if ( text != null )
         {
-            throw new IllegalArgumentException("Text and bytes cannot both be set on incoming sms");
+            throw new IllegalArgumentException( "Text and bytes cannot both be set on incoming sms" );
         }
         this.bytes = bytes;
     }

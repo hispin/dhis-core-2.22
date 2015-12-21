@@ -28,9 +28,8 @@ package org.hisp.dhis.webapi.controller.sms;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Zubair <rajazubair.asghar@gmail.com>
- */
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +40,6 @@ import org.hisp.dhis.sms.SmsSender;
 import org.hisp.dhis.sms.incoming.IncomingSmsService;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +48,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Zubair <rajazubair.asghar@gmail.com>
+ */
 @RestController
 @RequestMapping( value = "/sms" )
 public class SmsController
@@ -125,11 +126,10 @@ public class SmsController
 
     @RequestMapping( value = "/inbound", method = RequestMethod.POST )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_MOBILE_SETTINGS')" )
-    public void receiveSMSMessage( @RequestParam String originator,
-        @RequestParam( required = false ) String received_time, @RequestParam String message,
-        @RequestParam( defaultValue = "Unknown", required = false ) String gateway, HttpServletRequest request,
-        HttpServletResponse response)
-            throws WebMessageException
+    public void receiveSMSMessage( @RequestParam String originator, @RequestParam( required = false ) Date receivedTime,
+        @RequestParam String message, @RequestParam( defaultValue = "Unknown", required = false ) String gateway,
+        HttpServletRequest request, HttpServletResponse response)
+            throws WebMessageException, ParseException
     {
         if ( originator == null || originator.length() <= 0 )
         {
@@ -141,25 +141,28 @@ public class SmsController
             throw new WebMessageException( WebMessageUtils.conflict( "Message must be specified" ) );
         }
 
-        incomingSMSService.save( message, originator, gateway );
+        int smsId = incomingSMSService.save( message, originator, gateway, receivedTime );
 
-        webMessageService.send( WebMessageUtils.ok( "Received" ), response, request );
+        webMessageService.send( WebMessageUtils.ok( "Received: SMS ID " + smsId ), response, request );
+
     }
 
     @RequestMapping( value = "/inbound", method = RequestMethod.POST, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_MOBILE_SETTINGS')" )
     public void receiveSMSMessage( @RequestBody Map<String, Object> jsonMassage, HttpServletRequest request,
         HttpServletResponse response )
-            throws WebMessageException
+            throws WebMessageException, ParseException
     {
         if ( jsonMassage == null )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "RequestBody must not be empty" ) );
         }
 
-        incomingSMSService.save( jsonMassage.get( "message" ).toString(), jsonMassage.get( "originator" ).toString(),
-            jsonMassage.get( "gateway" ).toString() );
+        int smsId = incomingSMSService.save( jsonMassage.get( "message" ).toString(),
+            jsonMassage.get( "originator" ).toString(), jsonMassage.get( "gateway" ).toString(),
+            (Date) jsonMassage.get( "receivedTime" ) );
 
-        webMessageService.send( WebMessageUtils.ok( "Received" ), response, request );
+        webMessageService.send( WebMessageUtils.ok( "Received: SMS ID " + smsId ), response, request );
+
     }
 }

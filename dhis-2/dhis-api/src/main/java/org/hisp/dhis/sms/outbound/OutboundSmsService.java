@@ -30,15 +30,12 @@ package org.hisp.dhis.sms.outbound;
 
 import java.util.List;
 
-/**
- * OutboundSmsService provides support for sending SMSes.
- */
 public interface OutboundSmsService
 {
     String ID = OutboundSmsService.class.getName();
 
     List<OutboundSms> getAllOutboundSms();
-    
+
     List<OutboundSms> getAllOutboundSms( Integer min, Integer max );
 
     int saveOutboundSms( OutboundSms sms );
@@ -48,8 +45,8 @@ public interface OutboundSmsService
     void deleteById( Integer outboundSmsId );
 
     List<OutboundSms> getOutboundSms( OutboundSmsStatus status );
-    
+
     List<OutboundSms> getOutboundSms( OutboundSmsStatus status, Integer min, Integer max );
-    
+
     OutboundSms getOutboundSms( int id );
 }

@@ -35,7 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class SMSCommandDeletionHandler extends DeletionHandler
+public class SMSCommandDeletionHandler
+    extends DeletionHandler
 {
     @Autowired
     private SMSCommandService smsCommandService;
