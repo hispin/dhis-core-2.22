@@ -179,9 +179,9 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.selectedProgram.programStages[0].id){ 
                 
             //because this is single event, take the first program stage
-            MetaDataFactory.get('programStages', $scope.selectedProgram.programStages[0].id).then(function (programStage){
-
-                $scope.selectedProgramStage = programStage;   
+            
+            $scope.selectedProgramStage = $scope.selectedProgram.programStages[0];   
+            
 
                 angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                     section.open = true;
@@ -239,29 +239,22 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 
                 $scope.newDhis2Event.eventDate = '';
                 
-                var categoryIds = [];
+                $scope.selectedCategories = [];
                 if($scope.selectedProgram.categoryCombo && 
                         !$scope.selectedProgram.categoryCombo.isDefault &&
                         $scope.selectedProgram.categoryCombo.categories){
-                    
-                    angular.forEach($scope.selectedProgram.categoryCombo.categories, function(cat){
-                        categoryIds.push(cat.id);
-                    });
+                    $scope.selectedCategories = $scope.selectedProgram.categoryCombo.categories;                    
                 }
                 else{
                     $scope.optionsReady = true;
                 }
                 
-                MetaDataFactory.getByIds('categories', categoryIds).then(function(categories){
-                    $scope.selectedCategories = categories;                    
-                    TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-                        $scope.allProgramRules = rules;
-                        if($scope.selectedCategories.length === 0){
-                            $scope.loadEvents();
-                        }                        
-                    });
+                TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                    $scope.allProgramRules = rules;
+                    if($scope.selectedCategories.length === 0){
+                        $scope.loadEvents();
+                    }                        
                 });
-            });
         }
     };
     
