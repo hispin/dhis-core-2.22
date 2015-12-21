@@ -311,8 +311,6 @@ public class ExpressionServiceTest
         assertEquals( 5, items.size() );
         assertTrue( items.contains( opA ) );
         assertTrue( items.contains( deB ) );
-        assertTrue( items.contains( new ProgramDataElement( prA, deA ) ) );
-        assertTrue( items.contains( new ProgramTrackedEntityAttribute( prA, teaA ) ) );
         assertTrue( items.contains( piA ) );
     }
 
@@ -326,13 +324,11 @@ public class ExpressionServiceTest
         Set<Indicator> indicators = Sets.newHashSet( indicator );
         
         Set<DimensionalItemObject> items = expressionService.getDimensionalItemObjectsInIndicators( indicators );
-        
+                
         assertEquals( 6, items.size() );
         assertTrue( items.contains( opA ) );
         assertTrue( items.contains( opB ) );
         assertTrue( items.contains( deB ) );
-        assertTrue( items.contains( new ProgramDataElement( prA, deA ) ) );
-        assertTrue( items.contains( new ProgramTrackedEntityAttribute( prA, teaA ) ) );
         assertTrue( items.contains( piA ) );
     }
     
