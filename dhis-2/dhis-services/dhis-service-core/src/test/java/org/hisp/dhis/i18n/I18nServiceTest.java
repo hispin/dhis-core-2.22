@@ -33,6 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,8 +41,16 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.hisp.dhis.DhisSpringTest;
+import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementService;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.dataset.DataSetService;
+import org.hisp.dhis.indicator.Indicator;
+import org.hisp.dhis.indicator.IndicatorService;
+import org.hisp.dhis.indicator.IndicatorType;
+import org.hisp.dhis.period.MonthlyPeriodType;
+import org.hisp.dhis.period.PeriodType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -56,7 +65,24 @@ public class I18nServiceTest
     
     @Autowired
     private DataElementService dataElementService;
+    
+    @Autowired
+    private IndicatorService indicatorService;
+    
+    @Autowired
+    private DataSetService dataSetService;
+    
+    private IndicatorType itA;
+    
+    private PeriodType ptA = new MonthlyPeriodType();
 
+    @Override
+    public void setUpTest()
+    {
+        itA = createIndicatorType( 'A' );
+        indicatorService.addIndicatorType( itA );
+    }
+    
     // -------------------------------------------------------------------------
     // Tests
     // -------------------------------------------------------------------------
@@ -147,8 +173,8 @@ public class I18nServiceTest
         translationsC.put( "shortName", "frenchShortNameC" );
         translationsC.put( "description", "frenchDescriptionC" );        
 
-        i18nService.updateTranslation( className, locale, translationsA,dataElementA.getUid() );
-        i18nService.updateTranslation( className, locale, translationsB,dataElementB.getUid() );
+        i18nService.updateTranslation( className, locale, translationsA, dataElementA.getUid() );
+        i18nService.updateTranslation( className, locale, translationsB, dataElementB.getUid() );
         i18nService.updateTranslation( className, locale, translationsC, dataElementC.getUid());
         
         i18nService.internationalise( elements, locale );
@@ -158,6 +184,74 @@ public class I18nServiceTest
         assertEquals( "frenchNameA", elementIter.next().getDisplayName() );
         assertEquals( "frenchNameB", elementIter.next().getDisplayName() );
         assertEquals( "frenchNameC", elementIter.next().getDisplayName() );
+    }
+
+    @Test
+    public void testInternationaliseCollectionMultiObjectTypes()
+    {
+        Locale locale = Locale.FRANCE;
+        
+        DataElement dataElementA = createDataElement( 'A' );
+        dataElementService.addDataElement( dataElementA );
+
+        DataElement dataElementB = createDataElement( 'B' );
+        dataElementService.addDataElement( dataElementB );
+
+        Indicator indicatorA = createIndicator( 'A', itA );
+        indicatorService.addIndicator( indicatorA );
+
+        Indicator indicatorB = createIndicator( 'B', itA );
+        indicatorService.addIndicator( indicatorB );
+        
+        DataSet dataSetA = createDataSet( 'A', ptA );
+        dataSetService.addDataSet( dataSetA );
+
+        DataSet dataSetB = createDataSet( 'B', ptA );
+        dataSetService.addDataSet( dataSetB );
+                
+        List<? extends IdentifiableObject> elements = Arrays.asList( dataElementA, dataElementB, indicatorA, indicatorB, dataSetA, dataSetB );
+        
+        Map<String, String> translationsA = new HashMap<>();
+        translationsA.put( "name", "frenchNameDeA" );
+        translationsA.put( "shortName", "frenchShortNameDeA" );
+        
+        Map<String, String> translationsB = new HashMap<>();
+        translationsB.put( "name", "frenchNameDeB" );
+        translationsB.put( "shortName", "frenchShortNameDeB" );
+        
+        Map<String, String> translationsC = new HashMap<>();
+        translationsC.put( "name", "frenchNameInA" );
+        translationsC.put( "shortName", "frenchShortNameInA" );  
+
+        Map<String, String> translationsD = new HashMap<>();
+        translationsD.put( "name", "frenchNameInB" );
+        translationsD.put( "shortName", "frenchShortNameInB" );  
+
+        Map<String, String> translationsE = new HashMap<>();
+        translationsE.put( "name", "frenchNameDsA" );
+        translationsE.put( "shortName", "frenchShortNameDsA" );  
+
+        Map<String, String> translationsF = new HashMap<>();
+        translationsF.put( "name", "frenchNameDsB" );
+        translationsF.put( "shortName", "frenchShortNameDsB" );  
+
+        i18nService.updateTranslation( DataElement.class.getSimpleName(), locale, translationsA, dataElementA.getUid() );
+        i18nService.updateTranslation( DataElement.class.getSimpleName(), locale, translationsB, dataElementB.getUid() );
+        i18nService.updateTranslation( Indicator.class.getSimpleName(), locale, translationsC, indicatorA.getUid() );
+        i18nService.updateTranslation( Indicator.class.getSimpleName(), locale, translationsD, indicatorB.getUid() );
+        i18nService.updateTranslation( DataSet.class.getSimpleName(), locale, translationsE, dataSetA.getUid() );
+        i18nService.updateTranslation( DataSet.class.getSimpleName(), locale, translationsF, dataSetB.getUid() );
+        
+        i18nService.internationalise( elements, locale );
+        
+        Iterator<? extends IdentifiableObject> iter = elements.iterator();
+        
+        assertEquals( "frenchNameDeA", iter.next().getDisplayName() );
+        assertEquals( "frenchNameDeB", iter.next().getDisplayName() );
+        assertEquals( "frenchNameInA", iter.next().getDisplayName() );
+        assertEquals( "frenchNameInB", iter.next().getDisplayName() );
+        assertEquals( "frenchNameDsA", iter.next().getDisplayName() );
+        assertEquals( "frenchNameDsB", iter.next().getDisplayName() );
     }
     
     @Test

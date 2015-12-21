@@ -35,6 +35,8 @@ import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationService;
 import org.hisp.dhis.user.UserSettingService;
 
+import com.google.common.collect.Multimaps;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -88,11 +90,12 @@ public class DefaultI18nService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void internationalise( Object object, Locale locale )
     {
         if ( isCollection( object ) )
         {
-            internationaliseCollection( (Collection<?>) object, locale );
+            internationaliseCollection( (Collection<Object>) object, locale );
         }
         else
         {
@@ -125,30 +128,35 @@ public class DefaultI18nService
         }
     }
 
-    private void internationaliseCollection( Collection<?> objects, Locale locale )
+    private void internationaliseCollection( Collection<Object> objects, Locale locale )
     {
         if ( locale == null || objects == null || objects.size() == 0 )
         {
             return;
         }
 
-        Object peek = objects.iterator().next();
-
-        List<String> properties = getObjectPropertyNames( peek );
-
-        Collection<Translation> translations = translationService.getTranslations( getClassName( peek ), locale );
-
-        for ( Object object : objects )
+        Map<String, List<Object>> classNameObjectMap = Multimaps.asMap( Multimaps.index( objects, o -> getClassName( o ) ) );
+        
+        for ( String className : classNameObjectMap.keySet() )
         {
-            Map<String, String> translationMap = getTranslationsForObject( translations, getProperty( object, "uid" ) );
-
-            for ( String property : properties )
+            List<?> list = classNameObjectMap.get( className );
+                
+            List<String> properties = getObjectPropertyNames( list.iterator().next() );
+    
+            Collection<Translation> translations = translationService.getTranslations( className, locale );
+    
+            for ( Object object : list )
             {
-                String value = translationMap.get( property );
-
-                if ( value != null && !value.isEmpty() )
+                Map<String, String> translationMap = getTranslationsForObject( translations, getProperty( object, "uid" ) );
+    
+                for ( String property : properties )
                 {
-                    setProperty( object, "display", property, value );
+                    String value = translationMap.get( property );
+    
+                    if ( value != null && !value.isEmpty() )
+                    {
+                        setProperty( object, "display", property, value );
+                    }
                 }
             }
         }
