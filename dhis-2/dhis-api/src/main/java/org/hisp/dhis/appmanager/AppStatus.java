@@ -30,5 +30,26 @@ package org.hisp.dhis.appmanager;
 
 public enum AppStatus
 {
-    OK, NAMESPACE_TAKEN, INVALID_ZIP_FORMAT, INVALID_MANIFEST_JSON, INSTALLATION_FAILED
+    OK( "OK" ), 
+    NAMESPACE_TAKEN( "Namespace defined in manifest is protected" ), 
+    INVALID_ZIP_FORMAT( "Zipfile could not be read" ), 
+    INVALID_MANIFEST_JSON( "Invalid JSON in app manifest file" ), 
+    INSTALLATION_FAILED( "App could not be installed on file system" );
+    
+    private String message;
+    
+    AppStatus( String message )
+    {
+        this.message = message;
+    }
+
+    public boolean ok()
+    {
+        return this == OK;
+    }
+    
+    public String getMessage()
+    {
+        return message;
+    }
 }

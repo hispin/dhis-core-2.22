@@ -33,6 +33,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
+import org.hisp.dhis.appmanager.AppStatus;
 import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -125,22 +126,11 @@ public class AppController
 
         String contextPath = ContextUtils.getContextPath( request );
 
-        switch ( appManager.installApp( tempFile, file.getOriginalFilename(), contextPath ) )
+        AppStatus status = appManager.installApp( tempFile, file.getOriginalFilename(), contextPath );
+        
+        if ( !status.ok() )
         {
-        case OK:
-            break;
-        case NAMESPACE_TAKEN:
-            throw new WebMessageException(
-                WebMessageUtils.conflict( "The namespace defined in manifest.webapp is already protected." ) );
-        case INVALID_ZIP_FORMAT:
-            throw new WebMessageException(
-                WebMessageUtils.unprocessableEntity( "Zip-file could not be read." ) );
-        case INVALID_MANIFEST_JSON:
-            throw new WebMessageException(
-                WebMessageUtils.conflict( "Invalid JSON in app manifest file." ) );
-        case INSTALLATION_FAILED:
-            throw new WebMessageException(
-                WebMessageUtils.conflict( "App could not be installed on file system, check permissions." ) );
+            throw new WebMessageException( WebMessageUtils.conflict( status.getMessage() ) );
         }
     }
 
@@ -283,7 +273,7 @@ public class AppController
     }
 
     @RequestMapping( value = "/appStore", method = RequestMethod.GET, produces = "application/json" )
-    public @ResponseBody String getAppStoreUrl()
+    public @ResponseBody String getAppStore()
     {
         return restTemplate.getForObject( SettingKey.APP_STORE_INDEX_URL.getDefaultValue().toString(), String.class );
     }
