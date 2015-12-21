@@ -36,7 +36,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class SMSCodesDeletionHandler extends DeletionHandler
+public class SMSCodesDeletionHandler
+    extends DeletionHandler
 {
     private JdbcTemplate jdbcTemplate;
 

@@ -39,9 +39,9 @@ import org.hisp.dhis.sms.config.SmsConfiguration;
  * Marker interface for {@code OutboundSmsService outbound sms services}
  * providing actual SMS sending.
  */
-public interface OutboundSmsTransportService 
+public interface OutboundSmsTransportService
     extends SmsConfigurable
-{   
+{
     Map<String, String> getGatewayMap();
 
     void stopService();
@@ -56,9 +56,9 @@ public interface OutboundSmsTransportService
     String getMessageStatus();
 
     String getDefaultGateway();
-    
+
     SMSServiceStatus getServiceStatusEnum();
-    
+
     SMSGatewayStatus getGatewayStatus();
 
     boolean isEnabled();

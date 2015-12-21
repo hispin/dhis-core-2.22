@@ -98,8 +98,6 @@ public class SendSMSAction
             try
             {
                 smsSender.sendMessage( new OutboundSms( msg, recipient ), null );
-                // outboundSmsService.sendMessage( new OutboundSms( msg,
-                // recipient ), null );
                 this.message = "Sent message to " + recipient;
             }
             catch ( SmsServiceException e )

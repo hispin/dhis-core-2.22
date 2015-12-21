@@ -85,9 +85,9 @@ public class HibernateOutboundSmsStore
     public List<OutboundSms> get( OutboundSmsStatus status )
     {
         Session session = sessionFactory.getCurrentSession();
-        
+
         Criteria criteria = session.createCriteria( OutboundSms.class ).addOrder( Order.desc( "date" ) );
-        
+
         if ( status != null )
         {
             criteria.add( Restrictions.eq( "status", status ) );
@@ -112,15 +112,15 @@ public class HibernateOutboundSmsStore
     public List<OutboundSms> get( OutboundSmsStatus status, Integer min, Integer max )
     {
         Session session = sessionFactory.getCurrentSession();
-        
+
         Criteria criteria = session.createCriteria( OutboundSms.class ).addOrder( Order.desc( "date" ) );
-        
+
         if ( status != null )
         {
             criteria.add( Restrictions.eq( "status", status ) );
         }
-        
-        if ( min != null && max != null)
+
+        if ( min != null && max != null )
         {
             criteria.setFirstResult( min ).setMaxResults( max );
         }
@@ -132,10 +132,10 @@ public class HibernateOutboundSmsStore
     public List<OutboundSms> getAllOutboundSms( Integer min, Integer max )
     {
         Session session = sessionFactory.getCurrentSession();
-        
+
         Criteria criteria = session.createCriteria( OutboundSms.class ).addOrder( Order.desc( "date" ) );
-        
-        if ( min != null && max != null)
+
+        if ( min != null && max != null )
         {
             criteria.setFirstResult( min ).setMaxResults( max );
         }

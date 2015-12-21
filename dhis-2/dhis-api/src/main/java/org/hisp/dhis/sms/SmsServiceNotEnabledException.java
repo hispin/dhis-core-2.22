@@ -33,7 +33,7 @@ public class SmsServiceNotEnabledException
 {
     private static final long serialVersionUID = -1484667419558937721L;
 
-    public SmsServiceNotEnabledException( )
+    public SmsServiceNotEnabledException()
     {
         super( "Sms service is not enabled" );
     }

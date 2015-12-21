@@ -63,7 +63,7 @@ public class HibernateIncomingSmsStore
     @Override
     public int save( IncomingSms sms )
     {
-        return (Integer) sessionFactory.getCurrentSession().save( sms );        
+        return (Integer) sessionFactory.getCurrentSession().save( sms );
     }
 
     @Override
@@ -105,7 +105,7 @@ public class HibernateIncomingSmsStore
     }
 
     @Override
-    public long getSmsCount()    
+    public long getSmsCount()
     {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( IncomingSms.class );
@@ -141,18 +141,18 @@ public class HibernateIncomingSmsStore
     {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( IncomingSms.class ).addOrder( Order.desc( "sentDate" ) );
-        
+
         if ( status != null )
         {
             criteria.add( Restrictions.eq( "status", status ) );
         }
         criteria.add( Restrictions.ilike( "originator", "%" + keyword + "%" ) );
-        
+
         if ( min != null && max != null )
         {
             criteria.setFirstResult( min ).setMaxResults( max );
         }
-        
+
         return criteria.list();
     }
 }

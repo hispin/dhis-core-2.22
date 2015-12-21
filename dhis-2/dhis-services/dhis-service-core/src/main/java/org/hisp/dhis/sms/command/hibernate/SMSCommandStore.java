@@ -48,15 +48,15 @@ public interface SMSCommandStore
     void delete( SMSCommand cmd );
 
     void save( Set<SMSCode> codes );
-    
+
     List<SMSCommand> getJ2MESMSCommands();
-    
+
     SMSCommand getSMSCommand( String commandName, ParserType parserType );
-    
+
     void saveSpecialCharacterSet( Set<SMSSpecialCharacter> specialCharacters );
-    
+
     void deleteSpecialCharacterSet( Set<SMSSpecialCharacter> specialCharacters );
-    
+
     void deleteCodeSet( Set<SMSCode> codes );
 
     int countDataSetSmsCommands( DataSet dataSet );

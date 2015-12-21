@@ -34,7 +34,7 @@ public interface IncomingSmsListener
 {
     @Transactional
     boolean accept( IncomingSms sms );
-    
+
     @Transactional
     void receive( IncomingSms sms );
 }

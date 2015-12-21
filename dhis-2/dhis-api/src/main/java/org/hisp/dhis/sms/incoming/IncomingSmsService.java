@@ -29,6 +29,7 @@ package org.hisp.dhis.sms.incoming;
  */
 
 import java.util.List;
+import java.util.Date;
 
 import org.hisp.dhis.sms.MessageQueue;
 import org.smslib.InboundMessage;
@@ -61,9 +62,9 @@ public interface IncomingSmsService
 
     List<InboundMessage> getMsgList();
 
-    void save( IncomingSms sms );
+    int save( IncomingSms sms );
 
-    void save( String message, String originator, String gateway );
+    int save( String message, String originator, String gateway, Date receivedTime );
 
     void setIncomingSmsQueue( MessageQueue incomingSmsQueue );
 

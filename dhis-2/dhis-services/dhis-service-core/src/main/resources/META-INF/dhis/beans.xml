@@ -1095,14 +1095,9 @@
 
   <!-- SMS Services -->
 
-  <bean id="org.hisp.dhis.sms.MessageQueue" class="org.hisp.dhis.sms.DatabaseSupportedInternalMemoryMessageQueue">
-    <property name="smsStore" ref="org.hisp.dhis.sms.hibernate.IncomingSmsStore" />
-  </bean>
+  <bean id="org.hisp.dhis.sms.MessageQueue" class="org.hisp.dhis.sms.DatabaseSupportedInternalMemoryMessageQueue" />
 
-  <bean id="org.hisp.dhis.sms.SmsPublisher" class="org.hisp.dhis.sms.SmsPublisher">
-    <property name="messageQueue" ref="org.hisp.dhis.sms.MessageQueue" />
-    <property name="smsSender" ref="org.hisp.dhis.sms.SmsSender" />
-  </bean>
+  <bean id="org.hisp.dhis.sms.SmsPublisher" class="org.hisp.dhis.sms.SmsPublisher" />
 
   <bean id="org.hisp.dhis.sms.config.SmsConfigurationManager" class="org.hisp.dhis.sms.config.DefaultSmsConfigurationManager" />
 
@@ -1111,9 +1106,7 @@
     <property name="incomingSmsQueue" ref="org.hisp.dhis.sms.MessageQueue" />
   </bean>
 
-  <bean id="org.smslib.IInboundMessageNotification" class="org.hisp.dhis.sms.incoming.SMPPInboundNotification">
-    <property name="incomingSmsService" ref="org.hisp.dhis.sms.incoming.IncomingSmsService" />
-  </bean>
+  <bean id="org.smslib.IInboundMessageNotification" class="org.hisp.dhis.sms.incoming.SMPPInboundNotification" />
 
   <bean id="org.hisp.dhis.sms.outbound.OutboundSmsService" class="org.hisp.dhis.sms.outbound.DefaultOutboundSmsService">
     <property name="outboundSmsStore" ref="org.hisp.dhis.sms.hibernate.OutboundSmsStore" />
@@ -1125,15 +1118,13 @@
     <property name="smsPublisher" ref="org.hisp.dhis.sms.SmsPublisher" />
   </bean>
 
-  <bean id="org.hisp.dhis.sms.SmsSender" class="org.hisp.dhis.sms.DefaultSmsSender">
-    <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
-    <property name="outboundSmsService" ref="org.hisp.dhis.sms.outbound.OutboundSmsService" />
-  </bean>
+  <bean id="org.hisp.dhis.sms.SmsSender" class="org.hisp.dhis.sms.DefaultSmsSender" />
 
   <bean id="org.hisp.dhis.sms.SmsMessageSender" class="org.hisp.dhis.sms.SmsMessageSender" />
 
   <bean id="org.hisp.dhis.sms.task.SendSmsTask" class="org.hisp.dhis.sms.task.SendSmsTask" scope="prototype" />
+  
+  <bean id="org.hisp.dhis.sms.SmsConsumerThread" class="org.hisp.dhis.sms.SmsConsumerThread" />
 
   <!-- I18nService -->
 
@@ -1307,55 +1298,19 @@
     <property name="smsCommandStore" ref="org.hisp.dhis.sms.command.hibernate.SMSCommandStore" />
   </bean>
 
-  <bean id="org.hisp.dhis.sms.listener.DataValueSMSListener" class="org.hisp.dhis.sms.listener.DataValueSMSListener">
-    <property name="registrationService" ref="org.hisp.dhis.dataset.CompleteDataSetRegistrationService" />
-    <property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
-    <property name="smsSender" ref="org.hisp.dhis.sms.SmsSender" />
-    <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="smsCommandService" ref="org.hisp.dhis.sms.command.SMSCommandService" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
-    <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
-    <property name="incomingSmsService" ref="org.hisp.dhis.sms.incoming.IncomingSmsService" />
-    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
-  </bean>
+  <bean id="org.hisp.dhis.sms.listener.DataValueSMSListener" class="org.hisp.dhis.sms.listener.DataValueSMSListener" />
 
   <bean id="org.hisp.dhis.sms.listener.J2MEDataValueSMSListener"
-    class="org.hisp.dhis.sms.listener.J2MEDataValueSMSListener">
-    <property name="registrationService" ref="org.hisp.dhis.dataset.CompleteDataSetRegistrationService" />
-    <property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
-    <property name="smsSender" ref="org.hisp.dhis.sms.SmsSender" />
-    <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
-    <property name="smsCommandService" ref="org.hisp.dhis.sms.command.SMSCommandService" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
-  </bean>
+    class="org.hisp.dhis.sms.listener.J2MEDataValueSMSListener" />
 
   <bean id="org.hisp.dhis.sms.listener.UnregisteredSMSListener"
-    class="org.hisp.dhis.sms.listener.UnregisteredSMSListener">
-    <property name="smsCommandService" ref="org.hisp.dhis.sms.command.SMSCommandService" />
-    <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
-    <property name="smsMessageSender" ref="org.hisp.dhis.sms.SmsMessageSender" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
-    <property name="incomingSmsService" ref="org.hisp.dhis.sms.incoming.IncomingSmsService" />
-  </bean>
+    class="org.hisp.dhis.sms.listener.UnregisteredSMSListener" />
 
   <bean id="org.hisp.dhis.sms.listener.DHISMessageAlertListener"
-    class="org.hisp.dhis.sms.listener.DHISMessageAlertListener">
-    <property name="smsCommandService" ref="org.hisp.dhis.sms.command.SMSCommandService" />
-    <property name="messageService" ref="org.hisp.dhis.message.MessageService" />
-    <property name="smsMessageSender" ref="org.hisp.dhis.sms.SmsMessageSender" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
-    <property name="incomingSmsService" ref="org.hisp.dhis.sms.incoming.IncomingSmsService" />
-  </bean>
+    class="org.hisp.dhis.sms.listener.DHISMessageAlertListener" />
 
   <bean id="org.hisp.dhis.sms.listener.TrackedEntityRegistrationSMSListener"
-    class="org.hisp.dhis.sms.listener.TrackedEntityRegistrationSMSListener">
-    <property name="smsCommandService" ref="org.hisp.dhis.sms.command.SMSCommandService" />
-    <property name="userService" ref="org.hisp.dhis.user.UserService" />
-    <property name="trackedEntityService" ref="org.hisp.dhis.trackedentity.TrackedEntityService" />
-    <property name="trackedEntityInstanceService" ref="org.hisp.dhis.trackedentity.TrackedEntityInstanceService" />
-    <property name="programInstanceService" ref="org.hisp.dhis.program.ProgramInstanceService" />
-    <property name="smsSender" ref="org.hisp.dhis.sms.SmsSender" />
-  </bean>
+    class="org.hisp.dhis.sms.listener.TrackedEntityRegistrationSMSListener" />
 
   <!-- I18n UI -->
 

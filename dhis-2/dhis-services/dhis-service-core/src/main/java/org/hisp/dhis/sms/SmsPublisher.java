@@ -28,148 +28,54 @@ package org.hisp.dhis.sms;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.sms.incoming.IncomingSms;
-import org.hisp.dhis.sms.incoming.IncomingSmsListener;
-import org.hisp.dhis.sms.incoming.SmsMessageStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SmsPublisher
 {
     private static final Log log = LogFactory.getLog( SmsPublisher.class );
 
-    private List<IncomingSmsListener> listeners;
-
+    @Autowired
     private MessageQueue messageQueue;
 
-    private SMSConsumerThread thread;
+    @Autowired
+    private SmsConsumerThread smsConsumer;
 
-    private SmsSender smsSender;
+    private Thread thread;
+
+    private boolean stop = false;
 
     public void start()
     {
         messageQueue.initialize();
 
-        if ( thread == null )
+        thread = new Thread()
         {
-            thread = new SMSConsumerThread();
-            thread.start();
-        }
+            public void run()
+            {
+                while ( !stop )
+                {
+                    smsConsumer.spawnSmsConsumer();
+                    
+                    try
+                    {
+                        Thread.sleep( 1000 );
+                    }
+                    catch ( Exception e )
+                    {
+                    }
+                }
+            }
+        };
+
+        thread.start();
+
+        log.info( "SMS Consumer Started" );
     }
 
     public void stop()
     {
-        if ( thread != null )
-        {
-            thread.stopFetching();
-        }
-
-        thread = null;
-    }
-
-    private class SMSConsumerThread
-        extends Thread
-    {
-        private boolean stop;
-
-        public SMSConsumerThread()
-        {
-        }
-
-        @Override
-        public void run()
-        {
-            while ( !stop )
-            {
-                try
-                {
-                    fetchAndParseSMS();
-                }
-                catch ( Exception ex )
-                {
-                    log.error( ex.getMessage() );
-                }
-
-                try
-                {
-                    Thread.sleep( 10000 );
-                }
-                catch ( InterruptedException e )
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        private void fetchAndParseSMS()
-        {
-            IncomingSms message = messageQueue.get();
-            
-            while ( message != null )
-            {
-                log.info( "Received SMS: " + message.getText() );
-                try
-                {
-                    for ( IncomingSmsListener listener : listeners )
-                    {
-                        if ( listener.accept( message ) )
-                        {
-                            listener.receive( message );
-                            messageQueue.remove( message );
-                            return;
-                        }
-                    }
-                    
-                    smsSender.sendMessage( "No command found", message.getOriginator() );
-                    message.setStatus( SmsMessageStatus.UNHANDLED );
-                }
-                catch ( Exception e )
-                {
-                    log.error( e );
-                    e.printStackTrace();
-                    smsSender.sendMessage( e.getMessage(), message.getOriginator() );
-                    message.setStatus( SmsMessageStatus.FAILED );
-                }
-                finally
-                {
-                    messageQueue.remove( message );
-                    message = messageQueue.get();
-                }
-            }
-        }
-
-        public void stopFetching()
-        {
-            this.stop = true;
-        }
-    }
-
-    public void setMessageQueue( MessageQueue messageQueue )
-    {
-        this.messageQueue = messageQueue;
-    }
-
-    public List<IncomingSmsListener> getListeners()
-    {
-        return listeners;
-    }
-
-    @Autowired(required=false)
-    public void setListeners( List<IncomingSmsListener> listeners )
-    {
-        this.listeners = listeners;
-    }
-
-    public SmsSender getSmsSender()
-    {
-        return smsSender;
-    }
-
-    public void setSmsSender( SmsSender smsSender )
-    {
-        this.smsSender = smsSender;
+        this.stop = true;
     }
 }

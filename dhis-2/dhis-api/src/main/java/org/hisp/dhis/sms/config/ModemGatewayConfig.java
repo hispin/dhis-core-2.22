@@ -44,7 +44,7 @@ public class ModemGatewayConfig
     private String pin;
 
     private String simMemLocation;
-    
+
     private Integer pollingInterval;
 
     private boolean inbound;

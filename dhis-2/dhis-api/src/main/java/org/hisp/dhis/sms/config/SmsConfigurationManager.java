@@ -36,14 +36,14 @@ public interface SmsConfigurationManager
     SmsConfiguration getSmsConfiguration();
 
     void updateSmsConfiguration( SmsConfiguration config );
-    
+
     SmsGatewayConfig checkInstanceOfGateway( Class<?> clazz );
-    
-    boolean setDefaultSMSGateway(String gatewayId);
-    
-    boolean gatewayExists (String gatewayId);
-    
-    boolean removeSMSGatewayById(String gatewayId);
-    
+
+    boolean setDefaultSMSGateway( String gatewayId );
+
+    boolean gatewayExists( String gatewayId );
+
+    boolean removeSMSGatewayById( String gatewayId );
+
     String addSMSGateway();
 }

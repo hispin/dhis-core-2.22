@@ -44,51 +44,38 @@ import org.hisp.dhis.sms.incoming.IncomingSmsService;
 import org.hisp.dhis.sms.incoming.SmsMessageStatus;
 import org.hisp.dhis.sms.parse.ParserType;
 import org.hisp.dhis.sms.parse.SMSParserException;
+import org.hisp.dhis.system.util.SmsUtils;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class UnregisteredSMSListener
     implements IncomingSmsListener
 {
-    private SMSCommandService smsCommandService;
-
-    public void setSmsCommandService( SMSCommandService smsCommandService )
-    {
-        this.smsCommandService = smsCommandService;
-    }
-
-    private UserService userService;
-
-    public void setUserService( UserService userService )
-    {
-        this.userService = userService;
-    }
-
-    private MessageService messageService;
-
-    public void setMessageService( MessageService messageService )
-    {
-        this.messageService = messageService;
-    }
-
-    private SmsMessageSender smsMessageSender;
-
-    public void setSmsMessageSender( SmsMessageSender smsMessageSender )
-    {
-        this.smsMessageSender = smsMessageSender;
-    }
-
-    private IncomingSmsService incomingSmsService;
-
-    public void setIncomingSmsService( IncomingSmsService incomingSmsService )
-    {
-        this.incomingSmsService = incomingSmsService;
-    }
 
     public static final String USER_NAME = "anonymous";
+
+    // -------------------------------------------------------------------------
+    // Dependencies
+    // -------------------------------------------------------------------------
+
+    @Autowired
+    private SMSCommandService smsCommandService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private SmsMessageSender smsMessageSender;
+
+    @Autowired
+    private IncomingSmsService incomingSmsService;
 
     // -------------------------------------------------------------------------
     // IncomingSmsListener implementation
@@ -98,22 +85,8 @@ public class UnregisteredSMSListener
     @Override
     public boolean accept( IncomingSms sms )
     {
-        String message = sms.getText();
-        String commandString = null;
-
-        for ( int i = 0; i < message.length(); i++ )
-        {
-            String c = String.valueOf( message.charAt( i ) );
-            
-            if ( c.matches( "\\W" ) )
-            {
-                commandString = message.substring( 0, i );
-                message = message.substring( commandString.length() + 1 );
-                break;
-            }
-        }
-
-        return smsCommandService.getSMSCommand( commandString, ParserType.UNREGISTERED_PARSER ) != null;
+        return smsCommandService.getSMSCommand( SmsUtils.getCommandString( sms ),
+            ParserType.UNREGISTERED_PARSER ) != null;
     }
 
     @Transactional
@@ -121,20 +94,8 @@ public class UnregisteredSMSListener
     public void receive( IncomingSms sms )
     {
         String message = sms.getText();
-        String commandString = null;
-
-        for ( int i = 0; i < message.length(); i++ )
-        {
-            String c = String.valueOf( message.charAt( i ) );
-            if ( c.matches( "\\W" ) )
-            {
-                commandString = message.substring( 0, i );
-                message = message.substring( commandString.length() + 1 );
-                break;
-            }
-        }
-
-        SMSCommand smsCommand = smsCommandService.getSMSCommand( commandString, ParserType.UNREGISTERED_PARSER );
+        SMSCommand smsCommand = smsCommandService.getSMSCommand( SmsUtils.getCommandString( sms ),
+            ParserType.UNREGISTERED_PARSER );
 
         UserGroup userGroup = smsCommand.getUserGroup();
 
@@ -151,13 +112,13 @@ public class UnregisteredSMSListener
                 {
                     User user = iterator.next();
                     messageError += user.getName();
-                    
+
                     if ( iterator.hasNext() )
                     {
                         messageError += ", ";
                     }
                 }
-                
+
                 throw new SMSParserException( messageError );
             }
             else
@@ -191,8 +152,8 @@ public class UnregisteredSMSListener
                 User sender = new User();
                 sender.setPhoneNumber( senderPhoneNumber );
                 feedbackList.add( sender );
-                smsMessageSender.sendMessage( smsCommand.getName(), smsCommand.getReceivedMessage(), null,
-                    null, feedbackList, true );
+                smsMessageSender.sendMessage( smsCommand.getName(), smsCommand.getReceivedMessage(), null, null,
+                    feedbackList, true );
 
                 // update the status of the sms after process
                 sms.setStatus( SmsMessageStatus.PROCESSED );
