@@ -54,7 +54,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -922,10 +921,10 @@ public class DefaultAnalyticsService
 
         for ( DimensionalObject dimension : dimensions )
         {
-            i18nItems( dimension );
-
             List<DimensionalItemObject> items = new ArrayList<>( dimension.getItems() );
             
+            i18nService.internationalise( items );
+
             for ( DimensionalItemObject object : items )
             {
                 if ( DimensionType.PERIOD.equals( dimension.getDimensionType() ) && !calendar.isIso8601() )
@@ -990,29 +989,6 @@ public class DefaultAnalyticsService
         }
 
         return metaData;
-    }
-
-    /**
-     * Translate the items of the given dimensional object.
-     * 
-     * @param dimension the dimensional object.
-     * @param items the dimensional items.
-     */
-    private void i18nItems( DimensionalObject dimension )
-    {
-        Locale locale = i18nService.getCurrentLocale();
-        
-        if ( DimensionalObject.DATA_X_DIM_ID.equals( dimension.getDimension() ) )
-        {
-            for ( DimensionalItemObject item : dimension.getItems() )
-            {
-                i18nService.internationalise( item, locale );
-            }
-        }
-        else
-        {
-            i18nService.internationalise( dimension.getItems(), locale );            
-        }
     }
     
     /**
