@@ -98,16 +98,16 @@
                         </td>
                     </tr>                                    
                 </table>
-
+                
                 <!--<span class="alert alert-warning">{{'clears_local_cache'| translate}}</span>-->
-                <a href ng-click="clearCache()" class="btn btn-danger">{{'clear'| translate}}</a>
-                <a href ng-click="selectAll()" class="btn btn-primary">{{ (ssKeys | filter: {remove: true}).length > 0 || (lsKeys | filter: {remove: true}).length > 0 || (dbKeys | filter: {remove: true}).length > 0 ? 'unselect_all' : 'select_all' | translate}}</a>                
+                <button type="button" class="btn btn-danger" ng-click="clearCache()">{{'clear'| translate}}</button>
+                <button type="button" class="btn btn-primary" ng-click="selectAll()">{{ (ssKeys | filter: {remove: true}).length > 0 || (lsKeys | filter: {remove: true}).length > 0 || (dbKeys | filter: {remove: true}).length > 0 ? 'unselect_all' : 'select_all' | translate}}</button>                
 
             </div>
 
         </div>
 
-        <div class="row col-sm-6" ng-if="!lsCacheExists && !idCacheExists">
+        <div class="row col-sm-6 vertical-spacing" ng-if="!lsCacheExists && !idCacheExists">
             <div class="alert alert-info">{{ afterClearing ? 'cache_cleared' : 'nothing_to_clear' | translate}}</div>                
         </div>
 
