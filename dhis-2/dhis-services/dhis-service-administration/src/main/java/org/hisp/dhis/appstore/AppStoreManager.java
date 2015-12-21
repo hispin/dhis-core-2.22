@@ -1,4 +1,4 @@
-package org.hisp.dhis.appmanager;
+package org.hisp.dhis.appstore;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,29 +28,13 @@ package org.hisp.dhis.appmanager;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public enum AppStatus
-{
-    OK( "OK" ), 
-    NAMESPACE_TAKEN( "Namespace defined in manifest is protected" ), 
-    INVALID_ZIP_FORMAT( "Zipfile could not be read" ), 
-    INVALID_MANIFEST_JSON( "Invalid JSON in app manifest file" ), 
-    INSTALLATION_FAILED( "App could not be installed on file system" ),
-    NOT_FOUND( "App could not be found" );
-    
-    private String message;
-    
-    AppStatus( String message )
-    {
-        this.message = message;
-    }
+import java.io.IOException;
 
-    public boolean ok()
-    {
-        return this == OK;
-    }
-    
-    public String getMessage()
-    {
-        return message;
-    }
+/**
+ * @author Lars Helge Overland
+ */
+public interface AppStoreManager
+{
+    AppStore getAppStore()
+        throws IOException;
 }

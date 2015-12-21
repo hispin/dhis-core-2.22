@@ -1,4 +1,4 @@
-package org.hisp.dhis.appmanager;
+package org.hisp.dhis.appstore;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -28,29 +28,82 @@ package org.hisp.dhis.appmanager;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public enum AppStatus
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * @author Lars Helge Overland
+ */
+public class WebApp
 {
-    OK( "OK" ), 
-    NAMESPACE_TAKEN( "Namespace defined in manifest is protected" ), 
-    INVALID_ZIP_FORMAT( "Zipfile could not be read" ), 
-    INVALID_MANIFEST_JSON( "Invalid JSON in app manifest file" ), 
-    INSTALLATION_FAILED( "App could not be installed on file system" ),
-    NOT_FOUND( "App could not be found" );
+    private String name;
     
-    private String message;
+    private String description;
     
-    AppStatus( String message )
+    private String imgLarge;
+    
+    private String developer;
+    
+    private List<WebAppVersion> versions = new ArrayList<>();
+    
+    public WebApp()
     {
-        this.message = message;
     }
 
-    public boolean ok()
+    @JsonProperty
+    public String getName()
     {
-        return this == OK;
+        return name;
     }
-    
-    public String getMessage()
+
+    public void setName( String name )
     {
-        return message;
+        this.name = name;
+    }
+
+    @JsonProperty
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+
+    @JsonProperty( value = "img_large" )
+    public String getImgLarge()
+    {
+        return imgLarge;
+    }
+
+    public void setImgLarge( String imgLarge )
+    {
+        this.imgLarge = imgLarge;
+    }
+
+    @JsonProperty
+    public String getDeveloper()
+    {
+        return developer;
+    }
+
+    public void setDeveloper( String developer )
+    {
+        this.developer = developer;
+    }
+
+    @JsonProperty
+    public List<WebAppVersion> getVersions()
+    {
+        return versions;
+    }
+
+    public void setVersions( List<WebAppVersion> versions )
+    {
+        this.versions = versions;
     }
 }
