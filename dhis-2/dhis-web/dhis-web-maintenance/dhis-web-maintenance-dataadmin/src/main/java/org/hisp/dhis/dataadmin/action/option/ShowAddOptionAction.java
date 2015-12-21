@@ -39,9 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -67,8 +65,6 @@ public class ShowAddOptionAction
     private OptionSet optionSet;
 
     private List<Attribute> attributes;
-
-    private Map<Integer, String> attributeValues = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------
     // Getters && Setters

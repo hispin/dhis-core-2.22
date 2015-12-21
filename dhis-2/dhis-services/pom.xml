@@ -22,10 +22,10 @@
     <!-- Level 1 -->
     <module>dhis-service-core</module>
     <!-- Level 2 -->
-    <module>dhis-service-administration</module>
     <module>dhis-service-dxf2</module>
     <module>dhis-service-mobile</module>
     <!-- Level 3 -->
+    <module>dhis-service-administration</module>
     <module>dhis-service-analytics</module>
     <!-- Level 4 -->
     <module>dhis-service-eventreporting</module>
