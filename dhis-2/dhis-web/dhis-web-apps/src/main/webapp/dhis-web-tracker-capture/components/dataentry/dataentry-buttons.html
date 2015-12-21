@@ -8,11 +8,7 @@
     <a href ng-click="completeIncompleteEvent()" 
        class="btn btn-warning"
        ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed && currentEvent.status !== 'COMPLETED' || currentEvent.orgUnit !== selectedOrgUnit.id"
-       ng-if="currentEvent.eventDate && currentEvent.status === 'COMPLETED'">{{'incomplete'| translate}}</a>                       
-    <!--<a href ng-click="validateEvent()" 
-       class="btn btn-info" 
-       ng-disabled="currentEvent.enrollmentStatus !== 'ACTIVE' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id" 
-       ng-if="currentEvent.eventDate">{{'validate'| translate}}</a>     -->
+       ng-if="currentEvent.eventDate && currentEvent.status === 'COMPLETED'">{{'incomplete'| translate}}</a>    
     <a href ng-click="skipUnskipEvent()" 
        class="btn btn-warning" 
        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || currentEvent.orgUnit !== selectedOrgUnit.id"

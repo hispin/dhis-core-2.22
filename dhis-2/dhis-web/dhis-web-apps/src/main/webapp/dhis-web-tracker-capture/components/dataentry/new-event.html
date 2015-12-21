@@ -1,12 +1,26 @@
 <div class="modal-header page">
-    <h3 ng-if="isNewEvent">{{'add'| translate}} - {{dhis2Event.name}}</h3>
-    <h3 ng-if="isScheduleEvent && !isReferralEvent">{{'schedule'| translate}} - {{dhis2Event.name}}</h3>
-    <h3 ng-if="isReferralEvent">{{'referral' | translate}} - {{dhis2Event.name}}</h3>
+    <h3 ng-if="isNewEvent">{{'add'| translate}}<span ng-if="model.selectedStage"> - {{model.selectedStage.name}}</span></h3>
+    <h3 ng-if="isScheduleEvent && !isReferralEvent">{{'schedule'| translate}}<span ng-if="model.selectedStage"> - {{model.selectedStage.name}}</span></h3>
+    <h3 ng-if="isReferralEvent">{{'referral' | translate}}<span ng-if="model.selectedStage"> - {{model.selectedStage.name}}</span></h3>
 </div>
 <div class="modal-body page">
     <form name="eventCreationForm" class="form-horizontal" role="form" novalidate>
-        <div ng-if="!selectedStage.periodType">
-            <div ng-if="isScheduleEvent && !isReferralEvent" class="form-group">
+        <div ng-if="!model.selectedStage">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">
+                    {{'program_stage' | translate}}
+                </label>
+                <div class="col-sm-10">
+                    <select class="form-control-program" 
+                            ng-model="model.selectedStage"
+                            ng-options="stage.name for stage in stages">                    
+                    </select>
+                </div>                
+            </div>            
+        </div>
+        
+        <div ng-if="model.selectedStage && !model.selectedStage.periodType">
+            <div ng-if="isScheduleEvent && !isReferralEvent && !model.selectedStage.hideDueDate" class="form-group">
                 <label class="col-sm-2 control-label">{{'scheduled_date'| translate}}</label>
                 <div class="col-sm-10">
                     <input type="text" 
@@ -16,11 +30,11 @@
                            ng-rquired="true" 
                            d2-date
                            ng-model="dhis2Event.dueDate">
-                    <span ng-if="dueDateInvalid" class="error">{{'required'| translate}}</span>
+                    <span ng-if="model.dueDateInvalid" class="error">{{'required'| translate}}</span>
                 </div>                
             </div>
             <div ng-if="isNewEvent" class="form-group">
-                <label class="col-sm-2 control-label">{{dhis2Event.excecutionDateLabel}}</label>
+                <label class="col-sm-2 control-label">{{model.selectedStage.excecutionDateLabel}}</label>
                 <div class="col-sm-10">
                     <input type="text" 
                            class="form-control" 
@@ -31,7 +45,7 @@
                            max-date="0"
                            min-date=""
                            ng-model="dhis2Event.eventDate">
-                    <span ng-if="eventDateInvalid" class="error">{{'required'| translate}}</span>
+                    <span ng-if="model.eventDateInvalid" class="error">{{'required'| translate}}</span>
                 </div>
             </div>
             <div ng-if="isReferralEvent">
@@ -73,10 +87,11 @@
                         <input type="checkbox" ng-model="referralMovePermanent" id="referralMovePermanent" /> <strong>Move permanent</strong>
                     </label>
                 </div>
-                <span ng-if="dueDateInvalid" class="error">{{'required'| translate}}</span>
+                <span ng-if="model.dueDateInvalid" class="error">{{'required'| translate}}</span>
             </div>
         </div>
-        <div ng-if="selectedStage.periodType">
+        <div ng-if="model.selectedStage && model.selectedStage.periodType">
+            2
             <div class="form-group"> 
                 <label class="control-label">
                     {{'period'| translate}}
