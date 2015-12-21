@@ -136,12 +136,6 @@ public class DataEntryForm
             && Objects.equals( this.format, other.format );
     }
 
-    @Override
-    public String toString()
-    {
-        return "[" + name + "]";
-    }
-
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------

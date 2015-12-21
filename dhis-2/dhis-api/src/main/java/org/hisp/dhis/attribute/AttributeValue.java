@@ -124,11 +124,13 @@ public class AttributeValue
     @Override
     public String toString()
     {
-        return "AttributeValue{" +
-            "id=" + id +
-            ", attribute=" + (attribute != null ? attribute.getUid() : "") +
-            ", value='" + value + '\'' +
-            '}';
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"created\":\"" + created + "\", " +
+            "\"attribute\":" + attribute + ", " +
+            "\"value\":\"" + value + "\" " +
+            "}";
     }
 
     @JsonIgnore

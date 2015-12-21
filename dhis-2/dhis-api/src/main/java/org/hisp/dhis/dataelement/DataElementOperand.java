@@ -578,19 +578,17 @@ public class DataElementOperand
     @Override
     public String toString()
     {
-        return "DataElementOperand{" +
-            "id=" + id +
-            ", uid=" + uid +
-            ", dataElement=" + dataElement +
-            ", categoryOptionCombo=" + categoryOptionCombo +
-            ", dataElementId=" + dataElementId +
-            ", optionComboId=" + optionComboId +
-            ", operandId='" + operandId + '\'' +
-            ", operandName='" + operandName + '\'' +
-            ", aggregationType='" + aggregationType + '\'' +
-            ", aggregationLevels=" + aggregationLevels +
-            ", frequencyOrder=" + frequencyOrder +
-            ", operandType='" + operandType + '\'' +
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"uid\":\"" + uid + "\", " +
+            "\"dataElement\":" + dataElement + ", " +
+            "\"categoryOptionCombo\":" + categoryOptionCombo + ", " +
+            "\"dataElementId\":\"" + dataElementId + "\", " +
+            "\"optionComboId\":\"" + optionComboId + "\", " +
+            "\"operandId\":\"" + operandId + "\", " +
+            "\"operandName\":\"" + operandName + "\", " +
+            "\"operandType\":\"" + operandType + "\" " +
             '}';
     }
 

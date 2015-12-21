@@ -33,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.base.MoreObjects;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -124,6 +123,20 @@ public class ProgramTrackedEntityAttribute
     public ValueType getValueType()
     {
         return attribute.getValueType();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"uid\":\"" + uid + "\", " +
+            "\"program\":" + program + ", " +
+            "\"attribute\":" + attribute + ", " +
+            "\"created\":\"" + created + "\", " +
+            "\"lastUpdated\":\"" + lastUpdated + "\" " +
+            "}";
     }
 
     // -------------------------------------------------------------------------
@@ -217,18 +230,6 @@ public class ProgramTrackedEntityAttribute
     public void setAllowFutureDate( Boolean allowFutureDate )
     {
         this.allowFutureDate = allowFutureDate;
-    }
-
-    @Override
-    public String toString()
-    {
-        return MoreObjects.toStringHelper( this )
-            .add( "id", id )
-            .add( "attribute", attribute )
-            .add( "displayInList", displayInList )
-            .add( "mandatory", mandatory )
-            .add( "allowFutureDate", allowFutureDate )
-            .toString();
     }
 
     @Override
