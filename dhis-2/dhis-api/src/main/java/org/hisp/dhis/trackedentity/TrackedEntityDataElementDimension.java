@@ -94,11 +94,17 @@ public class TrackedEntityDataElementDimension
     {
         return dataElement != null ? dataElement.getDisplayName() : null;
     }
-    
+
     @Override
     public String toString()
     {
-        return "[Id: " + id + ", data element: " + dataElement + ", legend set: " + legendSet + ", filter: " + filter + "]";
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"dataElement\":" + dataElement + ", " +
+            "\"legendSet\":" + legendSet + ", " +
+            "\"filter\":\"" + filter + "\" " +
+            "}";
     }
 
     @Override

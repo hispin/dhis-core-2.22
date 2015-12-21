@@ -94,7 +94,21 @@ public class ProgramDataElement
     {
         return dataElement.getValueType();
     }
-    
+
+    @Override
+    public String toString()
+    {
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"uid\":\"" + uid + "\", " +
+            "\"program\":" + program + ", " +
+            "\"dataElement\":" + dataElement + ", " +
+            "\"created\":\"" + created + "\", " +
+            "\"lastUpdated\":\"" + lastUpdated + "\" " +
+            "}";
+    }
+
     // -------------------------------------------------------------------------
     // DimensionalItemObject
     // -------------------------------------------------------------------------

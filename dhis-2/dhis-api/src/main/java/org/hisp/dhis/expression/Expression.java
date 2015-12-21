@@ -215,13 +215,13 @@ public class Expression
     @Override
     public String toString()
     {
-        return "Expression{" +
-            "id=" + id +
-            ", expression='" + expression + '\'' +
-            ", explodedExpression='" + explodedExpression + '\'' +
-            ", description='" + description + '\'' +
-            ", dataElementsInExpression=" + dataElementsInExpression.size() +
-            '}';
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"expression\":\"" + expression + "\", " +
+            "\"explodedExpression\":\"" + explodedExpression + "\", " +
+            "\"description\":\"" + description + "\" " +
+            "}";
     }
 
     // -------------------------------------------------------------------------

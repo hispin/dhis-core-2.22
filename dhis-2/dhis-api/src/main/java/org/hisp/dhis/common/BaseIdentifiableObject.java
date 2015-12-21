@@ -560,15 +560,15 @@ public class BaseIdentifiableObject
     @Override
     public String toString()
     {
-        return "[IdentifiableObject: " +
-            "id='" + id +
-            "', uid='" + uid +
-            "', code='" + code +
-            "', name='" + name +
-            "', created='" + created +
-            "', lastUpdated='" + lastUpdated +
-            "', class='" + getClass() + '"' +
-            "']";
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"uid\":\"" + uid + "\", " +
+            "\"code\":\"" + code + "\", " +
+            "\"name\":\"" + name + "\", " +
+            "\"created\":\"" + created + "\", " +
+            "\"lastUpdated\":\"" + lastUpdated + "\" " +
+            "}";
     }
 
     @Override

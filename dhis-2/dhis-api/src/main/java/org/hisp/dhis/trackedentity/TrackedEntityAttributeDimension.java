@@ -97,7 +97,13 @@ public class TrackedEntityAttributeDimension
     @Override
     public String toString()
     {
-        return "[Id: " + id + ", attribute: " + attribute + ", legend set: " + legendSet + ", filter: " + filter + "]";
+        return "{" +
+            "\"class\":\"" + getClass() + "\", " +
+            "\"id\":\"" + id + "\", " +
+            "\"attribute\":" + attribute + ", " +
+            "\"legendSet\":" + legendSet + ", " +
+            "\"filter\":\"" + filter + "\" " +
+            "}";
     }
 
     @Override
