@@ -2,27 +2,11 @@
     <div ng-include="'components/dataentry/dataentry-print.html'">
     </div>
     <div class="panel-heading handle bold">
-        {{dataentryWidget.title| translate}}  
-        <span ng-if="currentStage && stageNeedsEvent(currentStage) && selectedEnrollment.status === 'ACTIVE'">
-            <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.add)" style="vertical-align:middle">
-                {{'add'|translate}}
-            </a>
-            |
-            <a href title="{{'schedule_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.schedule)" style="vertical-align:middle">
-                {{'schedule'|translate}}
-            </a>
-            |
-            <a href title="Make referral" ng-click="showCreateEvent(stage, eventCreationActions.referral)" style="vertical-align: middle" ng-if="showReferral">
-                Referral
-            </a>
+        {{dataentryWidget.title| translate}}
+        <span class="nav-pills" ng-if="stageNeedsEvent(currentStage)">
+            | <a href ng-click="showCreateEvent(currentStage, eventCreationActions.add)" title="{{'add_new_event'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [!editingDisabled]">{{'add_new_event'| translate}}</span></a>
         </span>
-        <!--<span class="nav-pills" ng-if="stageNeedsEvent(null)">
-            | <a href ng-click="showCreateEvent(currentStage)" title="{{'add_new_event'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [!editingDisabled]">{{'add_new_event'| translate}}</span></a>
-        </span>-->
-        <span class="pull-right widget-link">
-            <a href ng-click="toggleTableEditMode()" title="{{tableEditMode === tableEditModes.form ? 'use combined table edit mode' : 'use form only table edit mode'}}"><span ng-if="tableEditMode === tableEditModes.form"><i class="fa fa-clipboard vertical-center"></i></span><span ng-if="tableEditMode !== tableEditModes.form"><i class="fa fa-external-link vertical-center"></i></span></a>
-            <a href ng-click="toggleEventsTableDisplay()" title="{{showEventsAsTables ? 'toggle_table_view_off' : 'toggle_table_view_on'| translate}}" ng-show="stagesCanBeShownAsTable"><span ng-if="!showEventsAsTables"><i class="fa fa-bars vertical-center"></i></span><span ng-if="showEventsAsTables"><i class="fa fa-square vertical-center"></i></span></a>
-            <a href ng-click="filterEvents = !filterEvents" title="{{filterEvents ? 'list_events' : 'filter_events'| translate}}" ng-show="eventFilteringRequired"><span ng-if="!filterEvents"><i class="fa fa-filter vertical-center"></i></span><span ng-if="filterEvents"><i class="fa fa-list vertical-center"></i></span></a>
+        <span class="pull-right widget-link">            
             <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}" class="small-horizonal-spacing"><i class="fa fa-info-circle vertical-center"></i></a>
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(dataentryWidget)">
                 <span ng-show="dataentryWidget.expand"><i class="fa fa-chevron-up vertical-center" title="{{collapseLabel}}"></i></span>
