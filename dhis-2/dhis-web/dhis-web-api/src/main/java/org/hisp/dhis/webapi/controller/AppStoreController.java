@@ -43,6 +43,7 @@ import org.hisp.dhis.appstore.AppStore;
 import org.hisp.dhis.appstore.AppStoreManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * @author Lars Helge Overland
@@ -65,6 +66,7 @@ public class AppStoreController
     
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/{versionId}", method = RequestMethod.POST )
+    @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
     public void installAppFromAppStore( @PathVariable String versionId )
     {
         appStoreManager.installAppFromAppStore( versionId );
