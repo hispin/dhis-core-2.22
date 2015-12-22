@@ -39,7 +39,6 @@ import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.appmanager.AppManager;
 import org.hisp.dhis.appmanager.AppStatus;
-import org.hisp.dhis.dxf2.common.JacksonUtils;
 import org.hisp.dhis.setting.SettingKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -63,9 +62,7 @@ public class DefaultAppStoreManager
     public AppStore getAppStore()
         throws IOException
     {
-        String input = restTemplate.getForObject( SettingKey.APP_STORE_INDEX_URL.getDefaultValue().toString(), String.class );
-        
-        return JacksonUtils.fromJson( input, AppStore.class );
+        return restTemplate.getForObject( SettingKey.APP_STORE_INDEX_URL.getDefaultValue().toString(), AppStore.class );
     }
     
     public AppStatus installAppFromAppStore( String id )
