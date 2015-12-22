@@ -114,7 +114,7 @@ public class DimensionController
 
         if ( fields.isEmpty() )
         {
-            fields.add( ":identifiable" );
+            fields.add( ":id" );
         }
 
         List<DimensionalItemObject> items = dimensionService.getCanReadDimensionItems( uid );

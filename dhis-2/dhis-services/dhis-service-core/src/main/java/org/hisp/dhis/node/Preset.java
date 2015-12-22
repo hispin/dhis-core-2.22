@@ -1,4 +1,4 @@
-package org.hisp.dhis.node.presets;
+package org.hisp.dhis.node;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -29,26 +29,41 @@ package org.hisp.dhis.node.presets;
  */
 
 import com.google.common.collect.Lists;
-import org.hisp.dhis.common.PresetProvider;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-@Component
-public class AllPresetProvider implements PresetProvider
+public enum Preset
 {
-    @Override
-    public String name()
+    ID( "id", Lists.newArrayList( "id" ) ),
+    ALL( "all", Lists.newArrayList( "*" ) ),
+    IDENTIFIABLE( "identifiable", Lists.newArrayList( "id", "name", "code", "created", "lastUpdated", "href" ) ),
+    NAMEABLE( "nameable", Lists.newArrayList( "id", "name", "shortName", "description", "code", "created", "lastUpdated", "href" ) );
+
+    private String name;
+
+    private List<String> fields;
+
+    Preset( String name, List<String> fields )
     {
-        return "all";
+        this.name = name;
+        this.fields = fields;
     }
 
-    @Override
-    public List<String> provide()
+    public String getName()
     {
-        return Lists.newArrayList( "*" );
+        return name;
+    }
+
+    public List<String> getFields()
+    {
+        return fields;
+    }
+
+    public static Preset defaultPreset()
+    {
+        return Preset.ID;
     }
 }

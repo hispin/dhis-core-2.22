@@ -174,7 +174,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( fields.isEmpty() )
         {
-            fields.add( ":identifiable" );
+            fields.add( ":id" );
         }
 
         List<T> entities = getEntityList( metaData, options, filters, orders );
