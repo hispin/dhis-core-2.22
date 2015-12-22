@@ -55,7 +55,7 @@ public class DefaultAppStoreManager
     
     @Autowired
     private AppManager appManager;
-
+    
     // -------------------------------------------------------------------------
     // AppStoreManager implementation
     // -------------------------------------------------------------------------
@@ -67,8 +67,8 @@ public class DefaultAppStoreManager
         
         return JacksonUtils.fromJson( input, AppStore.class );
     }
-     
-    public AppStatus installAppFromAppstore( String id )
+    
+    public AppStatus installAppFromAppStore( String id )
     {
         try
         {
@@ -82,7 +82,7 @@ public class DefaultAppStoreManager
                 
                 String filename = url.getFile();
                 
-                return appManager.installApp( getFile( url ), filename, null );
+                return appManager.installApp( getFile( url ), filename );
             }
             
             return AppStatus.NOT_FOUND;

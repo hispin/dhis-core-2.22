@@ -71,10 +71,9 @@ public interface AppManager
      *
      * @param file     the app file.
      * @param fileName the name of the app file.
-     * @param rootPath the root path of the instance.
      * @throws IOException if the app manifest file could not be read.
      */
-    AppStatus installApp( File file, String fileName, String rootPath )
+    AppStatus installApp( File file, String fileName )
         throws IOException;
 
     /**

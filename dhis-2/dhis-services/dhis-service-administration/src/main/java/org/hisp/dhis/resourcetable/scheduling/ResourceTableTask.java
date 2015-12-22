@@ -92,14 +92,14 @@ public class ResourceTableTask
         }
         catch ( RuntimeException ex )
         {
-            String systemId = config.getProperty( ConfigurationKey.SYSTEM_ID );
+            String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
 
             notifier.notify( taskId, NotificationLevel.ERROR, "Process failed: " + ex.getMessage(), true );
             
             messageService.sendSystemNotification( 
                 "Resource table process failed",
                 "Resource table process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
-                "System: " + systemId + " " +
+                "System: " + baseUrl + " " +
                 "Message: " + ex.getMessage() + " " +
                 "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
             

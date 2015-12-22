@@ -129,9 +129,7 @@ public class AppController
         File tempFile = File.createTempFile( "IMPORT_", "_ZIP" );
         file.transferTo( tempFile );
 
-        String contextPath = ContextUtils.getContextPath( request );
-
-        AppStatus status = appManager.installApp( tempFile, file.getOriginalFilename(), contextPath );
+        AppStatus status = appManager.installApp( tempFile, file.getOriginalFilename() );
         
         if ( !status.ok() )
         {

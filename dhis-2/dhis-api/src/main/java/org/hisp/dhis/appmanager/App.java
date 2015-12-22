@@ -277,6 +277,10 @@ public class App
     @Override
     public String toString()
     {
-        return "[" + name + " " + version + "]";
+        return "{" +
+            "\"version:\"" + version + "\", " +
+            "\"name:\"" + name + "\", " +
+            "\"launchPath:\"" + launchPath + "\" " +
+            "}";
     }
 }

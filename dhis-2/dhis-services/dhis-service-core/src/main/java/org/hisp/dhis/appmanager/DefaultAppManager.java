@@ -49,6 +49,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.datavalue.DefaultDataValueService;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
 import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
@@ -92,6 +94,9 @@ public class DefaultAppManager
 
     @Autowired
     private KeyJsonValueService keyJsonValueService;
+    
+    @Autowired
+    private DhisConfigurationProvider config;
 
     // -------------------------------------------------------------------------
     // AppManagerService implementation
@@ -133,11 +138,12 @@ public class DefaultAppManager
     }
 
     @Override
-    public AppStatus installApp( File file, String fileName, String rootPath )
+    public AppStatus installApp( File file, String fileName )
     {
         try
         {
-
+            String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
+            
             // ---------------------------------------------------------------------
             // Parse zip file and it's manifest.webapp file.
             // ---------------------------------------------------------------------
@@ -155,14 +161,15 @@ public class DefaultAppManager
             // Check for namespace and if it's already taken by another app
             // ---------------------------------------------------------------------
 
-            String appNamespace = app.getActivities().getDhis().getNamespace();
-            if ( appNamespace != null && (this.appNamespaces.containsKey( appNamespace ) &&
-                !app.equals( appNamespaces.get( appNamespace ) )) )
+            String namespace = app.getActivities().getDhis().getNamespace();
+            
+            if ( namespace != null && ( this.appNamespaces.containsKey( namespace ) &&
+                !app.equals( appNamespaces.get( namespace ) ) ) )
             {
                 zip.close();
                 return AppStatus.NAMESPACE_TAKEN;
             }
-
+            
             // ---------------------------------------------------------------------
             // Delete if app is already installed.
             // Assuming app-update, so no data is deleted.
@@ -173,6 +180,8 @@ public class DefaultAppManager
             // ---------------------------------------------------------------------
             // Unzip the app
             // ---------------------------------------------------------------------
+
+            log.info( "Installing app, namespace: " + namespace + ", base URL: " + baseUrl );
 
             String dest = getAppFolderPath() + File.separator + fileName.substring( 0, fileName.lastIndexOf( '.' ) );
             Unzip unzip = new Unzip();
@@ -191,11 +200,13 @@ public class DefaultAppManager
             {
                 if ( "*".equals( installedApp.getActivities().getDhis().getHref() ) )
                 {
-                    installedApp.getActivities().getDhis().setHref( rootPath );
+                    installedApp.getActivities().getDhis().setHref( baseUrl );
                     mapper.writeValue( updateManifest, installedApp );
                 }
             }
 
+            log.info( "Installed app: " + app );
+            
             // ---------------------------------------------------------------------
             // Installation complete. Closing zip, reloading apps and return OK
             // ---------------------------------------------------------------------

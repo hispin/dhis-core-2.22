@@ -35,15 +35,11 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.appmanager.AppManager;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.commons.util.StreamUtils;
-import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.Action;
@@ -105,8 +101,6 @@ public class AddAppAction
     public String execute()
         throws Exception
     {
-        HttpServletRequest request = ServletActionContext.getRequest();
-
         if ( file == null )
         {
             message = i18n.getString( "appmanager_no_file_specified" );
@@ -133,9 +127,7 @@ public class AddAppAction
                 return FAILURE;
             }
 
-            String contextPath = ContextUtils.getContextPath( request );
-
-            switch ( appManager.installApp( file, fileName, contextPath ) )
+            switch ( appManager.installApp( file, fileName ) )
             {
                 case OK:
                     break;
