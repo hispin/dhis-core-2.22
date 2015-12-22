@@ -67,6 +67,11 @@ public class DefaultAppStoreManager
     
     public AppStatus installAppFromAppStore( String id )
     {
+        if ( id == null )
+        {
+            return AppStatus.NOT_FOUND;
+        }
+        
         try
         {
             Optional<WebAppVersion> webAppVersion = getWebAppVersion( id );
@@ -77,7 +82,7 @@ public class DefaultAppStoreManager
                 
                 URL url = new URL( version.getDownloadUrl() );
                 
-                String filename = url.getFile();
+                String filename = version.getFilename();
                 
                 return appManager.installApp( getFile( url ), filename );
             }
