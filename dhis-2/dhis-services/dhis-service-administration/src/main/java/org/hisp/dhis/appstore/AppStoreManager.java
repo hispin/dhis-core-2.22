@@ -30,6 +30,8 @@ package org.hisp.dhis.appstore;
 
 import java.io.IOException;
 
+import org.hisp.dhis.appmanager.AppStatus;
+
 /**
  * @author Lars Helge Overland
  */
@@ -37,4 +39,6 @@ public interface AppStoreManager
 {
     AppStore getAppStore()
         throws IOException;
+    
+    AppStatus installAppFromAppStore( String id );
 }

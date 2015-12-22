@@ -93,14 +93,14 @@ public class MonitoringTask
         }
         catch ( RuntimeException ex )
         {
-            String systemId = config.getProperty( ConfigurationKey.SYSTEM_ID );
+            String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
 
             notifier.notify( taskId, ERROR, "Process failed: " + ex.getMessage(), true );
             
             messageService.sendSystemNotification( 
                 "Monitoring process failed",
                 "Monitoring process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
-                "System: " + systemId + " " +
+                "System: " + baseUrl + " " +
                 "Message: " + ex.getMessage() + " " +
                 "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
             
