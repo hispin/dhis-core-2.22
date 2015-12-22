@@ -69,6 +69,8 @@ public class DefaultAppManager
     implements AppManager
 {
     private static final Log log = LogFactory.getLog( DefaultDataValueService.class );
+    
+    private static final String MANIFEST_FILENAME = "manifest.webapp";
 
     /**
      * In-memory singleton list holding state for apps.
@@ -144,22 +146,22 @@ public class DefaultAppManager
         {
             String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
             
-            // ---------------------------------------------------------------------
-            // Parse zip file and it's manifest.webapp file.
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
+            // Parse ZIP file and it's manifest.webapp file.
+            // -----------------------------------------------------------------
 
             ZipFile zip = new ZipFile( file );
 
-            ZipEntry entry = zip.getEntry( "manifest.webapp" );
+            ZipEntry entry = zip.getEntry( MANIFEST_FILENAME );
             InputStream inputStream = zip.getInputStream( entry );
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
 
             App app = mapper.readValue( inputStream, App.class );
 
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             // Check for namespace and if it's already taken by another app
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
 
             String namespace = app.getActivities().getDhis().getNamespace();
             
@@ -170,16 +172,16 @@ public class DefaultAppManager
                 return AppStatus.NAMESPACE_TAKEN;
             }
             
-            // ---------------------------------------------------------------------
-            // Delete if app is already installed.
-            // Assuming app-update, so no data is deleted.
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
+            // Delete if app is already installed, assuming app update so no 
+            // data is deleted
+            // -----------------------------------------------------------------
 
             deleteApp( app.getName(), false );
 
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             // Unzip the app
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
 
             log.info( "Installing app, namespace: " + namespace + ", base URL: " + baseUrl );
 
@@ -189,11 +191,11 @@ public class DefaultAppManager
             unzip.setDest( new File( dest ) );
             unzip.execute();
 
-            // ---------------------------------------------------------------------
-            // Set dhis server location
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
+            // Set DHIS 2 server location
+            // -----------------------------------------------------------------
 
-            File updateManifest = new File( dest + File.separator + "manifest.webapp" );
+            File updateManifest = new File( dest + File.separator + MANIFEST_FILENAME );
             App installedApp = mapper.readValue( updateManifest, App.class );
 
             if ( installedApp.getActivities() != null && installedApp.getActivities().getDhis() != null )
@@ -207,9 +209,9 @@ public class DefaultAppManager
 
             log.info( "Installed app: " + app );
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             // Installation complete. Closing zip, reloading apps and return OK
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
 
             zip.close();
 
@@ -262,7 +264,8 @@ public class DefaultAppManager
                     String folderPath = getAppFolderPath() + File.separator + app.getFolderName();
                     FileUtils.forceDelete( new File( folderPath ) );
 
-                    // If deleteAppData is true and a namespace associated with the app exists, delete it.
+                    // Delete if deleteAppData is true and a namespace associated with the app exists
+                    
                     if ( deleteAppData && appNamespaces.containsValue( app ) )
                     {
                         appNamespaces.forEach( ( namespace, app1 ) -> {
@@ -379,8 +382,8 @@ public class DefaultAppManager
                                 app.setFolderName( folder.getName() );
                                 appList.add( app );
 
-                                // Add namespace
                                 String appNamespace = app.getActivities().getDhis().getNamespace();
+                                
                                 if ( appNamespace != null )
                                 {
                                     appNamespaces.put( appNamespace, app );
