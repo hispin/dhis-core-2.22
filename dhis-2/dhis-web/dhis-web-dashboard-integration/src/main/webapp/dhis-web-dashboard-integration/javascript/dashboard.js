@@ -391,7 +391,7 @@ dhis2.db.renderDashboardListLoadFirst = function()
 
 	$l.empty();
 
-	$.getJSON( "../api/dashboards.json?paging=false&links=false&" + dhis2.util.cacheBust(), function( data )
+	$.getJSON( "../api/dashboards.json?fields=id,displayName&paging=false&links=false&" + dhis2.util.cacheBust(), function( data )
 	{
 		if ( undefined !== data.dashboards )
 		{
@@ -399,9 +399,9 @@ dhis2.db.renderDashboardListLoadFirst = function()
 
 			$.each( data.dashboards, function( index, dashboard )
 			{
-				$l.append( $.tmpl( dhis2.db.tmpl.dashboardLink, { "id": dashboard.id, "name": dashboard.name } ) );
+				$l.append( $.tmpl( dhis2.db.tmpl.dashboardLink, { "id": dashboard.id, "name": dashboard.displayName } ) );
 
-                if ( index == 0 )
+				if ( index == 0 )
 				{
 					first = dashboard.id;
 				}

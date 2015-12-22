@@ -32,11 +32,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.hisp.dhis.common.PresetProvider;
 import org.hisp.dhis.node.AbstractNode;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodePropertyConverter;
 import org.hisp.dhis.node.NodeTransformer;
+import org.hisp.dhis.node.Preset;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.ComplexNode;
 import org.hisp.dhis.node.types.SimpleNode;
@@ -70,15 +70,12 @@ public class DefaultFieldFilterService implements FieldFilterService
     private SchemaService schemaService;
 
     @Autowired( required = false )
-    private Set<PresetProvider> presetProviders = Sets.newHashSet();
-
-    @Autowired( required = false )
     private Set<NodePropertyConverter> nodePropertyConverters = Sets.newHashSet();
 
     @Autowired( required = false )
     private Set<NodeTransformer> nodeTransformers = Sets.newHashSet();
 
-    private ImmutableMap<String, PresetProvider> presets = ImmutableMap.of();
+    private ImmutableMap<String, Preset> presets = ImmutableMap.of();
 
     private ImmutableMap<String, NodePropertyConverter> converters = ImmutableMap.of();
 
@@ -87,11 +84,11 @@ public class DefaultFieldFilterService implements FieldFilterService
     @PostConstruct
     public void init()
     {
-        ImmutableMap.Builder<String, PresetProvider> presetBuilder = ImmutableMap.builder();
+        ImmutableMap.Builder<String, Preset> presetBuilder = ImmutableMap.builder();
 
-        for ( PresetProvider presetProvider : presetProviders )
+        for ( Preset preset : Preset.values() )
         {
-            presetBuilder.put( presetProvider.name(), presetProvider );
+            presetBuilder.put( preset.getName(), preset );
         }
 
         presets = presetBuilder.build();
@@ -224,7 +221,7 @@ public class DefaultFieldFilterService implements FieldFilterService
             }
             else if ( fieldValue.isEmpty() )
             {
-                List<String> fields = presets.get( "identifiable" ).provide();
+                List<String> fields = Preset.defaultPreset().getFields();
 
                 if ( property.isCollection() )
                 {
@@ -343,13 +340,9 @@ public class DefaultFieldFilterService implements FieldFilterService
         {
             if ( "*".equals( fieldKey ) )
             {
-                for ( String mapKey : schema.getPropertyMap().keySet() )
-                {
-                    if ( !fieldMap.containsKey( mapKey ) )
-                    {
-                        fieldMap.put( mapKey, new FieldMap() );
-                    }
-                }
+                schema.getPropertyMap().keySet().stream()
+                    .filter( mapKey -> !fieldMap.containsKey( mapKey ) )
+                    .forEach( mapKey -> fieldMap.put( mapKey, new FieldMap() ) );
 
                 cleanupFields.add( fieldKey );
             }
@@ -357,13 +350,9 @@ public class DefaultFieldFilterService implements FieldFilterService
             {
                 List<Property> properties = schema.getProperties();
 
-                for ( Property property : properties )
-                {
-                    if ( !fieldMap.containsKey( property.key() ) && property.isPersisted() )
-                    {
-                        fieldMap.put( property.key(), new FieldMap() );
-                    }
-                }
+                properties.stream()
+                    .filter( property -> !fieldMap.containsKey( property.key() ) && property.isPersisted() )
+                    .forEach( property -> fieldMap.put( property.key(), new FieldMap() ) );
 
                 cleanupFields.add( fieldKey );
             }
@@ -371,34 +360,26 @@ public class DefaultFieldFilterService implements FieldFilterService
             {
                 List<Property> properties = schema.getProperties();
 
-                for ( Property property : properties )
-                {
-                    if ( !fieldMap.containsKey( property.key() ) && property.isPersisted() && property.isOwner() )
-                    {
-                        fieldMap.put( property.key(), new FieldMap() );
-                    }
-                }
+                properties.stream()
+                    .filter( property -> !fieldMap.containsKey( property.key() ) && property.isPersisted() && property.isOwner() )
+                    .forEach( property -> fieldMap.put( property.key(), new FieldMap() ) );
 
                 cleanupFields.add( fieldKey );
             }
             else if ( fieldKey.startsWith( ":" ) )
             {
-                PresetProvider presetProvider = presets.get( fieldKey.substring( 1 ) );
+                Preset preset = presets.get( fieldKey.substring( 1 ) );
 
-                if ( presetProvider == null )
+                if ( preset == null )
                 {
                     continue;
                 }
 
-                List<String> fields = presetProvider.provide();
+                List<String> fields = preset.getFields();
 
-                for ( String field : fields )
-                {
-                    if ( !fieldMap.containsKey( field ) )
-                    {
-                        fieldMap.put( field, new FieldMap() );
-                    }
-                }
+                fields.stream()
+                    .filter( field -> !fieldMap.containsKey( field ) )
+                    .forEach( field -> fieldMap.put( field, new FieldMap() ) );
 
                 cleanupFields.add( fieldKey );
             }
