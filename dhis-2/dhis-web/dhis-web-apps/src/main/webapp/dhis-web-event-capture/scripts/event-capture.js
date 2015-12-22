@@ -440,8 +440,7 @@ function getD2MetaObject( programs, objNames, url, filter )
     if( !programs || !programs.programIds){
         return;
     }
-    
-    //console.log('programs.programIds:  ', programs.programIds);
+
     filter = filter + programs.programIds;
     var def = $.Deferred();
     
@@ -498,7 +497,7 @@ function checkAndGetD2Objects( obj, store, url, filter )
                 var _ids = ids.toString();
                 _ids = '[' + _ids + ']';
                 filter = filter + '&filter=id:in:' + _ids + '&paging=false';
-                promise = promise.then( getAllD2Objects( store, url, filter ) );
+                promise = promise.then( getD2Objects( store, store, url, filter ) );
             }
             
             mainDef.resolve( obj.programs, obj.programIds );
@@ -510,22 +509,6 @@ function checkAndGetD2Objects( obj, store, url, filter )
     builder.resolve();
 
     return mainPromise;
-}
-
-
-function getAllD2Objects( store, url, filter )
-{
-    return function() {        
-        return $.ajax( {
-            url: url,
-            type: 'GET',            
-            data: filter
-        }).done( function( response ){
-            if(response[store]){
-                dhis2.ec.store.setAll( store, response[store] );
-            }             
-        });
-    };
 }
 
 function getD2Objects(store, objs, url, filter)
