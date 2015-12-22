@@ -367,7 +367,6 @@ function getOptionSets( programs )
                         dhis2.ec.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {
                             if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetsInPromise.indexOf(prStDe.dataElement.optionSet.id) === -1) {
                                 optionSetsInPromise.push( prStDe.dataElement.optionSet.id );
-                                promise = promise.then( getD2Object( prStDe.dataElement.optionSet.id, 'optionSets', '../api/optionSets', 'fields=id,name,version,options[id,name,code]', 'idb' ) );
                             }
                             d.resolve();
                         });
@@ -383,6 +382,18 @@ function getOptionSets( programs )
         def.resolve();
 
         promise = promise.done( function () {
+            
+            if( optionSetsInPromise && optionSetsInPromise.length > 0 ){
+                var _optionSetsInPromise = optionSetsInPromise.toString();
+                _optionSetsInPromise = '[' + _optionSetsInPromise + ']';
+                
+                var filter = 'fields=id,name,version,options[id,name,code]';                
+                filter = filter + '&filter=id:in:' + _optionSetsInPromise + '&paging=false';
+                
+                var url = '../api/optionSets';
+                promise = promise.then( getD2Objects( 'optionSets', 'optionSets', url, filter ) );
+            }
+            
             mainDef.resolve( programs );
         } );
     }).fail(function(){
@@ -397,7 +408,7 @@ function getOptionSets( programs )
 function getMetaProgramValidations( programs, programIds )
 {
     programs.programIds = programIds;
-    return getD2MetaObject(programs, 'programValidations', '../api/programValidations.json', 'paging=false&fields=id&filter=program.id:in:');
+    return getD2MetaObjects(programs, 'programValidations', '../api/programValidations.json', 'paging=false&fields=id&filter=program.id:in:');
 }
 
 function getProgramValidations( programValidations )
@@ -407,7 +418,7 @@ function getProgramValidations( programValidations )
 
 function getMetaProgramIndicators( programs )
 {   
-    return getD2MetaObject(programs, 'programIndicators', '../api/programIndicators.json', 'paging=false&fields=id&filter=program.id:in:');
+    return getD2MetaObjects(programs, 'programIndicators', '../api/programIndicators.json', 'paging=false&fields=id&filter=program.id:in:');
 }
 
 function getProgramIndicators( programIndicators )
@@ -417,7 +428,7 @@ function getProgramIndicators( programIndicators )
 
 function getMetaProgramRules( programs )
 {
-    return getD2MetaObject(programs, 'programRules', '../api/programRules.json', 'paging=false&fields=id&filter=program.id:in:');
+    return getD2MetaObjects(programs, 'programRules', '../api/programRules.json', 'paging=false&fields=id&filter=program.id:in:');
 }
 
 function getProgramRules( programRules )
@@ -427,7 +438,7 @@ function getProgramRules( programRules )
 
 function getMetaProgramRuleVariables( programs )
 {    
-    return getD2MetaObject(programs, 'programRuleVariables', '../api/programRuleVariables.json', 'paging=false&fields=id&filter=program.id:in:');
+    return getD2MetaObjects(programs, 'programRuleVariables', '../api/programRuleVariables.json', 'paging=false&fields=id&filter=program.id:in:');
 }
 
 function getProgramRuleVariables( programRuleVariables )
@@ -435,7 +446,7 @@ function getProgramRuleVariables( programRuleVariables )
     return checkAndGetD2Objects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,name,programRuleVariableSourceType,program[id],programStage[id],dataElement[id]');
 }
 
-function getD2MetaObject( programs, objNames, url, filter )
+function getD2MetaObjects( programs, objNames, url, filter )
 {
     if( !programs || !programs.programIds){
         return;
