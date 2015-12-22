@@ -34,8 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
 import org.hisp.dhis.appmanager.AppStatus;
-import org.hisp.dhis.appstore.AppStore;
-import org.hisp.dhis.appstore.AppStoreManager;
 import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -78,9 +76,6 @@ public class AppController
     @Autowired
     private AppManager appManager;
     
-    @Autowired
-    private AppStoreManager appStoreManager;
-
     @Autowired
     private RenderService renderService;
 
@@ -275,13 +270,6 @@ public class AppController
         appManager.setAppBaseUrl( appBaseUrl );
     }
 
-    @RequestMapping( value = "/appStore", method = RequestMethod.GET, produces = "application/json" )
-    public @ResponseBody AppStore getAppStore( HttpServletResponse response )
-        throws IOException
-    {
-        return appStoreManager.getAppStore();
-    }
-    
     //--------------------------------------------------------------------------
     // Helpers
     //--------------------------------------------------------------------------

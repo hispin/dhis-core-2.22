@@ -1,5 +1,9 @@
 package org.hisp.dhis.appstore;
 
+import org.apache.commons.io.FilenameUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -51,6 +55,12 @@ public class WebAppVersion
     {
     }
 
+    @JsonIgnore
+    public String getFilename()
+    {
+        return FilenameUtils.getName( downloadUrl );
+    }
+    
     @JsonProperty
     public String getId()
     {
