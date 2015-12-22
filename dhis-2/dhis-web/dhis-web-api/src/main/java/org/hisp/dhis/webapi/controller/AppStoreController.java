@@ -70,5 +70,5 @@ public class AppStoreController
     public void installAppFromAppStore( @PathVariable String versionId )
     {
         appStoreManager.installAppFromAppStore( versionId );
-    } 
+    }
 }

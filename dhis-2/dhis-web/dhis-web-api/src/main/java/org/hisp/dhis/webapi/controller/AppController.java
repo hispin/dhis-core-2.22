@@ -89,7 +89,8 @@ public class AppController
     // -------------------------------------------------------------------------
 
     @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
-    public void getApps( @RequestParam( required = false ) String key, HttpServletResponse response )
+    public void getApps( @RequestParam( required = false ) String key, 
+        HttpServletResponse response )
         throws IOException
     {
         List<App> apps = new ArrayList<>();
@@ -141,7 +142,8 @@ public class AppController
     }
 
     @RequestMapping( value = "/{app}/**", method = RequestMethod.GET )
-    public void renderApp( @PathVariable( "app" ) String app, HttpServletRequest request, HttpServletResponse response )
+    public void renderApp( @PathVariable( "app" ) String app, 
+        HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {
         Iterable<Resource> locations = Lists.newArrayList(
@@ -209,7 +211,7 @@ public class AppController
     @RequestMapping( value = "/{app}", method = RequestMethod.DELETE )
     @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
     public void deleteApp( @PathVariable( "app" ) String app,
-        @RequestParam( value = "deleteappdata", required = false, defaultValue = "false" ) boolean deleteAppData,
+        @RequestParam( required = false ) boolean deleteAppData,
         HttpServletRequest request, HttpServletResponse response )
         throws WebMessageException
     {
