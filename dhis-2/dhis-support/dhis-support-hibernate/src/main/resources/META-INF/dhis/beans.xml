@@ -141,6 +141,6 @@
     <property name="poolSize" value="4" />
   </bean>
 
-  <bean id="org.jasypt.salt.RandomSaltGenerator" class="org.jasypt.salt.RandomSaltGenerator"></bean>
+  <bean id="org.jasypt.salt.RandomSaltGenerator" class="org.jasypt.salt.RandomSaltGenerator"/>
 
 </beans>

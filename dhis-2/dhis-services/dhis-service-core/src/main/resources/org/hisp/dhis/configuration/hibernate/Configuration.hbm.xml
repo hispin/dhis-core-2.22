@@ -39,9 +39,9 @@
 
     <property name="remoteServerUsername" column="remoteserverusername" />
 
-    <property name="remoteServerPassword" column="remotepassword" type="AESEncryptedString" />
+    <property name="remoteServerPassword" column="remoteserverpassword" type="encryptedString" />
 
-    <property name="smtpPassword" column="smtppassword" type="AESEncryptedString" />
+    <property name="smtpPassword" column="smtppassword" type="encryptedString" />
 
     <set name="corsWhitelist" table="configuration_corswhitelist">
       <cache usage="read-write" />

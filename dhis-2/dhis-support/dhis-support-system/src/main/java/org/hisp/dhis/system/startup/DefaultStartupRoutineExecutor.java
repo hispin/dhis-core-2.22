@@ -28,16 +28,16 @@ package org.hisp.dhis.system.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.external.conf.ConfigurationKey;
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Default implementation of StartupRoutineExecutor. The execute method will
@@ -102,6 +102,7 @@ public class DefaultStartupRoutineExecutor
     private void execute( boolean testing )
         throws Exception
     {
+
         if ( TRUE.equalsIgnoreCase( System.getProperty( SKIP_PROP ) ) )
         {
             LOG.info( "Skipping startup routines, system property " + SKIP_PROP + " is true" );

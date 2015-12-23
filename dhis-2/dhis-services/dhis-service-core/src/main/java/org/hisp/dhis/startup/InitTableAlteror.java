@@ -29,7 +29,6 @@ package org.hisp.dhis.startup;
  */
 
 import org.amplecode.quick.StatementManager;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.jdbc.StatementBuilder;
@@ -39,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
 
 /**
  * @author Lars Helge Overland
@@ -55,10 +55,10 @@ public class InitTableAlteror
     private StatementBuilder statementBuilder;
 
     @Resource( name = "stringEncryptor" )
-    private PBEStringEncryptor oldPBEStringEncryptor;
+    PBEStringEncryptor oldPBEStringEncryptor;
 
     @Resource( name = "strongStringEncryptor" )
-    private PBEStringEncryptor newPBEStringEncryptor;
+    PBEStringEncryptor newPBEStringEncryptor;
 
     // -------------------------------------------------------------------------
     // Execute
@@ -68,7 +68,8 @@ public class InitTableAlteror
     @Transactional
     public void execute()
     {
-        executeSql( "update dataelement set domaintype='AGGREGATE' where domaintype='aggregate' or domaintype is null;" );
+        executeSql(
+            "update dataelement set domaintype='AGGREGATE' where domaintype='aggregate' or domaintype is null;" );
         executeSql( "update dataelement set domaintype='TRACKER' where domaintype='patient';" );
         executeSql( "update users set invitation = false where invitation is null" );
         executeSql( "alter table dataelement alter column domaintype set not null;" );
@@ -76,7 +77,7 @@ public class InitTableAlteror
         executeSql( "UPDATE programstageinstance SET status='ACTIVE' WHERE status='0';" );
         executeSql( "UPDATE programstageinstance SET status='COMPLETED' WHERE status='1';" );
         executeSql( "UPDATE programstageinstance SET status='SKIPPED' WHERE status='5';" );
-        executeSql( "update users set externalauth = false where externalauth is null" );
+
         executeSql( "ALTER TABLE program DROP COLUMN displayonallorgunit" );
 
         upgradeProgramStageDataElements();
@@ -85,42 +86,27 @@ public class InitTableAlteror
         updateFeatureTypes();
         updateValidationRuleEnums();
         updateProgramStatus();
-        reEncryptConfigurationPasswords();
+        updateSmtpPasswordColumn();
         updateTimestamps();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
         executeSql( "update program set \"type\"='WITHOUT_REGISTRATION' where type='3'" );
-
-        executeSql( "alter table programstage rename column irregular to repeatable" );
-        executeSql( "update programstage set repeatable=false where repeatable is null" );
-        executeSql( "update attribute set isunique=false where isunique is null" );
     }
 
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void reEncryptConfigurationPasswords()
+    private void updateSmtpPasswordColumn()
     {
         try
         {
-            String smtpPassword = statementManager.getHolder().queryForString( "SELECT smptpassword FROM configuration" );
-            String remoteServerPassword = statementManager.getHolder().queryForString( "SELECT remoteserverpassword FROM configuration" );
+            executeSql( "UPDATE configuration SET smtppassword = smptpassword" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
 
-            if ( StringUtils.isNotBlank( smtpPassword ) )
-            {
-                executeSql( "UPDATE configuration SET smtppassword = '" + newPBEStringEncryptor.encrypt( oldPBEStringEncryptor.decrypt( smtpPassword ) ) + "'" );
-                executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
-            }
-
-            if ( StringUtils.isNotBlank( remoteServerPassword ) )
-            {
-                executeSql( "UPDATE configuration SET remotepassword = '" + newPBEStringEncryptor.encrypt( oldPBEStringEncryptor.decrypt( remoteServerPassword ) ) + "'" );
-                executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverpassword" );
-            }
         }
-        catch ( Exception ex )
+        catch(Exception ex)
         {
             log.debug( ex );
         }
@@ -139,7 +125,6 @@ public class InitTableAlteror
         executeSql( "update trackedentityattributevalue set created=now() where created is null" );
         executeSql( "update trackedentityattributevalue set lastupdated=now() where lastupdated is null" );
     }
-
     private void updateProgramStatus()
     {
         executeSql( "alter table programinstance alter column status type varchar(50)" );
@@ -210,11 +195,13 @@ public class InitTableAlteror
         executeSql( "update dataelement set valuetype='PERCENTAGE' where valuetype='int' and numbertype='percentage'" );
         executeSql( "update dataelement set valuetype='UNIT_INTERVAL' where valuetype='int' and numbertype='unitInterval'" );
         executeSql( "update dataelement set valuetype='NUMBER' where valuetype='int' and numbertype is null" );
+
         executeSql( "alter table dataelement drop column numbertype" );
 
         executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype='text'" );
         executeSql( "update dataelement set valuetype='LONG_TEXT' where valuetype='string' and texttype='longText'" );
         executeSql( "update dataelement set valuetype='TEXT' where valuetype='string' and texttype is null" );
+
         executeSql( "alter table dataelement drop column texttype" );
 
         executeSql( "update dataelement set valuetype='DATE' where valuetype='date'" );
@@ -241,16 +228,6 @@ public class InitTableAlteror
         executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype is null" );
 
         executeSql( "update optionset set valuetype='TEXT' where valuetype is null" );
-        executeSql( "update attribute set valuetype='TEXT' where valuetype='string'" );
-        executeSql( "update attribute set valuetype='LONG_TEXT' where valuetype='text'" );
-        executeSql( "update attribute set valuetype='BOOLEAN' where valuetype='bool'" );
-        executeSql( "update attribute set valuetype='DATE' where valuetype='date'" );
-        executeSql( "update attribute set valuetype='NUMBER' where valuetype='number'" );
-        executeSql( "update attribute set valuetype='INTEGER' where valuetype='integer'" );
-        executeSql( "update attribute set valuetype='INTEGER_POSITIVE' where valuetype='positive_integer'" );
-        executeSql( "update attribute set valuetype='INTEGER_NEGATIVE' where valuetype='negative_integer'" );
-        executeSql( "update attribute set valuetype='TEXT' where valuetype='option_set'" );
-        executeSql( "update attribute set valuetype='TEXT' where valuetype is null" );
     }
 
     private void upgradeProgramStageDataElements()
@@ -263,6 +240,7 @@ public class InitTableAlteror
                 "insert into programstagedataelement(programstagedataelementid,programstageid,dataelementid,compulsory,allowprovidedelsewhere," +
                     "sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order) " + "select " + autoIncr +
                     ",programstageid,dataelementid,compulsory,allowprovidedelsewhere,sort_order,displayinreports,programstagesectionid,allowfuturedate,section_sort_order from programstage_dataelements";
+
 
             executeSql( insertSql );
 
