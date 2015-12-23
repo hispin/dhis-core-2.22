@@ -38,6 +38,7 @@ import java.util.List;
 public enum Preset
 {
     ID( "id", Lists.newArrayList( "id" ) ),
+    ID_NAME( "idName", Lists.newArrayList( "id", "displayName" ) ),
     ALL( "all", Lists.newArrayList( "*" ) ),
     IDENTIFIABLE( "identifiable", Lists.newArrayList( "id", "name", "code", "created", "lastUpdated", "href" ) ),
     NAMEABLE( "nameable", Lists.newArrayList( "id", "name", "shortName", "description", "code", "created", "lastUpdated", "href" ) );
@@ -63,6 +64,11 @@ public enum Preset
     }
 
     public static Preset defaultPreset()
+    {
+        return Preset.ID_NAME;
+    }
+
+    public static Preset defaultAssociationPreset()
     {
         return Preset.ID;
     }

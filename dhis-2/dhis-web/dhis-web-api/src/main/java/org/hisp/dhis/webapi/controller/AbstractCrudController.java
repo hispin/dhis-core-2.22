@@ -59,6 +59,7 @@ import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodeUtils;
+import org.hisp.dhis.node.Preset;
 import org.hisp.dhis.node.config.InclusionStrategy;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.ComplexNode;
@@ -174,7 +175,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( fields.isEmpty() )
         {
-            fields.add( ":id" );
+            fields.addAll( Preset.defaultPreset().getFields() );
         }
 
         List<T> entities = getEntityList( metaData, options, filters, orders );
