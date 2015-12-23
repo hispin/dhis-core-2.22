@@ -94,33 +94,21 @@ public class ProgramStageInstance
     // Getters and setters
     // -------------------------------------------------------------------------
 
-    /**
-     * @return the programInstance
-     */
     public ProgramInstance getProgramInstance()
     {
         return programInstance;
     }
 
-    /**
-     * @param programInstance the programInstance to set
-     */
     public void setProgramInstance( ProgramInstance programInstance )
     {
         this.programInstance = programInstance;
     }
 
-    /**
-     * @return the programStage
-     */
     public ProgramStage getProgramStage()
     {
         return programStage;
     }
 
-    /**
-     * @param programStage the programStage to set
-     */
     public void setProgramStage( ProgramStage programStage )
     {
         this.programStage = programStage;
@@ -136,41 +124,26 @@ public class ProgramStageInstance
         this.completedUser = completedUser;
     }
 
-    /**
-     * @return the dueDate
-     */
     public Date getDueDate()
     {
         return dueDate;
     }
 
-    /**
-     * @param dueDate the dueDate to set
-     */
     public void setDueDate( Date dueDate )
     {
         this.dueDate = dueDate;
     }
 
-    /**
-     * @return the executionDate
-     */
     public Date getExecutionDate()
     {
         return executionDate;
     }
 
-    /**
-     * @param executionDate the executionDate to set
-     */
     public void setExecutionDate( Date executionDate )
     {
         this.executionDate = executionDate;
     }
 
-    /**
-     * @return the completed
-     */
     public boolean isCompleted()
     {
         return (status == EventStatus.COMPLETED) ? true : false;
