@@ -33,11 +33,11 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     
     //Selection
     $scope.ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];         
-    $scope.selectedOuMode = $scope.ouModes[0];    
+    $scope.selectedOuMode = $scope.ouModes[2];    
     $scope.dashboardProgramId = ($location.search()).program;
     $scope.selectedOrgUnitId = ($location.search()).ou;
     $scope.treeLoaded = false;
-    $scope.searchOuTree = false;
+    $scope.searchOuTree = {open: true};
     $scope.teiListMode = {onlyActive: false};
     $scope.enrollmentStatus = 'ALL';    
        
@@ -241,7 +241,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             }            
             
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
-            $scope.searchingOrgUnit = $scope.selectedOrgUnit;
+            $scope.searchingOrgUnit = $scope.selectedSearchingOrgUnit && $scope.selectedSearchingOrgUnit.id ? $scope.selectedSearchingOrgUnit : $scope.selectedOrgUnit;
         }
         
         if( $scope.selectedSearchMode === $scope.searchMode.attributeBased ){
@@ -262,7 +262,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         if( $scope.selectedSearchMode === $scope.searchMode.listAll ){
             $scope.searchText = null;            
             $scope.attributes = EntityQueryFactory.resetAttributesQuery($scope.attributes, $scope.enrollment);
-            $scope.searchingOrgUnit = $scope.selectedOrgUnit;
+            $scope.searchingOrgUnit = $scope.selectedSearchingOrgUnit && $scope.selectedSearchingOrgUnit.id ? $scope.selectedSearchingOrgUnit : $scope.selectedOrgUnit;
         }
         
         $scope.doSearch = false;
@@ -409,6 +409,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 o.hasChildren = o.children && o.children.length > 0 ? true : false;
             });            
         });
+        
+        $scope.selectedSearchingOrgUnit = $scope.orgUnits[0] ? $scope.orgUnits[0] : null; 
     });
     
     //expand/collapse of search orgunit tree
