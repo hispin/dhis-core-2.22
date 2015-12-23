@@ -43,6 +43,7 @@ import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.WebDataBinder;
@@ -77,6 +78,12 @@ public class CrudControllerAdvice
                 setValue( DateUtils.parseDate( value ) );
             }
         } );
+    }
+
+    @ExceptionHandler( { EncryptionOperationNotPossibleException.class } )
+    public void encryptionOperationNotPossibleException( EncryptionOperationNotPossibleException ex, HttpServletResponse response, HttpServletRequest request )
+    {
+        webMessageService.send( WebMessageUtils.unathorized( "Could not encrypt data. This indicates a problem in your setup. Please refer to the DHIS2 manual for setting up encryption." ), response, request );
     }
 
     @ExceptionHandler( { NotAuthenticatedException.class } )
