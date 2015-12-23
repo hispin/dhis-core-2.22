@@ -121,30 +121,8 @@ public class DefaultTrackedEntityInstanceService
         decideAccess( params );
         validate( params );
 
-        // ---------------------------------------------------------------------
-        // Verify params
-        // ---------------------------------------------------------------------
-
-        User user = currentUserService.getCurrentUser();
-
-        if ( user != null && params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ACCESSIBLE ) )
-        {
-            params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
-            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
-        }
-        else if ( params.isOrganisationUnitMode( CHILDREN ) )
-        {
-            Set<OrganisationUnit> organisationUnits = new HashSet<>();
-            organisationUnits.addAll( params.getOrganisationUnits() );
-
-            for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
-            {
-                organisationUnits.addAll( organisationUnit.getChildren() );
-            }
-
-            params.setOrganisationUnits( organisationUnits );
-        }
-
+        params.setUser( currentUserService.getCurrentUser() );
+        
         if ( !params.isPaging() && !params.isSkipPaging() )
         {
             params.setDefaultPaging();
@@ -160,23 +138,8 @@ public class DefaultTrackedEntityInstanceService
         decideAccess( params );
         validate( params );
 
-        // ---------------------------------------------------------------------
-        // Verify params
-        // ---------------------------------------------------------------------
-
-        User user = currentUserService.getCurrentUser();
-
-        if ( user != null && params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ACCESSIBLE ) )
-        {
-            params.setOrganisationUnits( user.getDataViewOrganisationUnitsWithFallback() );
-            params.setOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS );
-        }
-
-        if ( !params.isPaging() && !params.isSkipPaging() )
-        {
-            params.setDefaultPaging();
-        }
-
+        params.setUser( currentUserService.getCurrentUser() );
+        
         // ---------------------------------------------------------------------
         // If params of type query and no attributes or filters defined, use
         // attributes from program if program is defined, if not, use 
