@@ -498,10 +498,10 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return orgUnitWithParent;
         },
         getSearchTreeRoot: function(){
-            var roles = SessionStorageService.get('USER_ROLES');
+            //var roles = SessionStorageService.get('USER_ROLES');
             if(!rootOrgUnitPromise){
                 var url = '../api/me.json?fields=organisationUnits[id,name,children[id,name,children[id,name]]]&paging=false';
-                if( roles && roles.userCredentials && roles.userCredentials.userRoles){
+                /*if( roles && roles.userCredentials && roles.userCredentials.userRoles){
                     var userRoles = roles.userCredentials.userRoles;
                     for(var i=0; i<userRoles.length; i++){
                         if(userRoles[i].authorities.indexOf('ALL') !== -1 || 
@@ -510,7 +510,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                           i=userRoles.length;
                         }
                     }  
-                }             
+                }*/
                 rootOrgUnitPromise = $http.get( url ).then(function(response){
                     return response.data;
                 });
