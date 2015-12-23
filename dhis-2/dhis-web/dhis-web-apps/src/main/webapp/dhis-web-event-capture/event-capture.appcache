@@ -6,9 +6,6 @@ NETWORK:
 
 CACHE:
 
-../dhis-web-commons/javascripts/dhis2/dhis2.map.contextmenu.js
-../dhis-web-commons/javascripts/dhis2/dhis2.map.textoverlay.js
-
 ../dhis-web-commons/javascripts/jQuery/jquery.min.js
 ../dhis-web-commons/javascripts/jQuery/ui/jquery-ui.min.js
 ../dhis-web-commons/javascripts/jQuery/jquery.plugin.min.js
@@ -58,7 +55,7 @@ CACHE:
 ../dhis-web-commons/javascripts/dhis2/dhis2.contextmenu.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.appcache.js
 ../dhis-web-commons/ouwt/ouwt.js
-../main.js
+../dhis-web-commons/javascripts/dhis2/dhis2.tracker.metadata.js
 scripts/event-capture.js
 
 ../dhis-web-commons/javascripts/angular/plugins/angularLocalStorage.js
@@ -66,21 +63,22 @@ scripts/event-capture.js
 ../dhis-web-commons/javascripts/angular/plugins/select.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.directives.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.map.directive.js
-../dhis-web-commons/javascripts/dhis2/dhis2.angular.validations.js
-../dhis-web-commons/javascripts/dhis2/dhis2.angular.filters.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.services.js
+../dhis-web-commons/javascripts/dhis2/dhis2.angular.filters.js
+../dhis-web-commons/javascripts/dhis2/dhis2.angular.validations.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.angular.controllers.js
 
 scripts/app.js
-scripts/services.js
-scripts/filters.js
 scripts/directives.js
+scripts/services.js
 scripts/controllers.js        
 scripts/notes-controller.js
+scripts/filters.js
 
 ../dhis-web-commons/javascripts/dhis2/dhis2.translate.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.menu.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js
+../main.js
 
 ../dhis-web-commons/font-awesome/css/font-awesome.min.css
 ../dhis-web-commons/css/light_blue/light_blue.css
