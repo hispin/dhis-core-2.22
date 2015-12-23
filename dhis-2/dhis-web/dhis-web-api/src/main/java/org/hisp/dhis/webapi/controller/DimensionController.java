@@ -39,6 +39,7 @@ import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.node.AbstractNode;
 import org.hisp.dhis.node.Node;
 import org.hisp.dhis.node.NodeUtils;
+import org.hisp.dhis.node.Preset;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.query.Order;
@@ -114,7 +115,7 @@ public class DimensionController
 
         if ( fields.isEmpty() )
         {
-            fields.add( ":id" );
+            fields.addAll( Preset.defaultPreset().getFields() );
         }
 
         List<DimensionalItemObject> items = dimensionService.getCanReadDimensionItems( uid );

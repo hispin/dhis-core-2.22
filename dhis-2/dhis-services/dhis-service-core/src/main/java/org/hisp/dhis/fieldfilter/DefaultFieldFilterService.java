@@ -221,7 +221,7 @@ public class DefaultFieldFilterService implements FieldFilterService
             }
             else if ( fieldValue.isEmpty() )
             {
-                List<String> fields = Preset.defaultPreset().getFields();
+                List<String> fields = Preset.defaultAssociationPreset().getFields();
 
                 if ( property.isCollection() )
                 {
