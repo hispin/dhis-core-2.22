@@ -1,22 +1,27 @@
-@media print {
-  a[href]:after {
-    content: none;
-  }
+body, html {
+    width: 100% !important;
+    height: auto !important;
 }
 
 .not-for-screen {
-  display: none;
+    display: block;
 }
 
-@media print {
-  .not-for-screen {
-    display: block;
-  }
-  body, html, #print-div {
-    margin-top:0%;
-    display:block;
-    height:100%;
-  }
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: white !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: white !important;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: white !important;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: white !important;
+}
+
+#header, #leftBar, .hideInPrint {
+    display: none !important;
 }
 
 .dhis2-table-striped-border {

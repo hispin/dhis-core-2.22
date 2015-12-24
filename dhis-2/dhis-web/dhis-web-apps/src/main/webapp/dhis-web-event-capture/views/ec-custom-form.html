@@ -28,7 +28,7 @@
     </tr>
     <tr ng-if="selectedProgramStage.captureCoordinates">
         <td>
-            {{'latitude'| translate}}<span class="pull-right"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
+            {{'latitude'| translate}}<span class="pull-right hideInPrint"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
         <td>
             <input type="number" 
                    ng-model="currentEvent.coordinate.latitude"                    
@@ -42,7 +42,7 @@
     </tr>
     <tr ng-if="selectedProgramStage.captureCoordinates">
         <td>
-            {{'longitude'| translate}}<span class="pull-right"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
+            {{'longitude'| translate}}<span class="pull-right hideInPrint"><a href ng-click="showMap(currentEvent)" title="{{'get_from_map'| translate}}"><i class="fa fa-map-marker fa-2x"></i></a></span>
         </td>
         <td>
             <input type="number" 
