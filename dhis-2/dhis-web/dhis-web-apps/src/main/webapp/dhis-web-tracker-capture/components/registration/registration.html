@@ -44,7 +44,7 @@
         </div>
         <!-- default registration form ends -->
 
-        <div ng-if="formEmpty && outerForm.submitted">
+        <div class="hideInPrint" ng-if="formEmpty && outerForm.submitted">
             <div class="alert alert-warning">{{'form_is_empty_fill_at_least_one'| translate}}</div> 
         </div>
 
@@ -58,7 +58,7 @@
             <button type="button" class="btn btn-default" ng-click="showNewEnrollment()">{{'cancel'| translate}}</button>                    
         </div>
 
-        <div class="vertical-spacing" ng-if="registrationMode === 'REGISTRATION'">                
+        <div class="vertical-spacing hideInPrint" ng-if="registrationMode === 'REGISTRATION'">                
             <button type="button" class="btn btn-primary" ng-click="registerEntity('DASHBOARD')">{{'save_and_continue'| translate}}</button>
             <button type="button" class="btn btn-success small-horizonal-spacing" ng-click="registerEntity('SELF')">{{'save_and_add_new'| translate}}</button>
             <button type="button" class="btn btn-primary" onclick="javascript:window.print()">{{'print_form'| translate}}</button>
@@ -68,7 +68,7 @@
     </form>
     <!--registration form ends -->
 
-    <div ng-if="warningMessages.length > 0" style="margin-top:18px" ng-class="{true: 'col-sm-4'} [registrationMode === 'REGISTRATION']">
+    <div class="hideInPrint" ng-if="warningMessages.length > 0" style="margin-top:18px" ng-class="{true: 'col-sm-4'} [registrationMode === 'REGISTRATION']">
         <div ng-include="'views/warnings.html'"></div>
     </div>
     
