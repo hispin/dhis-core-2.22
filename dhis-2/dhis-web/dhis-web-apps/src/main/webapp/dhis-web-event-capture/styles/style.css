@@ -10,6 +10,37 @@ html, body {
     display: none;
 }
 
+@media print {
+    .not-for-screen {
+        display: block;
+    }
+    body, html {
+        width: 100% !important;
+        height: auto !important;
+    }
+    
+    ::-webkit-input-placeholder { /* WebKit browsers */
+        color: white !important;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: white !important;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: white !important;
+    }
+    :-ms-input-placeholder { /* Internet Explorer 10+ */
+        color: white !important;
+    }
+    
+    .select2-default {
+        color: #f00 !important;
+    }    
+
+    #header, #leftBar, .hideInPrint {
+        display: none !important;
+    }
+}
+
 /*----------------------------------------------------------------------------*/
 /* Table
 /*----------------------------------------------------------------------------*/

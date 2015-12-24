@@ -31,9 +31,9 @@ html, body {
     :-ms-input-placeholder { /* Internet Explorer 10+ */
         color: white !important;
     }
-    
-    .select2-default {
-        color: #f00 !important;
+
+    #header, #leftBar, .hideInPrint {
+        display: none !important;
     }
 }
 
@@ -1042,12 +1042,6 @@ input.typeahead::-ms-input-placeholder {
 .disable-clicks {
     pointer-events: none;
     color: #555;
-}
-
-@media print {
-    #header, #leftBar, .hideInPrint {
-        display: none;
-    }
 }
 
 .org-unit-tree {
