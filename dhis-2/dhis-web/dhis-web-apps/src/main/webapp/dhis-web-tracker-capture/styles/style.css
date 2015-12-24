@@ -32,7 +32,15 @@ html, body {
         color: white !important;
     }
 
+    .select2-chosen {
+        color: white !important;
+    }
+
     #header, #leftBar, .hideInPrint {
+        display: none !important;
+    }    
+    
+    .select2-arrow, .ui-select-toggle {
         display: none !important;
     }
 }
