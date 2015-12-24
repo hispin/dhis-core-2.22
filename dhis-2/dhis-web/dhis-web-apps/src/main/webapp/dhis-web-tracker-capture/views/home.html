@@ -16,7 +16,7 @@
     });
 </script>
 
-<span id="showLeftBar">
+<span id="showLeftBar" class="hideInPrint">
     <a href="javascript:dhis2.leftBar.showAnimated()" title="$i18n.getString('show_menu' )"><i class="fa fa-arrow-right leftBarIcon"></i></a>
 </span>
 
@@ -59,18 +59,18 @@
         <!--- selected org unit ends  -->
 
         <!--- search and registration menu begins -->
-        <div class="row small-vertical-spacing not-for-screen">
+        <!--<div class="row small-vertical-spacing not-for-screen hideInPrint">
             <div class="col-sm-6 col-md-4">
                 <h4>{{orgUnitLabel}}</h4>
             </div>
             <div class="col-sm-6 col-md-4">
                 <input type="text" class="form-control" ng-disabled='true' value="{{selectedOrgUnit.name}}">
             </div>
-        </div>
+        </div>-->
         <div class="row">
             
             <!-- program selection begins -->
-            <div class="col-md-4 small-vertical-spacing">
+            <div class="col-md-4 small-vertical-spacing hideInPrint">
                 <ui-select ng-model="model.selectedProgram" 
                         theme="select2" 
                         on-select="getProgramAttributes(model.selectedProgram)"

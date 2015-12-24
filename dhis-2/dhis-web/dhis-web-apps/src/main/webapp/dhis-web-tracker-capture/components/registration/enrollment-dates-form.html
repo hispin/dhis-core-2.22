@@ -9,18 +9,27 @@
     </tr>
     <tr>
         <td>
+            {{'program' | translate}}
+        </td>
+        <td>
+            <input type="text" class="form-control" value={{selectedProgram.name}} ng-disabled="true"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
             {{selectedProgram.enrollmentDateLabel}}
         </td>
         <td>
             <input type="text" 
                    placeholder="{{dhis2CalendarFormat.keyDateFormat}}" 
                    name="enrollmentDate" 
-                   class="form-control" 
+                   class="form-control hideInPrint" 
                    d2-date 
                    ng-model="selectedEnrollment.enrollmentDate" 
                    max-date="selectedProgram.selectEnrollmentDatesInFuture ? '' : 0"
                    min-date=""
                    ng-required="true"/>
+            <input type="text" class="form-control not-for-screen"/>
             <span ng-show="outerForm.submitted && outerForm.enrollmentDate.$invalid" class="error">{{'required'| translate}}</span>
         </td>
     </tr>     
@@ -32,11 +41,12 @@
             <input type="text" 
                    placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
                    name="incidentDate"
-                   class="form-control" 
+                   class="form-control hideInPrint" 
                    d2-date 
                    max-date="selectedProgram.selectIncidentDatesInFuture ? '' : 0"
                    min-date=""
                    ng-model="selectedEnrollment.incidentDate"/>
+            <input type="text" class="form-control not-for-screen"/>
         </td>
     </tr>
 </table>
