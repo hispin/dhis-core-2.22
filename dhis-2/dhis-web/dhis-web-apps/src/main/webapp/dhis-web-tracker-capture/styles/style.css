@@ -11,14 +11,16 @@ html, body {
 }
 
 @media print {
-    .not-for-screen {
-        display: block;
-    }
+    
     body, html {
         width: 100% !important;
         height: auto !important;
     }
-    
+
+    .not-for-screen {
+        display: block;
+    }
+
     ::-webkit-input-placeholder { /* WebKit browsers */
         color: white !important;
     }
@@ -32,15 +34,15 @@ html, body {
         color: white !important;
     }
 
-    .select2-chosen {
-        color: white !important;
-    }
-
     #header, #leftBar, .hideInPrint {
         display: none !important;
-    }    
+    }
+
+    span.select2-chosen.ng-binding.ng-hide {
+        display: none !important;
+    }
     
-    .select2-arrow, .ui-select-toggle {
+    .select2-arrow, .ui-select-toggle, .select2-chosen {
         display: none !important;
     }
 }
@@ -225,12 +227,7 @@ textarea {
 div.ui-select-dropdown.select2-drop.select2-with-searchbox.select2-drop-active{
     min-width: 200px;
 }
-ul.select2-choices {
-    /*overflow: visible !important;*/
-}
-span.form-control-ui-select.ui-select-match {
-    padding:1px;
-}
+
 .container-heading {
     color: white;
 }
@@ -255,8 +252,6 @@ div.paging a.active
     background-color: #D5CBC1;
     border-color: #aaa29a;
 }
-
-
 
 .stick {
     font-weight: bolder;

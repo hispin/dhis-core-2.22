@@ -24,93 +24,14 @@ body, html {
     display: none !important;
 }
 
-.dhis2-table-striped-border {
-  width: 100%;
-  border-collapse: collapse;
-  cursor: pointer;
-  table-layout: fixed;
+span.select2-chosen.ng-binding.ng-hide {
+    display: none !important;
 }
 
-.dhis2-table-striped-border tr th {
-  border: 1px solid #cad5e5;
+.select2-arrow, .ui-select-toggle {
+    display: none !important;
 }
 
-.dhis2-table-striped-border tr td {
-  border: 1px solid #cad5e5;
-}
-
-.dhis2-table-striped-border > tbody > tr:nth-child(odd)> td, .dhis2-table-striped > tbody > tr:nth-child(odd)> th {
-  background-color: #ebf0f6
-}
-
-.dhis2-table-striped>thead>tr,
-.dhis2-table-striped>tbody>tr,
-.dhis2-table-striped>tfoot>tr,
-.dhis2-table-striped>thead>tr,
-.dhis2-table-striped>tbody>tr,
-.dhis2-table-striped>tfoot>tr {
-  border-bottom: 1px solid #cad5e5;
-}
-
-.dhis2-table-striped > tbody > tr:nth-child(odd)> td, .dhis2-table-striped > tbody > tr:nth-child(odd)> th {
-  background-color: #ebf0f6
-}
-
-.dhis2-list-table-striped {
-  width: 100%;
-  padding: 5px 10px;
-  table-layout: fixed;
-}
-
-.dhis2-list-table-striped>thead>tr,
-.dhis2-list-table-striped>tbody>tr,
-.dhis2-list-table-striped>tfoot>tr,
-.dhis2-list-table-striped>thead>tr,
-.dhis2-list-table-striped>tbody>tr,
-.dhis2-list-table-striped>tfoot>tr {
-  border: none;
-}
-
-.dhis2-list-table-striped > tbody > tr:nth-child(odd)> td, .dhis2-table-striped > tbody > tr:nth-child(odd)> th {
-  background-color: #ebf0f6
-}
-
-table.table-striped tr.selected > td {
-  background-color: #d9edf7;;
-}
-
-table.table-striped tr td.optionset {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-.vertical-spacing{
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-
-
-.align-center {
-  text-align: center;
-}
-
-.alert {
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: 4px
-}
-
-.alert-warning {
-  color: #c09853;
-  background-color: #fcf8e3;
-  border-color: #faebcc
-}
-
-.section {
-  font-size: 20px;
-}
-
-.attritbute-name {
-  width:50%;
+.dhis2-list-table-striped > thead > tr > th, .dhis2-list-table-striped > tbody > tr > th, .dhis2-list-table-striped > tfoot > tr > th, .dhis2-list-table-striped > thead > tr > td, .dhis2-list-table-striped > tbody > tr > td, .dhis2-list-table-striped > tfoot > tr > td {
+    border: 1px solid #ddd
 }
