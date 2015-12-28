@@ -37,6 +37,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.adapter.JacksonPeriodTypeDeserializer;
 import org.hisp.dhis.common.adapter.JacksonPeriodTypeSerializer;
 import org.hisp.dhis.common.annotation.Scanned;
@@ -54,7 +56,7 @@ import java.util.Set;
 /**
  * Identifies types of data to be approved, and the set of approval levels
  * by which it is approved.
- *
+ * <p>
  * The types of data to be approved are identified by data sets (for aggregate
  * data) and or programs (for event/tracker data) that are related to a
  * workflow.
@@ -84,12 +86,12 @@ public class DataApprovalWorkflow
     {
     }
 
-    public DataApprovalWorkflow(String name)
+    public DataApprovalWorkflow( String name )
     {
         this.name = name;
     }
 
-    public DataApprovalWorkflow(String name, PeriodType periodType, Set<DataApprovalLevel> levels)
+    public DataApprovalWorkflow( String name, PeriodType periodType, Set<DataApprovalLevel> levels )
     {
         this.name = name;
         this.periodType = periodType;
@@ -149,5 +151,28 @@ public class DataApprovalWorkflow
     public void setLevels( Set<DataApprovalLevel> levels )
     {
         this.levels = levels;
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            DataApprovalWorkflow dataApprovalWorkflow = (DataApprovalWorkflow) other;
+
+            if ( strategy.isReplace() )
+            {
+                periodType = dataApprovalWorkflow.getPeriodType();
+            }
+            else if ( strategy.isMerge() )
+            {
+                periodType = dataApprovalWorkflow.getPeriodType() == null ? periodType : dataApprovalWorkflow.getPeriodType();
+            }
+
+            levels.clear();
+            levels.addAll( dataApprovalWorkflow.getLevels() );
+        }
     }
 }
