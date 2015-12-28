@@ -1195,7 +1195,7 @@ input, button, select, textarea {
 }
 
 .select2-container .select2-choice {
-    padding: 5px !important;
+    padding: 8px 6px !important;
     color: #555 !important;
 }
 
