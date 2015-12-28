@@ -307,6 +307,17 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 }            
             }         
             return val;
+        },
+        displayBooleanAsYesNo: function(value, dataElement){
+            if(angular.isUndefined(dataElement) || dataElement.valueType === "BOOLEAN"){
+                if(value === "true" || value === true){
+                    return "Yes";
+                }
+                else if(value === "false" || value === false){
+                    return "No";
+                }
+            }
+            return value;
         }
     };    
 })
