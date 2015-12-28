@@ -58,15 +58,7 @@
         <input type="text" selected-org-unit ng-model="selectedOrgUnit.name" ng-hide=true>
         <!--- selected org unit ends  -->
 
-        <!--- search and registration menu begins -->
-        <!--<div class="row small-vertical-spacing not-for-screen hideInPrint">
-            <div class="col-sm-6 col-md-4">
-                <h4>{{orgUnitLabel}}</h4>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <input type="text" class="form-control" ng-disabled='true' value="{{selectedOrgUnit.name}}">
-            </div>
-        </div>-->
+        <!--- search and registration menu begins -->        
         <div class="row">
             
             <!-- program selection begins -->
@@ -150,7 +142,7 @@
                     </span>
                 </span>
                 
-                <div class="pull-right hideInPrint" ng-if="trackedEntityList.rows.length > 0 && !showRegistrationDiv">
+                <div class="pull-right hideInPrint" ng-if="trackedEntityList.length > 0 && !showRegistrationDiv">
                     <button class="btn btn-info"
                             type="button"                             
                             ng-click="showHideColumns()">
