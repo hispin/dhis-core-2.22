@@ -58,7 +58,6 @@ import org.hisp.dhis.period.YearlyPeriodType;
 import org.hisp.dhis.schema.PropertyType;
 import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
-import org.hisp.dhis.util.ObjectUtils;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -331,14 +330,14 @@ public class DataElement
      */
     public int getOpenFuturePeriods()
     {
-        Set<Integer> openPeriods = new HashSet<>();
+        int maxOpenPeriods = 0;
 
         for ( DataSet dataSet : dataSets )
-        {
-            openPeriods.add( dataSet.getOpenFuturePeriods() );
+        {            
+            maxOpenPeriods = Math.max( maxOpenPeriods, dataSet.getOpenFuturePeriods() );
         }
 
-        return ObjectUtils.firstNonNull( Collections.max( openPeriods ), 0 );
+        return maxOpenPeriods;
     }
 
     /**

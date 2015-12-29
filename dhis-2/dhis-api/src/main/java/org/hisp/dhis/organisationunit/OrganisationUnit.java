@@ -576,10 +576,10 @@ public class OrganisationUnit
      * Returns the list of ancestor organisation units for this organisation unit.
      * Does not include itself. The list is ordered by root first.
      */
-    @JsonProperty( "parents" )
+    @JsonProperty( "ancestors" )
     @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JsonView( { DetailedView.class } )
-    @JacksonXmlElementWrapper( localName = "parents", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlElementWrapper( localName = "ancestors", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "organisationUnit", namespace = DxfNamespaces.DXF_2_0 )
     public List<OrganisationUnit> getAncestors()
     {

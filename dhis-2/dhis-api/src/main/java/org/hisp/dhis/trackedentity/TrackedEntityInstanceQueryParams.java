@@ -55,6 +55,7 @@ public class TrackedEntityInstanceQueryParams
     public static final String CREATED_ID = "created";
     public static final String LAST_UPDATED_ID = "lastupdated";
     public static final String ORG_UNIT_ID = "ou";
+    public static final String ORG_UNIT_NAME = "ouname";
     public static final String TRACKED_ENTITY_ID = "te";
     public static final String TRACKED_ENTITY_ATTRIBUTE_ID = "teattribute";
     public static final String TRACKED_ENTITY_ATTRIBUTE_VALUE_ID = "tevalue";
