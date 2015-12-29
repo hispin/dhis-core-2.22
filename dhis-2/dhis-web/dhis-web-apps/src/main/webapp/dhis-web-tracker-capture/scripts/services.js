@@ -31,7 +31,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     w.feedbackWidget = {title: 'feedback', view: "components/rulebound/rulebound.html", show: true, expand: true, parent: 'smallerWidget', order: 1};
     w.profileWidget = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true, parent: 'smallerWidget', order: 2};    
     w.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 4};
-    w.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 5};            
+    w.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 5};
+    w.associationWidget = {title: 'association', view: "greenstar-customizations/components/association/association.html", show: true, expand: true, parent: 'smallerWidget', order: 5};
+
     var defaultLayout = new Object();
     
     defaultLayout['DEFAULT'] = {widgets: w, program: 'DEFAULT'};
@@ -1586,81 +1588,79 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     };    
 })
 
-.service('TEIGridService', function(OptionSetService, CurrentSelection, DateUtils, $translate, $filter, SessionStorageService){
+.service('TEIGridService', function(OuService, OptionSetService, CurrentSelection, DateUtils, $translate){
     
     return {
         format: function(grid, map, optionSets, invalidTeis){
-            
-            var ou = SessionStorageService.get('SELECTED_OU');
             
             invalidTeis = !invalidTeis ? [] : invalidTeis;
             if(!grid || !grid.rows){
                 return;
             }            
             
-            //grid.headers[0-6] = Instance, Created, Last updated, OU ID, Ou Name, Tracked entity, Inactive
-            //grid.headers[7..] = Attribute, Attribute,.... 
+            //grid.headers[0-5] = Instance, Created, Last updated, Org unit, Tracked entity, Inactive
+            //grid.headers[6..] = Attribute, Attribute,.... 
             var attributes = [];
             for(var i=6; i<grid.headers.length; i++){
                 attributes.push({id: grid.headers[i].name, name: grid.headers[i].column, type: grid.headers[i].type});
             }
 
-            var entityList = {own: [], other: []};
+            var entityList = [];
             
             var attributes = CurrentSelection.getAttributesById();
             
-            
-            angular.forEach(grid.rows, function(row){
-                if(invalidTeis.indexOf(row[0]) === -1 ){
-                    var entity = {};
-                    var isEmpty = true;
+            OuService.open().then(function(){            
+                angular.forEach(grid.rows, function(row){
+                    if(invalidTeis.indexOf(row[0]) === -1 ){
+                        var entity = {};
+                        var isEmpty = true;
 
-                    entity.id = row[0];
-                    entity.created = DateUtils.formatFromApiToUser( row[1] );
+                        entity.id = row[0];
+                        entity.created = DateUtils.formatFromApiToUser( row[1] );
 
-                    entity.orgUnit = row[3];
-                    entity.orgUnitName = row[4];
-                    entity.type = row[5];
-                    entity.inactive = row[6] !== "" ? row[6] : false;
+                        entity.orgUnit = row[3];                              
+                        entity.type = row[4];
+                        entity.inactive = row[5] !== "" ? row[5] : false;
 
-                    for(var i=7; i<row.length; i++){
-                        if(row[i] && row[i] !== ''){
-                            isEmpty = false;
-                            var val = row[i];
+                        OuService.get(row[3]).then(function(ou){
+                            if(ou && ou.n){
+                                entity.orgUnitName = ou.n;
+                            }                                                       
+                        });
 
-                            if(attributes[grid.headers[i].name] && 
-                                    attributes[grid.headers[i].name].optionSetValue && 
-                                    optionSets &&    
-                                    attributes[grid.headers[i].name].optionSet &&
-                                    optionSets[attributes[grid.headers[i].name].optionSet.id] ){
-                                val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
+                        for(var i=6; i<row.length; i++){
+                            if(row[i] && row[i] !== ''){
+                                isEmpty = false;
+                                var val = row[i];
+
+                                if(attributes[grid.headers[i].name] && 
+                                        attributes[grid.headers[i].name].optionSetValue && 
+                                        optionSets &&    
+                                        attributes[grid.headers[i].name].optionSet &&
+                                        optionSets[attributes[grid.headers[i].name].optionSet.id] ){
+                                    val = OptionSetService.getName(optionSets[attributes[grid.headers[i].name].optionSet.id].options, val);
+                                }
+                                if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
+                                    val = DateUtils.formatFromApiToUser( val );
+                                }
+
+                                entity[grid.headers[i].name] = val;
                             }
-                            if(attributes[grid.headers[i].name] && attributes[grid.headers[i].name].valueType === 'date'){                                    
-                                val = DateUtils.formatFromApiToUser( val );
-                            }
-
-                            entity[grid.headers[i].name] = val;
                         }
-                    }
 
-                    if(!isEmpty){
-                        if(map){
-                            entityList[entity.id] = entity;
-                        }
-                        else{
-                            if(entity.orgUnit === ou.id){
-                                entityList.own.push(entity);
+                        if(!isEmpty){
+                            if(map){
+                                entityList[entity.id] = entity;
                             }
                             else{
-                                entityList.other.push(entity);
+                                entityList.push(entity);
                             }
                         }
                     }
-                }
+                });
             });
             
-            var len = entityList.own.length + entityList.other.length;
-            return {headers: attributes, rows: entityList, pager: grid.metaData.pager, length: len};
+            return {headers: attributes, rows: entityList, pager: grid.metaData.pager};
             
         },
         generateGridColumns: function(attributes, ouMode){

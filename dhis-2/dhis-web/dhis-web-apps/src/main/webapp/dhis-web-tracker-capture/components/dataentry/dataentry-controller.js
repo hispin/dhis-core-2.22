@@ -26,8 +26,6 @@ trackerCapture.controller('DataEntryController',
                 EventCreationService,
                 $q) {
 
-    $scope.printForm = false;
-    $scope.printEmptyForm = false;
     $scope.eventPageSize = 4;
     $scope.maxOptionSize = 30;
     $scope.dashboardReady = false;
@@ -119,26 +117,22 @@ trackerCapture.controller('DataEntryController',
         } 
     }
     $scope.model= {};
-            
+
     $scope.print = function(divName){
-        $scope.printForm = true;
-        $scope.printEmptyForm = true;
-        var printContents = document.getElementById(divName).innerHTML;
+        $scope.showProgramReportDetailsDiv = false;
+        var printContents =  document.getElementById(divName).innerHTML;
+        //var popupWin = window.open('', '_blank', 'resizable=1,scrollbars=no,width=500,height=200');
         var popupWin = window.open('', '_blank', 'fullscreen=1');
         popupWin.document.open();
         popupWin.document.write('<html>\n\
-                                        <head>\n\
-                                                <link rel="stylesheet" type="text/css" href="../dhis-web-commons/bootstrap/css/bootstrap.min.css" />\n\
-                                                <link type="text/css" rel="stylesheet" href="../dhis-web-commons/javascripts/angular/plugins/select.css">\n\
-                                                <link type="text/css" rel="stylesheet" href="../dhis-web-commons/javascripts/angular/plugins/select2.css">\n\
-                                                <link rel="stylesheet" type="text/css" href="styles/style.css" />\n\
-                                                <link rel="stylesheet" type="text/css" href="styles/print.css" />\n\
-                                        </head>\n\
-                                        <body onload="window.print()">' + printContents + 
+                                     <head>\n\
+                                         <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css" media="print"/>\n\
+                                         <link rel="stylesheet" type="text/css" href="styles/print.css" media="print"/>\n\
+                                     </head>\n\
+                                     <body onload="window.print()">' + printContents +
                                 '</html>');
         popupWin.document.close();
-        $scope.printForm = false;
-        $scope.printEmptyForm = false;
+
     };
 
     var processRuleEffect = function(event){
@@ -611,6 +605,9 @@ trackerCapture.controller('DataEntryController',
                 $scope.currentEvent = null;
                 $scope.currentElement = {id: '', saved: false};
                 $scope.showDataEntryDiv = !$scope.showDataEntryDiv;
+                $timeout(function () {
+                    $rootScope.$broadcast('association-widget', {event : null, show :false});
+                }, 200);
             }
             else {
                 $scope.currentElement = {};                
@@ -638,6 +635,10 @@ trackerCapture.controller('DataEntryController',
                         $scope.currentEvent.notes = orderByFilter($scope.currentEvent.notes, '-storedDate');
                     }
                 }
+
+                $timeout(function () {
+                    $rootScope.$broadcast('association-widget', {event : $scope.currentEvent , show :true});
+                }, 200);
 
                 $scope.getDataEntryForm();
             }

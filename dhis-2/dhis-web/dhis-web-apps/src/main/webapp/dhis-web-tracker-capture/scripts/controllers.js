@@ -25,7 +25,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 EntityQueryFactory,
                 CurrentSelection,
                 TEIGridService,
-                TEIService) {  
+                TEIService) {
 
 
     $scope.maxOptionSize = 30;
@@ -114,7 +114,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.searchLabel = $translate.instant('search');
             $scope.findLabel = $translate.instant('find');    
             $scope.advancedSearchLabel = $translate.instant('advanced_search');
-            $scope.allEnrollmentsLabel = $translate.instant('all_enrollment');
+             $scope.allEnrollmentsLabel = $translate.instant('all_enrollment');
             $scope.completedEnrollmentsLabel = $translate.instant('completed_enrollment');
             $scope.activeEnrollmentsLabel = $translate.instant('active_enrollment');
             $scope.cancelledEnrollmentsLabel = $translate.instant('cancelled_enrollment');

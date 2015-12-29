@@ -5,7 +5,7 @@
         {{currentEvent.excecutionDateLabel}}
         <input type="text"
                placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
-               class="form-control hideInPrint" 
+               class="form-control" 
                ng-class="{'input-success': eventDateSaved}"
                d2-date 
                max-date="0"
@@ -14,10 +14,6 @@
                ng-disabled="currentEvent.status === 'SKIPPED' || selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed"    
                ng-required="true"
                blur-or-change="saveEventDate()"/>
-        <input type="text"
-               class="form-control not-for-screen" 
-               ng-class="{'input-success': eventDateSaved}"               
-               value={{currentEvent.eventDate}}>
         <span ng-if="invalidDate === currentEvent.event" class="error">{{'date_required'| translate}}</span>
     </div>
     <div ng-if="!currentStage.hideDueDate || !currentEvent.eventDate && currentEvent.status !== 'SKIPPED'"  class="col-md-6">
