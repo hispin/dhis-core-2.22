@@ -7979,7 +7979,7 @@ Ext.onReady( function() {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
                                                 if (!init.organisationUnitLevels.length) {
-                                                    alert('No organisation unit levels');
+                                                    console.log('Info: No organisation unit levels defined');
                                                 }
 
                                                 fn();
