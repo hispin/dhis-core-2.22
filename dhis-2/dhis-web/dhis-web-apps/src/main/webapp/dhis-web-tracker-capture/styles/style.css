@@ -7,7 +7,7 @@ html, body {
 }
 
 .not-for-screen {
-    display: none;
+    display: none !important;
 }
 
 @media print {
