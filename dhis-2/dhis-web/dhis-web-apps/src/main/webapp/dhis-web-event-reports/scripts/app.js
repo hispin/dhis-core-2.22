@@ -3106,7 +3106,7 @@ Ext.onReady( function() {
 								eventReport.name = name;
 
 								Ext.Ajax.request({
-									url: ns.core.init.contextPath + '/api/eventReports/' + eventReport.id,
+									url: ns.core.init.contextPath + '/api/eventReports/' + eventReport.id + '?mergeStrategy=REPLACE',
 									method: 'PUT',
 									headers: {'Content-Type': 'application/json'},
 									params: Ext.encode(eventReport),
@@ -3309,7 +3309,7 @@ Ext.onReady( function() {
 
 										if (confirm(message)) {
 											Ext.Ajax.request({
-												url: ns.core.init.contextPath + '/api/eventReports/' + record.data.id,
+												url: ns.core.init.contextPath + '/api/eventReports/' + record.data.id + '?mergeStrategy=REPLACE',
 												method: 'PUT',
 												headers: {'Content-Type': 'application/json'},
 												params: Ext.encode(favorite),
