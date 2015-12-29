@@ -23,7 +23,7 @@
             <div class="row equal-height-columns">
                 <div class="col-sm-8">                
                     <div class="title small-vertical-spacing">
-                        {{'for_selected_program'| translate}}
+                        {{'selected_program'| translate}}
 
                         <span class="nav-pills" ng-show="selectedProgram && currentEnrollment && currentEnrollment !== selectedEnrollment">
                             | <a href ng-click="loadEnrollmentDetails(currentEnrollment)" title="{{'current'| translate}}"><span ng-class="{true: 'widget-link-active', false: 'widget-link'} [showEnrollmentDiv]">{{'current'| translate}}</span></a>
@@ -134,7 +134,7 @@
                     
                 </div>
                 <div class="col-sm-4 border-left" ng-if="!showEnrollmentDiv">
-                    <div class="title small-vertical-spacing">{{'for_other_programs'| translate}}</div>
+                    <div class="title small-vertical-spacing">{{'other_programs'| translate}}</div>
                     <div class="vertical-spacing">
                         <div ng-if="activeEnrollments.length > 0">
                             <table class="table table-striped dhis2-table-hover table-bordered">
