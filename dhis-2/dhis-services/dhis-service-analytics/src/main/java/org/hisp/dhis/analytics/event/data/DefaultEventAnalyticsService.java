@@ -327,21 +327,31 @@ public class DefaultEventAnalyticsService
 
         Program program = params.getProgram();
         ProgramStage stage = params.getProgramStage();
-
-        map.put( program.getUid(), program.getName() );
-
-        if ( stage != null )
+        
+        //System.out.println( "Params Details" + params );
+        //System.out.println( "----------------- 1 -- " + params.getItems() + "-- " + params.getDisplayProperty());
+        //System.out.println( "----------------- 2 -- " + params.getItemFilters() + "-- " + params.getDisplayProperty() );
+        //System.out.println( "----------------- 3 --  " + params.getDimensions() + "-- " + params.isHierarchyMeta() + "-- " + params.getDisplayProperty() );
+          
+        if( program != null )
         {
-            map.put( stage.getUid(), stage.getName() );
-        }
-        else
-        {
-            for ( ProgramStage st : program.getProgramStages() )
+            //System.out.println( "----------------- 4 Program Details" + program.getUid() + " -- " + program.getName() );
+            
+            map.put( program.getUid(), program.getName() );
+
+            if ( stage != null )
             {
-                map.put( st.getUid(), st.getName() );
+                map.put( stage.getUid(), stage.getName() );
+            }
+            else
+            {
+                for ( ProgramStage st : program.getProgramStages() )
+                {
+                    map.put( st.getUid(), st.getName() );
+                }
             }
         }
-
+        
         if ( params.hasValueDimension() )
         {
             map.put( params.getValue().getUid(), params.getValue().getDisplayProperty( params.getDisplayProperty() ) );
