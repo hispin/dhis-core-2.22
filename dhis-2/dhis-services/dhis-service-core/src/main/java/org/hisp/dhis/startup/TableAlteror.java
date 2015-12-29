@@ -565,8 +565,6 @@ public class TableAlteror
         executeSql( "update chart_filters set filter = 'pe' where filter = 'period'" );
         executeSql( "update chart_filters set filter = 'ou' where filter = 'organisationunit'" );
 
-        executeSql( "update users set selfregistered = false where selfregistered is null" );
-        executeSql( "update users set disabled = false where disabled is null" );
         executeSql( "update dataentryform set format = 1 where format is null" );
 
         executeSql( "update dataelementgroup set shortname=name where shortname is null and length(name)<=50" );
