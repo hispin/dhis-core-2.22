@@ -541,12 +541,7 @@ public abstract class AbstractEventService
             }
         }
 
-        if ( pr != null && !userCredentials.isSuper() && userCredentials.getAllPrograms().size() == 0 )
-        {
-            throw new IllegalQueryException( "User has no access to programs" );
-        }
-
-        if ( pr != null && !userCredentials.getAllPrograms().contains( pr ) )
+        if ( pr != null && !userCredentials.isSuper() && !userCredentials.canAccessProgram( pr ) )
         {
             throw new IllegalQueryException( "User has no access to program: " + pr.getUid() );
         }

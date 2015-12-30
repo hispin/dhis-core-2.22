@@ -290,6 +290,25 @@ public class UserCredentials
 
         return programs;
     }
+    
+    /**
+     * Indicates if the given program is accessible.
+     * 
+     * @param program the program.
+     * @return true if if the given program is accessible.
+     */
+    public boolean canAccessProgram( Program program )
+    {
+        for ( UserAuthorityGroup group : userAuthorityGroups )
+        {
+            if ( group.getPrograms().contains( program ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     /**
      * Indicates whether this user credentials can issue the given user authority
