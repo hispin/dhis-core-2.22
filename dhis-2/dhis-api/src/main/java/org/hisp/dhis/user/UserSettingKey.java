@@ -32,8 +32,6 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Optional;
 
-import org.hisp.dhis.setting.SettingKey;
-
 /**
  * @author Lars Helge Overland
  */
@@ -86,9 +84,9 @@ public enum UserSettingKey
     // Logic
     // -------------------------------------------------------------------------
 
-    public static Optional<SettingKey> getByName( String name )
+    public static Optional<UserSettingKey> getByName( String name )
     {
-        for ( SettingKey setting : SettingKey.values() )
+        for ( UserSettingKey setting : UserSettingKey.values() )
         {
             if ( setting.getName().equals( name ) )
             {
@@ -101,7 +99,7 @@ public enum UserSettingKey
 
     public static Serializable getAsRealClass( String name, String value )
     {
-        Optional<SettingKey> setting = getByName( name );
+        Optional<UserSettingKey> setting = getByName( name );
                 
         if ( setting.isPresent() )
         {            
