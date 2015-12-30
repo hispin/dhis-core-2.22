@@ -1133,30 +1133,37 @@ trackerCapture.controller('DataEntryController',
     };
 
     $scope.addNote = function () {
+        
+        if(!$scope.note.value){
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'please_add_some_text'
+            };                
 
-        if ($scope.note.value !== "" || !angular.isUndefined($scope.note.value)) {
-            var newNote = {value: $scope.note.value};
-            
-            if (angular.isUndefined($scope.currentEvent.notes)) {
-                $scope.currentEvent.notes = [{value: newNote.value, storedDate: today, storedBy: storedBy}];
-            }
-            else {
-                $scope.currentEvent.notes.splice(0, 0, {value: newNote.value, storedDate: today, storedBy: storedBy});
-            }
-
-            var e = {event: $scope.currentEvent.event,
-                program: $scope.currentEvent.program,
-                programStage: $scope.currentEvent.programStage,
-                orgUnit: $scope.currentEvent.orgUnit,
-                trackedEntityInstance: $scope.currentEvent.trackedEntityInstance,
-                notes: [newNote]
-            };
-
-            DHIS2EventFactory.updateForNote(e).then(function (data) {
-
-                $scope.note = {};
-            });
+            DialogService.showDialog({}, dialogOptions);
+            return;
         }
+        var newNote = {value: $scope.note.value};
+            
+        if (angular.isUndefined($scope.currentEvent.notes)) {
+            $scope.currentEvent.notes = [{value: newNote.value, storedDate: today, storedBy: storedBy}];
+        }
+        else {
+            $scope.currentEvent.notes.splice(0, 0, {value: newNote.value, storedDate: today, storedBy: storedBy});
+        }
+
+        var e = {event: $scope.currentEvent.event,
+            program: $scope.currentEvent.program,
+            programStage: $scope.currentEvent.programStage,
+            orgUnit: $scope.currentEvent.orgUnit,
+            trackedEntityInstance: $scope.currentEvent.trackedEntityInstance,
+            notes: [newNote]
+        };
+
+        DHIS2EventFactory.updateForNote(e).then(function (data) {
+
+            $scope.note = {};
+        });
     };
     
     $scope.notesModal = function(){
