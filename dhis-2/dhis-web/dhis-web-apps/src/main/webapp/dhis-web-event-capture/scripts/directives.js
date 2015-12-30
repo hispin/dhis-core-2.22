@@ -23,7 +23,7 @@ var eventCaptureDirectives = angular.module('eventCaptureDirectives', [])
             
             var updateModel = function () {
                 
-                var update = attrs.d2FileInputInstant;
+                var update = scope.d2FileInput.eventDate ? true : false;
                 
                 FileService.upload(element[0].files[0]).then(function(data){
                     
@@ -31,7 +31,7 @@ var eventCaptureDirectives = angular.module('eventCaptureDirectives', [])
                                             
                         scope.d2FileInput[de] = data.response.fileResource.id;   
                         scope.d2FileInputCurrentName[de] = data.response.fileResource.name;
-                        if( update === 'true' ){                            
+                        if( update ){                            
                             if(!scope.d2FileInputName[scope.d2FileInput.event]){
                                 scope.d2FileInputName[scope.d2FileInput.event] = [];
                             }                            

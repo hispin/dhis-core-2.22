@@ -442,10 +442,34 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 commonInputFieldProperty + ' ></span><span class="not-for-screen"><input type="checkbox" ng-checked={{currentEvent.' + fieldId + '}}></span>';
                                     }
                                     else if (prStDe.dataElement.valueType === "LONG_TEXT") {
-                                        newInputField = '<textarea row="3" ' +
+                                        newInputField = '<span class="hideInPrint"><textarea row="3" ' +
                                                 ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
-                                                commonInputFieldProperty + '></textarea></span><span class="not-for-screen"><textarea row="3" value={{currentEvent.' + fieldId + '}}></span>';
+                                                commonInputFieldProperty + '></textarea></span><span class="not-for-screen"><textarea row="3" value={{currentEvent.' + fieldId + '}}></textarea></span>';
+                                    }
+                                    else if (prStDe.dataElement.valueType === "FILE_RESOURCE") {
+                                        newInputField = '<span class="input-group">\n\
+                                                            <span ng-if="currentEvent.' + fieldId + '">\n\
+                                                                <a href ng-click="downloadFile(null, \'' + fieldId + '\', null)">{{fileNames[currentEvent.event][' + fieldId + ']}}</a>\n\
+                                                            </span>\n\
+                                                            <span class="input-group-btn">\n\
+                                                                <span class="btn btn-primary btn-file">\n\
+                                                                    <span ng-if="currentEvent.' + fieldId + '" title="{{\'delete\' | translate}}" d2-file-input-name="fileNames[currentEvent.event][' + fieldId + ']" d2-file-input-delete="currentEvent.' + fieldId + '">\n\
+                                                                        <a href ng-click="deleteFile(\'' + fieldId + '\')"><i class="fa fa-trash alert-danger"></i></a>\n\
+                                                                    </span>\n\
+                                                                    <span ng-if="!currentEvent.' + fieldId + '" title="{{\'upload\' | translate}}" >\n\
+                                                                        <i class="fa fa-upload"></i>\n\
+                                                                        <input  type="file" \n\
+                                                                                ' + this.getAttributesAsString(attributes) + '\n\
+                                                                                input-field-id="' + fieldId + '"\n\
+                                                                                d2-file-input-ps="currentStage"\n\
+                                                                                d2-file-input="currentEvent"\n\
+                                                                                d2-file-input-current-name="currentFileNames"\n\
+                                                                                d2-file-input-name="fileNames">\n\
+                                                                    </span>\n\
+                                                                </span>\n\
+                                                            </span>\n\
+                                                        </span>';
                                     }
                                     else {
                                         newInputField = '<span class="hideInPrint"><input type="text" ' +

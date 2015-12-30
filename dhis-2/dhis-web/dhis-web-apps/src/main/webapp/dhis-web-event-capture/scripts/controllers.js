@@ -135,6 +135,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         $scope.resetOu = false;
         $scope.selectedProgramStage = null;
+        $scope.currentStage = null;
         $scope.allProgramRules = [];
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
@@ -181,8 +182,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             //because this is single event, take the first program stage
             
             $scope.selectedProgramStage = $scope.selectedProgram.programStages[0];   
+            $scope.currentStage = $scope.selectedProgramStage;
             
-
                 angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                     section.open = true;
                 });
@@ -515,7 +516,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.showEventRegistration = function(){        
-        $scope.displayCustomForm = $scope.customForm ? true:false;
+        $scope.displayCustomForm = $scope.customForm ? true : false;
         $scope.currentEvent = {};
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
@@ -1145,7 +1146,19 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         return '';        
     };
     
-    $scope.downloadFile = function(eventUid, dataElementUid, e) {        
+    $scope.downloadFile = function(eventUid, dataElementUid, e) {
+        eventUid = eventUid ? eventUid : $scope.currentEvent.event ? $scope.currentEvent.event : null;        
+        if( !eventUid || !dataElementUid){
+            
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'missing_file_identifier'
+            };
+
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+        
         $window.open('../api/events/files?eventUid=' + eventUid +'&dataElementUid=' + dataElementUid, '_blank', '');
         if(e){
             e.stopPropagation();
@@ -1154,6 +1167,16 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.deleteFile = function(dataElement){
+        
+        if( !dataElement ){            
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'missing_file_identifier'
+            };
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+        
         var modalOptions = {
             closeButtonText: 'cancel',
             actionButtonText: 'remove',
