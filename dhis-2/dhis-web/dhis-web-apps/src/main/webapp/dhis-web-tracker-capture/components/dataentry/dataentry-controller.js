@@ -42,7 +42,7 @@ trackerCapture.controller('DataEntryController',
     $scope.eventPeriods = [];
     $scope.currentPeriod = [];
     $scope.filterEvents = true;
-    $scope.showEventsAsTables = true;
+    $scope.showEventsAsTables = false;
     //variable is set while looping through the program stages later.
     $scope.stagesCanBeShownAsTable = false;
     $scope.showHelpText = {};
@@ -51,7 +51,7 @@ trackerCapture.controller('DataEntryController',
     $scope.errorMessages = {};
     $scope.warningMessages = {};
     $scope.hiddenSections = {};
-    $scope.tableMaxNumberOfDataElements = 10;
+    $scope.tableMaxNumberOfDataElements = 7;
     $scope.xVisitScheduleDataElement = false;
 
     
@@ -338,7 +338,7 @@ trackerCapture.controller('DataEntryController',
                     $scope.eventsByStage[stage.id] = [];
 
                     //If one of the stages has less than $scope.tableMaxNumberOfDataElements data elements, allow sorting as table:
-                    if (stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements) {
+                    if ($scope.stageCanBeShownAsTable(stage)) {
                         $scope.stagesCanBeShownAsTable = true;
                     }
                 });
@@ -434,24 +434,29 @@ trackerCapture.controller('DataEntryController',
     };
 
     $scope.stageCanBeShownAsTable = function (stage) {
-        if (stage.programStageDataElements && stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements) {
+        if (stage.programStageDataElements 
+                && stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements
+                && !stage.repeatable) {
             return true;
         }
         return false;
     };
 
-    $scope.toggleEventsTableDisplay = function () {        
-        
+    $scope.toggleEventsTableDisplay = function () {       
         $scope.showEventsAsTables = !$scope.showEventsAsTables;                
+
+        $scope.setDisplayTypeForStages();
+
         
-        angular.forEach($scope.programStages, function (stage) {
-            if (stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements) {
-                stage.displayEventsInTable = $scope.showEventsAsTables;
-                if ($scope.currentStage === stage) {
-                    $scope.getDataEntryForm();
-                }
+        if ($scope.currentStage && $scope.stageCanBeShownAsTable($scope.currentStage)) {
+            //If the current event was deselected, select the first event in the current Stage before showing data entry:
+            if(!$scope.currentEvent.event 
+                    && $scope.eventsByStage[$scope.currentStage.id]) {
+                $scope.currentEvent = $scope.eventsByStage[$scope.currentStage.id][0];
             }
-        });
+            
+            $scope.getDataEntryForm();
+        } 
     };
     
     $scope.setDisplayTypeForStages = function(){
@@ -461,7 +466,7 @@ trackerCapture.controller('DataEntryController',
     };
     
     $scope.setDisplayTypeForStage = function(stage){
-        if (stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements) {
+        if ($scope.stageCanBeShownAsTable(stage)) {
             stage.displayEventsInTable = $scope.showEventsAsTables;
         }
     };
@@ -597,15 +602,15 @@ trackerCapture.controller('DataEntryController',
                 $scope.addNewEvent(newEvent);
 
                 $scope.currentEvent = null;
-                $scope.showDataEntry(newEvent, false);
+                $scope.showDataEntry(newEvent, true);
             }
         }, function () {
         });
     };
 
-    $scope.showDataEntry = function (event, rightAfterEnrollment) {
+    $scope.showDataEntry = function (event, suppressToggling) {
         if (event) {
-            if ($scope.currentEvent && !rightAfterEnrollment && $scope.currentEvent.event === event.event) {
+            if ($scope.currentEvent && !suppressToggling && $scope.currentEvent.event === event.event) {
                 //clicked on the same stage, do toggling
                 $scope.currentStage = null;
                 $scope.currentEvent = null;
@@ -713,14 +718,14 @@ trackerCapture.controller('DataEntryController',
     
     $scope.switchToEventRowDeselected = function(event){
         if($scope.currentEvent !== event) {
-            $scope.showDataEntry(event,false);
+            $scope.showDataEntry(event,true);
         }
         $scope.currentEvent = {};
     };
     
     $scope.switchToEventRow = function (event) {
         if($scope.currentEvent !== event) {
-            $scope.showDataEntry(event,false);
+            $scope.showDataEntry(event,true);
         }
     };
 

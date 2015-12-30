@@ -1196,7 +1196,9 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 {name:"d2:ceil",parameters:1},
                                 {name:"d2:round",parameters:1},
                                 {name:"d2:hasValue",parameters:1},
-                                {name:"d2:lastEventDate",parameters:1}];
+                                {name:"d2:lastEventDate",parameters:1},
+                                {name:"d2:addControlDigits",parameters:1},
+                                {name:"d2:checkControlDigits",parameters:1}];
             var continueLooping = true;
             //Safety harness on 10 loops, in case of unanticipated syntax causing unintencontinued looping
             for(var i = 0; i < 10 && continueLooping; i++ ) { 
@@ -1467,6 +1469,70 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             //Replace the end evaluation of the dhis function:
                             expression = expression.replace(callToThisFunction, valueFound);
                             successfulExecution = true;
+                        }
+                        else if(dhisFunction.name === "d2:addControlDigits") {
+                            
+                            var baseNumber = parameters[0];
+                            var baseDigits = baseNumber.split('');
+                            var error = false;
+                            
+                            
+                            var firstDigit = 0;
+                            var secondDigit = 0;
+                            
+                            if(baseDigits && baseDigits.length < 10 ) {
+                                var firstSum = 0;
+                                var baseNumberLength = baseDigits.length;
+                                //weights support up to 9 base digits:
+                                var firstWeights = [3,7,6,1,8,9,4,5,2];
+                                for(var i = 0; i < baseNumberLength && !error; i++) {
+                                    firstSum += parseInt(baseDigits[i]) * firstWeights[i];
+                                }
+                                firstDigit = firstSum % 11;
+                                
+                                //Push the first digit to the array before continuing, as the second digit is a result of the 
+                                //base digits and the first control digit.
+                                baseDigits.push(firstDigit);
+                                //Weights support up to 9 base digits plus first control digit:
+                                var secondWeights = [5,4,3,2,7,6,5,4,3,2];
+                                var secondSum = 0;
+                                for(var i = 0; i < baseNumberLength + 1 && !error; i++) {
+                                    secondSum += parseInt(baseDigits[i]) * secondWeights[i]; 
+                                }
+                                secondDigit = secondSum % 11;
+                                
+                                if(firstDigit === 10) {
+                                    $log.warn("First control digit became 10, replacing with 0");
+                                    firstDigit = 0;
+                                }
+                                if(secondDigit === 10) {
+                                    $log.warn("Second control digit became 10, replacing with 0");
+                                    secondDigit = 0;
+                                }
+                            }
+                            else
+                            {
+                                $log.warn("Base nuber not well formed(" + baseNumberLength + " digits): " + baseNumber);
+                            }
+                            
+                            if(!error) {
+                                //Replace the end evaluation of the dhis function:
+                                expression = expression.replace(callToThisFunction, baseNumber + firstDigit + secondDigit);
+                                successfulExecution = true;
+                            }
+                            else
+                            {
+                                //Replace the end evaluation of the dhis function:
+                                expression = expression.replace(callToThisFunction, baseNumber);
+                                successfulExecution = false;
+                            }
+                        }
+                        else if(dhisFunction.name === "d2:checkControlDigits") {
+                            $log.warn("checkControlDigits not implemented yet");
+                            
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, parameters[0]);
+                            successfulExecution = false;
                         }
                     });
                 });

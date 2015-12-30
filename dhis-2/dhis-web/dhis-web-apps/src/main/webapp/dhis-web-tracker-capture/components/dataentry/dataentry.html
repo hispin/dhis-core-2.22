@@ -8,6 +8,7 @@
         </span>
         <span class="pull-right widget-link">            
             <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}" class="small-horizonal-spacing"><i class="fa fa-info-circle vertical-center"></i></a>
+            <a href ng-click="toggleEventsTableDisplay()" title="{{showEventsAsTables ? 'toggle_table_view_off' : 'toggle_table_view_on'| translate}}" ng-show="stagesCanBeShownAsTable"><span ng-if="!showEventsAsTables"><i class="fa fa-bars vertical-center"></i></span><span ng-if="showEventsAsTables"><i class="fa fa-square vertical-center"></i></span></a>
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(dataentryWidget)">
                 <span ng-show="dataentryWidget.expand"><i class="fa fa-chevron-up vertical-center" title="{{collapseLabel}}"></i></span>
                 <span ng-show="!dataentryWidget.expand"><i class="fa fa-chevron-down vertical-center" title="{{expandLabel}}"></i></span>
@@ -40,7 +41,7 @@
             <div ng-if="!selectedEnrollment || !selectedEnrollment.enrollment" class="alert alert-danger">{{notEnrolledLabel}}</div>
 
             <div ng-include="'components/dataentry/main-dataentry-form.html'"></div>
-
+            
             <div ng-if="displayCustomForm !== 'TABLE'">
                 <div ng-include="'components/dataentry/dataentry-notes.html'"></div>
             </div>

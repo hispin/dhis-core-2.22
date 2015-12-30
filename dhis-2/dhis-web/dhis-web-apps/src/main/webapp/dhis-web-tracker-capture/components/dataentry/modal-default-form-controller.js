@@ -5,7 +5,6 @@ trackerCapture.controller('ModalDefaultFormController', function($scope){
     $scope.completeIncompleteEventModal = function(){  
            
         $scope.requestError = "";
-        debugger;
         if ($scope.currentEvent.status === 'COMPLETED'){
             var dhis2Event = $scope.makeDhis2EventToUpdate();
             dhis2Event.status = 'ACTIVE';
