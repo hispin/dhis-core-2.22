@@ -28,15 +28,11 @@ package org.hisp.dhis.settings.user.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.user.UserSettingService.KEY_DB_LOCALE;
-import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_EMAIL_NOTIFICATION;
-import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_SMS_NOTIFICATION;
-import static org.hisp.dhis.user.UserSettingService.KEY_ANALYSIS_DISPLAY_PROPERTY;
-
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.setting.StyleManager;
 import org.hisp.dhis.system.util.LocaleUtils;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.opensymphony.xwork2.Action;
@@ -143,15 +139,13 @@ public class SetGeneralSettingsAction
     {
         localeManager.setCurrentLocale( LocaleUtils.getLocale( currentLocale ) );
 
-        userSettingService.saveUserSetting( KEY_DB_LOCALE, LocaleUtils.getLocale( currentLocaleDb ) );
+        userSettingService.saveUserSetting( UserSettingKey.DB_LOCALE, LocaleUtils.getLocale( currentLocaleDb ) );
 
         styleManager.setUserStyle( currentStyle );
 
-        userSettingService.saveUserSetting( KEY_MESSAGE_EMAIL_NOTIFICATION, messageEmailNotification );
-
-        userSettingService.saveUserSetting( KEY_MESSAGE_SMS_NOTIFICATION, messageSmsNotification );
-
-        userSettingService.saveUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, analysisDisplayProperty );
+        userSettingService.saveUserSetting( UserSettingKey.MESSAGE_EMAIL_NOTIFICATION, messageEmailNotification );
+        userSettingService.saveUserSetting( UserSettingKey.MESSAGE_SMS_NOTIFICATION, messageSmsNotification );
+        userSettingService.saveUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, analysisDisplayProperty );
 
         message = i18n.getString( "settings_updated" );
 

@@ -57,7 +57,7 @@ public class UserSettingDeletionHandler
     @Override
     public void deleteUser( User user )
     {
-        for ( UserSetting setting : userSettingService.getAllUserSettings( user ) )
+        for ( UserSetting setting : userSettingService.getUserSettings( user ) )
         {
             userSettingService.deleteUserSetting( setting );
         }

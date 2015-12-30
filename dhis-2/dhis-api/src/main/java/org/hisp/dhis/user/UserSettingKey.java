@@ -32,6 +32,8 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.apache.commons.lang3.LocaleUtils;
+
 /**
  * @author Lars Helge Overland
  */
@@ -44,10 +46,11 @@ public enum UserSettingKey
     UI_LOCALE( "keyUiLocale", Locale.class ),
     DB_LOCALE( "keyDbLocale", Locale.class ),
     ANALYSIS_DISPLAY_PROPERTY( "keyAnalysisDisplayProperty", "name", String.class ),
-    KEY_CURRENT_DOMAIN_TYPE( "currentDomainType" ),
+    CURRENT_DOMAIN_TYPE( "currentDomainType" ),
     AUTO_SAVE_CASE_ENTRY_FORM( "autoSaveCaseEntryForm", Boolean.FALSE, Boolean.class ),
     AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM( "autoSavetTrackedEntityForm", Boolean.FALSE, Boolean.class ),
-    AUTO_SAVE_DATA_ENTRY_FORM( "autoSaveDataEntryForm", Boolean.FALSE, Boolean.class );    
+    AUTO_SAVE_DATA_ENTRY_FORM( "autoSaveDataEntryForm", Boolean.FALSE, Boolean.class ),
+    TRACKER_DASHBOARD_LAYOUT( "keyTrackerDashboardLayout" );
     
     private final String name;
     
@@ -116,6 +119,10 @@ public enum UserSettingKey
             else if ( Boolean.class.isAssignableFrom( settingClazz ) )
             {
                 return Boolean.valueOf( value );
+            }
+            else if ( Locale.class.isAssignableFrom( settingClazz ) )
+            {
+                return LocaleUtils.toLocale( value );
             }
             
             //TODO handle Dates

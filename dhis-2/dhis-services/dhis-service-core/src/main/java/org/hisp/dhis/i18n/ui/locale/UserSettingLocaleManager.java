@@ -35,6 +35,7 @@ import java.util.Locale;
 import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.i18n.ui.resourcebundle.ResourceBundleManager;
 import org.hisp.dhis.i18n.ui.resourcebundle.ResourceBundleManagerException;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 
 /**
@@ -83,7 +84,7 @@ public class UserSettingLocaleManager
     @Override
     public void setCurrentLocale( Locale locale )
     {
-        userSettingService.saveUserSetting( UserSettingService.KEY_UI_LOCALE, locale );
+        userSettingService.saveUserSetting( UserSettingKey.UI_LOCALE, locale );
     }
 
     @Override
@@ -105,7 +106,7 @@ public class UserSettingLocaleManager
 
     private Locale getUserSelectedLocale()
     {
-        return (Locale) userSettingService.getUserSetting( UserSettingService.KEY_UI_LOCALE );
+        return (Locale) userSettingService.getUserSetting( UserSettingKey.UI_LOCALE );
     }
 
     @Override

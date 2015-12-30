@@ -35,7 +35,6 @@ import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
-import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.message.MessageSender;
 import org.hisp.dhis.period.Cal;
 import org.hisp.dhis.setting.SettingKey;
@@ -46,6 +45,7 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserService;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,7 +230,7 @@ public class DefaultSecurityService
         vars.put( "username", credentials.getUsername() );
 
         User user = credentials.getUserInfo();
-        Locale locale = (Locale) userSettingService.getUserSetting( UserSettingService.KEY_UI_LOCALE, LocaleManager.DEFAULT_LOCALE, user );
+        Locale locale = (Locale) userSettingService.getUserSetting( UserSettingKey.UI_LOCALE, user );
 
         I18n i18n = i18nManager.getI18n( locale );
         vars.put( "i18n", i18n );

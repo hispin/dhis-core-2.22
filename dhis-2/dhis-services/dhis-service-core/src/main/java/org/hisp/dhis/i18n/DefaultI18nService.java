@@ -33,6 +33,7 @@ import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.translation.TranslationService;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.google.common.collect.Multimaps;
@@ -277,7 +278,7 @@ public class DefaultI18nService
     @Override
     public Locale getCurrentLocale()
     {
-        return (Locale) userSettingService.getUserSetting( UserSettingService.KEY_DB_LOCALE );
+        return (Locale) userSettingService.getUserSetting( UserSettingKey.DB_LOCALE );
     }
 
     @Override

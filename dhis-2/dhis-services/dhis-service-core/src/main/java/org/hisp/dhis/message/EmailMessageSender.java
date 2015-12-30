@@ -29,7 +29,6 @@ package org.hisp.dhis.message;
  */
 
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_EMAIL_NOTIFICATION;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -46,6 +45,7 @@ import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.scheduling.annotation.Async;
 
@@ -133,7 +133,7 @@ public class EmailMessageSender
 
             for ( User user : users )
             {
-                boolean doSend = forceSend || (Boolean) userSettingService.getUserSetting( KEY_MESSAGE_EMAIL_NOTIFICATION, false, user );
+                boolean doSend = forceSend || (Boolean) userSettingService.getUserSetting( UserSettingKey.MESSAGE_EMAIL_NOTIFICATION, user );
 
                 if ( doSend && user.getEmail() != null && !user.getEmail().trim().isEmpty() )
                 {

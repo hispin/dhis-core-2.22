@@ -40,6 +40,7 @@ import org.hisp.dhis.program.ProgramDataEntryService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.opensymphony.xwork2.Action;
@@ -219,7 +220,7 @@ public class ViewDataEntryFormAction
 
         flags = systemSettingManager.getFlags();
 
-        autoSave = (Boolean) userSettingService.getUserSetting( UserSettingService.AUTO_SAVE_CASE_ENTRY_FORM, false );
+        autoSave = (Boolean) userSettingService.getUserSetting( UserSettingKey.AUTO_SAVE_CASE_ENTRY_FORM );
 
         return SUCCESS;
     }
