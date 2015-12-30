@@ -44,7 +44,6 @@ import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataelement.DataElementCategoryCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.dataelement.DataElementService;
@@ -551,26 +550,6 @@ public abstract class AbstractEventService
         if ( StringUtils.isNotEmpty( trackedEntityInstance ) && tei == null )
         {
             throw new IllegalQueryException( "Tracked entity instance is specified but does not exist: " + trackedEntityInstance );
-        }
-
-        if ( attributeCoc.isDefault() )
-        {
-            DataElementCategoryCombo cc = null;
-
-            if ( pr != null )
-            {
-                cc = pr.getCategoryCombo();
-            }
-
-            if ( cc == null && ps != null )
-            {
-                cc = ps.getProgram().getCategoryCombo();
-            }
-
-            if ( cc != null && !cc.isDefault() )
-            {
-                throw new IllegalQueryException( "Default attribute option combo is specified while program has non-default attribute category combo:  " + cc.getUid() );
-            }
         }
 
         params.setProgram( pr );
