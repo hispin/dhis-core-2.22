@@ -912,12 +912,11 @@ trackerCapture.controller('DataEntryController',
     $scope.saveDatavalueForEvent = function (prStDe, field, eventToSave) {
         //Blank out the input-saved class on the last saved due date:
         $scope.eventDateSaved = false;
-        $scope.currentElement = {};
+        $scope.currentElement = {id: prStDe.dataElement.id, pending: true, saved: false, failed: false, event: eventToSave.event};
         
         //check for input validity
         $scope.updateSuccess = false;
         if (field && field.$invalid) {
-            $scope.currentElement = {id: prStDe.dataElement.id, saved: false};
             return false;
         }
 
@@ -956,6 +955,8 @@ trackerCapture.controller('DataEntryController',
             return DHIS2EventFactory.updateForSingleValue(ev).then(function (response) {
 
                 $scope.currentElement.saved = true;
+                $scope.currentElement.pending = false;
+                $scope.currentElement.failed = false;
 
                 $scope.currentEventOriginal = angular.copy($scope.currentEvent);
 
@@ -1267,6 +1268,13 @@ trackerCapture.controller('DataEntryController',
             event = $scope.currentEvent;
         }
         if($scope.currentElement.id && $scope.currentElement.id === id && $scope.currentElement.event && $scope.currentElement.event === event.event){
+            if($scope.currentElement.pending){
+                if(custom){
+                    return 'input-pending';
+                }
+                return 'form-control input-pending';
+            }
+            
             if($scope.currentElement.saved){
                 if(custom){
                     return 'input-success';
