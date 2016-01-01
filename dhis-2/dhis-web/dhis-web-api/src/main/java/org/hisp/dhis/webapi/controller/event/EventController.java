@@ -550,6 +550,21 @@ public class EventController
         }
     }
 
+    @RequestMapping( value = "/{uid}/note", method = RequestMethod.POST, consumes = "application/json" )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
+    public void postJsonEventForNote( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
+    {
+        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
+        {
+            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
+        }
+
+        Event event = renderService.fromJson( request.getInputStream(), Event.class );
+        event.setEvent( uid );
+
+        eventService.updateEventForNote( event );
+        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
+    }
 
     @RequestMapping( method = RequestMethod.POST, consumes = { "application/csv", "text/csv" } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
@@ -634,23 +649,7 @@ public class EventController
         webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 
-    @RequestMapping( value = "/{uid}/addNote", method = RequestMethod.PUT, consumes = "application/json" )
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
-    public void putJsonEventForNote( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
-    {
-        if ( !programStageInstanceService.programStageInstanceExists( uid ) )
-        {
-            throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
-        }
-
-        Event updatedEvent = renderService.fromJson( request.getInputStream(), Event.class );
-        updatedEvent.setEvent( uid );
-
-        eventService.updateEventForNote( updatedEvent );
-        webMessageService.send( WebMessageUtils.ok( "Event updated: " + uid ), response, request );
-    }
-
-    @RequestMapping( value = "/{uid}/updateEventDate", method = RequestMethod.PUT, consumes = "application/json" )
+    @RequestMapping( value = "/{uid}/eventDate", method = RequestMethod.PUT, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
     public void putJsonEventForEventDate( HttpServletResponse response, HttpServletRequest request, @PathVariable( "uid" ) String uid, ImportOptions importOptions ) throws IOException, WebMessageException
     {
