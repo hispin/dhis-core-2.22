@@ -20,6 +20,7 @@ trackerCapture.controller('RegistrationController',
                 SessionStorageService,
                 TEIGridService,
                 TrackerRulesFactory,
+                CustomIDGenerationService,
                 TrackerRulesExecutionService) {
     
     $scope.maxOptionSize = 30;
@@ -160,7 +161,14 @@ trackerCapture.controller('RegistrationController',
     };
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
-        goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+
+        // add for Generate CustomId
+        CustomIDGenerationService.validateAndCreateCustomId($scope.tei,$scope.selectedEnrollment.program,$scope.attributes,destination,$scope.optionSets,$scope.attributesById,$scope.selectedEnrollment.enrollmentDate).then(function(){
+            goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+
+        });
+
+        //goToDashboard( destination ? destination : 'DASHBOARD', teiId );
     };
     
     var performRegistration = function(destination){
