@@ -881,6 +881,40 @@ var d2Services = angular.module('d2Services', ['ngResource'])
     };
 })
 
+/* Service for uploading/downloading file */
+.service('FileService', function ($http) {
+
+    return {
+        get: function (uid) {
+            var promise = $http.get('../api/fileResources/' + uid).then(function (response) {
+                return response.data;
+            });
+            return promise;
+        },
+        delete: function (uid) {
+            var promise = $http.get('../api/fileResources/' + uid).then(function (response) {
+                return response.data;
+            });
+            return promise;
+        },
+        download: function (fileName) {
+            var promise = $http.get(fileName).then(function (response) {
+                return response.data;
+            });
+            return promise;
+        },
+        upload: function(file){
+            var formData = new FormData();
+            formData.append('file', file);
+            var headers = {transformRequest: angular.identity, headers: {'Content-Type': undefined}};
+            var promise = $http.post('../api/fileResources', formData, headers).then(function(response){
+                return response.data;
+            });
+            return promise;
+        }
+    };
+})
+
 /* service for building variables based on the data in users fields */
 .service('VariableService', function(DateUtils,$filter,$log){
     var processSingleValue = function(processedValue,valueType){
