@@ -1301,7 +1301,7 @@ Ext.onReady( function() {
 								chart.name = name;
 
 								Ext.Ajax.request({
-									url: ns.core.init.contextPath + '/api/charts/' + chart.id,
+									url: ns.core.init.contextPath + '/api/charts/' + chart.id + '?mergeStrategy=REPLACE',
 									method: 'PUT',
 									headers: {'Content-Type': 'application/json'},
 									params: Ext.encode(chart),
@@ -1501,7 +1501,7 @@ Ext.onReady( function() {
 
 										if (confirm(message)) {
 											Ext.Ajax.request({
-												url: ns.core.init.contextPath + '/api/charts/' + record.data.id,
+												url: ns.core.init.contextPath + '/api/charts/' + record.data.id + '?mergeStrategy=REPLACE',
 												method: 'PUT',
 												headers: {'Content-Type': 'application/json'},
 												params: Ext.encode(favorite),
@@ -7979,7 +7979,7 @@ Ext.onReady( function() {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
                                                 if (!init.organisationUnitLevels.length) {
-                                                    alert('No organisation unit levels');
+                                                    console.log('Info: No organisation unit levels defined');
                                                 }
 
                                                 fn();

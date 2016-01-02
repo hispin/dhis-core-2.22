@@ -40,6 +40,7 @@ import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.program.ProgramType;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.opensymphony.xwork2.Action;
@@ -153,7 +154,7 @@ public class ViewProgramEntryFormAction
         flags = systemSettingManager.getFlags();
 
         autoSave = (Boolean) userSettingService.getUserSetting(
-            UserSettingService.AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM, false );
+            UserSettingKey.AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM );
 
         return SUCCESS;
     }

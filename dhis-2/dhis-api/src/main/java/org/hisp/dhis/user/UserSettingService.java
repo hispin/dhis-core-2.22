@@ -41,63 +41,37 @@ public interface UserSettingService
 {
     String ID = UserSettingService.class.getName();
 
-    String KEY_STYLE = "stylesheet";
-    String KEY_STYLE_DIRECTORY = "stylesheetDirectory";
-    String KEY_MESSAGE_EMAIL_NOTIFICATION = "keyMessageEmailNotification";
-    String KEY_MESSAGE_SMS_NOTIFICATION = "keyMessageSmsNotification";
-    String KEY_UI_LOCALE = "keyUiLocale";
-    String KEY_DB_LOCALE = "keyDbLocale";
-    String KEY_ANALYSIS_DISPLAY_PROPERTY = "keyAnalysisDisplayProperty";
-    String KEY_CURRENT_DOMAIN_TYPE = "currentDomainType";
-    String AUTO_SAVE_CASE_ENTRY_FORM = "autoSaveCaseEntryForm";
-    String AUTO_SAVE_TRACKED_ENTITY_REGISTRATION_ENTRY_FORM = "autoSavetTrackedEntityForm";
-    String AUTO_SAVE_DATA_ENTRY_FORM = "autoSaveDataEntryForm";
-    
-    String DEFAULT_ANALYSIS_DISPLAY_PROPERTY = "name";
-    
-    //TODO use enum for names
-    
     // -------------------------------------------------------------------------
     // UserSettings
     // -------------------------------------------------------------------------
 
     /**
-     * Adds a UserSetting.
-     *
-     * @param userSetting the UserSetting to add.
-     */
-    void addUserSetting( UserSetting userSetting );
-    
-    /**
-     * Saves the name/value pair as a user setting connected to the currently
+     * Saves the key/value pair as a user setting connected to the currently
      * logged in user.
      * 
-     * @param name the name/handle of the value.
-     * @param value the value to store.
-     * @throws NoCurrentUserException if there is no current user.
+     * @param key the user setting key.
+     * @param value the setting value.
      */
-    void saveUserSetting( String name, Serializable value );
+    void saveUserSetting( UserSettingKey key, Serializable value );
 
     /**
-     * Saves the name/value pair as a user setting connected to user identified 
+     * Saves the key/value pair as a user setting connected to user identified 
      * by username.
      *
-     * @param name the name/handle of the value.
-     * @param value the value to store.
+     * @param key the user setting key.
+     * @param value the setting value.
      * @param username the username of user.
-     * @throws NoCurrentUserException if there is no user.
      */
-    void saveUserSetting( String name, Serializable value, String username );
-
+    void saveUserSetting( UserSettingKey key, Serializable value, String username );
+        
     /**
      * Saves the name/value pair as a user setting connected to user.
      *
-     * @param name the name/handle of the value.
-     * @param value the value to store.
-     * @param username the user.
-     * @throws NoCurrentUserException if there is no user.
+     * @param key the user setting key.
+     * @param value the setting value.
+     * @param username the username of user.
      */
-    void saveUserSetting( String name, Serializable value, User user );
+    void saveUserSetting( UserSettingKey key, Serializable value, User user );
 
     /**
      * Deletes a UserSetting.
@@ -109,67 +83,49 @@ public interface UserSettingService
     /**
      * Deletes the user setting with the given name.
      * 
-     * @param name the name of the user setting to delete.
-     * @throws NoCurrentUserException if there is no current user.
+     * @param key the user setting key.
      */
-    void deleteUserSetting( String name );
+    void deleteUserSetting( UserSettingKey key );
 
     /**
      * Deletes the user setting with the given name for the given user.
      * 
-     * @param name the name of the user setting to delete.
+     * @param key the user setting key.
      * @user the user.
      */
-    void deleteUserSetting( String name, User user );
+    void deleteUserSetting( UserSettingKey key, User user );
     
     /**
      * Returns the value of the user setting specified by the given name.
      * 
-     * @param name the name of the user setting.
+     * @param key the user setting key.
      * @return the value corresponding to the named user setting, or null if
      *         there is no match.
-     * @throws NoCurrentUserException if there is no current user.
      */
-    Serializable getUserSetting( String name );
+    Serializable getUserSetting( UserSettingKey key );
 
     /**
-     * Returns the value of the user setting specified by the given name. If
-     * there is no current user or the user setting doesn't exist, the specified
-     * default value is returned.
+     * Returns the value of the user setting specified by the given name.
      * 
-     * @param name the name of the user setting.
-     * @param defaultValue the value to return if there is no current user or no
-     *        user setting corresponding to the given name.
-     * @return the value corresponding to the names user setting, or the default
-     *         value if there is no current user or matching user setting.
+     * @param key the user setting key.
+     * @param user the user.
+     * @return the value corresponding to the named user setting, or null if
+     *         there is no match.
      */
-    Serializable getUserSetting( String name, Serializable defaultValue );
+    Serializable getUserSetting( UserSettingKey key, User user );
 
     /**
-     * Retrieves a user setting value for the given user and setting name. Returns
-     * the given default value if the setting does not exist or the setting value
-     * is null.
-     *
-     * @param name         the setting name.
-     * @param defaultValue the default value.
-     * @param user         the user.
-     * @return a setting value.
-     */
-    Serializable getUserSetting( String name, Serializable defaultValue, User user );
-
-    /**
-     * Retrieves all UserSettings for the given User.
+     * Retrieves UserSettings for the given User.
      *
      * @param user the User.
      * @return a List of UserSettings.
      */
-    List<UserSetting> getAllUserSettings( User user );
+    List<UserSetting> getUserSettings( User user );
 
     /**
      * Returns all user settings belonging to the current user.
      * 
      * @return all user settings belonging to the current user.
-     * @throws NoCurrentUserException if there is no current user.
      */
     List<UserSetting> getAllUserSettings();
     

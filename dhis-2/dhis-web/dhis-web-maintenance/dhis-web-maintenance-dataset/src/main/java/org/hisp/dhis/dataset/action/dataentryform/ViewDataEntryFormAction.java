@@ -42,6 +42,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.setting.SystemSettingManager;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.opensymphony.xwork2.Action;
@@ -173,7 +174,7 @@ public class ViewDataEntryFormAction
 
         dataEntryValue = dataEntryForm != null ? dataEntryFormService.prepareDataEntryFormForEdit( dataEntryForm, dataSet, i18n ) : "";
 
-        autoSave = (Boolean) userSettingService.getUserSetting( UserSettingService.AUTO_SAVE_DATA_ENTRY_FORM, false );
+        autoSave = (Boolean) userSettingService.getUserSetting( UserSettingKey.AUTO_SAVE_DATA_ENTRY_FORM );
         
         dataElementList = new ArrayList<>( dataSet.getDataElements() );
 

@@ -112,6 +112,11 @@ public class UserSetting
         value = other.getValue() != null ? other.getValue() : value;
     }
 
+    public boolean hasValue()
+    {
+        return value != null;
+    }
+    
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------

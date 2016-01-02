@@ -145,7 +145,7 @@ public class DeleteCurrentUserAction
         }
         else
         {
-            Collection<UserSetting> userSettings = userSettingService.getAllUserSettings( user );
+            Collection<UserSetting> userSettings = userSettingService.getAllUserSettings();
 
             for ( UserSetting userSetting : userSettings )
             {

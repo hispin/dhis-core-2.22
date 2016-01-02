@@ -87,6 +87,10 @@ div.paging a.active
     cursor: default;
 }
 
+.input-pending {
+    background-color: #fffe8c !important;
+}
+
 .input-error {
     background-color: #ff8a8a !important;
 }

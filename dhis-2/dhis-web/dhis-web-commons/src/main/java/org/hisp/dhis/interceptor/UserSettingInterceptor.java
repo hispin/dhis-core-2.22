@@ -28,13 +28,11 @@ package org.hisp.dhis.interceptor;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.user.UserSettingService.KEY_STYLE;
-import static org.hisp.dhis.user.UserSettingService.KEY_STYLE_DIRECTORY;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.hisp.dhis.setting.StyleManager;
+import org.hisp.dhis.user.UserSettingKey;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
@@ -76,8 +74,8 @@ public class UserSettingInterceptor
     {
         Map<String, Object> map = new HashMap<>();
 
-        map.put( KEY_STYLE, styleManager.getCurrentStyle() );
-        map.put( KEY_STYLE_DIRECTORY, styleManager.getCurrentStyleDirectory() );
+        map.put( UserSettingKey.STYLE.getName(), styleManager.getCurrentStyle() );
+        map.put( UserSettingKey.STYLE_DIRECTORY.getName(), styleManager.getCurrentStyleDirectory() );
 
         invocation.getStack().push( map );
 

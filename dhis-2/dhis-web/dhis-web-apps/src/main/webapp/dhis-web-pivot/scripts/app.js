@@ -1200,7 +1200,7 @@ Ext.onReady( function() {
 								reportTable.name = name;
 
 								Ext.Ajax.request({
-									url: ns.core.init.contextPath + '/api/reportTables/' + reportTable.id,
+									url: ns.core.init.contextPath + '/api/reportTables/' + reportTable.id + '?mergeStrategy=REPLACE',
 									method: 'PUT',
 									headers: {'Content-Type': 'application/json'},
 									params: Ext.encode(reportTable),
@@ -1400,7 +1400,7 @@ Ext.onReady( function() {
 
 										if (confirm(message)) {
 											Ext.Ajax.request({
-												url: ns.core.init.contextPath + '/api/reportTables/' + record.data.id,
+												url: ns.core.init.contextPath + '/api/reportTables/' + record.data.id + '?mergeStrategy=REPLACE',
 												method: 'PUT',
 												headers: {'Content-Type': 'application/json'},
 												params: Ext.encode(favorite),
@@ -7243,6 +7243,7 @@ console.log(table);
 				}
 			},
 			tbar: {
+                style: 'border-top: 0 none',
 				defaults: {
 					height: 26
 				},
@@ -8020,7 +8021,7 @@ console.log(table);
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
                                                 if (!init.organisationUnitLevels.length) {
-                                                    alert('No organisation unit levels found');
+                                                    console.log('Info: No organisation unit levels defined');
                                                 }
 
                                                 fn();

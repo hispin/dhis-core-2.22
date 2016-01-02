@@ -603,6 +603,9 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
             return e;
         },
         refreshList: function(eventList, currentEvent){
+            if(!eventList || !eventList.length){
+                return;
+            }
             var continueLoop = true;
             for(var i=0; i< eventList.length && continueLoop; i++){
                 if(eventList[i].event === currentEvent.event ){

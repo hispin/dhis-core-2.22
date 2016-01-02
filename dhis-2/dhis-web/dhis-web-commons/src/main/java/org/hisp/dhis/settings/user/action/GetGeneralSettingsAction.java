@@ -28,20 +28,14 @@ package org.hisp.dhis.settings.user.action;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.user.UserSettingService.DEFAULT_ANALYSIS_DISPLAY_PROPERTY;
-import static org.hisp.dhis.user.UserSettingService.KEY_ANALYSIS_DISPLAY_PROPERTY;
-import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_EMAIL_NOTIFICATION;
-import static org.hisp.dhis.user.UserSettingService.KEY_MESSAGE_SMS_NOTIFICATION;
-
 import java.util.List;
 import java.util.Locale;
-
-import java.io.Serializable;
 
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.setting.StyleManager;
 import org.hisp.dhis.setting.StyleObject;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 
 import com.opensymphony.xwork2.Action;
@@ -183,12 +177,11 @@ public class GetGeneralSettingsAction
 
         currentStyle = styleManager.getCurrentStyle();
 
-        analysisDisplayProperty = (String) userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY,
-            (Serializable) DEFAULT_ANALYSIS_DISPLAY_PROPERTY );
+        analysisDisplayProperty = (String) userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY );
 
-        messageEmailNotification = (Boolean) userSettingService.getUserSetting( KEY_MESSAGE_EMAIL_NOTIFICATION, false );
+        messageEmailNotification = (Boolean) userSettingService.getUserSetting( UserSettingKey.MESSAGE_EMAIL_NOTIFICATION );
 
-        messageSmsNotification = (Boolean) userSettingService.getUserSetting( KEY_MESSAGE_SMS_NOTIFICATION, false );
+        messageSmsNotification = (Boolean) userSettingService.getUserSetting( UserSettingKey.MESSAGE_SMS_NOTIFICATION );
 
         return SUCCESS;
     }

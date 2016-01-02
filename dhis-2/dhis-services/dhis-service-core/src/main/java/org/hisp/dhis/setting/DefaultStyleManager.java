@@ -35,6 +35,7 @@ import java.util.SortedMap;
 
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -94,13 +95,13 @@ public class DefaultStyleManager
     @Override
     public void setUserStyle( String style )
     {
-        userSettingService.saveUserSetting( SettingKey.STYLE.getName(), style );
+        userSettingService.saveUserSetting( UserSettingKey.STYLE, style );
     }
 
     @Override
     public String getCurrentStyle()
     {
-        String style = (String) userSettingService.getUserSetting( SettingKey.STYLE.getName() );
+        String style = (String) userSettingService.getUserSetting( UserSettingKey.STYLE );
         
         if ( style != null )
         {

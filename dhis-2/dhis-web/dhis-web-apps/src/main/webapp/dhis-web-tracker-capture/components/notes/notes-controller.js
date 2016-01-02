@@ -5,6 +5,7 @@ trackerCapture.controller('NotesController',
                 DateUtils,
                 EnrollmentService,
                 CurrentSelection,
+                DialogService,
                 SessionStorageService,
                 orderByFilter) {
     $scope.dashboardReady = false;
@@ -50,25 +51,34 @@ trackerCapture.controller('NotesController',
     });
        
     $scope.addNote = function(){
-        if ($scope.note.value !== "" || !angular.isUndefined($scope.note.value)) {
-            var newNote = {value: $scope.note.value};
+        if(!$scope.note.value){
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'please_add_some_text'
+            };                
 
-            if(angular.isUndefined( $scope.selectedEnrollment.notes) ){
-                $scope.selectedEnrollment.notes = [{value: newNote.value, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy}];
-                
-            }
-            else{
-                $scope.selectedEnrollment.notes.splice(0,0,{value: newNote.value, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy});
-            }
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+        
 
-            var e = angular.copy($scope.selectedEnrollment);
+        var newNote = {value: $scope.note.value};
 
-            e.notes = [newNote];
-            EnrollmentService.updateForNote(e).then(function(){
-                $scope.note = {};
-                $scope.addNoteField = false; //note is added, hence no need to show note field.                
-            });
-        }        
+        if(angular.isUndefined( $scope.selectedEnrollment.notes) ){
+            $scope.selectedEnrollment.notes = [{value: newNote.value, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy}];
+
+        }
+        else{
+            $scope.selectedEnrollment.notes.splice(0,0,{value: newNote.value, storedDate: DateUtils.formatFromUserToApi(today), storedBy: storedBy});
+        }
+
+        var e = angular.copy($scope.selectedEnrollment);
+
+        e.notes = [newNote];
+        EnrollmentService.updateForNote(e).then(function(){
+            $scope.note = {};
+            $scope.addNoteField = false; //note is added, hence no need to show note field.                
+        });
     };
     
     $scope.clearNote = function(){

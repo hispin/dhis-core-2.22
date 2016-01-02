@@ -14,7 +14,7 @@
 	var currentUserName = '$currentUsername';
 </script>
 
-#set( $hasAllAuth = $currentUser.getUserCredentials().isAuthorized( 'ALL' ) )
+#set( $canReplicate = $currentUser.getUserCredentials().isAuthorized( 'F_REPLICATE_USER' ) )
 
 <h3>$i18n.getString( "user_management" ) #openHelp( "user_management" )</h3>
 
@@ -80,7 +80,7 @@
 				    data-can-update="$security.canUpdate( $user.userCredentials )"
 				    data-can-delete="$security.canDelete( $user.userCredentials )"
 				    data-can-reinvite="#if( $user.userCredentials.isInvitation() && $security.canUpdate( $user.userCredentials ) )true#{else}false#end"
-				    data-can-replicate="$hasAllAuth"
+				    data-can-replicate="$canReplicate"
                     data-user-enabled="#if( !$user.userCredentials.disabled )true#{else}false#end"
                     data-user-disabled="$user.userCredentials.disabled">
 				    <td>$encoder.htmlEncode( $!user.surname ), $encoder.htmlEncode( $!user.firstName )</td>

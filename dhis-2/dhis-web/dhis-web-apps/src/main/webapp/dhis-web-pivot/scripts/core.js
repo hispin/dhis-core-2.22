@@ -2081,6 +2081,7 @@ Ext.onReady( function() {
 
                 // bodyStyle
                 config.bodyStyle = 'padding: 12px; background: #fff; max-width: 600px; max-height: ' + app.getCenterRegionHeight() / 2 + 'px';
+                config.bodyCls = 'user-select';
 
                 // destroy handler
                 config.modal = true;
@@ -2094,6 +2095,13 @@ Ext.onReady( function() {
 						if (!w.hasDestroyOnBlurHandler) {
 							web.window.addDestroyOnBlurHandler(w);
 						}
+
+                        document.body.oncontextmenu = true;
+                    },
+                    destroy: function() {
+                        document.body.oncontextmenu = function() {
+                            return false;
+                        };
                     }
                 };
 

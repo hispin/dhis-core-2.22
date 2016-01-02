@@ -50,7 +50,7 @@ import org.hisp.dhis.user.UserCredentials;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserService;
-import org.hisp.dhis.user.UserSetting;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -396,9 +396,9 @@ public class AddUserAction
         // User settings
         // ---------------------------------------------------------------------
 
-        userSettingService.addUserSetting( new UserSetting( user, UserSettingService.KEY_UI_LOCALE, LocaleUtils.getLocale( localeUi ) ) );
-        userSettingService.addUserSetting( new UserSetting( user, UserSettingService.KEY_DB_LOCALE, LocaleUtils.getLocale( localeDb ) ) );
-
+        userSettingService.saveUserSetting( UserSettingKey.UI_LOCALE, LocaleUtils.getLocale( localeUi ), user );
+        userSettingService.saveUserSetting( UserSettingKey.DB_LOCALE, LocaleUtils.getLocale( localeDb ), user );
+        
         if ( ACCOUNT_ACTION_INVITE.equals( accountAction ) )
         {
             RestoreOptions restoreOptions = inviteUsername == null || inviteUsername.isEmpty() ? RestoreOptions.INVITE_WITH_USERNAME_CHOICE : RestoreOptions.INVITE_WITH_DEFINED_USERNAME;

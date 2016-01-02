@@ -365,6 +365,7 @@
         <value>F_ACCEPT_DATA_LOWER_LEVELS</value>
         <value>F_INSERT_CUSTOM_JS_CSS</value>
         <value>F_VIEW_UNAPPROVED_DATA</value>
+        <value>F_REPLICATE_USER</value>
         <value>F_USERGROUP_MANAGING_RELATIONSHIPS_ADD</value>
         <value>F_USERGROUP_MANAGING_RELATIONSHIPS_VIEW</value>
         <value>F_USER_ADD_WITHIN_MANAGED_GROUP</value>

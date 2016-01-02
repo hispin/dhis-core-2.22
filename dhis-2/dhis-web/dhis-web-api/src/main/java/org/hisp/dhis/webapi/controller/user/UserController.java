@@ -285,7 +285,7 @@ public class UserController
     }
 
     @SuppressWarnings( "unchecked" )
-    @PreAuthorize( "hasRole('ALL')" )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_REPLICATE_USER')" )
     @RequestMapping( value = "/{uid}/replica", method = RequestMethod.POST )
     public void replicateUser( @PathVariable String uid,
         HttpServletRequest request, HttpServletResponse response ) throws IOException, WebMessageException

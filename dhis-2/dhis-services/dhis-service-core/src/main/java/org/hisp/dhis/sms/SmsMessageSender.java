@@ -44,6 +44,7 @@ import org.hisp.dhis.sms.outbound.OutboundSmsTransportService;
 import org.hisp.dhis.system.util.SmsUtils;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -184,7 +185,7 @@ public class SmsMessageSender
         // Receiver is user
         {
             Serializable userSetting = userSettingService
-                .getUserSetting( UserSettingService.KEY_MESSAGE_SMS_NOTIFICATION, null, user );
+                .getUserSetting( UserSettingKey.MESSAGE_SMS_NOTIFICATION, user );
 
             return userSetting != null ? (Boolean) userSetting : false;
         }

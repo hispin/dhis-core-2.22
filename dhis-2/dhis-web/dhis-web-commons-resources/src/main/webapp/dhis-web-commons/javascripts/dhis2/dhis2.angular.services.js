@@ -442,10 +442,34 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                                 commonInputFieldProperty + ' ></span><span class="not-for-screen"><input type="checkbox" ng-checked={{currentEvent.' + fieldId + '}}></span>';
                                     }
                                     else if (prStDe.dataElement.valueType === "LONG_TEXT") {
-                                        newInputField = '<textarea row="3" ' +
+                                        newInputField = '<span class="hideInPrint"><textarea row="3" ' +
                                                 ' ng-class="{{getInputNotifcationClass(prStDes.' + fieldId + '.dataElement.id, true)}}" ' +
                                                 ' ng-blur="saveDatavalue(prStDes.' + fieldId + ', outerForm.' + fieldId + ')"' +
-                                                commonInputFieldProperty + '></textarea></span><span class="not-for-screen"><textarea row="3" value={{currentEvent.' + fieldId + '}}></span>';
+                                                commonInputFieldProperty + '></textarea></span><span class="not-for-screen"><textarea row="3" value={{currentEvent.' + fieldId + '}}></textarea></span>';
+                                    }
+                                    else if (prStDe.dataElement.valueType === "FILE_RESOURCE") {
+                                        newInputField = '<span class="input-group">\n\
+                                                            <span ng-if="currentEvent.' + fieldId + '">\n\
+                                                                <a href ng-click="downloadFile(null, \'' + fieldId + '\', null)">{{fileNames[currentEvent.event][' + fieldId + ']}}</a>\n\
+                                                            </span>\n\
+                                                            <span class="input-group-btn">\n\
+                                                                <span class="btn btn-primary btn-file">\n\
+                                                                    <span ng-if="currentEvent.' + fieldId + '" title="{{\'delete\' | translate}}" d2-file-input-name="fileNames[currentEvent.event][' + fieldId + ']" d2-file-input-delete="currentEvent.' + fieldId + '">\n\
+                                                                        <a href ng-click="deleteFile(\'' + fieldId + '\')"><i class="fa fa-trash alert-danger"></i></a>\n\
+                                                                    </span>\n\
+                                                                    <span ng-if="!currentEvent.' + fieldId + '" title="{{\'upload\' | translate}}" >\n\
+                                                                        <i class="fa fa-upload"></i>\n\
+                                                                        <input  type="file" \n\
+                                                                                ' + this.getAttributesAsString(attributes) + '\n\
+                                                                                input-field-id="' + fieldId + '"\n\
+                                                                                d2-file-input-ps="currentStage"\n\
+                                                                                d2-file-input="currentEvent"\n\
+                                                                                d2-file-input-current-name="currentFileNames"\n\
+                                                                                d2-file-input-name="fileNames">\n\
+                                                                    </span>\n\
+                                                                </span>\n\
+                                                            </span>\n\
+                                                        </span>';
                                     }
                                     else {
                                         newInputField = '<span class="hideInPrint"><input type="text" ' +
@@ -1196,7 +1220,9 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                                 {name:"d2:ceil",parameters:1},
                                 {name:"d2:round",parameters:1},
                                 {name:"d2:hasValue",parameters:1},
-                                {name:"d2:lastEventDate",parameters:1}];
+                                {name:"d2:lastEventDate",parameters:1},
+                                {name:"d2:addControlDigits",parameters:1},
+                                {name:"d2:checkControlDigits",parameters:1}];
             var continueLooping = true;
             //Safety harness on 10 loops, in case of unanticipated syntax causing unintencontinued looping
             for(var i = 0; i < 10 && continueLooping; i++ ) { 
@@ -1467,6 +1493,70 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                             //Replace the end evaluation of the dhis function:
                             expression = expression.replace(callToThisFunction, valueFound);
                             successfulExecution = true;
+                        }
+                        else if(dhisFunction.name === "d2:addControlDigits") {
+                            
+                            var baseNumber = parameters[0];
+                            var baseDigits = baseNumber.split('');
+                            var error = false;
+                            
+                            
+                            var firstDigit = 0;
+                            var secondDigit = 0;
+                            
+                            if(baseDigits && baseDigits.length < 10 ) {
+                                var firstSum = 0;
+                                var baseNumberLength = baseDigits.length;
+                                //weights support up to 9 base digits:
+                                var firstWeights = [3,7,6,1,8,9,4,5,2];
+                                for(var i = 0; i < baseNumberLength && !error; i++) {
+                                    firstSum += parseInt(baseDigits[i]) * firstWeights[i];
+                                }
+                                firstDigit = firstSum % 11;
+                                
+                                //Push the first digit to the array before continuing, as the second digit is a result of the 
+                                //base digits and the first control digit.
+                                baseDigits.push(firstDigit);
+                                //Weights support up to 9 base digits plus first control digit:
+                                var secondWeights = [5,4,3,2,7,6,5,4,3,2];
+                                var secondSum = 0;
+                                for(var i = 0; i < baseNumberLength + 1 && !error; i++) {
+                                    secondSum += parseInt(baseDigits[i]) * secondWeights[i]; 
+                                }
+                                secondDigit = secondSum % 11;
+                                
+                                if(firstDigit === 10) {
+                                    $log.warn("First control digit became 10, replacing with 0");
+                                    firstDigit = 0;
+                                }
+                                if(secondDigit === 10) {
+                                    $log.warn("Second control digit became 10, replacing with 0");
+                                    secondDigit = 0;
+                                }
+                            }
+                            else
+                            {
+                                $log.warn("Base nuber not well formed(" + baseNumberLength + " digits): " + baseNumber);
+                            }
+                            
+                            if(!error) {
+                                //Replace the end evaluation of the dhis function:
+                                expression = expression.replace(callToThisFunction, baseNumber + firstDigit + secondDigit);
+                                successfulExecution = true;
+                            }
+                            else
+                            {
+                                //Replace the end evaluation of the dhis function:
+                                expression = expression.replace(callToThisFunction, baseNumber);
+                                successfulExecution = false;
+                            }
+                        }
+                        else if(dhisFunction.name === "d2:checkControlDigits") {
+                            $log.warn("checkControlDigits not implemented yet");
+                            
+                            //Replace the end evaluation of the dhis function:
+                            expression = expression.replace(callToThisFunction, parameters[0]);
+                            successfulExecution = false;
                         }
                     });
                 });

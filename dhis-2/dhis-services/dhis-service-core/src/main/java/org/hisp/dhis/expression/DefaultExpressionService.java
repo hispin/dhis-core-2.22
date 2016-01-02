@@ -54,6 +54,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.DimensionService;
 import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.GenericStore;
+import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.common.RegexUtils;
 import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
@@ -134,6 +135,13 @@ public class DefaultExpressionService
     public void setDimensionService( DimensionService dimensionService )
     {
         this.dimensionService = dimensionService;
+    }
+    
+    private IdentifiableObjectManager idObjectManager;
+
+    public void setIdObjectManager( IdentifiableObjectManager idObjectManager )
+    {
+        this.idObjectManager = idObjectManager;
     }
 
     // -------------------------------------------------------------------------
@@ -237,8 +245,6 @@ public class DefaultExpressionService
             orgUnitCountMap, days, expression.getMissingValueStrategy(), incompleteValues );
 
         Double result = expressionString != null ? calculateExpression( expressionString ) : null;
-        
-        log.debug( "Expression: " + expression.getExplodedExpressionFallback() + ", generated: " + expressionString + ", result: " + result );
         
         return result;
     }
@@ -510,7 +516,7 @@ public class DefaultExpressionService
         {
             String constant = matcher.group( 1 );
             
-            if ( constantService.getConstant( constant ) == null )
+            if ( idObjectManager.getNoAcl( Constant.class, constant ) == null )
             {
                 return ExpressionValidationOutcome.CONSTANT_DOES_NOT_EXIST;
             }
@@ -531,7 +537,7 @@ public class DefaultExpressionService
         {
             String group = matcher.group( 1 );
             
-            if ( organisationUnitGroupService.getOrganisationUnitGroup( group ) == null )
+            if ( idObjectManager.getNoAcl( OrganisationUnitGroup.class, group ) == null )
             {
                 return ExpressionValidationOutcome.ORG_UNIT_GROUP_DOES_NOT_EXIST;
             }
@@ -750,7 +756,7 @@ public class DefaultExpressionService
             {
                 final StringBuilder replace = new StringBuilder( PAR_OPEN );
 
-                final DataElement dataElement = dataElementService.getDataElement( matcher.group( 1 ) );
+                final DataElement dataElement = idObjectManager.getNoAcl( DataElement.class, matcher.group( 1 ) );
 
                 final DataElementCategoryCombo categoryCombo = dataElement.getCategoryCombo();
 
@@ -788,7 +794,7 @@ public class DefaultExpressionService
         {
             String co = matcher.group( 1 );
             
-            Constant constant = constantService.getConstant( co );
+            Constant constant = idObjectManager.getNoAcl( Constant.class, co );
             
             String replacement = constant != null ? String.valueOf( constant.getValue() ) : NULL_REPLACEMENT; 
             
@@ -808,7 +814,7 @@ public class DefaultExpressionService
         {
             String oug = matcher.group( 1 );
             
-            OrganisationUnitGroup group = organisationUnitGroupService.getOrganisationUnitGroup( oug );
+            OrganisationUnitGroup group = idObjectManager.get( OrganisationUnitGroup.class, oug );
             
             String replacement = group != null ? String.valueOf( group.getMembers().size() ) : NULL_REPLACEMENT;
 

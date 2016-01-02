@@ -32,10 +32,7 @@ import org.hisp.dhis.DhisSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.hisp.dhis.user.UserSettingService.KEY_ANALYSIS_DISPLAY_PROPERTY;
-import static org.hisp.dhis.user.UserSettingService.KEY_STYLE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author Kiran Prakash
@@ -67,64 +64,48 @@ public class UserSettingServiceTest
     @Test
     public void testSaveGetDeleteUserSetting()
     {
-        assertNull( userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertNull( userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
+        assertEquals( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY.getDefaultValue(), userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, userA ) );
+        assertEquals( UserSettingKey.STYLE.getDefaultValue(), userSettingService.getUserSetting( UserSettingKey.STYLE, userA ) );
         
-        userSettingService.saveUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, "name", "usernameA" );
-        userSettingService.saveUserSetting( KEY_STYLE, "blue", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, "shortName", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.STYLE, "blue", "usernameA" );
 
-        assertEquals( "name", userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertEquals( "blue", userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
+        assertEquals( "shortName", userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, userA ) );
+        assertEquals( "blue", userSettingService.getUserSetting( UserSettingKey.STYLE, userA ) );
         
-        userSettingService.deleteUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, userA );
+        userSettingService.deleteUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, userA );
 
-        assertNull( userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertEquals( "blue", userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
+        assertEquals( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY.getDefaultValue(), userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, userA ) );
+        assertEquals( "blue", userSettingService.getUserSetting( UserSettingKey.STYLE, userA ) );
 
-        userSettingService.deleteUserSetting( KEY_STYLE, userA );
+        userSettingService.deleteUserSetting( UserSettingKey.STYLE, userA );
 
-        assertNull( userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertNull( userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
+        assertEquals( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY.getDefaultValue(), userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, userA ) );
+        assertEquals( UserSettingKey.STYLE.getDefaultValue(), userSettingService.getUserSetting( UserSettingKey.STYLE, userA ) );
     }
 
     @Test
     public void testSaveOrUpdateUserSetting()
     {
-        userSettingService.saveUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, "name", "usernameA" );
-        userSettingService.saveUserSetting( KEY_STYLE, "blue", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, "name", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.STYLE, "blue", "usernameA" );
 
-        assertEquals( "name", userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertEquals( "blue", userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
+        assertEquals( "name", userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, userA ) );
+        assertEquals( "blue", userSettingService.getUserSetting( UserSettingKey.STYLE, userA ) );
 
-        userSettingService.saveUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, "shortName", "usernameA" );
-        userSettingService.saveUserSetting( KEY_STYLE, "green", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, "shortName", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.STYLE, "green", "usernameA" );
 
-        assertEquals( "shortName", userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertEquals( "green", userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
-    }
-
-    @Test
-    public void testGetWithDefaultUserSetting()
-    {
-        assertNull( userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertNull( userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
-        
-        assertEquals( "shortName", userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, "shortName", userA ) );
-        assertEquals( "yellow", userSettingService.getUserSetting( KEY_STYLE, "yellow", userA ) );
-
-        userSettingService.saveUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, "name", "usernameA" );
-        userSettingService.saveUserSetting( KEY_STYLE, "blue", "usernameA" );
-
-        assertEquals( "name", userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, null, userA ) );
-        assertEquals( "blue", userSettingService.getUserSetting( KEY_STYLE, null, userA ) );
+        assertEquals( "shortName", userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, userA ) );
+        assertEquals( "green", userSettingService.getUserSetting( UserSettingKey.STYLE, userA ) );
     }
 
     @Test
     public void testGetUserSettingsByUser()
     {
-        userSettingService.saveUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY, "name", "usernameA" );
-        userSettingService.saveUserSetting( KEY_STYLE, "blue", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY, "name", "usernameA" );
+        userSettingService.saveUserSetting( UserSettingKey.STYLE, "blue", "usernameA" );
         
-        assertEquals( 2, userSettingService.getAllUserSettings( userA ).size() );
+        assertEquals( 2, userSettingService.getUserSettings( userA ).size() );
     }
 }

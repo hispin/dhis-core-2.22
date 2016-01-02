@@ -7,7 +7,7 @@ html, body {
 }
 
 .not-for-screen {
-    display: none;
+    display: none !important;
 }
 
 @media print {
@@ -240,6 +240,10 @@ div.paging a.active
     text-decoration: none; 
     color: #000;
     cursor: default;
+}
+
+.input-pending {
+    background-color: #fffe8c !important;
 }
 
 .input-error {

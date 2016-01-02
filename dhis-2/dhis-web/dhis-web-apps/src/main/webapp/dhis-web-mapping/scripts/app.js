@@ -2768,7 +2768,7 @@ Ext.onReady( function() {
                             map.name = name;
 
                             Ext.Ajax.request({
-                                url: gis.init.contextPath + '/api/maps/' + id,
+                                url: gis.init.contextPath + '/api/maps/' + id + '?mergeStrategy=REPLACE',
                                 method: 'PUT',
                                 headers: {'Content-Type': 'application/json'},
                                 params: Ext.encode(map),
@@ -2984,7 +2984,7 @@ Ext.onReady( function() {
 											};
 
 											Ext.Ajax.request({
-												url: gis.init.contextPath + '/api/maps/' + record.data.id,
+												url: gis.init.contextPath + '/api/maps/' + record.data.id + '?mergeStrategy=REPLACE',
 												method: 'PUT',
 												headers: {'Content-Type': 'application/json'},
 												params: Ext.encode(map),
@@ -3991,7 +3991,7 @@ Ext.onReady( function() {
 					body = Ext.encode(getRequestBody());
 
 					Ext.Ajax.request({
-						url: gis.init.contextPath + '/api/legendSets/' + id,
+						url: gis.init.contextPath + '/api/legendSets/' + id + '?mergeStrategy=REPLACE',
 						method: 'PUT',
 						headers: {'Content-Type': 'application/json'},
 						params: body,
@@ -10226,7 +10226,7 @@ Ext.onReady( function() {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
                                                 if (!init.organisationUnitLevels.length) {
-                                                    alert('No organisation unit levels');
+                                                    console.log('Info: No organisation unit levels defined');
                                                 }
 
                                                 fn();

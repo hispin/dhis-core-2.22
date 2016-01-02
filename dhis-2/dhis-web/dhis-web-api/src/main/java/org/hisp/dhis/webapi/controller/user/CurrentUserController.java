@@ -60,6 +60,7 @@ import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserService;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.hisp.dhis.webapi.controller.exception.FilterTooShortException;
 import org.hisp.dhis.webapi.controller.exception.NotAuthenticatedException;
@@ -98,8 +99,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.hisp.dhis.user.UserSettingService.*;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -358,11 +357,11 @@ public class CurrentUserController
         userAccount.setInterests( currentUser.getInterests() );
         userAccount.setLanguages( currentUser.getLanguages() );
 
-        userAccount.getSettings().put( KEY_UI_LOCALE, TextUtils.toString( userSettingService.getUserSetting( KEY_UI_LOCALE ) ) );
-        userAccount.getSettings().put( KEY_DB_LOCALE, TextUtils.toString( userSettingService.getUserSetting( KEY_DB_LOCALE ) ) );
-        userAccount.getSettings().put( KEY_MESSAGE_EMAIL_NOTIFICATION, TextUtils.toString( userSettingService.getUserSetting( KEY_MESSAGE_EMAIL_NOTIFICATION ) ) );
-        userAccount.getSettings().put( KEY_MESSAGE_SMS_NOTIFICATION, TextUtils.toString( userSettingService.getUserSetting( KEY_MESSAGE_SMS_NOTIFICATION ) ) );
-        userAccount.getSettings().put( KEY_ANALYSIS_DISPLAY_PROPERTY, TextUtils.toString( userSettingService.getUserSetting( KEY_ANALYSIS_DISPLAY_PROPERTY ) ) );
+        userAccount.getSettings().put( UserSettingKey.UI_LOCALE.getName(), TextUtils.toString( userSettingService.getUserSetting( UserSettingKey.UI_LOCALE ) ) );
+        userAccount.getSettings().put( UserSettingKey.DB_LOCALE.getName(), TextUtils.toString( userSettingService.getUserSetting( UserSettingKey.DB_LOCALE ) ) );
+        userAccount.getSettings().put( UserSettingKey.MESSAGE_EMAIL_NOTIFICATION.getName(), TextUtils.toString( userSettingService.getUserSetting( UserSettingKey.MESSAGE_EMAIL_NOTIFICATION ) ) );
+        userAccount.getSettings().put( UserSettingKey.MESSAGE_SMS_NOTIFICATION.getName(), TextUtils.toString( userSettingService.getUserSetting( UserSettingKey.MESSAGE_SMS_NOTIFICATION ) ) );
+        userAccount.getSettings().put( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY.getName(), TextUtils.toString( userSettingService.getUserSetting( UserSettingKey.ANALYSIS_DISPLAY_PROPERTY ) ) );
         return userAccount;
     }
 

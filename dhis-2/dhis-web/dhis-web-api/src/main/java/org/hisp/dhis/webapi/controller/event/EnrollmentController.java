@@ -214,6 +214,14 @@ public class EnrollmentController
             webMessageService.send( WebMessageUtils.importSummaries( importSummaries ), response, request );
         }
     }
+    
+    @RequestMapping( value = "/{id}/note", method = RequestMethod.POST, consumes = "application/json" )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
+    public void updateEnrollmentForNoteJson( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws IOException
+    {
+        ImportSummary importSummary = enrollmentService.updateEnrollmentForNoteJson( id, request.getInputStream() );
+        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
+    }
 
     // -------------------------------------------------------------------------
     // UPDATE
@@ -232,14 +240,6 @@ public class EnrollmentController
     public void updateEnrollmentJson( @PathVariable String id, ImportOptions importOptions, HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
         ImportSummary importSummary = enrollmentService.updateEnrollmentJson( id, request.getInputStream(), importOptions );
-        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
-    }
-
-    @RequestMapping( value = "/{id}/addNote", method = RequestMethod.PUT, consumes = "application/json" )
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_PROGRAM_UNENROLLMENT')" )
-    public void updateEnrollmentForNoteJson( @PathVariable String id, HttpServletRequest request, HttpServletResponse response ) throws IOException
-    {
-        ImportSummary importSummary = enrollmentService.updateEnrollmentForNoteJson( id, request.getInputStream() );
         webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
     }
 

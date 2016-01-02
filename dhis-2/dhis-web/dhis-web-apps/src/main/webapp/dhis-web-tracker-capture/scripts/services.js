@@ -630,7 +630,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return promise;
         },
         updateForNote: function( enrollment ){
-            var promise = $http.put('../api/enrollments/' + enrollment.enrollment + '/addNote', enrollment).then(function(response){
+            var promise = $http.post('../api/enrollments/' + enrollment.enrollment + '/note', enrollment).then(function(response){
                 return response.data;         
             });
             return promise;
@@ -1062,13 +1062,13 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return promise;
         },
         updateForNote: function(dhis2Event){   
-            var promise = $http.put('../api/events/' + dhis2Event.event + '/addNote', dhis2Event).then(function(response){
+            var promise = $http.post('../api/events/' + dhis2Event.event + '/note', dhis2Event).then(function(response){
                 return response.data;         
             });
             return promise;
         },
         updateForEventDate: function(dhis2Event){
-            var promise = $http.put('../api/events/' + dhis2Event.event + '/updateEventDate', dhis2Event).then(function(response){
+            var promise = $http.put('../api/events/' + dhis2Event.event + '/eventDate', dhis2Event).then(function(response){
                 return response.data;         
             });
             return promise;

@@ -135,6 +135,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         $scope.resetOu = false;
         $scope.selectedProgramStage = null;
+        $scope.currentStage = null;
         $scope.allProgramRules = [];
         $scope.dhis2Events = [];
         $scope.currentEvent = {};
@@ -181,8 +182,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             //because this is single event, take the first program stage
             
             $scope.selectedProgramStage = $scope.selectedProgram.programStages[0];   
+            $scope.currentStage = $scope.selectedProgramStage;
             
-
                 angular.forEach($scope.selectedProgramStage.programStageSections, function(section){
                     section.open = true;
                 });
@@ -515,7 +516,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.showEventRegistration = function(){        
-        $scope.displayCustomForm = $scope.customForm ? true:false;
+        $scope.displayCustomForm = $scope.customForm ? true : false;
         $scope.currentEvent = {};
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
@@ -824,7 +825,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.updateSuccess = false;
         
         //get current element
-        $scope.currentElement = {id: dataElement};
+        $scope.currentElement = {id: dataElement, pending: true, updated: false, failed: false};
         
         //get new and old values
         var newValue = $scope.currentEvent[dataElement];        
@@ -832,7 +833,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         //check for form validity
         if( $scope.isFormInvalid() ){
-            $scope.currentElement.updated = false;            
+            $scope.currentElement.updated = false;
+            
             //reset value back to original
             $scope.currentEvent[dataElement] = oldValue;            
             $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
@@ -841,6 +843,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         
         if( $scope.prStDes[dataElement].compulsory && !newValue ) {
             $scope.currentElement.updated = false;                        
+            
             //reset value back to original
             $scope.currentEvent[dataElement] = oldValue;            
             $scope.dhis2Events = DHIS2EventService.refreshList($scope.dhis2Events, $scope.currentEvent);
@@ -860,8 +863,13 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 //update original value
                 $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);      
                 
+                $scope.currentElement.pending = false;
                 $scope.currentElement.updated = true;
                 $scope.updateSuccess = true;
+            }, function(){
+                $scope.currentElement.pending = false;
+                $scope.currentElement.updated = false;
+                $scope.currentElement.failed = true;
             });
         }
     };
@@ -1110,13 +1118,19 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     
     $scope.getInputNotifcationClass = function(id, custom){
         if($scope.currentElement.id && $scope.currentElement.id === id){
+            if($scope.currentElement.pending){
+                if(custom){
+                    return 'input-pending';
+                }
+                return 'form-control input-pending';
+            }
             if($scope.currentElement.updated){
                 if(custom){
                     return 'input-success';
                 }
                 return 'form-control input-success';
-            }            
-            else{
+            }          
+            if($scope.currentElement.failed){
                 if(custom){
                     return 'input-error';
                 }
@@ -1145,7 +1159,19 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         return '';        
     };
     
-    $scope.downloadFile = function(eventUid, dataElementUid, e) {        
+    $scope.downloadFile = function(eventUid, dataElementUid, e) {
+        eventUid = eventUid ? eventUid : $scope.currentEvent.event ? $scope.currentEvent.event : null;        
+        if( !eventUid || !dataElementUid){
+            
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'missing_file_identifier'
+            };
+
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+        
         $window.open('../api/events/files?eventUid=' + eventUid +'&dataElementUid=' + dataElementUid, '_blank', '');
         if(e){
             e.stopPropagation();
@@ -1154,6 +1180,16 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     };
     
     $scope.deleteFile = function(dataElement){
+        
+        if( !dataElement ){            
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'missing_file_identifier'
+            };
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+        
         var modalOptions = {
             closeButtonText: 'cancel',
             actionButtonText: 'remove',

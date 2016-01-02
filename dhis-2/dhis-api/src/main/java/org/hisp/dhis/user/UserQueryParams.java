@@ -40,7 +40,7 @@ import com.google.common.base.MoreObjects;
 public class UserQueryParams
 {
     private String query;
-        
+    
     private String phoneNumber;
     
     private User user;
