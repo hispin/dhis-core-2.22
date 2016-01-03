@@ -39,8 +39,7 @@ import org.apache.commons.lang3.LocaleUtils;
  */
 public enum UserSettingKey
 {
-    STYLE( "stylesheet" ),
-    STYLE_DIRECTORY( "stylesheetDirectory" ),
+    STYLE( "currentStyle" ),
     MESSAGE_EMAIL_NOTIFICATION( "keyMessageEmailNotification", Boolean.FALSE, Boolean.class ),
     MESSAGE_SMS_NOTIFICATION( "keyMessageSmsNotification", Boolean.FALSE, Boolean.class ),
     UI_LOCALE( "keyUiLocale", Locale.class ),

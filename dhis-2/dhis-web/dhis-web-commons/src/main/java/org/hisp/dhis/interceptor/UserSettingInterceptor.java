@@ -75,7 +75,6 @@ public class UserSettingInterceptor
         Map<String, Object> map = new HashMap<>();
 
         map.put( UserSettingKey.STYLE.getName(), styleManager.getCurrentStyle() );
-        map.put( UserSettingKey.STYLE_DIRECTORY.getName(), styleManager.getCurrentStyleDirectory() );
 
         invocation.getStack().push( map );
 
