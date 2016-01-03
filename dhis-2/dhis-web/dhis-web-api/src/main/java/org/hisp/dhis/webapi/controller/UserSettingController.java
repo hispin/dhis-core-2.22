@@ -141,23 +141,23 @@ public class UserSettingController
             throw new WebMessageException( WebMessageUtils.conflict( "Key is not supported: " + key ) );
         }
         
-        UserCredentials credentials = userService.getUserCredentialsByUsername( username );
+        User user = null;
         
-        if ( credentials == null )
+        if ( username != null )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "User does not exist: " + username ) );
+            UserCredentials credentials = userService.getUserCredentialsByUsername( username );
+            
+            if ( credentials != null )
+            {
+                user = credentials.getUser();
+            }
+            else
+            {
+                throw new WebMessageException( WebMessageUtils.conflict( "User does not exist: " + username ) );
+            }
         }
         
-        Serializable value;
-
-        if ( username == null )
-        {
-            value = userSettingService.getUserSetting( keyEnum.get() );
-        }
-        else
-        {
-            value = userSettingService.getUserSetting( keyEnum.get(), credentials.getUser() );
-        }
+        Serializable value = userSettingService.getUserSetting( keyEnum.get(), user );
 
         if ( value == null )
         {

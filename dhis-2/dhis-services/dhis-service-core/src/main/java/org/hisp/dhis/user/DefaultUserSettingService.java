@@ -180,7 +180,7 @@ public class DefaultUserSettingService
     @Override
     public Serializable getUserSetting( UserSettingKey key, User user )
     {
-        return getUserSetting( key, Optional.of( user ) ).orElse( null );
+        return getUserSetting( key, Optional.ofNullable( user ) ).orElse( null );
     }
 
     private Optional<Serializable> getUserSetting( UserSettingKey key, Optional<User> user )
