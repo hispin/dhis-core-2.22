@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.webmessage;
+package org.hisp.dhis.dxf2.common;
 
 /*
  * Copyright (c) 2004-2016, University of Oslo
@@ -31,7 +31,7 @@ package org.hisp.dhis.dxf2.webmessage;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public enum WebMessageStatus
+public enum Status
 {
     OK, WARNING, ERROR
 }

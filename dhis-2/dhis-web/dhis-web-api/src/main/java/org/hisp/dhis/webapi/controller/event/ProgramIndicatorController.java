@@ -29,7 +29,7 @@ package org.hisp.dhis.webapi.controller.event;
  */
 
 import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
-import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
+import org.hisp.dhis.dxf2.common.Status;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.program.ProgramIndicator;
@@ -70,7 +70,7 @@ public class ProgramIndicatorController
         String result = programIndicatorService.expressionIsValid( expression );
 
         DescriptiveWebMessage message = new DescriptiveWebMessage();
-        message.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
+        message.setStatus( ProgramIndicator.VALID.equals( result ) ? Status.OK : Status.ERROR );
         message.setMessage( i18n.getString( result ) );
 
         if ( message.isOk() )
@@ -90,7 +90,7 @@ public class ProgramIndicatorController
         String result = programIndicatorService.filterIsValid( expression );
 
         DescriptiveWebMessage message = new DescriptiveWebMessage();
-        message.setStatus( ProgramIndicator.VALID.equals( result ) ? WebMessageStatus.OK : WebMessageStatus.ERROR );
+        message.setStatus( ProgramIndicator.VALID.equals( result ) ? Status.OK : Status.ERROR );
         message.setMessage( i18n.getString( result ) );
 
         if ( message.isOk() )
