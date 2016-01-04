@@ -72,6 +72,7 @@ import org.hisp.dhis.organisationunit.OrganisationUnitGroupService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.validation.ValidationRule;
 import org.springframework.transaction.annotation.Transactional;
@@ -662,20 +663,6 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public void substituteExpressions( Collection<Indicator> indicators, Integer days )
-    {
-        if ( indicators != null && !indicators.isEmpty() )
-        {
-            for ( Indicator indicator : indicators )
-            {
-                indicator.setExplodedNumerator( substituteExpression( indicator.getNumerator(), days ) );
-                indicator.setExplodedDenominator( substituteExpression( indicator.getDenominator(), days ) );
-            }
-        }                
-    }
-    
-    @Override
-    @Transactional
     public void explodeValidationRuleExpressions( Collection<ValidationRule> validationRules )
     {
         if ( validationRules != null && !validationRules.isEmpty() )
@@ -776,7 +763,25 @@ public class DefaultExpressionService
 
     @Override
     @Transactional
-    public String substituteExpression( String expression, Integer days )
+    public void substituteExpressions( Collection<Indicator> indicators, Integer days )
+    {
+        if ( indicators != null && !indicators.isEmpty() )
+        {
+            Map<String, Constant> constants = new CachingMap<String, Constant>().
+                load( idObjectManager.getAllNoAcl( Constant.class ), c -> c.getUid() );
+            
+            Map<String, OrganisationUnitGroup> orgUnitGroups = new CachingMap<String, OrganisationUnitGroup>().
+                load( idObjectManager.getAllNoAcl( OrganisationUnitGroup.class ), g -> g.getUid() );
+            
+            for ( Indicator indicator : indicators )
+            {
+                indicator.setExplodedNumerator( substituteExpression( indicator.getNumerator(), constants, orgUnitGroups, days ) );
+                indicator.setExplodedDenominator( substituteExpression( indicator.getDenominator(), constants, orgUnitGroups, days ) );
+            }
+        }                
+    }
+    
+    private String substituteExpression( String expression, Map<String, Constant> constants, Map<String, OrganisationUnitGroup> orgUnitGroups, Integer days )
     {
         if ( expression == null || expression.isEmpty() )
         {
