@@ -799,7 +799,7 @@ public class DefaultExpressionService
         {
             String co = matcher.group( 1 );
             
-            Constant constant = idObjectManager.getNoAcl( Constant.class, co );
+            Constant constant = constants.get( co );
             
             String replacement = constant != null ? String.valueOf( constant.getValue() ) : NULL_REPLACEMENT; 
             
@@ -819,7 +819,7 @@ public class DefaultExpressionService
         {
             String oug = matcher.group( 1 );
             
-            OrganisationUnitGroup group = idObjectManager.get( OrganisationUnitGroup.class, oug );
+            OrganisationUnitGroup group = orgUnitGroups.get( oug );
             
             String replacement = group != null ? String.valueOf( group.getMembers().size() ) : NULL_REPLACEMENT;
 

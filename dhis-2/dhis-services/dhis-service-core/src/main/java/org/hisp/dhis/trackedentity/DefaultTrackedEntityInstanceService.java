@@ -269,7 +269,7 @@ public class DefaultTrackedEntityInstanceService
 
         User user = currentUserService.getCurrentUser();
 
-        if ( !params.hasOrganisationUnits() && !(params.isOrganisationUnitMode( ALL ) || params.isOrganisationUnitMode( ACCESSIBLE )) )
+        if ( !params.hasOrganisationUnits() && !( params.isOrganisationUnitMode( ALL ) || params.isOrganisationUnitMode( ACCESSIBLE ) ) )
         {
             violation = "At least one organisation unit must be specified";
         }
