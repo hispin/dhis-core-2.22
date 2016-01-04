@@ -255,8 +255,8 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Returns the encrypted or the plain-text value, based on the attribute's
-     * confidential value.
+     * Returns the encrypted or the plain-text value based on the confidential
+     * state of the attribute.
      *
      * @return String with value, either plain-text or decrypted.
      */
@@ -269,11 +269,11 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Since we never can be 100% certain Attribute is not null, we store the
-     * value in a temporary variable. The getEncrypted and getPlaintext methods
-     * will handle this value when requested.
+     * Property which temporarily stores the attribute value. The 
+     * {@link getEncryptedValue} and {@link getPlainValue} methods handle the 
+     * value when requested.
      *
-     * @param value the value to be stored
+     * @param value the value to be stored.
      */
     public void setValue( String value )
     {

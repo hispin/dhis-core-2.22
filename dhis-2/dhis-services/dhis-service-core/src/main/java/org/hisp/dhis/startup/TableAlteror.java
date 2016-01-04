@@ -865,6 +865,7 @@ public class TableAlteror
         executeSql( "update keyjsonvalue set namespacekey = key where namespacekey is null" );
         executeSql( "alter table keyjsonvalue alter column namespacekey set not null" );
         executeSql( "alter table keyjsonvalue drop column key" );
+        executeSql( "alter table trackedentityattributevalue drop column encrypted_value" );
 
         // Remove data mart
         executeSql( "drop table aggregateddatasetcompleteness" );
