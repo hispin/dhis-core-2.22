@@ -39,6 +39,7 @@ import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
+import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -81,7 +82,10 @@ public class AppController
 
     @Autowired
     private LocationManager locationManager;
-        
+    
+    @Autowired
+    private I18nManager i18nManager;
+    
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     // -------------------------------------------------------------------------
@@ -129,7 +133,9 @@ public class AppController
         
         if ( !status.ok() )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( status.getMessage() ) );
+            String message = i18nManager.getI18n().getString( status.getMessage() );
+            
+            throw new WebMessageException( WebMessageUtils.conflict( message ) );
         }
     }
 
