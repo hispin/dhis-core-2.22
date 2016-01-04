@@ -287,7 +287,7 @@ public class JdbcEventAnalyticsTableManager
             columns.add( col );
         }
 
-        for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributes() )
+        for ( TrackedEntityAttribute attribute : table.getProgram().getNonConfidentialTrackedEntityAttributes() )
         {
             String dataType = getColumnType( attribute.getValueType() );
             String dataClause = attribute.isNumericType() ? numericClause : attribute.isDateType() ? dateClause : "";
@@ -300,7 +300,7 @@ public class JdbcEventAnalyticsTableManager
             columns.add( col );
         }
         
-        for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributesWithLegendSet() )
+        for ( TrackedEntityAttribute attribute : table.getProgram().getNonConfidentialTrackedEntityAttributesWithLegendSet() )
         {
             String column = quote( attribute.getUid() + PartitionUtils.SEP + attribute.getLegendSet().getUid() );
             String select = getSelectClause( attribute.getValueType() );
