@@ -259,7 +259,7 @@ public class JdbcEventAnalyticsTableManager
             columns.add( col );
         }
 
-        for ( DataElement dataElement : table.getProgram().getAllDataElements() )
+        for ( DataElement dataElement : table.getProgram().getDataElements() )
         {
             ValueType valueType = dataElement.getValueType();
             String dataType = getColumnType( valueType );

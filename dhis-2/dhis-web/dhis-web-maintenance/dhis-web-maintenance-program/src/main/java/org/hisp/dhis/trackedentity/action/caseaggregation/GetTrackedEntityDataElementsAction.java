@@ -122,7 +122,7 @@ public class GetTrackedEntityDataElementsAction
         {
             Program program = programService.getProgram( programId );
             
-            dataElements = new ArrayList<>( program.getAllDataElements() );
+            dataElements = new ArrayList<>( program.getDataElements() );
         }
         
         Collections.sort( dataElements, IdentifiableObjectNameComparator.INSTANCE );

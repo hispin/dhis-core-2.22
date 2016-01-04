@@ -337,7 +337,7 @@ public class EventController
         {
             Map<String, String> dataElements = new HashMap<>();
 
-            for ( DataElement de : program.getAllDataElements() )
+            for ( DataElement de : program.getDataElements() )
             {
                 dataElements.put( de.getUid(), de.getDisplayName() );
             }

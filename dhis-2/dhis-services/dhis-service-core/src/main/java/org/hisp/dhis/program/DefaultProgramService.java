@@ -289,7 +289,7 @@ public class DefaultProgramService
             return programDataElements;
         }
         
-        for ( DataElement element : program.getAllDataElements() )
+        for ( DataElement element : program.getDataElements() )
         {
             programDataElements.add( new ProgramDataElement( program, element ) );
         }
