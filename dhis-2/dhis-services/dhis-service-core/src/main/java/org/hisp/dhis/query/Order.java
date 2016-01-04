@@ -73,6 +73,16 @@ public class Order
         return property;
     }
 
+    public boolean isPersisted()
+    {
+        return property.isPersisted() && property.isSimple();
+    }
+
+    public boolean isNonPersisted()
+    {
+        return !property.isPersisted() && property.isSimple();
+    }
+
     public int compare( Object lside, Object rside )
     {
         Object o1 = ReflectionUtils.invokeMethod( lside, property.getGetterMethod() );

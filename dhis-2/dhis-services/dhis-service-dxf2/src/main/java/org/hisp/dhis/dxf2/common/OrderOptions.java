@@ -95,7 +95,7 @@ public class OrderOptions
 
     private boolean validProperty( Property property )
     {
-        return property.isPersisted() && property.isSimple();
+        return property.isSimple();
     }
 
     private boolean validDirection( String direction )

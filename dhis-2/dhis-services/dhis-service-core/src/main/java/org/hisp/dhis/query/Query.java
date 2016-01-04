@@ -64,9 +64,32 @@ public class Query extends Criteria
         return schema;
     }
 
+    public boolean isEmpty()
+    {
+        return criterions.isEmpty() && orders.isEmpty();
+    }
+
     public List<Order> getOrders()
     {
         return orders;
+    }
+
+    public boolean ordersPersisted()
+    {
+        for ( Order order : orders )
+        {
+            if ( order.isNonPersisted() )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void clearOrders()
+    {
+        orders.clear();
     }
 
     public Integer getFirstResult()
