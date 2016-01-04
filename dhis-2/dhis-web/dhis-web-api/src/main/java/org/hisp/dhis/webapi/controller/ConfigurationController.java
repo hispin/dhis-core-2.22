@@ -40,6 +40,8 @@ import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
@@ -68,6 +70,9 @@ public class ConfigurationController
     @Autowired
     private ConfigurationService configurationService;
 
+    @Autowired
+    private DhisConfigurationProvider config;
+    
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
 
@@ -373,6 +378,18 @@ public class ConfigurationController
         config.setCorsWhitelist( corsWhitelist );
         
         configurationService.setConfiguration( config );
+    }
+    
+    @RequestMapping( value = "/systemBaseUrl", method = RequestMethod.GET )
+    public String getSystemBaseUrl( Model model, HttpServletRequest request )
+    {
+        return setModel( model, config.getProperty( ConfigurationKey.SYSTEM_BASE_URL ) );
+    }
+
+    @RequestMapping( value = "/systemReadOnlyMode", method = RequestMethod.GET )
+    public String getSystemReadOnlyMode( Model model, HttpServletRequest request )
+    {
+        return setModel( model, config.getProperty( ConfigurationKey.SYSTEM_READ_ONLY_MODE ) );
     }
 
     // -------------------------------------------------------------------------

@@ -148,6 +148,11 @@ public class DefaultAppManager
         {
             String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
             
+            if ( baseUrl == null )
+            {
+                return AppStatus.MISSING_SYSTEM_BASE_URL;
+            }
+            
             // -----------------------------------------------------------------
             // Parse ZIP file and it's manifest.webapp file.
             // -----------------------------------------------------------------
