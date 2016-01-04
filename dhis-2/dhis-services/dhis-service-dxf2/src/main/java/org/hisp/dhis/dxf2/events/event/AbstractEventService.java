@@ -662,13 +662,13 @@ public abstract class AbstractEventService
         {
             programStageInstance.setStatus( EventStatus.ACTIVE );
             programStageInstance.setCompletedDate( null );
-            programStageInstance.setCompletedUser( null );
+            programStageInstance.setCompletedBy( null );
         }
         else if ( event.getStatus() == EventStatus.COMPLETED )
         {
             programStageInstance.setCompletedDate( executionDate );
             programStageInstance.setStatus( EventStatus.COMPLETED );
-            programStageInstance.setCompletedUser( storedBy );
+            programStageInstance.setCompletedBy( storedBy );
 
             if ( !programStageInstance.isCompleted() )
             {
@@ -867,7 +867,7 @@ public abstract class AbstractEventService
         event.setStatus( programStageInstance.getStatus() );
         event.setEventDate( DateUtils.getLongDateString( programStageInstance.getExecutionDate() ) );
         event.setDueDate( DateUtils.getLongDateString( programStageInstance.getDueDate() ) );
-        event.setStoredBy( programStageInstance.getCompletedUser() );
+        event.setStoredBy( programStageInstance.getCompletedBy() );
         event.setCompletedDate( DateUtils.getLongDateString( programStageInstance.getCompletedDate() ) );
 
         UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
@@ -1123,7 +1123,7 @@ public abstract class AbstractEventService
         {
             programStageInstance.setStatus( EventStatus.COMPLETED );
             programStageInstance.setCompletedDate( new Date() );
-            programStageInstance.setCompletedUser( storedBy );
+            programStageInstance.setCompletedBy( storedBy );
             programStageInstanceService.completeProgramStageInstance( programStageInstance, i18nManager.getI18nFormat() );
         }
     }

@@ -190,7 +190,7 @@ public class DefaultProgramStageInstanceService
 
         programStageInstance.setStatus( EventStatus.COMPLETED );
         programStageInstance.setCompletedDate( date );
-        programStageInstance.setCompletedUser( currentUserService.getCurrentUsername() );
+        programStageInstance.setCompletedBy( currentUserService.getCurrentUsername() );
 
         // ---------------------------------------------------------------------
         // Send sms-message when to completed the event

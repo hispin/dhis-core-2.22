@@ -24,7 +24,7 @@
 
     <property name="followup" column="followup" />
     
-    <property name="completedUser" />
+    <property name="completedBy" />
 
     <property name="status" length="50">
       <type name="org.hibernate.type.EnumType">

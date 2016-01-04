@@ -570,7 +570,7 @@ public class DefaultProgramInstanceService
 
         programInstance.setStatus( ProgramStatus.COMPLETED );
         programInstance.setEndDate( new Date() );
-        programInstance.setCompletedUser( currentUserService.getCurrentUsername() );
+        programInstance.setCompletedBy( currentUserService.getCurrentUsername() );
 
         updateProgramInstance( programInstance );
     }

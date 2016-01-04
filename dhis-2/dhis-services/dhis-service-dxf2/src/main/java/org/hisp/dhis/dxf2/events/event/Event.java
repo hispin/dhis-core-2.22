@@ -85,7 +85,7 @@ public class Event
 
     private String attributeCategoryOptions;
 
-    private String completedUser;
+    private String completedBy;
 
     private String completedDate;
 
@@ -325,14 +325,14 @@ public class Event
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getCompletedUser()
+    public String getCompletedBy()
     {
-        return completedUser;
+        return completedBy;
     }
 
-    public void setCompletedUser( String completedUser )
+    public void setCompletedBy( String completedBy )
     {
-        this.completedUser = completedUser;
+        this.completedBy = completedBy;
     }
 
     @JsonProperty
@@ -382,7 +382,7 @@ public class Event
             ", coordinate=" + coordinate +
             ", dataValues=" + dataValues +
             ", attributeCategoryOptions=" + attributeCategoryOptions +
-            ", completedUser=" + completedUser +
+            ", completedBy=" + completedBy +
             ", completedDate=" + completedDate +
             '}';
     }

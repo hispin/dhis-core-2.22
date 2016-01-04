@@ -53,7 +53,7 @@
 
     <property name="latitude" />
 
-    <property name="completedUser" />
+    <property name="completedBy" />
 
     <property name="completedDate" />
 

@@ -119,14 +119,14 @@ public class JdbcEventStore
 
                 event.setTrackedEntityInstance( rowSet.getString( "tei_uid" ) );
 
-                event.setStoredBy( rowSet.getString( "psi_completeduser" ) );
+                event.setStoredBy( rowSet.getString( "psi_completedby" ) );
                 event.setOrgUnitName( rowSet.getString( "ou_name" ) );
                 event.setDueDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_duedate" ) ) );
                 event.setEventDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_executiondate" ) ) );
                 event.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_created" ) ) );
                 event.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_lastupdated" ) ) );
 
-                event.setCompletedUser( rowSet.getString( "psi_completeduser" ) );
+                event.setCompletedBy( rowSet.getString( "psi_completedby" ) );
                 event.setCompletedDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_completeddate" ) ) );
 
                 if ( rowSet.getBoolean( "ps_capturecoordinates" ) )
@@ -345,7 +345,7 @@ public class JdbcEventStore
         SqlHelper hlp = new SqlHelper();
 
         String sql =
-            "select psi.programstageinstanceid as psi_id, psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
+            "select psi.programstageinstanceid as psi_id, psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completedby as psi_completedby, " +
                 "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
                 "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
                 "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +

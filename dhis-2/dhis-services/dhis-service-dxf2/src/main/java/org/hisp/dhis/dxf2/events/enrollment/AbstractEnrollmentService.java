@@ -174,7 +174,7 @@ public abstract class AbstractEnrollmentService
         enrollment.setIncidentDate( programInstance.getIncidentDate() );
         enrollment.setFollowup( programInstance.getFollowup() );
         enrollment.setCompletedDate( programInstance.getEndDate() );
-        enrollment.setCompletedUser( programInstance.getCompletedUser() );
+        enrollment.setCompletedBy( programInstance.getCompletedBy() );
 
         List<TrackedEntityComment> comments = programInstance.getComments();
 

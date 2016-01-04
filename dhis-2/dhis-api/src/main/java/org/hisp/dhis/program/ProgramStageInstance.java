@@ -71,10 +71,10 @@ public class ProgramStageInstance
 
     private Double latitude;
 
-    private String completedUser;
+    private String completedBy;
 
     private Date completedDate;
-    
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -114,14 +114,14 @@ public class ProgramStageInstance
         this.programStage = programStage;
     }
 
-    public String getCompletedUser()
+    public String getCompletedBy()
     {
-        return completedUser;
+        return completedBy;
     }
 
-    public void setCompletedUser( String completedUser )
+    public void setCompletedBy( String completedBy )
     {
-        this.completedUser = completedUser;
+        this.completedBy = completedBy;
     }
 
     public Date getDueDate()
@@ -158,7 +158,7 @@ public class ProgramStageInstance
     {
         this.organisationUnit = organisationUnit;
     }
-    
+
     public DataElementCategoryOptionCombo getAttributeOptionCombo()
     {
         return attributeOptionCombo;
@@ -236,7 +236,7 @@ public class ProgramStageInstance
 
     public EventStatus getStatus()
     {
-       return status;
+        return status;
     }
 
     public EventStatus getEventStatus()

@@ -80,10 +80,20 @@ public class InitTableAlteror
         updateProgramStatus();
         updateSmtpPasswordColumn();
         updateTimestamps();
+        updateCompletedBy();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
         executeSql( "update program set \"type\"='WITHOUT_REGISTRATION' where type='3'" );
+    }
+
+    private void updateCompletedBy()
+    {
+        executeSql( "update programinstance set completedby=completeduser where completedby is null" );
+        executeSql( "update programstageinstance set completedby=completeduser where completedby is null" );
+
+        executeSql( "alter table programinstance drop column completeduser" );
+        executeSql( "alter table programstageinstance drop column completeduser" );
     }
 
     // -------------------------------------------------------------------------
@@ -98,7 +108,7 @@ public class InitTableAlteror
             executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
 
         }
-        catch(Exception ex)
+        catch ( Exception ex )
         {
             log.debug( ex );
         }
@@ -117,6 +127,7 @@ public class InitTableAlteror
         executeSql( "update trackedentityattributevalue set created=now() where created is null" );
         executeSql( "update trackedentityattributevalue set lastupdated=now() where lastupdated is null" );
     }
+
     private void updateProgramStatus()
     {
         executeSql( "alter table programinstance alter column status type varchar(50)" );
