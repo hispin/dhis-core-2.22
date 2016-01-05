@@ -76,6 +76,11 @@ public abstract class ResourceTable<T>
         return "drop table " + getTableName() + ";";
     }
     
+    public final String getDropTempTableStatement()
+    {
+        return "drop table " + getTempTableName() + ";";
+    }
+    
     public final String getRenameTempTableStatement()
     {
         return "alter table " + getTempTableName() + " rename to " + getTableName() + ";";
