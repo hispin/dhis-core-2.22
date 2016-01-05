@@ -396,54 +396,32 @@ public class JdbcEventStore
         {
             sql += hlp.whereAnd() + " psi.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
         }
-
-        if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
+        
+        if ( params.getStartDate() != null )
         {
-            if ( params.getStartDate() != null )
-            {
-                sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' "
-                		+ " or (psi.executiondate is null and psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "')) ";
-            }
-
-            if ( params.getEndDate() != null )
-            {
-                sql += hlp.whereAnd() + " (psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' "
-                 		+ " or (psi.executiondate is null and psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "')) ";
-            }
+            sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' "
+            		+ " or (psi.executiondate is null and psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "')) ";
         }
-        else
+
+        if ( params.getEndDate() != null )
         {
-            if ( params.getStartDate() != null )
-            {
-                sql += hlp.whereAnd() + " psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "' ";
-            }
+            sql += hlp.whereAnd() + " (psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' "
+             		+ " or (psi.executiondate is null and psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "')) ";
+        }
 
-            if ( params.getEndDate() != null )
-            {
-                sql += hlp.whereAnd() + " psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "' ";
-            }
-
+        if ( params.getEventStatus() != null )
+        {
             if ( params.getEventStatus() == EventStatus.VISITED )
             {
-                sql = "and psi.status = '" + EventStatus.ACTIVE.name() + "' and psi.executiondate is not null ";
-            }
-            else if ( params.getEventStatus() == EventStatus.COMPLETED )
-            {
-                sql = "and psi.status = '" + EventStatus.COMPLETED.name() + "' ";
-            }
-            else if ( params.getEventStatus() == EventStatus.SCHEDULE )
-            {
-                sql += "and psi.executiondate is null and date(now()) <= date(psi.duedate) and psi.status = '" +
-                    EventStatus.SCHEDULE.name() + "' ";
+                sql += hlp.whereAnd() + " psi.status = '" + EventStatus.ACTIVE.name() + "' and psi.executiondate is not null ";
             }
             else if ( params.getEventStatus() == EventStatus.OVERDUE )
             {
-                sql += "and psi.executiondate is null and date(now()) > date(psi.duedate) and psi.status = '" +
-                    EventStatus.SCHEDULE.name() + "' ";
+                sql += hlp.whereAnd() + " date(now()) > date(psi.duedate) and psi.status = '" + EventStatus.SCHEDULE.name() + "' ";
             }
             else
             {
-                sql += "and psi.status = '" + params.getEventStatus().name() + "' ";
+                sql += hlp.whereAnd() + " psi.status = '" + params.getEventStatus().name() + "' ";
             }
         }
 
