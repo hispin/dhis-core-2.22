@@ -81,9 +81,6 @@ public class AddAttributeAction
     @Autowired
     private AttributeService attributeService;
 
-    @Autowired
-    private DhisConfigurationProvider dhisConfigurationProvider;
-
     // -------------------------------------------------------------------------
     // Input/Output
     // -------------------------------------------------------------------------
