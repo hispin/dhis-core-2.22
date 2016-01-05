@@ -40,16 +40,16 @@ import java.util.Objects;
  */
 public class Order
 {
-    private boolean ascending;
+    private Direction direction;
 
     private boolean ignoreCase;
 
     private Property property;
 
-    public Order( Property property, boolean ascending )
+    public Order( Property property, Direction direction )
     {
         this.property = property;
-        this.ascending = ascending;
+        this.direction = direction;
     }
 
     public Order ignoreCase()
@@ -60,7 +60,7 @@ public class Order
 
     public boolean isAscending()
     {
-        return ascending;
+        return Direction.ASCENDING == direction;
     }
 
     public boolean isIgnoreCase()
@@ -98,31 +98,31 @@ public class Order
             String value1 = ignoreCase ? ((String) o1).toLowerCase() : (String) o1;
             String value2 = ignoreCase ? ((String) o2).toLowerCase() : (String) o2;
 
-            return ascending ? value1.compareTo( value2 ) : value2.compareTo( value1 );
+            return isAscending() ? value1.compareTo( value2 ) : value2.compareTo( value1 );
         }
         if ( Boolean.class.isInstance( o1 ) && Boolean.class.isInstance( o2 ) )
         {
-            return ascending ? ((Boolean) o1).compareTo( (Boolean) o2 ) : ((Boolean) o2).compareTo( (Boolean) o1 );
+            return isAscending() ? ((Boolean) o1).compareTo( (Boolean) o2 ) : ((Boolean) o2).compareTo( (Boolean) o1 );
         }
         else if ( Integer.class.isInstance( o1 ) && Integer.class.isInstance( o2 ) )
         {
-            return ascending ? ((Integer) o1).compareTo( (Integer) o2 ) : ((Integer) o2).compareTo( (Integer) o1 );
+            return isAscending() ? ((Integer) o1).compareTo( (Integer) o2 ) : ((Integer) o2).compareTo( (Integer) o1 );
         }
         else if ( Float.class.isInstance( o1 ) && Float.class.isInstance( o2 ) )
         {
-            return ascending ? ((Float) o1).compareTo( (Float) o2 ) : ((Float) o2).compareTo( (Float) o1 );
+            return isAscending() ? ((Float) o1).compareTo( (Float) o2 ) : ((Float) o2).compareTo( (Float) o1 );
         }
         else if ( Double.class.isInstance( o1 ) && Double.class.isInstance( o2 ) )
         {
-            return ascending ? ((Double) o1).compareTo( (Double) o2 ) : ((Double) o2).compareTo( (Double) o1 );
+            return isAscending() ? ((Double) o1).compareTo( (Double) o2 ) : ((Double) o2).compareTo( (Double) o1 );
         }
         else if ( Date.class.isInstance( o1 ) && Date.class.isInstance( o2 ) )
         {
-            return ascending ? ((Date) o1).compareTo( (Date) o2 ) : ((Date) o2).compareTo( (Date) o1 );
+            return isAscending() ? ((Date) o1).compareTo( (Date) o2 ) : ((Date) o2).compareTo( (Date) o1 );
         }
         else if ( Enum.class.isInstance( o1 ) && Enum.class.isInstance( o2 ) )
         {
-            return ascending ? String.valueOf( o1 ).compareTo( String.valueOf( o2 ) ) : String.valueOf( o2 ).compareTo( String.valueOf( o1 ) );
+            return isAscending() ? String.valueOf( o1 ).compareTo( String.valueOf( o2 ) ) : String.valueOf( o2 ).compareTo( String.valueOf( o1 ) );
         }
 
         return 0;
@@ -130,22 +130,22 @@ public class Order
 
     public static Order asc( Property property )
     {
-        return new Order( property, true );
+        return new Order( property, Direction.ASCENDING );
     }
 
     public static Order iasc( Property property )
     {
-        return new Order( property, true ).ignoreCase();
+        return new Order( property, Direction.ASCENDING ).ignoreCase();
     }
 
     public static Order desc( Property property )
     {
-        return new Order( property, false );
+        return new Order( property, Direction.DESCENDING );
     }
 
     public static Order idesc( Property property )
     {
-        return new Order( property, false ).ignoreCase();
+        return new Order( property, Direction.DESCENDING ).ignoreCase();
     }
 
     public static Order from( String direction, Property property )
@@ -168,7 +168,7 @@ public class Order
     @Override
     public int hashCode()
     {
-        return Objects.hash( ascending, ignoreCase, property );
+        return Objects.hash( direction, ignoreCase, property );
     }
 
     @Override
@@ -186,18 +186,19 @@ public class Order
 
         final Order other = (Order) obj;
 
-        return Objects.equals( this.ascending, other.ascending )
+        return Objects.equals( this.direction, other.direction )
             && Objects.equals( this.ignoreCase, other.ignoreCase )
             && Objects.equals( this.property, other.property );
     }
+
 
     @Override
     public String toString()
     {
         return MoreObjects.toStringHelper( this )
-            .add( "ascending", ascending )
+            .add( "direction", direction )
             .add( "ignoreCase", ignoreCase )
-            .add( "property", property != null ? property.getName() : null )
+            .add( "property", property )
             .toString();
     }
 }
