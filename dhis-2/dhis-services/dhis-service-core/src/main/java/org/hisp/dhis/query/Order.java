@@ -148,6 +148,23 @@ public class Order
         return new Order( property, false ).ignoreCase();
     }
 
+    public static Order from( String direction, Property property )
+    {
+        switch ( direction )
+        {
+            case "asc":
+                return Order.asc( property );
+            case "iasc":
+                return Order.iasc( property );
+            case "desc":
+                return Order.desc( property );
+            case "idesc":
+                return Order.idesc( property );
+            default:
+                return Order.asc( property );
+        }
+    }
+
     @Override
     public int hashCode()
     {

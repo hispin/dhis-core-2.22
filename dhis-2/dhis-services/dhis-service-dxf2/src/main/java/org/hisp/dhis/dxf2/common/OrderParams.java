@@ -80,28 +80,7 @@ public class OrderParams
                 continue;
             }
 
-            Order order;
-
-            switch ( direction )
-            {
-                case "asc":
-                    order = Order.asc( property );
-                    break;
-                case "iasc":
-                    order = Order.iasc( property );
-                    break;
-                case "desc":
-                    order = Order.desc( property );
-                    break;
-                case "idesc":
-                    order = Order.idesc( property );
-                    break;
-                default:
-                    order = Order.asc( property );
-                    break;
-            }
-
-            orders.put( propertyName, order );
+            orders.put( propertyName, Order.from( direction, property ) );
         }
 
         return new ArrayList<>( orders.values() );
