@@ -1318,13 +1318,14 @@ Ext.onReady( function() {
 
                         for (var j = 0, value; j < row.length; j++) {
                             value = row[j];
-                            obj[r.headers[j].name] = booleanNames[value] || r.metaData.optionNames[value] || names[value] || value;
+                            obj[r.headers[j].name] = booleanNames[value] || r.metaData.optionNames[value] || value;
                         }
 
+                        obj.id = obj.ou;
                         obj[gis.conf.finals.widget.value] = 0;
                         obj.label = obj.ouname;
                         obj.popupText = obj.ouname;
-                        obj.nameColumnMap = Ext.apply(names, r.metaData.optionNames, r.metaData.booleanNames);
+                        obj.nameColumnMap = Ext.apply(names, r.metaData.optionNames, r.metaData.booleanNames);                        
 
                         events.push(obj);
                     }
