@@ -210,7 +210,7 @@ public class DefaultUserSettingService
 
         if ( userCredentials == null )
         {
-            return Optional.empty();
+            return Optional.ofNullable( key.getDefaultValue() );
         }
         
         UserSetting setting = userSettingStore.getUserSetting( userCredentials.getUserInfo(), key.getName() );
