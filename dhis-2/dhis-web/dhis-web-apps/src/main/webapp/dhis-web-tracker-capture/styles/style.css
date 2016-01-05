@@ -816,6 +816,7 @@ div#searchOuTree h4{
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
 .form-control-inline {
     color: #555;
     padding: 6px 6px;
@@ -829,7 +830,6 @@ div#searchOuTree h4{
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
-
 
 .form-control-program {    
     width: 40%;
@@ -857,18 +857,23 @@ div#searchOuTree h4{
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6)
 }
+
 .form-control-program:-moz-placeholder {
     color: #999
 }
+
 .form-control-program::-moz-placeholder {
     color: #999
 }
+
 .form-control-program:-ms-input-placeholder {
     color: #999
 }
+
 .form-control-program::-webkit-input-placeholder {
     color: #999
 }
+
 .form-control-program[disabled], .form-control-program[readonly], fieldset[disabled] .form-control-program {
     cursor: not-allowed;
     background-color: #eee
@@ -880,18 +885,23 @@ div#searchOuTree h4{
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6)
 }
+
 .form-control-inline:-moz-placeholder {
     color: #999
 }
+
 .form-control-inline::-moz-placeholder {
     color: #999
 }
+
 .form-control-inline:-ms-input-placeholder {
     color: #999
 }
+
 .form-control-inline::-webkit-input-placeholder {
     color: #999
 }
+
 .form-control-inline[disabled], .form-control-inline[readonly], fieldset[disabled] .form-control-inline {
     cursor: not-allowed;
     background-color: #eee
@@ -915,6 +925,17 @@ div#searchOuTree h4{
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.form-control-checkbox {
+    height: 24px;
+    width: 24px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.form-narrow-column {
+    width: 80px;
 }
 
 .underline {
