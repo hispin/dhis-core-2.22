@@ -156,7 +156,8 @@ public class DefaultDhisConfigurationProvider
         try
         {
             maxKeyLength = Cipher.getMaxAllowedKeyLength( "AES" );
-            if(maxKeyLength == 128) {
+            if ( maxKeyLength == 128 )
+            {
                 return EncryptionStatus.MISSING_JCE_POLICY;
             }
         }
@@ -167,11 +168,13 @@ public class DefaultDhisConfigurationProvider
 
         password = getProperty( ConfigurationKey.ENCRYPTION_PASSWORD );
 
-        if(password.length() == 0) {
+        if ( password.length() == 0 )
+        {
             return EncryptionStatus.MISSING_ENCRYPTION_PASSWORD;
         }
 
-        if(password.length() < 24) {
+        if ( password.length() < 24 )
+        {
             return EncryptionStatus.ENCRYPTION_PASSWORD_TOO_SHORT;
         }
 

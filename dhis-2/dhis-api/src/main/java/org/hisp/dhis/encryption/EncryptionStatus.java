@@ -46,11 +46,13 @@ public enum EncryptionStatus
         this.key = key;
     }
 
-    public boolean isOk() {
+    public boolean isOk()
+    {
         return this == OK;
     }
 
-    public String getKey() {
+    public String getKey()
+    {
         return key;
     }
 }

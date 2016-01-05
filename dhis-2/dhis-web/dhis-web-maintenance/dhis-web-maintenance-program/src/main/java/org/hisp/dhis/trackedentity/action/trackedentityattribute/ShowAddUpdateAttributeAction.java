@@ -156,7 +156,7 @@ public class ShowAddUpdateAttributeAction
 
     public boolean getEncryptionStatus()
     {
-        return dhisConfigurationProvider.isEncryptionConfigured().isAvailable();
+        return dhisConfigurationProvider.isEncryptionConfigured().isOk();
 
     }
 
