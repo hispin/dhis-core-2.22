@@ -41,6 +41,8 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.configuration.ConfigurationService;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.velocity.VelocityManager;
@@ -81,12 +83,12 @@ public class EmailMessageSender
     {
         this.systemSettingManager = systemSettingManager;
     }
-    
-    private ConfigurationService configurationService;
-    
-    public void setConfigurationService( ConfigurationService configurationService )
+
+    private DhisConfigurationProvider dhisConfigurationProvider;
+
+    public void setDhisConfigurationProvider( DhisConfigurationProvider dhisConfigurationProvider)
     {
-        this.configurationService = configurationService;
+        this.dhisConfigurationProvider = dhisConfigurationProvider;
     }
     
     private UserSettingService userSettingService;
@@ -107,12 +109,12 @@ public class EmailMessageSender
     @Override
     public String sendMessage( String subject, String text, String footer, User sender, Set<User> users, boolean forceSend )
     {
-        String hostName = systemSettingManager.getEmailHostName();
-        int port = systemSettingManager.getEmailPort();
-        String username = systemSettingManager.getEmailUsername();
-        String password = configurationService.getConfiguration().getSmtpPassword();
-        boolean tls = systemSettingManager.getEmailTls();
-        String from = systemSettingManager.getEmailSender();
+        String hostName = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_HOSTNAME );
+        int port = Integer.parseInt( dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_PORT ) );
+        String username = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_USERNAME );
+        String password = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_PASSWORD );
+        boolean tls = Boolean.parseBoolean( dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_TLS ) );
+        String from = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_SENDER );
 
         if ( hostName == null )
         {

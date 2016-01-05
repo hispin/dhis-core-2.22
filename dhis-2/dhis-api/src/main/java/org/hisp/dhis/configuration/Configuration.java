@@ -86,22 +86,6 @@ public class Configuration
     private OrganisationUnit selfRegistrationOrgUnit;
     
     private Set<String> corsWhitelist = new HashSet<>();
-
-    // -------------------------------------------------------------------------
-    // Remote synch
-    // -------------------------------------------------------------------------
-
-    private String remoteServerUrl;
-    
-    private String remoteServerUsername;
-    
-    private String remoteServerPassword;
-
-    // -------------------------------------------------------------------------
-    // SMTP
-    // -------------------------------------------------------------------------
-    
-    private String smtpPassword;
     
     // -------------------------------------------------------------------------
     // Constructor
@@ -242,55 +226,10 @@ public class Configuration
         this.selfRegistrationOrgUnit = selfRegistrationOrgUnit;
     }
 
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getRemoteServerUrl()
-    {
-        return remoteServerUrl;
-    }
-
-    public void setRemoteServerUrl( String remoteServerUrl )
-    {
-        this.remoteServerUrl = remoteServerUrl;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getRemoteServerUsername()
-    {
-        return remoteServerUsername;
-    }
-
-    public void setRemoteServerUsername( String remoteServerUsername )
-    {
-        this.remoteServerUsername = remoteServerUsername;
-    }
 
     /**
      * Do not serialize.
      */
-    public String getRemoteServerPassword()
-    {
-        return remoteServerPassword;
-    }
-
-    public void setRemoteServerPassword( String remoteServerPassword )
-    {
-        this.remoteServerPassword = remoteServerPassword;
-    }
-
-    /**
-     * Do not serialize.
-     */
-    public String getSmtpPassword()
-    {
-        return smtpPassword;
-    }
-    
-    public void setSmtpPassword( String smtpPassword )
-    {
-        this.smtpPassword = smtpPassword;
-    }
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )

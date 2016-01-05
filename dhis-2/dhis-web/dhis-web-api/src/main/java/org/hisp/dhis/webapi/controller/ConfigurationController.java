@@ -298,64 +298,17 @@ public class ConfigurationController
         configurationService.setConfiguration( config );
     }
 
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/smtpPassword", method = RequestMethod.POST )
-    public void setSmtpPassword( @RequestBody String password  )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setSmtpPassword( StringUtils.trimToNull( password ) );
-        
-        configurationService.setConfiguration( config );
-    }    
-
     @RequestMapping( value = "/remoteServerUrl", method = RequestMethod.GET )
     public String getRemoteServerUrl( Model model, HttpServletRequest request )
     {
-        return setModel( model, configurationService.getConfiguration().getRemoteServerUrl() );
+        return setModel( model, config.getProperty( ConfigurationKey.REMOTE_INSTANCE_URL ) );
     }
-    
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerUrl", method = RequestMethod.POST )
-    public void setRemoteServerUrl( @RequestBody String url )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setRemoteServerUrl( StringUtils.trimToNull( url ) );
-        
-        configurationService.setConfiguration( config );
-    }
+
 
     @RequestMapping( value = "/remoteServerUsername", method = RequestMethod.GET )
     public String getRemoteServerUsername( Model model, HttpServletRequest request )
     {
-        return setModel( model, configurationService.getConfiguration().getRemoteServerUsername() );
-    }
-    
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerUsername", method = RequestMethod.POST )
-    public void setRemoteServerUsername( @RequestBody String username )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setRemoteServerUsername( StringUtils.trimToNull( username ) );
-        
-        configurationService.setConfiguration( config );
-    }
-    
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerPassword", method = RequestMethod.POST )
-    public void setRemoteServerPassword( @RequestBody String password )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setRemoteServerPassword( StringUtils.trimToNull( password ) );
-        
-        configurationService.setConfiguration( config );
+        return setModel( model, config.getProperty( ConfigurationKey.REMOTE_INSTANCE_USERNAME) );
     }
 
     @RequestMapping( value = "/corsWhitelist", method = RequestMethod.GET, produces = "application/json" )
