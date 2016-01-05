@@ -333,7 +333,15 @@ public class DataSet
     {
         return sections != null && sections.size() > 0;
     }
-
+    
+    /**
+     * Indicates whether data should be approved for this data set, i.e. whether
+     * this data set is part of a data approval workflow.
+     */
+    public boolean isApproveData()
+    {
+        return workflow != null;
+    }
 
     @JsonProperty
     @JsonView( { DetailedView.class } )
