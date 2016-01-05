@@ -128,14 +128,24 @@ public class Order
         return 0;
     }
 
-    public static Order iasc( Property property )
+    public static Order asc( Property property )
     {
         return new Order( property, true );
     }
 
-    public static Order idesc( Property property )
+    public static Order iasc( Property property )
+    {
+        return new Order( property, true ).ignoreCase();
+    }
+
+    public static Order desc( Property property )
     {
         return new Order( property, false );
+    }
+
+    public static Order idesc( Property property )
+    {
+        return new Order( property, false ).ignoreCase();
     }
 
     @Override

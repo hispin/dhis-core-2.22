@@ -70,24 +70,38 @@ public class OrderParams
                 continue;
             }
 
-            if ( orders.containsKey( split[0] ) || !schema.haveProperty( split[0] )
-                || !validProperty( schema.getProperty( split[0] ) ) || !validDirection( split[1] ) )
+            String propertyName = split[0];
+            Property property = schema.getProperty( propertyName );
+            String direction = split[1].toLowerCase();
+
+            if ( orders.containsKey( propertyName ) || !schema.haveProperty( propertyName )
+                || !validProperty( property ) || !validDirection( direction ) )
             {
                 continue;
             }
 
             Order order;
 
-            if ( "asc".equals( split[1] ) || "iasc".equals( split[1] ) )
+            switch ( direction )
             {
-                order = Order.iasc( schema.getProperty( split[0] ) );
-            }
-            else
-            {
-                order = Order.idesc( schema.getProperty( split[0] ) );
+                case "asc":
+                    order = Order.asc( property );
+                    break;
+                case "iasc":
+                    order = Order.iasc( property );
+                    break;
+                case "desc":
+                    order = Order.desc( property );
+                    break;
+                case "idesc":
+                    order = Order.idesc( property );
+                    break;
+                default:
+                    order = Order.asc( property );
+                    break;
             }
 
-            orders.put( split[0], order.ignoreCase() );
+            orders.put( propertyName, order );
         }
 
         return new ArrayList<>( orders.values() );
