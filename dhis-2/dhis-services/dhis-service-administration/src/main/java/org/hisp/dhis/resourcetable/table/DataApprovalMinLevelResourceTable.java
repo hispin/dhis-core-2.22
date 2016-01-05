@@ -58,7 +58,7 @@ public class DataApprovalMinLevelResourceTable
     public String getCreateTempTableStatement()
     {
         String sql = "create table " + getTempTableName() + "(" +
-            "datasetid integer not null, " +
+            "workflowid integer not null, " +
             "periodid integer not null, " +
             "organisationunitid integer not null, " +
             "attributeoptioncomboid integer not null, " +
@@ -72,15 +72,15 @@ public class DataApprovalMinLevelResourceTable
     {
         String sql = 
             "insert into " + getTempTableName() + 
-            " (datasetid,periodid,organisationunitid,attributeoptioncomboid,minlevel) " +
-            "select da.datasetid, da.periodid, da.organisationunitid, da.attributeoptioncomboid, dal.level as minlevel " +
+            " (workflowid,periodid,organisationunitid,attributeoptioncomboid,minlevel) " +
+            "select da.workflowid, da.periodid, da.organisationunitid, da.attributeoptioncomboid, dal.level as minlevel " +
             "from dataapproval da " +
             "inner join dataapprovallevel dal on da.dataapprovallevelid=dal.dataapprovallevelid " +
             "where not exists ( " +
                 "select 1 from dataapproval da2 " +
                 "inner join dataapprovallevel dal2 on da2.dataapprovallevelid=dal2.dataapprovallevelid " +
                 "inner join _orgunitstructure ous2 on da2.organisationunitid=ous2.organisationunitid " +
-                "where da.datasetid=da2.datasetid and da.periodid=da2.periodid and da.attributeoptioncomboid=da2.attributeoptioncomboid " +
+                "where da.workflowid=da2.workflowid and da.periodid=da2.periodid and da.attributeoptioncomboid=da2.attributeoptioncomboid " +
                 "and dal2.level < dal.level " +
                 "and ( ";
         
@@ -103,12 +103,10 @@ public class DataApprovalMinLevelResourceTable
     @Override
     public List<String> getCreateIndexStatements()
     {
-        String sql = 
-            "create index in_dataapprovalminlevel_datasetid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetid);" +
-            "create index in_dataapprovalminlevel_periodid_" + getRandomSuffix() + " on " + getTempTableName() + "(periodid);" +
-            "create index in_dataapprovalminlevel_organisationunitid_" + getRandomSuffix() + " on " + getTempTableName() + "(organisationunitid);" +
-            "create index in_dataapprovalminlevel_attributeoptioncomboid_" + getRandomSuffix() + " on " + getTempTableName() + "(attributeoptioncomboid);";
-        
-        return Lists.newArrayList( sql );        
+        return Lists.newArrayList(
+            "create index in_dataapprovalminlevel_workflowidid_" + getRandomSuffix() + " on " + getTempTableName() + "(workflowid);",
+            "create index in_dataapprovalminlevel_periodid_" + getRandomSuffix() + " on " + getTempTableName() + "(periodid);",
+            "create index in_dataapprovalminlevel_organisationunitid_" + getRandomSuffix() + " on " + getTempTableName() + "(organisationunitid);",
+            "create index in_dataapprovalminlevel_attributeoptioncomboid_" + getRandomSuffix() + " on " + getTempTableName() + "(attributeoptioncomboid);" );        
     }
 }

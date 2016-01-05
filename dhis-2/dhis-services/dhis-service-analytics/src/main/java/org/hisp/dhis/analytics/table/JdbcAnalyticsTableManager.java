@@ -271,7 +271,7 @@ public class JdbcAnalyticsTableManager
         {
             String sql =
                 "left join _dataapprovalminlevel da " +
-                    "on des.datasetid=da.datasetid and da.periodid=dv.periodid and da.attributeoptioncomboid=dv.attributeoptioncomboid " +
+                    "on des.workflowid=da.workflowid and da.periodid=dv.periodid and da.attributeoptioncomboid=dv.attributeoptioncomboid " +
                     "and (";
 
             Set<OrganisationUnitLevel> levels = dataApprovalLevelService.getOrganisationUnitApprovalLevels();
