@@ -22,8 +22,7 @@
     <set name="levels" table="dataapprovalworkflowlevels">
       <cache usage="read-write" />
       <key column="workflowid" foreign-key="fk_dataapprovalworkflowlevels_workflowid" />
-      <many-to-many class="org.hisp.dhis.dataapproval.DataApprovalLevel" column="dataapprovallevelid"
-                    foreign-key="fk_dataapprovalworkflowlevels_levelid" />
+      <many-to-many class="org.hisp.dhis.dataapproval.DataApprovalLevel" column="dataapprovallevelid" foreign-key="fk_dataapprovalworkflowlevels_levelid" />
     </set>
 
     <!-- Access properties -->
