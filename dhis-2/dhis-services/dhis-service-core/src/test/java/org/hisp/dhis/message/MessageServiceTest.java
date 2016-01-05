@@ -40,7 +40,6 @@ import java.util.Set;
 import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserService;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -68,20 +67,22 @@ public class MessageServiceTest
     // -------------------------------------------------------------------------
 
     @Override
-    @Before
     public void setUpTest()
-    {
+    {        
         userService = _userService;
         
         sender = createUser( 'S' );
         userA = createUser( 'A' );
         userB = createUser( 'B' );
-       
-
+        
         userService.addUser( sender );
+        userService.addUserCredentials( sender.getUserCredentials() );
+
         userService.addUser( userA );
+        userService.addUserCredentials( userA.getUserCredentials() );
+        
         userService.addUser( userB );
-       
+        userService.addUserCredentials( userB.getUserCredentials() );
         
         users = new HashSet<>();
         users.add( userA );
