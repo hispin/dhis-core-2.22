@@ -336,4 +336,35 @@ public class IdentifiableObjectUtils
 
         return map;
     }
+
+    /**
+     * @param object Object to get display name for
+     * @return A usable display name
+     */
+    public static String getDisplayName( Object object )
+    {
+        if ( object == null )
+        {
+            return "[ object is null ]";
+        }
+        else if ( IdentifiableObject.class.isInstance( object ) )
+        {
+            IdentifiableObject identifiableObject = (IdentifiableObject) object;
+
+            if ( identifiableObject.getDisplayName() != null && !identifiableObject.getDisplayName().isEmpty() )
+            {
+                return identifiableObject.getDisplayName();
+            }
+            else if ( identifiableObject.getUid() != null && !identifiableObject.getUid().isEmpty() )
+            {
+                return identifiableObject.getUid();
+            }
+            else if ( identifiableObject.getCode() != null && !identifiableObject.getCode().isEmpty() )
+            {
+                return identifiableObject.getCode();
+            }
+        }
+
+        return object.getClass().getName();
+    }
 }
