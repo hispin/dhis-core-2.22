@@ -807,7 +807,6 @@ public class UserCredentials
     public String toString()
     {
         return "{" +
-            "\"userInfo\":\"" + userInfo + "\", " +
             "\"username\":\"" + username + "\", " +
             "\"openId\":\"" + openId + "\", " +
             "\"password\":\"" + password + "\", " +
