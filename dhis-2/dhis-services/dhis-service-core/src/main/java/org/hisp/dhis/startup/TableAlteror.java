@@ -714,7 +714,9 @@ public class TableAlteror
         executeSql( "UPDATE program SET version=0 WHERE version IS NULL" );
         executeSql( "update program set shortname = substring(name,0,50) where shortname is null" );
         executeSql( "update program set categorycomboid = " + defaultCategoryComboId + " where categorycomboid is null" );
+
         executeSql( "update programstageinstance set attributeoptioncomboid = " + defaultOptionComboId + " where attributeoptioncomboid is null" );
+        executeSql( "update programstageinstance set storedby=completedby where storedby is null" );
 
         executeSql( "ALTER TABLE datavalue ALTER COLUMN lastupdated TYPE timestamp" );
         executeSql( "ALTER TABLE completedatasetregistration ALTER COLUMN date TYPE timestamp" );
