@@ -35,7 +35,7 @@
                     </div>                
                 </td>
             </tr>
-            <tr ng-repeat="attribute in attributes">
+            <tr ng-repeat="attribute in attributes | nonConfidential">
                 <td>
                     {{attribute.name}}
                 </td>

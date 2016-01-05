@@ -1670,12 +1670,15 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             var filterTypes = {}, filterText = {};
             var columns = [];
+            
+            //Filter out attributes that is confidential, so they will not be part of any grid:
+            var nonConfidentialAttributes = angular.copy($filter('nonConfidential')(attributes));
        
             //also add extra columns which are not part of attributes (orgunit for example)
             columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'TEXT', displayInListNoProgram: false, attribute: false});
             columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'DATE', displayInListNoProgram: false, attribute: false});
             columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'BOOLEAN', displayInListNoProgram: false, attribute: false});
-            columns = columns.concat(attributes ? angular.copy(attributes) : []);
+            columns = columns.concat(nonConfidentialAttributes ? nonConfidentialAttributes : []);
             
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
