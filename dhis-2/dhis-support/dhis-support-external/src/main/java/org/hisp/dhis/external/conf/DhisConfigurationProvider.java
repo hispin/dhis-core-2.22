@@ -28,6 +28,8 @@ package org.hisp.dhis.external.conf;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.encryption.EncryptionStatus;
+
 import java.util.Properties;
 
 /**
@@ -78,4 +80,11 @@ public interface DhisConfigurationProvider
      * @return true if LDAP authentication is configured.
      */
     boolean isLdapConfigured();
+
+    /**
+     * Indicates whether encryption is correctly configured and available in the system.
+     *
+     * @return EncryptionStatus reflecting the status of encryption in the system
+     */
+    EncryptionStatus isEncryptionConfigured();
 }

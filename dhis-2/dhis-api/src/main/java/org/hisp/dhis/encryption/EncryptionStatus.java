@@ -1,4 +1,4 @@
-package org.hisp.dhis.startup;
+package org.hisp.dhis.encryption;
 
 /*
  * Copyright (c) 2004-2016, University of Oslo
@@ -28,51 +28,29 @@ package org.hisp.dhis.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.UUID;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.configuration.Configuration;
-import org.hisp.dhis.configuration.ConfigurationService;
-import org.hisp.dhis.encryption.EncryptionStatus;
-import org.hisp.dhis.external.conf.DhisConfigurationProvider;
-import org.hisp.dhis.system.startup.AbstractStartupRoutine;
-import org.springframework.beans.factory.annotation.Autowired;
-
-public class ConfigurationPopulator
-    extends AbstractStartupRoutine
+/**
+ * @author Stian Sandvold
+ */
+public enum EncryptionStatus
 {
-    @Autowired
-    private ConfigurationService configurationService;
+    OK( "Encryption is available" ),
+    MISSING_JCE_POLICY( "Missing the required JCE policy files for strong encryption." ),
+    MISSING_ENCRYPTION_PASSWORD( "Missing encryption.password in dhis.conf." ),
+    ENCRYPTION_PASSWORD_TOO_SHORT(
+        "encryption.password in dhis.conf is too short. Minimum 24 characters is required." );
 
-    @Autowired
-    private DhisConfigurationProvider dhisConfigurationProvider;
+    private final String key;
 
-    private static final Log log = LogFactory.getLog( ConfigurationPopulator.class );
-
-    @Override
-    public void execute()
-        throws Exception
+    EncryptionStatus( String key )
     {
-
-        checkSecurityConfiguration();
-
-        Configuration config = configurationService.getConfiguration();
-
-        if ( config != null && config.getSystemId() == null )
-        {
-            config.setSystemId( UUID.randomUUID().toString() );
-            configurationService.setConfiguration( config );
-        }
+        this.key = key;
     }
 
-    private void checkSecurityConfiguration()
-    {
-        EncryptionStatus status = dhisConfigurationProvider.isEncryptionConfigured();
+    public boolean isOk() {
+        return this == OK;
+    }
 
-        if ( !status.isOk() )
-        {
-            log.warn( "Encryption not configured: " + status.getKey() );
-        }
+    public String getKey() {
+        return key;
     }
 }

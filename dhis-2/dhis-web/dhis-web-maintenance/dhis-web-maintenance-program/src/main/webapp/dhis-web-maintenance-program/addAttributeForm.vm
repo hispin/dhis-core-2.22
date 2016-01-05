@@ -78,9 +78,15 @@
 	<tr>
 		<td><label for="confidential">$i18n.getString( "confidential" ) <br /><span class="tipText">(Confidential attributes can not be used in search and analytics.)</span></label></td>
 		<td>
-			<input type='checkbox' id="confidential" name="confidential" value='true'>
+            #if($encryptionAvailable)
+			    <input type='checkbox' id="confidential" name="confidential" value='true'>
+            #else
+                <p style="max-width: 312px">
+                    <b>$i18n.getString( "encryption_not_available" )</b>
+                </p>
+            #end
 		</td>
-		<td></td>				
+		<td></td>
 	</tr>
 
 	<tr>

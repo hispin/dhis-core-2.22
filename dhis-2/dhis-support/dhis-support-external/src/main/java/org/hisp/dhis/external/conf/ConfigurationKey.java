@@ -35,6 +35,7 @@ public enum ConfigurationKey
 {
     SYSTEM_BASE_URL( "system.base_url" ),
     SYSTEM_READ_ONLY_MODE( "system.read_only_mode", "off" ),
+    ENCRYPTION_PASSWORD( "encryption.password", "" ),
     CONNECTION_DIALECT( "connection.dialect" ),
     CONNECTION_DRIVER_CLASS( "connection.driver_class" ),
     CONNECTION_URL( "connection.url" ),

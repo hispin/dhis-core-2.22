@@ -78,7 +78,7 @@ public class InitTableAlteror
         updateFeatureTypes();
         updateValidationRuleEnums();
         updateProgramStatus();
-        updateSmtpPasswordColumn();
+        removeDeprecatedConfigurationColumns();
         updateTimestamps();
         updateCompletedBy();
 
@@ -100,12 +100,16 @@ public class InitTableAlteror
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void updateSmtpPasswordColumn()
+    private void removeDeprecatedConfigurationColumns()
     {
         try
         {
-            executeSql( "UPDATE configuration SET smtppassword = smptpassword" );
             executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN smtppassword" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverurl" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverusername" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remotepassword" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverpassword" );
 
         }
         catch ( Exception ex )

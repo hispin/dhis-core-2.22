@@ -31,6 +31,7 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
 import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
@@ -82,6 +83,9 @@ public class ShowAddUpdateAttributeAction
 
     @Autowired
     private AttributeService attributeService;
+
+    @Autowired
+    private DhisConfigurationProvider dhisConfigurationProvider;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -148,6 +152,12 @@ public class ShowAddUpdateAttributeAction
     public List<TrackedEntity> getTrackedEntities()
     {
         return trackedEntities;
+    }
+
+    public boolean getEncryptionStatus()
+    {
+        return dhisConfigurationProvider.isEncryptionConfigured().isAvailable();
+
     }
 
     // -------------------------------------------------------------------------
