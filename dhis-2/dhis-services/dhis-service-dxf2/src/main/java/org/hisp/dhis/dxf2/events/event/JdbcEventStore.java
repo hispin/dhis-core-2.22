@@ -346,16 +346,16 @@ public class JdbcEventStore
 
         String sql =
             "select psi.programstageinstanceid as psi_id, psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completedby as psi_completedby, " +
-                "psi.storedby as psi_storedby, psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
-                "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
-                "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
-                "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid " +
-                "from programstageinstance psi " +
-                "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
-                "inner join program p on p.programid=pi.programid " +
-                "inner join programstage ps on ps.programstageid=psi.programstageid " +
-                "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
-                "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
+            "psi.storedby as psi_storedby, psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
+            "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
+            "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
+            "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid " +
+            "from programstageinstance psi " +
+            "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
+            "inner join program p on p.programid=pi.programid " +
+            "inner join programstage ps on ps.programstageid=psi.programstageid " +
+            "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
+            "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
 
         if ( params.getTrackedEntityInstance() != null )
         {
@@ -399,14 +399,14 @@ public class JdbcEventStore
         
         if ( params.getStartDate() != null )
         {
-            sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' "
-            		+ " or (psi.executiondate is null and psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "')) ";
+            sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' " +
+                "or (psi.executiondate is null and psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "')) ";
         }
 
         if ( params.getEndDate() != null )
         {
-            sql += hlp.whereAnd() + " (psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' "
-             		+ " or (psi.executiondate is null and psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "')) ";
+            sql += hlp.whereAnd() + " (psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' " +
+                "or (psi.executiondate is null and psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "')) ";
         }
 
         if ( params.getEventStatus() != null )
@@ -443,10 +443,11 @@ public class JdbcEventStore
     private String getDataValueQuery()
     {
         String sql =
-            "select pdv.programstageinstanceid as pdv_id, pdv.created as pdv_created, pdv.lastupdated as pdv_lastupdated, pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
-                "de.uid as de_uid, de.code as de_code " +
-                "from trackedentitydatavalue pdv " +
-                "inner join dataelement de on pdv.dataelementid=de.dataelementid ";
+            "select pdv.programstageinstanceid as pdv_id, pdv.created as pdv_created, pdv.lastupdated as pdv_lastupdated, " +
+            "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
+            "de.uid as de_uid, de.code as de_code " +
+            "from trackedentitydatavalue pdv " +
+            "inner join dataelement de on pdv.dataelementid=de.dataelementid ";
 
         return sql;
     }
@@ -455,18 +456,19 @@ public class JdbcEventStore
     {
         String sql =
             "select psic.programstageinstanceid as psic_id, psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
-                "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby " +
-                "from programstageinstancecomments psic " +
-                "inner join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
+            "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby " +
+            "from programstageinstancecomments psic " +
+            "inner join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
 
         return sql;
     }
 
     private String getAttributeValueQuery()
     {
-        String sql = "select pav.trackedentityinstanceid as pav_id, pav.created as pav_created, pav.lastupdated as pav_lastupdated, pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype "
-            + "from trackedentityattributevalue pav "
-            + "inner join trackedentityattribute ta on pav.trackedentityattributeid=ta.trackedentityattributeid ";
+        String sql = "select pav.trackedentityinstanceid as pav_id, pav.created as pav_created, pav.lastupdated as pav_lastupdated, " +
+            "pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype " +
+            "from trackedentityattributevalue pav " +
+            "inner join trackedentityattribute ta on pav.trackedentityattributeid=ta.trackedentityattributeid ";
 
         return sql;
     }
