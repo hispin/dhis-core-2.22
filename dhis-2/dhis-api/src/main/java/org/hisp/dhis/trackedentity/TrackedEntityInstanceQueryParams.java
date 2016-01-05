@@ -127,7 +127,7 @@ public class TrackedEntityInstanceQueryParams
     /**
      * Selection mode for the specified organisation units, default is ACCESSIBLE.
      */
-    private OrganisationUnitSelectionMode organisationUnitMode = OrganisationUnitSelectionMode.ACCESSIBLE;
+    private OrganisationUnitSelectionMode organisationUnitMode = OrganisationUnitSelectionMode.DESCENDANTS;
     
     /**
      * Status of any events in the specified program.

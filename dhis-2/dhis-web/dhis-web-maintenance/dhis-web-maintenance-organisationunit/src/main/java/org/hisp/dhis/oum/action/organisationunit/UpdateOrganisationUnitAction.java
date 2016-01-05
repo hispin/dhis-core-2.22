@@ -43,7 +43,6 @@ import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -188,21 +187,21 @@ public class UpdateOrganisationUnitAction
         this.phoneNumber = phoneNumber;
     }
 
-    private Collection<String> dataSets = new HashSet<>();
+    private Collection<String> dataSets;
 
     public void setDataSets( Collection<String> dataSets )
     {
         this.dataSets = dataSets;
     }
 
-    private List<String> orgUnitGroupSets = new ArrayList<>();
+    private List<String> orgUnitGroupSets;
 
     public void setOrgUnitGroupSets( List<String> orgUnitGroupSets )
     {
         this.orgUnitGroupSets = orgUnitGroupSets;
     }
 
-    private List<String> orgUnitGroups = new ArrayList<>();
+    private List<String> orgUnitGroups;
 
     public void setOrgUnitGroups( List<String> orgUnitGroups )
     {
@@ -287,37 +286,43 @@ public class UpdateOrganisationUnitAction
             organisationUnit.setFeatureType( featureType );
         }
 
-        Set<DataSet> sets = new HashSet<>();
-
-        for ( String id : dataSets )
+        if ( dataSets != null )
         {
-            sets.add( manager.getNoAcl( DataSet.class, Integer.parseInt( id ) ) );
+            Set<DataSet> sets = new HashSet<>();
+    
+            for ( String id : dataSets )
+            {
+                sets.add( manager.getNoAcl( DataSet.class, Integer.parseInt( id ) ) );
+            }
+    
+            organisationUnit.updateDataSets( sets );
         }
-
-        organisationUnit.updateDataSets( sets );
 
         organisationUnitService.updateOrganisationUnit( organisationUnit );
 
-        for ( int i = 0; i < orgUnitGroupSets.size(); i++ )
+        if ( orgUnitGroupSets != null && orgUnitGroups != null )
         {
-            OrganisationUnitGroupSet groupSet = manager.getNoAcl( OrganisationUnitGroupSet.class, Integer
-                .parseInt( orgUnitGroupSets.get( i ) ) );
-
-            OrganisationUnitGroup oldGroup = groupSet.getGroup( organisationUnit );
-
-            OrganisationUnitGroup newGroup = manager.getNoAcl( OrganisationUnitGroup.class, Integer
-                .parseInt( orgUnitGroups.get( i ) ) );
-
-            if ( oldGroup != null && oldGroup.getMembers().remove( organisationUnit ) )
+            for ( int i = 0; i < orgUnitGroupSets.size(); i++ )
             {
-                oldGroup.removeOrganisationUnit( organisationUnit );
-                manager.updateNoAcl( oldGroup );
-            }
-
-            if ( newGroup != null && newGroup.getMembers().add( organisationUnit ) )
-            {
-                newGroup.addOrganisationUnit( organisationUnit );
-                manager.updateNoAcl( newGroup );
+                OrganisationUnitGroupSet groupSet = manager.getNoAcl( OrganisationUnitGroupSet.class, Integer
+                    .parseInt( orgUnitGroupSets.get( i ) ) );
+    
+                OrganisationUnitGroup oldGroup = groupSet.getGroup( organisationUnit );
+    
+                OrganisationUnitGroup newGroup = manager.getNoAcl( OrganisationUnitGroup.class, Integer
+                    .parseInt( orgUnitGroups.get( i ) ) );
+    
+                if ( oldGroup != null && oldGroup.getMembers().remove( organisationUnit ) )
+                {
+                    oldGroup.removeOrganisationUnit( organisationUnit );
+                    manager.updateNoAcl( oldGroup );
+                }
+    
+                if ( newGroup != null && newGroup.getMembers().add( organisationUnit ) )
+                {
+                    newGroup.addOrganisationUnit( organisationUnit );
+                    manager.updateNoAcl( newGroup );
+                }
             }
         }
 
