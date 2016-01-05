@@ -36,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dbms.DbmsManager;
 import org.hisp.dhis.resourcetable.ResourceTable;
 import org.hisp.dhis.resourcetable.ResourceTableStore;
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
