@@ -184,11 +184,11 @@ public class Query extends Criteria
 
         if ( schema.havePersistedProperty( "name" ) )
         {
-            addOrder( Order.asc( schema.getPersistedProperty( "name" ) ) );
+            addOrder( Order.iasc( schema.getPersistedProperty( "name" ) ) );
         }
         if ( schema.havePersistedProperty( "created" ) )
         {
-            addOrder( Order.desc( schema.getPersistedProperty( "created" ) ) );
+            addOrder( Order.idesc( schema.getPersistedProperty( "created" ) ) );
         }
 
         return this;

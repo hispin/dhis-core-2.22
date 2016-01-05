@@ -44,11 +44,11 @@ import java.util.Set;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class OrderOptions
+public class OrderParams
 {
     private Set<String> order = new HashSet<>();
 
-    public OrderOptions()
+    public OrderParams()
     {
     }
 
@@ -80,11 +80,11 @@ public class OrderOptions
 
             if ( "asc".equals( split[1] ) )
             {
-                newOrder = Order.asc( schema.getProperty( split[0] ) );
+                newOrder = Order.iasc( schema.getProperty( split[0] ) );
             }
             else
             {
-                newOrder = Order.desc( schema.getProperty( split[0] ) );
+                newOrder = Order.idesc( schema.getProperty( split[0] ) );
             }
 
             orders.put( split[0], newOrder.ignoreCase() );
@@ -122,11 +122,10 @@ public class OrderOptions
             return false;
         }
 
-        final OrderOptions other = (OrderOptions) obj;
+        final OrderParams other = (OrderParams) obj;
 
         return Objects.equals( this.order, other.order );
     }
-
 
     @Override
     public String toString()

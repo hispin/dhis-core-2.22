@@ -128,12 +128,12 @@ public class Order
         return 0;
     }
 
-    public static Order asc( Property property )
+    public static Order iasc( Property property )
     {
         return new Order( property, true );
     }
 
-    public static Order desc( Property property )
+    public static Order idesc( Property property )
     {
         return new Order( property, false );
     }
