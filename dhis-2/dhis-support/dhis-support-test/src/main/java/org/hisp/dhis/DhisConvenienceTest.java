@@ -1075,19 +1075,20 @@ public abstract class DhisConvenienceTest
 
     public static User createUser( char uniqueCharacter )
     {
+        UserCredentials credentials = new UserCredentials();
         User user = new User();
         user.setAutoFields();
+
+        credentials.setUserInfo( user );
+        user.setUserCredentials( credentials );
+
+        credentials.setUsername( "username" + uniqueCharacter );
+        credentials.setPassword( "password" + uniqueCharacter );
 
         user.setFirstName( "FirstName" + uniqueCharacter );
         user.setSurname( "Surname" + uniqueCharacter );
         user.setEmail( "Email" + uniqueCharacter );
         user.setPhoneNumber( "PhoneNumber" + uniqueCharacter );
-
-        UserCredentials credentials = new UserCredentials();
-        credentials.setUsername( "username" ); //TODO include uniqueCharacter
-        credentials.setPassword( "password" );
-
-        user.setUserCredentials( credentials );
 
         return user;
     }
@@ -1615,7 +1616,8 @@ public abstract class DhisConvenienceTest
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add( new SimpleGrantedAuthority( "ALL" ) );
 
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User( "username", "password", authorities );
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User( 
+            user.getUserCredentials().getUsername(), user.getUserCredentials().getPassword(), authorities );
 
         Authentication authentication = new UsernamePasswordAuthenticationToken( userDetails, "", authorities );
         SecurityContextHolder.getContext().setAuthentication( authentication );
