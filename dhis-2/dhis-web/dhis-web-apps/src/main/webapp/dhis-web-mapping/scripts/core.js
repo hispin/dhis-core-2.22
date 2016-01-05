@@ -665,7 +665,11 @@ Ext.onReady( function() {
                                                                     });
                                                                 }
 
-                                                                layer.widget.infrastructuralDataElementValuesStore.loadData(records);
+                                                                var store = layer.widget.infrastructuralDataElementValuesStore;
+
+                                                                if (store) {
+                                                                    store.loadData(records);
+                                                                }
                                                             }
 														}
 													});
@@ -861,7 +865,7 @@ Ext.onReady( function() {
 
 		if (isEvent) {
 			defaultLeftClickSelect = function fn(feature) {
-                var ignoreKeys = ['label', 'value', 'nameColumnMap', 'psi', 'ps', 'longitude', 'latitude', 'eventdate', 'ou', 'oucode', 'ouname', 'popupText'],
+                var ignoreKeys = ['id', 'label', 'value', 'nameColumnMap', 'psi', 'ps', 'longitude', 'latitude', 'eventdate', 'ou', 'oucode', 'ouname', 'popupText'],
                     attributes = feature.attributes,
                     map = attributes.nameColumnMap,
                     html = '<table class="padding1">',
