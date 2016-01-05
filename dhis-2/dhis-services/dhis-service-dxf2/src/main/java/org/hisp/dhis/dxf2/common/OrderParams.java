@@ -76,18 +76,18 @@ public class OrderParams
                 continue;
             }
 
-            Order newOrder;
+            Order order;
 
-            if ( "asc".equals( split[1] ) )
+            if ( "asc".equals( split[1] ) || "iasc".equals( split[1] ) )
             {
-                newOrder = Order.iasc( schema.getProperty( split[0] ) );
+                order = Order.iasc( schema.getProperty( split[0] ) );
             }
             else
             {
-                newOrder = Order.idesc( schema.getProperty( split[0] ) );
+                order = Order.idesc( schema.getProperty( split[0] ) );
             }
 
-            orders.put( split[0], newOrder.ignoreCase() );
+            orders.put( split[0], order.ignoreCase() );
         }
 
         return new ArrayList<>( orders.values() );
@@ -100,7 +100,8 @@ public class OrderParams
 
     private boolean validDirection( String direction )
     {
-        return "asc".equals( direction ) || "desc".equals( direction );
+        return "asc".equals( direction ) || "desc".equals( direction )
+            || "iasc".equals( direction ) || "idesc".equals( direction );
     }
 
     @Override
