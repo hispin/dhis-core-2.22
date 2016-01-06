@@ -228,36 +228,36 @@ public class DefaultReportTableService
     @Override
     public int countDataSetReportTables( DataSet dataSet )
     {
-        return reportTableStore.countDataSetAnalyticalObject( dataSet );
+        return reportTableStore.countAnalyticalObject( dataSet );
     }
     
     @Override
     public int countIndicatorReportTables( Indicator indicator )
     {
-        return reportTableStore.countIndicatorAnalyticalObject( indicator );
+        return reportTableStore.countAnalyticalObject( indicator );
     }
     
     @Override
     public int countDataElementReportTables( DataElement dataElement )
     {
-        return reportTableStore.countDataElementAnalyticalObject( dataElement );
+        return reportTableStore.countAnalyticalObject( dataElement );
     }
 
     @Override
     public int countPeriodReportTables( Period period )
     {
-        return reportTableStore.countPeriodAnalyticalObject( period );
+        return reportTableStore.countAnalyticalObject( period );
     }
     
     @Override
     public int countOrganisationUnitReportTables( OrganisationUnit organisationUnit )
     {
-        return reportTableStore.countOrganisationUnitAnalyticalObject( organisationUnit );
+        return reportTableStore.countAnalyticalObject( organisationUnit );
     }
     
     @Override
     public int countCategoryOptionGroups( CategoryOptionGroup categoryOptionGroup )
     {
-        return reportTableStore.countCategoryOptionGroupAnalyticalObject( categoryOptionGroup );
+        return reportTableStore.countAnalyticalObject( categoryOptionGroup );
     }
 }

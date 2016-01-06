@@ -231,7 +231,7 @@ public class ReportTable
     public ReportTable()
     {
     }
-
+    
     /**
      * Default constructor.
      *

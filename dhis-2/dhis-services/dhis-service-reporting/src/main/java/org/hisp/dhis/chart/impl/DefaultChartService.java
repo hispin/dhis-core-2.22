@@ -984,36 +984,36 @@ public class DefaultChartService
     @Override
     public int countDataSetCharts( DataSet dataSet )
     {
-        return chartStore.countDataSetAnalyticalObject( dataSet );
+        return chartStore.countAnalyticalObject( dataSet );
     }
 
     @Override
     public int countIndicatorCharts( Indicator indicator )
     {
-        return chartStore.countIndicatorAnalyticalObject( indicator );
+        return chartStore.countAnalyticalObject( indicator );
     }
 
     @Override
     public int countDataElementCharts( DataElement dataElement )
     {
-        return chartStore.countDataElementAnalyticalObject( dataElement );
+        return chartStore.countAnalyticalObject( dataElement );
     }
 
     @Override
     public int countPeriodCharts( Period period )
     {
-        return chartStore.countPeriodAnalyticalObject( period );
+        return chartStore.countAnalyticalObject( period );
     }
     
     @Override
     public int countOrganisationUnitCharts( OrganisationUnit organisationUnit )
     {
-        return chartStore.countOrganisationUnitAnalyticalObject( organisationUnit );
+        return chartStore.countAnalyticalObject( organisationUnit );
     }
 
     @Override
     public int countCategoryOptionGroups( CategoryOptionGroup categoryOptionGroup )
     {
-        return chartStore.countCategoryOptionGroupAnalyticalObject( categoryOptionGroup );
+        return chartStore.countAnalyticalObject( categoryOptionGroup );
     }
 }
