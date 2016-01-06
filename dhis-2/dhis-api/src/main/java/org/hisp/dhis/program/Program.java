@@ -287,6 +287,7 @@ public class Program
     // Getters and setters
     // -------------------------------------------------------------------------
 
+    @Override
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -294,11 +295,6 @@ public class Program
     public String getDescription()
     {
         return description;
-    }
-
-    public void setDescription( String description )
-    {
-        this.description = description;
     }
 
     @Override
