@@ -268,6 +268,21 @@ public abstract class BaseAnalyticalObject
     }
 
     /**
+     * Removes a data dimension object.
+     * 
+     * @return true if a data dimension was removed, false if not.
+     */
+    public boolean removeDataDimensionItem( DimensionalItemObject object )
+    {
+        if ( object != null && DataDimensionItem.DATA_DIMENSION_CLASSES.contains( object.getClass() ) )
+        {
+            return dataDimensionItems.remove( DataDimensionItem.create( object ) );
+        }
+        
+        return false;
+    }
+
+    /**
      * Adds all given data dimension objects.
      */
     public void addAllDataDimensionItems( Collection<? extends DimensionalItemObject> objects )

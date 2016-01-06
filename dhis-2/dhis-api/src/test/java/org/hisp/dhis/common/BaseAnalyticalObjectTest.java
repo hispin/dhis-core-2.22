@@ -37,6 +37,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.eventchart.EventChart;
+import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension;
 import org.junit.Test;
@@ -188,5 +189,39 @@ public class BaseAnalyticalObjectTest
         assertFalse( deA.equals( dsA ) );
         assertFalse( deA.equals( dsD ) );
         assertFalse( dsA.equals( dsD ) );        
+    }
+    
+    @Test
+    public void testAddDataDimensionItem()
+    {        
+        DataElement deA = new DataElement();
+        deA.setAutoFields();
+
+        MapView mv = new MapView( MapView.LAYER_THEMATIC1 );
+        
+        mv.addDataDimensionItem( deA );
+        
+        assertEquals( 1, mv.getDataDimensionItems().size() );        
+    }
+
+    @Test
+    public void testRemoveDataDimensionItem()
+    {        
+        DataElement deA = new DataElement();
+        DataElement deB = new DataElement();
+        deA.setAutoFields();
+        deB.setAutoFields();
+
+        MapView mv = new MapView( MapView.LAYER_THEMATIC1 );
+        
+        mv.addDataDimensionItem( deA );
+        mv.addDataDimensionItem( deB );
+        
+        assertEquals( 2, mv.getDataDimensionItems().size() );
+        
+        mv.removeDataDimensionItem( deA );
+
+        assertEquals( 1, mv.getDataDimensionItems().size() );
+        assertEquals( deB, mv.getDataDimensionItems().get( 0 ).getDataElement() );        
     }
 }

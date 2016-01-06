@@ -64,21 +64,24 @@ public class ReportTableDeletionHandler
     }
     
     @Override
-    public String allowDeleteDataSet( DataSet dataSet )
+    public void deleteIndicator( Indicator indicator )
     {
-        return reportTableService.countAnalyticalObjects( dataSet ) == 0 ? null : ERROR;
-    }
-    
-    @Override
-    public String allowDeleteIndicator( Indicator indicator )
-    {
-        return reportTableService.countAnalyticalObjects( indicator ) == 0 ? null : ERROR;
+        for ( ReportTable reportTable : reportTableService.getAnalyticalObjects( indicator ) )
+        {
+            reportTableService.deleteReportTable( reportTable );
+        }
     }
     
     @Override
     public String allowDeleteDataElement( DataElement dataElement )
     {
         return reportTableService.countAnalyticalObjects( dataElement ) == 0 ? null : ERROR;
+    }
+
+    @Override
+    public String allowDeleteDataSet( DataSet dataSet )
+    {
+        return reportTableService.countAnalyticalObjects( dataSet ) == 0 ? null : ERROR;
     }
     
     @Override
