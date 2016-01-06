@@ -127,13 +127,6 @@ public class DefaultAdxDataService
     @Override
     public void writeDataValueSet( DataExportParams params, OutputStream out )
     {
-        // TODO: defensive code around possible missing CODEs
-        
-        //TODO: Use dhis commons CachingMap
-
-        // caching map used to lookup category attributes per cat opt combo
-        Map<Integer, Map<String, String>> catOptMap = new HashMap<>();
-
         XMLWriter adxWriter = XMLFactory.getXMLWriter( out );
 
         adxWriter.openElement( AdxDataService.ROOT );
@@ -141,6 +134,17 @@ public class DefaultAdxDataService
 
         for ( DataSet dataSet : params.getDataSets() )
         {
+            AdxDataSetMetadata metadata;
+            try 
+            {
+                metadata = new AdxDataSetMetadata(dataSet);
+            } catch (AdxException ex) 
+            {
+                log.info("Export failed for dataset: " + dataSet.getName());
+                log.info("Error: " + ex.getMessage());
+                continue;
+            }
+            
             DataElementCategoryCombo categoryCombo = dataSet.getCategoryCombo();
 
             List<DataElementCategory> categories = categoryCombo.getCategories();
@@ -149,20 +153,8 @@ public class DefaultAdxDataService
             {
                 Set<DataElementCategoryOption> catopts = aoc.getCategoryOptions();
                 
-                Map<String, String> attributeDimensions;
+                Map<String, String> attributeDimensions = metadata.getExplodedCategoryAttributes(aoc.getId());
                 
-                int aocId = aoc.getId();
-                
-                if ( catOptMap.containsKey( aocId ) )
-                {
-                    attributeDimensions = catOptMap.get( aocId );
-                }
-                else
-                {
-                    attributeDimensions = getExplodedCategoryAttributes( aoc );
-                    catOptMap.put( aocId, attributeDimensions );
-                }
-
                 for ( OrganisationUnit orgUnit : params.getOrganisationUnits() )
                 {
                     for ( Period period : params.getPeriods() )
@@ -182,23 +174,11 @@ public class DefaultAdxDataService
                         {
                             adxWriter.openElement( AdxDataService.DATAVALUE );
                             
-                            Map<String, String> dvDimensions = getExplodedCategoryAttributes( dv.getCategoryOptionCombo() );
-
                             adxWriter.writeAttribute( AdxDataService.DATAELEMENT, dv.getDataElement().getCode() );
 
                             DataElementCategoryOptionCombo coc = dv.getCategoryOptionCombo();
 
-                            Map<String, String> categoryDimensions;
-                            int cocId = coc.getId();
-                            if ( catOptMap.containsKey( cocId ) )
-                            {
-                                categoryDimensions = catOptMap.get( cocId );
-                            }
-                            else
-                            {
-                                categoryDimensions = getExplodedCategoryAttributes( coc );
-                                catOptMap.put( cocId, categoryDimensions );
-                            }
+                            Map<String, String> categoryDimensions = metadata.getExplodedCategoryAttributes(coc.getId());
 
                             for ( String attribute : categoryDimensions.keySet() )
                             {
@@ -553,16 +533,6 @@ public class DefaultAdxDataService
         attributes.put( optionComboName, catOptCombo.getUid() );
 
         log.debug( "DXF attributes: " + attributes );
-    }
-
-    private Map<String, String> getExplodedCategoryAttributes( DataElementCategoryOptionCombo coc )
-    {
-        Map<String, String> categoryAttributes = new HashMap<>();
-        for ( DataElementCategory category : coc.getCategoryCombo().getCategories() )
-        {
-            categoryAttributes.put( category.getCode(), category.getCategoryOption( coc ).getCode() );
-        }
-        return categoryAttributes;
     }
 
     private Map<Integer, Map<String, String>> createCatOptMap()

@@ -55,6 +55,7 @@ public interface AdxDataService
     String DATAVALUE = "dataValue";
     String VALUE = "value";
     String ANNOTATION = "annotation";
+    String ERROR = "error";
     
     //--------------------------------------------------------------------------
     // DHIS 2 specific constants
