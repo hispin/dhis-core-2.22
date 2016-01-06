@@ -135,16 +135,18 @@ public class DefaultAdxDataService
         for ( DataSet dataSet : params.getDataSets() )
         {
             AdxDataSetMetadata metadata;
-            try 
+
+            try
             {
-                metadata = new AdxDataSetMetadata(dataSet);
-            } catch (AdxException ex) 
+                metadata = new AdxDataSetMetadata( dataSet );
+            }
+            catch ( AdxException ex )
             {
-                log.info("Export failed for dataset: " + dataSet.getName());
-                log.info("Error: " + ex.getMessage());
+                log.info( "Export failed for dataset: " + dataSet.getName() );
+                log.info( "Error: " + ex.getMessage() );
                 continue;
             }
-            
+
             DataElementCategoryCombo categoryCombo = dataSet.getCategoryCombo();
 
             List<DataElementCategory> categories = categoryCombo.getCategories();
@@ -169,8 +171,7 @@ public class DefaultAdxDataService
                             adxWriter.writeAttribute( attribute, attributeDimensions.get( attribute ) );
                         }
 
-                        for ( DataValue dv : dataValueService.getDataValues( orgUnit, period, dataSet.getDataElements(),
-                            aoc ) )
+                        for ( DataValue dv : dataValueService.getDataValues( orgUnit, period, dataSet.getDataElements(), aoc ) )
                         {
                             adxWriter.openElement( AdxDataService.DATAVALUE );
                             

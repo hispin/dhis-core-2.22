@@ -1,3 +1,5 @@
+package org.hisp.dhis.dxf2.adx;
+
 /*
  * Copyright (c) 2015, UiO
  * All rights reserved.
@@ -23,7 +25,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.dxf2.adx;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,67 +41,73 @@ import org.hisp.dhis.dataset.DataSet;
  *
  * @author bobj
  */
-public class AdxDataSetMetadata {
-    
+public class AdxDataSetMetadata
+{
     private final DataSet dataSet;
-   
-    // lookup categoryoptions per catoptcombo
+
+    // Lookup category options per catoptcombo
+    
     private final Map<Integer, Map<String, String>> categoryOptionMap;
 
-    AdxDataSetMetadata(DataSet dataSet) throws AdxException
+    AdxDataSetMetadata( DataSet dataSet )
+        throws AdxException
     {
         this.dataSet = dataSet;
-        
+
         categoryOptionMap = new HashMap<>();
-        
+
         Set<DataElementCategoryCombo> catCombos = new HashSet<>();
+
+        catCombos.add( dataSet.getCategoryCombo() );
         
-        catCombos.add(dataSet.getCategoryCombo());
-        for (DataElement dataElement : dataSet.getDataElements())
+        for ( DataElement dataElement : dataSet.getDataElements() )
         {
-            catCombos.add(dataElement.getCategoryCombo());
+            catCombos.add( dataElement.getCategoryCombo() );
         }
-        
-        for (DataElementCategoryCombo categoryCombo : catCombos)
+
+        for ( DataElementCategoryCombo categoryCombo : catCombos )
         {
-            for (DataElementCategoryOptionCombo catOptCombo : categoryCombo.getOptionCombos())
+            for ( DataElementCategoryOptionCombo catOptCombo : categoryCombo.getOptionCombos() )
             {
-                addExplodedCategoryAttributes(catOptCombo);
+                addExplodedCategoryAttributes( catOptCombo );
             }
         }
     }
-    
-    private void addExplodedCategoryAttributes( DataElementCategoryOptionCombo coc ) 
-            throws AdxException
+
+    private void addExplodedCategoryAttributes( DataElementCategoryOptionCombo coc )
+        throws AdxException
     {
         Map<String, String> categoryAttributes = new HashMap<>();
-        
-        if (!coc.isDefault())
-        {            
-            for (DataElementCategory category : coc.getCategoryCombo().getCategories()) 
+
+        if ( !coc.isDefault() )
+        {
+            for ( DataElementCategory category : coc.getCategoryCombo().getCategories() )
             {
                 String categoryCode = category.getCode();
-                if (categoryCode == null || !XMLChar.isValidName(categoryCode)) {
+                
+                if ( categoryCode == null || !XMLChar.isValidName( categoryCode ) )
+                {
                     throw new AdxException(
-                            "Category code for " + category.getName() + " is missing or invalid: " + categoryCode);
+                        "Category code for " + category.getName() + " is missing or invalid: " + categoryCode );
                 }
 
-                String catOptCode = category.getCategoryOption(coc).getCode();
-                if (catOptCode == null || catOptCode.isEmpty()) {
+                String catOptCode = category.getCategoryOption( coc ).getCode();
+                
+                if ( catOptCode == null || catOptCode.isEmpty() )
+                {
                     throw new AdxException(
-                            "CategoryOption code for " + category.getCategoryOption(coc).getName() + " is missing");
+                        "CategoryOption code for " + category.getCategoryOption( coc ).getName() + " is missing" );
                 }
 
-                categoryAttributes.put(categoryCode, catOptCode);
+                categoryAttributes.put( categoryCode, catOptCode );
             }
         }
-        
-        categoryOptionMap.put(coc.getId(), categoryAttributes);
-    }    
-    
-    public Map<String, String> getExplodedCategoryAttributes( int cocId )
-    {
-        return this.categoryOptionMap.get(cocId);
+
+        categoryOptionMap.put( coc.getId(), categoryAttributes );
     }
 
+    public Map<String, String> getExplodedCategoryAttributes( int cocId )
+    {
+        return this.categoryOptionMap.get( cocId );
+    }
 }
