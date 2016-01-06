@@ -77,12 +77,11 @@ public class SystemSettingController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     public void setSystemSetting(
         @PathVariable( value = "key" ) String key,
-        @RequestParam( required = false, value = "key" ) String keyParam,
-        @RequestParam( required = false ) String value,
+        @RequestParam( value = "value", required = false ) String value,
         @RequestBody( required = false ) String valuePayload,
         HttpServletResponse response, HttpServletRequest request ) throws WebMessageException
     {
-        if ( key == null && keyParam == null )
+        if ( key == null )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Key must be specified" ) );
         }
@@ -91,8 +90,6 @@ public class SystemSettingController
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Value must be specified as query param or as payload" ) );
         }
-
-        key = ObjectUtils.firstNonNull( key, keyParam );
 
         value = ObjectUtils.firstNonNull( value, valuePayload );
         
