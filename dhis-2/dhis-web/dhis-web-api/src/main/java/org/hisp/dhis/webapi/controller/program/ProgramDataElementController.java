@@ -28,17 +28,19 @@ package org.hisp.dhis.webapi.controller.program;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.List;
-
 import org.hisp.dhis.program.ProgramDataElement;
 import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
+import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
 import org.hisp.dhis.webapi.webdomain.WebMetaData;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 /**
  * @author Lars Helge Overland
@@ -50,12 +52,24 @@ public class ProgramDataElementController
 {
     @Autowired
     private ProgramService programService;
-    
+
     @Override
-    protected List<ProgramDataElement> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    @SuppressWarnings( "unchecked" )
+    protected List<ProgramDataElement> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
     {
-        String programUid = options.get( "program" );
-        
-        return programService.getGeneratedProgramDataElements( programUid );        
+        List<ProgramDataElement> programDataElements;
+        Query query = queryService.getQueryFromUrl( ProgramDataElement.class, filters, orders );
+        query.setDefaultOrder();
+
+        if ( options.contains( "program" ) )
+        {
+            String programUid = options.get( "program" );
+            programDataElements = programService.getGeneratedProgramDataElements( programUid );
+            query.setObjects( programDataElements );
+        }
+
+        programDataElements = (List<ProgramDataElement>) queryService.query( query );
+
+        return programDataElements;
     }
 }
