@@ -580,13 +580,13 @@
   </bean>
 
   <bean id="org.hisp.dhis.eventreport.EventReportStore"
-    class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
+    class="org.hisp.dhis.common.hibernate.HibernateAnalyticalObjectStore">
     <property name="clazz" value="org.hisp.dhis.eventreport.EventReport" />
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
   <bean id="org.hisp.dhis.eventchart.EventChartStore"
-    class="org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore">
+    class="org.hisp.dhis.common.hibernate.HibernateAnalyticalObjectStore">
     <property name="clazz" value="org.hisp.dhis.eventchart.EventChart" />
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>

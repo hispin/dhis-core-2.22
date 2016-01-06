@@ -30,10 +30,13 @@ package org.hisp.dhis.eventchart;
 
 import java.util.List;
 
+import org.hisp.dhis.common.AnalyticalObjectService;
+
 /**
 * @author Lars Helge Overland
 */
 public interface EventChartService
+    extends AnalyticalObjectService<EventChart>
 {
     int saveEventChart( EventChart eventChart );
     

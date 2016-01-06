@@ -63,7 +63,7 @@ public class EventReportDeletionHandler
     {
         Collection<EventReport> charts = eventReportService.getAllEventReports();
         
-        for( EventReport chart : charts )
+        for ( EventReport chart : charts )
         {
             if( chart.getProgramStage().equals( programStage ))
             {
@@ -77,7 +77,7 @@ public class EventReportDeletionHandler
     {
         Collection<EventReport> charts = eventReportService.getAllEventReports();
         
-        for( EventReport chart : charts )
+        for ( EventReport chart : charts )
         {
             if( chart.getProgram().equals( program ))
             {

@@ -30,10 +30,13 @@ package org.hisp.dhis.eventreport;
 
 import java.util.List;
 
+import org.hisp.dhis.common.AnalyticalObjectService;
+
 /**
 * @author Lars Helge Overland
 */
 public interface EventReportService
+    extends AnalyticalObjectService<EventReport>
 {
     int saveEventReport( EventReport report );
     
