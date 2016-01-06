@@ -71,30 +71,30 @@ public class MapViewDeletionHandler
     @Override
     public String allowDeleteDataSet( DataSet dataSet )
     {
-        return mappingService.countDataSetMapViews( dataSet ) == 0 ? null : ERROR;
+        return mappingService.countAnalyticalObjects( dataSet ) == 0 ? null : ERROR;
     }
 
     @Override
     public String allowDeleteIndicator( Indicator indicator )
     {
-        return mappingService.countIndicatorMapViews( indicator ) == 0 ? null : ERROR;
+        return mappingService.countAnalyticalObjects( indicator ) == 0 ? null : ERROR;
     }
 
     @Override
     public String allowDeletePeriod( Period period )
     {
-        return mappingService.countPeriodMapViews( period ) == 0 ? null : ERROR;
+        return mappingService.countAnalyticalObjects( period ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteDataElement( DataElement dataElement )
     {
-        return mappingService.countDataElementMapViews( dataElement ) == 0 ? null : ERROR;
+        return mappingService.countAnalyticalObjects( dataElement ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteOrganisationUnit( OrganisationUnit organisationUnit )
     {
-        return mappingService.countOrganisationUnitMapViews( organisationUnit ) == 0 ? null : ERROR;
+        return mappingService.countAnalyticalObjects( organisationUnit ) == 0 ? null : ERROR;
     }
 }

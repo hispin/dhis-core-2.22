@@ -67,36 +67,36 @@ public class ChartDeletionHandler
     @Override
     public String allowDeleteDataSet( DataSet dataSet )
     {
-        return chartService.countDataSetCharts( dataSet ) == 0 ? null : ERROR;
+        return chartService.countAnalyticalObjects( dataSet ) == 0 ? null : ERROR;
     }
 
     @Override
     public String allowDeleteIndicator( Indicator indicator )
     {
-        return chartService.countIndicatorCharts( indicator ) == 0 ? null : ERROR;
+        return chartService.countAnalyticalObjects( indicator ) == 0 ? null : ERROR;
     }
 
     @Override
     public String allowDeleteDataElement( DataElement dataElement )
     {
-        return chartService.countDataElementCharts( dataElement ) == 0 ? null : ERROR;
+        return chartService.countAnalyticalObjects( dataElement ) == 0 ? null : ERROR;
     }
 
     @Override
     public String allowDeletePeriod( Period period )
     {
-        return chartService.countPeriodCharts( period ) == 0 ? null : ERROR;
+        return chartService.countAnalyticalObjects( period ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteOrganisationUnit( OrganisationUnit organisationUnit )
     {
-        return chartService.countOrganisationUnitCharts( organisationUnit ) == 0 ? null : ERROR;
+        return chartService.countAnalyticalObjects( organisationUnit ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteCategoryOptionGroup( CategoryOptionGroup categoryOptionGroup )
     {
-        return chartService.countCategoryOptionGroups( categoryOptionGroup ) == 0 ? null : ERROR;
+        return chartService.countAnalyticalObjects( categoryOptionGroup ) == 0 ? null : ERROR;
     }
 }

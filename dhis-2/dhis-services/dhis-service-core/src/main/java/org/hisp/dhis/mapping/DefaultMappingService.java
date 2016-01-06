@@ -30,8 +30,8 @@ package org.hisp.dhis.mapping;
 
 import java.util.List;
 
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.common.AnalyticalObjectStore;
+import org.hisp.dhis.common.GenericAnalyticalObjectService;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.indicator.IndicatorService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -46,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class DefaultMappingService
+    extends GenericAnalyticalObjectService<MapView>
     implements MappingService
 {
     // -------------------------------------------------------------------------
@@ -98,6 +99,12 @@ public class DefaultMappingService
     // MappingService implementation
     // -------------------------------------------------------------------------
 
+    @Override
+    protected AnalyticalObjectStore<MapView> getAnalyticalObjectStore()
+    {
+        return mapViewStore;
+    }
+    
     // -------------------------------------------------------------------------
     // Map
     // -------------------------------------------------------------------------
@@ -312,35 +319,5 @@ public class DefaultMappingService
     public int countMapViewMaps( MapView mapView )
     {
         return mapStore.countMapViewMaps( mapView );
-    }
-
-    @Override
-    public int countDataSetMapViews( DataSet dataSet )
-    {
-        return mapViewStore.countAnalyticalObjects( dataSet );
-    }
-
-    @Override
-    public int countIndicatorMapViews( Indicator indicator )
-    {
-        return mapViewStore.countAnalyticalObjects( indicator );
-    }
-
-    @Override
-    public int countDataElementMapViews( DataElement dataElement )
-    {
-        return mapViewStore.countAnalyticalObjects( dataElement );
-    }
-    
-    @Override
-    public int countPeriodMapViews( Period period )
-    {
-        return mapViewStore.countAnalyticalObjects( period );
-    }
-    
-    @Override
-    public int countOrganisationUnitMapViews( OrganisationUnit organisationUnit )
-    {
-        return mapViewStore.countAnalyticalObjects( organisationUnit );
     }
 }

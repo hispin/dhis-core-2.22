@@ -35,15 +35,11 @@ import java.util.Map;
 
 import org.hisp.dhis.analytics.AnalyticsService;
 import org.hisp.dhis.common.AnalyticalObjectStore;
+import org.hisp.dhis.common.GenericAnalyticalObjectService;
 import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.i18n.I18nFormat;
-import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.period.Period;
 import org.hisp.dhis.report.ReportService;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
@@ -56,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class DefaultReportTableService
+    extends GenericAnalyticalObjectService<ReportTable>
     implements ReportTableService
 {
     // ---------------------------------------------------------------------
@@ -101,6 +98,12 @@ public class DefaultReportTableService
     // ReportTableService implementation
     // -------------------------------------------------------------------------
 
+    @Override
+    protected AnalyticalObjectStore<ReportTable> getAnalyticalObjectStore()
+    {
+        return reportTableStore;
+    }    
+    
     @Override
     public Grid getReportTableGrid( String uid, I18nFormat format, Date reportingPeriod, String organisationUnitUid )
     {
@@ -223,41 +226,5 @@ public class DefaultReportTableService
     public List<ReportTable> getReportTablesBetween( int first, int max )
     {
         return reportTableStore.getAllOrderedName( first, max );
-    }
-    
-    @Override
-    public int countDataSetReportTables( DataSet dataSet )
-    {
-        return reportTableStore.countAnalyticalObjects( dataSet );
-    }
-    
-    @Override
-    public int countIndicatorReportTables( Indicator indicator )
-    {
-        return reportTableStore.countAnalyticalObjects( indicator );
-    }
-    
-    @Override
-    public int countDataElementReportTables( DataElement dataElement )
-    {
-        return reportTableStore.countAnalyticalObjects( dataElement );
-    }
-
-    @Override
-    public int countPeriodReportTables( Period period )
-    {
-        return reportTableStore.countAnalyticalObjects( period );
-    }
-    
-    @Override
-    public int countOrganisationUnitReportTables( OrganisationUnit organisationUnit )
-    {
-        return reportTableStore.countAnalyticalObjects( organisationUnit );
-    }
-    
-    @Override
-    public int countCategoryOptionGroups( CategoryOptionGroup categoryOptionGroup )
-    {
-        return reportTableStore.countAnalyticalObjects( categoryOptionGroup );
     }
 }

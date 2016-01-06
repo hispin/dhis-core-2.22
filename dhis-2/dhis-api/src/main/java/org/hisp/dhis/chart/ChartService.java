@@ -32,10 +32,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
+import org.hisp.dhis.common.AnalyticalObjectService;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
-import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -48,6 +47,7 @@ import org.jfree.chart.plot.PlotOrientation;
  * @author Lars Helge Overland
  */
 public interface ChartService
+    extends AnalyticalObjectService<Chart>
 {
     String ID = ChartService.class.getName();
 
@@ -108,16 +108,4 @@ public interface ChartService
     int getChartCount();
 
     int getChartCountByName( String name );
-    
-    int countDataSetCharts( DataSet dataSet );
-
-    int countIndicatorCharts( Indicator indicator );
-
-    int countDataElementCharts( DataElement dataElement );
-    
-    int countPeriodCharts( Period period );
-    
-    int countOrganisationUnitCharts( OrganisationUnit organisationUnit );
-    
-    int countCategoryOptionGroups( CategoryOptionGroup categoryOptionGroup );
 }

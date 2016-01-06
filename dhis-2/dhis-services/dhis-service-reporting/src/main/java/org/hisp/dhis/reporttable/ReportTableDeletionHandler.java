@@ -66,36 +66,36 @@ public class ReportTableDeletionHandler
     @Override
     public String allowDeleteDataSet( DataSet dataSet )
     {
-        return reportTableService.countDataSetReportTables( dataSet ) == 0 ? null : ERROR;
+        return reportTableService.countAnalyticalObjects( dataSet ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteIndicator( Indicator indicator )
     {
-        return reportTableService.countIndicatorReportTables( indicator ) == 0 ? null : ERROR;
+        return reportTableService.countAnalyticalObjects( indicator ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteDataElement( DataElement dataElement )
     {
-        return reportTableService.countDataElementReportTables( dataElement ) == 0 ? null : ERROR;
+        return reportTableService.countAnalyticalObjects( dataElement ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeletePeriod( Period period )
     {
-        return reportTableService.countPeriodReportTables( period ) == 0 ? null : ERROR;
+        return reportTableService.countAnalyticalObjects( period ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteOrganisationUnit( OrganisationUnit organisationUnit )
     {
-        return reportTableService.countOrganisationUnitReportTables( organisationUnit ) == 0 ? null : ERROR;
+        return reportTableService.countAnalyticalObjects( organisationUnit ) == 0 ? null : ERROR;
     }
     
     @Override
     public String allowDeleteCategoryOptionGroup( CategoryOptionGroup categoryOptionGroup )
     {
-        return reportTableService.countCategoryOptionGroups( categoryOptionGroup ) == 0 ? null : ERROR;
+        return reportTableService.countAnalyticalObjects( categoryOptionGroup ) == 0 ? null : ERROR;
     }
 }
