@@ -46,6 +46,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.SettingKey;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
@@ -71,7 +73,7 @@ public class ConfigurationController
 
     @Autowired
     private DhisConfigurationProvider config;
-    
+
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
 
@@ -80,6 +82,9 @@ public class ConfigurationController
 
     @Autowired
     private RenderService renderService;
+
+    @Autowired
+    private SystemSettingManager systemSettingManager;
 
     // -------------------------------------------------------------------------
     // Resources
@@ -90,7 +95,7 @@ public class ConfigurationController
     {
         return setModel( model, configurationService.getConfiguration() );
     }
-    
+
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/systemId", method = RequestMethod.GET )
@@ -238,7 +243,7 @@ public class ConfigurationController
         }
 
         Configuration config = configurationService.getConfiguration();
-        
+
         periodType = periodService.reloadPeriodType( periodType );
 
         config.setInfrastructuralPeriodType( periodType );
@@ -300,14 +305,15 @@ public class ConfigurationController
     @RequestMapping( value = "/remoteServerUrl", method = RequestMethod.GET )
     public String getRemoteServerUrl( Model model, HttpServletRequest request )
     {
-        return setModel( model, config.getProperty( ConfigurationKey.REMOTE_INSTANCE_URL ) );
+        return setModel( model, systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_URL ) );
     }
-
 
     @RequestMapping( value = "/remoteServerUsername", method = RequestMethod.GET )
     public String getRemoteServerUsername( Model model, HttpServletRequest request )
     {
-        return setModel( model, config.getProperty( ConfigurationKey.REMOTE_INSTANCE_USERNAME) );
+        return setModel( model, systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_USERNAME ) );
     }
 
     @RequestMapping( value = "/corsWhitelist", method = RequestMethod.GET, produces = "application/json" )
@@ -315,8 +321,8 @@ public class ConfigurationController
     {
         return setModel( model, configurationService.getConfiguration().getCorsWhitelist() );
     }
-    
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings( "unchecked" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/corsWhitelist", method = RequestMethod.POST, consumes = "application/json" )
@@ -324,14 +330,14 @@ public class ConfigurationController
         throws IOException
     {
         Set<String> corsWhitelist = renderService.fromJson( input, Set.class );
-        
+
         Configuration config = configurationService.getConfiguration();
-        
+
         config.setCorsWhitelist( corsWhitelist );
-        
+
         configurationService.setConfiguration( config );
     }
-    
+
     @RequestMapping( value = "/systemBaseUrl", method = RequestMethod.GET )
     public String getSystemBaseUrl( Model model, HttpServletRequest request )
     {

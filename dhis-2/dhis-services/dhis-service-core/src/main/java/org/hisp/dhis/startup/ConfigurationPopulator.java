@@ -54,7 +54,6 @@ public class ConfigurationPopulator
     public void execute()
         throws Exception
     {
-
         checkSecurityConfiguration();
 
         Configuration config = configurationService.getConfiguration();
