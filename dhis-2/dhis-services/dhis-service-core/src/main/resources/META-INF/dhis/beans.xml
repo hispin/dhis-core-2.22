@@ -876,6 +876,7 @@
 
   <bean id="emailMessageSender" class="org.hisp.dhis.message.EmailMessageSender">
     <property name="systemSettingManager" ref="org.hisp.dhis.setting.SystemSettingManager" />
+    <property name="dhisConfigurationProvider" ref="dhisConfigurationProvider" />
     <property name="userSettingService" ref="org.hisp.dhis.user.UserSettingService" />
   </bean>
 

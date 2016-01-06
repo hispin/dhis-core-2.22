@@ -58,7 +58,6 @@ public enum SettingKey
     EMAIL_USERNAME( "keyEmailUsername" ),
     EMAIL_TLS( "keyEmailTls", Boolean.TRUE, Boolean.class ),
     EMAIL_SENDER( "keyEmailSender" ),
-    EMAIL_PASSWORD( "keyEmailPassword", "", String.class, true ),
     INSTANCE_BASE_URL( "keyInstanceBaseUrl" ),
     SCHEDULED_TASKS( "keySchedTasks", ListMap.class ),
     SMS_CONFIG( "keySmsConfig", SmsConfiguration.class ),
@@ -113,18 +112,13 @@ public enum SettingKey
     APP_BASE_URL( "appBaseUrl" ),
     APP_STORE_URL( "appStoreUrl", "https://www.dhis2.org/appstore", String.class ),
     APP_STORE_INDEX_URL( "appStoreIndexUrl", "https://s3-eu-west-1.amazonaws.com/dhis2-appstore/appstore.json", String.class ),
-    STYLE( "currentStyle", "light_blue/light_blue.css", String.class ),
-    REMOTE_INSTANCE_URL( "keyRemoteInstanceUrl", "", String.class ),
-    REMOTE_INSTANCE_USERNAME( "keyRemoteInstanceUsername", "", String.class ),
-    REMOTE_INSTANCE_PASSWORD( "keyRemoteInstancePassword", "", String.class, true );
+    STYLE( "currentStyle", "light_blue/light_blue.css", String.class );
     
     private final String name;
     
     private final Serializable defaultValue;
     
     private final Class<?> clazz;
-
-    private boolean confidential;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -135,7 +129,6 @@ public enum SettingKey
         this.name = name;
         this.defaultValue = null;
         this.clazz = String.class;
-        this.confidential = false;
     }
     
     private SettingKey( String name, Class<?> clazz )
@@ -143,23 +136,13 @@ public enum SettingKey
         this.name = name;
         this.defaultValue = null;
         this.clazz = clazz;
-        this.confidential = false;
     }
-
+    
     private SettingKey( String name, Serializable defaultValue, Class<?> clazz )
     {
         this.name = name;
         this.defaultValue = defaultValue;
         this.clazz = clazz;
-        this.confidential = false;
-    }
-
-    private SettingKey( String name, Serializable defaultValue, Class<?> clazz, boolean confidential )
-    {
-        this.name = name;
-        this.defaultValue = defaultValue;
-        this.clazz = clazz;
-        this.confidential = confidential;
     }
 
     // -------------------------------------------------------------------------
@@ -224,7 +207,6 @@ public enum SettingKey
         return name;
     }
 
-
     public Serializable getDefaultValue()
     {
         return defaultValue;
@@ -234,6 +216,4 @@ public enum SettingKey
     {
         return clazz;
     }
-
-    public boolean getConfidential() { return confidential; }
 }

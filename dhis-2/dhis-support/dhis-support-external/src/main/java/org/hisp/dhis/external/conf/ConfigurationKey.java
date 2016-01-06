@@ -51,7 +51,17 @@ public enum ConfigurationKey
     FILE_STORE_CONTAINER( "filestore.container", "files" ),
     FILE_STORE_LOCATION( "filestore.location" ),
     FILE_STORE_IDENTITY( "filestore.identity", "" ),
-    FILE_STORE_SECRET( "filestore.secret", "" );
+    FILE_STORE_SECRET( "filestore.secret", "" ),
+    SMTP_HOSTNAME( "smtp.hostname", "" ),
+    SMTP_PORT( "smtp.port", "587" ),
+    SMTP_TLS( "smtp.tls", "true" ),
+    SMTP_USERNAME( "smtp.username", "" ),
+    SMTP_PASSWORD( "smtp.password", "" ),
+    SMTP_SENDER( "smtp.sender", "" ),
+    REMOTE_INSTANCE_URL( "remote_instance.url", "" ),
+    REMOTE_INSTANCE_USERNAME( "remote_instance.username", "" ),
+    REMOTE_INSTANCE_PASSWORD( "remote_instance.password", "" );
+
 
     private final String key;
     

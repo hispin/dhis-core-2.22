@@ -44,8 +44,6 @@ public class SystemSetting
 
     private Serializable value;
 
-    private boolean confidential;
-
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------

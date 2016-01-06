@@ -102,6 +102,9 @@ public class DefaultSynchronizationManager
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private DhisConfigurationProvider dhisConfigurationProvider;
+
     // -------------------------------------------------------------------------
     // SynchronizatonManager implementation
     // -------------------------------------------------------------------------
@@ -116,14 +119,14 @@ public class DefaultSynchronizationManager
             return new AvailabilityStatus( false, "Remote server is not configured" );
         }
 
-        String url = systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL ) + PING_PATH;
+        String url = dhisConfigurationProvider.getProperty( ConfigurationKey.REMOTE_INSTANCE_URL ) + PING_PATH;
 
-        log.info( "Remote server ping URL: " + url + ", username: " + systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_USERNAME ) );
+        log.info( "Remote server ping URL: " + url + ", username: " + dhisConfigurationProvider.getProperty(
+            ConfigurationKey.REMOTE_INSTANCE_USERNAME ) );
 
-        HttpEntity<String> request = getBasicAuthRequestEntity( (String) systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_USERNAME ), (String) systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_PASSWORD ) );
+        HttpEntity<String> request = getBasicAuthRequestEntity( dhisConfigurationProvider.getProperty(
+            ConfigurationKey.REMOTE_INSTANCE_USERNAME ), dhisConfigurationProvider.getProperty(
+            ConfigurationKey.REMOTE_INSTANCE_PASSWORD ) );
 
         ResponseEntity<String> response = null;
         HttpStatus sc = null;
@@ -214,8 +217,8 @@ public class DefaultSynchronizationManager
 
         final Configuration config = configurationService.getConfiguration();
 
-        String url = systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_URL ) + "/api/dataValueSets";
+        String url = dhisConfigurationProvider.getProperty( ConfigurationKey.REMOTE_INSTANCE_URL ) +
+            "/api/dataValueSets";
 
         log.info( "Remote server POST URL: " + url );
 
@@ -227,12 +230,10 @@ public class DefaultSynchronizationManager
             {
                 request.getHeaders().setContentType( MediaType.APPLICATION_JSON );
                 request.getHeaders().add( HEADER_AUTHORIZATION,
-                    CodecUtils.getBasicAuthString(
-                        (String) systemSettingManager.getSystemSetting(
-                            SettingKey.REMOTE_INSTANCE_USERNAME ),
-                        (String) systemSettingManager.getSystemSetting(
-                            SettingKey.REMOTE_INSTANCE_PASSWORD ) ) );
-
+                    CodecUtils.getBasicAuthString( dhisConfigurationProvider.getProperty(
+                            ConfigurationKey.REMOTE_INSTANCE_USERNAME ),
+                        dhisConfigurationProvider.getProperty(
+                            ConfigurationKey.REMOTE_INSTANCE_PASSWORD ) ) );
                 dataValueSetService
                     .writeDataValueSetJson( lastSuccessTime, request.getBody(), new IdSchemes() );
             }
@@ -315,17 +316,16 @@ public class DefaultSynchronizationManager
      */
     private boolean isRemoteServerConfigured( Configuration config )
     {
-        if ( trimToNull( (String) systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_URL ) ) ==
+        if ( trimToNull( dhisConfigurationProvider.getProperty( ConfigurationKey.REMOTE_INSTANCE_URL ) ) ==
             null )
         {
             log.info( "Remote server URL not set" );
             return false;
         }
 
-        if ( trimToNull( (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME ) ) ==
+        if ( trimToNull( dhisConfigurationProvider.getProperty( ConfigurationKey.REMOTE_INSTANCE_USERNAME ) ) ==
             null ||
-            trimToNull( (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL ) ) ==
+            trimToNull( dhisConfigurationProvider.getProperty( ConfigurationKey.REMOTE_INSTANCE_URL ) ) ==
                 null )
         {
             log.info( "Remote server username or password not set" );
