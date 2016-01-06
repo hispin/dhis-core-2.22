@@ -3074,6 +3074,7 @@ console.log(table);
             loadTotalsPage: function(uid, filter, append, noPaging, fn) {
                 var store = this,
 					params = {},
+                    types = ns.core.conf.valueType.aAggregateTypes.join(','),
                     path;
 
                 if (store.nextPage === store.lastPage) {
@@ -3081,10 +3082,10 @@ console.log(table);
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -4443,24 +4444,21 @@ console.log(table);
                 onProgramIndicatorProgramSelect(programId, true);
             }
 
+            var types = ns.core.conf.valueType.tAggregateTypes.join(',');
+
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programDataElements.json?program=' + programId + '&fields=dimensionItem|rename(id),name,valueType&paging=false',
+                url: ns.core.init.contextPath + '/api/programDataElements.json?program=' + programId + '&filter=valueType:in:[' + types + ']&fields=dimensionItem|rename(id),name,valueType&paging=false',
                 disableCaching: false,
                 success: function(r) {
-                    var types = ns.core.conf.valueType.aggregateTypes,
-                        elements = Ext.decode(r.responseText).programDataElements.filter(function(item) {
-                            return Ext.Array.contains(types, (item || {}).valueType);
-                        }),
+                    var elements = Ext.decode(r.responseText).programDataElements,
                         isA = Ext.isArray,
                         isO = Ext.isObject;
 
                     Ext.Ajax.request({
-                        url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programTrackedEntityAttributes[dimensionItem|rename(id),' + namePropertyUrl + '|rename(name),valueType]&paging=false',
+                        url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&filter=programTrackedEntityAttributes.valueType:in:[' + types + ']&fields=programTrackedEntityAttributes[dimensionItem|rename(id),' + namePropertyUrl + '|rename(name),valueType]&paging=false',
                         disableCaching: false,
                         success: function(r) {
-                            var attributes = ((Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || []).filter(function(item) {
-                                    return Ext.Array.contains(types, (item || {}).valueType);
-                                }),
+                            var attributes = (Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || [],
                                 data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(elements, attributes))) || [];
 
                             if (data) {

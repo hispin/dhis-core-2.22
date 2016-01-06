@@ -4045,7 +4045,7 @@ Ext.onReady( function() {
             }
             else {
                 Ext.Ajax.request({
-                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programStages[id,displayName|rename(name)],programIndicators[id,' + namePropertyUrl + '],programTrackedEntityAttributes[trackedEntityAttribute[id,' + namePropertyUrl + ',valueType,optionSet[id,displayName|rename(name)],legendSet[id,displayName|rename(name)]]]&paging=false',
+                    url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programStages[id,displayName|rename(name)],programIndicators[id,' + namePropertyUrl + '],programTrackedEntityAttributes[trackedEntityAttribute[id,' + namePropertyUrl + ',valueType,confidential,optionSet[id,displayName|rename(name)],legendSet[id,displayName|rename(name)]]]&paging=false',
                     success: function(r) {
                         var program = Ext.decode(r.responseText).programs[0],
                             stages,
@@ -4061,10 +4061,11 @@ Ext.onReady( function() {
                         attributes = Ext.Array.pluck(program.programTrackedEntityAttributes, 'trackedEntityAttribute');
                         programIndicators = program.programIndicators;
 
-                        // mark as attribute
-                        for (var i = 0; i < attributes.length; i++) {
-                            attributes[i].isAttribute = true;
-                        }
+                        // filter confidential, mark as attribute
+                        attributes.filter(function(item) {
+                            item.isAttribute = true;
+                            return !item.confidential;
+                        });
 
                         // attributes cache
                         if (Ext.isArray(attributes) && attributes.length) {
@@ -4072,15 +4073,15 @@ Ext.onReady( function() {
                         }
 
                         // mark as program indicator
-                        for (var i = 0; i < programIndicators.length; i++) {
-                            programIndicators[i].isProgramIndicator = true;
-                        }
+                        programIndicators.forEach(function(item) {
+                            item.isProgramIndicator = true;
+                        });
 
                         // program indicator cache
                         if (Ext.isArray(programIndicators) && programIndicators.length) {
                             programIndicatorStorage[programId] = programIndicators;
                         }
-
+                        
                         if (Ext.isArray(stages) && stages.length) {
 
                             // stages cache
