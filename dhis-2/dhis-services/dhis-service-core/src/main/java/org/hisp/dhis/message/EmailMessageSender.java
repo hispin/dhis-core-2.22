@@ -77,19 +77,12 @@ public class EmailMessageSender
     // -------------------------------------------------------------------------
 
     private SystemSettingManager systemSettingManager;
-    
+
     public void setSystemSettingManager( SystemSettingManager systemSettingManager )
     {
         this.systemSettingManager = systemSettingManager;
     }
 
-    private DhisConfigurationProvider dhisConfigurationProvider;
-
-    public void setDhisConfigurationProvider( DhisConfigurationProvider dhisConfigurationProvider)
-    {
-        this.dhisConfigurationProvider = dhisConfigurationProvider;
-    }
-    
     private UserSettingService userSettingService;
 
     public void setUserSettingService( UserSettingService userSettingService )
@@ -106,14 +99,15 @@ public class EmailMessageSender
      */
     @Async
     @Override
-    public String sendMessage( String subject, String text, String footer, User sender, Set<User> users, boolean forceSend )
+    public String sendMessage( String subject, String text, String footer, User sender, Set<User> users,
+        boolean forceSend )
     {
-        String hostName = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_HOSTNAME );
-        int port = Integer.parseInt( dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_PORT ) );
-        String username = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_USERNAME );
-        String password = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_PASSWORD );
-        boolean tls = Boolean.parseBoolean( dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_TLS ) );
-        String from = dhisConfigurationProvider.getProperty( ConfigurationKey.SMTP_SENDER );
+        String hostName = (String) systemSettingManager.getSystemSetting( SettingKey.EMAIL_HOST_NAME );
+        int port = (int) systemSettingManager.getSystemSetting( SettingKey.EMAIL_PORT );
+        String username = (String) systemSettingManager.getSystemSetting( SettingKey.EMAIL_USERNAME );
+        String password = (String) systemSettingManager.getSystemSetting( SettingKey.EMAIL_PASSWORD );
+        boolean tls = (boolean) systemSettingManager.getSystemSetting( SettingKey.EMAIL_TLS );
+        String from = (String) systemSettingManager.getSystemSetting( SettingKey.EMAIL_SENDER );
 
         if ( hostName == null )
         {
@@ -134,13 +128,16 @@ public class EmailMessageSender
 
             for ( User user : users )
             {
-                boolean doSend = forceSend || (Boolean) userSettingService.getUserSetting( UserSettingKey.MESSAGE_EMAIL_NOTIFICATION, user );
+                boolean doSend = forceSend ||
+                    (Boolean) userSettingService.getUserSetting( UserSettingKey.MESSAGE_EMAIL_NOTIFICATION, user );
 
                 if ( doSend && user.getEmail() != null && !user.getEmail().trim().isEmpty() )
                 {
                     email.addBcc( user.getEmail() );
 
-                    log.info( "Sending email to user: " + user.getUsername() + " with email address: " + user.getEmail() + " to host: " + hostName + ":" + port );
+                    log.info(
+                        "Sending email to user: " + user.getUsername() + " with email address: " + user.getEmail() +
+                            " to host: " + hostName + ":" + port );
 
                     hasRecipients = true;
                 }
@@ -168,7 +165,8 @@ public class EmailMessageSender
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private HtmlEmail getHtmlEmail( String hostName, int port, String username, String password, boolean tls, String sender )
+    private HtmlEmail getHtmlEmail( String hostName, int port, String username, String password, boolean tls,
+        String sender )
         throws EmailException
     {
         HtmlEmail email = new HtmlEmail();
@@ -187,11 +185,11 @@ public class EmailMessageSender
 
     private String renderPlainContent( String text, User sender )
     {
-        return sender == null ? text : ( text + LB + LB +
+        return sender == null ? text : (text + LB + LB +
             sender.getName() + LB +
-            ( sender.getOrganisationUnitsName() != null ? ( sender.getOrganisationUnitsName() + LB ) : StringUtils.EMPTY ) +
-            ( sender.getEmail() != null ? ( sender.getEmail() + LB ) : StringUtils.EMPTY ) +
-            ( sender.getPhoneNumber() != null ? ( sender.getPhoneNumber() + LB ) : StringUtils.EMPTY ) );
+            (sender.getOrganisationUnitsName() != null ? (sender.getOrganisationUnitsName() + LB) : StringUtils.EMPTY) +
+            (sender.getEmail() != null ? (sender.getEmail() + LB) : StringUtils.EMPTY) +
+            (sender.getPhoneNumber() != null ? (sender.getPhoneNumber() + LB) : StringUtils.EMPTY));
     }
 
     private String renderHtmlContent( String text, String footer, User sender )
