@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.analytics.AggregationType;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.common.ValueType;
-import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.option.OptionService;
 import org.hisp.dhis.option.OptionSet;
