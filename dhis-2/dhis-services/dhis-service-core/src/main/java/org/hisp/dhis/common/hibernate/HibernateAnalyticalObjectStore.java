@@ -53,7 +53,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     @SuppressWarnings("unchecked")
     public List<T> getAnalyticalObjects( Indicator indicator )
     {
-        String hql = "select distinct c from " + clazz.getSimpleName() + " c join c.dataDimensionItems d where d.indicator = :indicator";
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.indicator = :indicator";
         return getQuery( hql ).setEntity( "indicator", indicator ).list();
     }
 
