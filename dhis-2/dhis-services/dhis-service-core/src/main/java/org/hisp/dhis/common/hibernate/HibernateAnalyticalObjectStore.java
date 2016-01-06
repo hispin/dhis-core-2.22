@@ -69,7 +69,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     @SuppressWarnings("unchecked")
     public List<T> getAnalyticalObjects( DataSet dataSet )
     {
-        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataElement = :dataElement";
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataSet = :dataSet";
         return getQuery( hql ).setEntity( "dataSet", dataSet ).list(); 
     }
 
@@ -77,7 +77,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     @SuppressWarnings("unchecked")
     public List<T> getAnalyticalObjects( ProgramIndicator programIndicator )
     {
-        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataElement = :dataElement";
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.programIndicator = :programIndicator";
         return getQuery( hql ).setEntity( "programIndicator", programIndicator ).list(); 
     }
 

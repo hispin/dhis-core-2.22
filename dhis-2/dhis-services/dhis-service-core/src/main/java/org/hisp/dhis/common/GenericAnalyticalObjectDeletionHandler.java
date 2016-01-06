@@ -88,6 +88,7 @@ public abstract class GenericAnalyticalObjectDeletionHandler<T extends Analytica
         for ( T analyticalObject : analyticalObjects )
         {
             updateOperation.accept( analyticalObject, itemObject );
+            
             getAnalyticalObjectService().update( analyticalObject );
         }
     }
