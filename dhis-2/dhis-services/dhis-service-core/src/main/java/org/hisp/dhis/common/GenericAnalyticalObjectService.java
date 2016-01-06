@@ -41,76 +41,95 @@ import org.hisp.dhis.program.ProgramIndicator;
 /**
  * @author Lars Helge Overland
  */
-public abstract class GenericAnalyticalObjectService<T extends BaseAnalyticalObject>
+public abstract class GenericAnalyticalObjectService<T extends AnalyticalObject>
     implements AnalyticalObjectService<T>
 {
     protected abstract AnalyticalObjectStore<T> getAnalyticalObjectStore();
 
+    public void update( T object )
+    {
+        getAnalyticalObjectStore().update( object );
+    }
+
+    @Override
     public List<T> getAnalyticalObjects( Indicator indicator )
     {
         return getAnalyticalObjectStore().getAnalyticalObjects( indicator );
     }
-    
+
+    @Override
     public List<T> getAnalyticalObjects( DataElement dataElement )
     {
         return getAnalyticalObjectStore().getAnalyticalObjects( dataElement );
     }
-    
+
+    @Override
     public List<T> getAnalyticalObjects( DataSet dataSet )
     {
         return getAnalyticalObjectStore().getAnalyticalObjects( dataSet );
     }
 
+    @Override
     public List<T> getAnalyticalObjects( ProgramIndicator programIndicator )
     {
         return getAnalyticalObjectStore().getAnalyticalObjects( programIndicator );
     }
 
+    @Override
     public List<T> getAnalyticalObjects( Period period )
     {
         return getAnalyticalObjectStore().getAnalyticalObjects( period );
     }
 
+    @Override
     public List<T> getAnalyticalObjects( OrganisationUnit organisationUnit )
     {
         return getAnalyticalObjectStore().getAnalyticalObjects( organisationUnit );
     }
 
+    @Override
     public List<T> getAnalyticalObjects( CategoryOptionGroup categoryOptionGroup )
     {
         return getAnalyticalObjectStore().getAnalyticalObjects( categoryOptionGroup );
     }
-    
+
+    @Override
     public int countAnalyticalObjects( Indicator indicator )
     {
         return getAnalyticalObjectStore().countAnalyticalObjects( indicator );
     }
 
+    @Override
     public int countAnalyticalObjects( DataElement dataElement )
     {
         return getAnalyticalObjectStore().countAnalyticalObjects( dataElement );
     }
 
+    @Override
     public int countAnalyticalObjects( DataSet dataSet )
     {
         return getAnalyticalObjectStore().countAnalyticalObjects( dataSet );
     }
 
+    @Override
     public int countAnalyticalObjects( ProgramIndicator programIndicator )
     {
         return getAnalyticalObjectStore().countAnalyticalObjects( programIndicator );
     }
-    
+
+    @Override
     public int countAnalyticalObjects( Period period )
     {
         return getAnalyticalObjectStore().countAnalyticalObjects( period );
     }
-    
+
+    @Override
     public int countAnalyticalObjects( OrganisationUnit organisationUnit )
     {
         return getAnalyticalObjectStore().countAnalyticalObjects( organisationUnit );
     }
-    
+
+    @Override
     public int countAnalyticalObjects( CategoryOptionGroup categoryOptionGroup )
     {
         return getAnalyticalObjectStore().countAnalyticalObjects( categoryOptionGroup );

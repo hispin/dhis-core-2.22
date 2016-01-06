@@ -41,8 +41,10 @@ import org.hisp.dhis.program.ProgramIndicator;
 /**
  * @author Lars Helge Overland
  */
-public interface AnalyticalObjectService<T extends BaseAnalyticalObject>
+public interface AnalyticalObjectService<T extends AnalyticalObject>
 {
+    void update( T object );
+    
     List<T> getAnalyticalObjects( Indicator indicator );
     
     List<T> getAnalyticalObjects( DataElement dataElement );

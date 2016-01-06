@@ -28,19 +28,14 @@ package org.hisp.dhis.reporttable;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.period.Period;
-import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.hisp.dhis.common.AnalyticalObjectService;
+import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
 
 /**
  * @author Lars Helge Overland
  */
 public class ReportTableDeletionHandler
-    extends DeletionHandler
+    extends GenericAnalyticalObjectDeletionHandler<ReportTable>
 {
     // -------------------------------------------------------------------------
     // Dependencies
@@ -58,47 +53,14 @@ public class ReportTableDeletionHandler
     // -------------------------------------------------------------------------
 
     @Override
+    protected AnalyticalObjectService<ReportTable> getAnalyticalObjectService()
+    {
+        return reportTableService;
+    }
+    
+    @Override
     public String getClassName()
     {
         return ReportTable.class.getSimpleName();
-    }
-    
-    @Override
-    public void deleteIndicator( Indicator indicator )
-    {
-        for ( ReportTable reportTable : reportTableService.getAnalyticalObjects( indicator ) )
-        {
-            reportTableService.deleteReportTable( reportTable );
-        }
-    }
-    
-    @Override
-    public String allowDeleteDataElement( DataElement dataElement )
-    {
-        return reportTableService.countAnalyticalObjects( dataElement ) == 0 ? null : ERROR;
-    }
-
-    @Override
-    public String allowDeleteDataSet( DataSet dataSet )
-    {
-        return reportTableService.countAnalyticalObjects( dataSet ) == 0 ? null : ERROR;
-    }
-    
-    @Override
-    public String allowDeletePeriod( Period period )
-    {
-        return reportTableService.countAnalyticalObjects( period ) == 0 ? null : ERROR;
-    }
-    
-    @Override
-    public String allowDeleteOrganisationUnit( OrganisationUnit organisationUnit )
-    {
-        return reportTableService.countAnalyticalObjects( organisationUnit ) == 0 ? null : ERROR;
-    }
-    
-    @Override
-    public String allowDeleteCategoryOptionGroup( CategoryOptionGroup categoryOptionGroup )
-    {
-        return reportTableService.countAnalyticalObjects( categoryOptionGroup ) == 0 ? null : ERROR;
     }
 }

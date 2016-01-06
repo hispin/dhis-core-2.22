@@ -41,7 +41,7 @@ import org.hisp.dhis.program.ProgramIndicator;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public interface AnalyticalObjectStore<T extends BaseAnalyticalObject>
+public interface AnalyticalObjectStore<T extends AnalyticalObject>
     extends GenericIdentifiableObjectStore<T>
 {
     List<T> getAnalyticalObjects( Indicator indicator );
