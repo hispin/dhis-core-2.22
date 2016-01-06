@@ -1,6 +1,20 @@
+<div class="row vertical-spacing">
+    <div id="selectDropDownParent" class="input-group col-md-3" ng-if="enrollmentStatus==='TODAY'">            
+        <button type="button" class="select-dropdown-button form-control">{{selectedEventsTodayFilter.name}}</button>
+        <div class="input-group-btn todayfilter-drop-down">
+            <button class="btn btn-default select-dropdown-caret" type="button" data-toggle="dropdown" title="Test"><i class="fa fa-caret-down"></i></button>
+            <ul id="selectDropDown" class="dropdown-menu dropdown-menu-right">
+                <li ng-repeat="filter in eventsTodayFilters | orderBy: 'name'">
+                    <a href ng-click="fetchTeisEventsToday(filter)">{{filter.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<i ng-if="!teiFetched && enrollmentStatus==='TODAY'" class="fa fa-spinner fa-spin fa-2x"></i>
 <div ng-if="teiFetched">
     <div class="alert alert-warning vertical-spacing" ng-if="trackedEntityList.length === 0 || !trackedEntityList.length">
-        {{'no'| translate}} {{selectedProgram.trackedEntity.name|| 'records' | translate}} {{'found'| translate}}                        
+        {{'no'| translate}} {{selectedProgram.trackedEntity.name|| 'records' | translate}} {{'found'| translate}}
     </div>
 
     <div class="vertical-spacing" ng-if="trackedEntityList.length > 0">
@@ -93,8 +107,9 @@
                 </tr>
             </tbody>        
         </table>
-        <serverside-paginator></serverside-paginator>
-    </div>   
+        <div ng-if="enrollmentStatus!=='TODAY'">
+         <serverside-paginator></serverside-paginator>           
+        </div>
+
+    </div>
 </div>
-
-

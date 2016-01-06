@@ -112,7 +112,6 @@
                 </button>
             </div>
             <!--search/registration buttons end-->
-
         </div>
         <!--- search and registration menu ends -->
 
@@ -127,11 +126,12 @@
         <!-- registration form ends -->        
 
         <!-- entity grid begins -->
-        <i ng-if="!teiFetched && showTrackedEntityDiv" class="fa fa-spinner fa-spin fa-2x"></i>
+        <i ng-if="!teiFetched && showTrackedEntityDiv && enrollmentStatus!=='TODAY'" class="fa fa-spinner fa-spin fa-2x"></i>
         <div class="row">
             <div class="col-sm-12">
                 <span ng-if='!showRegistrationDiv'>
-                    <span class="btn-group" ng-if="selectedProgram && teiFetched">
+                    <span class="btn-group" ng-if="selectedProgram && teiFetched || enrollmentStatus==='TODAY'">
+                        <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'TODAY'" title="{{todayLabel}}" ng-click='filterByEnrollmentStatus("TODAY")'><i class='fa fa-calendar-o mouse-pointer'></i></label>
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ALL'" title="{{allEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ALL")'><i class="fa fa-list mouse-pointer"></i></label>
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'ACTIVE'" title="{{activeEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("ACTIVE")'><i class="fa fa-circle-o mouse-pointer"></i></label>
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{completedEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
