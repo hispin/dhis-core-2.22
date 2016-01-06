@@ -106,7 +106,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
     
     @Override
-    public int countAnalyticalObject( Indicator indicator )
+    public int countAnalyticalObjects( Indicator indicator )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.indicator = :indicator" );
         query.setEntity( "indicator", indicator );
@@ -115,7 +115,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countAnalyticalObject( DataElement dataElement )
+    public int countAnalyticalObjects( DataElement dataElement )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataElement = :dataElement" );
         query.setEntity( "dataElement", dataElement );
@@ -124,7 +124,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countAnalyticalObject( DataSet dataSet )
+    public int countAnalyticalObjects( DataSet dataSet )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataSet = :dataSet" );
         query.setEntity( "dataSet", dataSet );
@@ -133,7 +133,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countAnalyticalObject( ProgramIndicator programIndicator )
+    public int countAnalyticalObjects( ProgramIndicator programIndicator )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.programIndicator = :programIndicator" );
         query.setEntity( "dataSet", programIndicator );
@@ -142,7 +142,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
     
     @Override
-    public int countAnalyticalObject( Period period )
+    public int countAnalyticalObjects( Period period )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :period in elements(c.periods)" );
         query.setEntity( "period", period );
@@ -151,7 +151,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countAnalyticalObject( OrganisationUnit organisationUnit )
+    public int countAnalyticalObjects( OrganisationUnit organisationUnit )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :organisationUnit in elements(c.organisationUnits)" );
         query.setEntity( "organisationUnit", organisationUnit );
@@ -160,7 +160,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countAnalyticalObject( CategoryOptionGroup categoryOptionGroup )
+    public int countAnalyticalObjects( CategoryOptionGroup categoryOptionGroup )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :categoryOptionGroup in elements(c.categoryOptionGroups)" );
         query.setEntity( "categoryOptionGroup", categoryOptionGroup );

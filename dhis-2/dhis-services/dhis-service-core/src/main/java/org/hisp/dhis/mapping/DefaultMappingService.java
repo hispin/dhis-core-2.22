@@ -317,30 +317,30 @@ public class DefaultMappingService
     @Override
     public int countDataSetMapViews( DataSet dataSet )
     {
-        return mapViewStore.countAnalyticalObject( dataSet );
+        return mapViewStore.countAnalyticalObjects( dataSet );
     }
 
     @Override
     public int countIndicatorMapViews( Indicator indicator )
     {
-        return mapViewStore.countAnalyticalObject( indicator );
+        return mapViewStore.countAnalyticalObjects( indicator );
     }
 
     @Override
     public int countDataElementMapViews( DataElement dataElement )
     {
-        return mapViewStore.countAnalyticalObject( dataElement );
+        return mapViewStore.countAnalyticalObjects( dataElement );
     }
     
     @Override
     public int countPeriodMapViews( Period period )
     {
-        return mapViewStore.countAnalyticalObject( period );
+        return mapViewStore.countAnalyticalObjects( period );
     }
     
     @Override
     public int countOrganisationUnitMapViews( OrganisationUnit organisationUnit )
     {
-        return mapViewStore.countAnalyticalObject( organisationUnit );
+        return mapViewStore.countAnalyticalObjects( organisationUnit );
     }
 }

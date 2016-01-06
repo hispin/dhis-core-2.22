@@ -58,17 +58,17 @@ public interface AnalyticalObjectStore<T extends BaseAnalyticalObject>
 
     List<T> getAnalyticalObjects( CategoryOptionGroup categoryOptionGroup );
     
-    int countAnalyticalObject( Indicator indicator );
+    int countAnalyticalObjects( Indicator indicator );
 
-    int countAnalyticalObject( DataElement dataElement );
+    int countAnalyticalObjects( DataElement dataElement );
 
-    int countAnalyticalObject( DataSet dataSet );
+    int countAnalyticalObjects( DataSet dataSet );
 
-    int countAnalyticalObject( ProgramIndicator programIndicator );
+    int countAnalyticalObjects( ProgramIndicator programIndicator );
     
-    int countAnalyticalObject( Period period );
+    int countAnalyticalObjects( Period period );
     
-    int countAnalyticalObject( OrganisationUnit organisationUnit );
+    int countAnalyticalObjects( OrganisationUnit organisationUnit );
     
-    int countAnalyticalObject( CategoryOptionGroup categoryOptionGroup );
+    int countAnalyticalObjects( CategoryOptionGroup categoryOptionGroup );
 }
