@@ -30,16 +30,17 @@ package org.hisp.dhis.eventreport;
 
 import java.util.Collection;
 
+import org.hisp.dhis.common.AnalyticalObjectService;
+import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.system.deletion.DeletionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
  */
 public class EventReportDeletionHandler
-    extends DeletionHandler
+    extends GenericAnalyticalObjectDeletionHandler<EventReport>
 {
     // -------------------------------------------------------------------------
     // Dependencies
@@ -58,6 +59,12 @@ public class EventReportDeletionHandler
         return EventReport.class.getSimpleName();
     }
 
+    @Override
+    protected AnalyticalObjectService<EventReport> getAnalyticalObjectService()
+    {
+        return eventReportService;
+    }
+    
     @Override
     public void deleteProgramStage( ProgramStage programStage )
     {

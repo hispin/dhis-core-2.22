@@ -30,16 +30,17 @@ package org.hisp.dhis.eventchart;
 
 import java.util.Collection;
 
+import org.hisp.dhis.common.AnalyticalObjectService;
+import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.system.deletion.DeletionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
  */
 public class EventChartDeletionHandler
-    extends DeletionHandler
+    extends GenericAnalyticalObjectDeletionHandler<EventChart>
 {
     // -------------------------------------------------------------------------
     // Dependencies
@@ -52,6 +53,12 @@ public class EventChartDeletionHandler
     // DeletionHandler implementation
     // -------------------------------------------------------------------------
 
+    @Override
+    protected AnalyticalObjectService<EventChart> getAnalyticalObjectService()
+    {
+        return eventChartService;
+    }
+    
     @Override
     protected String getClassName()
     {
