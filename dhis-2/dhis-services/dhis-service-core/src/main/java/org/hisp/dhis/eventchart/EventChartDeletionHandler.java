@@ -32,6 +32,9 @@ import java.util.Collection;
 
 import org.hisp.dhis.common.AnalyticalObjectService;
 import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +66,24 @@ public class EventChartDeletionHandler
     protected String getClassName()
     {
         return EventChart.class.getSimpleName();
+    }
+
+    @Override
+    public void deleteIndicator( Indicator indicator )
+    {
+        //TODO
+    }
+    
+    @Override
+    public void deleteDataElement( DataElement dataElement )
+    {
+        //TODO
+    }
+
+    @Override
+    public void deleteDataSet( DataSet dataSet )
+    {
+        //TODO
     }
 
     @Override
