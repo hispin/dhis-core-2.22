@@ -55,23 +55,32 @@ public class TrackedEntityAttributeValueAudit
 
     private Date created;
 
-    private String value;
+    private String plainValue;
+
+    private String encryptedValue;
 
     private String modifiedBy;
 
     private AuditType auditType;
 
+    /**
+     * This value is only used to store values from setValue when we don't know
+     * if attribute is set or not.
+     */
+    private String value;
+
     public TrackedEntityAttributeValueAudit()
     {
     }
 
-    public TrackedEntityAttributeValueAudit( TrackedEntityAttributeValue trackedEntityAttributeValue, String value, String modifiedBy, AuditType auditType )
+    public TrackedEntityAttributeValueAudit( TrackedEntityAttributeValue trackedEntityAttributeValue, String value,
+        String modifiedBy, AuditType auditType )
     {
         this.attribute = trackedEntityAttributeValue.getAttribute();
         this.entityInstance = trackedEntityAttributeValue.getEntityInstance();
 
         this.created = new Date();
-        this.value = value;
+        setValue( value );
         this.modifiedBy = modifiedBy;
         this.auditType = auditType;
     }
@@ -79,7 +88,7 @@ public class TrackedEntityAttributeValueAudit
     @Override
     public int hashCode()
     {
-        return Objects.hash( attribute, entityInstance, created, value, modifiedBy, auditType );
+        return Objects.hash( attribute, entityInstance, created, getValue(), modifiedBy, auditType );
     }
 
     @Override
@@ -100,7 +109,7 @@ public class TrackedEntityAttributeValueAudit
         return Objects.equals( this.attribute, other.attribute )
             && Objects.equals( this.entityInstance, other.entityInstance )
             && Objects.equals( this.created, other.created )
-            && Objects.equals( this.value, other.value )
+            && Objects.equals( this.getValue(), other.getValue() )
             && Objects.equals( this.modifiedBy, other.modifiedBy )
             && Objects.equals( this.auditType, other.auditType );
     }
@@ -113,6 +122,26 @@ public class TrackedEntityAttributeValueAudit
     public void setId( int id )
     {
         this.id = id;
+    }
+
+    public String getPlainValue()
+    {
+        return (!getAttribute().getConfidential() && this.value != null ? this.value : this.plainValue);
+    }
+
+    public void setPlainValue( String plainValue )
+    {
+        this.plainValue = plainValue;
+    }
+
+    public String getEncryptedValue()
+    {
+        return (getAttribute().getConfidential() && this.value != null ? this.value : this.encryptedValue);
+    }
+
+    public void setEncryptedValue( String encryptedValue )
+    {
+        this.encryptedValue = encryptedValue;
     }
 
     @JsonProperty( "trackedEntityAttribute" )
@@ -155,9 +184,16 @@ public class TrackedEntityAttributeValueAudit
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getValue()
     {
-        return value;
+        return (getAttribute().getConfidential() ? this.getEncryptedValue() : this.getPlainValue());
     }
 
+    /**
+     * Property which temporarily stores the attribute value. The
+     * {@link getEncryptedValue} and {@link getPlainValue} methods handle the
+     * value when requested.
+     *
+     * @param value the value to be stored.
+     */
     public void setValue( String value )
     {
         this.value = value;

@@ -76,7 +76,6 @@ public class TrackedEntityAttributeValue
      */
     private String value;
 
-
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -91,7 +90,8 @@ public class TrackedEntityAttributeValue
         setEntityInstance( entityInstance );
     }
 
-    public TrackedEntityAttributeValue( TrackedEntityAttribute attribute, TrackedEntityInstance entityInstance, String value )
+    public TrackedEntityAttributeValue( TrackedEntityAttribute attribute, TrackedEntityInstance entityInstance,
+        String value )
     {
         setAttribute( attribute );
         setEntityInstance( entityInstance );
@@ -187,7 +187,8 @@ public class TrackedEntityAttributeValue
     @Override
     public String toString()
     {
-        return "[Tracked attribute=" + attribute + ", entityInstance=" + entityInstance + ", value='" + getValue() + "']";
+        return "[Tracked attribute=" + attribute + ", entityInstance=" + entityInstance + ", value='" + getValue() +
+            "']";
     }
 
     // -------------------------------------------------------------------------
@@ -269,8 +270,8 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Property which temporarily stores the attribute value. The 
-     * {@link getEncryptedValue} and {@link getPlainValue} methods handle the 
+     * Property which temporarily stores the attribute value. The
+     * {@link getEncryptedValue} and {@link getPlainValue} methods handle the
      * value when requested.
      *
      * @param value the value to be stored.
