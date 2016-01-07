@@ -24,7 +24,7 @@ trackerCapture.controller('DataEntryController',
                 PeriodService,
                 TrackerRulesFactory,
                 EventCreationService,
-                $q) {
+                $q,$location) {
 
     $scope.printForm = false;
     $scope.printEmptyForm = false;
@@ -1346,9 +1346,10 @@ trackerCapture.controller('DataEntryController',
         return dhis2EventToUpdate;
     };
     
-    $scope.completeIncompleteEvent = function (inTableView) {
+    $scope.completeIncompleteEvent = function (inTableView, outerForm) {
             
         var modalOptions;
+        var modalDefaults = {};
         var dhis2Event = $scope.makeDhis2EventToUpdate();        
         
         if ($scope.currentEvent.status === 'COMPLETED') {//activiate event
@@ -1362,10 +1363,13 @@ trackerCapture.controller('DataEntryController',
         }
         else {//complete event
                 if(angular.isUndefined(inTableView) || inTableView === false){
-                $scope.outerForm.$setSubmitted();
-                if($scope.outerForm.$invalid){
-                    return;
-                }
+                    if(!outerForm){
+                        outerForm = $scope.outerForm;
+                    }
+                    outerForm.$setSubmitted();
+                    if(outerForm.$invalid){
+                        return;
+                    }
             }
             
             if(angular.isDefined($scope.errorMessages[$scope.currentEvent.event]) && $scope.errorMessages[$scope.currentEvent.event].length > 0) {
@@ -1385,65 +1389,75 @@ trackerCapture.controller('DataEntryController',
                 modalOptions = {
                     closeButtonText: 'cancel',
                     actionButtonText: 'complete',
+                    secondActionButtonText: 'complete_and_exit',
                     headerText: 'complete',
-                    bodyText: 'are_you_sure_to_complete_event'
+                    bodyText: 'are_you_sure_to_complete_event',
                 };
+                modalDefaults.templateUrl = 'components/dataentry/modal-complete-event.html';
                 dhis2Event.status = 'COMPLETED';
             }
         }        
-        
-        ModalService.showModal({}, modalOptions).then(function (result) {            
-            $scope.executeCompleteIncompleteEvent(dhis2Event);
-        });        
+
+        ModalService.showModal(modalDefaults, modalOptions).then(function (result) {
+            var backToDashboard = false;
+            if(result === 'ok-exit'){
+                backToDashboard = true;
+            }
+            $scope.executeCompleteIncompleteEvent(dhis2Event,backToDashboard);
+        });           
     };
     
-    $scope.executeCompleteIncompleteEvent = function(dhis2Event){
+    $scope.executeCompleteIncompleteEvent = function(dhis2Event, backToDashboard){
             
         DHIS2EventFactory.update(dhis2Event).then(function (data) {
-
-            if ($scope.currentEvent.status === 'COMPLETED') {//activiate event                    
-                $scope.currentEvent.status = 'ACTIVE';
-            }
-            else {//complete event                    
-                $scope.currentEvent.status = 'COMPLETED';
-
-            }
-
-            setStatusColor();
-
-            setEventEditing($scope.currentEvent, $scope.currentStage);
-
-            if ($scope.currentEvent.status === 'COMPLETED') {
-
-                if ($scope.currentStage.remindCompleted) {
-                    completeEnrollment($scope.currentStage);
+            if(backToDashboard){
+                selection.load();
+                $location.path('/').search({program: $scope.selectedProgramId}); 
+            }else{
+                if ($scope.currentEvent.status === 'COMPLETED') {//activiate event                    
+                    $scope.currentEvent.status = 'ACTIVE';
                 }
-                else {
-                    if ($scope.currentStage.allowGenerateNextVisit) {
-                        if($scope.currentStage.repeatable){
-                            $scope.showCreateEvent($scope.currentStage, $scope.eventCreationActions.add);
-                        }
-                        else{
-                            var index = -1, stage = null;
-                            for(var i=0; i<$scope.programStages.length && index===-1; i++){
-                                if($scope.currentStage.id === $scope.programStages[i].id){
-                                    index = i;
-                                    stage = $scope.programStages[i+1];
-                                }
+                else {//complete event                    
+                    $scope.currentEvent.status = 'COMPLETED';
+
+                }
+
+                setStatusColor();
+
+                setEventEditing($scope.currentEvent, $scope.currentStage);
+
+                if ($scope.currentEvent.status === 'COMPLETED') {
+
+                    if ($scope.currentStage.remindCompleted) {
+                        completeEnrollment($scope.currentStage);
+                    }
+                    else {
+                        if ($scope.currentStage.allowGenerateNextVisit) {
+                            if($scope.currentStage.repeatable){
+                                $scope.showCreateEvent($scope.currentStage, $scope.eventCreationActions.add);
                             }
-                            if(stage ){
-                                if(!$scope.eventsByStage[stage.id] || $scope.eventsByStage[stage.id] && $scope.eventsByStage[stage.id].length === 0){
-                                    $scope.showCreateEvent(stage, $scope.eventCreationActions.add);
+                            else{
+                                var index = -1, stage = null;
+                                for(var i=0; i<$scope.programStages.length && index===-1; i++){
+                                    if($scope.currentStage.id === $scope.programStages[i].id){
+                                        index = i;
+                                        stage = $scope.programStages[i+1];
+                                    }
                                 }
-                            }                                
+                                if(stage ){
+                                    if(!$scope.eventsByStage[stage.id] || $scope.eventsByStage[stage.id] && $scope.eventsByStage[stage.id].length === 0){
+                                        $scope.showCreateEvent(stage, $scope.eventCreationActions.add);
+                                    }
+                                }                                
+                            }
                         }
                     }
-                }
 
-                if($scope.displayCustomForm !== "TABLE") {
-                    //Close the event when the event is completed, to make it 
-                    //more clear that the completion went through.
-                    $scope.showDataEntry($scope.currentEvent, false);
+                    if($scope.displayCustomForm !== "TABLE") {
+                        //Close the event when the event is completed, to make it 
+                        //more clear that the completion went through.
+                        $scope.showDataEntry($scope.currentEvent, false);
+                    }
                 }
             }
         });
@@ -1860,5 +1874,5 @@ trackerCapture.controller('DataEntryController',
         for(var key in $scope.eventTableOptions){
             $scope.eventTableOptionsArr[$scope.eventTableOptions[key].sort] = $scope.eventTableOptions[key];
         }
-    }        
+    }   
 });
