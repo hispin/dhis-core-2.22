@@ -153,7 +153,7 @@ trackerCapture.controller('OverdueEventsController',
             });
 
             AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
-                var grid = TEIGridService.generateGridColumns(atts, $scope.selectedOuMode);
+                var grid = TEIGridService.generateGridColumns(atts, $scope.selectedOuMode,true);
                 $scope.gridColumns = [];
                 $scope.gridColumns.push({name: $translate.instant('due_date'), id: 'dueDate', valueType: 'DATE', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});
                 $scope.gridColumns.push({name: $translate.instant('event_name'), id: 'eventName', valueType: 'TEXT', displayInListNoProgram: false, showFilter: false, show: true, eventCol: true});

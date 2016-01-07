@@ -233,7 +233,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     //$scope.searchParam = {bools: []};
     $scope.search = function(mode){
         resetParams();
-        var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name);
+        var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name, true);
         $scope.gridColumns = grid.columns;
             
         $scope.selectedSearchMode = mode;        
