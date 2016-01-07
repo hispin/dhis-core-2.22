@@ -1148,6 +1148,7 @@
                         var userStyleName = getStyleName(userStyleUrl);
 
                         addUserStyleStylesheet(getStylesheetUrl(userStyleUrl));
+                        addUserStyleStylesheet("../api/files/style/external");
                         setHeaderLogo(userStyleName, logo);
                         setHeaderTitle(title);
                         setHeaderLink(link);
