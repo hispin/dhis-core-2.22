@@ -693,6 +693,21 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     att.value = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'USER');
                 });
                 return tei;
+            }, function(error){
+                if(error){
+                    var dialogOptions = {
+                        headerText: 'error',
+                        bodyText: 'access_denied'
+                    };
+                    if(error.statusText) {
+                        dialogOptions.headerText = error.statusText;
+                    }
+                    if(error.data && error.data.message) {
+                        dialogOptions.bodyText = error.data.message;
+                    }
+                    
+                    DialogService.showDialog({}, dialogOptions);
+                }
             });
             
             return promise;
