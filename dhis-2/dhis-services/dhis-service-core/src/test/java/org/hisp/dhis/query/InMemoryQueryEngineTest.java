@@ -560,6 +560,18 @@ public class InMemoryQueryEngineTest
     }
 
     @Test
+    public void testCollectionDeep()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.setObjects( dataElementGroups );
+
+        query.add( Restrictions.like( "dataElements.dataElementGroups.name", "A", MatchMode.END ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        System.err.println( "xyz: " + objects );
+    }
+
+    @Test
     public void testCollectionEqSize()
     {
         Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
