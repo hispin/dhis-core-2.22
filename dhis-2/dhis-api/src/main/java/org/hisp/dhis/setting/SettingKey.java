@@ -235,5 +235,8 @@ public enum SettingKey
         return clazz;
     }
 
-    public boolean getConfidential() { return confidential; }
+    public boolean isConfidential()
+    {
+        return confidential;
+    }
 }

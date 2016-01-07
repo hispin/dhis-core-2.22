@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

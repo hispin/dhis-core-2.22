@@ -46,8 +46,6 @@ import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportService;
 import org.hisp.dhis.dxf2.metadata.MetaData;
-import org.hisp.dhis.external.conf.ConfigurationKey;
-import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.util.CodecUtils;
@@ -212,8 +210,6 @@ public class DefaultSynchronizationManager
             return null;
         }
 
-        final Configuration config = configurationService.getConfiguration();
-
         String url = systemSettingManager.getSystemSetting(
             SettingKey.REMOTE_INSTANCE_URL ) + "/api/dataValueSets";
 
@@ -225,16 +221,13 @@ public class DefaultSynchronizationManager
             public void doWithRequest( ClientHttpRequest request )
                 throws IOException
             {
+                String username = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME );
+                String password = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_PASSWORD );
+                
                 request.getHeaders().setContentType( MediaType.APPLICATION_JSON );
-                request.getHeaders().add( HEADER_AUTHORIZATION,
-                    CodecUtils.getBasicAuthString(
-                        (String) systemSettingManager.getSystemSetting(
-                            SettingKey.REMOTE_INSTANCE_USERNAME ),
-                        (String) systemSettingManager.getSystemSetting(
-                            SettingKey.REMOTE_INSTANCE_PASSWORD ) ) );
+                request.getHeaders().add( HEADER_AUTHORIZATION, CodecUtils.getBasicAuthString( username, password ) );
 
-                dataValueSetService
-                    .writeDataValueSetJson( lastSuccessTime, request.getBody(), new IdSchemes() );
+                dataValueSetService.writeDataValueSetJson( lastSuccessTime, request.getBody(), new IdSchemes() );
             }
         };
 
