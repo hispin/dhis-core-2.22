@@ -96,12 +96,6 @@
     <property name="defaultValue" value="J7GhAs287hsSQlKd9g5" />
   </bean>
 
-  <bean id="systemSettingEncryptionPassword" class="org.hisp.dhis.hibernate.ConnectionPropertyFactoryBean">
-    <property name="hibernateConfigurationProvider" ref="hibernateConfigurationProvider" />
-    <property name="hibernateProperty" value="encryption.password" />
-    <property name="defaultValue" value="J7GhAs287hsSQlKd9g5" />
-  </bean>
-
   <!-- Encryption -->
 
   <!-- Bouncy Castle Crypto APIs -->

@@ -28,31 +28,27 @@ package org.hisp.dhis.setting;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.jasypt.encryption.pbe.PBEStringEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.salt.StringFixedSaltGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Lists;
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Stian Strandli
@@ -109,7 +105,7 @@ public class DefaultSystemSettingManager
 
         SystemSetting setting = systemSettingStore.getByName( name );
 
-        if ( NAME_KEY_MAP.containsKey( name ) && NAME_KEY_MAP.get( name ).isConfidential() )
+        if ( isConfidential( name ) )
         {
             value = pbeStringEncryptor.encrypt( value.toString() );
         }
@@ -161,9 +157,11 @@ public class DefaultSystemSettingManager
     {
         SystemSetting setting = systemSettingStore.getByName( name );
 
-        if ( NAME_KEY_MAP.containsKey( name ) && NAME_KEY_MAP.get( name ).isConfidential() )
+        if ( isConfidential( name ) )
         {
+
             setting.setValue( pbeStringEncryptor.decrypt( setting.getValue().toString() ) );
+
         }
 
         return setting != null && setting.hasValue() ? setting.getValue() : null;
@@ -197,7 +195,7 @@ public class DefaultSystemSettingManager
 
         if ( setting != null && setting.hasValue() )
         {
-            return NAME_KEY_MAP.get( name ).isConfidential() ?
+            return isConfidential( name ) ?
                 Optional.of( pbeStringEncryptor.decrypt( setting.getValue().toString() ) ) :
                 Optional.of( setting.getValue() );
         }
@@ -205,15 +203,20 @@ public class DefaultSystemSettingManager
         {
             return Optional.ofNullable( defaultValue );
         }
+
     }
 
     @Override
     public List<SystemSetting> getAllSystemSettings()
     {
+
+        /*
+         * Remove confidential settings from this list!
+         */
         return systemSettingStore.getAll().stream()
-            .filter( systemSetting -> !NAME_KEY_MAP.containsKey( systemSetting.getName() ) ||
-                !NAME_KEY_MAP.get( systemSetting.getName() ).isConfidential() )
+            .filter( systemSetting -> !isConfidential( systemSetting.getName() ) )
             .collect( Collectors.toList() );
+
     }
 
     @Override
@@ -426,4 +429,5 @@ public class DefaultSystemSettingManager
     {
         return NAME_KEY_MAP.containsKey( name ) && NAME_KEY_MAP.get( name ).isConfidential();
     }
+
 }
