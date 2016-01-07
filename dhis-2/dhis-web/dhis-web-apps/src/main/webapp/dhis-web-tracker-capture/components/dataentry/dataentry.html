@@ -3,9 +3,9 @@
     </div>
     <div class="panel-heading handle bold">
         {{dataentryWidget.title| translate}}
-        <span class="nav-pills" ng-if="stageNeedsEvent(currentStage)">
+        <!--<span class="nav-pills" ng-if="stageNeedsEvent(currentStage)">
             | <a href ng-click="showCreateEvent(currentStage, eventCreationActions.add)" title="{{'add_new_event'| translate}}"><span ng-class="{true: 'widget - link - active', false: 'widget - link'} [!editingDisabled]">{{'add_new_event'| translate}}</span></a>
-        </span>
+        </span>-->
         <span class="pull-right widget-link">            
             <a href ng-click="toggleLegend()" title="{{'event_color_legend'| translate}}" class="small-horizonal-spacing"><i class="fa fa-info-circle vertical-center"></i></a>
             <a href ng-click="toggleEventsTableDisplay()" title="{{showEventsAsTables ? 'toggle_table_view_off' : 'toggle_table_view_on'| translate}}" ng-show="stagesCanBeShownAsTable"><span ng-if="!showEventsAsTables"><i class="fa fa-bars vertical-center"></i></span><span ng-if="showEventsAsTables"><i class="fa fa-square vertical-center"></i></span></a>

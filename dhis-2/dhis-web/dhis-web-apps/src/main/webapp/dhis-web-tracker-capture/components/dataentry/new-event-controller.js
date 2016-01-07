@@ -13,20 +13,26 @@ trackerCapture.controller('EventCreationController',
                 eventsByStage,
                 stage,
                 stages,
+                allStages,
                 tei,
                 program,
                 orgUnit,
                 enrollment,                
                 eventCreationAction,
                 autoCreate,
-                EventUtils) {
+                EventUtils,
+                events) {
     $scope.stages = stages;
+    $scope.allStages = allStages;
+    $scope.events = events;
     $scope.eventCreationAction = eventCreationAction;
     $scope.eventCreationActions = EventCreationService.eventCreationActions;
     $scope.isNewEvent = (eventCreationAction === $scope.eventCreationActions.add);
     $scope.isScheduleEvent = (eventCreationAction === $scope.eventCreationActions.schedule || eventCreationAction === $scope.eventCreationActions.referral);
     $scope.isReferralEvent = (eventCreationAction === $scope.eventCreationActions.referral);
     $scope.model = {selectedStage: stage, dueDateInvalid: false, eventDateInvalid: false};
+    $scope.stageSpecifiedOnModalOpen = angular.isObject(stage) ? true : false;    
+    
     var orgPath = [];    
     var dummyEvent = {};
     
@@ -35,33 +41,101 @@ trackerCapture.controller('EventCreationController',
         dummyEvent = EventUtils.createDummyEvent(eventsByStage[stage.id], tei, program, stage, orgUnit, enrollment);
         
         $scope.newEvent = {programStage: stage};
-        $scope.dhis2Event = {eventDate: $scope.isScheduleEvent ? '' : DateUtils.getToday(), dueDate: dummyEvent.dueDate, excecutionDateLabel : dummyEvent.excecutionDateLabel, name: dummyEvent.name, invalid: true};
-
-        //custom code for folkehelsa. Set empty eventDate if selectedStage is previous pregnancies
-        if($scope.model.selectedStage.id === 'PUZaKR0Jh2k'){
-            $scope.dhis2Event.eventDate = '';
-        }
+        $scope.dhis2Event = {eventDate: $scope.isScheduleEvent ? '' : DateUtils.getToday(), dueDate: dummyEvent.dueDate, excecutionDateLabel : dummyEvent.excecutionDateLabel, name: dummyEvent.name, invalid: true};        
 
         if ($scope.model.selectedStage.periodType) {
             $scope.dhis2Event.eventDate = dummyEvent.dueDate;
             $scope.dhis2Event.periodName = dummyEvent.periodName;
             $scope.dhis2Event.periods = dummyEvent.periods;
             $scope.dhis2Event.selectedPeriod = dummyEvent.periods[0];
-        }
-        
-        orgPath.push(dummyEvent.orgUnit);
+        }       
     };
     
-    if($scope.model.selectedStage){
-        prepareEvent();
+    function suggestStage(){        
+        var suggestedStage;
+        var events = $scope.events;        
+        var allStages = $scope.allStages;
+        
+        var availableStagesOrdered = $scope.stages.slice();
+        availableStagesOrdered.sort(function (a,b){
+            return a.sortOrder - b.sortOrder;
+        });
+        
+        var stagesById = [];
+        
+        if(angular.isUndefined(events) || events.length === 0){
+            suggestedStage = availableStagesOrdered[0];
+        }
+        else{
+            angular.forEach(allStages, function(stage){
+                stagesById[stage.id] = stage;
+            });
+            
+            var lastStageForEvents;
+            for(i = 0; i < events.length; i++){
+                var event = events[i];
+                var eventStage = stagesById[event.programStage];
+                    if(i > 0){
+                        if(eventStage.sortOrder > lastStageForEvents.sortOrder){
+                            lastStageForEvents = eventStage;
+                        }
+                        else if(eventStage.sortOrder === lastStageForEvents.sortOrder){
+                            if(eventStage.id !== lastStageForEvents.id){
+                                if(eventStage.name.localeCompare(lastStageForEvents.name) > 0){
+                                    lastStageForEvents = eventStage;
+                                }
+                            }                            
+                        }
+                    }
+                    else {
+                        lastStageForEvents = eventStage;
+                    }
+            }
+            
+            for(j = 0; j < availableStagesOrdered.length; j++){
+                var availableStage = availableStagesOrdered[j];
+                
+                if(availableStage.id === lastStageForEvents.id){
+                    suggestedStage = availableStage;
+                    break;
+                }
+                else if(availableStage.sortOrder === lastStageForEvents.sortOrder){
+                    if(availableStage.name.localeCompare(lastStageForEvents.name) > 0){
+                        suggestedStage = availableStage;
+                        break;
+                    }
+                }
+                else if(availableStage.sortOrder > lastStageForEvents.sortOrder){
+                    suggestedStage = availableStage;
+                    break;
+                }
+            }
+            
+            if(angular.isUndefined(suggestedStage)){
+                suggestedStage = availableStagesOrdered[availableStagesOrdered.length - 1];
+            }
+        }
+        
+        $scope.model.selectedStage = suggestedStage;
+        stage = $scope.model.selectedStage;
+    };
+    
+    if(!$scope.stageSpecifiedOnModalOpen){
+        //suggest stage
+        suggestStage();        
     }
+        
+    if(angular.isDefined(orgUnit) && angular.isDefined(orgUnit.id)){
+        orgPath.push(orgUnit.id);
+    }    
+    
     
     $scope.$watch('model.selectedStage', function(){       
         if(angular.isObject($scope.model.selectedStage)){
             stage = $scope.model.selectedStage;
             prepareEvent();
         }
-    });
+    });    
 
     //watch for changes in due/event-date
     $scope.$watchCollection('[dhis2Event.dueDate, dhis2Event.eventDate]', function () {
@@ -93,7 +167,8 @@ trackerCapture.controller('EventCreationController',
         if($scope.isReferralEvent && !$scope.selectedSearchingOrgUnit){
             $scope.orgUnitError = true;
             return false;
-        }
+        }        
+        
         $scope.orgUnitError =  false;
         
         if ($scope.model.selectedStage.periodType) {
@@ -123,7 +198,7 @@ trackerCapture.controller('EventCreationController',
         DHIS2EventFactory.create(newEvents).then(function (response) {
             if (response.response && response.response.importSummaries[0].status === 'SUCCESS') {
                 newEvent.event = response.response.importSummaries[0].reference;
-                $modalInstance.close(newEvent);
+                $modalInstance.close({dummyEvent: dummyEvent, ev: newEvent});
             }
             else {
                 var dialogOptions = {
@@ -216,7 +291,7 @@ trackerCapture.controller('EventCreationController',
             $scope.orgUnitsLoading = false;
         }
     };
-    
+   
     if($scope.isReferralEvent){
         initOrgUnits(orgPath[0]);
     }

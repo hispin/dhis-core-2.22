@@ -1,4 +1,4 @@
-<form name="outerForm" novalidate>
+<form name="outerForm" novalidate>    
     <table class="dhis2-list-table-striped dhis2-table-hover" ng-if='currentEvent && !currentStage.programStageSections.length'>
         <thead>
             <tr>
@@ -10,7 +10,7 @@
                 </th>
             </tr>
         </thead>
-        <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id, currentEvent)">
+        <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id, currentEvent)">            
             <td>
                 <span ng-bind="prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name"></span>
                 <span class="hideInPrint">

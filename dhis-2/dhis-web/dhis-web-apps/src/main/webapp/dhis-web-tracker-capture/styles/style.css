@@ -1443,3 +1443,39 @@ input, button, select, textarea {
     padding-top: 16px;
 }
 
+.row-alternate:nth-child(even) {
+    background-color: #ebf0f6;
+}
+
+.row-alternate:nth-child(odd) {
+    background-color: white;
+}
+
+.stage-task-badge-placement {
+    padding-right: 10px;
+    padding-top: 5px;
+}
+
+.stage-tasks-badge {
+    margin-top: 4px;
+    margin-right: 4px;
+    width: 26px;
+    height: 26px;
+    padding-left: 7.5px;
+    padding-right: 6px;
+    background-color: #d9edf7;
+    color: #3162C5;
+    font-size: 14px;
+    border-radius: 13px;    
+    text-align: left;
+}
+
+a.disable-link-effects:focus {
+    border: none;
+    border-image: none;
+    text-decoration: none;
+    outline-style: none;
+}
+
+
+
