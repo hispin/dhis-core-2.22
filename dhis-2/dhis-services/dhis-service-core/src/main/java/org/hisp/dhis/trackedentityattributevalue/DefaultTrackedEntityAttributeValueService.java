@@ -102,8 +102,7 @@ public class DefaultTrackedEntityAttributeValueService
     }
 
     @Override
-    public List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues(
-        Collection<TrackedEntityInstance> instances )
+    public List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( Collection<TrackedEntityInstance> instances )
     {
         if ( instances != null && instances.size() > 0 )
         {
@@ -116,9 +115,9 @@ public class DefaultTrackedEntityAttributeValueService
     @Override
     public void addTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
-        if(attributeValue.getAttribute().isConfidential() && !dhisConfigurationProvider.isEncryptionConfigured().isOk())
+        if ( attributeValue.getAttribute().isConfidential() && !dhisConfigurationProvider.isEncryptionConfigured().isOk() )
         {
-            throw new EncryptionOperationNotPossibleException( "Unable to encrypt data. Encryption is not correctly configured." );
+            throw new EncryptionOperationNotPossibleException( "Unable to encrypt data, encryption is not correctly configured" );
         }
 
         attributeValue.setAutoFields();
