@@ -37,7 +37,6 @@ import org.hisp.dhis.appmanager.AppStatus;
 import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
-import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.setting.SettingKey;
@@ -79,9 +78,6 @@ public class AppController
     
     @Autowired
     private RenderService renderService;
-
-    @Autowired
-    private LocationManager locationManager;
     
     @Autowired
     private I18nManager i18nManager;
@@ -245,39 +241,14 @@ public class AppController
             throw new WebMessageException( WebMessageUtils.conflict( "No config specified" ) );
         }
 
-        String appBaseUrl = StringUtils.trimToNull( config.get( SettingKey.APP_BASE_URL.getName() ) );
-        String appFolderPath = StringUtils.trimToNull( config.get( SettingKey.APP_FOLDER_PATH.getName() ) );
         String appStoreUrl = StringUtils.trimToNull( config.get( SettingKey.APP_STORE_URL.getName() ) );
-
-        if ( appBaseUrl != null )
-        {
-            appManager.setAppBaseUrl( appBaseUrl );
-        }
-
-        if ( appFolderPath != null )
-        {
-            appManager.setAppFolderPath( appFolderPath );
-        }
 
         if ( appStoreUrl != null )
         {
             appManager.setAppStoreUrl( appStoreUrl );
         }
     }
-
-    @RequestMapping( value = "/config", method = RequestMethod.DELETE )
-    @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
-    public void resetConfig( HttpServletRequest request )
-    {
-        String contextPath = ContextUtils.getContextPath( request );
-
-        String appFolderPath = locationManager.getExternalDirectoryPath() + AppManager.APPS_DIR;
-        String appBaseUrl = contextPath + AppManager.APPS_API_PATH;
-
-        appManager.setAppFolderPath( appFolderPath );
-        appManager.setAppBaseUrl( appBaseUrl );
-    }
-
+    
     //--------------------------------------------------------------------------
     // Helpers
     //--------------------------------------------------------------------------

@@ -51,6 +51,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.datavalue.DefaultDataValueService;
 import org.hisp.dhis.external.conf.ConfigurationKey;
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
+import org.hisp.dhis.external.location.LocationManager;
+import org.hisp.dhis.external.location.LocationManagerException;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
 import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
@@ -85,6 +87,8 @@ public class DefaultAppManager
     @PostConstruct
     private void init()
     {
+        verifyAppFolder();
+        
         reloadApps();
     }
 
@@ -93,6 +97,9 @@ public class DefaultAppManager
 
     @Autowired
     private CurrentUserService currentUserService;
+    
+    @Autowired
+    private LocationManager locationManager;
 
     @Autowired
     private KeyJsonValueService keyJsonValueService;
@@ -303,41 +310,23 @@ public class DefaultAppManager
     @Override
     public String getAppFolderPath()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( SettingKey.APP_FOLDER_PATH ) );
-    }
-
-    @Override
-    public void setAppFolderPath( String appFolderPath )
-    {
-        if ( !appFolderPath.isEmpty() )
+        try
         {
-            try
-            {
-                File folder = new File( appFolderPath );
-                if ( !folder.exists() )
-                {
-                    FileUtils.forceMkdir( folder );
-                }
-            }
-            catch ( IOException ex )
-            {
-                log.error( ex.getLocalizedMessage(), ex );
-            }
+            return locationManager.getExternalDirectoryPath() + APPS_DIR;
         }
-
-        appSettingManager.saveSystemSetting( SettingKey.APP_FOLDER_PATH, appFolderPath );
+        catch ( LocationManagerException ex )
+        {
+            log.info( "Could not get app folder path, external directory not set" );
+            return null;
+        }
     }
 
     @Override
     public String getAppBaseUrl()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( SettingKey.APP_BASE_URL ) );
-    }
-
-    @Override
-    public void setAppBaseUrl( String appBaseUrl )
-    {
-        appSettingManager.saveSystemSetting( SettingKey.APP_BASE_URL, appBaseUrl );
+        String baseUrl = (String) config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
+        
+        return baseUrl +  APPS_API_PATH;
     }
 
     @Override
@@ -437,5 +426,30 @@ public class DefaultAppManager
     public App getAppByNamespace( String namespace )
     {
         return appNamespaces.get( namespace );
+    }
+
+    /**
+     * Creates the app folder if it does not exist already.
+     */
+    private void verifyAppFolder()
+    {
+        String appFolderPath = getAppFolderPath();
+        
+        if ( appFolderPath != null && !appFolderPath.isEmpty() )
+        {
+            try
+            {
+                File folder = new File( appFolderPath );
+                
+                if ( !folder.exists() )
+                {
+                    FileUtils.forceMkdir( folder );
+                }
+            }
+            catch ( IOException ex )
+            {
+                log.error( ex.getMessage(), ex );
+            }
+        }
     }
 }

@@ -91,8 +91,8 @@ public class AppSettingsAction
 
         if ( appFolderPath == null || appFolderPath.isEmpty() )
         {
-            appFolderPath = locationManager.getExternalDirectoryPath() + AppManager.APPS_DIR;            
-            appManager.setAppFolderPath( appFolderPath );
+            appFolderPath = locationManager.getExternalDirectoryPath() + AppManager.APPS_DIR;
+            //appManager.setAppFolderPath( appFolderPath );
         }
         
         appBaseUrl = appManager.getAppBaseUrl();
@@ -101,7 +101,7 @@ public class AppSettingsAction
         {
             String contextPath = ContextUtils.getContextPath( ServletActionContext.getRequest() );
             appBaseUrl = contextPath + AppManager.APPS_API_PATH;
-            appManager.setAppBaseUrl( appBaseUrl );
+            //appManager.setAppBaseUrl( appBaseUrl );
         }
                 
         appManager.reloadApps();

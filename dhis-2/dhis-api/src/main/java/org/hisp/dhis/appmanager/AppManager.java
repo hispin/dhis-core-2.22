@@ -108,25 +108,11 @@ public interface AppManager
     String getAppFolderPath();
 
     /**
-     * Saves the folder in which apps will be expanded
-     *
-     * @param appFolderPath
-     */
-    void setAppFolderPath( String appFolderPath );
-
-    /**
      * Gets the Base URL for accessing the apps
      *
      * @return the apps baseurl
      */
     String getAppBaseUrl();
-
-    /**
-     * Saves the base URL where apps are installed
-     *
-     * @param appBaseUrl
-     */
-    void setAppBaseUrl( String appBaseUrl );
 
     /**
      * Returns the url of the app repository
