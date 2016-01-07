@@ -163,9 +163,7 @@ public class DefaultSystemSettingManager
 
         if ( NAME_KEY_MAP.containsKey( name ) && NAME_KEY_MAP.get( name ).isConfidential() )
         {
-
             setting.setValue( pbeStringEncryptor.decrypt( setting.getValue().toString() ) );
-
         }
 
         return setting != null && setting.hasValue() ? setting.getValue() : null;
@@ -207,21 +205,15 @@ public class DefaultSystemSettingManager
         {
             return Optional.ofNullable( defaultValue );
         }
-
     }
 
     @Override
     public List<SystemSetting> getAllSystemSettings()
     {
-
-        /*
-         * Remove confidential settings from this list!
-         */
         return systemSettingStore.getAll().stream()
             .filter( systemSetting -> !NAME_KEY_MAP.containsKey( systemSetting.getName() ) ||
                 !NAME_KEY_MAP.get( systemSetting.getName() ).isConfidential() )
             .collect( Collectors.toList() );
-
     }
 
     @Override
