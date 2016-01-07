@@ -72,8 +72,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     }
     
     //watch for selection of org unit from tree
-    $scope.$watch('selectedOrgUnit', function() {           
-
+    $scope.$watch('selectedOrgUnit', function() {
         if( angular.isObject($scope.selectedOrgUnit)){   
             $scope.doSearch = true;
             $scope.searchingOrgUnit = $scope.selectedOrgUnit;
@@ -159,7 +158,6 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     
     //load programs associated with the selected org unit.
     $scope.loadPrograms = function(orgUnit) {
-        
         $scope.selectedOrgUnit = orgUnit;
         
         if (angular.isObject($scope.selectedOrgUnit)) {   

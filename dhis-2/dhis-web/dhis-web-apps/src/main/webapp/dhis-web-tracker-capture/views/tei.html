@@ -1,5 +1,5 @@
 <div class="row vertical-spacing">
-    <div id="selectDropDownParent" class="input-group col-md-3" ng-if="enrollmentStatus==='TODAY'">            
+    <div id="selectDropDownParent" class="input-group col-md-3" ng-if="enrollmentStatus==='TODAY' && selectedProgram">            
         <button type="button" class="select-dropdown-button form-control">{{selectedEventsTodayFilter.name}}</button>
         <div class="input-group-btn todayfilter-drop-down">
             <button class="btn btn-default select-dropdown-caret" type="button" data-toggle="dropdown" title="Test"><i class="fa fa-caret-down"></i></button>
@@ -11,7 +11,7 @@
         </div>
     </div>
 </div>
-<i ng-if="!teiFetched && enrollmentStatus==='TODAY'" class="fa fa-spinner fa-spin fa-2x"></i>
+<i ng-if="!teiFetched && showTrackedEntityDiv && enrollmentStatus==='TODAY'" class="fa fa-spinner fa-spin fa-2x"></i>
 <div ng-if="teiFetched">
     <div class="alert alert-warning vertical-spacing" ng-if="trackedEntityList.length === 0 || !trackedEntityList.length">
         {{'no'| translate}} {{selectedProgram.trackedEntity.name|| 'records' | translate}} {{'found'| translate}}
