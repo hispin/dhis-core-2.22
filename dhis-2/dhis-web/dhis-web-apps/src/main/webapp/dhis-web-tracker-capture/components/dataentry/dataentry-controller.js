@@ -180,7 +180,7 @@ trackerCapture.controller('DataEntryController',
 
                             //Blank out the value:
                             affectedEvent[effect.dataElement.id] = "";
-                            $scope.saveDatavalueForEvent($scope.prStDes[effect.dataElement.id], null, affectedEvent);
+                            $scope.saveDataValueForEvent($scope.prStDes[effect.dataElement.id], null, affectedEvent, true);
                         }
 
                         if(effect.ineffect) {
@@ -238,7 +238,7 @@ trackerCapture.controller('DataEntryController',
                         var processedValue = $filter('trimquotes')(effect.data);
                         affectedEvent[effect.dataElement.id] = processedValue;
                         $scope.assignedFields[event][effect.dataElement.id] = true;
-                        $scope.saveDatavalueForEvent($scope.prStDes[effect.dataElement.id], null, affectedEvent);
+                        $scope.saveDataValueForEvent($scope.prStDes[effect.dataElement.id], null, affectedEvent, true);
                     }
                 }
             }
@@ -828,7 +828,7 @@ trackerCapture.controller('DataEntryController',
     };
 
     $scope.saveDatavalue = function (prStDe, field) {        
-        $scope.saveDatavalueForEvent(prStDe, field, $scope.currentEvent);
+        $scope.saveDataValueForEvent(prStDe, field, $scope.currentEvent, false);
     };
     
     $scope.saveDataValueForRadio = function(prStDe, event, value){
@@ -837,7 +837,7 @@ trackerCapture.controller('DataEntryController',
         
         event[prStDe.dataElement.id] = value;
         
-        var saveReturn = $scope.saveDatavalueForEvent(prStDe, null, event);
+        var saveReturn = $scope.saveDataValueForEvent(prStDe, null, event, false);
         if(angular.isDefined(saveReturn)){
             if(saveReturn === true){
                 def.resolve("saved");                
@@ -909,7 +909,7 @@ trackerCapture.controller('DataEntryController',
         var i = item;
     };
     
-    $scope.saveDatavalueForEvent = function (prStDe, field, eventToSave) {
+    $scope.saveDataValueForEvent = function (prStDe, field, eventToSave, suppressRulesExecution) {
         //Blank out the input-saved class on the last saved due date:
         $scope.eventDateSaved = false;
         $scope.currentElement = {id: prStDe.dataElement.id, pending: true, saved: false, failed: false, event: eventToSave.event};
@@ -962,8 +962,13 @@ trackerCapture.controller('DataEntryController',
 
                 $scope.currentStageEventsOriginal = angular.copy($scope.currentStageEvents);
 
-                //Run rules on updated data:
-                $scope.executeRules();                
+                //In some cases, the rules execution should be suppressed to avoid the 
+                //possibility of infinite loops(rules updating datavalues, that triggers a new 
+                //rule execution)
+                if(!suppressRulesExecution) {
+                    //Run rules on updated data:
+                    $scope.executeRules();
+                }
             });
 
         }
