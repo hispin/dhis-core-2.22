@@ -20,7 +20,8 @@ trackerCapture.controller('RegistrationController',
                 SessionStorageService,
                 TEIGridService,
                 TrackerRulesFactory,
-                TrackerRulesExecutionService) {
+                TrackerRulesExecutionService,
+                ModalService) {
     
     $scope.maxOptionSize = 30;
     
@@ -403,5 +404,17 @@ trackerCapture.controller('RegistrationController',
                 $scope.selectedTei[selectedAttribute.id] = res.id;
             }
         });
-    };    
+    };
+    $scope.cancelRegistrationWarning = function(cancelFunction){
+        
+        var modalOptions = {
+            closeButtonText: 'no',
+            actionButtonText: 'yes',
+            headerText: 'cancel',
+            bodyText: 'are_you_sure_to_cancel_registration'
+        }
+        ModalService.showModal({}, modalOptions).then(function(){
+            cancelFunction();
+        });
+    }
 });

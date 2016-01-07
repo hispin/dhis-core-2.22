@@ -50,19 +50,19 @@
 
         <div ng-if="!editingDisabled && registrationMode === 'PROFILE'" class="vertical-spacing">
             <button type="button" class="btn btn-primary small-horizonal-spacing" ng-click="registerEntity(null)">{{'save'| translate}}</button>        
-            <button type="button" class="btn btn-default small-horizonal-spacing" ng-click="cancel()">{{'cancel'| translate}}</button>
+            <button type="button" class="btn btn-default small-horizonal-spacing" ng-click="cancelRegistrationWarning(cancel)">{{'cancel'| translate}}</button>
         </div>
 
         <div class="vertical-spacing" ng-if="registrationMode === 'ENROLLMENT'">            
             <button type="button" class="btn btn-primary" ng-click="registerEntity(null)">{{'enroll'| translate}}</button>  
-            <button type="button" class="btn btn-default" ng-click="showNewEnrollment()">{{'cancel'| translate}}</button>                    
+            <button type="button" class="btn btn-default" ng-click="cancelRegistrationWarning(showNewEnrollment)">{{'cancel'| translate}}</button>                    
         </div>
 
         <div class="vertical-spacing hideInPrint" ng-if="registrationMode === 'REGISTRATION'">                
             <button type="button" class="btn btn-primary" ng-click="registerEntity('DASHBOARD')">{{'save_and_continue'| translate}}</button>
             <button type="button" class="btn btn-success small-horizonal-spacing" ng-click="registerEntity('SELF')">{{'save_and_add_new'| translate}}</button>
             <button type="button" class="btn btn-primary" onclick="javascript:window.print()">{{'print_form'| translate}}</button>
-            <button type="button" class="btn btn-default small-horizonal-spacing" ng-click="showRegistration()">{{'cancel'| translate}}</button>
+            <button type="button" class="btn btn-default small-horizonal-spacing" ng-click="cancelRegistrationWarning(showRegistration)">{{'cancel'| translate}}</button>
         </div>
 
     </form>
