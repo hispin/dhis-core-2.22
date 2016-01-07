@@ -38,22 +38,17 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataset.DataSet;
 
 /**
- *
  * @author bobj
  */
 public class AdxDataSetMetadata
 {
-    private final DataSet dataSet;
-
-    // Lookup category options per catoptcombo
+    // Lookup category options per cat option combo
     
     private final Map<Integer, Map<String, String>> categoryOptionMap;
 
     AdxDataSetMetadata( DataSet dataSet )
         throws AdxException
     {
-        this.dataSet = dataSet;
-
         categoryOptionMap = new HashMap<>();
 
         Set<DataElementCategoryCombo> catCombos = new HashSet<>();

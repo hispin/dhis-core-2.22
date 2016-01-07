@@ -205,14 +205,9 @@ public class DefaultSystemSettingManager
     @Override
     public List<SystemSetting> getAllSystemSettings()
     {
-
-        /*
-         * Remove confidential settings from this list!
-         */
         return systemSettingStore.getAll().stream()
             .filter( systemSetting -> !isConfidential( systemSetting.getName() ) )
             .collect( Collectors.toList() );
-
     }
 
     @Override
