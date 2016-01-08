@@ -383,6 +383,21 @@ public class DefaultIdentifiableObjectManager
 
         return (List<T>) store.getByUid( uids );
     }
+    
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends IdentifiableObject> List<T> getByCode(Class<T> clazz, Collection<String> codes) 
+    {
+        GenericIdentifiableObjectStore<IdentifiableObject> store = getIdentifiableObjectStore( clazz );
+
+        if ( store == null )
+        {
+            return new ArrayList<>();
+        }
+
+        return (List<T>) store.getByCode( codes );
+    }
+
 
     @Override
     @SuppressWarnings( "unchecked" )

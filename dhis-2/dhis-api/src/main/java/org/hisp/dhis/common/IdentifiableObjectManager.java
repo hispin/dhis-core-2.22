@@ -65,6 +65,8 @@ public interface IdentifiableObjectManager
 
     <T extends IdentifiableObject> T getByCode( Class<T> clazz, String code );
 
+    <T extends IdentifiableObject> List<T> getByCode( Class<T> clazz, Collection<String> codes );
+
     <T extends IdentifiableObject> T getByName( Class<T> clazz, String name );
 
     <T extends IdentifiableObject> T getByUniqueAttributeValue( Class<T> clazz, Attribute attribute, String value );
