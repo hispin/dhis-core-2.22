@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.controller.program;
+package org.hisp.dhis.webapi.controller.event;
 
 /*
  * Copyright (c) 2004-2016, University of Oslo

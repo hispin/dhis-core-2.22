@@ -28,13 +28,6 @@ package org.hisp.dhis.webapi.controller.sms;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.sms.SmsSender;
 import org.hisp.dhis.sms.incoming.IncomingSmsService;
@@ -47,6 +40,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Zubair <rajazubair.asghar@gmail.com>
@@ -76,7 +75,7 @@ public class SmsController
     @RequestMapping( value = "/outbound", method = RequestMethod.POST )
     public void sendSMSMessage( @RequestParam String recipient, @RequestParam String message,
         HttpServletResponse response, HttpServletRequest request )
-            throws WebMessageException
+        throws WebMessageException
     {
         if ( recipient == null || recipient.length() <= 0 )
         {
@@ -104,7 +103,7 @@ public class SmsController
     @RequestMapping( value = "/outbound", method = RequestMethod.POST, consumes = "application/json" )
     public void sendSMSMessage( @RequestBody Map<String, Object> jsonMessage, HttpServletResponse response,
         HttpServletRequest request )
-            throws WebMessageException
+        throws WebMessageException
     {
         if ( jsonMessage == null )
         {
@@ -128,8 +127,8 @@ public class SmsController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_MOBILE_SETTINGS')" )
     public void receiveSMSMessage( @RequestParam String originator, @RequestParam( required = false ) Date receivedTime,
         @RequestParam String message, @RequestParam( defaultValue = "Unknown", required = false ) String gateway,
-        HttpServletRequest request, HttpServletResponse response)
-            throws WebMessageException, ParseException
+        HttpServletRequest request, HttpServletResponse response )
+        throws WebMessageException, ParseException
     {
         if ( originator == null || originator.length() <= 0 )
         {
@@ -151,7 +150,7 @@ public class SmsController
     @PreAuthorize( "hasRole('ALL') or hasRole('F_MOBILE_SETTINGS')" )
     public void receiveSMSMessage( @RequestBody Map<String, Object> jsonMassage, HttpServletRequest request,
         HttpServletResponse response )
-            throws WebMessageException, ParseException
+        throws WebMessageException, ParseException
     {
         if ( jsonMassage == null )
         {
