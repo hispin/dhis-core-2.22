@@ -100,11 +100,7 @@ public class DataElementGroupController
         }
 
         metaData.setDataElementOperands( dataElementOperands );
-
-        if ( options.hasLinks() )
-        {
-            linkService.generateLinks( metaData, false );
-        }
+        linkService.generateLinks( metaData, false );
 
         model.addAttribute( "model", metaData );
         model.addAttribute( "viewClass", options.getViewClass( "basic" ) );
@@ -150,11 +146,7 @@ public class DataElementGroupController
         }
 
         metaData.setDataElementOperands( dataElementOperands );
-
-        if ( options.hasLinks() )
-        {
-            linkService.generateLinks( metaData, false );
-        }
+        linkService.generateLinks( metaData, false );
 
         model.addAttribute( "model", metaData );
         model.addAttribute( "viewClass", options.getViewClass( "basic" ) );

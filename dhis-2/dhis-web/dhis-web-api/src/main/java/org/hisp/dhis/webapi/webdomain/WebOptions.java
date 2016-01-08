@@ -48,16 +48,6 @@ public class WebOptions
     // Getters for standard web options
     //--------------------------------------------------------------------------
 
-    public boolean hasLinks( boolean defaultValue )
-    {
-        return stringAsBoolean( options.get( "links" ), defaultValue );
-    }
-
-    public boolean hasLinks()
-    {
-        return stringAsBoolean( options.get( "links" ), true );
-    }
-
     public boolean hasPaging()
     {
         return stringAsBoolean( options.get( "paging" ), true );
