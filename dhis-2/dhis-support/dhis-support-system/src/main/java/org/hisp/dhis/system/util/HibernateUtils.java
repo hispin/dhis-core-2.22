@@ -65,11 +65,6 @@ public class HibernateUtils
 
         if ( HibernateProxy.class.isInstance( proxy ) )
         {
-            return (T) ((HibernateProxy) proxy).getHibernateLazyInitializer().getImplementation();
-        }
-
-        if ( HibernateProxy.class.isInstance( proxy ) )
-        {
             Object result = ((HibernateProxy) proxy).writeReplace();
 
             if ( !SerializableProxy.class.isInstance( result ) )
