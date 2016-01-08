@@ -51,7 +51,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping( value = "/sms/services" )
 public class SmsServiceController
 {
-
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -136,6 +135,7 @@ public class SmsServiceController
         }
 
         SMSServiceStatus status = outboundSmsTransportService.getServiceStatusEnum();
+        
         if ( status == SMSServiceStatus.STOPPED )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Service already stopped" ) );

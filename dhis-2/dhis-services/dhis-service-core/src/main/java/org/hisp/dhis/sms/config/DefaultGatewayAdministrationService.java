@@ -1,3 +1,4 @@
+package org.hisp.dhis.sms.config;
 
 /*
  * Copyright (c) 2004-2015, University of Oslo
@@ -26,7 +27,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.sms.config;
 
 import java.util.List;
 
@@ -36,21 +36,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Zubair <rajazubair.asghar@gmail.com>
- *
  */
 public class DefaultGatewayAdministrationService
     implements GatewayAdministratonService
 {
-
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
     @Autowired
     private SmsConfigurationManager smsConfigMgr;
 
     @Autowired
     private OutboundSmsTransportService transportService;
+
+    // -------------------------------------------------------------------------
+    // GatewayAdministratonService implementation
+    // -------------------------------------------------------------------------
 
     @Override
     public SmsConfiguration listGateways()
@@ -73,9 +71,9 @@ public class DefaultGatewayAdministrationService
         {
             return null;
         }
+        
         for ( SmsGatewayConfig gateway : list )
         {
-
             if ( gateway.getUid().equals( uid ) )
             {
                 gateway.setDefault( true );
@@ -100,7 +98,6 @@ public class DefaultGatewayAdministrationService
 
         if ( smsConfig != null )
         {
-
             SmsGatewayConfig gatewayConfig = smsConfigMgr.checkInstanceOfGateway( klass );
 
             int index = -1;
@@ -165,7 +162,9 @@ public class DefaultGatewayAdministrationService
     public SmsGatewayConfig getGatewayConfiguration( String uid )
     {
         SmsConfiguration smsConfig = getSmsConfiguration();
+        
         List<SmsGatewayConfig> list = smsConfig.getGateways();
+        
         for ( SmsGatewayConfig gw : list )
         {
             if ( gw.getUid().equals( uid ) )
@@ -176,6 +175,10 @@ public class DefaultGatewayAdministrationService
 
         return null;
     }
+
+    // -------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------
 
     private boolean checkGateway( List<SmsGatewayConfig> list, String uid )
     {
