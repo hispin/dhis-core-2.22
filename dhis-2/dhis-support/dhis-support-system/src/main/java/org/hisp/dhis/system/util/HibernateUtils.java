@@ -34,7 +34,6 @@ import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.pojo.javassist.SerializableProxy;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -83,17 +82,12 @@ public class HibernateUtils
         {
             PersistentCollection persistentCollection = (PersistentCollection) proxy;
 
-            if ( !PersistentSet.class.isInstance( persistentCollection ) )
-            {
-                return (T) persistentCollection.getStoredSnapshot();
-            }
-            else if ( PersistentSet.class.isInstance( persistentCollection ) )
+            if ( PersistentSet.class.isInstance( persistentCollection ) )
             {
                 Map<?, ?> map = (Map<?, ?>) persistentCollection.getStoredSnapshot();
                 return (T) new LinkedHashSet<>( map.keySet() );
             }
 
-            // for now just return same as for non-sets, but PersistentSets might require a bit of extra work.
             return (T) persistentCollection.getStoredSnapshot();
         }
 
