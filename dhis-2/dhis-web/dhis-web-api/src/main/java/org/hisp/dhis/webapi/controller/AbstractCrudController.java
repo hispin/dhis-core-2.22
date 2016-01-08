@@ -922,7 +922,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     {
         for ( String field : fields )
         {
-            if ( field.contains( match ) )
+            // for now assume href/access if * or preset is requested
+            if ( field.contains( match ) || field.equals( "*" ) || field.startsWith( ":" ) )
             {
                 return true;
             }
