@@ -44,6 +44,8 @@ public interface OutboundSmsTransportService
 {
     Map<String, String> getGatewayMap();
 
+    void updateGatewayMap( String key );
+
     void stopService();
 
     void startService();

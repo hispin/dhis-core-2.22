@@ -1,9 +1,6 @@
-package org.hisp.dhis.sms.config;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /*
- * Copyright (c) 2004-2016, University of Oslo
+ * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,72 +26,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.hisp.dhis.sms.config;
 
-public class ClickatellGatewayConfig
-    extends SmsGatewayConfig
+/**
+ * @author Zubair <rajazubair.asghar@gmail.com>
+ *
+ */
+public interface GatewayAdministratonService
 {
-    private static final long serialVersionUID = -4286107769356591957L;
+    String setDefault( String uid );
 
-    private String username;
+    boolean removeGateway( String uid );
 
-    private String password;
+    SmsConfiguration listGateways();
 
-    private String apiId;
+    SmsGatewayConfig getGatewayConfiguration( String uid );
 
-    @JsonProperty( value = "username" )
-    public String getUsername()
-    {
-        return username;
-    }
+    String addOrUpdateGateway( SmsGatewayConfig config, Class<?> klass );
 
-    public void setUsername( String username )
-    {
-        this.username = username;
-    }
-
-    @JsonProperty( value = "password" )
-    public String getPassword()
-    {
-        return password;
-    }
-
-    @JsonProperty( value = "default" )
-    public boolean getStatus()
-    {
-        return super.isDefault();
-    }
-
-    public void setPassword( String password )
-    {
-        this.password = password;
-    }
-
-    @JsonProperty( value = "apiid" )
-    public String getApiId()
-    {
-        return apiId;
-    }
-
-    @JsonProperty( value = "name" )
-    public String getName()
-    {
-        return super.getName();
-    }
-
-    public void setApiId( String apiId )
-    {
-        this.apiId = apiId;
-    }
-
-    @Override
-    public boolean isInbound()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isOutbound()
-    {
-        return true;
-    }
 }

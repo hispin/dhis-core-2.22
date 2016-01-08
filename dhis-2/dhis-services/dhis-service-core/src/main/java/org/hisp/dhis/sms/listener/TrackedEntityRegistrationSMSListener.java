@@ -149,7 +149,7 @@ public class TrackedEntityRegistrationSMSListener
         programInstanceService.enrollTrackedEntityInstance(
             trackedEntityInstanceService.getTrackedEntityInstance( trackedEntityInstanceId ), smsCommand.getProgram(),
             new Date(), date, orgUnit );
-        smsSender.sendMessage( "Register new User successfully", senderPhoneNumber );
+        smsSender.sendMessage( "New User successfully Registered", senderPhoneNumber );
 
     }
 

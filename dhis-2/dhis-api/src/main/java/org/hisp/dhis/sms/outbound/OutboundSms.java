@@ -35,6 +35,11 @@ import java.util.Set;
 
 import org.hisp.dhis.common.BaseIdentifiableObject;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+@JacksonXmlRootElement( localName = "outboundsms" )
 public class OutboundSms
     extends BaseIdentifiableObject
 {
@@ -61,6 +66,8 @@ public class OutboundSms
         Collections.addAll( this.recipients, recipients );
     }
 
+    @JsonProperty( value = "recipients" )
+    @JacksonXmlProperty( localName = "recipients" )
     public Set<String> getRecipients()
     {
         return recipients;
@@ -81,6 +88,8 @@ public class OutboundSms
         this.date = date;
     }
 
+    @JsonProperty( value = "message" )
+    @JacksonXmlProperty( localName = "message" )
     public String getMessage()
     {
         return message;

@@ -30,13 +30,21 @@ package org.hisp.dhis.sms.config;
 
 import java.io.Serializable;
 
+import org.hisp.dhis.common.DxfNamespaces;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 /**
  * Super class for gateway configurations
  */
 @SuppressWarnings( "serial" )
+@JacksonXmlRootElement( localName = "smsgatewayconfig", namespace = DxfNamespaces.DXF_2_0 )
 public abstract class SmsGatewayConfig
     implements Serializable
 {
+    private String uid;
+
     private String name;
 
     private boolean isDefault;
@@ -59,6 +67,17 @@ public abstract class SmsGatewayConfig
     public void setDefault( boolean isDefault )
     {
         this.isDefault = isDefault;
+    }
+
+    @JsonProperty( value = "uid" )
+    public String getUid()
+    {
+        return uid;
+    }
+
+    public void setUid( String uid )
+    {
+        this.uid = uid;
     }
 
     public abstract boolean isInbound();

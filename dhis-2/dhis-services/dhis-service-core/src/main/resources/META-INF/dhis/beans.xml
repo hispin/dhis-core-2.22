@@ -1125,7 +1125,10 @@
   <bean id="org.hisp.dhis.sms.task.SendSmsTask" class="org.hisp.dhis.sms.task.SendSmsTask" scope="prototype" />
   
   <bean id="org.hisp.dhis.sms.SmsConsumerThread" class="org.hisp.dhis.sms.SmsConsumerThread" />
-
+  
+  <bean id="org.hisp.dhis.sms.config.GatewayAdministratonService" 
+  			class="org.hisp.dhis.sms.config.DefaultGatewayAdministrationService" />
+  
   <!-- I18nService -->
 
   <bean id="org.hisp.dhis.i18n.I18nService" class="org.hisp.dhis.i18n.DefaultI18nService">
