@@ -1,19 +1,5 @@
 package org.hisp.dhis.webapi.controller.sms;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.hisp.dhis.dxf2.webmessage.WebMessageException;
-import org.hisp.dhis.sms.outbound.OutboundSmsTransportService;
-import org.hisp.dhis.sms.outbound.SMSServiceStatus;
-import org.hisp.dhis.webapi.service.WebMessageService;
-import org.hisp.dhis.webapi.utils.WebMessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 /*
  * Copyright (c) 2004-2015, University of Oslo
  * All rights reserved.
@@ -42,19 +28,27 @@ import org.springframework.web.bind.annotation.RestController;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.sms.outbound.OutboundSmsTransportService;
+import org.hisp.dhis.sms.outbound.SMSServiceStatus;
+import org.hisp.dhis.webapi.service.WebMessageService;
+import org.hisp.dhis.webapi.utils.WebMessageUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  * @author Zubair <rajazubair.asghar@gmail.com>
- *
  */
-
 @RestController
 @RequestMapping( value = "/sms/services" )
 public class SmsServiceController
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
     @Autowired
     private WebMessageService webMessageService;
 
@@ -81,7 +75,7 @@ public class SmsServiceController
     }
 
     // -------------------------------------------------------------------------
-    // POST,PUT
+    // POST, PUT
     // -------------------------------------------------------------------------
 
     @PreAuthorize( "hasRole('ALL') or hasRole(' F_MOBILE_SENDSMS')" )
@@ -95,6 +89,7 @@ public class SmsServiceController
         }
 
         SMSServiceStatus status = outboundSmsTransportService.getServiceStatusEnum();
+        
         if ( status == SMSServiceStatus.STARTED )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Service already started" ) );
