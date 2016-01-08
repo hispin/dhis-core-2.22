@@ -132,7 +132,7 @@ public class DataValueSetController
     {
         response.setContentType( CONTENT_TYPE_XML_ADX );
 
-        DataExportParams params = dataValueSetService.getFromUrl( dataSet, period,
+        DataExportParams params = adxDataService.getFromUrl( dataSet, period,
             startDate, endDate, orgUnit, children, lastUpdated, limit, idSchemes );
 
         adxDataService.writeDataValueSet( params, response.getOutputStream() );

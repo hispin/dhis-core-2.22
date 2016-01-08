@@ -30,6 +30,9 @@ package org.hisp.dhis.dxf2.adx;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
+import java.util.Set;
+import org.hisp.dhis.common.IdSchemes;
 
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
@@ -68,6 +71,10 @@ public interface AdxDataService
     // Methods
     //--------------------------------------------------------------------------
 
+    DataExportParams getFromUrl( Set<String> dataSets, Set<String> periods, Date startDate, Date endDate, 
+        Set<String> organisationUnits, boolean includeChildren, Date lastUpdated, Integer limit,  IdSchemes idSchemes);
+    
+    
     /**
      * Post data. Takes ADX Data from input stream and saves a series of DXF2 
      * DataValueSets.

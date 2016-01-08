@@ -55,7 +55,6 @@ import org.hisp.dhis.datavalue.DataValueService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.datavalueset.DataExportParams;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
-import org.hisp.dhis.dxf2.datavalueset.PipedImporter;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummaries;
@@ -74,6 +73,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedOutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,6 +85,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.hisp.dhis.common.IdSchemes;
+import org.hisp.dhis.period.PeriodService;
 
 /**
  * @author bobj
@@ -113,6 +116,10 @@ public class DefaultAdxDataService
 
     @Autowired
     protected DataSetService dataSetService;
+    
+    @Autowired
+    private PeriodService periodService;
+
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
@@ -125,8 +132,45 @@ public class DefaultAdxDataService
     // -------------------------------------------------------------------------
 
     @Override
+    public DataExportParams getFromUrl(Set<String> dataSets, Set<String> periods, Date startDate, Date endDate, 
+            Set<String> organisationUnits, boolean includeChildren, Date lastUpdated, Integer limit, IdSchemes idSchemes) 
+    {
+        DataExportParams params = new DataExportParams();
+
+        if ( dataSets != null )
+        {
+            params.getDataSets().addAll( identifiableObjectManager.getByCode( DataSet.class, dataSets ) );
+        }
+
+        if ( periods != null && !periods.isEmpty() )
+        {
+            params.getPeriods().addAll( periodService.reloadIsoPeriods( new ArrayList<>( periods ) ) );
+        }
+        else if ( startDate != null && endDate != null )
+        {
+            params.setStartDate( startDate );
+            params.setEndDate( endDate );
+        }
+
+        if ( organisationUnits != null )
+        {
+            params.getOrganisationUnits().addAll( identifiableObjectManager.getByCode( OrganisationUnit.class, organisationUnits ) );
+        }
+
+        params.setIncludeChildren( includeChildren );
+        params.setLastUpdated( lastUpdated );
+        params.setLimit( limit );
+        params.setIdSchemes( idSchemes );
+
+        return params;
+    }
+    
+    @Override
     public void writeDataValueSet( DataExportParams params, OutputStream out )
     {
+        dataValueSetService.decideAccess( params );
+        dataValueSetService.validate( params );
+        
         XMLWriter adxWriter = XMLFactory.getXMLWriter( out );
 
         adxWriter.openElement( AdxDataService.ROOT );
@@ -231,7 +275,7 @@ public class DefaultAdxDataService
             try (PipedOutputStream pipeOut = new PipedOutputStream())
             {
                 Future<ImportSummary> futureImportSummary;
-                futureImportSummary = executor.submit( new PipedImporter( dataValueSetService, importOptions, id, pipeOut ) );
+                futureImportSummary = executor.submit( new AdxPipedImporter( dataValueSetService, importOptions, id, pipeOut ) );
                 XMLOutputFactory factory = XMLOutputFactory.newInstance();
                 XMLStreamWriter dxfWriter = factory.createXMLStreamWriter( pipeOut );
 
@@ -557,22 +601,4 @@ public class DefaultAdxDataService
         
         return catOptMap;
     }
-
-    /**
-     * 
-     * select distinct de.categorycomboid from dataset ds join datasetmembers
-     * dsm on ds.datasetid=dsm.datasetid join dataelement de on
-     * dsm.dataelementid=de.dataelementid;
-     * 
-     * 
-     * select coc.categoryoptioncomboid, cat.code, co.code from
-     * categoryoptioncombos_categoryoptions cocco inner join
-     * dataelementcategoryoption co on cocco.categoryoptionid =
-     * co.categoryoptionid inner join categories_categoryoptions cco on
-     * co.categoryoptionid = cco.categoryoptionid inner join categoryoptioncombo
-     * coc on coc.categoryoptioncomboid = cocco.categoryoptioncomboid inner join
-     * dataelementcategory cat on cco.categoryid = cat.categoryid where coc.name
-     * != 'default' ;
-     * 
-     */
 }

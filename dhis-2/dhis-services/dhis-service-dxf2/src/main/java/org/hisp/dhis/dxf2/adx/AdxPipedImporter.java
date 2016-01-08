@@ -1,4 +1,4 @@
-package org.hisp.dhis.dxf2.datavalueset;
+package org.hisp.dhis.dxf2.adx;
 
 /*
  * Copyright (c) 2004-2016, University of Oslo
@@ -35,6 +35,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
+import org.hisp.dhis.dxf2.datavalueset.DataValueSetService;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.scheduling.TaskId;
@@ -44,7 +45,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 /**
  * @author bobj
  */
-public class PipedImporter
+public class AdxPipedImporter
     implements Callable<ImportSummary>
 {
     public static final int PIPE_BUFFER_SIZE = 4096;
@@ -61,7 +62,7 @@ public class PipedImporter
     
     private final Authentication authentication;
 
-    public PipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions,
+    public AdxPipedImporter( DataValueSetService dataValueSetService, ImportOptions importOptions,
         TaskId id, PipedOutputStream pipeOut ) throws IOException
     {
         this.dataValueSetService = dataValueSetService;
