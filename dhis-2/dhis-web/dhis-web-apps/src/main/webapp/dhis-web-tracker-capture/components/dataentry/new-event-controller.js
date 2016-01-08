@@ -21,7 +21,8 @@ trackerCapture.controller('EventCreationController',
                 eventCreationAction,
                 autoCreate,
                 EventUtils,
-                events) {
+                events,
+                suggestedStage) {
     $scope.stages = stages;
     $scope.allStages = allStages;
     $scope.events = events;
@@ -31,7 +32,8 @@ trackerCapture.controller('EventCreationController',
     $scope.isScheduleEvent = (eventCreationAction === $scope.eventCreationActions.schedule || eventCreationAction === $scope.eventCreationActions.referral);
     $scope.isReferralEvent = (eventCreationAction === $scope.eventCreationActions.referral);
     $scope.model = {selectedStage: stage, dueDateInvalid: false, eventDateInvalid: false};
-    $scope.stageSpecifiedOnModalOpen = angular.isObject(stage) ? true : false;    
+    $scope.stageSpecifiedOnModalOpen = angular.isObject(stage) ? true : false;
+    $scope.suggestedStage = suggestedStage;
     
     var orgPath = [];    
     var dummyEvent = {};
@@ -63,7 +65,7 @@ trackerCapture.controller('EventCreationController',
         
         var stagesById = [];
         
-        if(angular.isUndefined(events) || events.length === 0){
+        if((angular.isUndefined(events) || events.length === 0) && angular.isUndefined($scope.suggestedStage)){
             suggestedStage = availableStagesOrdered[0];
         }
         else{
@@ -72,25 +74,32 @@ trackerCapture.controller('EventCreationController',
             });
             
             var lastStageForEvents;
-            for(i = 0; i < events.length; i++){
-                var event = events[i];
-                var eventStage = stagesById[event.programStage];
-                    if(i > 0){
-                        if(eventStage.sortOrder > lastStageForEvents.sortOrder){
+            
+            if(angular.isUndefined($scope.suggestedStage)){
+                for(i = 0; i < events.length; i++){
+                    var event = events[i];
+                    var eventStage = stagesById[event.programStage];
+                        if(i > 0){
+                            if(eventStage.sortOrder > lastStageForEvents.sortOrder){
+                                lastStageForEvents = eventStage;
+                            }
+                            else if(eventStage.sortOrder === lastStageForEvents.sortOrder){
+                                if(eventStage.id !== lastStageForEvents.id){
+                                    if(eventStage.name.localeCompare(lastStageForEvents.name) > 0){
+                                        lastStageForEvents = eventStage;
+                                    }
+                                }                            
+                            }
+                        }
+                        else {
                             lastStageForEvents = eventStage;
                         }
-                        else if(eventStage.sortOrder === lastStageForEvents.sortOrder){
-                            if(eventStage.id !== lastStageForEvents.id){
-                                if(eventStage.name.localeCompare(lastStageForEvents.name) > 0){
-                                    lastStageForEvents = eventStage;
-                                }
-                            }                            
-                        }
-                    }
-                    else {
-                        lastStageForEvents = eventStage;
-                    }
+                }   
             }
+            else {
+                lastStageForEvents = $scope.suggestedStage;
+            }
+
             
             for(j = 0; j < availableStagesOrdered.length; j++){
                 var availableStage = availableStagesOrdered[j];

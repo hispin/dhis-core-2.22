@@ -18,7 +18,7 @@
                         <span class="glyphicon glyphicon-info-sign" ></span>
                         <span ng-show="showHelpText[prStDe.dataElement.id]" ><br>{{prStDe.dataElement.description}}</span>
                     </a>    
-                    <span ng-if="otherValuesLists[prStDe.dataElement.id] && currentStage.id !== 'PUZaKR0Jh2k'" ng-repeat="altValue in otherValuesLists[prStDe.dataElement.id] track by $index">
+                    <span ng-if="otherValuesLists[prStDe.dataElement.id]" ng-repeat="altValue in otherValuesLists[prStDe.dataElement.id] track by $index">
                         <span class="label label-default">{{altValue | translate}}</span>
                    </span> 
                 </span>                

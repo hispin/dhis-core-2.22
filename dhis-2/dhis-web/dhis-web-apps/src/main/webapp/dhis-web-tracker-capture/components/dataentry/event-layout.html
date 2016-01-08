@@ -17,7 +17,10 @@
                 &nbsp;<br/>
                 {{'next'| translate}}
             </div>
-        </div>        
+        </div>
+        <div ng-if="allEventsSorted.length < 1">
+            <div class="alert alert-warning">{{'no_events_exist'| translate}}</div> 
+        </div>
     </div>
     <div ng-class="{'col-sm-3': showStageTasks, 'col-xs-6': showStageTasks, 'col-sm-1': !showStageTasks, 'col-xs-2': !showStageTasks}">
         <div ng-if="showStageTasks && eventsLoaded" class="panel panel-info">
@@ -88,10 +91,7 @@
             </div>                 
             -->
         </div>
-    </div>
-    <div ng-if="allEventsSorted.length < 1">
-        <div class="alert alert-warning">{{'no_events_exist'| translate}}</div> 
-    </div>
+    </div>    
 </div>
 
 <hr>

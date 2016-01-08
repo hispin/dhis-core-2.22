@@ -547,11 +547,11 @@ trackerCapture.controller('DataEntryController',
         sortEventsByStage('ADD', newEvent);
     };
 
-    $scope.showCreateEvent = function (stage, eventCreationAction) {        
+    $scope.showCreateEvent = function (stage, eventCreationAction, suggestedStage) {        
         
         var availableStages = [];
         if(!stage){
-            if(!$scope.allEventsSorted || $scope.allEventsSorted.length === 0){                
+            if(!$scope.allEventsSorted || $scope.allEventsSorted.length === 0){                               
                 availableStages = $scope.programStages;
             }
             else{
@@ -610,6 +610,9 @@ trackerCapture.controller('DataEntryController',
                 },
                 events: function(){
                     return $scope.allEventsSorted;
+                },
+                suggestedStage: function(){
+                    return suggestedStage;
                 }
             }
         });
@@ -1459,7 +1462,7 @@ trackerCapture.controller('DataEntryController',
                     actionButtonText: 'complete',
                     secondActionButtonText: 'complete_and_exit',
                     headerText: 'complete',
-                    bodyText: 'are_you_sure_to_complete_event',
+                    bodyText: 'are_you_sure_to_complete_event'
                 };
                 modalDefaults.templateUrl = 'components/dataentry/modal-complete-event.html';
                 dhis2Event.status = 'COMPLETED';
@@ -1826,20 +1829,22 @@ trackerCapture.controller('DataEntryController',
     };   
     
     $scope.getEventPageForEvent = function(event){
-        var index = -1;
-        for(i = 0; i < $scope.allEventsSorted.length; i++){
-            if(event.event === $scope.allEventsSorted[i].event){
-                index = i;
-                break;
+        if(angular.isDefined(event) && angular.isObject(event)){
+            var index = -1;
+            for(i = 0; i < $scope.allEventsSorted.length; i++){
+                if(event.event === $scope.allEventsSorted[i].event){
+                    index = i;
+                    break;
+                }
             }
-        }
-        
-        if(index !== -1){
-            var page = Math.floor(index / $scope.eventPageSize);
-            $scope.eventPagingStart = page * $scope.eventPageSize;
-            $scope.eventPagingEnd = $scope.eventPagingStart + $scope.eventPageSize;
-        }
-    }
+
+            if(index !== -1){
+                var page = Math.floor(index / $scope.eventPageSize);
+                $scope.eventPagingStart = page * $scope.eventPageSize;
+                $scope.eventPagingEnd = $scope.eventPagingStart + $scope.eventPageSize;
+            }
+        }        
+    };
 
     $scope.deselectCurrent = function(id){        
         
