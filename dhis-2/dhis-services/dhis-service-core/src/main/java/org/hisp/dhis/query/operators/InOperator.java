@@ -50,7 +50,7 @@ public class InOperator extends Operator
     @Override
     public Criterion getHibernateCriterion( Property property )
     {
-        return Restrictions.in( property.getFieldName(), getValue( Collection.class, args.get( 0 ) ) );
+        return Restrictions.in( property.getFieldName(), getValue( Collection.class, property.getKlass(), args.get( 0 ) ) );
     }
 
     @Override
@@ -115,9 +115,10 @@ public class InOperator extends Operator
         }
         else if ( type.isEnum() )
         {
+            String s1 = String.valueOf( item );
             String s2 = String.valueOf( object );
 
-            return item != null && s2.equals( item );
+            return s1 != null && s2.equals( s1 );
         }
 
         return false;

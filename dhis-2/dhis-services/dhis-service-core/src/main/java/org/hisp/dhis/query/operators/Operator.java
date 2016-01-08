@@ -73,14 +73,24 @@ public abstract class Operator
         return args;
     }
 
+    protected <T> T getValue( Class<T> klass, Class<?> secondaryClass, int idx )
+    {
+        return QueryUtils.getValue( klass, secondaryClass, args.get( idx ) );
+    }
+
     protected <T> T getValue( Class<T> klass, int idx )
     {
-        return QueryUtils.getValue( klass, args.get( idx ) );
+        return QueryUtils.getValue( klass, null, args.get( idx ) );
     }
 
     protected <T> T getValue( Class<T> klass )
     {
         return getValue( klass, 0 );
+    }
+
+    protected <T> T getValue( Class<T> klass, Class<?> secondaryClass, Object value )
+    {
+        return QueryUtils.getValue( klass, secondaryClass, value );
     }
 
     protected <T> T getValue( Class<T> klass, Object value )

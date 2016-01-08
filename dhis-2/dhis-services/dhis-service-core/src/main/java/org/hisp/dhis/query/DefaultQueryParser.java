@@ -194,11 +194,11 @@ public class DefaultQueryParser implements QueryParser
             }
             case "in":
             {
-                return Restrictions.in( path, QueryUtils.getValue( Collection.class, arg ) );
+                return Restrictions.in( path, QueryUtils.getValue( Collection.class, property.getKlass(), arg ) );
             }
             case "!in":
             {
-                return Restrictions.notIn( path, QueryUtils.getValue( Collection.class, arg ) );
+                return Restrictions.notIn( path, QueryUtils.getValue( Collection.class, property.getKlass(), arg ) );
             }
             case "null":
             {
