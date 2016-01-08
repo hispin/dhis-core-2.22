@@ -73,7 +73,7 @@
 	</tr>
 	
 	<tr>
-		<td><label for="confidential">$i18n.getString( "confidential" ) <br /><span class="tipText">(Confidential attributes can not be used in search and analytics.)</span></label></td>
+		<td><label for="confidential">$i18n.getString( "confidential" ) <br /><span class="tipText">($i18n.getString( "not_available_for_search_and_analytics" ))</span></label></td>
 		<td>
             #if($encryptionAvailable)
                 <input type='checkbox' id="confidential" name="confidential" value='true' #if( $attribute.confidential ) checked #end disabled="disabled">
