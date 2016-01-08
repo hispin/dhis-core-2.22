@@ -1705,7 +1705,8 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
                 column.attribute = angular.isUndefined(column.attribute) ? true : false;
-                column.show = false;                    
+                column.show = false;
+
                 if( (column.id === 'orgUnitName' && ouMode !== 'SELECTED') ||
                     column.displayInListNoProgram || 
                     column.displayInList){
@@ -1870,7 +1871,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         autoGenerateEvents: function(teiId, program, orgUnit, enrollment){
             var dhis2Events = {events: []};
-            if(teiId && program && orgUnit && enrollment){                
+            if(teiId && program && orgUnit && enrollment){
                 angular.forEach(program.programStages, function(stage){
                     if(stage.autoGenerateEvent){
                         var newEvent = {
@@ -1906,7 +1907,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             
            return dhis2Events;
-        },        
+        },
         reconstruct: function(dhis2Event, programStage, optionSets){
             
             var e = {dataValues: [], 
@@ -1980,26 +1981,49 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
 .service('EventCreationService', function($modal){
             
-        this.showModal = function(stage, dummyEvent,eventCreationAction, autoCreate){
+        this.showModal = function(eventsByStage, stage, availableStages,programStages,selectedEntity,selectedProgram,selectedOrgUnit,selectedEnrollment, autoCreate, eventCreationAction,allEventsSorted, suggestedStage){
             var modalInstance = $modal.open({
                 templateUrl: 'components/dataentry/new-event.html',
                 controller: 'EventCreationController',
                 resolve: {                    
-                    dummyEvent: function () {
-                        return dummyEvent;
+                    eventsByStage: function () {
+                        return eventsByStage;
+                    },
+                    stage: function () {
+                        return stage;
+                    },                
+                    stages: function(){
+                        return availableStages;
+                    },
+                    allStages: function(){
+                        return programStages;
+                    },
+                    tei: function(){
+                        return selectedEntity;
+                    },
+                    program: function(){
+                        return selectedProgram;
+                    },
+                    orgUnit: function(){
+                        return selectedOrgUnit;
+                    },
+                    enrollment: function(){
+                        return selectedEnrollment;
                     },
                     autoCreate: function () {
-                        //In case the programstage is a table, autocreate
                         return autoCreate;
                     },
-                    eventCreationAction: function() {
+                    eventCreationAction: function(){
                         return eventCreationAction;
-                    },                    
-                    stage: function(){
-                        return stage;
+                    },
+                    events: function(){
+                        return allEventsSorted;
+                    },
+                    suggestedStage: function(){
+                        return suggestedStage;
                     }
                 }
-            });
+            }).result;
             return modalInstance;
         };
         this.eventCreationActions = { add: 'ADD',  schedule: 'SCHEDULE', referral: 'REFERRAL'};

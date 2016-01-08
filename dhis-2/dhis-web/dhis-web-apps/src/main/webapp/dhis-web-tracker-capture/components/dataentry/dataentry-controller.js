@@ -53,6 +53,7 @@ trackerCapture.controller('DataEntryController',
     $scope.hiddenSections = {};
     $scope.tableMaxNumberOfDataElements = 7;
     $scope.xVisitScheduleDataElement = false;
+    $scope.reSortStageEvents = true;
     $scope.eventsLoaded = false;
 
     
@@ -268,15 +269,15 @@ trackerCapture.controller('DataEntryController',
     $scope.executeRules = function () {        
         
         //$scope.allEventsSorted cannot be used, as it is not reflecting updates that happened within the current session
-        /*var allSorted = [];
+        var allSorted = [];
         for(var ps = 0; ps < $scope.programStages.length; ps++ ) {
-            for(var e = 0; e < $scope.eventsByStageAsc[$scope.programStages[ps].id].length; e++) {
-                allSorted.push($scope.eventsByStageAsc[$scope.programStages[ps].id][e]);
+            for(var e = 0; e < $scope.eventsByStage[$scope.programStages[ps].id].length; e++) {
+                allSorted.push($scope.eventsByStage[$scope.programStages[ps].id][e]);
             }
         }
-        allSorted = orderByFilter(allSorted, '-sortingDate').reverse();*/
+        allSorted = orderByFilter(allSorted, '-sortingDate').reverse();
         
-        var evs = {all: $scope.allEventsSorted, byStage: $scope.eventsByStageAsc};
+        var evs = {all: allSorted, byStage: $scope.eventsByStage};
         var flag = {debug: true, verbose: true};
 
         //If the events is displayed in a table, it is necessary to run the rules for all visible events.        
@@ -304,7 +305,7 @@ trackerCapture.controller('DataEntryController',
         $scope.allowEventCreation = false;
         $scope.repeatableStages = [];
         $scope.eventsByStage = [];
-        $scope.eventsByStageAsc = [];
+        $scope.eventsByStageDesc = [];
         $scope.programStages = [];
         $rootScope.ruleeffects = {};
         $scope.prStDes = [];
@@ -571,87 +572,45 @@ trackerCapture.controller('DataEntryController',
                 
                 return;
             }
-        }        
-        
-        var modalInstance = $modal.open({
-            templateUrl: 'components/dataentry/new-event.html',
-            controller: 'EventCreationController',
-            resolve: {
-                eventsByStage: function () {
-                    return $scope.eventsByStage;
-                },
-                stage: function () {
-                    return stage;
-                },                
-                stages: function(){
-                    return availableStages;
-                },
-                allStages: function(){
-                    return $scope.programStages;
-                },
-                tei: function(){
-                    return $scope.selectedEntity;
-                },
-                program: function(){
-                    return $scope.selectedProgram;
-                },
-                orgUnit: function(){
-                    return $scope.selectedOrgUnit;
-                },
-                enrollment: function(){
-                    return $scope.selectedEnrollment;
-                },
-                autoCreate: function () {
-                    //In case the programstage is a table, autocreate
-                    return stage && stage.displayEventsInTable ? stage.displayEventsInTable : false;
-                },
-                eventCreationAction: function(){
-                    return eventCreationAction;
-                },
-                events: function(){
-                    return $scope.allEventsSorted;
-                },
-                suggestedStage: function(){
-                    return suggestedStage;
-                }
-            }
-        });
-        
-        modalInstance.result.then(function (eventContainer) {
-            
-            if(angular.isDefined(eventContainer)){                
-                var ev = eventContainer.ev;
-                var dummyEvent = eventContainer.dummyEvent;      
-            
-                if (angular.isObject(ev) && angular.isObject(dummyEvent)) {
+        }
+        var autoCreate = stage && stage.displayEventsInTable ? stage.displayEventsInTable : false;
+        EventCreationService.showModal($scope.eventsByStage, stage, availableStages, $scope.programStages, $scope.selectedEntity, $scope.selectedProgram, $scope.selectedOrgUnit, $scope.selectedEnrollment, autoCreate, eventCreationAction, $scope.allEventsSorted,suggestedStage)
+                .then(function (eventContainer) {
+                    if(angular.isDefined(eventContainer)){                
+                        var ev = eventContainer.ev;
+                        var dummyEvent = eventContainer.dummyEvent;      
 
-                    var newEvent = ev;
-                    newEvent.orgUnitName = dummyEvent.orgUnitName;
-                    newEvent.name = dummyEvent.name;
-                    newEvent.excecutionDateLabel = dummyEvent.excecutionDateLabel;
-                    newEvent.sortingDate = ev.eventDate ? ev.eventDate : ev.dueDate,
-                    newEvent.statusColor = EventUtils.getEventStatusColor(ev);
-                    newEvent.eventDate = DateUtils.formatFromApiToUser(ev.eventDate);
-                    newEvent.dueDate = DateUtils.formatFromApiToUser(ev.dueDate);
-                    newEvent.enrollmentStatus = dummyEvent.enrollmentStatus;
+                        if (angular.isObject(ev) && angular.isObject(dummyEvent)) {
 
-                    if (dummyEvent.coordinate) {
-                        newEvent.coordinate = {};
+                            var newEvent = ev;
+                            newEvent.orgUnitName = dummyEvent.orgUnitName;
+                            newEvent.name = dummyEvent.name;
+                            newEvent.excecutionDateLabel = dummyEvent.excecutionDateLabel;
+                            newEvent.sortingDate = ev.eventDate ? ev.eventDate : ev.dueDate,
+                            newEvent.statusColor = EventUtils.getEventStatusColor(ev);
+                            newEvent.eventDate = DateUtils.formatFromApiToUser(ev.eventDate);
+                            newEvent.dueDate = DateUtils.formatFromApiToUser(ev.dueDate);
+                            newEvent.enrollmentStatus = dummyEvent.enrollmentStatus;
+
+                            if (dummyEvent.coordinate) {
+                                newEvent.coordinate = {};
+                            }
+
+                            //get stage from created event
+                            $scope.currentStage = $scope.stagesById[dummyEvent.programStage];
+
+                            $scope.addNewEvent(newEvent);
+
+                            $scope.currentEvent = null;
+                            $scope.showDataEntry(newEvent, true);
+
+
+                            //show page with event in event-layout
+                            $scope.getEventPageForEvent(newEvent);
+                        }
                     }
-                    
-                    //get stage from created event
-                    $scope.currentStage = $scope.stagesById[dummyEvent.programStage];
-                    
-                    $scope.addNewEvent(newEvent);
-
-                    $scope.currentEvent = null;
-                    $scope.showDataEntry(newEvent, true);
-                    //show page with event in event-layout
-                    $scope.getEventPageForEvent(newEvent);
-                }
-            }
-        }, function () {
-        });
+                }, function () {
+            });
     };
 
     $scope.showDataEntry = function (event, suppressToggling) {
@@ -713,8 +672,7 @@ trackerCapture.controller('DataEntryController',
     $scope.tableEditModes = { form: 0, table: 1, tableAndForm: 2 };
     $scope.tableEditMode = $scope.tableEditModes.form;
     
-    $scope.toggleTableEditMode = function(){
-        $scope.currentEvent = {};
+    $scope.toggleTableEditMode = function(){        
         $scope.tableEditMode = $scope.tableEditMode === $scope.tableEditModes.tableAndForm ? $scope.tableEditModes.form : $scope.tableEditModes.tableAndForm;
     };
     
@@ -723,12 +681,12 @@ trackerCapture.controller('DataEntryController',
         
         if($scope.currentEvent !== event){
             $scope.eventRowChanged = true;
+            $scope.switchToEventRow(event);
         }
         else {
             $scope.eventRowChanged = false;
-        }
-        
-        $scope.switchToEventRow(event); 
+        }        
+         
         if($scope.tableEditMode === $scope.tableEditModes.form){
             $scope.openEventEditFormModal(event);
         }
@@ -764,14 +722,16 @@ trackerCapture.controller('DataEntryController',
     
     $scope.switchToEventRowDeselected = function(event){
         if($scope.currentEvent !== event) {
-            $scope.showDataEntry(event,true);
+            $scope.showDataEntry(event,false);
         }
         $scope.currentEvent = {};
     };
     
     $scope.switchToEventRow = function (event) {
         if($scope.currentEvent !== event) {
-            $scope.showDataEntry(event,true);
+            $scope.reSortStageEvents = false;
+            $scope.showDataEntry(event,false);
+            $scope.reSortStageEvents = true;
         }
     };
 
@@ -786,11 +746,11 @@ trackerCapture.controller('DataEntryController',
             //Build a list of datavalues OUTSIDE the current event. 
             angular.forEach($scope.currentStage.programStageDataElements, function(programStageDataElement) {
                 angular.forEach($scope.programStages, function(stage) {
-                    for(var i = 0; i < $scope.eventsByStageAsc[stage.id].length; i++) {
+                    for(var i = 0; i < $scope.eventsByStage[stage.id].length; i++) {
                         //We are not interested in the values from the current stage:
-                        if($scope.eventsByStageAsc[stage.id][i] !== $scope.currentEvent) {
+                        if($scope.eventsByStage[stage.id][i] !== $scope.currentEvent) {
                             var currentId = programStageDataElement.dataElement.id;
-                            if ( $scope.eventsByStageAsc[stage.id][i][currentId] ) {
+                            if ( $scope.eventsByStage[stage.id][i][currentId] ) {
                                 //The current stage has a dataelement of the type in question
 
                                 //Init the list if not already done:
@@ -800,12 +760,12 @@ trackerCapture.controller('DataEntryController',
                                 
                                 //Decorate and push the alternate value to the list:
                                 
-                                var alternateValue = $scope.eventsByStageAsc[stage.id][i][currentId];                                
+                                var alternateValue = $scope.eventsByStage[stage.id][i][currentId];                                
                                 alternateValue = CommonUtils.displayBooleanAsYesNo(alternateValue, programStageDataElement.dataElement);
                                 
+
                                 //Else decorate with the event date:
-                                alternateValue = $scope.eventsByStageAsc[stage.id][i].eventDate + ': ' + alternateValue;
-                                
+                                alternateValue = $scope.eventsByStage[stage.id][i].eventDate + ': ' + alternateValue;
                                 otherValues[currentId].push(alternateValue);
                             }
                         }
@@ -850,13 +810,21 @@ trackerCapture.controller('DataEntryController',
         angular.forEach($scope.currentStage.programStageSections, function (section) {
             section.open = true;
         });
-
+        
+        $scope.setDisplayTypeForStage($scope.currentStage);
+        
         $scope.customForm = CustomFormService.getForProgramStage($scope.currentStage, $scope.prStDes);
         $scope.displayCustomForm = "DEFAULT";
         if ($scope.customForm) {
             $scope.displayCustomForm = "CUSTOM";
         }
         else if ($scope.currentStage.displayEventsInTable) {
+            if($scope.reSortStageEvents === true){
+                sortStageEvents($scope.currentStage);            
+                if($scope.eventsByStage.hasOwnProperty($scope.currentStage.id)){
+                    $scope.currentStageEvents = $scope.eventsByStage[$scope.currentStage.id];
+                }            
+            }
             $scope.displayCustomForm = "TABLE";
         }
 
@@ -867,7 +835,6 @@ trackerCapture.controller('DataEntryController',
         var period = {event: $scope.currentEvent.event, stage: $scope.currentEvent.programStage, name: $scope.currentEvent.sortingDate};
         $scope.currentPeriod[$scope.currentEvent.programStage] = period;        
         
-        $scope.setDisplayTypeForStage($scope.currentStage);
         //Execute rules for the first time, to make the initial page appear correctly.
         //Subsequent calls will be made from the "saveDataValue" function.
         $scope.executeRules();
@@ -965,8 +932,8 @@ trackerCapture.controller('DataEntryController',
             //check for input validity
             $scope.updateSuccess = false;
         }
-        
-        if (field && field.$invalid) {
+        if (field && field.$invalid && angular.isDefined(value) && value !== "") {
+            $scope.currentElement = {id: prStDe.dataElement.id, saved: false, event: eventToSave.event};
             return false;
         }
 
@@ -1107,7 +1074,11 @@ trackerCapture.controller('DataEntryController',
             $scope.invalidDate = false;
             $scope.eventDateSaved = eventToSave.event;
             eventToSave.statusColor = EventUtils.getEventStatusColor(eventToSave); 
-            sortEventsByStage('UPDATE');
+            
+            if(angular.isUndefined($scope.currentStage.displayEventsInTable) || $scope.currentStage.displayEventsInTable === false){
+                sortEventsByStage('UPDATE');
+            } 
+            
             $scope.validatedDateSetForEvent = {date: eventToSave.eventDate, event: eventToSave};
             $scope.currentElement = {id: "eventDate", event: eventToSave.event, saved: true};
             $scope.executeRules();
@@ -1480,7 +1451,8 @@ trackerCapture.controller('DataEntryController',
     
     $scope.executeCompleteIncompleteEvent = function(dhis2Event, backToDashboard){
             
-        DHIS2EventFactory.update(dhis2Event).then(function (data) {
+        return DHIS2EventFactory.update(dhis2Event).then(function (data) {
+
             if(backToDashboard){
                 selection.load();
                 $location.path('/').search({program: $scope.selectedProgramId}); 
@@ -1676,6 +1648,29 @@ trackerCapture.controller('DataEntryController',
         var d = dhis2Event.sortingDate;
         return DateUtils.getDate(d);
     };
+    
+    var sortStageEvents = function(stage){        
+        var key = stage.id;
+        if ($scope.eventsByStage.hasOwnProperty(key)){
+            var sortedEvents = $filter('orderBy')($scope.eventsByStage[key], function (event) {
+                    if(angular.isDefined(stage.displayEventsInTable) && stage.displayEventsInTable === true){
+                        return DateUtils.getDate(event.eventDate);
+                    }
+                    else{
+                        return DateUtils.getDate(event.sortingDate);
+                    }                    
+                }, false);
+            $scope.eventsByStage[key] = sortedEvents;
+            $scope.eventsByStageDesc[key] = [];
+            
+            //Reverse the order of events, but keep the objects within the array.
+            //angular.copy and reverse did not work - this messed up databinding.
+            angular.forEach(sortedEvents, function(sortedEvent) {
+                $scope.eventsByStageDesc[key].splice(0,0,sortedEvent);
+            });            
+            return sortedEvents;
+        }        
+    }
 
     var sortEventsByStage = function (operation, newEvent) {
 
@@ -1683,22 +1678,10 @@ trackerCapture.controller('DataEntryController',
 
         for (var key in $scope.eventsByStage) {
 
-            var stage = $scope.stagesById[key];
-
+            var stage = $scope.stagesById[key];            
+            var sortedEvents = sortStageEvents(stage);           
             if ($scope.eventsByStage.hasOwnProperty(key) && stage) {
-
-                var sortedEvents = $filter('orderBy')($scope.eventsByStage[key], function (event) {
-                    return DateUtils.getDate(event.sortingDate);
-                }, true);
-
-                $scope.eventsByStage[key] = sortedEvents;
-                $scope.eventsByStageAsc[key] = [];
-                //Reverse the order of events, but keep the objects within the array.
-                //angular.copy and reverse did not work - this messed up databinding.
-                angular.forEach(sortedEvents, function(sortedEvent) {
-                    $scope.eventsByStageAsc[key].splice(0,0,sortedEvent);
-                });
-
+           
                 var periods = PeriodService.getPeriods(sortedEvents, stage, $scope.selectedEnrollment).occupiedPeriods;
 
                 $scope.eventPeriods[key] = periods;
@@ -1849,7 +1832,9 @@ trackerCapture.controller('DataEntryController',
     $scope.deselectCurrent = function(id){        
         
         if($scope.currentEvent && $scope.currentEvent.event === id){
-            $scope.currentEvent = {};
+            $scope.currentEvent = {};            
+            sortStageEvents($scope.currentStage);
+            $scope.currentStageEvents = $scope.eventsByStage[$scope.currentStage.id];
         }        
     };
     
@@ -1866,8 +1851,7 @@ trackerCapture.controller('DataEntryController',
                 DialogService.showDialog({}, dialogOptions);        
     };
 })
-
-.controller('EventOptionsInTableController', function($scope){
+.controller('EventOptionsInTableController', function($scope, $translate){
     
     var COMPLETE = "Complete";
     var INCOMPLETE = "Incomplete";

@@ -51,7 +51,8 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
             'EventUtils',
             'DHIS2EventFactory',
             'DialogService',
-            function($scope, $element, $attrs, $q, EventUtils, DHIS2EventFactory, DialogService){
+            '$translate',
+            function($scope, $element, $attrs, $q, EventUtils, DHIS2EventFactory, DialogService, $translate){
                 
                 $scope.EVENTSTATUSCOMPLETELABEL = "COMPLETED";
                 $scope.EVENTSTATUSSKIPPEDLABEL = "SKIPPED";
@@ -426,8 +427,11 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
             required: '=dhRequired',
             value: '=dhValue',
             disabled: '=dhDisabled',
-            name: '@dhName',
-            customOnClick: '&dhClick'            
+            name: '@dhName',            
+            customOnClick: '&dhClick',
+            currentElement: '=dhCurrentElement',
+            event: '=dhEvent',
+            id: '=dhId'
         },
         controller: [
             '$scope',
@@ -437,7 +441,7 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
             'CommonUtils',
             function($scope, $element, $attrs, $q, CommonUtils){
                 
-                $scope.status = "";
+                $scope.status = "";                
                 $scope.clickedButton = "";
                 
                 $scope.valueClicked = function (buttonValue){
@@ -455,7 +459,7 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
                         if(angular.isDefined(promise) && angular.isDefined(promise.then)){
                             promise.then(function(status){
                                 if(angular.isUndefined(status) || status !== "notSaved"){
-                                    $scope.status = "saved";
+                                    $scope.status = "saved";                                    
                                 }
                                 $scope.value = tempValue;                            
                             }, function(){   
@@ -501,18 +505,30 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
                 
                 if(scope.value !== ""){
                     if(scope.status === "saved"){
-                        if(scope.clickedButton === buttonValue){
-                            return 'radio-save-success';
-                        }
-                    }
+                        if(angular.isUndefined(scope.currentElement) || (scope.currentElement.id === scope.id && scope.currentElement.event === scope.event)){
+                            if(scope.clickedButton === buttonValue){
+                                return 'radio-save-success';
+                            }
+                        }                                            
                     //different solution with text chosen
                     /*else if(scope.status === "error"){
                         if(scope.clickedButton === buttonValue){
                             return 'radio-save-error';
                         }
                     }*/
+                    }
                 }                
                 return 'radio-white';
+            };
+            
+            scope.errorStatus = function(){
+                
+                if(scope.status === 'error'){
+                    if(angular.isUndefined(scope.currentElement) || (scope.currentElement.id === scope.id && scope.currentElement.event === scope.event)){
+                        return true;
+                    }
+                }
+                return false;
             };
 
             scope.radioButtonImage = function(buttonValue){        

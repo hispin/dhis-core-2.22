@@ -983,7 +983,6 @@ var d2Services = angular.module('d2Services', ['ngResource'])
             programVariables = programVariables.concat(allProgramRules.programIndicators.variables);
 
             angular.forEach(programVariables, function(programVariable) {
-                
                 var dataElementId = programVariable.dataElement;
                 if(programVariable.dataElement && programVariable.dataElement.id) {
                     dataElementId = programVariable.dataElement.id;

@@ -1,5 +1,5 @@
-<form name="outerForm" novalidate>    
-    <table class="dhis2-list-table-striped dhis2-table-hover" ng-if='currentEvent && !currentStage.programStageSections.length'>
+<form name="outerForm" novalidate>
+    <table class="dhis2-list-table-striped default-form-table dhis2-table-hover" ng-if='currentEvent && !currentStage.programStageSections.length'>
         <thead>
             <tr>
                 <th ng-bind="dataElementLabel">
@@ -10,7 +10,7 @@
                 </th>
             </tr>
         </thead>
-        <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id, currentEvent)">            
+        <tr class="col-md-12" ng-repeat="prStDe in currentStage.programStageDataElements" ng-if="!isHidden(prStDe.dataElement.id, currentEvent)">
             <td>
                 <span ng-bind="prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name"></span>
                 <span class="hideInPrint">
@@ -196,6 +196,9 @@
                                     dh-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[currentEvent.event][prStDe.dataElement.id] === true" 
                                     dh-value="currentEvent[prStDe.dataElement.id]" 
                                     dh-name="foo"
+                                    dh-current-element="currentElement"
+                                    dh-event="currentEvent.event"
+                                    dh-id="prStDe.dataElement.id"
                                     dh-click="saveDataValueForRadio(prStDe, currentEvent, value)">                                                    
                                 </dhis2-radio-button>
                             </div>                            
@@ -309,14 +312,14 @@
                     <div class="alert alert-warning">{{'section'| translate}} {{section.name}} {{'has_no_dataelements'| translate}}</div>
                 </div> 
 
-                <table class="dhis2-list-table-striped dhis2-table-hover" ng-if="section.programStageDataElements && section.programStageDataElements.length > 0">                    
+                <table class="dhis2-list-table-striped default-form-table dhis2-table-hover" ng-if="section.programStageDataElements && section.programStageDataElements.length > 0">                    
                     <thead>
                         <tr>
                             <th ng-bind="dataElementLabel">
                             </th>
                             <th class="" ng-bind="valueLabel">
                             </th>
-                            <th class="form-narrow-column" class="" ng-if="allowProvidedElsewhereExists[currentStage.id]" ng-bind="providedElsewhereLabel">
+                            <th class="form-narrow-column" ng-if="allowProvidedElsewhereExists[currentStage.id]" ng-bind="providedElsewhereLabel">
                             </th>
                         </tr>
                     </thead>
@@ -477,6 +480,9 @@
                                                     dh-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[currentEvent.event][de.dataElement.id] === true" 
                                                     dh-value="currentEvent[prStDes[de.dataElement.id].dataElement.id]" 
                                                     dh-name="foo"
+                                                    dh-current-element="currentElement"
+                                                    dh-event="currentEvent.event"
+                                                    dh-id="de.dataElement.id"
                                                     dh-click="saveDataValueForRadio(prStDes[de.dataElement.id], currentEvent, value)">                                                    
                                                 </dhis2-radio-button>
                                             </div>                                            
