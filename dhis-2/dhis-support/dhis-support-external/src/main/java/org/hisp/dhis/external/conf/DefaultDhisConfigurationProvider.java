@@ -150,12 +150,15 @@ public class DefaultDhisConfigurationProvider
     public EncryptionStatus isEncryptionConfigured()
     {
         String password;
+        
         int maxKeyLength;
 
         // Check for JCE files is present (key length > 128) and AES is available
+        
         try
         {
             maxKeyLength = Cipher.getMaxAllowedKeyLength( "AES" );
+            
             if ( maxKeyLength == 128 )
             {
                 return EncryptionStatus.MISSING_JCE_POLICY;

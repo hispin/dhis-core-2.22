@@ -154,10 +154,9 @@ public class ShowAddUpdateAttributeAction
         return trackedEntities;
     }
 
-    public boolean getEncryptionStatus()
+    public boolean isEncryptionAvailable()
     {
         return dhisConfigurationProvider.isEncryptionConfigured().isOk();
-
     }
 
     // -------------------------------------------------------------------------
