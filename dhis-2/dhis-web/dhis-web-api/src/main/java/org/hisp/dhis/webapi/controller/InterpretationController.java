@@ -28,16 +28,8 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.chart.ChartService;
-import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
@@ -50,14 +42,11 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
-import org.hisp.dhis.query.Order;
 import org.hisp.dhis.reporttable.ReportTable;
 import org.hisp.dhis.reporttable.ReportTableService;
 import org.hisp.dhis.schema.descriptors.InterpretationSchemaDescriptor;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
-import org.hisp.dhis.webapi.webdomain.WebMetaData;
-import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
@@ -67,7 +56,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Iterator;
 
 /**
  * @author Lars Helge Overland
@@ -94,32 +85,6 @@ public class InterpretationController
 
     @Autowired
     private MappingService mappingService;
-
-    @Override
-    protected List<Interpretation> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
-    {
-        List<Interpretation> entityList;
-
-        if ( options.getOptions().containsKey( "query" ) )
-        {
-            entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
-        }
-        else if ( options.hasPaging() )
-        {
-            int count = manager.getCount( getEntityClass() );
-
-            Pager pager = new Pager( options.getPage(), count );
-            metaData.setPager( pager );
-
-            entityList = new ArrayList<>( interpretationService.getInterpretations( pager.getOffset(), pager.getPageSize() ) );
-        }
-        else
-        {
-            entityList = new ArrayList<>( interpretationService.getInterpretations() );
-        }
-
-        return entityList;
-    }
 
     @RequestMapping( value = "/chart/{uid}", method = RequestMethod.POST, consumes = { "text/html", "text/plain" } )
     public void shareChartInterpretation(
