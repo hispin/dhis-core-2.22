@@ -541,8 +541,6 @@ $.extend(dhis2.period.WeeklyGenerator.prototype, {
     var periods = [];
 
     var startDate = this.calendar.newDate(year, 1, 1);
-    // startDate.add(-(startDate.dayOfWeek() - 1), 'd'); // rewind to start of week, might cross year boundary
-
     var day = startDate.dayOfWeek();
 
     if( day == 0 ) // Sunday (0), forward to Monday
