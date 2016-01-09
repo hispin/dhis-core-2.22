@@ -8,6 +8,7 @@ trackerCapture.controller('DataEntryController',
                 $log,
                 $timeout,
                 $translate,
+                $window,
                 CommonUtils,
                 DateUtils,
                 EventUtils,
@@ -421,6 +422,7 @@ trackerCapture.controller('DataEntryController',
                 }
             });
             
+            $scope.fileNames = CurrentSelection.getFileNames();            
             $scope.allEventsSorted = orderByFilter($scope.allEventsSorted, '-sortingDate').reverse();
             sortEventsByStage(null);
             $scope.showDataEntry($scope.currentEvent, true);
@@ -778,6 +780,7 @@ trackerCapture.controller('DataEntryController',
     };
     
     $scope.getDataEntryForm = function () {
+        $scope.currentFileNames = $scope.fileNames[$scope.currentEvent.event] ? $scope.fileNames[$scope.currentEvent.event] : [];
         $scope.currentStage = $scope.stagesById[$scope.currentEvent.programStage];
         $scope.currentStageEvents = $scope.eventsByStage[$scope.currentEvent.programStage];
         if(!$scope.currentStage.multiSelectGroups) {
@@ -840,7 +843,7 @@ trackerCapture.controller('DataEntryController',
         $scope.executeRules();
     };
 
-    $scope.saveDatavalue = function (prStDe, field) {        
+    $scope.saveDatavalue = function (prStDe, field) {
         $scope.saveDataValueForEvent(prStDe, field, $scope.currentEvent, false);
     };
     
@@ -880,7 +883,7 @@ trackerCapture.controller('DataEntryController',
 
         $scope.currentElement = {id: currentElement.dataElement.id, event: eventToSave.event, saved: false};
         
-        value = CommonUtils.formatDataValue(value, prStDe.dataElement, $scope.optionSets, 'API');
+        value = CommonUtils.formatDataValue(eventToSave.event, value, prStDe.dataElement, $scope.optionSets, 'API');
         var dataValue = {
             dataElement: prStDe.dataElement.id,
             value: value,
@@ -949,7 +952,7 @@ trackerCapture.controller('DataEntryController',
 
         if (oldValue !== value) {
             
-            value = CommonUtils.formatDataValue(value, prStDe.dataElement, $scope.optionSets, 'API');
+            value = CommonUtils.formatDataValue(eventToSave.event, value, prStDe.dataElement, $scope.optionSets, 'API');
             
             //Do not change the input notification variables for background updates
             if(!backgroundUpdate) {
@@ -973,6 +976,8 @@ trackerCapture.controller('DataEntryController',
             };
             return DHIS2EventFactory.updateForSingleValue(ev).then(function (response) {
 
+                $scope.updateFileNames();
+                
                 if(!backgroundUpdate) {
                     $scope.currentElement.saved = true;
                     $scope.currentElement.pending = false;
@@ -1849,6 +1854,63 @@ trackerCapture.controller('DataEntryController',
                 };                
                 
                 DialogService.showDialog({}, dialogOptions);        
+    };
+    
+    $scope.downloadFile = function(eventUid, dataElementUid, e) {
+        eventUid = eventUid ? eventUid : $scope.currentEvent.event ? $scope.currentEvent.event : null;        
+        if( !eventUid || !dataElementUid){
+            
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'missing_file_identifier'
+            };
+
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+        
+        $window.open('../api/events/files?eventUid=' + eventUid +'&dataElementUid=' + dataElementUid, '_blank', '');
+        if(e){
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    };
+    
+    $scope.deleteFile = function(dataElement){
+        
+        if( !dataElement ){            
+            var dialogOptions = {
+                headerText: 'error',
+                bodyText: 'missing_file_identifier'
+            };
+            DialogService.showDialog({}, dialogOptions);
+            return;
+        }
+        
+        var modalOptions = {
+            closeButtonText: 'cancel',
+            actionButtonText: 'remove',
+            headerText: 'remove',
+            bodyText: 'are_you_sure_to_remove'
+        };
+
+        ModalService.showModal({}, modalOptions).then(function(result){            
+            $scope.fileNames[$scope.currentEvent.event][dataElement] = null;
+            $scope.currentEvent[dataElement] = null;
+            $scope.saveDatavalue($scope.prStDes[dataElement], null);
+            //$scope.updateEventDataValue($scope.currentEvent, dataElement);
+        });
+    };
+    
+    $scope.updateFileNames = function(){        
+        for(var dataElement in $scope.currentFileNames){
+            if($scope.currentFileNames[dataElement]){
+                if(!$scope.fileNames[$scope.currentEvent.event]){
+                    $scope.fileNames[$scope.currentEvent.event] = [];
+                }                 
+                $scope.fileNames[$scope.currentEvent.event][dataElement] = $scope.currentFileNames[dataElement];
+            }
+        }
     };
 })
 .controller('EventOptionsInTableController', function($scope, $translate){

@@ -262,11 +262,12 @@ var d2Services = angular.module('d2Services', ['ngResource'])
 })
 
 /* service for common utils */
-.service('CommonUtils', function(DateUtils, OptionSetService){    
+.service('CommonUtils', function(DateUtils, OptionSetService, CurrentSelection, FileService){    
     
     return {
-        formatDataValue: function(val, obj, optionSets, destination){                               
-            if(val && 
+        formatDataValue: function(event, val, obj, optionSets, destination){            
+        	var fileNames = CurrentSelection.getFileNames();
+        	if(val && 
                     obj.valueType === 'NUMBER' || 
                     obj.valueType === 'INTEGER' ||
                     obj.valueType === 'INTEGER_POSITIVE' ||
@@ -305,7 +306,18 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 else{
                     val = val === true ? 'true' : '';
                 }            
-            }         
+            }
+            if(event && val && destination === 'USER' && obj.valueType === 'FILE_RESOURCE'){
+            	FileService.get(val).then(function(response){
+                    if(response && response.name){
+                        if(!fileNames[event]){
+                            fileNames[event] = [];
+                        } 
+                        fileNames[event][obj.id] = response.name;
+                        CurrentSelection.setFileNames( fileNames );
+                    }
+                });
+            }
             return val;
         },
         displayBooleanAsYesNo: function(value, dataElement){
@@ -1905,5 +1917,131 @@ var d2Services = angular.module('d2Services', ['ngResource'])
                 return true;
             }
         }
+    };
+})
+
+/* service for dealing with events */
+.service('DHIS2EventService', function(){
+    return {     
+        //for simplicity of grid display, events were changed from
+        //event.datavalues = [{dataElement: dataElement, value: value}] to
+        //event[dataElement] = value
+        //now they are changed back for the purpose of storage.   
+        reconstructEvent: function(event, programStageDataElements){
+            var e = {};
+        
+            e.event         = event.event;
+            e.status        = event.status;
+            e.program       = event.program;
+            e.programStage  = event.programStage;
+            e.orgUnit       = event.orgUnit;
+            e.eventDate     = event.eventDate;
+
+            var dvs = [];
+            angular.forEach(programStageDataElements, function(prStDe){
+                if(event.hasOwnProperty(prStDe.dataElement.id)){
+                    dvs.push({dataElement: prStDe.dataElement.id, value: event[prStDe.dataElement.id]});
+                }
+            });
+
+            e.dataValues = dvs;
+            
+            if(event.coordinate){
+                e.coordinate = {latitude: event.coordinate.latitude ? event.coordinate.latitude : '',
+                                     longitude: event.coordinate.longitude ? event.coordinate.longitude : ''};
+            }
+
+            return e;
+        },
+        refreshList: function(eventList, currentEvent){
+            if(!eventList || !eventList.length){
+                return;
+            }
+            var continueLoop = true;
+            for(var i=0; i< eventList.length && continueLoop; i++){
+                if(eventList[i].event === currentEvent.event ){
+                    eventList[i] = currentEvent;
+                    continueLoop = false;
+                }
+            }            
+            return eventList;
+        }
+    };
+})
+
+/* current selections */
+.service('CurrentSelection', function(){
+    this.currentSelection = {};
+    this.relationshipInfo = {};
+    this.optionSets = null;
+    this.attributesById = null;
+    this.ouLevels = null;
+    this.sortedTeiIds = [];
+    this.selectedTeiEvents = null;
+    this.relationshipOwner = {};
+    this.selectedTeiEvents = [];
+    this.fileNames = [];
+    
+    this.set = function(currentSelection){  
+        this.currentSelection = currentSelection;        
+    };    
+    this.get = function(){
+        return this.currentSelection;
+    };
+    
+    this.setRelationshipInfo = function(relationshipInfo){  
+        this.relationshipInfo = relationshipInfo;        
+    };    
+    this.getRelationshipInfo = function(){
+        return this.relationshipInfo;
+    };
+    
+    this.setOptionSets = function(optionSets){
+        this.optionSets = optionSets;
+    };
+    this.getOptionSets = function(){
+        return this.optionSets;
+    };    
+    
+    this.setAttributesById = function(attributesById){
+        this.attributesById = attributesById;
+    };
+    this.getAttributesById = function(){
+        return this.attributesById;
+    }; 
+    
+    this.setOuLevels = function(ouLevels){
+        this.ouLevels = ouLevels;
+    };
+    this.getOuLevels = function(){
+        return this.ouLevels;
+    };
+    
+    this.setSortedTeiIds = function(sortedTeiIds){
+        this.sortedTeiIds = sortedTeiIds;
+    };
+    this.getSortedTeiIds = function(){
+        return this.sortedTeiIds;
+    };
+    
+    this.setSelectedTeiEvents = function(selectedTeiEvents){
+        this.selectedTeiEvents = selectedTeiEvents;
+    };
+    this.getSelectedTeiEvents = function(){
+        return this.selectedTeiEvents;
+    };
+    
+    this.setRelationshipOwner = function(relationshipOwner){
+        this.relationshipOwner = relationshipOwner;
+    };
+    this.getRelationshipOwner = function(){
+        return this.relationshipOwner;
+    };
+    
+    this.setFileNames = function(fileNames){
+        this.fileNames = fileNames;
+    };
+    this.getFileNames = function(){
+        return this.fileNames;
     };
 });

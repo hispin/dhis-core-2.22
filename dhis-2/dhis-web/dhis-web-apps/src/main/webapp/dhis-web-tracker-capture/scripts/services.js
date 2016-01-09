@@ -1474,75 +1474,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     }; 
 })
 
-/* current selections */
-.service('CurrentSelection', function(){
-    this.currentSelection = {};
-    this.relationshipInfo = {};
-    this.optionSets = null;
-    this.attributesById = null;
-    this.ouLevels = null;
-    this.sortedTeiIds = [];
-    this.selectedTeiEvents = null;
-    this.relationshipOwner = {};
-    this.selectedTeiEvents = [];
-    
-    this.set = function(currentSelection){  
-        this.currentSelection = currentSelection;        
-    };    
-    this.get = function(){
-        return this.currentSelection;
-    };
-    
-    this.setRelationshipInfo = function(relationshipInfo){  
-        this.relationshipInfo = relationshipInfo;        
-    };    
-    this.getRelationshipInfo = function(){
-        return this.relationshipInfo;
-    };
-    
-    this.setOptionSets = function(optionSets){
-        this.optionSets = optionSets;
-    };
-    this.getOptionSets = function(){
-        return this.optionSets;
-    };    
-    
-    this.setAttributesById = function(attributesById){
-        this.attributesById = attributesById;
-    };
-    this.getAttributesById = function(){
-        return this.attributesById;
-    }; 
-    
-    this.setOuLevels = function(ouLevels){
-        this.ouLevels = ouLevels;
-    };
-    this.getOuLevels = function(){
-        return this.ouLevels;
-    };
-    
-    this.setSortedTeiIds = function(sortedTeiIds){
-        this.sortedTeiIds = sortedTeiIds;
-    };
-    this.getSortedTeiIds = function(){
-        return this.sortedTeiIds;
-    };
-    
-    this.setSelectedTeiEvents = function(selectedTeiEvents){
-        this.selectedTeiEvents = selectedTeiEvents;
-    };
-    this.getSelectedTeiEvents = function(){
-        return this.selectedTeiEvents;
-    };
-    
-    this.setRelationshipOwner = function(relationshipOwner){
-        this.relationshipOwner = relationshipOwner;
-    };
-    this.getRelationshipOwner = function(){
-        return this.relationshipOwner;
-    };
-})
-
 /*Orgunit service for local db */
 .service('OuService', function($window, $q){
     
@@ -1922,7 +1853,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 
             angular.forEach(programStage.programStageDataElements, function(prStDe){
                 if(dhis2Event[prStDe.dataElement.id]){                    
-                    var value = CommonUtils.formatDataValue(dhis2Event[prStDe.dataElement.id], prStDe.dataElement, optionSets, 'API');                    
+                    var value = CommonUtils.formatDataValue(dhis2Event.event, dhis2Event[prStDe.dataElement.id], prStDe.dataElement, optionSets, 'API');                    
                     var val = {value: value, dataElement: prStDe.dataElement.id};
                     if(dhis2Event.providedElsewhere[prStDe.dataElement.id]){
                         val.providedElsewhere = dhis2Event.providedElsewhere[prStDe.dataElement.id];
@@ -1951,7 +1882,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if( prStDe ){                
                     var val = dataValue.value;
                     if(prStDe.dataElement){
-                        val = CommonUtils.formatDataValue(val, prStDe.dataElement, optionSets, 'USER');                        
+                        val = CommonUtils.formatDataValue(event.event, val, prStDe.dataElement, optionSets, 'USER');                        
                     }    
                     event[dataValue.dataElement] = val;
                     if(dataValue.providedElsewhere){

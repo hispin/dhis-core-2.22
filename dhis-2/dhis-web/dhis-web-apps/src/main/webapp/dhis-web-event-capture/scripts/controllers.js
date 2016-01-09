@@ -339,7 +339,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                             if($scope.prStDes[dataValue.dataElement]){
                                 var val = dataValue.value;                                  
                                 if(angular.isObject($scope.prStDes[dataValue.dataElement].dataElement)){
-                                    val = CommonUtils.formatDataValue(val, $scope.prStDes[dataValue.dataElement].dataElement, $scope.optionSets, 'USER');                                                                          
+                                    val = CommonUtils.formatDataValue(null, val, $scope.prStDes[dataValue.dataElement].dataElement, $scope.optionSets, 'USER');                                                                          
                                 }
 
                                 event[dataValue.dataElement] = val;
@@ -592,7 +592,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             var val = $scope.currentEvent[dataElement];
             if(val){
                 valueExists = true;                
-                val = CommonUtils.formatDataValue(val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');
+                val = CommonUtils.formatDataValue(null, val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');
             }
             dataValues.push({dataElement: dataElement, value: val});
         }
@@ -723,7 +723,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         var dataValues = [];        
         for(var dataElement in $scope.prStDes){
             var val = $scope.currentEvent[dataElement];            
-            val = CommonUtils.formatDataValue(val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
+            val = CommonUtils.formatDataValue(null, val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
             dataValues.push({dataElement: dataElement, value: val});
         }
         
@@ -851,7 +851,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }        
                 
         if( newValue !== oldValue ){            
-            newValue = CommonUtils.formatDataValue(newValue, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
+            newValue = CommonUtils.formatDataValue(null, newValue, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
             var updatedSingleValueEvent = {event: $scope.currentEvent.event, dataValues: [{value: newValue, dataElement: dataElement}]};
             var updatedFullValueEvent = DHIS2EventService.reconstructEvent($scope.currentEvent, $scope.selectedProgramStage.programStageDataElements);
 

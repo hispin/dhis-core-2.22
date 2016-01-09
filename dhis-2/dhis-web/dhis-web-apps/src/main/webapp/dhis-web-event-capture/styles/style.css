@@ -381,7 +381,6 @@ div#orgUnitTree {
     background-color: #d0eBd0;
     padding-top: 10px;
     padding-bottom: 10px;    
-    //margin-bottom: 15px;
     border-radius: 3px;
 }
 
@@ -413,8 +412,8 @@ div#orgUnitTree {
 }
 
 .ui-datepicker-group .ui-datepicker-header {
-    //height: 1.5em; 
-    height: inherit;  //this is to make it play nice with bootstrap
+    /*height: 1.5em;*/ 
+    height: inherit;  /*this is to make it play nice with bootstrap*/
 }
 
 .btn-file {
