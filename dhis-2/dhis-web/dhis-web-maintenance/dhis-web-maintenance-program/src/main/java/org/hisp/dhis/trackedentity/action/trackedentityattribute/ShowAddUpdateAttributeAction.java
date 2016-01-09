@@ -85,7 +85,7 @@ public class ShowAddUpdateAttributeAction
     private AttributeService attributeService;
 
     @Autowired
-    private DhisConfigurationProvider dhisConfigurationProvider;
+    private DhisConfigurationProvider configurationProvider;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -154,9 +154,11 @@ public class ShowAddUpdateAttributeAction
         return trackedEntities;
     }
 
+    private boolean encryptionAvailable;
+    
     public boolean isEncryptionAvailable()
     {
-        return dhisConfigurationProvider.isEncryptionConfigured().isOk();
+        return encryptionAvailable;
     }
 
     // -------------------------------------------------------------------------
@@ -176,7 +178,9 @@ public class ShowAddUpdateAttributeAction
             programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION ) );
             Collections.sort( programs );
         }
-
+        
+        encryptionAvailable = configurationProvider.isEncryptionConfigured().isOk();
+        
         periodTypes = periodService.getAllPeriodTypes();
         optionSets = optionService.getAllOptionSets();
         legendSets = legendService.getAllLegendSets();
