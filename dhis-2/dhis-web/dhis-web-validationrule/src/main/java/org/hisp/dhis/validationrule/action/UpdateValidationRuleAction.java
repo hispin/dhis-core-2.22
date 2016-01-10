@@ -197,20 +197,6 @@ public class UpdateValidationRuleAction
         this.annualSampleCount = annualSampleCount;
     }
 
-    private String highOutliers;
-
-    public void setHighOutliers( String highOutliers )
-    {
-        this.highOutliers = highOutliers;
-    }
-
-    private String lowOutliers;
-
-    public void setLowOutliers( String lowOutliers )
-    {
-        this.lowOutliers = lowOutliers;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -243,8 +229,6 @@ public class UpdateValidationRuleAction
 
         validationRule.setSequentialSampleCount( sequentialSampleCount != null && !sequentialSampleCount.isEmpty() ? Integer.parseInt( sequentialSampleCount ) : null );
         validationRule.setAnnualSampleCount( annualSampleCount != null && !annualSampleCount.isEmpty() ? Integer.parseInt( annualSampleCount ) : null );
-        validationRule.setHighOutliers( highOutliers != null && !highOutliers.isEmpty() ? Integer.parseInt( highOutliers ) : null );
-        validationRule.setLowOutliers( lowOutliers != null && !lowOutliers.isEmpty() ? Integer.parseInt( lowOutliers ) : null );
 
         validationRuleService.updateValidationRule( validationRule );
 

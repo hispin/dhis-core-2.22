@@ -894,6 +894,9 @@ public class TableAlteror
         upgradeToDataApprovalWorkflows();
         executeSql( "alter table dataapproval alter column workflowid set not null" );
         executeSql( "alter table dataapproval add constraint dataapproval_unique_key unique (dataapprovallevelid,workflowid,periodid,organisationunitid,attributeoptioncomboid)" );
+        
+        upgradeImplicitAverageMonitoringRules();
+        
         updateOptions();
 
         upgradeAggregationType( "reporttable" );
@@ -1181,6 +1184,34 @@ public class TableAlteror
         log.info( "Added any workflows needed for approvble datasets and/or approved data." );
     }
 
+    /**
+     * Convert from older releases where the right hand sides of surveillance rules were
+     * implicitly averaged.  This just wraps the previous expression in a call to AVG().
+     * 
+     * We use the presence of the lowoutliers column to determine whether we need to make the
+     * change.  Just to be extra sure, our rewrite SQL won't rewrite rules which already have
+     * references to AVG or STDDEV.
+     */
+    private void upgradeImplicitAverageMonitoringRules()
+    {
+        if ( executeSql( "update validationrule set lowoutliers = lowoutliers where validationruleid < 0" ) < 0 )
+        {
+            return; // Already converted because lowoutliers fields are gone
+        }
+
+        // Just to be extra sure, we don't modify any expressions which already contain a call to AVG or STDDEV
+        executeSql( "update expression set expression="+statementBuilder.concatenate("'AVG('","expression","')'")+" from  validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid AND expression NOT LIKE '%AVG%' and expression NOT LIKE '%STDDEV%';");
+        executeSql( "update expression set expression=FORMAT('AVG(%s)',expression) from  validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid AND expression NOT LIKE '%AVG%' and expression NOT LIKE '%STDDEV%';");
+
+        executeSql("ALTER TABLE validationrule DROP COLUMN highoutliers");
+        executeSql("ALTER TABLE validationrule DROP COLUMN lowoutliers");
+        
+        log.info( "Added explicit AVG calls to olid-style implicit average surveillance rules");
+    }
+    /* For testing purposes, this will undo the wrapping functionality above:
+     * update expression set expression=regexp_replace(regexp_replace(expression,'[)]$',''),'^AVG[(]','') from validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid;
+     */
+    
     private List<Integer> getDistinctIdList( String table, String col1 )
     {
         StatementHolder holder = statementManager.getHolder();

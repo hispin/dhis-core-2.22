@@ -29,25 +29,15 @@ function showValidationRuleDetails( context )
 			var annualSampleCount = json.validationRule.annualSampleCount;
 			setText( 'annualSampleCountField', annualSampleCount ? annualSampleCount : '[' + i18n_none + ']' );
 			
-			var highOutliers = string( json.validationRule.highOutliers );
-			setText( 'highOutliersField', highOutliers ? highOutliers : '[' + i18n_none + ']' );
-			
-			var lowOutliers = string( json.validationRule.lowOutliers );
-			setText( 'lowOutliersField', lowOutliers ? lowOutliers : '[' + i18n_none + ']' );
-
 			document.getElementById('organisationUnitLevelP').style.display = '';
 			document.getElementById('sequentialSampleCountP').style.display = '';
 			document.getElementById('annualSampleCountP').style.display = '';
-			document.getElementById('highOutliersP').style.display = '';
-			document.getElementById('lowOutliersP').style.display = '';
 		} 
 		else
 		{
 			document.getElementById('organisationUnitLevelP').style.display = 'none';
 			document.getElementById('sequentialSampleCountP').style.display = 'none';
 			document.getElementById('annualSampleCountP').style.display = 'none';
-			document.getElementById('highOutliersP').style.display = 'none';
-			document.getElementById('lowOutliersP').style.display = 'none';
 		}
 		
 		var leftSideDescription = json.validationRule.leftSideDescription;

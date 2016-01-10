@@ -59,9 +59,5 @@
 
     <property name="annualSampleCount" column="annualsamplecount" />
 
-    <property name="highOutliers" column="highoutliers" />
-
-    <property name="lowOutliers" column="lowoutliers" />
-
   </class>
 </hibernate-mapping>

@@ -124,16 +124,6 @@ public class ValidationRule
      */
     private Integer annualSampleCount;
 
-    /**
-     * The number of high values sampled from previous periods that are discarded before averaging.
-     */
-    private Integer highOutliers;
-
-    /**
-     * The number of low values sampled from previous periods that are discarded before averaging.
-     */
-    private Integer lowOutliers;
-
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -383,33 +373,6 @@ public class ValidationRule
         this.annualSampleCount = annualSampleCount;
     }
 
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    @PropertyRange( min = 0, max = 99 )
-    public Integer getHighOutliers()
-    {
-        return highOutliers;
-    }
-
-    public void setHighOutliers( Integer highOutliers )
-    {
-        this.highOutliers = highOutliers;
-    }
-
-    @JsonProperty
-    @JsonView( { DetailedView.class, ExportView.class } )
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    @PropertyRange( min = 0, max = 99 )
-    public Integer getLowOutliers()
-    {
-        return lowOutliers;
-    }
-
-    public void setLowOutliers( Integer lowOutliers )
-    {
-        this.lowOutliers = lowOutliers;
-    }
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )

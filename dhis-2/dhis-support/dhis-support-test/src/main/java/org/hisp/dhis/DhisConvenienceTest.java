@@ -964,14 +964,10 @@ public abstract class DhisConvenienceTest
      *                              evaluated by this rule.
      * @param sequentialSampleCount How many sequential past periods to sample.
      * @param annualSampleCount     How many years of past periods to sample.
-     * @param highOutliers          How many high outlying past samples to discard before
-     *                              averaging.
-     * @param lowOutliers           How many low outlying past samples to discard before
-     *                              averaging.
-     */
+    */
     public static ValidationRule createMonitoringRule( char uniqueCharacter, Operator operator, Expression leftSide,
         Expression rightSide, PeriodType periodType, int organisationUnitLevel, int sequentialSampleCount,
-        int annualSampleCount, int highOutliers, int lowOutliers )
+        int annualSampleCount )
     {
         ValidationRule validationRule = new ValidationRule();
         validationRule.setAutoFields();
@@ -986,8 +982,6 @@ public abstract class DhisConvenienceTest
         validationRule.setOrganisationUnitLevel( organisationUnitLevel );
         validationRule.setSequentialSampleCount( sequentialSampleCount );
         validationRule.setAnnualSampleCount( annualSampleCount );
-        validationRule.setHighOutliers( highOutliers );
-        validationRule.setLowOutliers( lowOutliers );
 
         return validationRule;
     }

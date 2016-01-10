@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.common.DimensionalItemObject;
+import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
@@ -71,6 +72,7 @@ public interface ExpressionService
     String DAYS_SYMBOL = "[days]";
 
     String VARIABLE_EXPRESSION = "(#|D|A|I)\\{(([a-zA-Z]\\w{10})\\.?(\\w*))\\}";
+    String AGGREGATE_EXPRESSION = "#\\[([^\\]]*)\\]";
     String OPERAND_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\.?(\\w*)\\}";
     String PROGRAM_DATA_ELEMENT_EXPRESSION = "D\\{([a-zA-Z]\\w{10})\\.?([a-zA-Z]\\w{10})\\}";
     String OPERAND_UID_EXPRESSION = "([a-zA-Z]\\w{10})\\.?(\\w*)";
@@ -81,6 +83,7 @@ public interface ExpressionService
     String DAYS_EXPRESSION = "\\[days\\]";
 
     Pattern VARIABLE_PATTERN = Pattern.compile( VARIABLE_EXPRESSION );
+    Pattern AGGREGATE_PATTERN = Pattern.compile(AGGREGATE_EXPRESSION);
     Pattern OPERAND_PATTERN = Pattern.compile( OPERAND_EXPRESSION );
     Pattern OPERAND_UID_PATTERN = Pattern.compile( OPERAND_UID_EXPRESSION );
     Pattern PROGRAM_DATA_ELEMENT_PATTERN = Pattern.compile( PROGRAM_DATA_ELEMENT_EXPRESSION );
@@ -157,7 +160,7 @@ public interface ExpressionService
      */
     Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days );
-    
+
     /**
      * Generates the calculated value for the given expression base on the values
      * supplied in the value map, constant map and days.
@@ -175,8 +178,31 @@ public interface ExpressionService
      *        not all children had a value.)
      * @return the calculated value as a double.
      */
-    Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap, 
-        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, Set<DataElementOperand> incompleteValues );
+    Double getExpressionValue(Expression expression, Map<? extends DimensionalItemObject, Double> valueMap,
+			Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days,
+			Set<DataElementOperand> incompleteValues);
+    
+    /**
+     * Generates the calculated value for the given expression base on the values
+     * supplied in the value map, constant map and days.
+     * 
+     * @param expression the expression which holds the formula for the calculation.
+     * @param valueMap the mapping between data element operands and values to
+     *        use in the calculation.
+     * @param constantMap the mapping between the constant uid and value to use
+     *        in the calculation.
+     * @param orgUnitCountMap the mapping between organisation unit group uid and
+     *        count of organisation units to use in the calculation.
+     * @param days the number of days to use in the calculation.
+     * @param set of data element operands that have values but they are incomplete
+     *        (for example due to aggregation from organisationUnit children where
+     *        not all children had a value.)
+     * @param a map of subexpression strings to List(s) of aggregated samples for the expression
+     * @return the calculated value as a double.
+     */
+    Double getExpressionValue(Expression expression, Map<? extends DimensionalItemObject, Double> valueMap,
+			Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days,
+			Set<DataElementOperand> incompleteValues, ListMap<String, Double> aggregateMap);
     
     /**
      * Returns all data elements included in the given expression string. Returns
@@ -208,6 +234,16 @@ public interface ExpressionService
      * @return A Set of Operands.
      */
     Set<DataElementOperand> getOperandsInExpression( String expression );
+    
+    /**
+     * Returns all aggregates included in an expression string. An aggregate has the form
+     * #[expr]  where expr is a well-formed sub-expression.  This returns the
+     * empty set if the given expression is null or there are no aggregates.
+     * 
+     * @param expression The expression string.
+     * @return A Set of Expression strings.
+     */
+    Set<String> getAggregatesInExpression( String expression );
     
     /**
      * Returns all data elements which are present in the numerator and denominator
@@ -346,7 +382,8 @@ public interface ExpressionService
      *        when calculating the expression. Strategy defaults to NEVER_SKIP if null.
      */
     String generateExpression( String expression, Map<? extends DimensionalItemObject, Double> valueMap, 
-        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, MissingValueStrategy missingValueStrategy );
+        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days,
+        MissingValueStrategy missingValueStrategy );
     
     /**
      * Returns all Operands included in the formulas for the given collection of
@@ -356,4 +393,5 @@ public interface ExpressionService
      * @param indicators the collection of Indicators.
      */
     List<DataElementOperand> getOperandsInIndicators( List<Indicator> indicators );
+
 }

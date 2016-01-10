@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.validator.routines.DoubleValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.hisp.dhis.expression.Operator;
+import org.hisp.dhis.system.jep.CustomFunctions;
 import org.nfunk.jep.JEP;
 
 import com.google.common.cache.Cache;
@@ -183,6 +184,7 @@ public class MathUtils
     {
         final JEP parser = new JEP();
         parser.addStandardFunctions();
+        CustomFunctions.addFunctions(parser);
         return parser;
     }
     
@@ -758,4 +760,6 @@ public class MathUtils
         
         return result.intValue();
     }
+
+    
 }
