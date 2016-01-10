@@ -25,7 +25,7 @@
 		        <tr>
 					<td>
 						<select id="expression-program-stage" onChange="getTrackedEntityDataElements('expression');" style="width:35%;margin-right:20px;">
-							<option>[ $i18n.getString('select_program_stage') ]</option>
+							<option value='' >[ $i18n.getString('select_program_stage') ]</option>
 							#foreach( $programStage in $program.programStages )
 								<option value='$programStage.uid'>$programStage.displayName</option>
 							#end
