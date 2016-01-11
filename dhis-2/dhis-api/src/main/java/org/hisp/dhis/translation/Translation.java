@@ -85,6 +85,19 @@ public class Translation
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
+
+    @JsonProperty( value = "objectId" )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getObjectUid()
+    {
+        return objectUid;
+    }
+
+    public void setObjectUid( String objectUid )
+    {
+        this.objectUid = objectUid;
+    }
+
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getClassName()
@@ -131,18 +144,6 @@ public class Translation
     public void setValue( String value )
     {
         this.value = value;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getObjectUid()
-    {
-        return objectUid;
-    }
-
-    public void setObjectUid( String objectUid )
-    {
-        this.objectUid = objectUid;
     }
 
     // -------------------------------------------------------------------------
