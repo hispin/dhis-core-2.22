@@ -240,18 +240,25 @@ public class DataElementCategoryCombo
     // Logic
     // -------------------------------------------------------------------------
 
-    public void addDataElementCategory( DataElementCategory dataElementCategory )
+    public void addDataElementCategory( DataElementCategory category )
     {
-        categories.add( dataElementCategory );
+        categories.add( category );
+        category.getCategoryCombos().add( this );
     }
 
-    public void removeDataElementCategory( DataElementCategory dataElementCategory )
+    public void removeDataElementCategory( DataElementCategory category )
     {
-        categories.remove( dataElementCategory );
+        categories.remove( category );
+        category.getCategoryCombos().remove( this );
     }
 
-    public void removeAllDataElementCategories()
+    public void removeAllCategories()
     {
+        for ( DataElementCategory category : categories )
+        {
+            category.getCategoryCombos().remove( this );
+        }
+
         categories.clear();
     }
 
@@ -335,12 +342,8 @@ public class DataElementCategoryCombo
                 dataDimensionType = categoryCombo.getDataDimensionType() == null ? dataDimensionType : categoryCombo.getDataDimensionType();
             }
 
-            removeAllDataElementCategories();
-
-            for ( DataElementCategory dataElementCategory : categoryCombo.getCategories() )
-            {
-                addDataElementCategory( dataElementCategory );
-            }
+            removeAllCategories();
+            categoryCombo.getCategories().forEach( this::addDataElementCategory );
         }
     }
 }

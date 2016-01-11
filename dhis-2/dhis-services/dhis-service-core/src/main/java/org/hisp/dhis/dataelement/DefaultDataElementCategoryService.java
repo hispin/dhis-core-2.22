@@ -620,7 +620,7 @@ public class DefaultDataElementCategoryService
         // ---------------------------------------------------------------------
 
         DataElementCategory category = new DataElementCategory( DataElementCategory.DEFAULT_NAME );
-        category.addDataElementCategoryOption( categoryOption );
+        category.addCategoryOption( categoryOption );
         addDataElementCategory( category );
 
         // ---------------------------------------------------------------------

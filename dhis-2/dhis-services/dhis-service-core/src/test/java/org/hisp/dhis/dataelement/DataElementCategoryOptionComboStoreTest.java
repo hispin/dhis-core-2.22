@@ -90,10 +90,10 @@ public class DataElementCategoryOptionComboStoreTest
         categoryA = new DataElementCategory( "Gender" );
         categoryB = new DataElementCategory( "Agegroup" );
         
-        categoryA.addDataElementCategoryOption( categoryOptionA );
-        categoryA.addDataElementCategoryOption( categoryOptionB );        
-        categoryB.addDataElementCategoryOption( categoryOptionC );
-        categoryB.addDataElementCategoryOption( categoryOptionD );
+        categoryA.addCategoryOption( categoryOptionA );
+        categoryA.addCategoryOption( categoryOptionB );
+        categoryB.addCategoryOption( categoryOptionC );
+        categoryB.addCategoryOption( categoryOptionD );
         
         categoryService.addDataElementCategory( categoryA );
         categoryService.addDataElementCategory( categoryB );

@@ -109,7 +109,7 @@ public class AddDataElementCategoryAction
 
         for ( String id : coSelected )
         {
-            dataElementCategory.addDataElementCategoryOption( dataElementCategoryService.getDataElementCategoryOption( id ) );
+            dataElementCategory.addCategoryOption( dataElementCategoryService.getDataElementCategoryOption( id ) );
         }
 
         dataElementCategoryService.addDataElementCategory( dataElementCategory );

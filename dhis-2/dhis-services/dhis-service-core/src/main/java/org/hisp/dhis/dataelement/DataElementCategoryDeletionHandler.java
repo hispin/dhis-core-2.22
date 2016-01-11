@@ -60,7 +60,7 @@ public class DataElementCategoryDeletionHandler
 
         for ( DataElementCategory category : categories )
         {
-            category.removeDataElementCategoryOption( categoryOption );
+            category.removeCategoryOption( categoryOption );
             idObjectManager.updateNoAcl( category );
         }
     }

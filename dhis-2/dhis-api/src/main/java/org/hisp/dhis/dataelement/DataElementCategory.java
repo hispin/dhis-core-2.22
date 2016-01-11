@@ -35,7 +35,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -51,7 +50,9 @@ import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A Category is a dimension of a data element. DataElements can have sets of
@@ -71,6 +72,8 @@ public class DataElementCategory
 
     @Scanned
     private List<DataElementCategoryOption> categoryOptions = new ArrayList<>();
+
+    private Set<DataElementCategoryCombo> categoryCombos = new HashSet<>();
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -96,13 +99,13 @@ public class DataElementCategory
     // Logic
     // -------------------------------------------------------------------------
 
-    public void addDataElementCategoryOption( DataElementCategoryOption dataElementCategoryOption )
+    public void addCategoryOption( DataElementCategoryOption dataElementCategoryOption )
     {
         categoryOptions.add( dataElementCategoryOption );
         dataElementCategoryOption.getCategories().add( this );
     }
 
-    public void removeDataElementCategoryOption( DataElementCategoryOption dataElementCategoryOption )
+    public void removeCategoryOption( DataElementCategoryOption dataElementCategoryOption )
     {
         categoryOptions.remove( dataElementCategoryOption );
         dataElementCategoryOption.getCategories().remove( this );
@@ -116,6 +119,28 @@ public class DataElementCategory
         }
 
         categoryOptions.clear();
+    }
+
+    public void addCategoryCombo( DataElementCategoryCombo categoryCombo )
+    {
+        categoryCombos.add( categoryCombo );
+        categoryCombo.getCategories().add( this );
+    }
+
+    public void removeCategoryCombo( DataElementCategoryCombo categoryCombo )
+    {
+        categoryCombos.remove( categoryCombo );
+        categoryCombo.getCategories().remove( this );
+    }
+
+    public void removeAllCategoryCombos()
+    {
+        for ( DataElementCategoryCombo categoryCombo : categoryCombos )
+        {
+            categoryCombo.getCategories().remove( this );
+        }
+
+        categoryCombos.clear();
     }
 
     public DataElementCategoryOption getCategoryOption( DataElementCategoryOptionCombo categoryOptionCombo )
@@ -212,6 +237,21 @@ public class DataElementCategory
         this.categoryOptions = categoryOptions;
     }
 
+    @JsonProperty
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "categoryCombos", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "categoryCombo", namespace = DxfNamespaces.DXF_2_0 )
+    public Set<DataElementCategoryCombo> getCategoryCombos()
+    {
+        return categoryCombos;
+    }
+
+    public void setCategoryCombos( Set<DataElementCategoryCombo> categoryCombos )
+    {
+        this.categoryCombos = categoryCombos;
+    }
+
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -231,11 +271,10 @@ public class DataElementCategory
             }
 
             removeAllCategoryOptions();
+            removeAllCategoryCombos();
 
-            for ( DataElementCategoryOption dataElementCategoryOption : category.getCategoryOptions() )
-            {
-                addDataElementCategoryOption( dataElementCategoryOption );
-            }
+            category.getCategoryOptions().forEach( this::addCategoryOption );
+            category.getCategoryCombos().forEach( this::addCategoryCombo );
         }
     }
 }

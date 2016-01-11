@@ -533,7 +533,7 @@ public abstract class DhisConvenienceTest
 
         for ( DataElementCategoryOption categoryOption : categoryOptions )
         {
-            dataElementCategory.addDataElementCategoryOption( categoryOption );
+            dataElementCategory.addCategoryOption( categoryOption );
         }
 
         return dataElementCategory;
