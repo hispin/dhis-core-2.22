@@ -147,7 +147,7 @@ public class AuditController
     @RequestMapping( value = "trackedEntityDataValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getTrackedEntityDataValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> de,
-        @RequestParam( required = false, defaultValue = "" ) List<String> ps,
+        @RequestParam( required = false, defaultValue = "" ) List<String> psi,
         @RequestParam( required = false ) AuditType auditType,
         @RequestParam( required = false ) boolean skipPaging,
         @RequestParam( required = false, defaultValue = "50" ) int pageSize,
@@ -155,7 +155,7 @@ public class AuditController
     ) throws WebMessageException
     {
         List<DataElement> dataElements = getDataElements( de );
-        List<ProgramStageInstance> programStageInstances = getProgramStageInstances( ps );
+        List<ProgramStageInstance> programStageInstances = getProgramStageInstances( psi );
 
         List<TrackedEntityDataValueAudit> dataValueAudits;
         Pager pager = null;
@@ -192,7 +192,7 @@ public class AuditController
     @RequestMapping( value = "trackedEntityAttributeValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getTrackedEntityAttributeValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> tea,
-        @RequestParam( required = false, defaultValue = "" ) List<String> te,
+        @RequestParam( required = false, defaultValue = "" ) List<String> tei,
         @RequestParam( required = false ) AuditType auditType,
         @RequestParam( required = false ) boolean skipPaging,
         @RequestParam( required = false, defaultValue = "50" ) int pageSize,
@@ -200,7 +200,7 @@ public class AuditController
     ) throws WebMessageException
     {
         List<TrackedEntityAttribute> trackedEntityAttributes = getTrackedEntityAttributes( tea );
-        List<TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( te );
+        List<TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( tei );
 
         List<TrackedEntityAttributeValueAudit> attributeValueAudits;
         Pager pager = null;
