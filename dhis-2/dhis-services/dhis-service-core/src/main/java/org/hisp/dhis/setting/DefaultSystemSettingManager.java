@@ -155,9 +155,7 @@ public class DefaultSystemSettingManager
 
         if ( isConfidential( name ) )
         {
-
             setting.setValue( pbeStringEncryptor.decrypt( setting.getValue().toString() ) );
-
         }
 
         return setting != null && setting.hasValue() ? setting.getValue() : null;
@@ -420,5 +418,4 @@ public class DefaultSystemSettingManager
     {
         return NAME_KEY_MAP.containsKey( name ) && NAME_KEY_MAP.get( name ).isConfidential();
     }
-
 }

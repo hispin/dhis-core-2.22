@@ -60,7 +60,7 @@ public class DefaultCalendarService
 
     private Map<String, Calendar> calendarMap = Maps.newHashMap();
 
-    private List<DateFormat> dateFormats = Lists.newArrayList(
+    private static final List<DateFormat> DATE_FORMATS = Lists.newArrayList(
         new DateFormat( "yyyy-MM-dd", "yyyy-MM-dd", "yyyy-MM-dd", "yyyy-mm-dd" ),
         new DateFormat( "dd-MM-yyyy", "dd-MM-yyyy", "dd-MM-yyyy", "dd-mm-yyyy" )
     );
@@ -93,7 +93,7 @@ public class DefaultCalendarService
     @Override
     public List<DateFormat> getAllDateFormats()
     {
-        return dateFormats;
+        return DATE_FORMATS;
     }
 
     @Override
@@ -123,7 +123,7 @@ public class DefaultCalendarService
     {
         String dateFormatKey = (String) settingManager.getSystemSetting( SettingKey.DATE_FORMAT );
 
-        for ( DateFormat dateFormat : dateFormats )
+        for ( DateFormat dateFormat : DATE_FORMATS )
         {
             if ( dateFormat.name().equals( dateFormatKey ) )
             {
@@ -131,6 +131,6 @@ public class DefaultCalendarService
             }
         }
 
-        return dateFormats.get( 0 );
+        return DATE_FORMATS.get( 0 );
     }
 }
