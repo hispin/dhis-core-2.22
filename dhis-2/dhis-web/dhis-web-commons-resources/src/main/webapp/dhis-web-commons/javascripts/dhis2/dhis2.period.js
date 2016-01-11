@@ -540,22 +540,8 @@ $.extend(dhis2.period.WeeklyGenerator.prototype, {
     var year = offset + this.calendar.today().year();
     var periods = [];
 
-    var startDate = this.calendar.newDate(year, 1, 1);
-    var day = startDate.dayOfWeek();
-
-    if( day == 0 ) // Sunday (0), forward to Monday
-    {
-      startDate.add(1, 'd');
-    }
-    else if( day <= 4 ) // Monday - Thursday, rewind to Monday
-    {
-      startDate.add(( ( day - 1 ) * -1 ), 'd');
-    }
-    else
-    // Friday - Saturday, forward to Monday
-    {
-      startDate.add(8 - day, 'd');
-    }
+    var startDate = this.calendar.newDate(year, 1, 4); // first ISO week of the year always contains 4th January
+    startDate.add(-(startDate.dayOfWeek() - 1), 'd'); // rewind to start of week, might cross year boundary
 
     // no reliable way to figure out number of weeks in a year (can differ in different calendars)
     // goes up to 200, but break when week is back to 1
