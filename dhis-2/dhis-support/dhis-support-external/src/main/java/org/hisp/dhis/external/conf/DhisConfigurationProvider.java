@@ -75,6 +75,13 @@ public interface DhisConfigurationProvider
     boolean isEnabled( ConfigurationKey key );
     
     /**
+     * Indicates whether the system is set to read-only mode.
+     * 
+     * @return the if the system is in read-only mode.
+     */
+    public boolean isReadOnlyMode();
+    
+    /**
      * Indicates whether LDAP authentication is configured.
      * 
      * @return true if LDAP authentication is configured.

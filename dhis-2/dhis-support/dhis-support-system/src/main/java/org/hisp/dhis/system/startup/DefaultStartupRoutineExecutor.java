@@ -30,7 +30,6 @@ package org.hisp.dhis.system.startup;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.external.conf.ConfigurationKey;
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,7 +40,7 @@ import java.util.List;
 
 /**
  * Default implementation of StartupRoutineExecutor. The execute method will
- * execute the added StartupRoutines ordered by their runlevels. Startup routines
+ * execute the added StartupRoutines ordered by their run levels. Startup routines
  * can be ignored from the command line by appending the below.
  * 
  * <code>-Ddhis.skip.startup=true</code>
@@ -102,14 +101,13 @@ public class DefaultStartupRoutineExecutor
     private void execute( boolean testing )
         throws Exception
     {
-
         if ( TRUE.equalsIgnoreCase( System.getProperty( SKIP_PROP ) ) )
         {
             LOG.info( "Skipping startup routines, system property " + SKIP_PROP + " is true" );
             return;
         }
         
-        if ( config.isEnabled( ConfigurationKey.SYSTEM_READ_ONLY_MODE ) )
+        if ( config.isReadOnlyMode() )
         {
             LOG.info( "Skipping startup routines, read-only mode is enabled" );
             return;

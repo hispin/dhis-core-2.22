@@ -150,6 +150,13 @@ public class DefaultHibernateConfigurationProvider
                 Properties fileProperties = configurationProvider.getProperties();
                 
                 mapToHibernateProperties( fileProperties );
+
+                if ( configurationProvider.isReadOnlyMode() )
+                {
+                    fileProperties.setProperty( "hibernate.hbm2ddl.auto", "validate" );
+                    
+                    log.info( "Setting hibernate.hbm2ddl.auto to 'validate' due to read-only mode" );
+                }
                 
                 configuration.addProperties( fileProperties );
             }
@@ -168,7 +175,7 @@ public class DefaultHibernateConfigurationProvider
             configuration.setProperty( "hibernate.cache.use_second_level_cache", "false" );
             configuration.setProperty( "hibernate.cache.use_query_cache", "false" );
         }
-        
+
         log.info( "Hibernate configuration loaded, using dialect: " + configuration.getProperty( "hibernate.dialect" ) );
         
         this.configuration = configuration;

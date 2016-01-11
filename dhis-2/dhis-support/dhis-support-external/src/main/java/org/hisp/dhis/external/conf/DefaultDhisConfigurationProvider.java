@@ -137,13 +137,19 @@ public class DefaultDhisConfigurationProvider
     }
 
     @Override
+    public boolean isReadOnlyMode()
+    {
+        return ENABLED_VALUE.equals( getProperty( ConfigurationKey.SYSTEM_READ_ONLY_MODE ) );
+    }
+
+    @Override
     public boolean isLdapConfigured()
     {
         String ldapUrl = getProperty( ConfigurationKey.LDAP_URL );
         String managerDn = getProperty( ConfigurationKey.LDAP_MANAGER_DN );
 
-        return !(ConfigurationKey.LDAP_URL.getDefaultValue().equals( ldapUrl ) ||
-            ldapUrl == null || managerDn == null);
+        return !( ConfigurationKey.LDAP_URL.getDefaultValue().equals( ldapUrl ) ||
+            ldapUrl == null || managerDn == null );
     }
 
     @Override
