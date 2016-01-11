@@ -4504,54 +4504,35 @@ Ext.onReady( function() {
         // event data item
         onEventDataItemProgramSelect = function(programId, skipSync) {
             if (!skipSync) {
-                dataSelectedStore.removeByProperty('objectName', ['di','pi']);
+                //dataSelectedStore.removeByProperty('objectName', ['di','pi']);
                 programIndicatorProgram.setValue(programId);
                 onProgramIndicatorProgramSelect(programId, true);
             }
 
+            var types = ns.core.conf.valueType.tAggregateTypes.join(',');
+
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programTrackedEntityAttributes[id,' + namePropertyUrl + '|rename(name),valueType],programStages[programStageDataElements[dataElement[id,name,valueType]]]&paging=false',
+                url: ns.core.init.contextPath + '/api/programDataElements.json?program=' + programId + '&filter=valueType:in:[' + types + ']&fields=dimensionItem|rename(id),name,valueType&paging=false',
+                disableCaching: false,
                 success: function(r) {
-                    r = Ext.decode(r.responseText);
+                    var elements = Ext.decode(r.responseText).programDataElements,
+                        isA = Ext.isArray,
+                        isO = Ext.isObject;
 
-                    var isA = Ext.isArray,
-                        isO = Ext.isObject,
-                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
-                        stages = isO(program) && isA(program.programStages) && program.programStages.length ? program.programStages : [],
-                        teas = isO(program) && isA(program.programTrackedEntityAttributes) ? program.programTrackedEntityAttributes : [],
-                        dataElements = [],
-                        attributes = [],
-                        types = ns.core.conf.valueType.aggregateTypes,
-                        data;
+                    Ext.Ajax.request({
+                        url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&filter=programTrackedEntityAttributes.trackedEntityAttribute.confidential:eq:false&filter=programTrackedEntityAttributes.valueType:in:[' + types + ']&fields=programTrackedEntityAttributes[dimensionItem|rename(id),' + namePropertyUrl + '|rename(name),valueType]&paging=false',
+                        disableCaching: false,
+                        success: function(r) {
+                            var attributes = (Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || [],
+                                data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(elements, attributes))) || [];
 
-                    // data elements
-                    for (var i = 0, stage, elements; i < stages.length; i++) {
-                        stage = stages[i];
-
-                        if (isA(stage.programStageDataElements) && stage.programStageDataElements.length) {
-                            elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
-
-                            for (var j = 0; j < elements.length; j++) {
-                                if (Ext.Array.contains(types, elements[j].valueType)) {
-                                    dataElements.push(elements[j]);
-                                }
+                            if (data) {
+                                eventDataItemAvailableStore.loadDataAndUpdate(data);
                             }
                         }
-                    }
-
-                    // attributes
-                    for (i = 0; i < teas.length; i++) {
-                        if (Ext.Array.contains(types, teas[i].valueType)) {
-                            attributes.push(teas[i]);
-                        }
-                    }
-
-                    data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(dataElements, attributes))) || [];
-
-                    eventDataItemAvailableStore.loadDataAndUpdate(data);
+                    });
                 }
             });
-
         };
 
 		eventDataItemProgram = Ext.create('Ext.form.field.ComboBox', {
