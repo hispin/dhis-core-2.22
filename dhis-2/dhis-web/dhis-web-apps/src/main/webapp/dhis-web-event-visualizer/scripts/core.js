@@ -763,8 +763,9 @@ Ext.onReady( function() {
             	textTypes: ['TEXT','LONG_TEXT','LETTER','PHONE_NUMBER','EMAIL'],
             	booleanTypes: ['BOOLEAN','TRUE_ONLY'],
             	dateTypes: ['DATE','DATETIME'],
-            	aggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
-            }
+                aAggregateTypes: ['BOOLEAN', 'TRUE_ONLY', 'TEXT', 'LONG_TEXT', 'LETTER', 'INTEGER', 'INTEGER_POSITIVE', 'INTEGER_NEGATIVE', 'INTEGER_ZERO_OR_POSITIVE', 'NUMBER', 'UNIT_INTERVAL', 'PERCENTAGE', 'COORDINATE'],
+            	tAggregateTypes: ['NUMBER','UNIT_INTERVAL','PERCENTAGE','INTEGER','INTEGER_POSITIVE','INTEGER_NEGATIVE','INTEGER_ZERO_OR_POSITIVE','BOOLEAN','TRUE_ONLY']
+            };
 
             for (var i = 0, obj; i < conf.aggregationType.data.length; i++) {
                 obj = conf.aggregationType.data[i];

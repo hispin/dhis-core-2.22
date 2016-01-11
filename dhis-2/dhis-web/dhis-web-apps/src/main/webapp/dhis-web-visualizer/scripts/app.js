@@ -3152,6 +3152,7 @@ Ext.onReady( function() {
             loadTotalsPage: function(uid, filter, append, noPaging, fn) {
                 var store = this,
 					params = {},
+                    types = ns.core.conf.valueType.aAggregateTypes.join(','),
                     path;
 
                 if (store.nextPage === store.lastPage) {
@@ -3159,10 +3160,10 @@ Ext.onReady( function() {
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElements.json?fields=id,' + namePropertyUrl + '&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElements.json?fields=id,' + namePropertyUrl + '&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -3199,6 +3200,7 @@ Ext.onReady( function() {
 			loadDetailsPage: function(uid, filter, append, noPaging, fn) {
                 var store = this,
 					params = {},
+                    types = ns.core.conf.valueType.aAggregateTypes.join(','),
                     path;
 
                 if (store.nextPage === store.lastPage) {
@@ -3206,10 +3208,10 @@ Ext.onReady( function() {
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElementOperands.json?fields=id,' + namePropertyUrl + '&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElementOperands.json?fields=id,' + namePropertyUrl + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -4543,6 +4545,7 @@ Ext.onReady( function() {
 			displayField: 'name',
 			emptyText: NS.i18n.select_program,
 			editable: false,
+            queryMode: 'local',
 			store: programStore,
 			listeners: {
 				select: function(cb) {

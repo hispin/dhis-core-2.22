@@ -4174,6 +4174,7 @@ Ext.onReady( function() {
                     url: ns.core.init.contextPath + '/api/programStages.json?filter=id:eq:' + stageId + '&fields=programStageDataElements[dataElement[id,' + namePropertyUrl + ',valueType,optionSet[id,displayName|rename(name)],legendSet|rename(storageLegendSet)[id,displayName|rename(name)]]]',
                     success: function(r) {
                         var objects = Ext.decode(r.responseText).programStages,
+                            types = ns.core.conf.valueType.tAggregateTypes,
                             dataElements;
 
                         if (!objects.length) {
@@ -4183,6 +4184,12 @@ Ext.onReady( function() {
 
                         dataElements = Ext.Array.pluck(objects[0].programStageDataElements, 'dataElement');
 
+                        // filter non-aggregatable types
+                        dataElements.filter(function(item) {
+                            item.isDataElement = true;
+                            return Ext.Array.contains(types, item.valueType);
+                        });
+                        
                         // data elements cache
                         dataElementStorage[stageId] = dataElements;
 
