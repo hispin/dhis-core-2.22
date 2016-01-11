@@ -44,12 +44,8 @@ import org.hisp.dhis.dataelement.CategoryComboMap.CategoryComboMapException;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategory;
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
-import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
-import org.hisp.dhis.dataelement.DataElementCategoryService;
-import org.hisp.dhis.dataelement.DataElementService;
 import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -107,9 +103,6 @@ public class DefaultAdxDataService
 
     @Autowired
     private DataValueService dataValueService;
-
-    @Autowired
-    private DataElementCategoryService categoryService;
 
     @Autowired
     private PeriodService periodService;
@@ -186,12 +179,8 @@ public class DefaultAdxDataService
 
             DataElementCategoryCombo categoryCombo = dataSet.getCategoryCombo();
 
-            List<DataElementCategory> categories = categoryCombo.getCategories();
-
             for ( DataElementCategoryOptionCombo aoc : categoryCombo.getOptionCombos() )
-            {
-                Set<DataElementCategoryOption> catopts = aoc.getCategoryOptions();
-                
+            {                
                 Map<String, String> attributeDimensions = metadata.getExplodedCategoryAttributes(aoc.getId());
                 
                 for ( OrganisationUnit orgUnit : params.getOrganisationUnits() )

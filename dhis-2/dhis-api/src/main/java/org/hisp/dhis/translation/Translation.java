@@ -60,9 +60,17 @@ public class Translation
 
     public Translation()
     {
-
     }
 
+    /**
+     * TODO find some consistent order across object, service, HBM.
+     * 
+     * @param className the class name of the translated object.
+     * @param locale the locale.
+     * @param property the property name.
+     * @param value the translation.
+     * @param objectUid the UID of the translated object.
+     */
     public Translation( String className, String locale, String property, String value, String objectUid )
     {
         this.className = className;
