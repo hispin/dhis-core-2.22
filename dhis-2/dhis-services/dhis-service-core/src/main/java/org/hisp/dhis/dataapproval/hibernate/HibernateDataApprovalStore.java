@@ -60,7 +60,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.hibernate.HibernateGenericStore;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.setting.SettingKey;
@@ -97,13 +96,6 @@ public class HibernateDataApprovalStore
     public void setCurrentUserService( CurrentUserService currentUserService )
     {
         this.currentUserService = currentUserService;
-    }
-
-    private OrganisationUnitService organisationUnitService;
-
-    public void setOrganisationUnitService( OrganisationUnitService organisationUnitService )
-    {
-        this.organisationUnitService = organisationUnitService;
     }
 
     private DataElementCategoryService categoryService;
@@ -365,7 +357,7 @@ public class HibernateDataApprovalStore
                 "from dataapproval da " +
                 "join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
                 "where da.workflowid = " + workflow.getId() + " " +
-                "and da.periodid = " + getWorkflowPeriodId( workflow, endDate ) + " " +
+                "and da.periodid = " + workflowPeriodId + " " +
                 "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
                 "and " + highestApprovedOrgUnitCompare +
             ") as highest_approved, " +
