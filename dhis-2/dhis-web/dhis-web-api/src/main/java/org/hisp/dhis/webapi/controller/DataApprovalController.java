@@ -237,9 +237,8 @@ public class DataApprovalController
         DataApprovalStatus status = dataApprovalService.getDataApprovalStatusAndPermissions( dataSet.getWorkflow(), period,
             organisationUnit, optionCombo );
 
-        DataApproval dataApproval = status.getDataApproval();
-        Date createdDate = dataApproval == null ? null : dataApproval.getCreated();
-        String createdByUsername = dataApproval == null || dataApproval.getCreator() == null ? null : dataApproval.getCreator().getUsername();
+        Date createdDate = status.getCreated();
+        String createdByUsername = status.getCreator() == null ? null : status.getCreator().getUsername();
 
         String state = status.getState().toString();
 
@@ -265,6 +264,11 @@ public class DataApprovalController
 
         OrganisationUnit orgUnit = organisationUnitService.getOrganisationUnit( ou );
 
+        if ( orgUnit != null && orgUnit.isRoot() )
+        {
+            orgUnit = null; // Look for all org units.
+        }
+
         SetMap<DataApprovalWorkflow, DataElementCategoryCombo> workflowCategoryComboMap = new SetMap<>();
 
         for ( DataSet dataSet : dataSets )
@@ -288,26 +292,21 @@ public class DataApprovalController
         {
             Map<String, Object> item = new HashMap<>();
 
-            DataApproval approval = status.getDataApproval();
-
             Map<String, String> approvalLevel = new HashMap<>();
 
-            if ( status.getDataApprovalLevel() != null )
+            if ( status.getApprovedLevel() != null )
             {
-                approvalLevel.put( "id", status.getDataApprovalLevel().getUid() );
-                approvalLevel.put( "level", String.valueOf( status.getDataApprovalLevel().getLevel() ) );
+                approvalLevel.put( "id", status.getApprovedLevel().getUid() );
+                approvalLevel.put( "level", String.valueOf( status.getApprovedLevel().getLevel() ) );
             }
 
-            if ( approval != null )
-            {
-                item.put( "id", approval.getAttributeOptionCombo().getUid() );
-                item.put( "level", approvalLevel );
-                item.put( "ou", approval.getOrganisationUnit().getUid() );
-                item.put( "accepted", approval.isAccepted() );
-                item.put( "permissions", status.getPermissions() );
+            item.put( "id", status.getAttributeOptionComboUid() );
+            item.put( "level", approvalLevel );
+            item.put( "ou", status.getOrganisationUnitUid() );
+            item.put( "accepted", status.isAccepted() );
+            item.put( "permissions", status.getPermissions() );
 
-                list.add( item );
-            }
+            list.add( item );
         }
 
         renderService.toJson( response.getOutputStream(), list );

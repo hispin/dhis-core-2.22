@@ -48,7 +48,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
-import org.hisp.dhis.commons.collection.CachingMap;
 import org.hisp.dhis.dataapproval.DataApproval;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
 import org.hisp.dhis.dataapproval.DataApprovalLevelService;
@@ -193,10 +192,9 @@ public class HibernateDataApprovalStore
         Period period, OrganisationUnit orgUnit, DataElementCategoryCombo attributeCombo,
         Set<DataElementCategoryOptionCombo> attributeOptionCombos )
     {
-        final CachingMap<Integer, DataElementCategoryOptionCombo> optionComboCache = new CachingMap<>();
-        final CachingMap<Integer, OrganisationUnit> orgUnitCache = new CachingMap<>();
-        
         final User user = currentUserService.getCurrentUser();
+
+        boolean isSuperUser = currentUserService.currentUserIsSuper();
 
         final String startDate = DateUtils.getMediumDateString( period.getStartDate() );
         final String endDate = DateUtils.getMediumDateString( period.getEndDate() );
@@ -228,8 +226,17 @@ public class HibernateDataApprovalStore
         String orgUnitJoinOn = null;
         String highestApprovedOrgUnitCompare = null;
 
+        Set<OrganisationUnit> userOrgUnits = user.getDataViewOrganisationUnitsWithFallback();
+
         if ( orgUnit != null )
         {
+            if ( !orgUnit.isDescendant( userOrgUnits ) )
+            {
+                log.debug( "User " + user.getUsername() + " can't see orgUnit " + orgUnit.getName() );
+
+                return new ArrayList<>(); // Unapprovable.
+            }
+
             orgUnitLevel = orgUnit.getLevel();
             orgUnitJoinOn = "o.organisationunitid = " + orgUnit.getId();
             highestApprovedOrgUnitCompare = "da.organisationunitid = o.organisationunitid ";
@@ -253,9 +260,20 @@ public class HibernateDataApprovalStore
             highestApprovedOrgUnitCompare += ") ";
 
             orgUnitJoinOn = "o.level = " + orgUnitLevel;
-        }
 
-        boolean isSuperUser = currentUserService.currentUserIsSuper();
+            if ( !userOrgUnits.isEmpty() )
+            {
+                String restrict = "";
+
+                for ( OrganisationUnit ou : userOrgUnits )
+                {
+                    restrict += ( restrict.length() == 0 ? " and ( " : " or " )
+                        + "o.idlevel" + ou.getLevel() + " = " + ou.getId();
+                }
+
+                orgUnitJoinOn += restrict + ")";
+            }
+        }
 
         DataApprovalLevel lowestApprovalLevelForOrgUnit = null;
 
@@ -309,9 +327,9 @@ public class HibernateDataApprovalStore
                     "where not exists (select 1 from dataapproval da " +
                         "join period p on p.periodid = da.periodid " +
                         "where da.organisationunitid = ous.organisationunitid " +
-                        "and da.dataapprovallevelid = " + dal.getId() +
+                        "and da.dataapprovallevelid = " + dal.getId() + " " +
                         "and '" + endDate + "' >= p.startdate and '" + endDate + "' <= p.enddate " +
-                        "and da.workflowid = " + workflow.getId() +
+                        "and da.workflowid = " + workflow.getId() + " " +
                         "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
                         ( acceptanceRequiredForApproval ? "and da.accepted " : "" ) +
                     ") " +
@@ -339,19 +357,24 @@ public class HibernateDataApprovalStore
                 "and da.workflowid = " + workflow.getId() + " and da.attributeoptioncomboid = cocco.categoryoptioncomboid)";
         }
 
+        int workflowPeriodId = getWorkflowPeriodId( workflow, endDate );
+
         final String sql =
-            "select cocco.categoryoptioncomboid, o.organisationunitid, " +
-            "(select min(coalesce(dal.level + case when da.accepted then .0 else .1 end, 0)) from period p " +
-                "left join dataapproval da on da.workflowid = " + workflow.getId() + " and da.periodid = p.periodid " +
-                "left join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
-                "where '" + endDate + "' >= p.startdate and '" + endDate + "' <= p.enddate " +
-                "and da.attributeoptioncomboid = cocco.categoryoptioncomboid and " + highestApprovedOrgUnitCompare +
+            "select coc.uid as categoryoptioncombouid, o.organisationunituid, " +
+            "(select min(dal.level + case when da.accepted then .0 else .1 end) " +
+                "from dataapproval da " +
+                "join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
+                "where da.workflowid = " + workflow.getId() + " " +
+                "and da.periodid = " + getWorkflowPeriodId( workflow, endDate ) + " " +
+                "and da.attributeoptioncomboid = cocco.categoryoptioncomboid " +
+                "and " + highestApprovedOrgUnitCompare +
             ") as highest_approved, " +
             readyBelowSubquery + " as ready_below, " +
             approvedAboveSubquery + " as approved_above " +
-            "from categoryoptioncombos_categoryoptions cocco " +
+            "from categoryoptioncombo coc " +
+            "join categoryoptioncombos_categoryoptions cocco on cocco.categoryoptioncomboid = coc.categoryoptioncomboid " +
                 ( attributeCombo == null ? "" : "join categorycombos_optioncombos ccoc on ccoc.categoryoptioncomboid = cocco.categoryoptioncomboid " +
-                    " and ccoc.categorycomboid = " + attributeCombo.getId() + " " ) +
+                    "and ccoc.categorycomboid = " + attributeCombo.getId() + " " ) +
                 "join dataelementcategoryoption co on co.categoryoptionid = cocco.categoryoptionid " +
                     "and (co.startdate is null or co.startdate <= '" + endDate + "') and (co.enddate is null or co.enddate >= '" + startDate + "') " +
                 "join _orgunitstructure o on " + orgUnitJoinOn + " " +
@@ -378,8 +401,8 @@ public class HibernateDataApprovalStore
 
         while ( rowSet.next() )
         {
-            final Integer aoc = rowSet.getInt( 1 );
-            final Integer ouId = rowSet.getInt( 2 );
+            final String aocUid = rowSet.getString( 1 );
+            final String ouUid = rowSet.getString( 2 );
             final Double highestApproved = rowSet.getDouble( 3 );
             final boolean readyBelow = rowSet.getBoolean( 4 );
             final boolean approvedAbove = rowSet.getBoolean( 5 );
@@ -387,21 +410,15 @@ public class HibernateDataApprovalStore
             final int level = highestApproved == null ? 0 : highestApproved.intValue();
             final boolean accepted = ( highestApproved == level );
 
-            DataApprovalLevel statusLevel = ( level == 0 ? null : levelMap.get( level ) ); // null if not approved
-            DataApprovalLevel daLevel = ( statusLevel == null ? lowestApprovalLevelForOrgUnit : statusLevel );
+            DataApprovalLevel approvedLevel = ( level == 0 ? null : levelMap.get( level ) ); // null if not approved
+            DataApprovalLevel actionLevel = ( approvedLevel == null ? lowestApprovalLevelForOrgUnit : approvedLevel );
 
-            DataElementCategoryOptionCombo optionCombo = aoc == null || aoc == 0 ? null : optionComboCache.get( aoc, () -> categoryService.getDataElementCategoryOptionCombo( aoc ) );
-
-            OrganisationUnit ou = orgUnit != null ? orgUnit : orgUnitCache.get( ouId, () -> organisationUnitService.getOrganisationUnit( ouId ) );
-
-            if ( ou != null )
+            if ( ouUid != null )
             {
-                DataApproval da = new DataApproval( daLevel, workflow, period, ou, optionCombo, accepted, null, null );
-
                 DataApprovalState state = (
                     approvedAbove ?
                         APPROVED_ABOVE :
-                        statusLevel == null ?
+                        approvedLevel == null ?
                             lowestApprovalLevelForOrgUnit == null ?
                                 orgUnitLevelAbove == 0 ?
                                     UNAPPROVABLE :
@@ -413,15 +430,48 @@ public class HibernateDataApprovalStore
                                 ACCEPTED_HERE :
                                 APPROVED_HERE );
     
-                statusList.add( new DataApprovalStatus( state, da, statusLevel, null ) );
+                statusList.add( new DataApprovalStatus( state, approvedLevel, actionLevel, ouUid, aocUid, accepted, null ) );
     
-                log.debug( "Get approval result: level " + level + " dataApprovalLevel " + ( daLevel != null ? daLevel.getLevel() : "[none]" )
-                    + " approved " + ( statusLevel != null )
+                log.debug( "Get approval result: level " + level + " dataApprovalLevel " + ( actionLevel != null ? actionLevel.getLevel() : "[none]" )
+                    + " approved " + ( approvedLevel != null )
                     + " readyBelow " + readyBelow + " approvedAbove " + approvedAbove
-                    + " accepted " + accepted + " state " + ( state != null ? state.name() : "[none]" ) + " " + da );
+                    + " accepted " + accepted + " state " + ( state != null ? state.name() : "[none]" )
+                    + " orgUnitUid " + ouUid
+                    + " aocUid " + aocUid );
             }
         }
 
         return statusList;
+    }
+
+    /**
+     * Get the id for the workflow period that spans the given end date.
+     * The workflow period may or may not be the same as the period for which
+     * we are checking data validity. The workflow period will have a period
+     * type that matches the workflow period type, and it will contain the
+     * end date of the period for which we are checking data validity.
+     *
+     * Returns zero if there is no such workflow period.
+     *
+     * It turns out that this is much faster done as a separate query in
+     * postgresql than imbedding this as a subquery in the larger query above.
+     *
+     * @param workflow workflow we are checking
+     * @param endDate end date of the period we are checking approval for,
+     *                formatted as a string for a SQL query.
+     * @return id of the workflow period which overlaps with the endDate
+     */
+    private int getWorkflowPeriodId( DataApprovalWorkflow workflow, String endDate )
+    {
+        final String sql = "select periodid from period where '" + endDate + "' >= startdate and '" + endDate + "' <= enddate and periodtypeid = " + workflow.getPeriodType().getId();
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet( sql );
+
+        if ( rowSet.next() )
+        {
+            return rowSet.getInt( 1 );
+        }
+
+        return 0;
     }
 }
