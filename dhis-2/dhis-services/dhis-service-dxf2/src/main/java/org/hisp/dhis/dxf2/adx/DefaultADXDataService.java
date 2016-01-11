@@ -103,23 +103,16 @@ public class DefaultAdxDataService
     // -------------------------------------------------------------------------
 
     @Autowired
-    protected DataValueSetService dataValueSetService;
+    private DataValueSetService dataValueSetService;
 
     @Autowired
-    protected DataValueService dataValueService;
+    private DataValueService dataValueService;
 
     @Autowired
-    protected DataElementService dataElementService;
+    private DataElementCategoryService categoryService;
 
-    @Autowired
-    protected DataElementCategoryService categoryService;
-
-    @Autowired
-    protected DataSetService dataSetService;
-    
     @Autowired
     private PeriodService periodService;
-
 
     @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
@@ -578,27 +571,5 @@ public class DefaultAdxDataService
         attributes.put( optionComboName, catOptCombo.getUid() );
 
         log.debug( "DXF attributes: " + attributes );
-    }
-
-    private Map<Integer, Map<String, String>> createCatOptMap()
-    {
-        Map<Integer, Map<String, String>> catOptMap = new HashMap<>();
-
-        for ( DataElementCategoryOptionCombo coc : categoryService.getAllDataElementCategoryOptionCombos() )
-        {
-            int id = coc.getId();
-            
-            Map<String, String> categoryCodes = new HashMap<>();
-            DataElementCategoryCombo catCombo = coc.getCategoryCombo();
-            Set<DataElementCategoryOption> catOptions = coc.getCategoryOptions();
-            
-            for ( DataElementCategory category : catCombo.getCategories() )
-            {
-                categoryCodes.put( category.getCode(), category.getCategoryOption( coc ).getCode() );
-            }
-            catOptMap.put( id, categoryCodes );
-        }
-        
-        return catOptMap;
     }
 }
