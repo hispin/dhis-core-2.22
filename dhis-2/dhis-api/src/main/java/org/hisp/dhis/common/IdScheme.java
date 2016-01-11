@@ -53,6 +53,8 @@ public class IdScheme
         put( IdentifiableProperty.CODE, IdScheme.CODE ).
         put( IdentifiableProperty.NAME, IdScheme.NAME ).build();
     
+    private static final String ATTR_ID_SCHEME_PREFIX = "ATTRIBUTE:";
+    
     private IdentifiableProperty identifiableProperty;
 
     private String attribute;
@@ -151,7 +153,7 @@ public class IdScheme
 
     public static boolean isAttribute( String str )
     {
-        return !StringUtils.isEmpty( str ) && str.toUpperCase().startsWith( "ATTRIBUTE:" ) && str.length() == 21;
+        return !StringUtils.isEmpty( str ) && str.toUpperCase().startsWith( ATTR_ID_SCHEME_PREFIX ) && str.length() == 21;
     }
 
     @Override
