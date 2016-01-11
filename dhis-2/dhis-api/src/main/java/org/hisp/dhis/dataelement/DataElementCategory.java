@@ -50,9 +50,7 @@ import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A Category is a dimension of a data element. DataElements can have sets of
@@ -73,7 +71,7 @@ public class DataElementCategory
     @Scanned
     private List<DataElementCategoryOption> categoryOptions = new ArrayList<>();
 
-    private Set<DataElementCategoryCombo> categoryCombos = new HashSet<>();
+    private List<DataElementCategoryCombo> categoryCombos = new ArrayList<>();
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -242,12 +240,12 @@ public class DataElementCategory
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "categoryCombos", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "categoryCombo", namespace = DxfNamespaces.DXF_2_0 )
-    public Set<DataElementCategoryCombo> getCategoryCombos()
+    public List<DataElementCategoryCombo> getCategoryCombos()
     {
         return categoryCombos;
     }
 
-    public void setCategoryCombos( Set<DataElementCategoryCombo> categoryCombos )
+    public void setCategoryCombos( List<DataElementCategoryCombo> categoryCombos )
     {
         this.categoryCombos = categoryCombos;
     }
