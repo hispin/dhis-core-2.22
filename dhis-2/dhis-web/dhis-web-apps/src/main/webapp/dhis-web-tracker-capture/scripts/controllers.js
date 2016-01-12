@@ -57,7 +57,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     $scope.attributesById = null;
     $scope.doSearch = true;    
        
-    function resetParams(){
+    function resetParams(goToPage){
         $scope.trackedEntityList = null;
         $scope.sortColumn = {};
         $scope.emptySearchText = false;
@@ -68,7 +68,10 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         $scope.queryUrl = null;
         $scope.programUrl = null;
         $scope.attributeUrl = {url: null, hasValue: false};
-        $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};
+        if(!goToPage){
+            $scope.pager = {pageSize: 50, page: 1, toolBarDisplay: 5};           
+        }
+
     }
     
     //watch for selection of org unit from tree
@@ -229,8 +232,8 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
     };
    
     //$scope.searchParam = {bools: []};
-    $scope.search = function(mode){
-        resetParams();
+    $scope.search = function(mode,goToPage){
+        resetParams(goToPage);
         var grid = TEIGridService.generateGridColumns($scope.attributes, $scope.selectedOuMode.name, true);
         $scope.gridColumns = grid.columns;
             
@@ -363,17 +366,17 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         if($scope.pager && $scope.pager.page && $scope.pager.pageCount && $scope.pager.page > $scope.pager.pageCount){
             $scope.pager.page = $scope.pager.pageCount;
         }
-        $scope.search();
+        $scope.search(null,true);
     };
     
     $scope.resetPageSize = function(){
         $scope.pager.page = 1;        
-        $scope.search();
+        $scope.search(null,true);
     };
     
     $scope.getPage = function(page){    
         $scope.pager.page = page;
-        $scope.search();
+        $scope.search(null,true);
     };
     
     $scope.clearEntities = function(){
