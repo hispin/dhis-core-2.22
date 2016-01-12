@@ -33,7 +33,7 @@ import org.hisp.dhis.attribute.AttributeValue;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class NonUniqueAttributeValueException extends Exception
+public class NonUniqueAttributeValueException extends RuntimeException
 {
     public NonUniqueAttributeValueException( AttributeValue attributeValue )
     {
