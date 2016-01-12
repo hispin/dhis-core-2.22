@@ -718,6 +718,7 @@ public class TableAlteror
         executeSql( "delete from usersetting where name = 'dashboardConfig' or name = 'dashboardConfiguration'" );
         executeSql( "update usersetting set name = 'keyUiLocale' where name = 'currentLocale'" );
         executeSql( "update usersetting set name = 'keyDbLocale' where name = 'keyLocaleUserSetting'" );
+        executeSql( "update usersetting set name = 'keyStyle' where name = 'currentStyle'" );
         executeSql( "ALTER TABLE interpretation ALTER COLUMN userid DROP NOT NULL" );
         executeSql( "UPDATE interpretation SET publicaccess='r-------' WHERE publicaccess IS NULL;" );
 
