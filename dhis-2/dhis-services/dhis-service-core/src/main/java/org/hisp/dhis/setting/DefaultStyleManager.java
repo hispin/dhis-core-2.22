@@ -37,6 +37,7 @@ import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
+import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
@@ -103,12 +104,7 @@ public class DefaultStyleManager
     {
         String style = (String) userSettingService.getUserSetting( UserSettingKey.STYLE );
         
-        if ( style != null )
-        {
-            return style;
-        }
-        
-        return getSystemStyle();
+        return ObjectUtils.firstNonNull( style, getSystemStyle() );
     }
     
     @Override

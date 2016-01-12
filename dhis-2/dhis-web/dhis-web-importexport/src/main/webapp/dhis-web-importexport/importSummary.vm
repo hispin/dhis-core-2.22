@@ -23,6 +23,10 @@
 	<td>${summary.importCount.updated}</td>
 </tr>
 <tr>
+	<td>$i18n.getString( "deleted" )</td>
+	<td>${summary.importCount.deleted}</td>
+</tr>
+<tr>
 	<td>$i18n.getString( "ignored" )</td>
 	<td>${summary.importCount.ignored}</td>
 </tr>
