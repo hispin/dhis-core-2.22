@@ -157,10 +157,9 @@ public class DefaultFieldFilterService implements FieldFilterService
             fieldMap = fieldParser.parse( fields );
         }
 
-        for ( Object object : objects )
-        {
-            collectionNode.addChild( buildNode( fieldMap, klass, object ) );
-        }
+
+        final FieldMap finalFieldMap = fieldMap;
+        objects.stream().forEach( object -> collectionNode.addChild( buildNode( finalFieldMap, klass, object ) ) );
 
         return collectionNode;
     }
