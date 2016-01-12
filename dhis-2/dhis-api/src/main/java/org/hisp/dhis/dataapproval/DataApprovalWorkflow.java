@@ -45,6 +45,8 @@ import org.hisp.dhis.common.annotation.Scanned;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.schema.PropertyType;
+import org.hisp.dhis.schema.annotation.Property;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -128,6 +130,7 @@ public class DataApprovalWorkflow
     @JsonDeserialize( using = JacksonPeriodTypeDeserializer.class )
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @Property( PropertyType.TEXT )
     public PeriodType getPeriodType()
     {
         return periodType;

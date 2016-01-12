@@ -36,7 +36,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
-
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -60,6 +59,8 @@ import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.schema.PropertyType;
+import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.user.UserGroup;
 
 import java.util.HashSet;
@@ -243,7 +244,7 @@ public class DataSet
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-    
+
     public void addOrganisationUnit( OrganisationUnit organisationUnit )
     {
         sources.add( organisationUnit );
@@ -333,7 +334,7 @@ public class DataSet
     {
         return sections != null && sections.size() > 0;
     }
-    
+
     /**
      * Indicates whether data should be approved for this data set, i.e. whether
      * this data set is part of a data approval workflow.
@@ -440,6 +441,7 @@ public class DataSet
     @JsonDeserialize( using = JacksonPeriodTypeDeserializer.class )
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @Property( PropertyType.TEXT )
     public PeriodType getPeriodType()
     {
         return periodType;
