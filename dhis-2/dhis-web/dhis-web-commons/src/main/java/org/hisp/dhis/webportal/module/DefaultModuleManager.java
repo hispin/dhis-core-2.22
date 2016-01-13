@@ -152,10 +152,10 @@ public class DefaultModuleManager
     }
 
     @Override
-    public List<Module> getAccessibleMenuModulesAndApps()
+    public List<Module> getAccessibleMenuModulesAndApps( String contextPath )
     {
         List<Module> modules = getAccessibleMenuModules();
-        List<App> apps = appManager.getAccessibleApps();
+        List<App> apps = appManager.getAccessibleApps( contextPath );
 
         modules.addAll( apps.stream().map( Module::getModule ).collect( Collectors.toList() ) );
 

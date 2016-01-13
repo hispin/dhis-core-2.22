@@ -84,23 +84,30 @@ public class App
     private String folderName;
 
     @JsonProperty
+    private String launchUrl;
+    
+    @JsonIgnore
     private String baseUrl;
 
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
     
-    @JsonProperty
-    public String getLaunchUrl()
+    /**
+     * Initializes the app. Sets the launchUrl property.
+     * 
+     * @param contextPath the context path of this instance.
+     */
+    public void init( String contextPath )
     {
-        if ( baseUrl != null && folderName != null && launchPath != null )
-        {
-            return baseUrl + "/" + folderName + "/"+ launchPath;
-        }
+        this.baseUrl = contextPath + "/api/apps";
         
-        return null;
+        if ( contextPath != null && folderName != null && launchPath != null )
+        {
+            launchUrl = baseUrl + "/" + folderName + "/" + launchPath;
+        }
     }
-    
+        
     /**
      * Alias for folder name.
      */
@@ -222,6 +229,16 @@ public class App
     public void setFolderName( String folderName )
     {
         this.folderName = folderName;
+    }
+
+    public String getLaunchUrl()
+    {
+        return launchUrl;
+    }
+
+    public void setLaunchUrl( String launchUrl )
+    {
+        this.launchUrl = launchUrl;
     }
 
     public String getBaseUrl()

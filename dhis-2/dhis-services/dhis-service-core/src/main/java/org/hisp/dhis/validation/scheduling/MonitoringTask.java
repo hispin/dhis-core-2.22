@@ -34,8 +34,6 @@ import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 import java.util.Date;
 
 import org.hisp.dhis.commons.util.DebugUtils;
-import org.hisp.dhis.external.conf.ConfigurationKey;
-import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.setting.SettingKey;
@@ -64,9 +62,6 @@ public class MonitoringTask
     @Autowired
     private SystemSettingManager systemSettingManager;
 
-    @Autowired
-    private DhisConfigurationProvider config;
-
     private TaskId taskId;
 
     public void setTaskId( TaskId taskId )
@@ -93,14 +88,14 @@ public class MonitoringTask
         }
         catch ( RuntimeException ex )
         {
-            String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
+            String title = (String) systemSettingManager.getSystemSetting( SettingKey.APPLICATION_TITLE );
 
             notifier.notify( taskId, ERROR, "Process failed: " + ex.getMessage(), true );
             
             messageService.sendSystemNotification( 
                 "Monitoring process failed",
                 "Monitoring process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
-                "System: " + baseUrl + " " +
+                "System: " + title + " " +
                 "Message: " + ex.getMessage() + " " +
                 "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
             

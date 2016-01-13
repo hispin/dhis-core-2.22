@@ -32,8 +32,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webportal.module.Module;
 import org.hisp.dhis.webportal.module.ModuleManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +65,9 @@ public class GetModulesAction
     public String execute()
         throws Exception
     {
-        modules = manager.getAccessibleMenuModulesAndApps();
+        String contextPath = ContextUtils.getContextPath( ServletActionContext.getRequest() );
+        
+        modules = manager.getAccessibleMenuModulesAndApps( contextPath );
 
         User user = currentUserService.getCurrentUser();
         

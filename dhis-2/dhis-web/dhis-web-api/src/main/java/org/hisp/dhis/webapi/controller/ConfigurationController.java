@@ -337,13 +337,7 @@ public class ConfigurationController
 
         configurationService.setConfiguration( config );
     }
-
-    @RequestMapping( value = "/systemBaseUrl", method = RequestMethod.GET )
-    public String getSystemBaseUrl( Model model, HttpServletRequest request )
-    {
-        return setModel( model, config.getProperty( ConfigurationKey.SYSTEM_BASE_URL ) );
-    }
-
+    
     @RequestMapping( value = "/systemReadOnlyMode", method = RequestMethod.GET )
     public String getSystemReadOnlyMode( Model model, HttpServletRequest request )
     {

@@ -31,8 +31,6 @@ package org.hisp.dhis.resourcetable.scheduling;
 import java.util.Date;
 
 import org.hisp.dhis.commons.util.DebugUtils;
-import org.hisp.dhis.external.conf.ConfigurationKey;
-import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.resourcetable.ResourceTableService;
 import org.hisp.dhis.scheduling.TaskId;
@@ -62,9 +60,6 @@ public class ResourceTableTask
     @Autowired
     private SystemSettingManager systemSettingManager;
 
-    @Autowired
-    private DhisConfigurationProvider config;
-
     private TaskId taskId;
 
     public void setTaskId( TaskId taskId )
@@ -92,14 +87,14 @@ public class ResourceTableTask
         }
         catch ( RuntimeException ex )
         {
-            String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
+            String title = (String) systemSettingManager.getSystemSetting( SettingKey.APPLICATION_TITLE );
 
             notifier.notify( taskId, NotificationLevel.ERROR, "Process failed: " + ex.getMessage(), true );
             
             messageService.sendSystemNotification( 
                 "Resource table process failed",
                 "Resource table process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
-                "System: " + baseUrl + " " +
+                "System: " + title + " " +
                 "Message: " + ex.getMessage() + " " +
                 "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
             

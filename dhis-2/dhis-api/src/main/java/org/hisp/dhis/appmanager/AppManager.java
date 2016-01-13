@@ -47,24 +47,27 @@ public interface AppManager
     /**
      * Returns a list of all the installed apps at @see getAppFolderPath
      *
+     * @param contextPath the context path of this instance.
      * @return list of installed apps
      */
-    List<App> getApps();
+    List<App> getApps( String contextPath );
     
     /**
      * Returns the app with the given key (folder name).
      * 
      * @param key the app key.
+     * @param contextPath the context path of this instance.
      * @return the app with the given key.
      */
-    App getApp( String key );
+    App getApp( String key, String contextPath );
 
     /**
      * Returns apps which are accessible to the current user.
      * 
+     * @param contextPath the context path of this instance.
      * @return apps which are accessible to the current user.
      */
-    List<App> getAccessibleApps();
+    List<App> getAccessibleApps( String contextPath );
 
     /**
      * Installs the app.
@@ -106,13 +109,6 @@ public interface AppManager
      * @return app folder path
      */
     String getAppFolderPath();
-
-    /**
-     * Gets the Base URL for accessing the apps
-     *
-     * @return the apps baseurl
-     */
-    String getAppBaseUrl();
 
     /**
      * Returns the url of the app repository

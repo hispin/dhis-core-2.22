@@ -47,7 +47,7 @@ public interface ModuleManager
     
     List<Module> getAccessibleMenuModules();
     
-    List<Module> getAccessibleMenuModulesAndApps();
+    List<Module> getAccessibleMenuModulesAndApps( String contextPath );
     
     Collection<Module> getAllModules();
 

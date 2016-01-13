@@ -46,7 +46,7 @@ public class AppsSystemAuthoritiesProvider implements SystemAuthoritiesProvider
     @Override
     public Collection<String> getSystemAuthorities()
     {
-        return appManager.getApps().stream()
+        return appManager.getApps( null ).stream()
             .filter( app -> !StringUtils.isEmpty( app.getName() ) )
             .map( app -> "See " + app.getName().trim() )
             .collect( Collectors.toList() );

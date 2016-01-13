@@ -90,14 +90,16 @@ public class AppController
 
     @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
     public void getApps( @RequestParam( required = false ) String key, 
-        HttpServletResponse response )
+        HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {
+        String contextPath = ContextUtils.getContextPath( request );
+        
         List<App> apps = new ArrayList<>();
 
         if ( key != null )
         {
-            App app = appManager.getApp( key );
+            App app = appManager.getApp( key, contextPath );
 
             if ( app == null )
             {
@@ -109,7 +111,7 @@ public class AppController
         }
         else
         {
-            apps = appManager.getApps();
+            apps = appManager.getApps( contextPath );
         }
 
         renderService.toJson( response.getOutputStream(), apps );
