@@ -28,13 +28,12 @@ package org.hisp.dhis.common;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Date;
-import java.util.Set;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 
-import com.google.common.collect.Sets;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Lars Helge Overland

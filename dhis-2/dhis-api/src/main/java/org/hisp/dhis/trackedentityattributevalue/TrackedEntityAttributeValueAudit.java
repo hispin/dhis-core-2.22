@@ -80,7 +80,7 @@ public class TrackedEntityAttributeValueAudit
         this.entityInstance = trackedEntityAttributeValue.getEntityInstance();
 
         this.created = new Date();
-        setValue( value );
+        this.value = value;
         this.modifiedBy = modifiedBy;
         this.auditType = auditType;
     }
