@@ -247,7 +247,8 @@ public class TrackedEntityAttributeValue
     {
         this.encryptedValue = encryptedValue;
 
-        if(getAttribute().getConfidential()) {
+        if ( getAttribute().getConfidential() )
+        {
             auditValue = encryptedValue;
             auditValueIsSet = true;
         }
@@ -270,7 +271,8 @@ public class TrackedEntityAttributeValue
     {
         this.plainValue = plainValue;
 
-        if(!getAttribute().getConfidential()) {
+        if ( !getAttribute().getConfidential() )
+        {
             auditValue = plainValue;
             auditValueIsSet = true;
         }
