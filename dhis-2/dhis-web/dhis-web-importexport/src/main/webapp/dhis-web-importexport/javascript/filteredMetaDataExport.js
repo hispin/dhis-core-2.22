@@ -190,13 +190,13 @@ function Filter()
 function loadMetaData( metaDataCategoryName )
 {
     $( "#available" + metaDataCategoryName ).dhisAjaxSelect( {
-        source: "../api/" + lowercaseFirstLetter( metaDataCategoryName ) + ".json?links=false&paging=false",
+        source: "../api/" + lowercaseFirstLetter( metaDataCategoryName ) + ".json?paging=false",
         iterator: lowercaseFirstLetter( metaDataCategoryName ),
         connectedTo: "selected" + metaDataCategoryName,
         handler: function ( item )
         {
             var option = jQuery( "<option/>" );
-            option.text( item.name );
+            option.text( item.displayName );
             option.attr( "name", item.displayName );
             option.attr( "value", item.id );
 
