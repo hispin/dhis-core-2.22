@@ -76,7 +76,7 @@ public class DefaultTrackedEntityAttributeValueService
     public void deleteTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
         TrackedEntityAttributeValueAudit trackedEntityAttributeValueAudit = new TrackedEntityAttributeValueAudit( attributeValue,
-            attributeValue.getValue(), currentUserService.getCurrentUsername(), AuditType.DELETE );
+            attributeValue.getAuditValue(), currentUserService.getCurrentUsername(), AuditType.DELETE );
 
         trackedEntityAttributeValueAuditService.addTrackedEntityAttributeValueAudit( trackedEntityAttributeValueAudit );
         attributeValueStore.delete( attributeValue );
@@ -140,7 +140,7 @@ public class DefaultTrackedEntityAttributeValueService
         else
         {
             TrackedEntityAttributeValueAudit trackedEntityAttributeValueAudit = new TrackedEntityAttributeValueAudit( attributeValue,
-                attributeValue.getValue(), currentUserService.getCurrentUsername(), AuditType.UPDATE );
+                attributeValue.getAuditValue(), currentUserService.getCurrentUsername(), AuditType.UPDATE );
 
             trackedEntityAttributeValueAuditService.addTrackedEntityAttributeValueAudit( trackedEntityAttributeValueAudit );
             attributeValueStore.update( attributeValue );

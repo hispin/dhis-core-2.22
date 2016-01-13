@@ -63,6 +63,16 @@ public class TrackedEntityDataValue
     private String storedBy;
 
     // -------------------------------------------------------------------------
+    // Transient properties
+    // -------------------------------------------------------------------------
+
+    private transient boolean auditValueIsSet = false;
+
+    private transient boolean valueIsSet = false;
+
+    private transient String auditValue;
+
+    // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
@@ -75,7 +85,7 @@ public class TrackedEntityDataValue
     {
         this.dataElement = dataElement;
         this.programStageInstance = programStageInstance;
-        this.value = value;
+        setValue( value );
     }
 
     public void setAutoFields()
@@ -215,6 +225,14 @@ public class TrackedEntityDataValue
 
     public void setValue( String value )
     {
+        if ( !auditValueIsSet )
+        {
+            this.auditValue = valueIsSet ? this.value : value;
+            auditValueIsSet = true;
+        }
+
+        valueIsSet = true;
+
         this.value = value;
     }
 
@@ -231,5 +249,10 @@ public class TrackedEntityDataValue
     public void setStoredBy( String storedBy )
     {
         this.storedBy = storedBy;
+    }
+
+    public String getAuditValue()
+    {
+        return auditValue;
     }
 }

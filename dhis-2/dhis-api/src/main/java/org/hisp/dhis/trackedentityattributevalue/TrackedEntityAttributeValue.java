@@ -77,6 +77,16 @@ public class TrackedEntityAttributeValue
     private String value;
 
     // -------------------------------------------------------------------------
+    // Transient properties
+    // -------------------------------------------------------------------------
+
+    private transient boolean auditValueIsSet = false;
+
+    private transient boolean valueIsSet = false;
+
+    private transient String auditValue;
+
+    // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
@@ -278,6 +288,14 @@ public class TrackedEntityAttributeValue
      */
     public void setValue( String value )
     {
+        if ( !auditValueIsSet )
+        {
+            this.auditValue = valueIsSet ? this.value : value;
+            auditValueIsSet = true;
+        }
+
+        valueIsSet = true;
+
         this.value = value;
     }
 
@@ -307,5 +325,10 @@ public class TrackedEntityAttributeValue
     public void setEntityInstance( TrackedEntityInstance entityInstance )
     {
         this.entityInstance = entityInstance;
+    }
+
+    public String getAuditValue()
+    {
+        return auditValue;
     }
 }
