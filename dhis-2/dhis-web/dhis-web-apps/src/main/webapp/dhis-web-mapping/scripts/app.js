@@ -2972,6 +2972,7 @@ Ext.onReady( function() {
 
 												// remove
 												delete view.periodType;
+                                                delete view.dataDimensionItems;
 
 												views.push(view);
 											}
