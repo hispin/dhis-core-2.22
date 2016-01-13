@@ -197,7 +197,7 @@ function loadMetaData( metaDataCategoryName )
         {
             var option = jQuery( "<option/>" );
             option.text( item.name );
-            option.attr( "name", item.name );
+            option.attr( "name", item.displayName );
             option.attr( "value", item.id );
 
             return option;

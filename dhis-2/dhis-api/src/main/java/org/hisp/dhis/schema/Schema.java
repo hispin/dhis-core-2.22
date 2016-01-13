@@ -443,8 +443,8 @@ public class Schema implements Ordered, Klass
     {
         this.propertyMap = propertyMap;
     }
-    
-    @SuppressWarnings("rawtypes")
+
+    @SuppressWarnings( "rawtypes" )
     private Set<Class> references;
 
     @JsonProperty
