@@ -2977,6 +2977,7 @@ Ext.onReady( function() {
 											}
 
 											map = {
+                                                name: record.data.name,
 												longitude: lonlat.lon,
 												latitude: lonlat.lat,
 												zoom: gis.olmap.getZoom(),
