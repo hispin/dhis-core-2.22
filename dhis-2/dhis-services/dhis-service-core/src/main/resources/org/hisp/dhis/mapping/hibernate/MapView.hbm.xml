@@ -20,13 +20,13 @@
 
     <property name="layer" not-null="true" />
 
-	<list name="dataDimensionItems" table="mapview_datadimensionitems" cascade="all, delete-orphan">
-	  <cache usage="read-write" />
-	  <key column="mapviewid" foreign-key="fk_mapview_datadimensionitems_mapviewid" />
-	  <list-index column="sort_order" base="0" />
-	  <many-to-many column="datadimensionitemid" class="org.hisp.dhis.common.DataDimensionItem"
+    <list name="dataDimensionItems" table="mapview_datadimensionitems" cascade="all, delete-orphan">
+      <cache usage="read-write" />
+      <key column="mapviewid" foreign-key="fk_mapview_datadimensionitems_mapviewid" />
+      <list-index column="sort_order" base="0" />
+      <many-to-many column="datadimensionitemid" class="org.hisp.dhis.common.DataDimensionItem"
         foreign-key="fk_mapview_datadimensionitems_datadimensionitemid" />
-	</list>
+    </list>
 
     <list name="organisationUnits" table="mapview_organisationunits">
       <cache usage="read-write" />
@@ -61,10 +61,10 @@
       <many-to-many column="orgunitgroupid" class="org.hisp.dhis.organisationunit.OrganisationUnitGroup"
         foreign-key="fk_mapview_itemorgunitgroups_orgunitgroupid" />
     </list>
-    
+
     <many-to-one name="program" class="org.hisp.dhis.program.Program" column="programid"
       foreign-key="fk_reporttable_programid" />
-    
+
     <property name="userOrganisationUnit" />
 
     <property name="userOrganisationUnitChildren" />
@@ -92,18 +92,18 @@
       column="orgunitgroupsetid" foreign-key="fk_mapview_orgunitgroupsetid" />
 
     <property name="areaRadius" />
-	  
-	<property name="hidden" />
-	  
-	<property name="labels" />
-	  
-	<property name="labelFontSize" />
-	  
-	<property name="labelFontWeight" />
-	  
-	<property name="labelFontStyle" />
-	  
-	<property name="labelFontColor" />
+
+    <property name="hidden" />
+
+    <property name="labels" />
+
+    <property name="labelFontSize" />
+
+    <property name="labelFontWeight" />
+
+    <property name="labelFontStyle" />
+
+    <property name="labelFontColor" />
 
   </class>
 </hibernate-mapping>
