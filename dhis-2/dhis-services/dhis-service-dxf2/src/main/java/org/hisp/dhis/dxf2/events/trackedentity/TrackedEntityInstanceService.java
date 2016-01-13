@@ -51,6 +51,8 @@ public interface TrackedEntityInstanceService
     List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 
     TrackedEntityInstance getTrackedEntityInstance( String uid );
+    
+    TrackedEntityInstance getTrackedEntityInstance( int id );
 
     TrackedEntityInstance getTrackedEntityInstance( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance );
 
