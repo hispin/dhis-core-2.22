@@ -12,10 +12,31 @@ trackerCapture.controller('EventToTEIAssociations',
 
         $scope.$on('association-widget', function (event, args) {
 
+            $scope.isAssociation = true;
+            //
+            //if (args.event.event == "s9b0ZMF7QZU")
+            //{
+            //    $scope.isAssociation = false;
+            //}
+
+
             $scope.TEtoEventTEIMap = [];
             $scope.TEWiseEventTEIs = [];
             if (args.show){
-               $scope.eventSelected = true
+
+                if (args.event.program == "nJNF0T9BSDg")
+                {
+                    $scope.isAssociation = false;
+                    $scope.selectedEvent = undefined;
+                }
+
+                else
+                {
+                    $scope.isAssociation = true;
+                }
+
+
+                $scope.eventSelected = true
                 AjaxCalls.getEventbyId(args.event.event).then(function(event){
                     $scope.selectedEvent = event;
 
@@ -52,13 +73,13 @@ trackerCapture.controller('EventToTEIAssociations',
         //get attributes for display in association widget
         AjaxCalls.getAssociationWidgetAttributes().then(function(associationWidgetAttributes){
             $scope.associationWidgetAttributes = associationWidgetAttributes;
-        })
+        });
 
         // get all tracked entities
         AjaxCalls.getTrackedEntities().then(function(data){
             if (data.trackedEntities)
             $scope.trackedEntityMap = utilityService.prepareIdToObjectMap(data.trackedEntities,"id");
-        })
+        });
         $scope.showHomeScreen = function () {
 
             var modalInstance = $modal.open({
@@ -74,7 +95,7 @@ trackerCapture.controller('EventToTEIAssociations',
 
             }, function () {
             });
-        }
+        };
 
         updateMap = function(tei){
 

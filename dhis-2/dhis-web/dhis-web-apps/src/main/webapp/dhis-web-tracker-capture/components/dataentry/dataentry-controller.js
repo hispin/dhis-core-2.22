@@ -346,7 +346,8 @@ trackerCapture.controller('DataEntryController',
                 
                 TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
                     $scope.allProgramRules = rules;
-                    $scope.getEvents();                       
+                    $scope.getEvents();
+
                     $rootScope.$broadcast('dataEntryControllerData', {programStages: $scope.programStages, eventsByStage: $scope.eventsByStage, addNewEvent: $scope.addNewEvent });
                 });           
             });
@@ -773,59 +774,99 @@ trackerCapture.controller('DataEntryController',
     };
     
     $scope.getDataEntryForm = function () {
+
+        //$scope.isAssociation = true;
+
         $scope.currentStage = $scope.stagesById[$scope.currentEvent.programStage];
-        $scope.currentStageEvents = $scope.eventsByStage[$scope.currentEvent.programStage];
-        if(!$scope.currentStage.multiSelectGroups) {
-            $scope.currentStage.multiSelectGroups = {};
+
+        if ($scope.currentStage.id == "s9b0ZMF7QZU") {
+            //alert("invitation");
+
+            $timeout(function () {
+                $rootScope.$broadcast('invitation-div', {event : $scope.currentEvent , show :true});
+
+                //$scope.isAssociation = false;
+            }, 200);
+
+
+            //notifyAshaController('beneficiaryRegistration');
         }
 
-        for(var i = $scope.currentStage.programStageDataElements.length-1;i >=0;i--) {
-            var s = $scope.currentStage.programStageDataElements[i].dataElement;
-            
-            //If the datatype is a boolean, and there is a list of dataElementGropus, put the boolean into the group:
-            var s = $scope.currentStage.programStageDataElements[i].dataElement;
-            if($scope.currentStage.programStageDataElements[i].dataElement.dataElementGroups
-                    && $scope.currentStage.programStageDataElements[i].dataElement.valueType === "TRUE_ONLY") {
-                angular.forEach($scope.currentStage.programStageDataElements[i].dataElement.dataElementGroups, function(dataElementGroup) {
-                    //if the element it grouped, we only add a prStDe for the group element:
-                    if( !$scope.currentStage.multiSelectGroups[dataElementGroup.id] ) {
-                        $scope.currentStage.multiSelectGroups[dataElementGroup.id] = 
-                            {dataElement:{valueType:'MULTI_SELECT_GROUP',name:dataElementGroup.name,id:dataElementGroup.id},
-                             dataElements: []};
-                        $scope.currentStage.programStageDataElements.push($scope.currentStage.multiSelectGroups[dataElementGroup.id]);
-                    }
-                    
-                    $scope.currentStage.multiSelectGroups[dataElementGroup.id].dataElements.push($scope.currentStage.programStageDataElements[i]);
-                    $scope.currentStage.programStageDataElements.splice(i,1);
-                });
+        else if ($scope.currentStage.id == "qdHKjsLKQ6C") {
+
+            //alert("Attend");
+            $timeout(function () {
+                $rootScope.$broadcast('attendance-div', {event : $scope.currentEvent , show :true});
+
+            }, 200);
+        }
+
+        else
+        {
+            $scope.currentStageEvents = $scope.eventsByStage[$scope.currentEvent.programStage];
+            if (!$scope.currentStage.multiSelectGroups) {
+                $scope.currentStage.multiSelectGroups = {};
             }
+
+            for (var i = $scope.currentStage.programStageDataElements.length - 1; i >= 0; i--) {
+                var s = $scope.currentStage.programStageDataElements[i].dataElement;
+
+                //If the datatype is a boolean, and there is a list of dataElementGropus, put the boolean into the group:
+                var s = $scope.currentStage.programStageDataElements[i].dataElement;
+                if ($scope.currentStage.programStageDataElements[i].dataElement.dataElementGroups
+                    && $scope.currentStage.programStageDataElements[i].dataElement.valueType === "TRUE_ONLY") {
+                    angular.forEach($scope.currentStage.programStageDataElements[i].dataElement.dataElementGroups, function (dataElementGroup) {
+                        //if the element it grouped, we only add a prStDe for the group element:
+                        if (!$scope.currentStage.multiSelectGroups[dataElementGroup.id]) {
+                            $scope.currentStage.multiSelectGroups[dataElementGroup.id] =
+                            {
+                                dataElement: {
+                                    valueType: 'MULTI_SELECT_GROUP',
+                                    name: dataElementGroup.name,
+                                    id: dataElementGroup.id
+                                },
+                                dataElements: []
+                            };
+                            $scope.currentStage.programStageDataElements.push($scope.currentStage.multiSelectGroups[dataElementGroup.id]);
+                        }
+
+                        $scope.currentStage.multiSelectGroups[dataElementGroup.id].dataElements.push($scope.currentStage.programStageDataElements[i]);
+                        $scope.currentStage.programStageDataElements.splice(i, 1);
+                    });
+                }
+            }
+
+
+            angular.forEach($scope.currentStage.programStageSections, function (section) {
+                section.open = true;
+            });
+
+            $scope.customForm = CustomFormService.getForProgramStage($scope.currentStage, $scope.prStDes);
+            $scope.displayCustomForm = "DEFAULT";
+            if ($scope.customForm) {
+                $scope.displayCustomForm = "CUSTOM";
+            }
+            else if ($scope.currentStage.displayEventsInTable) {
+                $scope.displayCustomForm = "TABLE";
+            }
+
+            $scope.currentEventOriginal = angular.copy($scope.currentEvent);
+
+            $scope.currentStageEventsOriginal = angular.copy($scope.currentStageEvents);
+
+            var period = {
+                event: $scope.currentEvent.event,
+                stage: $scope.currentEvent.programStage,
+                name: $scope.currentEvent.sortingDate
+            };
+            $scope.currentPeriod[$scope.currentEvent.programStage] = period;
+
+            $scope.setDisplayTypeForStage($scope.currentStage);
+            //Execute rules for the first time, to make the initial page appear correctly.
+            //Subsequent calls will be made from the "saveDataValue" function.
+            $scope.executeRules();
+
         }
-        
-
-        angular.forEach($scope.currentStage.programStageSections, function (section) {
-            section.open = true;
-        });
-
-        $scope.customForm = CustomFormService.getForProgramStage($scope.currentStage, $scope.prStDes);
-        $scope.displayCustomForm = "DEFAULT";
-        if ($scope.customForm) {
-            $scope.displayCustomForm = "CUSTOM";
-        }
-        else if ($scope.currentStage.displayEventsInTable) {
-            $scope.displayCustomForm = "TABLE";
-        }
-
-        $scope.currentEventOriginal = angular.copy($scope.currentEvent);
-
-        $scope.currentStageEventsOriginal = angular.copy($scope.currentStageEvents);
-
-        var period = {event: $scope.currentEvent.event, stage: $scope.currentEvent.programStage, name: $scope.currentEvent.sortingDate};
-        $scope.currentPeriod[$scope.currentEvent.programStage] = period;        
-        
-        $scope.setDisplayTypeForStage($scope.currentStage);
-        //Execute rules for the first time, to make the initial page appear correctly.
-        //Subsequent calls will be made from the "saveDataValue" function.
-        $scope.executeRules();
     };
 
     $scope.saveDatavalue = function (prStDe, field) {        

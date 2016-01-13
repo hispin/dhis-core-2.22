@@ -33,6 +33,54 @@ trackerCapture
                 });
                 return promise;
             },
+
+            //http://127.0.0.1:8090/dhis/api/trackedEntityInstances.json?program=y6lXVg8TdOj&ou=sGXSQmbYeMk
+            //http://127.0.0.1:8090/dhis/api/events/IVUDkb8kK6n.json?fields=eventMembers&paging=false
+
+            //../api/trackedEntityInstances.json?program=y6lXVg8TdOj&ou=sGXSQmbYeMk&paging=false
+
+            getTrackedEntityInstancesByOrgUnitAndProgram : function(){
+                var promise = $http.get(  '../api/events/IVUDkb8kK6n.json?fields=eventMembers&paging=false').then(function(response){
+                    return response.data;
+                });
+                return promise;
+            },
+
+            /*
+            getTrackedEntityInstancesByOrgUnitAndProgram : function(){
+                var promise = $http.get(  '../api/events/IVUDkb8kK6n.json?fields=eventMembers&paging=false').then(function(response){
+                    return response.data;
+                });
+                return promise;
+            },
+            */
+            //http://127.0.0.1:8090/dhis/api/events.json?programStage=s9b0ZMF7QZU&trackedEntityInstance=JND71K1mcXt&paging=false
+            getEventsByTrackedEntityInstancesAndProgramStage  : function( inviteTEI ){
+                var promise = $http.get(  '../api/events.json?programStage=s9b0ZMF7QZU&trackedEntityInstance=' + inviteTEI + '&paging=false').then(function(response){
+                    return response.data;
+                });
+                return promise;
+            },
+
+
+            getEventsByTrackedEntityInstancesAndProgramStageUid  : function( programStageUid, inviteTEI ){
+                var promise = $http.get(  '../api/events.json?programStage=' + programStageUid + '&trackedEntityInstance=' + inviteTEI + '&paging=false').then(function(response){
+                    return response.data;
+                });
+                return promise;
+            },
+
+
+            //http://127.0.0.1:8090/dhis/api/events/IVUDkb8kK6n.json?paging=false
+            getEventMemberByEvent  : function( eventUid ){
+                var promise = $http.get(  '../api/events/'+eventUid + '.json?paging=false').then(function(response){
+                    return response.data;
+                });
+                return promise;
+            },
+
+
+
             getRootOrgUnit : function(){
                 var promise = $http.get(  '../api/organisationUnits?filter=level:eq:1').then(function(response){
                     return response.data;

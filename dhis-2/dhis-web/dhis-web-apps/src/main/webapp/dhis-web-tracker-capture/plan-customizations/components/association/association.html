@@ -1,3 +1,6 @@
+
+{{isAssociation}}
+
 <div class="panel panel-info" ng-controller="EventToTEIAssociations">
     <div class="panel-heading handle bold">
         {{associationWidget.title| translate}}
@@ -6,7 +9,7 @@
             | <a href ng-click="showHomeScreen()" title="{{'add_association'| translate}}">{{'add'| translate}}</a>
         </span>
         <span class="nav-pills" ng-if="selectedEvent && selectedEvent.eventMembers.length > 0">
-            | <label>{{selectedEvent.eventMembers.length}} {{'associations_found'| translate}}</label>
+            | <label>{{selectedEvent.eventMembers.length}}  {{'associations_found'| translate}}</label>
         </span>
         <span class="pull-right widget-link">
             <a class="small-horizonal-spacing" href ng-click="expandCollapse(associationWidget)">
@@ -17,9 +20,11 @@
         </span>
     </div>
     <div ng-show="associationWidget.expand" class="panel-body dashboard-element-container">
+
+
         <div ng-show="selectedEvent" class="widgetDiv">
             <table class="table table-striped dhis2-table-hover table-bordered">
-               <tr><th>#</th>
+               <tr><th># {{selectedEvent.eventMembers.length}} </th>
                    <th ng-repeat="attr in associationWidgetAttributes">{{attr.displayName}}</th>
                </tr>
 

@@ -280,6 +280,7 @@ trackerCapture.controller('DashboardController',
         if($scope.selectedProgram && $scope.selectedProgram.id){
             layout[$scope.selectedProgram.id] = {widgets: widgets, program: $scope.selectedProgram.id};
         }
+
         else{
             layout['DEFAULT'] = {widgets: widgets, program: 'DEFAULT'};
         }

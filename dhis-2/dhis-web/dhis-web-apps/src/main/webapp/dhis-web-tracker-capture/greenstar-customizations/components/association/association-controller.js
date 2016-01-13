@@ -15,7 +15,7 @@ trackerCapture.controller('EventToTEIAssociations',
             $scope.TEtoEventTEIMap = [];
             $scope.TEWiseEventTEIs = [];
             if (args.show){
-               $scope.eventSelected = true
+               $scope.eventSelected = true;
                 AjaxCalls.getEventbyId(args.event.event).then(function(event){
                     $scope.selectedEvent = event;
 
