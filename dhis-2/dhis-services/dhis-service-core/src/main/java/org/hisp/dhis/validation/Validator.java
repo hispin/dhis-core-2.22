@@ -54,17 +54,18 @@ import org.hisp.dhis.user.UserService;
 public class Validator
 {
     /**
-     * Evaluates validation rules for a collection of organisation units.
-     * This method breaks the job down by organisation unit. It assigns the
+     * Evaluates validation rules for a collection of organisation units. This
+     * method breaks the job down by organisation unit. It assigns the
      * evaluation for each organisation unit to a task that can be evaluated
      * independently in a multi-threaded environment.
      * 
-     * @param sources the organisation units in which to run the validation rules
+     * @param sources the organisation units in which to run the validation
+     *        rules
      * @param periods the periods of data to check
      * @param attributeCombo the attribute combo to check (if restricted)
      * @param rules the ValidationRules to evaluate
-     * @param lastScheduledRun date/time of the most recent successful
-     *        scheduled monitoring run (needed only for scheduled runs)
+     * @param lastScheduledRun date/time of the most recent successful scheduled
+     *        monitoring run (needed only for scheduled runs)
      * @param constantService Constant Service reference
      * @param expressionService Expression Service reference
      * @param periodService Period Service reference
@@ -74,15 +75,16 @@ public class Validator
      * @param currentUserService current user service
      * @return a collection of any validations that were found
      */
-    public static Collection<ValidationResult> validate( Collection<OrganisationUnit> sources, Collection<Period> periods,
-        Collection<ValidationRule> rules, DataElementCategoryOptionCombo attributeCombo, Date lastScheduledRun,
-        ConstantService constantService, ExpressionService expressionService, PeriodService periodService,
-        DataValueService dataValueService, DataElementCategoryService dataElementCategoryService,
-        UserService userService, CurrentUserService currentUserService )
+    public static Collection<ValidationResult> validate( Collection<OrganisationUnit> sources,
+        Collection<Period> periods, Collection<ValidationRule> rules, DataElementCategoryOptionCombo attributeCombo,
+        Date lastScheduledRun, ConstantService constantService, ExpressionService expressionService,
+        PeriodService periodService, DataValueService dataValueService,
+        DataElementCategoryService dataElementCategoryService, UserService userService,
+        CurrentUserService currentUserService )
     {
-        ValidationRunContext context = ValidationRunContext.getNewContext( sources, periods,
-            attributeCombo, rules, constantService.getConstantMap(), ValidationRunType.SCHEDULED, lastScheduledRun,
-            expressionService, periodService, dataValueService, dataElementCategoryService, userService, currentUserService );
+        ValidationRunContext context = ValidationRunContext.getNewContext( sources, periods, attributeCombo, rules,
+            constantService.getConstantMap(), ValidationRunType.SCHEDULED, lastScheduledRun, expressionService,
+            periodService, dataValueService, dataElementCategoryService, userService, currentUserService );
 
         int threadPoolSize = getThreadPoolSize( context );
         ExecutorService executor = Executors.newFixedThreadPool( threadPoolSize );
@@ -97,7 +99,7 @@ public class Validator
         }
 
         executor.shutdown();
-        
+
         try
         {
             executor.awaitTermination( 6, TimeUnit.HOURS );
@@ -111,7 +113,7 @@ public class Validator
 
         return context.getValidationResults();
     }
-    
+
     /**
      * Determines how many threads we should use for testing validation rules.
      * 
@@ -121,18 +123,18 @@ public class Validator
     private static int getThreadPoolSize( ValidationRunContext context )
     {
         int threadPoolSize = SystemUtils.getCpuCores();
-        
+
         if ( threadPoolSize > 2 )
         {
             threadPoolSize--;
         }
-        
+
         if ( threadPoolSize > context.getCountOfSourcesToValidate() )
         {
             threadPoolSize = context.getCountOfSourcesToValidate();
         }
 
-    	return threadPoolSize;
+        return threadPoolSize;
     }
 
     /**
@@ -141,11 +143,13 @@ public class Validator
      * @param results
      * @param dataElementCategoryService
      */
-    private static void reloadAttributeOptionCombos( Collection<ValidationResult> results, DataElementCategoryService dataElementCategoryService )
+    private static void reloadAttributeOptionCombos( Collection<ValidationResult> results,
+        DataElementCategoryService dataElementCategoryService )
     {
         for ( ValidationResult result : results )
         {
-            result.setAttributeOptionCombo( dataElementCategoryService.getDataElementCategoryOptionCombo( result.getAttributeOptionCombo().getId() ) );
+            result.setAttributeOptionCombo( dataElementCategoryService
+                .getDataElementCategoryOptionCombo( result.getAttributeOptionCombo().getId() ) );
         }
     }
 }

@@ -149,9 +149,9 @@ public class ExpressionServiceTest
     private String expressionG;
     private String expressionH;
     private String expressionI;
+    private String expressionK;
     private String expressionJ;
-    private String expressionJ0;
-    private String expressionJ1;
+    private String expressionL;
 
     private String descriptionA;
     private String descriptionB;
@@ -264,9 +264,9 @@ public class ExpressionServiceTest
         expressionH = "#{" + deA.getUid() + SEPARATOR + coc.getUid() + "}*OUG{" + groupA.getUid() + "}";        
         expressionI = "#{" + opA.getDimensionItem() + "}*" + "#{" + deB.getDimensionItem() + "}+" + "C{" + constantA.getUid() + "}+5-" +
             "D{" + pdeA.getDimensionItem() + "}+" + "A{" + pteaA.getDimensionItem() + "}-10+" + "I{" + piA.getDimensionItem() + "}";
-        expressionJ0 = "#{" + opA.getDimensionItem() + "}+#{" + opB.getDimensionItem() + "}";
-        expressionJ = "1.5*AVG("+expressionJ0+")";
-        expressionJ1 = "AVG("+expressionJ0+")+1.5*STDDEV("+expressionJ0+")";
+        expressionJ = "#{" + opA.getDimensionItem() + "}+#{" + opB.getDimensionItem() + "}";
+        expressionK = "1.5*AVG("+expressionJ+")";
+        expressionL = "AVG("+expressionJ+")+1.5*STDDEV("+expressionJ+")";
 
         descriptionA = "Expression A";
         descriptionB = "Expression B";
@@ -358,27 +358,27 @@ public class ExpressionServiceTest
     @Test
     public void testGetAggregatesInExpression()
     {
-        Set<DataElement> dataElements = expressionService.getDataElementsInExpression( expressionJ );
-        Set<String> aggregates=expressionService.getAggregatesInExpression(expressionJ.toString());
+        Set<DataElement> dataElements = expressionService.getDataElementsInExpression( expressionK );
+        Set<String> aggregates=expressionService.getAggregatesInExpression(expressionK.toString());
 
         assertTrue( dataElements.size() == 2 );
         assertTrue( dataElements.contains( deA ) );
         assertTrue( dataElements.contains( deB ) );
   
         assertEquals( 1, aggregates.size() );
-        for (String subexp: aggregates) assertEquals(expressionJ0,subexp);
-        assertTrue( aggregates.contains( expressionJ0 ) );
+        for (String subexp: aggregates) assertEquals(expressionJ,subexp);
+        assertTrue( aggregates.contains( expressionJ ) );
         
-        dataElements=expressionService.getDataElementsInExpression( expressionJ );
-        aggregates=expressionService.getAggregatesInExpression(expressionJ.toString());
+        dataElements=expressionService.getDataElementsInExpression( expressionK );
+        aggregates=expressionService.getAggregatesInExpression(expressionK.toString());
         
         assertTrue( dataElements.size() == 2 );
         assertTrue( dataElements.contains( deA ) );
         assertTrue( dataElements.contains( deB ) );
   
         assertEquals( 1, aggregates.size() );
-        for (String subexp: aggregates) assertEquals(expressionJ0,subexp);
-        assertTrue( aggregates.contains( expressionJ0 ) );
+        for (String subexp: aggregates) assertEquals(expressionJ,subexp);
+        assertTrue( aggregates.contains( expressionJ ) );
 
         
     }
@@ -496,8 +496,8 @@ public class ExpressionServiceTest
         assertTrue( expressionService.expressionIsValid( expressionD ).isValid() );
         assertTrue( expressionService.expressionIsValid( expressionE ).isValid() );
         assertTrue( expressionService.expressionIsValid( expressionH ).isValid() );
-        assertTrue( expressionService.expressionIsValid( expressionJ ).isValid() );
-        assertTrue( expressionService.expressionIsValid( expressionJ1 ).isValid() );
+        assertTrue( expressionService.expressionIsValid( expressionK ).isValid() );
+        assertTrue( expressionService.expressionIsValid( expressionL ).isValid() );
 
         expressionA = "#{nonExisting" + SEPARATOR + coc.getUid() + "} + 12";
 
@@ -516,7 +516,7 @@ public class ExpressionServiceTest
 
         assertEquals( ExpressionValidationOutcome.EXPRESSION_IS_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
         
-        expressionA=expressionJ.replace(")", "");
+        expressionA=expressionK.replace(")", "");
 
         assertEquals( ExpressionValidationOutcome.EXPRESSION_IS_NOT_WELL_FORMED, expressionService.expressionIsValid( expressionA ) );
         

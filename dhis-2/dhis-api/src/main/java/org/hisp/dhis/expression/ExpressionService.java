@@ -72,7 +72,6 @@ public interface ExpressionService
     String DAYS_SYMBOL = "[days]";
 
     String VARIABLE_EXPRESSION = "(#|D|A|I)\\{(([a-zA-Z]\\w{10})\\.?(\\w*))\\}";
-    String AGGREGATE_EXPRESSION = "#\\[([^\\]]*)\\]";
     String OPERAND_EXPRESSION = "#\\{([a-zA-Z]\\w{10})\\.?(\\w*)\\}";
     String PROGRAM_DATA_ELEMENT_EXPRESSION = "D\\{([a-zA-Z]\\w{10})\\.?([a-zA-Z]\\w{10})\\}";
     String OPERAND_UID_EXPRESSION = "([a-zA-Z]\\w{10})\\.?(\\w*)";
@@ -83,7 +82,6 @@ public interface ExpressionService
     String DAYS_EXPRESSION = "\\[days\\]";
 
     Pattern VARIABLE_PATTERN = Pattern.compile( VARIABLE_EXPRESSION );
-    Pattern AGGREGATE_PATTERN = Pattern.compile(AGGREGATE_EXPRESSION);
     Pattern OPERAND_PATTERN = Pattern.compile( OPERAND_EXPRESSION );
     Pattern OPERAND_UID_PATTERN = Pattern.compile( OPERAND_UID_EXPRESSION );
     Pattern PROGRAM_DATA_ELEMENT_PATTERN = Pattern.compile( PROGRAM_DATA_ELEMENT_EXPRESSION );

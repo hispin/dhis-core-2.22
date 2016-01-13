@@ -82,7 +82,8 @@ public class ValidationRule
     private RuleType ruleType = RuleType.VALIDATION;
 
     /**
-     * The comparison operator to compare left and right expressions in the rule.
+     * The comparison operator to compare left and right expressions in the
+     * rule.
      */
     private Operator operator;
 
@@ -107,20 +108,22 @@ public class ValidationRule
     private Set<ValidationRuleGroup> groups = new HashSet<>();
 
     /**
-     * The organisation unit level at which this rule is evaluated (Monitoring-type rules only).
+     * The organisation unit level at which this rule is evaluated
+     * (Monitoring-type rules only).
      */
     private Integer organisationUnitLevel;
 
     /**
      * The number of sequential right-side periods from which to collect samples
      * to average (Monitoring-type rules only). Sequential periods are those
-     * immediately preceding (or immediately following in previous years) the selected period.
+     * immediately preceding (or immediately following in previous years) the
+     * selected period.
      */
     private Integer sequentialSampleCount;
 
     /**
-     * The number of annual right-side periods from which to collect samples
-     * to average (Monitoring-type rules only). Annual periods are from previous
+     * The number of annual right-side periods from which to collect samples to
+     * average (Monitoring-type rules only). Annual periods are from previous
      * years. Samples collected from previous years can also include sequential
      * periods adjacent to the equivalent period in previous years.
      */
@@ -135,8 +138,8 @@ public class ValidationRule
 
     }
 
-    public ValidationRule( String name, String description,
-        Operator operator, Expression leftSide, Expression rightSide )
+    public ValidationRule( String name, String description, Operator operator, Expression leftSide,
+        Expression rightSide )
     {
         this.name = name;
         this.description = description;
@@ -150,9 +153,9 @@ public class ValidationRule
     // -------------------------------------------------------------------------
 
     /**
-     * Clears the left-side and right-side expressions. This can be useful, for example,
-     * before changing the validation rule period type, because the data elements
-     * allowed in the expressions depend on the period type.
+     * Clears the left-side and right-side expressions. This can be useful, for
+     * example, before changing the validation rule period type, because the
+     * data elements allowed in the expressions depend on the period type.
      */
     public void clearExpressions()
     {
@@ -183,8 +186,8 @@ public class ValidationRule
     }
 
     /**
-     * Gets the validation rule description, but returns the validation rule name
-     * if there is no description.
+     * Gets the validation rule description, but returns the validation rule
+     * name if there is no description.
      *
      * @return the description (or name).
      */
@@ -194,9 +197,9 @@ public class ValidationRule
     }
 
     /**
-     * Gets the data elements to evaluate for the current period. For validation-type
-     * rules this means all data elements. For monitoring-type rules this means just
-     * the left side elements.
+     * Gets the data elements to evaluate for the current period. For
+     * validation-type rules this means all data elements. For monitoring-type
+     * rules this means just the left side elements.
      *
      * @return the data elements to evaluate for the current period.
      */
@@ -214,9 +217,9 @@ public class ValidationRule
     }
 
     /**
-     * Gets the data elements to compare against for past periods. For validation-type
-     * rules this returns null. For monitoring-type rules this is just the
-     * right side elements.
+     * Gets the data elements to compare against for past periods. For
+     * validation-type rules this returns null. For monitoring-type rules this
+     * is just the right side elements.
      *
      * @return the data elements to evaluate for past periods.
      */
@@ -254,7 +257,8 @@ public class ValidationRule
         }
         else if ( leftSide != null && rightSide != null )
         {
-            return leftSide.getDescription() + " " + operator.getMathematicalOperator() + " " + rightSide.getDescription();
+            return leftSide.getDescription() + " " + operator.getMathematicalOperator() + " "
+                + rightSide.getDescription();
         }
         else
         {
@@ -375,7 +379,6 @@ public class ValidationRule
     {
         this.annualSampleCount = annualSampleCount;
     }
-
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
