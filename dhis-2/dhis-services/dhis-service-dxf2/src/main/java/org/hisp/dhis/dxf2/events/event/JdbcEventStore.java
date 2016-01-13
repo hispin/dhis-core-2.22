@@ -47,8 +47,6 @@ import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
-import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -170,6 +168,8 @@ public class JdbcEventStore
             if ( rowSet.getString( "pdv_value" ) != null && rowSet.getString( "de_uid" ) != null )
             {
                 DataValue dataValue = new DataValue();
+                dataValue.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_created" ) ) );
+                dataValue.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_lastupdated" ) ) );
                 dataValue.setValue( rowSet.getString( "pdv_value" ) );
                 dataValue.setProvidedElsewhere( rowSet.getBoolean( "pdv_providedelsewhere" ) );
                 dataValue.setDataElement( IdSchemes.getValue( rowSet.getString( "de_uid" ), rowSet.getString( "de_code" ), idSchemes.getDataElementIdScheme() ) );
@@ -263,6 +263,8 @@ public class JdbcEventStore
                 String valueType = rowSet.getString( "ta_valuetype" );
 
                 Attribute attribute = new Attribute();
+                attribute.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "pav_created" ) ) );
+                attribute.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "pav_lastupdated" ) ) );
                 attribute.setValue( rowSet.getString( "pav_value" ) );
                 attribute.setDisplayName( rowSet.getString( "ta_name" ) );
                 attribute.setValueType( valueType != null ? ValueType.valueOf( valueType.toUpperCase() ) : null );
@@ -274,6 +276,8 @@ public class JdbcEventStore
             if ( rowSet.getString( "pdv_value" ) != null && rowSet.getString( "de_uid" ) != null )
             {
                 DataValue dataValue = new DataValue();
+                dataValue.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_created" ) ) );
+                dataValue.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "pdv_lastupdated" ) ) );
                 dataValue.setValue( rowSet.getString( "pdv_value" ) );
                 dataValue.setProvidedElsewhere( rowSet.getBoolean( "pdv_providedelsewhere" ) );
                 dataValue.setDataElement( IdSchemes.getValue( rowSet.getString( "de_uid" ),
@@ -294,7 +298,6 @@ public class JdbcEventStore
                 eventRow.getNotes().add( note );
                 notes.add( rowSet.getString( "psinote_id" ) );
             }
-      
         }
 
         return eventRows;
@@ -352,7 +355,7 @@ public class JdbcEventStore
         List<Integer> orgUnitIds = getIdentifiers( organisationUnits );
 
         SqlHelper hlp = new SqlHelper();
-
+        
         String sql =
             "select psi.programstageinstanceid as psi_id, psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
                 "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
@@ -367,15 +370,8 @@ public class JdbcEventStore
 
         sql += " left join programstageinstancemembers psim on (psim.programstageinstanceid=psi.programstageinstanceid) ";
         
-        if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
-        {
-            sql += "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
-        }
-        else
-        {
-            sql += "left join organisationunit ou on (tei.organisationunitid=ou.organisationunitid) ";
-        }
-
+        
+        
         if ( params.getTrackedEntityInstance() != null )
         {
             sql += hlp.whereAnd() + " tei.trackedentityinstanceid=" + params.getTrackedEntityInstance().getId() + " ";
@@ -410,31 +406,28 @@ public class JdbcEventStore
         {
             sql += hlp.whereAnd() + " psi.attributeoptioncomboid = " + params.getCategoryOptionCombo().getId() + " ";
         }
+        
+        if ( orgUnitIds != null && !orgUnitIds.isEmpty() )
+        {
+            sql += hlp.whereAnd() + " psi.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
+        }
 
         if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
         {
-            if ( orgUnitIds != null && !orgUnitIds.isEmpty() )
-            {
-                sql += hlp.whereAnd() + " psi.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
-            }
-
             if ( params.getStartDate() != null )
             {
-                sql += hlp.whereAnd() + " psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' ";
+                sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' "
+                		+ " or (psi.executiondate is null and psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "')) ";
             }
 
             if ( params.getEndDate() != null )
             {
-                sql += hlp.whereAnd() + " psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' ";
+                sql += hlp.whereAnd() + " (psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' "
+                 		+ " or (psi.executiondate is null and psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "')) ";
             }
         }
         else
         {
-            if ( orgUnitIds != null && !orgUnitIds.isEmpty() )
-            {
-                sql += hlp.whereAnd() + " tei.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
-            }
-
             if ( params.getStartDate() != null )
             {
                 sql += hlp.whereAnd() + " psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "' ";
@@ -487,7 +480,7 @@ public class JdbcEventStore
     private String getDataValueQuery()
     {
         String sql =
-            "select pdv.programstageinstanceid as pdv_id, pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
+            "select pdv.programstageinstanceid as pdv_id, pdv.created as pdv_created, pdv.lastupdated as pdv_lastupdated, pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
                 "de.uid as de_uid, de.code as de_code " +
                 "from trackedentitydatavalue pdv " +
                 "inner join dataelement de on pdv.dataelementid=de.dataelementid ";
@@ -508,7 +501,7 @@ public class JdbcEventStore
 
     private String getAttributeValueQuery()
     {
-        String sql = "select pav.trackedentityinstanceid as pav_id, pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype "
+        String sql = "select pav.trackedentityinstanceid as pav_id, pav.created as pav_created, pav.lastupdated as pav_lastupdated, pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype "
             + "from trackedentityattributevalue pav "
             + "inner join trackedentityattribute ta on pav.trackedentityattributeid=ta.trackedentityattributeid ";
 
