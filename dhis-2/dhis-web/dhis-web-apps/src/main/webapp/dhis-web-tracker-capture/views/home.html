@@ -137,8 +137,11 @@
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'COMPLETED'" title="{{completedEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("COMPLETED")'><i class="fa fa-check mouse-pointer"></i></label>
                         <label class="btn btn-default" ng-model="enrollmentStatus" btn-radio="'CANCELLED'" title="{{cancelledEnrollmentsLabel}}" ng-click='filterByEnrollmentStatus("CANCELLED")'><i class="fa fa-times mouse-pointer"></i></label>
                     </span>
-                    <span ng-if="teiFetched && pager.total">
+                    <span ng-if="teiFetched && enrollmentStatus!== 'TODAY' &&pager.total">
                         {{'total'| translate}}:  {{pager.total}}
+                    </span>
+                    <span ng-if="teiFetched && enrollmentStatus=== 'TODAY' && trackedEntityList">
+                        {{'total'| translate}}:  {{trackedEntityList.length}}
                     </span>
                 </span>
                 

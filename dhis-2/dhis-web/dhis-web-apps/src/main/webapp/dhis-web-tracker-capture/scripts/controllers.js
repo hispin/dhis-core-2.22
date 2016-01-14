@@ -130,7 +130,9 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.listProgramsLabel = $translate.instant('list_programs');
             $scope.settingsLabel = $translate.instant('settings');
             $scope.todayLabel = $translate.instant('events_today_persons');
-
+            angular.forEach($scope.eventsTodayFilters, function(filter){
+               filter.name = $translate.instant(filter.name); 
+            });
             $scope.displayModeLabel = $translate.instant('display_mode');
             
             resetParams();
