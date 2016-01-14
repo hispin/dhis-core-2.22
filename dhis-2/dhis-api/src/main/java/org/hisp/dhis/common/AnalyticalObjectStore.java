@@ -37,6 +37,7 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -47,6 +48,10 @@ public interface AnalyticalObjectStore<T extends AnalyticalObject>
     List<T> getAnalyticalObjects( Indicator indicator );
     
     List<T> getAnalyticalObjects( DataElement dataElement );
+    
+    List<T> getAnalyticalObjectsByDataDimension( DataElement dataElement );
+    
+    List<T> getAnalyticalObjectsByDataDimension( TrackedEntityAttribute attribute );
     
     List<T> getAnalyticalObjects( DataSet dataSet );
 

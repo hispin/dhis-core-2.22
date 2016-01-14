@@ -37,6 +37,7 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 /**
  * @author Lars Helge Overland
@@ -63,6 +64,18 @@ public abstract class GenericAnalyticalObjectService<T extends AnalyticalObject>
         return getAnalyticalObjectStore().getAnalyticalObjects( dataElement );
     }
 
+    @Override
+    public List<T> getAnalyticalObjectsByDataDimension( DataElement dataElement )
+    {
+        return getAnalyticalObjectStore().getAnalyticalObjectsByDataDimension( dataElement );
+    }
+
+    @Override
+    public List<T> getAnalyticalObjectsByDataDimension( TrackedEntityAttribute attribute )
+    {
+        return getAnalyticalObjectStore().getAnalyticalObjectsByDataDimension( attribute );
+    }
+    
     @Override
     public List<T> getAnalyticalObjects( DataSet dataSet )
     {

@@ -29,6 +29,8 @@ package org.hisp.dhis.eventreport;
  */
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.hisp.dhis.common.AnalyticalObjectService;
 import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
@@ -37,6 +39,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -71,19 +74,34 @@ public class EventReportDeletionHandler
     @Override
     public void deleteIndicator( Indicator indicator )
     {
-        //TODO
+        // Ignore default implementation
     }
     
     @Override
     public void deleteDataElement( DataElement dataElement )
     {
-        //TODO
+        List<EventReport> eventReports = getAnalyticalObjectService().getAnalyticalObjectsByDataDimension( dataElement );
+        
+        for ( EventReport report : eventReports )
+        {
+            Iterator<TrackedEntityDataElementDimension> dimensions = report.getDataElementDimensions().iterator();
+            
+            while ( dimensions.hasNext() )
+            {
+                if ( dimensions.next().getDataElement().equals( dataElement ) )
+                {
+                    dimensions.remove();
+                }
+            }
+            
+            eventReportService.update( report );
+        }
     }
 
     @Override
     public void deleteDataSet( DataSet dataSet )
     {
-        //TODO
+        // Ignore default implementation
     }
 
     @Override
@@ -93,7 +111,7 @@ public class EventReportDeletionHandler
         
         for ( EventReport chart : charts )
         {
-            if( chart.getProgramStage().equals( programStage ))
+            if ( chart.getProgramStage().equals( programStage ))
             {
                eventReportService.deleteEventReport( chart );
             }

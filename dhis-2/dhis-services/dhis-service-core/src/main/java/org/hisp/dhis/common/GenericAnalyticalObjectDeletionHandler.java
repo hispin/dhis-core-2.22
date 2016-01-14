@@ -83,7 +83,7 @@ public abstract class GenericAnalyticalObjectDeletionHandler<T extends Analytica
         removeItem( getAnalyticalObjectService().getAnalyticalObjects( categoryOptionGroup ), categoryOptionGroup, ( ao, di ) -> ao.getCategoryOptionGroups().remove( di ) );
     }
     
-    private void removeItem( List<T> analyticalObjects, DimensionalItemObject itemObject, BiConsumer<AnalyticalObject, DimensionalItemObject> updateOperation )
+    protected void removeItem( List<T> analyticalObjects, DimensionalItemObject itemObject, BiConsumer<AnalyticalObject, DimensionalItemObject> updateOperation )
     {
         for ( T analyticalObject : analyticalObjects )
         {

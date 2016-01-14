@@ -38,6 +38,7 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 
 import java.util.List;
 
@@ -63,6 +64,22 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     {
         String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataElement = :dataElement";
         return getQuery( hql ).setEntity( "dataElement", dataElement ).list();        
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjectsByDataDimension( DataElement dataElement )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataElementDimensions d where d.dataElement = :dataElement";
+        return getQuery( hql ).setEntity( "dataElement", dataElement ).list();        
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjectsByDataDimension( TrackedEntityAttribute attribute )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.attributeDimensions d where d.attribute = :attribute";
+        return getQuery( hql ).setEntity( "attribute", attribute ).list();        
     }
 
     @Override

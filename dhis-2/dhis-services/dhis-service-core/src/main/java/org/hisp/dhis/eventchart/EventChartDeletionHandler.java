@@ -29,6 +29,8 @@ package org.hisp.dhis.eventchart;
  */
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.hisp.dhis.common.AnalyticalObjectService;
 import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
@@ -37,6 +39,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
+import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -71,19 +74,34 @@ public class EventChartDeletionHandler
     @Override
     public void deleteIndicator( Indicator indicator )
     {
-        //TODO
+        // Ignore default implementation
     }
-    
+
     @Override
     public void deleteDataElement( DataElement dataElement )
     {
-        //TODO
+        List<EventChart> eventCharts = getAnalyticalObjectService().getAnalyticalObjectsByDataDimension( dataElement );
+        
+        for ( EventChart chart : eventCharts )
+        {
+            Iterator<TrackedEntityDataElementDimension> dimensions = chart.getDataElementDimensions().iterator();
+            
+            while ( dimensions.hasNext() )
+            {
+                if ( dimensions.next().getDataElement().equals( dataElement ) )
+                {
+                    dimensions.remove();
+                }
+            }
+            
+            eventChartService.update( chart );
+        }
     }
 
     @Override
     public void deleteDataSet( DataSet dataSet )
     {
-        //TODO
+        // Ignore default implementation
     }
 
     @Override
@@ -91,7 +109,7 @@ public class EventChartDeletionHandler
     {
         Collection<EventChart> charts = eventChartService.getAllEventCharts();
         
-        for( EventChart chart : charts )
+        for ( EventChart chart : charts )
         {
             if( chart.getProgramStage().equals( programStage ))
             {
@@ -105,9 +123,9 @@ public class EventChartDeletionHandler
     {
         Collection<EventChart> charts = eventChartService.getAllEventCharts();
         
-        for( EventChart chart : charts )
+        for ( EventChart chart : charts )
         {
-            if( chart.getProgram().equals( program ))
+            if ( chart.getProgram().equals( program ))
             {
                 eventChartService.deleteEventChart( chart );
             }
