@@ -155,7 +155,7 @@ public class DefaultHibernateConfigurationProvider
                 {
                     fileProperties.setProperty( "hibernate.hbm2ddl.auto", "validate" );
                     
-                    log.info( "Setting hibernate.hbm2ddl.auto to 'validate' due to read-only mode" );
+                    log.info( "Read-only mode enabled, setting hibernate.hbm2ddl.auto to 'validate'" );
                 }
                 
                 configuration.addProperties( fileProperties );
