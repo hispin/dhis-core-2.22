@@ -54,7 +54,6 @@ import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.MergeStrategy;
-import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
@@ -94,8 +93,8 @@ public class ReportTable
     public static final String TOTAL_COLUMN_NAME = "total";
     public static final String TOTAL_COLUMN_PRETTY_NAME = "Total";
 
-    public static final NameableObject[] IRT = new NameableObject[0];
-    public static final NameableObject[][] IRT2D = new NameableObject[0][];
+    public static final DimensionalItemObject[] IRT = new DimensionalItemObject[0];
+    public static final DimensionalItemObject[][] IRT2D = new DimensionalItemObject[0][];
 
     private static final String EMPTY = "";
 
@@ -204,12 +203,12 @@ public class ReportTable
     /**
      * All crosstabulated columns.
      */
-    private transient List<List<NameableObject>> gridColumns = new ArrayList<>();
+    private transient List<List<DimensionalItemObject>> gridColumns = new ArrayList<>();
 
     /**
      * All rows.
      */
-    private transient List<List<NameableObject>> gridRows = new ArrayList<>();
+    private transient List<List<DimensionalItemObject>> gridRows = new ArrayList<>();
 
     /**
      * The name of the reporting month based on the report param.
@@ -347,8 +346,8 @@ public class ReportTable
     public void populateGridColumnsAndRows( Date date, User user,
         List<OrganisationUnit> organisationUnitsAtLevel, List<OrganisationUnit> organisationUnitsInGroups, I18nFormat format )
     {
-        List<NameableObject[]> tableColumns = new ArrayList<>();
-        List<NameableObject[]> tableRows = new ArrayList<>();
+        List<DimensionalItemObject[]> tableColumns = new ArrayList<>();
+        List<DimensionalItemObject[]> tableRows = new ArrayList<>();
         List<DimensionalItemObject> filterItems = new ArrayList<>();
 
         for ( String dimension : columnDimensions )
@@ -407,11 +406,11 @@ public class ReportTable
      * Generates a pretty column name based on short-names of the argument
      * objects. Null arguments are ignored in the name.
      */
-    public static String getPrettyColumnName( List<NameableObject> objects )
+    public static String getPrettyColumnName( List<DimensionalItemObject> objects )
     {
         StringBuilder builder = new StringBuilder();
 
-        for ( NameableObject object : objects )
+        for ( DimensionalItemObject object : objects )
         {
             builder.append( object != null ? (object.getShortName() + SPACE) : EMPTY );
         }
@@ -427,11 +426,11 @@ public class ReportTable
      * re-used in reports, hence the name property is used which will be formatted
      * only when the period dimension is on rows.
      */
-    public static String getColumnName( List<NameableObject> objects )
+    public static String getColumnName( List<DimensionalItemObject> objects )
     {
         StringBuffer buffer = new StringBuffer();
 
-        for ( NameableObject object : objects )
+        for ( DimensionalItemObject object : objects )
         {
             if ( object != null && object instanceof Period )
             {
@@ -502,13 +501,13 @@ public class ReportTable
     }
 
     /**
-     * Adds an empty list of NameableObjects to the given list if empty.
+     * Adds an empty list of DimensionalItemObjects to the given list if empty.
      */
-    public static void addIfEmpty( List<List<NameableObject>> list )
+    public static void addIfEmpty( List<List<DimensionalItemObject>> list )
     {
         if ( list != null && list.size() == 0 )
         {
-            list.add( Arrays.asList( new NameableObject[0] ) );
+            list.add( Arrays.asList( new DimensionalItemObject[0] ) );
         }
     }
 
@@ -573,7 +572,7 @@ public class ReportTable
         final int startColumnIndex = grid.getHeaders().size();
         final int numberOfColumns = getGridColumns().size();
 
-        for ( List<NameableObject> column : gridColumns )
+        for ( List<DimensionalItemObject> column : gridColumns )
         {
             grid.addHeader( new GridHeader( getPrettyColumnName( column ), getColumnName( column ), Double.class
                 .getName(), false, false ) );
@@ -583,7 +582,7 @@ public class ReportTable
         // Values
         // ---------------------------------------------------------------------
 
-        for ( List<NameableObject> row : gridRows )
+        for ( List<DimensionalItemObject> row : gridRows )
         {
             grid.addRow();
 
@@ -591,7 +590,7 @@ public class ReportTable
             // Row meta data
             // -----------------------------------------------------------------
 
-            for ( NameableObject object : row )
+            for ( DimensionalItemObject object : row )
             {
                 grid.addValue( object.getUid() );
                 grid.addValue( object.getName() );
@@ -612,7 +611,7 @@ public class ReportTable
 
             boolean hasValue = false;
 
-            for ( List<NameableObject> column : gridColumns )
+            for ( List<DimensionalItemObject> column : gridColumns )
             {
                 String key = getIdentifier( column, row );
 
@@ -996,23 +995,23 @@ public class ReportTable
     }
 
     @JsonIgnore
-    public List<List<NameableObject>> getGridColumns()
+    public List<List<DimensionalItemObject>> getGridColumns()
     {
         return gridColumns;
     }
 
-    public void setGridColumns( List<List<NameableObject>> gridColumns )
+    public void setGridColumns( List<List<DimensionalItemObject>> gridColumns )
     {
         this.gridColumns = gridColumns;
     }
 
     @JsonIgnore
-    public List<List<NameableObject>> getGridRows()
+    public List<List<DimensionalItemObject>> getGridRows()
     {
         return gridRows;
     }
 
-    public void setGridRows( List<List<NameableObject>> gridRows )
+    public void setGridRows( List<List<DimensionalItemObject>> gridRows )
     {
         this.gridRows = gridRows;
     }

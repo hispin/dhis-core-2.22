@@ -143,11 +143,11 @@ public class BaseAnalyticalObjectTest
         oB.setUid( "b1" );
         oC.setUid( "c1" );
         
-        List<NameableObject> column = new ArrayList<>();
+        List<DimensionalItemObject> column = new ArrayList<>();
         column.add( oC );
         column.add( oA );
         
-        List<NameableObject> row = new ArrayList<>();
+        List<DimensionalItemObject> row = new ArrayList<>();
         row.add( oB );
         
         assertEquals( "a1-b1-c1", BaseAnalyticalObject.getIdentifier( column, row ) );
