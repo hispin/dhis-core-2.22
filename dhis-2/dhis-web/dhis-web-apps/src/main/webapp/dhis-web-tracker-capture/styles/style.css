@@ -18,7 +18,7 @@ html, body {
     }
 
     .not-for-screen {
-        display: block;
+        display: block !important;
     }
 
     ::-webkit-input-placeholder { /* WebKit browsers */

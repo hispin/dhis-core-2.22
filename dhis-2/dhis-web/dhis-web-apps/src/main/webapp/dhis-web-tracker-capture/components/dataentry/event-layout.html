@@ -41,18 +41,22 @@
                                 <a href title="{{'create_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.add)" style="vertical-align:middle">
                                     {{'add'|translate}}
                                 </a>
+                            </span>
+                            <span ng-if="!stage.hideDueDate">
                                 |
                                 <a href title="{{'schedule_new_event'| translate}}" ng-click="showCreateEvent(stage,eventCreationActions.schedule)" style="vertical-align:middle">
                                     {{'schedule'|translate}}
-                                </a>
-                                <!-- hides referral in trunk
+                                </a>                                
+                            </span>
+                            <!-- hides referral in trunk
+                            <span>                                
                                 |
                                 <a href title="{{'make_referral' | translate}}" ng-click="showCreateEvent(stage, eventCreationActions.referral)" style="vertical-align: middle" ng-if="showReferral">
                                     {{'referral'|translate}}
                                 </a>
-                                -->
+                                
                             </span>
-
+                            -->
                         </div>
                     </div>
                 </div>

@@ -559,9 +559,11 @@ trackerCapture.controller('DataEntryController',
             }
             else{
                 angular.forEach($scope.programStages, function(stage){
-                    if($scope.stageNeedsEvent(stage)){
-                        availableStages.push(stage);
-                    }
+                    if(eventCreationAction !== $scope.eventCreationActions.schedule || stage.hideDueDate !== true){
+                        if($scope.stageNeedsEvent(stage)){
+                            availableStages.push(stage);
+                        }
+                    }                    
                 });
             }           
             if(availableStages.length === 0) {
