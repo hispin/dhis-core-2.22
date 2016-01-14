@@ -13,6 +13,7 @@ trackerCapture.controller('DataEntryController',
                 DateUtils,
                 EventUtils,
                 orderByFilter,
+                dateFilter,
                 SessionStorageService,
                 EnrollmentService,
                 ProgramStageFactory,
@@ -345,7 +346,7 @@ trackerCapture.controller('DataEntryController',
                         $scope.stagesCanBeShownAsTable = true;
                     }
                 });
-
+                var s = dateFilter(new Date(), 'YYYY-MM-dd');
                 $scope.programStages = orderByFilter($scope.programStages, '-sortOrder').reverse();
                 if (!$scope.currentStage) {
                     $scope.currentStage = $scope.programStages[0];
@@ -442,7 +443,7 @@ trackerCapture.controller('DataEntryController',
     $scope.stageCanBeShownAsTable = function (stage) {
         if (stage.programStageDataElements 
                 && stage.programStageDataElements.length < $scope.tableMaxNumberOfDataElements
-                && !stage.repeatable) {
+                && stage.repeatable) {
             return true;
         }
         return false;
@@ -1475,7 +1476,14 @@ trackerCapture.controller('DataEntryController',
                 setStatusColor();
 
                 setEventEditing($scope.currentEvent, $scope.currentStage);
-
+                
+                for(var i=0;i<$scope.allEventsSorted.length;i++){
+                    if($scope.allEventsSorted[i].event === $scope.currentEvent.event){
+                        $scope.allEventsSorted[i] = $scope.currentEvent;
+                        i=$scope.allEventsSorted.length;
+                    }
+                }
+                
                 if ($scope.currentEvent.status === 'COMPLETED') {
 
                     if ($scope.currentStage.remindCompleted) {
