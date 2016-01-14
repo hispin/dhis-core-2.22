@@ -470,6 +470,7 @@ public class DefaultAnalyticsService
                 DataDimensionItemType.PROGRAM_ATTRIBUTE, DataDimensionItemType.PROGRAM_INDICATOR );
             
             EventQueryParams eventQueryParams = EventQueryParams.fromDataQueryParams( dataSourceParams );
+            eventQueryParams.setSkipMeta( true );
             
             Grid eventGrid = eventAnalyticsService.getAggregatedEventData( eventQueryParams );
             
