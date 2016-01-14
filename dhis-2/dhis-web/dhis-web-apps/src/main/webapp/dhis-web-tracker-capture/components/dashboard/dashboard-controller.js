@@ -379,6 +379,10 @@ trackerCapture.controller('DashboardController',
         $location.path('/').search({program: $scope.selectedProgramId});        
     };
     
+    $scope.$on('$locationChangeSuccess',function(){
+        selection.load();
+    });
+    
     $scope.displayEnrollment = false;
     $scope.showEnrollment = function(){
         $scope.displayEnrollment = true;
