@@ -1,7 +1,5 @@
 package org.hisp.dhis.webapi.controller.dataelement;
 
-import org.hisp.dhis.dataelement.DataElementCategory;
-
 /*
  * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
