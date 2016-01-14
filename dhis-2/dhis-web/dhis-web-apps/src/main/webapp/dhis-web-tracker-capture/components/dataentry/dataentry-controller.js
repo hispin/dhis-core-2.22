@@ -1627,7 +1627,15 @@ trackerCapture.controller('DataEntryController',
                     $scope.currentEvent = null;
                 }
                 
-            }, function(error){               
+            }, function(error){   
+                
+                //temporarily error message because of new audit functionality
+                var dialogOptions = {
+                    headerText: 'error',
+                    bodyText: 'delete_error_audit'                    
+                };
+                DialogService.showDialog({}, dialogOptions);
+                
                 return $q.reject(error);
             });        
     };
