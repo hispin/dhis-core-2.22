@@ -92,7 +92,7 @@ public class DataElementCategoryOption
 
     public boolean isDefault()
     {
-        return name.equals( DEFAULT_NAME );
+        return DEFAULT_NAME.equals( name );
     }
 
     /**
