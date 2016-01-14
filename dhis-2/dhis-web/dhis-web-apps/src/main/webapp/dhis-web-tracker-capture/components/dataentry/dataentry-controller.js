@@ -52,7 +52,7 @@ trackerCapture.controller('DataEntryController',
     $scope.errorMessages = {};
     $scope.warningMessages = {};
     $scope.hiddenSections = {};
-    $scope.tableMaxNumberOfDataElements = 7;
+    $scope.tableMaxNumberOfDataElements = 15;
     $scope.xVisitScheduleDataElement = false;
     $scope.reSortStageEvents = true;
     $scope.eventsLoaded = false;

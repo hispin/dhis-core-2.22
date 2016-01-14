@@ -1958,4 +1958,5 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return modalInstance;
         };
         this.eventCreationActions = { add: 'ADD',  schedule: 'SCHEDULE', referral: 'REFERRAL'};
-});
+})
+

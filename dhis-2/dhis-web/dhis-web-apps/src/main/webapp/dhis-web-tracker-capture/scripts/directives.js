@@ -211,7 +211,7 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
                         for(var key in $scope.eventTableOptions){
                             var show = false;
                             
-                            for(i = 0; i < $scope.applicableButtons.length; i++){
+                            for(var i = 0; i < $scope.applicableButtons.length; i++){
                                 if($scope.applicableButtons[i] === key){
                                     show = true;
                                     break;
@@ -248,7 +248,7 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
                     
                     var bodyList = [];
                     if($scope.event.notes) {
-                        for(i = 0; i < $scope.event.notes.length; i++){
+                        for(var i = 0; i < $scope.event.notes.length; i++){
                             var currentNote = $scope.event.notes[i];            
                             bodyList.push({value1: currentNote.storedDate, value2: currentNote.value});
                         }
@@ -338,7 +338,7 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
                         
                         var foundIndex = -1;
                         //find index
-                        for(i = 0; i < $scope.allEvents.length; i++){
+                        for(var i = 0; i < $scope.allEvents.length; i++){
                             if($scope.allEvents[i] === $scope.event){
                                 foundIndex = i;
                                 break;
@@ -600,5 +600,4 @@ var trackerCaptureDirectives = angular.module('trackerCaptureDirectives', [])
             }],
         link: function (scope, element, attrs) {}
     };
-})        
-;
+});
