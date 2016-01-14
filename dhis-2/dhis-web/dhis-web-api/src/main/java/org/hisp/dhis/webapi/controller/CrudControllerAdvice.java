@@ -83,7 +83,7 @@ public class CrudControllerAdvice
     @ExceptionHandler( { EncryptionOperationNotPossibleException.class } )
     public void encryptionOperationNotPossibleException( EncryptionOperationNotPossibleException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.conflict( "Could not encrypt data. This indicates a problem in your setup. Please refer to the DHIS2 manual for setting up encryption." ), response, request );
+        webMessageService.send( WebMessageUtils.conflict( "Could not encrypt data, indicates a configuration issue" ), response, request );
     }
 
     @ExceptionHandler( { NotAuthenticatedException.class } )

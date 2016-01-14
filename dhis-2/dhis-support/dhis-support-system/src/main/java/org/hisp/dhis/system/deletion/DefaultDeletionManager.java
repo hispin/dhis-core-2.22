@@ -103,7 +103,8 @@ public class DefaultDeletionManager
                 {
                     String hint = String.valueOf( allow );
 
-                    String message = handler.getClassName() + ( hint.isEmpty() ? hint : ( " (" + hint + ")" ) );
+                    String message = "Could not delete due to association with another object: " +
+                        handler.getClassName() + ( hint.isEmpty() ? hint : ( " (" + hint + ")" ) );
 
                     log.info( "Delete was not allowed by " + currentHandler + ": " + message );
                     
