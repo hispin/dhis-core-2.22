@@ -25,7 +25,7 @@ POSSIBILITY OF SUCH DAMAGE.
 -->
  
 
-<div ng-if="!disabled" class="custom-radio-group">     
+<div ng-if="!disabled" class="custom-radio-group custom-radio-container">     
     <span ng-click="valueClicked('true')">
         <span class="fa-stack">                                                                                                        
             <span class='fa fa-stack-1x fa-circle radio-default fa-stack-custom-large' ng-class='radioButtonColor("true")'></span>        
@@ -59,7 +59,7 @@ POSSIBILITY OF SUCH DAMAGE.
         </label>
     </div>
 </div>
-<div ng-if="disabled">
+<div ng-if="disabled" class="custom-radio-container">
     <span class="fa-icon-width" ng-class="getDisabledIcon(value)"></span>
     <span>{{getDisabledValue(value) | translate}}</span>         
 </div>

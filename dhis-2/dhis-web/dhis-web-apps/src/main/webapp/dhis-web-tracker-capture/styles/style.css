@@ -1376,6 +1376,10 @@ input, button, select, textarea {
     margin-left: -8px;
 }
 
+.custom-radio-container{
+    display: inline-block;
+}
+
 .custom-radio-text {
     display: inline-block;
     margin-left: -5px;
