@@ -310,7 +310,7 @@ public abstract class ChronologyBasedCalendar extends AbstractCalendar
     @Override
     public DateTimeUnit isoStartOfYear( int year )
     {
-        DateTime dateTime = new DateTime( year, 1, 1, 0, 0, chronology ).withChronology( ISOChronology.getInstance() );
+        DateTime dateTime = new DateTime( year, 1, 1, 11, 0, chronology ).withChronology( ISOChronology.getInstance() );
         return DateTimeUnit.fromJodaDateTime( dateTime );
     }
 }
