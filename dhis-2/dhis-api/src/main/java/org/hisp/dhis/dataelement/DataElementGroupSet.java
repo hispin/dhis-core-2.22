@@ -185,6 +185,19 @@ public class DataElementGroupSet
         return sortedGroups;
     }
 
+    @Override
+    public String getShortName()
+    {
+        if ( getName() == null || getName().length() <= 50 )
+        {
+            return getName();
+        }
+        else
+        {
+            return getName().substring( 0, 49 );
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Dimensional object
     // -------------------------------------------------------------------------
@@ -209,19 +222,6 @@ public class DataElementGroupSet
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
-
-    @Override
-    public String getShortName()
-    {
-        if ( getName() == null || getName().length() <= 50 )
-        {
-            return getName();
-        }
-        else
-        {
-            return getName().substring( 0, 49 );
-        }
-    }
 
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )

@@ -102,6 +102,19 @@ public class CategoryOptionGroupSet
         return null;
     }
 
+    @Override
+    public String getShortName()
+    {
+        if ( getName() == null || getName().length() <= 50 )
+        {
+            return getName();
+        }
+        else
+        {
+            return getName().substring( 0, 49 );
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Dimensional object
     // -------------------------------------------------------------------------
