@@ -152,10 +152,10 @@ public class EventController
     private FileResourceService fileResourceService;
 
     @Autowired
-    protected FieldFilterService fieldFilterService;
+    private FieldFilterService fieldFilterService;
 
     @Autowired
-    protected ContextService contextService;
+    private ContextService contextService;
 
     // -------------------------------------------------------------------------
     // READ
