@@ -783,7 +783,8 @@ Ext.onReady( function() {
 			fieldLabel: 'Range axis decimals',
 			labelStyle: 'color:#333',
 			labelWidth: 125,
-			minValue: 0
+			minValue: 0,
+            maxValue: 20
 		});
 
 		rangeAxisTitle = Ext.create('Ext.form.field.Text', {

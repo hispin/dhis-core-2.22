@@ -2821,10 +2821,7 @@ Ext.onReady( function() {
                         fields: store.numericFields,
                         minimum: minimum < 0 ? minimum : 0,
                         label: {
-                            //renderer: Ext.util.Format.numberRenderer(renderer),
-                            renderer: function(v) {
-                                return support.prototype.number.prettyPrint(v);
-                            },
+                            renderer: Ext.util.Format.numberRenderer(renderer),
                             style: {},
                             rotate: {}
                         },
