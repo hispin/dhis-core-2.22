@@ -2188,11 +2188,6 @@ Ext.onReady( function() {
 					paramString += '&approvalLevel=' + xLayout.dataApprovalLevel.id;
 				}
 
-                // TODO program
-                if (xLayout.program && xLayout.program.id) {
-                    paramString += '&program=' + xLayout.program.id;
-                }
-
                 // relative period date
                 if (xLayout.relativePeriodDate) {
                     paramString += '&relativePeriodDate=' + xLayout.relativePeriodDate;

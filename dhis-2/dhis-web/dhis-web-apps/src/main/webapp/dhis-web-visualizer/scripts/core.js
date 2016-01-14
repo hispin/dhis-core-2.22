@@ -2465,11 +2465,6 @@ Ext.onReady( function() {
                     }
 				}
 
-                // TODO program
-                if (xLayout.program && xLayout.program.id) {
-                    paramString += '&program=' + xLayout.program.id;
-                }
-
                 // relative period date
                 if (xLayout.relativePeriodDate) {
                     paramString += '&relativePeriodDate=' + xLayout.relativePeriodDate;

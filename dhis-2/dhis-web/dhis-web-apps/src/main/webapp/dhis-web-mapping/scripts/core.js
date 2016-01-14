@@ -2373,11 +2373,6 @@ Ext.onReady( function() {
 				paramString += i < dxItems.length - 1 ? ';' : '';
 			}
 
-            // program
-            if (view.program) {
-                paramString += '&program=' + view.program.id;
-            }
-
 			paramString += isOperand ? '&dimension=co' : '';
 
 			// pe
