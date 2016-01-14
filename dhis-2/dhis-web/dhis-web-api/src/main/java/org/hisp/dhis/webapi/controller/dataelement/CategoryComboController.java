@@ -1,5 +1,7 @@
 package org.hisp.dhis.webapi.controller.dataelement;
 
+import org.hisp.dhis.dataelement.DataElementCategory;
+
 /*
  * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
@@ -29,8 +31,10 @@ package org.hisp.dhis.webapi.controller.dataelement;
  */
 
 import org.hisp.dhis.dataelement.DataElementCategoryCombo;
+import org.hisp.dhis.dataelement.DataElementCategoryService;
 import org.hisp.dhis.schema.descriptors.CategoryComboSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,4 +46,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CategoryComboController
     extends AbstractCrudController<DataElementCategoryCombo>
 {
+    @Autowired
+    private DataElementCategoryService categoryService;
+    
+    @Override
+    public void postCreateEntity( DataElementCategoryCombo categoryCombo )
+    {
+        categoryService.updateOptionCombos( categoryCombo );
+    }
+    
+    public void postUpdateEntity( DataElementCategoryCombo categoryCombo )
+    {
+        categoryService.updateOptionCombos( categoryCombo );
+    }
 }
