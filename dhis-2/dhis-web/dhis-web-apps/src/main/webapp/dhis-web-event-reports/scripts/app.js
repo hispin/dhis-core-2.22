@@ -4817,7 +4817,7 @@ Ext.onReady( function() {
 				allElements = [],
                 aggWindow = ns.app.aggregateLayoutWindow,
                 queryWindow = ns.app.queryLayoutWindow,
-                includeKeys = ns.core.conf.valueType.aggregateTypes,
+                includeKeys = ns.core.conf.valueType.tAggregateTypes,
                 ignoreKeys = ['pe', 'ou'],
                 recordMap = {
 					'pe': {id: 'pe', name: 'Periods'},
