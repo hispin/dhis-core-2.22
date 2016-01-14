@@ -28,8 +28,6 @@ package org.hisp.dhis.startup;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.UUID;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.configuration.Configuration;
@@ -38,6 +36,8 @@ import org.hisp.dhis.encryption.EncryptionStatus;
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
 
 public class ConfigurationPopulator
     extends AbstractStartupRoutine
@@ -72,6 +72,9 @@ public class ConfigurationPopulator
         if ( !status.isOk() )
         {
             log.warn( "Encryption not configured: " + status.getKey() );
+        }
+        else {
+            log.info( "Encryption is available. " );
         }
     }
 }
