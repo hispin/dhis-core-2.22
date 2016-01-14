@@ -143,6 +143,11 @@ trackerCapture.controller('EventCreationController',
         if(angular.isObject($scope.model.selectedStage)){
             stage = $scope.model.selectedStage;
             prepareEvent();
+            
+            //If the caller wants to create right away, go ahead and save.
+            if (autoCreate) {
+                $scope.save();
+            };
         }
     });    
 
@@ -336,12 +341,6 @@ trackerCapture.controller('EventCreationController',
     }*/
     //end referral logic
     
-    
-    //If the caller wants to create right away, go ahead and save.
-    if (autoCreate) {
-        $scope.save();
-    };
-
     $scope.cancel = function () {
         $modalInstance.close();
     };
