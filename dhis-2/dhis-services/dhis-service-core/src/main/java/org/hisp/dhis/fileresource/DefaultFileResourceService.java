@@ -29,14 +29,15 @@ package org.hisp.dhis.fileresource;
  */
 
 import com.google.common.io.ByteSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.common.GenericIdentifiableObjectStore;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Hours;
+import org.joda.time.Seconds;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.annotation.PostConstruct;
@@ -52,6 +53,8 @@ import java.util.stream.Collectors;
 public class DefaultFileResourceService
     implements FileResourceService
 {
+    private static final Log log = LogFactory.getLog(DefaultFileResourceService.class);
+
     private static final String KEY_FILE_CLEANUP_TASK = "fileResourceCleanupTask";
 
     private static final Duration IS_ORPHAN_TIME_DELTA = Hours.TWO.toStandardDuration();
@@ -119,7 +122,8 @@ public class DefaultFileResourceService
     @Override
     public FileResource getFileResource( String uid )
     {
-        return fileResourceStore.getByUid( uid );
+        // TODO ensureStorageStatus(..) is a temp fix. Should be removed.
+        return ensureStorageStatus( fileResourceStore.getByUid( uid ) );
     }
 
     @Override
@@ -147,24 +151,7 @@ public class DefaultFileResourceService
 
         final String uid = fileResource.getUid();
 
-        // Ensures callback is registered after this transaction is committed.
-        // Works as a safeguard against the unlikely race condition which
-        // could occur when the callback is executed before the FileResource
-        // object has been written to the db. We should consider exposing the
-        // locking mechanisms of Hibernate which would offer a cleaner solution
-        // to this very issue.
-
-        TransactionSynchronizationManager.registerSynchronization(
-            new TransactionSynchronizationAdapter()
-            {
-                @Override
-                public void afterCommit()
-                {
-                    super.afterCommit();
-                    saveContentTask.addCallback( uploadCallback.newInstance( uid ) );
-                }
-            }
-        );
+        saveContentTask.addCallback( uploadCallback.newInstance( uid ) );
 
         return uid;
     }
@@ -219,5 +206,49 @@ public class DefaultFileResourceService
         }
 
         return fileResourceContentStore.getSignedGetContentUri( fileResource.getStorageKey() );
+    }
+
+    // -------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * TODO Temporary fix. Remove at some point.
+     *
+     * Ensures correctness of the storageStatus of this FileResource.
+     *
+     * If the status has been 'PENDING' for more than 1 second we check to see if the content may actually have been stored.
+     * If this is the case the status is corrected to STORED.
+     *
+     * This method is a TEMPORARY fix for the for now unsolved issue with a race occurring between the Hibernate object cache
+     * and the upload callback attempting to modify the FileResource object upon completion.
+     *
+     * Resolving that issue (likely by breaking the StorageStatus into a separate table) should make this method redundant.
+     */
+    private FileResource ensureStorageStatus( FileResource fileResource )
+    {
+        if (FileResourceStorageStatus.PENDING == fileResource.getStorageStatus() )
+        {
+            Duration pendingDuration = new Duration( new DateTime( fileResource.getLastUpdated() ), DateTime.now() );
+
+            if ( pendingDuration.isLongerThan( Seconds.seconds( 1 ).toStandardDuration() ) )
+            {
+                // Upload has been finished for 5+ seconds and is still PENDING.
+                // Check if content has actually been stored and correct to STORED if this is the case.
+
+                boolean contentIsStored = fileResourceContentStore.fileResourceContentExists( fileResource.getStorageKey() );
+
+                if ( contentIsStored )
+                {
+                    // We fix
+                    fileResource.setStorageStatus( FileResourceStorageStatus.STORED );
+                    fileResourceStore.update( fileResource );
+                    log.warn( "Corrected issue: FileResource '" + fileResource.getUid() +
+                        "' had storageStatus PENDING but content was actually stored." );
+                }
+            }
+        }
+
+        return fileResource;
     }
 }
