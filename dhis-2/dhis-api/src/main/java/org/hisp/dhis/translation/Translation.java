@@ -231,7 +231,6 @@ public class Translation
                 property = translation.getProperty() == null ? property : translation.getProperty();
                 value = translation.getValue() == null ? value : translation.getValue();
             }
-            }
         }
     }
 }
