@@ -34,6 +34,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 
 import java.util.Objects;
 
@@ -64,11 +66,11 @@ public class Translation
 
     /**
      * TODO find some consistent order across object, service, HBM.
-     * 
+     *
      * @param className the class name of the translated object.
-     * @param locale the locale.
-     * @param property the property name.
-     * @param value the translation.
+     * @param locale    the locale.
+     * @param property  the property name.
+     * @param value     the translation.
      * @param objectUid the UID of the translated object.
      */
     public Translation( String className, String locale, String property, String value, String objectUid )
@@ -202,5 +204,34 @@ public class Translation
         sb.append( '}' );
 
         return sb.toString();
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            Translation translation = (Translation) other;
+
+            if ( strategy.isReplace() )
+            {
+                objectUid = translation.getObjectUid();
+                className = translation.getClassName();
+                locale = translation.getLocale();
+                property = translation.getProperty();
+                value = translation.getValue();
+            }
+            else if ( strategy.isMerge() )
+            {
+                objectUid = translation.getObjectUid() == null ? objectUid : translation.getObjectUid();
+                className = translation.getClassName() == null ? className : translation.getClassName();
+                locale = translation.getLocale() == null ? locale : translation.getLocale();
+                property = translation.getProperty() == null ? property : translation.getProperty();
+                value = translation.getValue() == null ? value : translation.getValue();
+            }
+            }
+        }
     }
 }
