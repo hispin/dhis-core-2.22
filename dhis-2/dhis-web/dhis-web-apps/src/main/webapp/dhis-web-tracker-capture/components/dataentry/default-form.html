@@ -697,11 +697,10 @@
                         <td class="form-narrow-column" ng-if="allowProvidedElsewhereExists[currentStage.id]">
                             <div ng-show="prStDes[de.dataElement.id].allowProvidedElsewhere">
                                 <input type="checkbox"
-                                       class="form-control-checkbox  input-with-audit"
+                                       class="form-control-checkbox"
                                        ng-model="currentEvent.providedElsewhere[prStDes[de.dataElement.id].dataElement.id]"
                                        ng-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed"
                                        ng-change="saveDatavalueLocation(prStDes[de.dataElement.id])"/>
-                                <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}" current-event="{{currentEvent.event}}"></d2-audit>
                             </div>
                         </td>
                     </tr>
