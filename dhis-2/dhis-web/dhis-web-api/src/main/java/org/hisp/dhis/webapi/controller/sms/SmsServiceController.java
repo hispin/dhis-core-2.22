@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Zubair <rajazubair.asghar@gmail.com>
  */
 @RestController
-@RequestMapping( value = "/sms/services" )
+@RequestMapping( value = "/sms/service" )
 public class SmsServiceController
 {
     @Autowired
