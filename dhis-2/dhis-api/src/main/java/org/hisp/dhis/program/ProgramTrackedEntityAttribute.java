@@ -122,7 +122,7 @@ public class ProgramTrackedEntityAttribute
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public ValueType getValueType()
     {
-        return attribute.getValueType();
+        return attribute != null ? attribute.getValueType() : null;
     }
 
     @Override
@@ -146,19 +146,19 @@ public class ProgramTrackedEntityAttribute
     @Override
     public String getDimensionItem()
     {
-        return program.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + attribute.getUid();
+        return (program != null ? program.getUid() : "") + COMPOSITE_DIM_OBJECT_PLAIN_SEP + (attribute != null ? attribute.getUid() : "");
     }
 
     @Override
     public LegendSet getLegendSet()
     {
-        return attribute.getLegendSet();
+        return attribute != null ? attribute.getLegendSet() : null;
     }
 
     @Override
     public AggregationType getAggregationType()
     {
-        return attribute.getAggregationType();
+        return attribute != null ? attribute.getAggregationType() : null;
     }
 
     // -------------------------------------------------------------------------
