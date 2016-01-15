@@ -1,4 +1,4 @@
-package org.hisp.dhis.webapi.controller;
+package org.hisp.dhis.webapi.webdomain;
 
 /*
  * Copyright (c) 2004-2016, University of Oslo
@@ -28,48 +28,53 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.i18n.I18nService;
-import org.hisp.dhis.i18n.locale.LocaleManager;
-import org.hisp.dhis.webapi.webdomain.WebLocale;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping( value = "/locales" )
-public class LocaleController
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+/**
+ * @author Lars Helge Overland
+ */
+@JacksonXmlRootElement( localName = "locale" )
+public class WebLocale
 {
-    @Autowired
-    private LocaleManager localeManager;
-
-    @Autowired
-    private I18nService i18nService;
-
-    @RequestMapping( value = "/ui", method = RequestMethod.GET )
-    public String getUiLocales( Model model )
+    private String locale;
+    
+    private String name;
+    
+    public static WebLocale fromLocale( Locale locale )
     {
-        List<Locale> locales = localeManager.getAvailableLocales();
+        WebLocale loc = new WebLocale();
         
-        List<WebLocale> webLocales = locales.stream().map( l -> WebLocale.fromLocale( l ) ).collect( Collectors.toList() );
+        loc.setLocale( locale.toString() );
+        loc.setName( locale.getDisplayName() );
         
-        model.addAttribute( "model", webLocales );
-        return "locales";
+        return loc;
+    }
+    
+    @JsonProperty
+    @JacksonXmlProperty
+    public String getLocale()
+    {
+        return locale;
     }
 
-    @RequestMapping( value = "/db", method = RequestMethod.GET )
-    public String getDbLocales( Model model )
+    public void setLocale( String locale )
     {
-        List<Locale> locales = i18nService.getAvailableLocales();
-        
-        List<WebLocale> webLocales = locales.stream().map( l -> WebLocale.fromLocale( l ) ).collect( Collectors.toList() );
-        
-        model.addAttribute( "model", webLocales );
-        return "locales";
+        this.locale = locale;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
     }
 }
