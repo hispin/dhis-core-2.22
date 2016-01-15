@@ -260,17 +260,20 @@
                             <div ng-switch-when="FILE_RESOURCE">                                
                                 <div class="input-group">
                                     <div class="form-control">
-                                        <a href ng-click="downloadFile(currentEvent.event, eventGridColumn.id)">{{fileNames[currentEvent.event][eventGridColumn.id]}}</a>                                        
+                                        <span ng-if="!currentEvent.event || currentEvent.event ==='SINGLE_EVENT'">{{fileNames[currentEvent.event][eventGridColumn.id]}}</span>
+                                        <a ng-if="currentEvent.event && currentEvent.event !=='SINGLE_EVENT'" href ng-click="downloadFile(currentEvent.event, eventGridColumn.id)">{{fileNames[currentEvent.event][eventGridColumn.id]}}</a>                                        
                                     </div>
                                     <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
-                                            <span ng-if="currentEvent[eventGridColumn.id]" 
+                                        <span class="btn btn-primary btn-file" ng-if="currentEvent[eventGridColumn.id]" ng-click="deleteFile(eventGridColumn.id)">
+                                            <span
                                                   title="{{'delete' | translate}}" 
                                                   d2-file-input-name="fileNames[currentEvent.event][eventGridColumn.id]" 
                                                   d2-file-input-delete="currentEvent[eventGridColumn.id]">
-                                                <a href ng-click="deleteFile(eventGridColumn.id)"><i class="fa fa-trash alert-danger"></i></a>
+                                                <i class="fa fa-trash"></i>
                                             </span>
-                                            <span ng-if="!currentEvent[eventGridColumn.id]" title="{{'upload' | translate}}">
+                                        </span>
+                                        <span class="btn btn-primary btn-file" ng-if="!currentEvent[eventGridColumn.id]">
+                                            <span title="{{'upload' | translate}}">
                                                 <i class="fa fa-upload"></i>
                                                 <input type="file" 
                                                        ng-required={{eventGridColumn.compulsory}}
@@ -495,10 +498,10 @@
                                         <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>
                                     </span>
                                 </div>
-                                <div ng-switch-when="BOOLEAN" class="form-control">
-
-                                    <label class="radio-inline">
-                                        <span>
+                                <span>
+                                <div ng-switch-when="BOOLEAN">
+                                    <span class="form-control input-with-audit">
+                                        <label class="radio-inline">
                                             <input type="radio"
                                                 ng-model="currentEvent[de.dataElement.id]"
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
@@ -507,11 +510,8 @@
                                                 ng-change="saveDatavalue()"
                                                 value="">
                                             {{'no_value'| translate}}
-                                            <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>
-                                        </span>
-                                    </label>
-                                    <label class="radio-inline">
-                                        <span>
+                                        </label>
+                                        <label class="radio-inline">
                                             <input type="radio"
                                                 ng-model="currentEvent[de.dataElement.id]"
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
@@ -520,11 +520,8 @@
                                                 ng-change="saveDatavalue()"
                                                 value="true">
                                             {{'yes'| translate}}
-                                            <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>
-                                        </span>
-                                    </label>
-                                    <label class="radio-inline">
-                                        <span>
+                                        </label>
+                                        <label class="radio-inline">
                                             <input type="radio"
                                                 ng-model="currentEvent[de.dataElement.id]"
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
@@ -533,10 +530,12 @@
                                                 ng-change="saveDatavalue()"
                                                 value="false">
                                                 {{'no'| translate}}
-                                            <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>
-                                        </span>
-                                    </label>
+                                        </label>
+                                    </span>
+                                    <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>
                                 </div>
+
+
                                 <div ng-switch-when="DATE">
                                     <span>
                                         <input type="text"
@@ -586,17 +585,20 @@
                                 <div ng-switch-when="FILE_RESOURCE">
                                     <div class="input-group">
                                         <div class="form-control">
-                                            <a href ng-click="downloadFile(currentEvent.event, de.dataElement.id)">{{fileNames[currentEvent.event][de.dataElement.id]}}</a>                                        
+                                            <span ng-if="!currentEvent.event || currentEvent.event ==='SINGLE_EVENT'">{{fileNames[currentEvent.event][de.dataElement.id]}}</span>
+                                            <a ng-if="currentEvent.event && currentEvent.event !=='SINGLE_EVENT'" href ng-click="downloadFile(currentEvent.event, de.dataElement.id)">{{fileNames[currentEvent.event][de.dataElement.id]}}</a>                                        
                                         </div>
                                         <span class="input-group-btn">
-                                            <span class="btn btn-primary btn-file">
-                                                <span ng-if="currentEvent[de.dataElement.id]" 
+                                            <span class="btn btn-primary btn-file"  ng-if="currentEvent[de.dataElement.id]" ng-click="deleteFile(de.dataElement.id)">
+                                                <span
                                                       title="{{'delete' | translate}}" 
                                                       d2-file-input-name="fileNames[currentEvent.event][de.dataElement.id]" 
                                                       d2-file-input-delete="currentEvent[de.dataElement.id]">
-                                                    <a href ng-click="deleteFile(de.dataElement.id)"><i class="fa fa-trash alert-danger"></i></a>
+                                                    <i class="fa fa-trash"></i>
                                                 </span>
-                                                <span ng-if="!currentEvent[de.dataElement.id]" title="{{'upload' | translate}}">
+                                            </span>
+                                            <span class="btn btn-primary btn-file" ng-if="!currentEvent[de.dataElement.id]" >
+                                                <span title="{{'upload' | translate}}">
                                                     <i class="fa fa-upload"></i>
                                                     <input type="file" 
                                                            ng-required={{eventGridColumn.compulsory}}

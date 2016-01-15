@@ -402,6 +402,9 @@ var d2Directives = angular.module('d2Directives', [])
                     if ($scope.currentEvent && $scope.currentEvent !== 'SINGLE_EVENT') {
                         return true;
                     }
+                    if ($scope.type === "attribute" && $scope.selectedTeiId) {
+                        return true;
+                    }
                     return false;
                 }
 

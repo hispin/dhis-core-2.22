@@ -2006,6 +2006,7 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         this.relationshipOwner = {};
         this.selectedTeiEvents = [];
         this.fileNames = [];
+            this.location = null;
 
         this.set = function(currentSelection){
             this.currentSelection = currentSelection;
@@ -2068,6 +2069,13 @@ var d2Services = angular.module('d2Services', ['ngResource'])
         };
         this.getFileNames = function(){
             return this.fileNames;
+        };
+        
+        this.setLocation = function(location){
+            this.location = location;
+        };
+        this.getLocation = function(){
+            return this.location;
         };
     })
     .service('AuditHistoryDataService', function( $http, DialogService ) {

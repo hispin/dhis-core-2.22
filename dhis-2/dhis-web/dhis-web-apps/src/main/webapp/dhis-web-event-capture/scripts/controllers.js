@@ -511,6 +511,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.editingEventInGrid = false;
         $scope.currentElement.updated = false;        
         $scope.currentEvent = {};
+        $scope.fileNames['SINGLE_EVENT'] = [];
         $scope.currentElement = {};
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
     };
@@ -518,6 +519,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.showEventRegistration = function(){        
         $scope.displayCustomForm = $scope.customForm ? true : false;
         $scope.currentEvent = {};
+        $scope.fileNames['SINGLE_EVENT'] = [];
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
         $scope.outerForm.submitted = false;
@@ -690,6 +692,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.currentEvent = {};
                 $scope.currentEvent = angular.copy($scope.newDhis2Event); 
                 $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
+                $scope.fileNames['SINGLE_EVENT'] = [];
                                
                 $scope.note = {};
                 $scope.outerForm.submitted = false;
@@ -900,7 +903,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     }
                 }
                 $scope.dhis2Events.splice(index,1);                
-                $scope.currentEvent = {};             
+                $scope.currentEvent = {}; 
+                $scope.fileNames['SINGLE_EVENT'] = [];
             });
         });        
     };

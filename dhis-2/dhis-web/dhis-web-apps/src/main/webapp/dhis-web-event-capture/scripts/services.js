@@ -60,27 +60,6 @@ var eventCaptureServices = angular.module('eventCaptureServices', ['ngResource']
     };
 })
 
-/* current selections */
-.service('CurrentSelection', function(){
-
-    this.ouLevels = null;     
-    this.location = null;
-    
-    this.setOuLevels = function(ouLevels){
-        this.ouLevels = ouLevels;
-    };
-    this.getOuLevels = function(){
-        return this.ouLevels;
-    };
-    
-    this.setLocation = function(location){
-        this.location = location;
-    };
-    this.getLocation = function(){
-        return this.location;
-    };
-})
-
 /* Factory to fetch optionSets */
 .factory('OptionSetService', function() { 
     return {
