@@ -27,7 +27,6 @@ trackerCapture.controller('DataEntryController',
                 TrackerRulesFactory,
                 EventCreationService,
                 $q,$location) {
-
     $scope.printForm = false;
     $scope.printEmptyForm = false;
     $scope.eventPageSize = 4;
@@ -379,7 +378,6 @@ trackerCapture.controller('DataEntryController',
                             note.storedDate = DateUtils.formatToHrsMins(note.storedDate);
                         });
                     }
-
                     var eventStage = $scope.stagesById[dhis2Event.programStage];
                     if (angular.isObject(eventStage)) {
                         dhis2Event.name = eventStage.name;
@@ -1894,7 +1892,7 @@ trackerCapture.controller('DataEntryController',
         }
     };
     
-    $scope.deleteFile = function(dataElement){
+    $scope.deleteFile = function(ev, dataElement){
         
         if( !dataElement ){            
             var dialogOptions = {
@@ -1915,6 +1913,7 @@ trackerCapture.controller('DataEntryController',
         ModalService.showModal({}, modalOptions).then(function(result){            
             $scope.fileNames[$scope.currentEvent.event][dataElement] = null;
             $scope.currentEvent[dataElement] = null;
+            ev[dataElement] = null;
             $scope.saveDatavalue($scope.prStDes[dataElement], null);
             //$scope.updateEventDataValue($scope.currentEvent, dataElement);
         });

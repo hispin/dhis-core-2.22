@@ -288,13 +288,15 @@
                                         <a href ng-click="downloadFile(currentEvent.event, prStDe.dataElement.id)">{{fileNames[currentEvent.event][prStDe.dataElement.id]}}</a>
                                     </div>
                                     <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
+                                        <span class="btn btn-primary btn-file" ng-if="currentEvent[prStDe.dataElement.id]" ng-click="deleteFile(currentEvent,prStDe.dataElement.id)">
                                             <span ng-if="currentEvent[prStDe.dataElement.id]"
                                                   title="{{'delete' | translate}}"
                                                   d2-file-input-name="fileNames[currentEvent.event][prStDe.dataElement.id]"
                                                   d2-file-input-delete="currentEvent[prStDe.dataElement.id]">
-                                                <a href ng-click="deleteFile(prStDe.dataElement.id)"><i class="fa fa-trash alert-danger"></i></a>
+                                                <i class="fa fa-trash"></i><
                                             </span>
+                                        </span>
+                                        <span class="btn btn-primary btn-file" ng-if="!currentEvent[prStDe.dataElement.id]">
                                             <span ng-if="!currentEvent[prStDe.dataElement.id]" title="{{'upload' | translate}}">
                                                 <i class="fa fa-upload"></i>
                                                 <input type="file"
@@ -634,14 +636,16 @@
                                                     <a href ng-click="downloadFile(currentEvent.event, de.dataElement.id)">{{fileNames[currentEvent.event][de.dataElement.id]}}</a>
                                                 </div>
                                                     <span class="input-group-btn">
-                                                        <span class="btn btn-primary btn-file">
-                                                            <span ng-if="currentEvent[de.dataElement.id]"
+                                                        <span class="btn btn-primary btn-file" ng-click="deleteFile(currentEvent,de.dataElement.id)" ng-if="currentEvent[de.dataElement.id]">
+                                                            <span
                                                                   title="{{'delete' | translate}}"
                                                                   d2-file-input-name="fileNames[currentEvent.event][de.dataElement.id]"
                                                                   d2-file-input-delete="currentEvent[de.dataElement.id]">
-                                                                <a href ng-click="deleteFile(de.dataElement.id)"><i class="fa fa-trash alert-danger"></i></a>
+                                                                <i class="fa fa-trash"></i>
                                                             </span>
-                                                            <span ng-if="!currentEvent[de.dataElement.id]" title="{{'upload' | translate}}">
+                                                        </span>
+                                                        <span class="btn btn-primary btn-file" ng-if="!currentEvent[de.dataElement.id]">
+                                                            <span title="{{'upload' | translate}}">
                                                                 <i class="fa fa-upload"></i>
                                                                 <input type="file"
                                                                        ng-required={{prStDes[de.dataElement.id].compulsory}}

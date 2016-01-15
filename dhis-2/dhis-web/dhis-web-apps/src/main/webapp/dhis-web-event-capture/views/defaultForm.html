@@ -504,7 +504,7 @@
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 ng-disabled="assignedFields[de.dataElement.id]"
                                                 input-field-id={{de.dataElement.id}}
-                                                ng-change="saveDatavalue()">
+                                                ng-change="saveDatavalue()"
                                                 value="">
                                             {{'no_value'| translate}}
                                             <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>
@@ -517,8 +517,8 @@
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 ng-disabled="assignedFields[de.dataElement.id]"
                                                 input-field-id={{de.dataElement.id}}
-                                                ng-change="saveDatavalue()">
-                                            value="true">
+                                                ng-change="saveDatavalue()"
+                                                value="true">
                                             {{'yes'| translate}}
                                             <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>
                                         </span>
@@ -530,7 +530,7 @@
                                                 ng-required={{prStDes[de.dataElement.id].compulsory}}
                                                 ng-disabled="assignedFields[de.dataElement.id]"
                                                 input-field-id={{de.dataElement.id}}
-                                                ng-change="saveDatavalue()">
+                                                ng-change="saveDatavalue()"
                                                 value="false">
                                                 {{'no'| translate}}
                                             <d2-audit dataelement-id="{{de.dataElement.id}}" dataelement-name="{{prStDes[de.dataElement.id].dataElement.name}}"  current-event="{{currentEvent.event}}"></d2-audit>

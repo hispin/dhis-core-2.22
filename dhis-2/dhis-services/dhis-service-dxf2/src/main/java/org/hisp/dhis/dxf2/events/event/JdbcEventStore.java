@@ -223,7 +223,11 @@ public class JdbcEventStore
 
                 eventRow.setEvent( rowSet.getString( "psi_uid" ) );
                 eventRow.setTrackedEntityInstance( rowSet.getString( "tei_uid" ) );
-
+                eventRow.setTrackedEntityInstanceOrgUnit( rowSet.getString( "tei_ou" ) );
+                eventRow.setTrackedEntityInstanceOrgUnitName( rowSet.getString( "tei_ou_name" ) );
+                eventRow.setTrackedEntityInstanceCreated( rowSet.getString( "tei_created" ) );
+                eventRow.setTrackedEntityInstanceInactive( rowSet.getBoolean( "tei_inactive" ) );
+                
                 eventRow.setProgram( IdSchemes.getValue( rowSet.getString( "p_uid" ), rowSet.getString( "p_code" ),
                     idSchemes.getProgramIdScheme() ) );
                 eventRow.setProgramStage( IdSchemes.getValue( rowSet.getString( "ps_uid" ),
@@ -349,13 +353,15 @@ public class JdbcEventStore
             "psi.storedby as psi_storedby, psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
             "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
             "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
-            "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid " +
+            "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, " +
+            "tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid, teiou.uid as tei_ou, teiou.name as tei_ou_name, tei.created as tei_created, tei.inactive as tei_inactive " +
             "from programstageinstance psi " +
             "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
             "inner join program p on p.programid=pi.programid " +
             "inner join programstage ps on ps.programstageid=psi.programstageid " +
             "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
-            "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
+            "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) " + 
+            "left join organisationunit teiou on (tei.organisationunitid=teiou.organisationunitid) ";
 
         if ( params.getTrackedEntityInstance() != null )
         {

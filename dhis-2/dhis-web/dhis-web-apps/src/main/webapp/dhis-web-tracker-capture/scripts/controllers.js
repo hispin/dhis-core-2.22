@@ -308,7 +308,15 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
                 if(result.eventRows){
                     angular.forEach(result.eventRows, function(eventRow){
                         if(ids.indexOf(eventRow.trackedEntityInstance) === -1){
-                            var row = { id: eventRow.trackedEntityInstance};
+                            
+                            var row = { 
+                                id: eventRow.trackedEntityInstance,
+                                created: DateUtils.formatFromApiToUser(eventRow.trackedEntityInstanceCreated),
+                                orgUnit: eventRow.trackedEntityInstanceOrgUnit,
+                                orgUnitName: eventRow.trackedEntityInstanceOrgUnitName,
+                                inactive: eventRow.trackedEntityInstanceInactive
+                                };
+                            
                             angular.forEach(eventRow.attributes, function(attr){
                                 row[attr.attribute] = attr.value;                            
                             });
