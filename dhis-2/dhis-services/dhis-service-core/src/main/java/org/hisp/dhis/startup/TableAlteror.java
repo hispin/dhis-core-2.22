@@ -33,7 +33,6 @@ import org.amplecode.quick.StatementHolder;
 import org.amplecode.quick.StatementManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.dataelement.CategoryOptionComboStore;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
@@ -1161,7 +1160,7 @@ public class TableAlteror
         }
 
         executeSql( "insert into dataapprovalworkflow ( workflowid, uid, created, lastupdated, name, periodtypeid, userid, publicaccess ) "
-            + "select " + statementBuilder.getAutoIncrementValue() + ", " + CodeGenerator.generateCode() + ", now(), now(), ds.name, ds.periodtypeid, ds.userid, ds.publicaccess "
+            + "select " + statementBuilder.getAutoIncrementValue() + ", " + statementBuilder.getUid() + ", now(), now(), ds.name, ds.periodtypeid, ds.userid, ds.publicaccess "
             + "from (select datasetid from dataset where approvedata = true union select distinct datasetid from dataapproval) as a "
             + "join dataset ds on ds.datasetid = a.datasetid" );
 

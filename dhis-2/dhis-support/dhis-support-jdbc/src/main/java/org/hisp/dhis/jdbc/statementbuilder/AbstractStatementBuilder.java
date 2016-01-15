@@ -92,6 +92,23 @@ public abstract class AbstractStatementBuilder
     }
 
     @Override
+    public String getUid()
+    {
+        return concatenate(
+            getCharAt( AZaz, "1 + " + getRandom( AZaz.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ),
+            getCharAt( AZaz09, "1 + " + getRandom( AZaz09.length() ) ) );
+    }
+
+    @Override
     public String getPeriodIdentifierStatement( Period period )
     {
         return
