@@ -1384,6 +1384,7 @@
         <value>dataelementgroupset</value>
         <value>dataelementcategory</value>
         <value>dataelementcategoryoption</value>
+        <value>dataapprovalworkflow</value>
         <value>categorycombo</value>
         <value>categoryoptioncombo</value>
         <value>translation</value>
