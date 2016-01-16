@@ -854,6 +854,8 @@ public class TableAlteror
         executeSql( "update programstage set excecutiondatelabel = reportdatedescription where excecutiondatelabel is not null" );
         executeSql( "alter table programstage drop column reportdatedescription" );
         executeSql( "update programstage set reportdatetouse = 'indicentDate' where reportdatetouse='dateOfIncident'" );
+        executeSql( "update programstage set repeatable = false where repeatable is null" );
+        
 
         executeSql( "alter table programindicator drop column missingvaluereplacement" );
         
