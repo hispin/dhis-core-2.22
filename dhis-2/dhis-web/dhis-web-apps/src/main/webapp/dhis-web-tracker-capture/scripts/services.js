@@ -945,15 +945,20 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }                
             }
             else{
-                if(val){                    
-                    if( type === 'NUMBER' ){
-                        if(dhis2.validation.isNumber(val)){                            
-                            //val = new Number(val);
-                            val = parseInt(val);                            
-                        }
-                        else{
-                            //val = new Number('0');
-                            val = parseInt('0');      
+                if(val){  
+                    if(type === 'NUMBER' ||
+                        type === 'INTEGER' ||
+                        type === 'INTEGER_POSITIVE' ||
+                        type === 'INTEGER_NEGATIVE' ||
+                        type === 'INTEGER_ZERO_OR_POSITIVE'){
+                        if( dhis2.validation.isNumber(val)){
+                            if(type === 'NUMBER'){
+                                val = parseFloat(val);
+                            }else{
+                                val = parseInt(val);
+                            }
+                        } else {
+                            val = parseInt('0');
                         }
                     }
                     if(type === 'DATE'){
