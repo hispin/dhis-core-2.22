@@ -235,6 +235,17 @@ public class InitTableAlteror
         executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype is null" );
 
         executeSql( "update optionset set valuetype='TEXT' where valuetype is null" );
+
+        executeSql( "update attribute set valuetype='TEXT' where valuetype='string'" );
+        executeSql( "update attribute set valuetype='LONG_TEXT' where valuetype='text'" );
+        executeSql( "update attribute set valuetype='BOOLEAN' where valuetype='bool'" );
+        executeSql( "update attribute set valuetype='DATE' where valuetype='date'" );
+        executeSql( "update attribute set valuetype='NUMBER' where valuetype='number'" );
+        executeSql( "update attribute set valuetype='INTEGER' where valuetype='integer'" );
+        executeSql( "update attribute set valuetype='INTEGER_POSITIVE' where valuetype='positive_integer'" );
+        executeSql( "update attribute set valuetype='INTEGER_NEGATIVE' where valuetype='negative_integer'" );
+        executeSql( "update attribute set valuetype='TEXT' where valuetype='option_set'" );
+        executeSql( "update attribute set valuetype='TEXT' where valuetype is null" );
     }
 
     private void upgradeProgramStageDataElements()
