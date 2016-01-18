@@ -1079,8 +1079,8 @@
                 /**
                  * @description
                  * Priority of the color scheme that is being loaded is as follows
-                 * 1. /api/userSettings/currentStyle
-                 * 2. /api/systemSettings {currentStyle property on the systemSettings object}
+                 * 1. /api/userSettings/keyStyle
+                 * 2. /api/systemSettings {keyStyle property on the systemSettings object}
                  * 3. The default style as defined in this function using the `defaultStyle` variable
                  */
                 function d2HeaderBarController($scope, $http) {
@@ -1112,12 +1112,12 @@
                         return requestUserStyle()
                             .catch(function () {
                                 console && console.info && console.info('Unable to load usersettings, falling back to systemSettings');
-                                localStorage.setItem('dhis2.menu.ui.headerBar.userStyle', systemSettings.currentStyle);
-                                return systemSettings.currentStyle;
+                                localStorage.setItem('dhis2.menu.ui.headerBar.userStyle', systemSettings.keyStyle);
+                                return systemSettings.keyStyle;
                             })
                             .then(function (userStyleUrl) {
                                 return {
-                                    userStyleUrl: userStyleUrl || systemSettings.currentStyle,
+                                    userStyleUrl: userStyleUrl || systemSettings.keyStyle,
                                     logo: systemSettings.keyCustomTopMenuLogo,
                                     title: systemSettings.applicationTitle,
                                     link: systemSettings.startModule
@@ -1184,7 +1184,7 @@
                     }
 
                     function requestUserStyle() {
-                        var currentUserStyleUrl = [baseUrl, 'api', 'userSettings', 'currentStyle'].join('/');
+                        var currentUserStyleUrl = [baseUrl, 'api', 'userSettings', 'keyStyle'].join('/');
 
                         return $http.get(currentUserStyleUrl, {responseType: 'text', cache: true, headers: {'Accept': 'text/plain'}})
                             .then(function (response) {
