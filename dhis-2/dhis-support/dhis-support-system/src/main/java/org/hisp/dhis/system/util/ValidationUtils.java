@@ -456,7 +456,7 @@ public class ValidationUtils
             return null;
         }
 
-        if ( storedBy.length() > 31 )
+        if ( storedBy.length() > 255 )
         {
             return "stored_by_length_greater_than_max_length";
         }
