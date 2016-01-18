@@ -136,6 +136,18 @@ trackerCapture.controller('ADDAttendanceController',
 
                     for (var i=0;i<$scope.trackedEntityInstanceList.eventMembers.length;i++)
                     {
+
+                        /*
+                        if( $scope.alreadyAttendedTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntityInstance] )
+                        {
+                            $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = true;
+                        }
+                        else
+                        {
+                            $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = false;
+                        }
+                        */
+
                         $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = "";
 
                         if (!$scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity])
@@ -146,7 +158,6 @@ trackerCapture.controller('ADDAttendanceController',
                         $scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity].push($scope.trackedEntityInstanceList.eventMembers[i]);
 
                     }
-
 
                     for (key in $scope.TEtoEventTEIMap){
                         var TEIList = [];
@@ -172,7 +183,7 @@ trackerCapture.controller('ADDAttendanceController',
 
 
         //get attributes for display in association widget
-        AjaxCalls.getAssociationWidgetAttributes().then(function(attendanceAttributes){
+        AjaxCalls.getInvitationAndAttendedWidgetAttributes().then(function(attendanceAttributes){
             $scope.attendanceAttributes = attendanceAttributes;
         });
 
@@ -298,18 +309,6 @@ trackerCapture.controller('ADDAttendanceController',
         };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         // close popUp Window
 
         $scope.closeWindowAttendance = function () {
@@ -331,17 +330,10 @@ trackerCapture.controller('ADDAttendanceController',
         };
 
 
-
         AjaxCalls.getRootOrgUnit().then(function(data){
             $scope.previouslySelectedOrgUnitId = selection.getSelected()[0];
             selection.setSelected(data.organisationUnits[0].id);
             selection.load();
         })
-
-
-
-
-
-
 
     });

@@ -54,7 +54,7 @@ trackerCapture.controller('AttendanceController',
 
 
         //get attributes for display in association widget
-        AjaxCalls.getAssociationWidgetAttributes().then(function(attendanceAttributes){
+        AjaxCalls.getInvitationAndAttendedWidgetAttributes().then(function(attendanceAttributes){
             $scope.attendanceAttributes = attendanceAttributes;
         });
 

@@ -38,6 +38,9 @@
 }
 .associated{
     font-style: italic;
+    color: green;
+    /*font-weight: bold;
+    */
 }
 .teiHeading{
 border-color: burlywood!important;

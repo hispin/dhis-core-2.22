@@ -87,6 +87,30 @@ trackerCapture
                 });
                 return promise;
             },
+
+            getInvitationAndAttendedWidgetAttributes : function(){
+                var promise = $http.get(  '../api/trackedEntityAttributes?fields=*,attributeValues[*,attribute[id,name,code]]&paging=false').then(function(response){
+                    var associationWidgets = [];
+
+                    if (!response.data.trackedEntityAttributes)
+                        return associationWidgets;
+
+                    for (var i=0;i<response.data.trackedEntityAttributes.length;i++){
+                        if (response.data.trackedEntityAttributes[i].attributeValues)
+                            for (var j=0;j<response.data.trackedEntityAttributes[i].attributeValues.length;j++){
+                                if (response.data.trackedEntityAttributes[i].attributeValues[j].attribute.code=="ToBeShownInInvitationAndAttendendWidget"){
+                                    if (response.data.trackedEntityAttributes[i].attributeValues[j].value){
+                                        associationWidgets.push(response.data.trackedEntityAttributes[i]);
+                                    }
+                                }
+                            }
+                    }
+                    return associationWidgets;
+                });
+                return promise;
+            },
+
+
             getAssociationWidgetAttributes : function(){
                 var promise = $http.get(  '../api/trackedEntityAttributes?fields=*,attributeValues[*,attribute[id,name,code]]&paging=false').then(function(response){
                     var associationWidgets = [];

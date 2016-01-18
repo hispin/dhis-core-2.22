@@ -98,7 +98,7 @@ trackerCapture.controller('InvitationController',
         //})
 
         //get attributes for display in association widget
-        AjaxCalls.getAssociationWidgetAttributes().then(function(invitationAttributes){
+        AjaxCalls.getInvitationAndAttendedWidgetAttributes().then(function(invitationAttributes){
             $scope.invitationAttributes = invitationAttributes;
         });
 
