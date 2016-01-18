@@ -267,7 +267,7 @@ public class TableAlteror
 
         executeSql( "ALTER TABLE minmaxdataelement RENAME minvalue TO minimumvalue" );
         executeSql( "ALTER TABLE minmaxdataelement RENAME maxvalue TO maximumvalue" );
-        
+
         executeSql( "update minmaxdataelement set generatedvalue = generated where generatedvalue is null" );
         executeSql( "alter table minmaxdataelement drop column generated" );
         executeSql( "alter table minmaxdataelement alter column generatedvalue set not null" );
@@ -753,7 +753,7 @@ public class TableAlteror
         executeSql( "UPDATE attribute SET documentattribute=false WHERE documentattribute IS NULL" );
         executeSql( "UPDATE attribute SET optionattribute=false WHERE optionattribute IS NULL" );
         executeSql( "UPDATE attribute SET optionsetattribute=false WHERE optionsetattribute IS NULL" );
-        
+
         executeSql( "update attribute set isunique=false where isunique is null" );
 
         executeSql( "ALTER TABLE trackedentityattributedimension DROP COLUMN operator" );
@@ -764,11 +764,11 @@ public class TableAlteror
 
         //update programruleaction:
         executeSql( "ALTER TABLE programruleaction DROP COLUMN name" );
-        
+
         //update programrule
         executeSql( "UPDATE programrule SET rulecondition = condition WHERE rulecondition IS NULL" );
         executeSql( "ALTER TABLE programrule DROP COLUMN condition" );
-        
+
         // data approval
         executeSql( "UPDATE dataapproval SET accepted=false WHERE accepted IS NULL" );
         executeSql( "ALTER TABLE dataapproval ALTER COLUMN accepted SET NOT NULL" );
@@ -855,10 +855,10 @@ public class TableAlteror
         executeSql( "alter table programstage drop column reportdatedescription" );
         executeSql( "update programstage set reportdatetouse = 'indicentDate' where reportdatetouse='dateOfIncident'" );
         executeSql( "update programstage set repeatable = false where repeatable is null" );
-        
+
 
         executeSql( "alter table programindicator drop column missingvaluereplacement" );
-        
+
         executeSql( "update keyjsonvalue set namespacekey = key where namespacekey is null" );
         executeSql( "alter table keyjsonvalue alter column namespacekey set not null" );
         executeSql( "alter table keyjsonvalue drop column key" );
@@ -890,9 +890,9 @@ public class TableAlteror
         upgradeToDataApprovalWorkflows();
         executeSql( "alter table dataapproval alter column workflowid set not null" );
         executeSql( "alter table dataapproval add constraint dataapproval_unique_key unique (dataapprovallevelid,workflowid,periodid,organisationunitid,attributeoptioncomboid)" );
-        
+
         upgradeImplicitAverageMonitoringRules();
-        
+
         updateOptions();
 
         upgradeAggregationType( "reporttable" );
@@ -904,6 +904,9 @@ public class TableAlteror
         organisationUnitService.updatePaths();
 
         categoryOptionComboStore.updateNames();
+
+        executeSql( "alter table trackedentitydatavalue alter column storedby TYPE character varying(255)" );
+        executeSql( "alter table datavalue alter column storedby TYPE character varying(255)" );
 
         log.info( "Tables updated" );
     }
@@ -1144,7 +1147,7 @@ public class TableAlteror
     /**
      * Convert from older releases where dataApproval referenced dataset
      * instead of workflow:
-     *
+     * <p>
      * For every dataset that has either ("approve data" == true) *or*
      * (existing data approval database records referencing it), a workflow will
      * be created with the same name as the data set. This workflow will be
@@ -1183,7 +1186,7 @@ public class TableAlteror
     /**
      * Convert from older releases where the right hand sides of surveillance rules were
      * implicitly averaged.  This just wraps the previous expression in a call to AVG().
-     * 
+     * <p>
      * We use the presence of the lowoutliers column to determine whether we need to make the
      * change.  Just to be extra sure, our rewrite SQL won't rewrite rules which already have
      * references to AVG or STDDEV.
@@ -1196,18 +1199,19 @@ public class TableAlteror
         }
 
         // Just to be extra sure, we don't modify any expressions which already contain a call to AVG or STDDEV
-        executeSql( "update expression set expression="+statementBuilder.concatenate("'AVG('","expression","')'")+" from  validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid AND expression NOT LIKE '%AVG%' and expression NOT LIKE '%STDDEV%';");
-        executeSql( "update expression set expression=FORMAT('AVG(%s)',expression) from  validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid AND expression NOT LIKE '%AVG%' and expression NOT LIKE '%STDDEV%';");
+        executeSql( "update expression set expression=" + statementBuilder.concatenate( "'AVG('", "expression", "')'" ) + " from  validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid AND expression NOT LIKE '%AVG%' and expression " +
+            "NOT LIKE '%STDDEV%';" );
+        executeSql( "update expression set expression=FORMAT('AVG(%s)',expression) from  validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid AND expression NOT LIKE '%AVG%' and expression NOT LIKE '%STDDEV%';" );
 
-        executeSql("ALTER TABLE validationrule DROP COLUMN highoutliers");
-        executeSql("ALTER TABLE validationrule DROP COLUMN lowoutliers");
-        
-        log.info( "Added explicit AVG calls to olid-style implicit average surveillance rules");
+        executeSql( "ALTER TABLE validationrule DROP COLUMN highoutliers" );
+        executeSql( "ALTER TABLE validationrule DROP COLUMN lowoutliers" );
+
+        log.info( "Added explicit AVG calls to olid-style implicit average surveillance rules" );
     }
     /* For testing purposes, this will undo the wrapping functionality above:
      * update expression set expression=regexp_replace(regexp_replace(expression,'[)]$',''),'^AVG[(]','') from validationrule where ruletype='SURVEILLANCE' AND rightexpressionid=expressionid;
      */
-    
+
     private List<Integer> getDistinctIdList( String table, String col1 )
     {
         StatementHolder holder = statementManager.getHolder();
