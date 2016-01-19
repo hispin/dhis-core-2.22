@@ -47,6 +47,7 @@ import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 
@@ -71,6 +72,7 @@ public class JdbcEventStore
     @Autowired
     private JdbcTemplate jdbcTemplate;
     
+    // for getting eventMember inside Events
     @Autowired
     private TrackedEntityInstanceService trackedEntityInstanceService;
 
@@ -199,7 +201,6 @@ public class JdbcEventStore
                 event.getEventMembers().add(trackedEntityInstance);
                 }
             }
-            
         }
 
         return events;
@@ -357,23 +358,22 @@ public class JdbcEventStore
         List<Integer> orgUnitIds = getIdentifiers( organisationUnits );
 
         SqlHelper hlp = new SqlHelper();
-        
+
         String sql =
             "select psi.programstageinstanceid as psi_id, psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
                 "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
                 "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
                 "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
-                "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid " + ",psim.trackedentityinstanceid as psim_tei " +
+                "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid " + ", psim.trackedentityinstanceid as psim_tei " +
                 "from programstageinstance psi " +
                 "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
                 "inner join program p on p.programid=pi.programid " +
                 "inner join programstage ps on ps.programstageid=psi.programstageid " +
-                "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid ";
+                "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
+                "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
+        
+        sql += " left join programstageinstancemembers psim on ( psim.programstageinstanceid=psi.programstageinstanceid ) ";
 
-        sql += " left join programstageinstancemembers psim on (psim.programstageinstanceid=psi.programstageinstanceid) ";
-        
-        
-        
         if ( params.getTrackedEntityInstance() != null )
         {
             sql += hlp.whereAnd() + " tei.trackedentityinstanceid=" + params.getTrackedEntityInstance().getId() + " ";

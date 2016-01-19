@@ -29,7 +29,6 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.CodeGenerator;
 import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -126,12 +125,14 @@ public abstract class AbstractTrackedEntityInstanceService
     {
         return getTrackedEntityInstance( teiService.getTrackedEntityInstance( uid ) );
     }
-
+    
+    // for getting eventMember inside Events
     @Override
     public TrackedEntityInstance getTrackedEntityInstance( int id )
     {
         return getTrackedEntityInstance( teiService.getTrackedEntityInstance( id ) );
     }
+    
     
     @Override
     public TrackedEntityInstance getTrackedEntityInstance( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance )

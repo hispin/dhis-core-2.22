@@ -52,6 +52,7 @@ public interface TrackedEntityInstanceService
 
     TrackedEntityInstance getTrackedEntityInstance( String uid );
     
+    // for getting eventMember inside Events
     TrackedEntityInstance getTrackedEntityInstance( int id );
 
     TrackedEntityInstance getTrackedEntityInstance( org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance );
