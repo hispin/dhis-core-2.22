@@ -1116,6 +1116,19 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         return dhis2.validation.isNumber(val) ? val : '';
     };
     
+    //check if field is hidden
+    $scope.isHidden = function(id) {
+        //In case the field contains a value, we cant hide it. 
+        //If we hid a field with a value, it would falsely seem the user was aware that the value was entered in the UI.
+        if($scope.currentEvent[id]) {
+           return false; 
+        }
+        else {
+            return $scope.hiddenFields[id];
+        }
+    }; 
+    
+    
     $scope.saveDatavalue = function(){        
         $scope.executeRules();
     };
