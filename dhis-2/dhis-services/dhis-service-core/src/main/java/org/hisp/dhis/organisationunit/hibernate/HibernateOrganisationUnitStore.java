@@ -28,15 +28,6 @@ package org.hisp.dhis.organisationunit.hibernate;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -58,6 +49,15 @@ import org.hisp.dhis.system.objectmapper.OrganisationUnitRelationshipRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.security.access.AccessDeniedException;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Kristian Nordal
@@ -120,52 +120,52 @@ public class HibernateOrganisationUnitStore
     public List<OrganisationUnit> getOrganisationUnits( OrganisationUnitQueryParams params )
     {
         SqlHelper hlp = new SqlHelper();
-        
+
         String hql = "select o from OrganisationUnit o ";
-        
+
         if ( params.getQuery() != null )
         {
-            hql += hlp.whereAnd() + " (lower(o.name) like :queryLower or o.code = :query or o.uid = :query) " ;
+            hql += hlp.whereAnd() + " (lower(o.name) like :queryLower or o.code = :query or o.uid = :query) ";
         }
 
         if ( params.hasParents() )
         {
             hql += hlp.whereAnd() + " (";
-            
+
             for ( OrganisationUnit parent : params.getParents() )
             {
                 hql += "o.path like :" + parent.getUid() + " or ";
             }
-            
+
             hql = TextUtils.removeLastOr( hql ) + ") ";
         }
-        
+
         if ( params.hasGroups() )
         {
             hql += hlp.whereAnd() + " (";
-            
+
             for ( OrganisationUnitGroup group : params.getGroups() )
             {
                 hql += " :" + group.getUid() + " in elements(o.groups) or ";
             }
-            
+
             hql = TextUtils.removeLastOr( hql ) + ") ";
         }
-        
+
         if ( params.hasLevels() )
         {
             hql += hlp.whereAnd() + " o.hierarchyLevel in (:levels) ";
         }
-        
+
         if ( params.getMaxLevels() != null )
         {
             hql += hlp.whereAnd() + " o.hierarchyLevel <= :maxLevels ";
         }
-        
+
         hql += "order by o.name";
-        
+
         Query query = getQuery( hql );
-        
+
         if ( params.getQuery() != null )
         {
             query.setString( "queryLower", "%" + params.getQuery().toLowerCase() + "%" );
@@ -179,7 +179,7 @@ public class HibernateOrganisationUnitStore
                 query.setString( parent.getUid(), parent.getPath() + "%" );
             }
         }
-        
+
         if ( params.hasGroups() )
         {
             for ( OrganisationUnitGroup group : params.getGroups() )
@@ -187,12 +187,12 @@ public class HibernateOrganisationUnitStore
                 query.setEntity( group.getUid(), group );
             }
         }
-        
+
         if ( params.hasLevels() )
         {
             query.setParameterList( "levels", params.getLevels() );
         }
-        
+
         if ( params.getMaxLevels() != null )
         {
             query.setInteger( "maxLevels", params.getMaxLevels() );
@@ -202,12 +202,12 @@ public class HibernateOrganisationUnitStore
         {
             query.setFirstResult( params.getFirst() );
         }
-        
+
         if ( params.getMax() != null )
         {
             query.setMaxResults( params.getMax() ).list();
         }
-        
+
         return query.list();
     }
 
@@ -250,12 +250,12 @@ public class HibernateOrganisationUnitStore
     public List<OrganisationUnit> getWithinCoordinateArea( double[] box )
     {
         return getQuery( "from OrganisationUnit o " +
-            "where o.featureType='Point' " +
-            "and o.coordinates is not null " +
-            "and cast( substring(o.coordinates, 2, locate(',', o.coordinates) - 2) AS big_decimal ) >= " + box[3] + " " +
-            "and cast( substring(o.coordinates, 2, locate(',', o.coordinates) - 2) AS big_decimal ) <= " + box[1] + " " +
-            "and cast( substring(coordinates, locate(',', o.coordinates) + 1, locate(']', o.coordinates) - locate(',', o.coordinates) - 1 ) AS big_decimal ) >= " + box[2] + " " +
-            "and cast( substring(coordinates, locate(',', o.coordinates) + 1, locate(']', o.coordinates) - locate(',', o.coordinates) - 1 ) AS big_decimal ) <= " + box[0]
+                "where o.featureType='Point' " +
+                "and o.coordinates is not null " +
+                "and cast( substring(o.coordinates, 2, locate(',', o.coordinates) - 2) AS big_decimal ) >= " + box[3] + " " +
+                "and cast( substring(o.coordinates, 2, locate(',', o.coordinates) - 2) AS big_decimal ) <= " + box[1] + " " +
+                "and cast( substring(coordinates, locate(',', o.coordinates) + 1, locate(']', o.coordinates) - locate(',', o.coordinates) - 1 ) AS big_decimal ) >= " + box[2] + " " +
+                "and cast( substring(coordinates, locate(',', o.coordinates) + 1, locate(']', o.coordinates) - locate(',', o.coordinates) - 1 ) AS big_decimal ) <= " + box[0]
         ).list();
     }
 
@@ -286,8 +286,7 @@ public class HibernateOrganisationUnitStore
     @SuppressWarnings( "unchecked" )
     public void updatePaths()
     {
-        List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit ou where ou.path is null or ou.hierarchyLevel is null" ).list() );
-        updatePaths( organisationUnits );
+        getQuery( "from OrganisationUnit ou where ou.path is null or ou.hierarchyLevel is null" ).list();
     }
 
     @Override
@@ -297,7 +296,7 @@ public class HibernateOrganisationUnitStore
         List<OrganisationUnit> organisationUnits = new ArrayList<>( getQuery( "from OrganisationUnit" ).list() );
         updatePaths( organisationUnits );
     }
-    
+
     private void updatePaths( List<OrganisationUnit> organisationUnits )
     {
         Session session = sessionFactory.getCurrentSession();
@@ -307,7 +306,7 @@ public class HibernateOrganisationUnitStore
         {
             session.update( organisationUnit );
 
-            if ( ( counter % 400 ) == 0 )
+            if ( (counter % 400) == 0 )
             {
                 dbmsManager.clearSession();
             }
@@ -322,7 +321,7 @@ public class HibernateOrganisationUnitStore
         String hql = "select max(ou.hierarchyLevel) from OrganisationUnit ou";
 
         Integer maxLength = (Integer) getQuery( hql ).uniqueResult();
-        
+
         return maxLength != null ? maxLength.intValue() : 0;
     }
 }
