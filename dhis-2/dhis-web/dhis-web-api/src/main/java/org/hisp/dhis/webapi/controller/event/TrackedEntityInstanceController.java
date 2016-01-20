@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
+import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.cache.CacheStrategy;
 import org.hisp.dhis.commons.util.TextUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -148,6 +149,14 @@ public class TrackedEntityInstanceController
         List<TrackedEntityInstance> trackedEntityInstances = trackedEntityInstanceService.getTrackedEntityInstances( params );
 
         RootNode rootNode = NodeUtils.createMetadata();
+
+        if ( params.isPaging() && params.isTotalPages() )
+        {
+            int count = trackedEntityInstanceService.getTrackedEntityInstanceCount( params );
+            Pager pager = new Pager( params.getPage(), count, params.getPageSize() );
+            rootNode.addChild( NodeUtils.createPager( pager ) );
+        }
+
         rootNode.addChild( fieldFilterService.filter( TrackedEntityInstance.class, trackedEntityInstances, fields ) );
 
         return rootNode;

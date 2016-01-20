@@ -892,7 +892,6 @@ public class TableAlteror
         executeSql( "alter table dataapproval add constraint dataapproval_unique_key unique (dataapprovallevelid,workflowid,periodid,organisationunitid,attributeoptioncomboid)" );
 
         upgradeImplicitAverageMonitoringRules();
-
         updateOptions();
 
         upgradeAggregationType( "reporttable" );

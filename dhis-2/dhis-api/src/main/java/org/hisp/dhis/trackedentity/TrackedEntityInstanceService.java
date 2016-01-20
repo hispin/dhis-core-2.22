@@ -119,6 +119,8 @@ public interface TrackedEntityInstanceService
      */
     List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
 
+    int getTrackedEntityInstanceCount( TrackedEntityInstanceQueryParams params );
+
     /**
      * Returns a TrackedEntityInstanceQueryParams based on the given input.
      *

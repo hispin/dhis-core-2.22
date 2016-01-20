@@ -94,8 +94,7 @@ public class HibernateTrackedEntityInstanceStore
     @Override
     public int countTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
     {
-        String hql = buildTrackedEntityInstanceHql( params );
-        
+        String hql = buildTrackedEntityInstanceCountHql( params );
         Query query = getQuery( hql );
 
         return ((Number) query.iterate().next()).intValue();
@@ -106,7 +105,6 @@ public class HibernateTrackedEntityInstanceStore
     public List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params )
     {
         String hql = buildTrackedEntityInstanceHql( params );
-        
         Query query = getQuery( hql );
 
         if ( params.isPaging() )
@@ -116,6 +114,11 @@ public class HibernateTrackedEntityInstanceStore
         }
 
         return query.list();
+    }
+
+    private String buildTrackedEntityInstanceCountHql( TrackedEntityInstanceQueryParams params )
+    {
+        return buildTrackedEntityInstanceHql( params ).replaceFirst( "select distinct tei from", "select count(distinct tei) from" );
     }
 
     private String buildTrackedEntityInstanceHql( TrackedEntityInstanceQueryParams params )
@@ -131,11 +134,11 @@ public class HibernateTrackedEntityInstanceStore
         if ( params.hasOrganisationUnits() )
         {
             params.handleOrganisationUnits();
-            
+
             if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.DESCENDANTS ) )
             {
                 String ouClause = "(";
-                
+
                 SqlHelper orHlp = new SqlHelper( true );
 
                 for ( OrganisationUnit organisationUnit : params.getOrganisationUnits() )
@@ -162,7 +165,7 @@ public class HibernateTrackedEntityInstanceStore
                     String filter = queryFilter.getSqlFilter( StringUtils.lowerCase( queryFilter.getFilter() ) );
 
                     hql += hlp.whereAnd() + " exists (from TrackedEntityAttributeValue teav where teav.entityInstance=tei";
-                    
+
                     hql += " and teav.attribute.uid='" + queryItem.getItemId() + "'";
 
                     if ( queryItem.isNumeric() )
@@ -181,7 +184,7 @@ public class HibernateTrackedEntityInstanceStore
         if ( params.hasProgram() )
         {
             hql += hlp.whereAnd() + "exists (from ProgramInstance pi where pi.entityInstance=tei";
-            
+
             hql += " and pi.program.uid = '" + params.getProgram().getUid() + "'";
 
             if ( params.hasProgramStatus() )
@@ -219,14 +222,14 @@ public class HibernateTrackedEntityInstanceStore
         // Select clause
         // ---------------------------------------------------------------------
 
-        String sql = 
-            "select tei.uid as " + TRACKED_ENTITY_INSTANCE_ID + ", " + 
-            "tei.created as " + CREATED_ID + ", " + 
-            "tei.lastupdated as " + LAST_UPDATED_ID + ", " + 
-            "ou.uid as " + ORG_UNIT_ID + ", " +
-            "ou.name as " + ORG_UNIT_NAME + ", " +
-            "te.uid as " + TRACKED_ENTITY_ID + ", " + 
-            "tei.inactive as " + INACTIVE_ID + ", ";
+        String sql =
+            "select tei.uid as " + TRACKED_ENTITY_INSTANCE_ID + ", " +
+                "tei.created as " + CREATED_ID + ", " +
+                "tei.lastupdated as " + LAST_UPDATED_ID + ", " +
+                "ou.uid as " + ORG_UNIT_ID + ", " +
+                "ou.name as " + ORG_UNIT_NAME + ", " +
+                "te.uid as " + TRACKED_ENTITY_ID + ", " +
+                "tei.inactive as " + INACTIVE_ID + ", ";
 
         for ( QueryItem item : params.getAttributes() )
         {
@@ -358,7 +361,7 @@ public class HibernateTrackedEntityInstanceStore
         }
 
         params.handleOrganisationUnits();
-        
+
         if ( params.isOrganisationUnitMode( OrganisationUnitSelectionMode.ALL ) )
         {
             // No restriction

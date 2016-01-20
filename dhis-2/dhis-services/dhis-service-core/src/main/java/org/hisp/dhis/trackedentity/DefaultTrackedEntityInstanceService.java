@@ -68,7 +68,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.*;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ACCESSIBLE;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ALL;
 import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.*;
 
 /**
@@ -122,13 +123,24 @@ public class DefaultTrackedEntityInstanceService
         validate( params );
 
         params.setUser( currentUserService.getCurrentUser() );
-        
+
         if ( !params.isPaging() && !params.isSkipPaging() )
         {
             params.setDefaultPaging();
         }
 
         return trackedEntityInstanceStore.getTrackedEntityInstances( params );
+    }
+
+    @Override
+    public int getTrackedEntityInstanceCount( TrackedEntityInstanceQueryParams params )
+    {
+        decideAccess( params );
+        validate( params );
+
+        params.setUser( currentUserService.getCurrentUser() );
+
+        return trackedEntityInstanceStore.countTrackedEntityInstances( params );
     }
 
     // TODO lower index on attribute value?
@@ -139,7 +151,7 @@ public class DefaultTrackedEntityInstanceService
         validate( params );
 
         params.setUser( currentUserService.getCurrentUser() );
-        
+
         // ---------------------------------------------------------------------
         // If params of type query and no attributes or filters defined, use
         // attributes from program if program is defined, if not, use 
@@ -269,7 +281,7 @@ public class DefaultTrackedEntityInstanceService
 
         User user = currentUserService.getCurrentUser();
 
-        if ( !params.hasOrganisationUnits() && !( params.isOrganisationUnitMode( ALL ) || params.isOrganisationUnitMode( ACCESSIBLE ) ) )
+        if ( !params.hasOrganisationUnits() && !(params.isOrganisationUnitMode( ALL ) || params.isOrganisationUnitMode( ACCESSIBLE )) )
         {
             violation = "At least one organisation unit must be specified";
         }

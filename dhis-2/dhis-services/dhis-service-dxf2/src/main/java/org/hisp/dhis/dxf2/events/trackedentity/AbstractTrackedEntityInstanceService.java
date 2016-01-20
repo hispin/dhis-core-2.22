@@ -121,6 +121,12 @@ public abstract class AbstractTrackedEntityInstanceService
     }
 
     @Override
+    public int getTrackedEntityInstanceCount( TrackedEntityInstanceQueryParams params )
+    {
+        return entityInstanceService.getTrackedEntityInstanceCount( params );
+    }
+
+    @Override
     public TrackedEntityInstance getTrackedEntityInstance( String uid )
     {
         return getTrackedEntityInstance( teiService.getTrackedEntityInstance( uid ) );
