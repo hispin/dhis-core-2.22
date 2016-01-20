@@ -9,10 +9,10 @@ trackerCapture.controller('EventToTEIAssociations',
         $scope.teiAttributesMap = [];
         $scope.trackedEntityMap = [];
 
+        $scope.isAssociation = true;
 
         $scope.$on('association-widget', function (event, args) {
 
-            $scope.isAssociation = true;
             //
             //if (args.event.event == "s9b0ZMF7QZU")
             //{
@@ -27,43 +27,61 @@ trackerCapture.controller('EventToTEIAssociations',
                 if (args.event.program == "nJNF0T9BSDg")
                 {
                     $scope.isAssociation = false;
-                    $scope.selectedEvent = undefined;
+                    //$scope.selectedEvent = undefined;
                 }
 
                 else
                 {
                     $scope.isAssociation = true;
+
+                    // fro show all programs except contact moment
+                    AjaxCalls.getAssociationWidgetAttributes().then(function(associationWidgetAttributes){
+                        $scope.associationWidgetAttributes = associationWidgetAttributes;
+                    });
+
+                    // get all tracked entities
+                    AjaxCalls.getTrackedEntities().then(function(data){
+                        if (data.trackedEntities)
+                            $scope.trackedEntityMap = utilityService.prepareIdToObjectMap(data.trackedEntities,"id");
+                    });
+
+                    $scope.eventSelected = true;
+                    AjaxCalls.getEventbyId(args.event.event).then(function(event){
+                        $scope.selectedEvent = event;
+
+                        if (event.eventMembers)
+                            for (var i=0;i<event.eventMembers.length;i++){
+                                if (!$scope.TEtoEventTEIMap[event.eventMembers[i].trackedEntity]){
+                                    $scope.TEtoEventTEIMap[event.eventMembers[i].trackedEntity] = [];
+                                }
+                                $scope.TEtoEventTEIMap[event.eventMembers[i].trackedEntity].push(event.eventMembers[i]);
+
+                            }
+                        for (key in $scope.TEtoEventTEIMap){
+                            var TEIList = [];
+                            for (var j=0;j<$scope.TEtoEventTEIMap[key].length;j++) {
+                                updateMap($scope.TEtoEventTEIMap[key][j]);
+                                TEIList.push($scope.TEtoEventTEIMap[key][j])
+                            }
+                            $scope.TEWiseEventTEIs.push({
+                                id: key,
+                                trackedEntity: $scope.trackedEntityMap[key].displayName,
+                                TEIList :TEIList});
+                        }
+                    })
                 }
 
+            }
 
-                $scope.eventSelected = true
-                AjaxCalls.getEventbyId(args.event.event).then(function(event){
-                    $scope.selectedEvent = event;
+            else
 
-                    if (event.eventMembers)
-                    for (var i=0;i<event.eventMembers.length;i++){
-                        if (!$scope.TEtoEventTEIMap[event.eventMembers[i].trackedEntity]){
-                            $scope.TEtoEventTEIMap[event.eventMembers[i].trackedEntity] = [];
-                        }
-                            $scope.TEtoEventTEIMap[event.eventMembers[i].trackedEntity].push(event.eventMembers[i]);
-
-                    }
-                    for (key in $scope.TEtoEventTEIMap){
-                        var TEIList = [];
-                        for (var j=0;j<$scope.TEtoEventTEIMap[key].length;j++) {
-                            updateMap($scope.TEtoEventTEIMap[key][j]);
-                            TEIList.push($scope.TEtoEventTEIMap[key][j])
-                        }
-                        $scope.TEWiseEventTEIs.push({
-                            id: key,
-                            trackedEntity: $scope.trackedEntityMap[key].displayName,
-                            TEIList :TEIList});
-                    }
-                })
-            }else {
+            {
                 $scope.selectedEvent = undefined;
             }
         });
+
+
+        //console.log( "isAssociation  === " + $scope.isAssociation)
 
         // get all no program attributes
         //AjaxCalls.getNoProgramAttributes().then(function(data){
@@ -71,19 +89,25 @@ trackerCapture.controller('EventToTEIAssociations',
         //})
 
         //get attributes for display in association widget
+
+        /*
         AjaxCalls.getAssociationWidgetAttributes().then(function(associationWidgetAttributes){
             $scope.associationWidgetAttributes = associationWidgetAttributes;
         });
+        */
 
         // get all tracked entities
+        /*
         AjaxCalls.getTrackedEntities().then(function(data){
             if (data.trackedEntities)
             $scope.trackedEntityMap = utilityService.prepareIdToObjectMap(data.trackedEntities,"id");
         });
+        */
+
         $scope.showHomeScreen = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'greenstar-customizations/components/association/addAssociation.html',
+                templateUrl: 'plan-customizations/components/association/addAssociation.html',
                 controller: 'AddAssociationController',
                 windowClass: 'modal-full-window',
                 resolve: {

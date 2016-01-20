@@ -32,7 +32,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     w.profileWidget = {title: 'profile', view: "components/profile/profile.html", show: true, expand: true, parent: 'smallerWidget', order: 2};    
     w.relationshipWidget = {title: 'relationships', view: "components/relationship/relationship.html", show: true, expand: true, parent: 'smallerWidget', order: 4};
     w.notesWidget = {title: 'notes', view: "components/notes/notes.html", show: true, expand: true, parent: 'smallerWidget', order: 5};
-    w.associationWidget = {title: 'association', view: "greenstar-customizations/components/association/association.html", show: true, expand: true, parent: 'smallerWidget', order: 5};
+    w.associationWidget = {title: 'association', view: "plan-customizations/components/association/association.html", show: true, expand: true, parent: 'smallerWidget', order: 5};
 
     var defaultLayout = new Object();
     

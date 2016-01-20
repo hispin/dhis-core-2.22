@@ -5,7 +5,11 @@
 
 #leftBarWidget
 {
+    /*height: 130%;
+    */
+
     height: 70%;
+
     width: 235px;
     position: fixed;
     left: 2%;
@@ -19,6 +23,12 @@
     height: 70%;
     overflow-x: scroll;
     min-height: 250px;
+
+    /*
+    overflow: auto;
+    min-height: 550px;
+    max-height: 550px;
+    */
 }
 
 #div.row{
@@ -43,8 +53,8 @@
     */
 }
 .teiHeading{
-border-color: burlywood!important;
+    border-color: burlywood!important;
 }
 .minHeight{
-min-height: 300px;
+    min-height: 300px;
 }
