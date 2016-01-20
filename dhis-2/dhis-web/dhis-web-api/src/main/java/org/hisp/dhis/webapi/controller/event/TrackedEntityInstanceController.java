@@ -153,7 +153,7 @@ public class TrackedEntityInstanceController
         if ( params.isPaging() && params.isTotalPages() )
         {
             int count = trackedEntityInstanceService.getTrackedEntityInstanceCount( params );
-            Pager pager = new Pager( params.getPage(), count, params.getPageSize() );
+            Pager pager = new Pager( params.getPageWithDefault(), count, params.getPageSizeWithDefault() );
             rootNode.addChild( NodeUtils.createPager( pager ) );
         }
 
