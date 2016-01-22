@@ -651,7 +651,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
             } );
         }
 
-        if ( rootNode.getChildren().get( 0 ).getChildren().isEmpty() )
+        if ( rootNode.getChildren().isEmpty() || rootNode.getChildren().get( 0 ).getChildren().isEmpty() )
         {
             throw new WebMessageException( WebMessageUtils.notFound( pvProperty + " with ID " + pvItemId + " could not be found." ) );
         }
