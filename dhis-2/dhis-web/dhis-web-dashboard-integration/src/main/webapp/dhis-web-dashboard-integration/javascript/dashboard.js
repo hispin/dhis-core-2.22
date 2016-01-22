@@ -534,7 +534,7 @@ dhis2.db.renderDashboard = function( id )
 
     $( "#dashboard-" + dhis2.db.current() ).addClass( "currentDashboard" );
 
-    $.getJSON( "../api/dashboards/" + id + "?fields=:all,dashboardItems[:all]&" + dhis2.util.cacheBust(), function( data )
+    $.getJSON( "../api/dashboards/" + id + "?fields=:all,dashboardItems[:all,reports[id,displayName],chart[id,displayName],map[id,displayName],reportTable[id,displayName]]&" + dhis2.util.cacheBust(), function( data )
     {
 		$d = $( "#contentList" ).empty();
 
@@ -780,7 +780,7 @@ dhis2.db.renderLinkItem = function( $d, itemId, contents, title, baseUrl, urlSuf
 		}
 
 		html +=
-			"<li><a href='" + baseUrl + content.id + urlSuffix + "'>" + content.name + "</a>" +
+			"<li><a href='" + baseUrl + content.id + urlSuffix + "'>" + content.displayName + "</a>" +
 			"<a class='removeItemLink' href='javascript:dhis2.db.removeItemContent( \"" + itemId + "\", \"" + content.id + "\" )' title='" + i18n_remove + "'>" +
 			"<img src='../images/hide.png'></a></li>";
 	} );
