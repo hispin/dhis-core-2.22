@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.events.event;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -657,18 +657,21 @@ public abstract class AbstractEventService
         }
 
         String storedBy = getStoredBy( event, null, user );
+        programStageInstance.setStoredBy( storedBy );
+
+        String completedBy = getCompletedBy( event, null, user );
 
         if ( event.getStatus() == EventStatus.ACTIVE )
         {
             programStageInstance.setStatus( EventStatus.ACTIVE );
+            programStageInstance.setCompletedBy( null );
             programStageInstance.setCompletedDate( null );
-            programStageInstance.setCompletedUser( null );
         }
         else if ( event.getStatus() == EventStatus.COMPLETED )
         {
-            programStageInstance.setCompletedDate( executionDate );
             programStageInstance.setStatus( EventStatus.COMPLETED );
-            programStageInstance.setCompletedUser( storedBy );
+            programStageInstance.setCompletedBy( completedBy );
+            programStageInstance.setCompletedDate( executionDate );
 
             if ( !programStageInstance.isCompleted() )
             {
@@ -868,7 +871,8 @@ public abstract class AbstractEventService
         event.setStatus( programStageInstance.getStatus() );
         event.setEventDate( DateUtils.getLongDateString( programStageInstance.getExecutionDate() ) );
         event.setDueDate( DateUtils.getLongDateString( programStageInstance.getDueDate() ) );
-        event.setStoredBy( programStageInstance.getCompletedUser() );
+        event.setStoredBy( programStageInstance.getStoredBy() );
+        event.setCompletedBy( programStageInstance.getCompletedBy() );
         event.setCompletedDate( DateUtils.getLongDateString( programStageInstance.getCompletedDate() ) );
 
         UserCredentials userCredentials = currentUserService.getCurrentUser().getUserCredentials();
@@ -1056,7 +1060,31 @@ public abstract class AbstractEventService
 
             storedBy = User.getSafeUsername( fallbackUser );
         }
+
         return storedBy;
+    }
+
+    private String getCompletedBy( Event event, ImportSummary importSummary, User fallbackUser )
+    {
+        String completedBy = event.getCompletedBy();
+
+        if ( completedBy == null )
+        {
+            completedBy = User.getSafeUsername( fallbackUser );
+        }
+        else if ( completedBy.length() >= 31 )
+        {
+            if ( importSummary != null )
+            {
+                importSummary.getConflicts().add(
+                    new ImportConflict( "completed by", completedBy
+                        + " is more than 31 characters, using current username instead" ) );
+            }
+
+            completedBy = User.getSafeUsername( fallbackUser );
+        }
+
+        return completedBy;
     }
 
     private void saveDataValue( ProgramStageInstance programStageInstance, String storedBy, DataElement dataElement,
@@ -1109,20 +1137,20 @@ public abstract class AbstractEventService
 
     private ProgramStageInstance createProgramStageInstance( ProgramStage programStage, ProgramInstance programInstance,
         OrganisationUnit organisationUnit, Date dueDate, Date executionDate, int status,
-        Coordinate coordinate, String storedBy, String programStageInstanceUid, DataElementCategoryOptionCombo coc )
+        Coordinate coordinate, String completedBy, String programStageInstanceUid, DataElementCategoryOptionCombo coc )
     {
         ProgramStageInstance programStageInstance = new ProgramStageInstance();
         programStageInstance.setUid( CodeGenerator.isValidCode( programStageInstanceUid ) ? programStageInstanceUid : CodeGenerator.generateCode() );
 
         updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, executionDate, status,
-            coordinate, storedBy, programStageInstance, coc );
+            coordinate, completedBy, programStageInstance, coc );
 
         return programStageInstance;
     }
 
     private void updateProgramStageInstance( ProgramStage programStage, ProgramInstance programInstance,
         OrganisationUnit organisationUnit, Date dueDate, Date executionDate, int status, Coordinate coordinate,
-        String storedBy, ProgramStageInstance programStageInstance, DataElementCategoryOptionCombo coc )
+        String completedBy, ProgramStageInstance programStageInstance, DataElementCategoryOptionCombo coc )
     {
         programStageInstance.setProgramInstance( programInstance );
         programStageInstance.setProgramStage( programStage );
@@ -1157,7 +1185,7 @@ public abstract class AbstractEventService
         {
             programStageInstance.setStatus( EventStatus.COMPLETED );
             programStageInstance.setCompletedDate( new Date() );
-            programStageInstance.setCompletedUser( storedBy );
+            programStageInstance.setCompletedBy( completedBy );
             programStageInstanceService.completeProgramStageInstance( programStageInstance, i18nManager.getI18nFormat() );
         }
     }
@@ -1185,6 +1213,7 @@ public abstract class AbstractEventService
         Date dueDate = DateUtils.parseDate( event.getDueDate() );
 
         String storedBy = getStoredBy( event, importSummary, user );
+        String completedBy = getCompletedBy( event, importSummary, user );
 
         DataElementCategoryOptionCombo coc = categoryService.getDefaultDataElementCategoryOptionCombo();
 
@@ -1203,12 +1232,12 @@ public abstract class AbstractEventService
             if ( programStageInstance == null )
             {
                 programStageInstance = createProgramStageInstance( programStage, programInstance, organisationUnit,
-                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), storedBy, event.getEvent(), coc );
+                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), completedBy, event.getEvent(), coc );
             }
             else
             {
                 updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, eventDate, event
-                    .getStatus().getValue(), event.getCoordinate(), storedBy, programStageInstance, coc );
+                    .getStatus().getValue(), event.getCoordinate(), completedBy, programStageInstance, coc );
             }
 
             saveTrackedEntityComment( programStageInstance, event, storedBy );

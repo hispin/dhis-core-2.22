@@ -1,7 +1,7 @@
 package org.hisp.dhis.resourcetable.table;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,7 @@ public class DataElementResourceTable
             "datasetuid CHARACTER(11), " +
             "datasetname VARCHAR(230), " +
             "datasetapprovallevel INTEGER, " +
+            "workflowid INTEGER, " +
             "periodtypeid INTEGER, " + 
             "periodtypename VARCHAR(230))";
         
@@ -104,7 +105,8 @@ public class DataElementResourceTable
             values.add( dataSet != null ? dataSet.getId() : null );
             values.add( dataSet != null ? dataSet.getUid() : null );
             values.add( dataSet != null ? dataSet.getName() : null );
-            values.add( dataSet != null && dataSet.getWorkflow() != null ? null : APPROVAL_LEVEL_HIGHEST );
+            values.add( dataSet != null && dataSet.isApproveData() ? null : APPROVAL_LEVEL_HIGHEST );
+            values.add( dataSet != null && dataSet.isApproveData() ? dataSet.getWorkflow().getId() : null );
             values.add( periodType != null ? periodType.getId() : null );
             values.add( periodType != null ? periodType.getName() : null );
 
@@ -121,6 +123,7 @@ public class DataElementResourceTable
             "create unique index in_dataelementstructure_dataelementuid_" + getRandomSuffix() + " on " + getTempTableName() + "(dataelementuid);",
             "create index in_dataelementstructure_datasetid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetid);",
             "create index in_dataelementstructure_datasetuid_" + getRandomSuffix() + " on " + getTempTableName() + "(datasetuid);",
-            "create index in_dataelementstructure_periodtypeid_" + getRandomSuffix() + " on " + getTempTableName() + "(periodtypeid);" );
+            "create index in_dataelementstructure_periodtypeid_" + getRandomSuffix() + " on " + getTempTableName() + "(periodtypeid);",
+            "create index in_dataelementstructure_workflowid_" + getRandomSuffix() + " on " + getTempTableName() + "(workflowid);" );
     }
 }

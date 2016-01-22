@@ -1,7 +1,7 @@
 package org.hisp.dhis.sms.outbound;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,6 +41,7 @@ import org.hisp.dhis.sms.config.BulkSmsGatewayConfig;
 import org.hisp.dhis.sms.config.ClickatellGatewayConfig;
 import org.hisp.dhis.sms.config.GateWayFactory;
 import org.hisp.dhis.sms.config.GenericHttpGatewayConfig;
+import org.hisp.dhis.sms.config.ModemGatewayConfig;
 import org.hisp.dhis.sms.config.SMPPGatewayConfig;
 import org.hisp.dhis.sms.config.SMSGatewayStatus;
 import org.hisp.dhis.sms.config.SmsConfiguration;
@@ -61,16 +62,6 @@ public class DefaultOutboundSmsTransportService
     implements OutboundSmsTransportService
 {
     private static final Log log = LogFactory.getLog( DefaultOutboundSmsTransportService.class );
-
-    private static final String BULK_GATEWAY = "bulk_gw";
-
-    private static final String CLICKATELL_GATEWAY = "clickatell_gw";
-
-    private static final String HTTP_GATEWAY = "generic_http_gw";
-
-    private static final String MODEM_GATEWAY = "modem_gw";
-
-    private static final String SMPP_GATEWAY = "smpp_gw";
 
     public static final Map<String, String> GATEWAY_MAP = new HashMap<>();
 
@@ -102,7 +93,7 @@ public class DefaultOutboundSmsTransportService
     {
         this.smsPublisher = smsPublisher;
     }
-    
+
     // -------------------------------------------------------------------------
     // OutboundSmsTransportService implementation
     // -------------------------------------------------------------------------
@@ -116,6 +107,11 @@ public class DefaultOutboundSmsTransportService
         }
 
         return GATEWAY_MAP;
+    }
+
+    public void updateGatewayMap( String key )
+    {
+        GATEWAY_MAP.remove( key );
     }
 
     @Override
@@ -155,7 +151,7 @@ public class DefaultOutboundSmsTransportService
             try
             {
                 getService().startService();
-                if ( GATEWAY_MAP.containsKey( SMPP_GATEWAY ) )
+                if ( GATEWAY_MAP.containsKey( SMPPGatewayConfig.class.getTypeName() ) )
                 {
                     getService().setInboundMessageNotification( smppInboundMessageNotification );
                 }
@@ -230,23 +226,23 @@ public class DefaultOutboundSmsTransportService
 
                     if ( gatewayConfig instanceof BulkSmsGatewayConfig )
                     {
-                        GATEWAY_MAP.put( BULK_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( BulkSmsGatewayConfig.class.getTypeName(), gateway.getGatewayId() );
                     }
                     else if ( gatewayConfig instanceof ClickatellGatewayConfig )
                     {
-                        GATEWAY_MAP.put( CLICKATELL_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( ClickatellGatewayConfig.class.getTypeName(), gateway.getGatewayId() );
                     }
                     else if ( gatewayConfig instanceof GenericHttpGatewayConfig )
                     {
-                        GATEWAY_MAP.put( HTTP_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( GenericHttpGatewayConfig.class.getTypeName(), gateway.getGatewayId() );
                     }
                     else if ( gatewayConfig instanceof SMPPGatewayConfig )
                     {
-                        GATEWAY_MAP.put( SMPP_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( SMPPGatewayConfig.class.getTypeName(), gateway.getGatewayId() );
                     }
                     else
                     {
-                        GATEWAY_MAP.put( MODEM_GATEWAY, gateway.getGatewayId() );
+                        GATEWAY_MAP.put( ModemGatewayConfig.class.getTypeName(), gateway.getGatewayId() );
                     }
 
                     log.debug( "Added gateway " + gatewayConfig.getName() );
@@ -314,23 +310,23 @@ public class DefaultOutboundSmsTransportService
 
         if ( gatewayConfig instanceof BulkSmsGatewayConfig )
         {
-            gatewayId = GATEWAY_MAP.get( BULK_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( BulkSmsGatewayConfig.class.getTypeName() );
         }
         else if ( gatewayConfig instanceof ClickatellGatewayConfig )
         {
-            gatewayId = GATEWAY_MAP.get( CLICKATELL_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( ClickatellGatewayConfig.class.getTypeName() );
         }
         else if ( gatewayConfig instanceof GenericHttpGatewayConfig )
         {
-            gatewayId = GATEWAY_MAP.get( HTTP_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( GenericHttpGatewayConfig.class.getTypeName() );
         }
         else if ( gatewayConfig instanceof SMPPGatewayConfig )
         {
-            gatewayId = GATEWAY_MAP.get( SMPP_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( SMPPGatewayConfig.class.getTypeName() );
         }
         else
         {
-            gatewayId = GATEWAY_MAP.get( MODEM_GATEWAY );
+            gatewayId = GATEWAY_MAP.get( ModemGatewayConfig.class.getTypeName() );
         }
 
         return gatewayId;

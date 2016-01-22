@@ -115,6 +115,19 @@ var d2Filters = angular.module('d2Filters', [])
     };
 })
 
+/* filter out confidential attributes from a list */
+.filter('nonConfidential', function() {
+  return function( items ) {
+    var filtered = [];
+    angular.forEach(items, function(item) {
+      if(!item.confidential) {
+        filtered.push(item);
+      }
+    });
+    return filtered;
+  };
+})
+
 /* trim away the qualifiers before and after a variable name */
 .filter('trimvariablequalifiers', function() {
     return function(input) {

@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.events.report;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,6 +53,14 @@ public class EventRow
 {
     private String trackedEntityInstance;
     
+    private String trackedEntityInstanceOrgUnit;
+    
+    private String trackedEntityInstanceOrgUnitName;
+    
+    private String trackedEntityInstanceCreated;
+    
+    private boolean trackedEntityInstanceInactive;
+    
     private String event;
     
     private String program;
@@ -93,7 +101,55 @@ public class EventRow
     public void setTrackedEntityInstance( String trackedEntityInstance )
     {
         this.trackedEntityInstance = trackedEntityInstance;
-    }    
+    }   
+    
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getTrackedEntityInstanceOrgUnit()
+    {
+        return trackedEntityInstanceOrgUnit;
+    }
+
+    public void setTrackedEntityInstanceOrgUnit( String trackedEntityInstanceOrgUnit )
+    {
+        this.trackedEntityInstanceOrgUnit = trackedEntityInstanceOrgUnit;
+    }   
+    
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getTrackedEntityInstanceOrgUnitName()
+    {
+        return trackedEntityInstanceOrgUnitName;
+    }
+
+    public void setTrackedEntityInstanceOrgUnitName( String trackedEntityInstanceOrgUnitName )
+    {
+        this.trackedEntityInstanceOrgUnitName = trackedEntityInstanceOrgUnitName;
+    }
+    
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getTrackedEntityInstanceCreated()
+    {
+        return trackedEntityInstanceCreated;
+    }
+
+    public void setTrackedEntityInstanceCreated( String trackedEntityInstanceCreated )
+    {
+        this.trackedEntityInstanceCreated = trackedEntityInstanceCreated;
+    }
+    
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public boolean getTrackedEntityInstanceInactive()
+    {
+        return trackedEntityInstanceInactive;
+    }
+
+    public void setTrackedEntityInstanceInactive( boolean trackedEntityInstanceInactive )
+    {
+        this.trackedEntityInstanceInactive = trackedEntityInstanceInactive;
+    }
     
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )

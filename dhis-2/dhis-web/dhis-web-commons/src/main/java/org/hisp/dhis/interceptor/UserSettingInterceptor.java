@@ -1,7 +1,7 @@
 package org.hisp.dhis.interceptor;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,7 +75,6 @@ public class UserSettingInterceptor
         Map<String, Object> map = new HashMap<>();
 
         map.put( UserSettingKey.STYLE.getName(), styleManager.getCurrentStyle() );
-        map.put( UserSettingKey.STYLE_DIRECTORY.getName(), styleManager.getCurrentStyleDirectory() );
 
         invocation.getStack().push( map );
 

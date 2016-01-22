@@ -1,7 +1,7 @@
 package org.hisp.dhis.user;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -806,18 +806,18 @@ public class UserCredentials
     @Override
     public String toString()
     {
-        return "UserCredentials{" +
-            "username='" + username + '\'' +
-            ", openId='" + openId + '\'' +
-            ", password='" + password + '\'' +
-            ", passwordLastUpdated=" + passwordLastUpdated +
-            ", userAuthorityGroups=" + userAuthorityGroups +
-            ", lastLogin=" + lastLogin +
-            ", restoreToken='" + restoreToken + '\'' +
-            ", restoreCode='" + restoreCode + '\'' +
-            ", restoreExpiry=" + restoreExpiry +
-            ", selfRegistered=" + selfRegistered +
-            ", disabled=" + disabled +
-            '}';
+        return "{" +
+            "\"username\":\"" + username + "\", " +
+            "\"openId\":\"" + openId + "\", " +
+            "\"password\":\"" + password + "\", " +
+            "\"passwordLastUpdated\":\"" + passwordLastUpdated + "\", " +
+            "\"userAuthorityGroups\":\"" + userAuthorityGroups + "\", " +
+            "\"lastLogin\":\"" + lastLogin + "\", " +
+            "\"restoreToken\":\"" + restoreToken + "\", " +
+            "\"restoreCode\":\"" + restoreCode + "\", " +
+            "\"restoreExpiry\":\"" + restoreExpiry + "\", " +
+            "\"selfRegistered\":\"" + selfRegistered + "\", " +
+            "\"disabled\":\"" + disabled + "\" " +
+            "}";
     }
 }

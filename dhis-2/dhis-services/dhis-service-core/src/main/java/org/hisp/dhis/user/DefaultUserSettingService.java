@@ -1,7 +1,7 @@
 package org.hisp.dhis.user;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -180,7 +180,7 @@ public class DefaultUserSettingService
     @Override
     public Serializable getUserSetting( UserSettingKey key, User user )
     {
-        return getUserSetting( key, Optional.of( user ) ).orElse( null );
+        return getUserSetting( key, Optional.ofNullable( user ) ).orElse( null );
     }
 
     private Optional<Serializable> getUserSetting( UserSettingKey key, Optional<User> user )
@@ -210,7 +210,7 @@ public class DefaultUserSettingService
 
         if ( userCredentials == null )
         {
-            return Optional.empty();
+            return Optional.ofNullable( key.getDefaultValue() );
         }
         
         UserSetting setting = userSettingStore.getUserSetting( userCredentials.getUserInfo(), key.getName() );

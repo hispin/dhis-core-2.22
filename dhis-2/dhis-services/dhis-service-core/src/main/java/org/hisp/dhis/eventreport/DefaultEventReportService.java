@@ -1,7 +1,7 @@
 package org.hisp.dhis.eventreport;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,9 @@ package org.hisp.dhis.eventreport;
 
 import java.util.List;
 
-import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.common.AnalyticalObjectStore;
+import org.hisp.dhis.common.GenericAnalyticalObjectService;
+import org.hisp.dhis.common.hibernate.HibernateAnalyticalObjectStore;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -38,11 +40,12 @@ import org.springframework.transaction.annotation.Transactional;
 */
 @Transactional
 public class DefaultEventReportService
+    extends GenericAnalyticalObjectService<EventReport>
     implements EventReportService
 {
-    private HibernateIdentifiableObjectStore<EventReport> eventReportStore;
+    private HibernateAnalyticalObjectStore<EventReport> eventReportStore;
 
-    public void setEventReportStore( HibernateIdentifiableObjectStore<EventReport> eventReportStore )
+    public void setEventReportStore( HibernateAnalyticalObjectStore<EventReport> eventReportStore )
     {
         this.eventReportStore = eventReportStore;
     }
@@ -51,6 +54,12 @@ public class DefaultEventReportService
     // EventReportService implementation
     // -------------------------------------------------------------------------
 
+    @Override
+    protected AnalyticalObjectStore<EventReport> getAnalyticalObjectStore()
+    {
+        return eventReportStore;
+    }
+    
     @Override
     public int saveEventReport( EventReport report )
     {

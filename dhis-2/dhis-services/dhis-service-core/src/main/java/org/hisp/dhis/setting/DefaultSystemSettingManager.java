@@ -1,7 +1,7 @@
 package org.hisp.dhis.setting;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,27 +28,23 @@ package org.hisp.dhis.setting;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.system.util.ValidationUtils;
+import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Lists;
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Stian Strandli
@@ -61,12 +57,15 @@ public class DefaultSystemSettingManager
     /**
      * Cache for system settings. Does not accept nulls.
      */
-    private static Cache<String, Optional<Serializable>> SETTING_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<String, Optional<Serializable>> SETTING_CACHE = CacheBuilder.newBuilder()
         .expireAfterAccess( 1, TimeUnit.HOURS )
         .initialCapacity( 200 )
         .maximumSize( 400 )
         .build();
-    
+
+    private static final Map<String, SettingKey> NAME_KEY_MAP = Lists.newArrayList(
+        SettingKey.values() ).stream().collect( Collectors.toMap( SettingKey::getName, e -> e ) );
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
@@ -88,6 +87,9 @@ public class DefaultSystemSettingManager
     @Autowired
     private I18nManager i18nManager;
 
+    @Resource( name = "stringEncryptor" )
+    private PBEStringEncryptor pbeStringEncryptor;
+
     // -------------------------------------------------------------------------
     // SystemSettingManager implementation
     // -------------------------------------------------------------------------
@@ -96,8 +98,13 @@ public class DefaultSystemSettingManager
     public void saveSystemSetting( String name, Serializable value )
     {
         SETTING_CACHE.invalidate( name );
-        
+
         SystemSetting setting = systemSettingStore.getByName( name );
+
+        if ( isConfidential( name ) )
+        {
+            value = pbeStringEncryptor.encrypt( value.toString() );
+        }
 
         if ( setting == null )
         {
@@ -118,7 +125,7 @@ public class DefaultSystemSettingManager
 
     @Override
     public void saveSystemSetting( SettingKey setting, Serializable value )
-    {        
+    {
         saveSystemSetting( setting.getName(), value );
     }
 
@@ -130,7 +137,7 @@ public class DefaultSystemSettingManager
         if ( setting != null )
         {
             SETTING_CACHE.invalidate( name );
-            
+
             systemSettingStore.delete( setting );
         }
     }
@@ -146,6 +153,11 @@ public class DefaultSystemSettingManager
     {
         SystemSetting setting = systemSettingStore.getByName( name );
 
+        if ( isConfidential( name ) )
+        {
+            setting.setValue( pbeStringEncryptor.decrypt( setting.getValue().toString() ) );
+        }
+
         return setting != null && setting.hasValue() ? setting.getValue() : null;
     }
 
@@ -154,8 +166,9 @@ public class DefaultSystemSettingManager
     {
         try
         {
-            Optional<Serializable> value = SETTING_CACHE.get( setting.getName(), () -> getSystemSettingOptional( setting.getName(), setting.getDefaultValue() ) );
-            
+            Optional<Serializable> value = SETTING_CACHE.get( setting.getName(),
+                () -> getSystemSettingOptional( setting.getName(), setting.getDefaultValue() ) );
+
             return value.orElse( null );
         }
         catch ( ExecutionException ignored )
@@ -173,31 +186,43 @@ public class DefaultSystemSettingManager
     private Optional<Serializable> getSystemSettingOptional( String name, Serializable defaultValue )
     {
         SystemSetting setting = systemSettingStore.getByName( name );
-        
-        return setting != null && setting.hasValue() ? Optional.of( setting.getValue() ) : Optional.ofNullable( defaultValue );
+
+        if ( setting != null && setting.hasValue() )
+        {
+            return isConfidential( name ) ?
+                Optional.of( pbeStringEncryptor.decrypt( setting.getValue().toString() ) ) :
+                Optional.of( setting.getValue() );
+        }
+        else
+        {
+            return Optional.ofNullable( defaultValue );
+        }
+
     }
 
     @Override
     public List<SystemSetting> getAllSystemSettings()
     {
-        return systemSettingStore.getAll();
+        return systemSettingStore.getAll().stream()
+            .filter( systemSetting -> !isConfidential( systemSetting.getName() ) )
+            .collect( Collectors.toList() );
     }
-    
+
     @Override
     public Map<String, Serializable> getSystemSettingsAsMap()
     {
         Map<String, Serializable> settingsMap = new HashMap<>();
-        
+
         Collection<SystemSetting> systemSettings = getAllSystemSettings();
 
         for ( SystemSetting systemSetting : systemSettings )
         {
             Serializable settingValue = systemSetting.getValue();
-            
+
             if ( settingValue == null )
             {
                 Optional<SettingKey> setting = SettingKey.getByName( systemSetting.getName() );
-                
+
                 if ( setting.isPresent() )
                 {
                     settingValue = setting.get().getDefaultValue();
@@ -222,13 +247,13 @@ public class DefaultSystemSettingManager
             if ( settingValue == null )
             {
                 Optional<SettingKey> setting = SettingKey.getByName( name );
-                
+
                 if ( setting.isPresent() )
                 {
                     settingValue = setting.get().getDefaultValue();
                 }
             }
-            
+
             if ( settingValue != null )
             {
                 map.put( name, settingValue );
@@ -242,26 +267,26 @@ public class DefaultSystemSettingManager
     public Map<String, Serializable> getSystemSettings( Collection<SettingKey> settings )
     {
         Map<String, Serializable> map = new HashMap<>();
-        
+
         for ( SettingKey setting : settings )
         {
             Serializable value = getSystemSetting( setting );
-            
+
             if ( value != null )
             {
                 map.put( setting.getName(), value );
             }
         }
-        
+
         return map;
     }
-    
+
     @Override
     public void invalidateCache()
     {
         SETTING_CACHE.invalidateAll();
     }
-    
+
     // -------------------------------------------------------------------------
     // Specific methods
     // -------------------------------------------------------------------------
@@ -272,24 +297,24 @@ public class DefaultSystemSettingManager
         Collections.sort( flags );
         return flags;
     }
-    
+
     @Override
     public List<StyleObject> getFlagObjects()
     {
         Collections.sort( flags );
-        
+
         I18n i18n = i18nManager.getI18n();
-        
+
         List<StyleObject> list = Lists.newArrayList();
-        
+
         for ( String flag : flags )
         {
             String name = i18n.getString( flag );
             String file = flag + ".png";
-            
+
             list.add( new StyleObject( name, flag, file ) );
         }
-        
+
         return list;
     }
 
@@ -372,7 +397,8 @@ public class DefaultSystemSettingManager
     @Override
     public boolean isOpenIdConfigured()
     {
-        return getSystemSetting( SettingKey.OPENID_PROVIDER ) != null && getSystemSetting( SettingKey.OPENID_PROVIDER_LABEL ) != null;
+        return getSystemSetting( SettingKey.OPENID_PROVIDER ) != null &&
+            getSystemSetting( SettingKey.OPENID_PROVIDER_LABEL ) != null;
     }
 
     @Override
@@ -385,5 +411,11 @@ public class DefaultSystemSettingManager
     public Integer credentialsExpires()
     {
         return (Integer) getSystemSetting( SettingKey.CREDENTIALS_EXPIRES );
+    }
+
+    @Override
+    public boolean isConfidential( String name )
+    {
+        return NAME_KEY_MAP.containsKey( name ) && NAME_KEY_MAP.get( name ).isConfidential();
     }
 }

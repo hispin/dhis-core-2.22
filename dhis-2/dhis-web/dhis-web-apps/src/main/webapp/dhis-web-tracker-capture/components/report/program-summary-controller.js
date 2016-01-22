@@ -83,7 +83,7 @@ trackerCapture.controller('ProgramSummaryController',
         $scope.dataReady = false;
             
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
-            var grid = TEIGridService.generateGridColumns(atts, $scope.selectedOuMode.name);   
+            var grid = TEIGridService.generateGridColumns(atts, $scope.selectedOuMode.name,true);   
             $scope.gridColumns = grid.columns;
         });  
         

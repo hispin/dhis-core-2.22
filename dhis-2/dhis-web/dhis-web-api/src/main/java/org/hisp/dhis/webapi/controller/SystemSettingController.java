@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,39 +73,42 @@ public class SystemSettingController
     @Autowired
     private WebMessageService webMessageService;
 
-    @RequestMapping( value = "/{key}", method = RequestMethod.POST, consumes = { ContextUtils.CONTENT_TYPE_TEXT, ContextUtils.CONTENT_TYPE_HTML } )
+    @RequestMapping( value = "/{key}", method = RequestMethod.POST, consumes = { ContextUtils.CONTENT_TYPE_TEXT,
+        ContextUtils.CONTENT_TYPE_HTML } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     public void setSystemSetting(
         @PathVariable( value = "key" ) String key,
-        @RequestParam( required = false, value = "key" ) String keyParam,
-        @RequestParam( required = false ) String value,
+        @RequestParam( value = "value", required = false ) String value,
         @RequestBody( required = false ) String valuePayload,
-        HttpServletResponse response, HttpServletRequest request ) throws WebMessageException
+        HttpServletResponse response, HttpServletRequest request )
+        throws WebMessageException
     {
-        if ( key == null && keyParam == null )
+        if ( key == null )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Key must be specified" ) );
         }
 
         if ( value == null && valuePayload == null )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "Value must be specified as query param or as payload" ) );
+            throw new WebMessageException(
+                WebMessageUtils.conflict( "Value must be specified as query param or as payload" ) );
         }
 
-        key = ObjectUtils.firstNonNull( key, keyParam );
-
         value = ObjectUtils.firstNonNull( value, valuePayload );
-        
+
         Serializable valueObject = SettingKey.getAsRealClass( key, value );
-        
+
         systemSettingManager.saveSystemSetting( key, valueObject );
 
-        webMessageService.send( WebMessageUtils.ok( "System setting " + key + " set as value '" + valueObject + "'." ), response, request );
+        webMessageService
+            .send( WebMessageUtils.ok( "System setting " + key + " set as value '" + valueObject + "'." ), response,
+                request );
     }
 
     @RequestMapping( method = RequestMethod.POST, consumes = { ContextUtils.CONTENT_TYPE_JSON } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    public void setSystemSetting( @RequestBody Map<String, Object> settings, HttpServletResponse response, HttpServletRequest request )
+    public void setSystemSetting( @RequestBody Map<String, Object> settings, HttpServletResponse response,
+        HttpServletRequest request )
     {
         for ( String key : settings.keySet() )
         {
@@ -116,16 +119,30 @@ public class SystemSettingController
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_TEXT )
-    public @ResponseBody String getSystemSettingAsText( @PathVariable( "key" ) String key )
+    public
+    @ResponseBody
+    String getSystemSettingAsText( @PathVariable( "key" ) String key )
     {
-        Serializable setting = systemSettingManager.getSystemSetting( key );
+        if ( systemSettingManager.isConfidential( key ) )
+        {
+            return "";
+        }
+        else
+        {
+            Serializable setting = systemSettingManager.getSystemSetting( key );
 
-        return setting != null ? String.valueOf( setting ) : null;
+            return setting != null ? String.valueOf( setting ) : null;
+        }
     }
 
-    @RequestMapping( method = RequestMethod.GET, produces = { ContextUtils.CONTENT_TYPE_JSON, ContextUtils.CONTENT_TYPE_HTML } )
-    public void getSystemSettingsJson( @RequestParam( value = "key", required = false ) Set<String> key, HttpServletResponse response ) throws IOException
+    @RequestMapping( method = RequestMethod.GET, produces = { ContextUtils.CONTENT_TYPE_JSON,
+        ContextUtils.CONTENT_TYPE_HTML } )
+    public void getSystemSettingsJson( @RequestParam( value = "key", required = false ) Set<String> key,
+        HttpServletResponse response )
+        throws IOException
     {
+        if ( key != null )
+            key.removeIf( systemSettingManager::isConfidential );
         response.setContentType( MediaType.APPLICATION_JSON_VALUE );
         renderService.toJson( response.getOutputStream(), getSystemSettings( key ) );
     }
@@ -134,7 +151,8 @@ public class SystemSettingController
     public void getSystemSettingsJsonP(
         @RequestParam( value = "key", required = false ) Set<String> key,
         @RequestParam( defaultValue = "callback" ) String callback,
-        HttpServletResponse response ) throws IOException
+        HttpServletResponse response )
+        throws IOException
     {
         response.setContentType( "application/javascript" );
         renderService.toJsonP( response.getOutputStream(), getSystemSettings( key ), callback );

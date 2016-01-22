@@ -1,7 +1,7 @@
 package org.hisp.dhis.configuration;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,6 +41,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
+import org.hisp.dhis.schema.PropertyType;
+import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserGroup;
 
@@ -86,22 +88,6 @@ public class Configuration
     private OrganisationUnit selfRegistrationOrgUnit;
     
     private Set<String> corsWhitelist = new HashSet<>();
-
-    // -------------------------------------------------------------------------
-    // Remote synch
-    // -------------------------------------------------------------------------
-
-    private String remoteServerUrl;
-    
-    private String remoteServerUsername;
-    
-    private String remoteServerPassword;
-
-    // -------------------------------------------------------------------------
-    // SMTP
-    // -------------------------------------------------------------------------
-    
-    private String smtpPassword;
     
     // -------------------------------------------------------------------------
     // Constructor
@@ -206,6 +192,7 @@ public class Configuration
     @JsonProperty
     @JsonSerialize( using = JacksonPeriodTypeSerializer.class )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @Property( PropertyType.TEXT )
     public PeriodType getInfrastructuralPeriodType()
     {
         return infrastructuralPeriodType;
@@ -242,55 +229,10 @@ public class Configuration
         this.selfRegistrationOrgUnit = selfRegistrationOrgUnit;
     }
 
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getRemoteServerUrl()
-    {
-        return remoteServerUrl;
-    }
-
-    public void setRemoteServerUrl( String remoteServerUrl )
-    {
-        this.remoteServerUrl = remoteServerUrl;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getRemoteServerUsername()
-    {
-        return remoteServerUsername;
-    }
-
-    public void setRemoteServerUsername( String remoteServerUsername )
-    {
-        this.remoteServerUsername = remoteServerUsername;
-    }
 
     /**
      * Do not serialize.
      */
-    public String getRemoteServerPassword()
-    {
-        return remoteServerPassword;
-    }
-
-    public void setRemoteServerPassword( String remoteServerPassword )
-    {
-        this.remoteServerPassword = remoteServerPassword;
-    }
-
-    /**
-     * Do not serialize.
-     */
-    public String getSmtpPassword()
-    {
-        return smtpPassword;
-    }
-    
-    public void setSmtpPassword( String smtpPassword )
-    {
-        this.smtpPassword = smtpPassword;
-    }
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )

@@ -1,7 +1,9 @@
 package org.hisp.dhis.sms.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,6 +43,7 @@ public class SMPPGatewayConfig
 
     private String password;
 
+    @JsonProperty( value = "username" )
     public String getUsername()
     {
         return username;
@@ -51,6 +54,19 @@ public class SMPPGatewayConfig
         this.username = username;
     }
 
+    @JsonProperty( value = "name" )
+    public String getName()
+    {
+        return super.getName();
+    }
+
+    @JsonProperty( value = "default" )
+    public boolean getStatus()
+    {
+        return super.isDefault();
+    }
+
+    @JsonProperty( value = "password" )
     public String getPassword()
     {
         return password;
@@ -73,6 +89,7 @@ public class SMPPGatewayConfig
         return true;
     }
 
+    @JsonProperty( value = "port" )
     public int getPort()
     {
         return port;
@@ -83,6 +100,7 @@ public class SMPPGatewayConfig
         this.port = port;
     }
 
+    @JsonProperty( value = "address" )
     public String getAddress()
     {
         return address;

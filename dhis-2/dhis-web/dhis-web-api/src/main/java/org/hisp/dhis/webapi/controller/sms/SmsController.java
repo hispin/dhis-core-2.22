@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller.sms;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,21 +28,25 @@ package org.hisp.dhis.webapi.controller.sms;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.sms.SmsSender;
+import org.hisp.dhis.sms.incoming.IncomingSms;
 import org.hisp.dhis.sms.incoming.IncomingSmsService;
+import org.hisp.dhis.sms.outbound.OutboundSms;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,10 +59,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping( value = "/sms" )
 public class SmsController
 {
-    // -------------------------------------------------------------------------
-    // Dependencies
-    // -------------------------------------------------------------------------
-
     @Autowired
     private SmsSender smsSender;
 
@@ -67,6 +67,9 @@ public class SmsController
 
     @Autowired
     private IncomingSmsService incomingSMSService;
+
+    @Autowired
+    private RenderService renderService;
 
     // -------------------------------------------------------------------------
     // POST
@@ -92,7 +95,7 @@ public class SmsController
 
         if ( result.equals( "success" ) )
         {
-            webMessageService.send( WebMessageUtils.ok( "Message Sent" ), response, request );
+            webMessageService.send( WebMessageUtils.ok( "Message sent" ), response, request );
         }
         else
         {
@@ -102,25 +105,20 @@ public class SmsController
 
     @PreAuthorize( "hasRole('ALL') or hasRole(' F_MOBILE_SENDSMS')" )
     @RequestMapping( value = "/outbound", method = RequestMethod.POST, consumes = "application/json" )
-    public void sendSMSMessage( @RequestBody Map<String, Object> jsonMessage, HttpServletResponse response,
-        HttpServletRequest request )
-            throws WebMessageException
+    public void sendSMSMessage( HttpServletResponse response, HttpServletRequest request )
+        throws WebMessageException, IOException
     {
-        if ( jsonMessage == null )
-        {
-            throw new WebMessageException( WebMessageUtils.conflict( "Request body must be specified" ) );
-        }
+        OutboundSms sms = renderService.fromJson( request.getInputStream(), OutboundSms.class );
 
-        String result = smsSender.sendMessage( jsonMessage.get( "message" ).toString(),
-            jsonMessage.get( "recipient" ).toString() );
-
+        String result = smsSender.sendMessage( sms );
+        
         if ( result.equals( "success" ) )
         {
-            webMessageService.send( WebMessageUtils.ok( "Message Sent" ), response, request );
+            webMessageService.send( WebMessageUtils.ok( "Message sent" ), response, request );
         }
         else
         {
-            throw new WebMessageException( WebMessageUtils.error( "Message seding failed" ) );
+            webMessageService.send( WebMessageUtils.error( "Message sending failed" ), response, request );
         }
     }
 
@@ -133,7 +131,7 @@ public class SmsController
     {
         if ( originator == null || originator.length() <= 0 )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "originator must be specified" ) );
+            throw new WebMessageException( WebMessageUtils.conflict( "Originator must be specified" ) );
         }
 
         if ( message == null || message.length() <= 0 )
@@ -143,26 +141,24 @@ public class SmsController
 
         int smsId = incomingSMSService.save( message, originator, gateway, receivedTime );
 
-        webMessageService.send( WebMessageUtils.ok( "Received: SMS ID " + smsId ), response, request );
+        webMessageService.send( WebMessageUtils.ok( "Received SMS: " + smsId ), response, request );
 
     }
 
     @RequestMapping( value = "/inbound", method = RequestMethod.POST, consumes = "application/json" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_MOBILE_SETTINGS')" )
-    public void receiveSMSMessage( @RequestBody Map<String, Object> jsonMassage, HttpServletRequest request,
-        HttpServletResponse response )
-            throws WebMessageException, ParseException
+    public void receiveSMSMessage( HttpServletRequest request, HttpServletResponse response )
+        throws WebMessageException, ParseException, IOException
     {
-        if ( jsonMassage == null )
+        if ( incomingSMSService == null )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "RequestBody must not be empty" ) );
+            throw new WebMessageException( WebMessageUtils.error( "Service unavailable" ) );
         }
 
-        int smsId = incomingSMSService.save( jsonMassage.get( "message" ).toString(),
-            jsonMassage.get( "originator" ).toString(), jsonMassage.get( "gateway" ).toString(),
-            (Date) jsonMassage.get( "receivedTime" ) );
+        IncomingSms sms = renderService.fromJson( request.getInputStream(), IncomingSms.class );
 
-        webMessageService.send( WebMessageUtils.ok( "Received: SMS ID " + smsId ), response, request );
+        int smsId = incomingSMSService.save( sms );
 
+        webMessageService.send( WebMessageUtils.ok( "Received SMS:" + smsId ), response, request );
     }
 }

@@ -1,7 +1,7 @@
 package org.hisp.dhis.schema;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -443,8 +443,8 @@ public class Schema implements Ordered, Klass
     {
         this.propertyMap = propertyMap;
     }
-    
-    @SuppressWarnings("rawtypes")
+
+    @SuppressWarnings( "rawtypes" )
     private Set<Class> references;
 
     @JsonProperty

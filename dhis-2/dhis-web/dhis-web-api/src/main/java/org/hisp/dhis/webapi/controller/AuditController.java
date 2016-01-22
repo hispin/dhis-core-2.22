@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,7 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
 import org.hisp.dhis.common.AuditType;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.Pager;
@@ -39,6 +40,7 @@ import org.hisp.dhis.datavalue.DataValueAuditService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.fieldfilter.FieldFilterService;
 import org.hisp.dhis.node.NodeUtils;
+import org.hisp.dhis.node.Preset;
 import org.hisp.dhis.node.types.CollectionNode;
 import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -52,6 +54,7 @@ import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAudi
 import org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValueAuditService;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAudit;
 import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAuditService;
+import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -88,6 +91,9 @@ public class AuditController
     @Autowired
     private FieldFilterService fieldFilterService;
 
+    @Autowired
+    private ContextService contextService;
+
     @RequestMapping( value = "dataValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getAggregateDataValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> ds,
@@ -102,6 +108,13 @@ public class AuditController
         @RequestParam( required = false, defaultValue = "1" ) int page
     ) throws WebMessageException
     {
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+
+        if ( fields.isEmpty() )
+        {
+            fields.addAll( Preset.ALL.getFields() );
+        }
+
         List<DataElement> dataElements = new ArrayList<>();
         dataElements.addAll( getDataElements( de ) );
         dataElements.addAll( getDataElementsByDataSet( ds ) );
@@ -139,7 +152,7 @@ public class AuditController
 
         CollectionNode trackedEntityAttributeValueAudits = rootNode.addChild( new CollectionNode( "dataValueAudits", true ) );
         trackedEntityAttributeValueAudits.addChildren( fieldFilterService.filter( DataValueAudit.class,
-            dataValueAudits, new ArrayList<>() ).getChildren() );
+            dataValueAudits, fields ).getChildren() );
 
         return rootNode;
     }
@@ -147,15 +160,22 @@ public class AuditController
     @RequestMapping( value = "trackedEntityDataValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getTrackedEntityDataValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> de,
-        @RequestParam( required = false, defaultValue = "" ) List<String> ps,
+        @RequestParam( required = false, defaultValue = "" ) List<String> psi,
         @RequestParam( required = false ) AuditType auditType,
         @RequestParam( required = false ) boolean skipPaging,
         @RequestParam( required = false, defaultValue = "50" ) int pageSize,
         @RequestParam( required = false, defaultValue = "1" ) int page
     ) throws WebMessageException
     {
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+
+        if ( fields.isEmpty() )
+        {
+            fields.addAll( Preset.ALL.getFields() );
+        }
+
         List<DataElement> dataElements = getDataElements( de );
-        List<ProgramStageInstance> programStageInstances = getProgramStageInstances( ps );
+        List<ProgramStageInstance> programStageInstances = getProgramStageInstances( psi );
 
         List<TrackedEntityDataValueAudit> dataValueAudits;
         Pager pager = null;
@@ -184,7 +204,7 @@ public class AuditController
 
         CollectionNode trackedEntityAttributeValueAudits = rootNode.addChild( new CollectionNode( "trackedEntityDataValueAudits", true ) );
         trackedEntityAttributeValueAudits.addChildren( fieldFilterService.filter( TrackedEntityDataValueAudit.class,
-            dataValueAudits, new ArrayList<>() ).getChildren() );
+            dataValueAudits, fields ).getChildren() );
 
         return rootNode;
     }
@@ -192,15 +212,17 @@ public class AuditController
     @RequestMapping( value = "trackedEntityAttributeValue", method = RequestMethod.GET )
     public @ResponseBody RootNode getTrackedEntityAttributeValueAudit(
         @RequestParam( required = false, defaultValue = "" ) List<String> tea,
-        @RequestParam( required = false, defaultValue = "" ) List<String> te,
+        @RequestParam( required = false, defaultValue = "" ) List<String> tei,
         @RequestParam( required = false ) AuditType auditType,
         @RequestParam( required = false ) boolean skipPaging,
         @RequestParam( required = false, defaultValue = "50" ) int pageSize,
         @RequestParam( required = false, defaultValue = "1" ) int page
     ) throws WebMessageException
     {
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+
         List<TrackedEntityAttribute> trackedEntityAttributes = getTrackedEntityAttributes( tea );
-        List<TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( te );
+        List<TrackedEntityInstance> trackedEntityInstances = getTrackedEntityInstances( tei );
 
         List<TrackedEntityAttributeValueAudit> attributeValueAudits;
         Pager pager = null;
@@ -230,7 +252,7 @@ public class AuditController
 
         CollectionNode trackedEntityAttributeValueAudits = rootNode.addChild( new CollectionNode( "trackedEntityAttributeValueAudits", true ) );
         trackedEntityAttributeValueAudits.addChildren( fieldFilterService.filter( TrackedEntityAttributeValueAudit.class,
-            attributeValueAudits, new ArrayList<>() ).getChildren() );
+            attributeValueAudits, fields ).getChildren() );
 
         return rootNode;
     }

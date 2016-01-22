@@ -1,7 +1,7 @@
 package org.hisp.dhis.resourcetable;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,6 +74,11 @@ public abstract class ResourceTable<T>
     public final String getDropTableStatement()
     {
         return "drop table " + getTableName() + ";";
+    }
+    
+    public final String getDropTempTableStatement()
+    {
+        return "drop table " + getTempTableName() + ";";
     }
     
     public final String getRenameTempTableStatement()

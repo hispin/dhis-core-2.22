@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataapproval;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,12 +74,12 @@ public class DataApproval
     private DataApprovalWorkflow workflow;
 
     /**
-     * The Period of the DataSet values being approved (required).
+     * The Period of the approval (required).
      */
     private Period period;
 
     /**
-     * The OrganisationUnit of the DataSet values being approved (required).
+     * The OrganisationUnit of the approval (required).
      */
     private OrganisationUnit organisationUnit;
     
@@ -95,13 +95,12 @@ public class DataApproval
     private boolean accepted;
 
     /**
-     * The Date (including time) when the DataSet values were approved
-     * (required).
+     * The Date (including time) when this approval was made (required).
      */
     private Date created;
 
     /**
-     * The User who approved the DataSet values (required).
+     * The User who made this approval (required).
      */
     private User creator;
 

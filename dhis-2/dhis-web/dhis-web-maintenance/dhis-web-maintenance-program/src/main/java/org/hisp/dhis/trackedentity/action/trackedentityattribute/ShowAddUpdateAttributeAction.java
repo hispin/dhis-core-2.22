@@ -1,7 +1,7 @@
 package org.hisp.dhis.trackedentity.action.trackedentityattribute;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@ package org.hisp.dhis.trackedentity.action.trackedentityattribute;
 import com.opensymphony.xwork2.Action;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.legend.LegendService;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.option.OptionService;
@@ -82,6 +83,9 @@ public class ShowAddUpdateAttributeAction
 
     @Autowired
     private AttributeService attributeService;
+
+    @Autowired
+    private DhisConfigurationProvider configurationProvider;
 
     // -------------------------------------------------------------------------
     // Input/Output
@@ -150,6 +154,13 @@ public class ShowAddUpdateAttributeAction
         return trackedEntities;
     }
 
+    private boolean encryptionAvailable;
+    
+    public boolean isEncryptionAvailable()
+    {
+        return encryptionAvailable;
+    }
+
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -167,7 +178,9 @@ public class ShowAddUpdateAttributeAction
             programs.removeAll( programService.getPrograms( ProgramType.WITHOUT_REGISTRATION ) );
             Collections.sort( programs );
         }
-
+        
+        encryptionAvailable = configurationProvider.isEncryptionConfigured().isOk();
+        
         periodTypes = periodService.getAllPeriodTypes();
         optionSets = optionService.getAllOptionSets();
         legendSets = legendService.getAllLegendSets();

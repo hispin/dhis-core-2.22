@@ -10,8 +10,6 @@
 	"periodType": "$!encoder.jsonEncode( ${validationRule.periodType} )",
 	"sequentialSampleCount": "$!encoder.jsonEncode( ${validationRule.sequentialSampleCount} )",
 	"annualSampleCount": "$!encoder.jsonEncode( ${validationRule.annualSampleCount} )",
-	"highOutliers": "$!encoder.jsonEncode( ${validationRule.highOutliers} )",
-	"lowOutliers": "$!encoder.jsonEncode( ${validationRule.lowOutliers} )",
 	"operator": "${validationRule.operator}",
 	"leftSideDescription": "$!encoder.jsonEncode( ${validationRule.leftSide.description} )",
 	"rightSideDescription": "$!encoder.jsonEncode( ${validationRule.rightSide.description} )"

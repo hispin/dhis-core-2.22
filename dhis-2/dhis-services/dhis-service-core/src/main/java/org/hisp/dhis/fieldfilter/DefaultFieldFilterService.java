@@ -1,7 +1,7 @@
 package org.hisp.dhis.fieldfilter;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -157,10 +157,9 @@ public class DefaultFieldFilterService implements FieldFilterService
             fieldMap = fieldParser.parse( fields );
         }
 
-        for ( Object object : objects )
-        {
-            collectionNode.addChild( buildNode( fieldMap, klass, object ) );
-        }
+
+        final FieldMap finalFieldMap = fieldMap;
+        objects.stream().forEach( object -> collectionNode.addChild( buildNode( finalFieldMap, klass, object ) ) );
 
         return collectionNode;
     }

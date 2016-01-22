@@ -35,14 +35,6 @@
     <many-to-one name="selfRegistrationOrgUnit" class="org.hisp.dhis.organisationunit.OrganisationUnit"
         column="selfRegistrationOrgUnit" foreign-key="fk_configuration_selfregistrationorgunit" />
 
-    <property name="remoteServerUrl" column="remoteserverurl" />
-
-    <property name="remoteServerUsername" column="remoteserverusername" />
-
-    <property name="remoteServerPassword" column="remoteserverpassword" type="encryptedString" />
-
-    <property name="smtpPassword" column="smtppassword" type="encryptedString" />
-
     <set name="corsWhitelist" table="configuration_corswhitelist">
       <cache usage="read-write" />
       <key column="configurationid" foreign-key="fk_configuration_corswhitelist" />

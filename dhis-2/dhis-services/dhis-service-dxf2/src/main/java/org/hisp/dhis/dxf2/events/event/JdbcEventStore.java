@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.events.event;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,6 @@ import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstanceService;
 
@@ -72,7 +71,6 @@ public class JdbcEventStore
     @Autowired
     private JdbcTemplate jdbcTemplate;
     
-    // for getting eventMember inside Events
     @Autowired
     private TrackedEntityInstanceService trackedEntityInstanceService;
 
@@ -126,14 +124,14 @@ public class JdbcEventStore
 
                 event.setTrackedEntityInstance( rowSet.getString( "tei_uid" ) );
 
-                event.setStoredBy( rowSet.getString( "psi_completeduser" ) );
+                event.setStoredBy( rowSet.getString( "psi_storedby" ) );
                 event.setOrgUnitName( rowSet.getString( "ou_name" ) );
                 event.setDueDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_duedate" ) ) );
                 event.setEventDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_executiondate" ) ) );
                 event.setCreated( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_created" ) ) );
                 event.setLastUpdated( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_lastupdated" ) ) );
 
-                event.setCompletedUser( rowSet.getString( "psi_completeduser" ) );
+                event.setCompletedBy( rowSet.getString( "psi_completedby" ) );
                 event.setCompletedDate( DateUtils.getLongGmtDateString( rowSet.getDate( "psi_completeddate" ) ) );
 
                 if ( rowSet.getBoolean( "ps_capturecoordinates" ) )
@@ -201,6 +199,7 @@ public class JdbcEventStore
                 event.getEventMembers().add(trackedEntityInstance);
                 }
             }
+            
         }
 
         return events;
@@ -238,7 +237,11 @@ public class JdbcEventStore
 
                 eventRow.setEvent( rowSet.getString( "psi_uid" ) );
                 eventRow.setTrackedEntityInstance( rowSet.getString( "tei_uid" ) );
-
+                eventRow.setTrackedEntityInstanceOrgUnit( rowSet.getString( "tei_ou" ) );
+                eventRow.setTrackedEntityInstanceOrgUnitName( rowSet.getString( "tei_ou_name" ) );
+                eventRow.setTrackedEntityInstanceCreated( rowSet.getString( "tei_created" ) );
+                eventRow.setTrackedEntityInstanceInactive( rowSet.getBoolean( "tei_inactive" ) );
+                
                 eventRow.setProgram( IdSchemes.getValue( rowSet.getString( "p_uid" ), rowSet.getString( "p_code" ),
                     idSchemes.getProgramIdScheme() ) );
                 eventRow.setProgramStage( IdSchemes.getValue( rowSet.getString( "ps_uid" ),
@@ -301,6 +304,7 @@ public class JdbcEventStore
                 eventRow.getNotes().add( note );
                 notes.add( rowSet.getString( "psinote_id" ) );
             }
+      
         }
 
         return eventRows;
@@ -360,19 +364,21 @@ public class JdbcEventStore
         SqlHelper hlp = new SqlHelper();
 
         String sql =
-            "select psi.programstageinstanceid as psi_id, psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completeduser as psi_completeduser, " +
-                "psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
-                "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
-                "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
-                "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid " + ", psim.trackedentityinstanceid as psim_tei " +
-                "from programstageinstance psi " +
-                "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
-                "inner join program p on p.programid=pi.programid " +
-                "inner join programstage ps on ps.programstageid=psi.programstageid " +
-                "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
-                "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) ";
-        
-        sql += " left join programstageinstancemembers psim on ( psim.programstageinstanceid=psi.programstageinstanceid ) ";
+            "select psi.programstageinstanceid as psi_id, psi.uid as psi_uid, psi.status as psi_status, psi.executiondate as psi_executiondate, psi.duedate as psi_duedate, psi.completedby as psi_completedby, " +
+            "psi.storedby as psi_storedby, psi.longitude as psi_longitude, psi.latitude as psi_latitude, psi.created as psi_created, psi.lastupdated as psi_lastupdated, psi.completeddate as psi_completeddate, " +
+            "pi.uid as pi_uid, pi.status as pi_status, pi.followup as pi_followup, p.uid as p_uid, p.code as p_code, " +
+            "p.type as p_type, ps.uid as ps_uid, ps.code as ps_code, ps.capturecoordinates as ps_capturecoordinates, " +
+            "ou.uid as ou_uid, ou.code as ou_code, ou.name as ou_name, " + "psim.trackedentityinstanceid as psim_tei, " +
+            "tei.trackedentityinstanceid as tei_id, tei.uid as tei_uid, teiou.uid as tei_ou, teiou.name as tei_ou_name, tei.created as tei_created, tei.inactive as tei_inactive " +
+            "from programstageinstance psi " +
+            "inner join programinstance pi on pi.programinstanceid=psi.programinstanceid " +
+            "inner join program p on p.programid=pi.programid " +
+            "inner join programstage ps on ps.programstageid=psi.programstageid " +
+            "left join trackedentityinstance tei on tei.trackedentityinstanceid=pi.trackedentityinstanceid " +
+            "left join organisationunit ou on (psi.organisationunitid=ou.organisationunitid) " + 
+            "left join organisationunit teiou on (tei.organisationunitid=teiou.organisationunitid) "+
+            "left join programstageinstancemembers psim on (psim.programstageinstanceid=psi.programstageinstanceid) ";
+;
 
         if ( params.getTrackedEntityInstance() != null )
         {
@@ -413,54 +419,32 @@ public class JdbcEventStore
         {
             sql += hlp.whereAnd() + " psi.organisationunitid in (" + getCommaDelimitedString( orgUnitIds ) + ") ";
         }
-
-        if ( params.getEventStatus() == null || EventStatus.isExistingEvent( params.getEventStatus() ) )
+        
+        if ( params.getStartDate() != null )
         {
-            if ( params.getStartDate() != null )
-            {
-                sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' "
-                		+ " or (psi.executiondate is null and psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "')) ";
-            }
-
-            if ( params.getEndDate() != null )
-            {
-                sql += hlp.whereAnd() + " (psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' "
-                 		+ " or (psi.executiondate is null and psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "')) ";
-            }
+            sql += hlp.whereAnd() + " (psi.executiondate >= '" + getMediumDateString( params.getStartDate() ) + "' " +
+                "or (psi.executiondate is null and psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "')) ";
         }
-        else
+
+        if ( params.getEndDate() != null )
         {
-            if ( params.getStartDate() != null )
-            {
-                sql += hlp.whereAnd() + " psi.duedate >= '" + getMediumDateString( params.getStartDate() ) + "' ";
-            }
+            sql += hlp.whereAnd() + " (psi.executiondate <= '" + getMediumDateString( params.getEndDate() ) + "' " +
+                "or (psi.executiondate is null and psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "')) ";
+        }
 
-            if ( params.getEndDate() != null )
-            {
-                sql += hlp.whereAnd() + " psi.duedate <= '" + getMediumDateString( params.getEndDate() ) + "' ";
-            }
-
+        if ( params.getEventStatus() != null )
+        {
             if ( params.getEventStatus() == EventStatus.VISITED )
             {
-                sql = "and psi.status = '" + EventStatus.ACTIVE.name() + "' and psi.executiondate is not null ";
-            }
-            else if ( params.getEventStatus() == EventStatus.COMPLETED )
-            {
-                sql = "and psi.status = '" + EventStatus.COMPLETED.name() + "' ";
-            }
-            else if ( params.getEventStatus() == EventStatus.SCHEDULE )
-            {
-                sql += "and psi.executiondate is null and date(now()) <= date(psi.duedate) and psi.status = '" +
-                    EventStatus.SCHEDULE.name() + "' ";
+                sql += hlp.whereAnd() + " psi.status = '" + EventStatus.ACTIVE.name() + "' and psi.executiondate is not null ";
             }
             else if ( params.getEventStatus() == EventStatus.OVERDUE )
             {
-                sql += "and psi.executiondate is null and date(now()) > date(psi.duedate) and psi.status = '" +
-                    EventStatus.SCHEDULE.name() + "' ";
+                sql += hlp.whereAnd() + " date(now()) > date(psi.duedate) and psi.status = '" + EventStatus.SCHEDULE.name() + "' ";
             }
             else
             {
-                sql += "and psi.status = '" + params.getEventStatus().name() + "' ";
+                sql += hlp.whereAnd() + " psi.status = '" + params.getEventStatus().name() + "' ";
             }
         }
 
@@ -482,10 +466,11 @@ public class JdbcEventStore
     private String getDataValueQuery()
     {
         String sql =
-            "select pdv.programstageinstanceid as pdv_id, pdv.created as pdv_created, pdv.lastupdated as pdv_lastupdated, pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
-                "de.uid as de_uid, de.code as de_code " +
-                "from trackedentitydatavalue pdv " +
-                "inner join dataelement de on pdv.dataelementid=de.dataelementid ";
+            "select pdv.programstageinstanceid as pdv_id, pdv.created as pdv_created, pdv.lastupdated as pdv_lastupdated, " +
+            "pdv.value as pdv_value, pdv.storedby as pdv_storedby, pdv.providedelsewhere as pdv_providedelsewhere, " +
+            "de.uid as de_uid, de.code as de_code " +
+            "from trackedentitydatavalue pdv " +
+            "inner join dataelement de on pdv.dataelementid=de.dataelementid ";
 
         return sql;
     }
@@ -494,18 +479,19 @@ public class JdbcEventStore
     {
         String sql =
             "select psic.programstageinstanceid as psic_id, psinote.trackedentitycommentid as psinote_id, psinote.commenttext as psinote_value, " +
-                "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby " +
-                "from programstageinstancecomments psic " +
-                "inner join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
+            "psinote.createddate as psinote_storeddate, psinote.creator as psinote_storedby " +
+            "from programstageinstancecomments psic " +
+            "inner join trackedentitycomment psinote on psic.trackedentitycommentid=psinote.trackedentitycommentid ";
 
         return sql;
     }
 
     private String getAttributeValueQuery()
     {
-        String sql = "select pav.trackedentityinstanceid as pav_id, pav.created as pav_created, pav.lastupdated as pav_lastupdated, pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype "
-            + "from trackedentityattributevalue pav "
-            + "inner join trackedentityattribute ta on pav.trackedentityattributeid=ta.trackedentityattributeid ";
+        String sql = "select pav.trackedentityinstanceid as pav_id, pav.created as pav_created, pav.lastupdated as pav_lastupdated, " +
+            "pav.value as pav_value, ta.uid as ta_uid, ta.name as ta_name, ta.valuetype as ta_valuetype " +
+            "from trackedentityattributevalue pav " +
+            "inner join trackedentityattribute ta on pav.trackedentityattributeid=ta.trackedentityattributeid ";
 
         return sql;
     }

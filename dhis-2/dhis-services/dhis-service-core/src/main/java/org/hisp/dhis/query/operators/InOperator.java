@@ -1,7 +1,7 @@
 package org.hisp.dhis.query.operators;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ public class InOperator extends Operator
     @Override
     public Criterion getHibernateCriterion( Property property )
     {
-        return Restrictions.in( property.getFieldName(), getValue( Collection.class, args.get( 0 ) ) );
+        return Restrictions.in( property.getFieldName(), getValue( Collection.class, property.getKlass(), args.get( 0 ) ) );
     }
 
     @Override
@@ -76,48 +76,49 @@ public class InOperator extends Operator
         return false;
     }
 
-    private boolean compare( Type type, Object item, Object object )
+    private boolean compare( Type type, Object lside, Object rside )
     {
         if ( type.isString() )
         {
-            String s1 = getValue( String.class, item );
-            String s2 = (String) object;
+            String s1 = getValue( String.class, lside );
+            String s2 = (String) rside;
 
             return s1 != null && s2.equals( s1 );
         }
         else if ( type.isBoolean() )
         {
-            Boolean s1 = getValue( Boolean.class, item );
-            Boolean s2 = (Boolean) object;
+            Boolean s1 = getValue( Boolean.class, lside );
+            Boolean s2 = (Boolean) rside;
 
             return s1 != null && s2.equals( s1 );
         }
         else if ( type.isInteger() )
         {
-            Integer s1 = getValue( Integer.class, item );
-            Integer s2 = (Integer) object;
+            Integer s1 = getValue( Integer.class, lside );
+            Integer s2 = (Integer) rside;
 
             return s1 != null && s2.equals( s1 );
         }
         else if ( type.isFloat() )
         {
-            Float s1 = getValue( Float.class, item );
-            Float s2 = (Float) object;
+            Float s1 = getValue( Float.class, lside );
+            Float s2 = (Float) rside;
 
             return s1 != null && s2.equals( s1 );
         }
         else if ( type.isDate() )
         {
-            Date s1 = getValue( Date.class, item );
-            Date s2 = (Date) object;
+            Date s1 = getValue( Date.class, lside );
+            Date s2 = (Date) rside;
 
             return s1 != null && s2.equals( s1 );
         }
         else if ( type.isEnum() )
         {
-            String s2 = String.valueOf( object );
+            String s1 = String.valueOf( lside );
+            String s2 = String.valueOf( rside );
 
-            return item != null && s2.equals( item );
+            return s1 != null && s2.equals( s1 );
         }
 
         return false;

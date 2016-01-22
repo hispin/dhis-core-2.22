@@ -1,7 +1,7 @@
 package org.hisp.dhis.program;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Abyot Asalefew
@@ -179,8 +180,8 @@ public class Program
         Set<OrganisationUnit> toRemove = Sets.difference( organisationUnits, updates );
         Set<OrganisationUnit> toAdd = Sets.difference( updates, organisationUnits );
 
-        toRemove.parallelStream().forEach( u -> u.getPrograms().remove( this ) );
-        toAdd.parallelStream().forEach( u -> u.getPrograms().add( this ) );
+        toRemove.stream().forEach( u -> u.getPrograms().remove( this ) );
+        toAdd.stream().forEach( u -> u.getPrograms().add( this ) );
 
         organisationUnits.clear();
         organisationUnits.addAll( updates );
@@ -206,7 +207,7 @@ public class Program
     /**
      * Returns all data elements which are part of the stages of this program.
      */
-    public Set<DataElement> getAllDataElements()
+    public Set<DataElement> getDataElements()
     {
         Set<DataElement> elements = new HashSet<>();
 
@@ -224,17 +225,7 @@ public class Program
      */
     public Set<DataElement> getDataElementsWithLegendSet()
     {
-        Set<DataElement> elements = new HashSet<>();
-
-        for ( DataElement element : getAllDataElements() )
-        {
-            if ( element != null && element.hasLegendSet() && element.isNumericType() )
-            {
-                elements.add( element );
-            }
-        }
-
-        return elements;
+        return getDataElements().stream().filter( e -> e.hasLegendSet() && e.isNumericType() ).collect( Collectors.toSet() );
     }
 
     /**
@@ -243,33 +234,25 @@ public class Program
      */
     public List<TrackedEntityAttribute> getTrackedEntityAttributes()
     {
-        List<TrackedEntityAttribute> attributes = new ArrayList<>();
+        return programAttributes.stream().map( p -> p.getAttribute() ).collect( Collectors.toList() );
+    }
 
-        for ( ProgramTrackedEntityAttribute programAttribute : programAttributes )
-        {
-            attributes.add( programAttribute.getAttribute() );
-        }
-
-        return attributes;
+    /**
+     * Returns non-confidential TrackedEntityAttributes from ProgramTrackedEntityAttributes. Use
+     * getAttributes() to access the persisted attribute list.
+     */
+    public List<TrackedEntityAttribute> getNonConfidentialTrackedEntityAttributes()
+    {
+        return programAttributes.stream().map( p -> p.getAttribute() ).filter( a -> a.isConfidential() ).collect( Collectors.toList() );
     }
 
     /**
      * Returns TrackedEntityAttributes from ProgramTrackedEntityAttributes which
      * have a legend set and is of numeric value type.
      */
-    public List<TrackedEntityAttribute> getTrackedEntityAttributesWithLegendSet()
+    public List<TrackedEntityAttribute> getNonConfidentialTrackedEntityAttributesWithLegendSet()
     {
-        List<TrackedEntityAttribute> attributes = new ArrayList<>();
-
-        for ( TrackedEntityAttribute attribute : getTrackedEntityAttributes() )
-        {
-            if ( attribute != null && attribute.hasLegendSet() && attribute.isNumericType() )
-            {
-                attributes.add( attribute );
-            }
-        }
-
-        return attributes;
+        return getTrackedEntityAttributes().stream().filter( a -> a.isConfidential() && a.hasLegendSet() && a.isNumericType() ).collect( Collectors.toList() );
     }
 
     public ProgramStage getProgramStageByStage( int stage )
@@ -304,6 +287,7 @@ public class Program
     // Getters and setters
     // -------------------------------------------------------------------------
 
+    @Override
     @JsonProperty
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
@@ -311,11 +295,6 @@ public class Program
     public String getDescription()
     {
         return description;
-    }
-
-    public void setDescription( String description )
-    {
-        this.description = description;
     }
 
     @Override

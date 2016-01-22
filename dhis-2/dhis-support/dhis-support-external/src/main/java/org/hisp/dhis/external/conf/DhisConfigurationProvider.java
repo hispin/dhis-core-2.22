@@ -1,7 +1,7 @@
 package org.hisp.dhis.external.conf;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,6 +27,8 @@ package org.hisp.dhis.external.conf;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+import org.hisp.dhis.encryption.EncryptionStatus;
 
 import java.util.Properties;
 
@@ -73,9 +75,23 @@ public interface DhisConfigurationProvider
     boolean isEnabled( ConfigurationKey key );
     
     /**
+     * Indicates whether the system is set to read-only mode.
+     * 
+     * @return the if the system is in read-only mode.
+     */
+    public boolean isReadOnlyMode();
+    
+    /**
      * Indicates whether LDAP authentication is configured.
      * 
      * @return true if LDAP authentication is configured.
      */
     boolean isLdapConfigured();
+
+    /**
+     * Indicates whether encryption is correctly configured and available in the system.
+     *
+     * @return EncryptionStatus reflecting the status of encryption in the system
+     */
+    EncryptionStatus isEncryptionConfigured();
 }

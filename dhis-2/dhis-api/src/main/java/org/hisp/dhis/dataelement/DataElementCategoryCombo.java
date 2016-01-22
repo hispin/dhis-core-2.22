@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataelement;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -111,7 +111,7 @@ public class DataElementCategoryCombo
      */
     public boolean isValid()
     {
-        if ( categories == null || categories.isEmpty() || optionCombos == null || optionCombos.isEmpty() )
+        if ( categories == null || categories.isEmpty() )
         {
             return false;
         }
@@ -240,18 +240,25 @@ public class DataElementCategoryCombo
     // Logic
     // -------------------------------------------------------------------------
 
-    public void addDataElementCategory( DataElementCategory dataElementCategory )
+    public void addDataElementCategory( DataElementCategory category )
     {
-        categories.add( dataElementCategory );
+        categories.add( category );
+        category.getCategoryCombos().add( this );
     }
 
-    public void removeDataElementCategory( DataElementCategory dataElementCategory )
+    public void removeDataElementCategory( DataElementCategory category )
     {
-        categories.remove( dataElementCategory );
+        categories.remove( category );
+        category.getCategoryCombos().remove( this );
     }
 
-    public void removeAllDataElementCategories()
+    public void removeAllCategories()
     {
+        for ( DataElementCategory category : categories )
+        {
+            category.getCategoryCombos().remove( this );
+        }
+
         categories.clear();
     }
 
@@ -335,12 +342,8 @@ public class DataElementCategoryCombo
                 dataDimensionType = categoryCombo.getDataDimensionType() == null ? dataDimensionType : categoryCombo.getDataDimensionType();
             }
 
-            removeAllDataElementCategories();
-
-            for ( DataElementCategory dataElementCategory : categoryCombo.getCategories() )
-            {
-                addDataElementCategory( dataElementCategory );
-            }
+            removeAllCategories();
+            categoryCombo.getCategories().forEach( this::addDataElementCategory );
         }
     }
 }

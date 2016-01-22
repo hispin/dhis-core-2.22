@@ -1,7 +1,7 @@
 package org.hisp.dhis.mapping;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -133,6 +133,11 @@ public class MapView
 
     public MapView()
     {
+    }
+
+    public MapView( String layer )
+    {
+        this.layer = layer;
     }
 
     // -------------------------------------------------------------------------

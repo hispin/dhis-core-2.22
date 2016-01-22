@@ -1,7 +1,7 @@
 package org.hisp.dhis.trackedentityattributevalue;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,9 +29,11 @@ package org.hisp.dhis.trackedentityattributevalue;
  */
 
 import org.hisp.dhis.common.AuditType;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.user.CurrentUserService;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -63,6 +65,9 @@ public class DefaultTrackedEntityAttributeValueService
     @Autowired
     private CurrentUserService currentUserService;
 
+    @Autowired
+    private DhisConfigurationProvider dhisConfigurationProvider;
+
     // -------------------------------------------------------------------------
     // Implementation methods
     // -------------------------------------------------------------------------
@@ -71,7 +76,7 @@ public class DefaultTrackedEntityAttributeValueService
     public void deleteTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
         TrackedEntityAttributeValueAudit trackedEntityAttributeValueAudit = new TrackedEntityAttributeValueAudit( attributeValue,
-            attributeValue.getValue(), currentUserService.getCurrentUsername(), AuditType.DELETE );
+            attributeValue.getAuditValue(), currentUserService.getCurrentUsername(), AuditType.DELETE );
 
         trackedEntityAttributeValueAuditService.addTrackedEntityAttributeValueAudit( trackedEntityAttributeValueAudit );
         attributeValueStore.delete( attributeValue );
@@ -97,8 +102,7 @@ public class DefaultTrackedEntityAttributeValueService
     }
 
     @Override
-    public List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues(
-        Collection<TrackedEntityInstance> instances )
+    public List<TrackedEntityAttributeValue> getTrackedEntityAttributeValues( Collection<TrackedEntityInstance> instances )
     {
         if ( instances != null && instances.size() > 0 )
         {
@@ -111,6 +115,11 @@ public class DefaultTrackedEntityAttributeValueService
     @Override
     public void addTrackedEntityAttributeValue( TrackedEntityAttributeValue attributeValue )
     {
+        if ( attributeValue.getAttribute().isConfidential() && !dhisConfigurationProvider.isEncryptionConfigured().isOk() )
+        {
+            throw new EncryptionOperationNotPossibleException( "Unable to encrypt data, encryption is not correctly configured" );
+        }
+
         attributeValue.setAutoFields();
 
         if ( attributeValue.getValue() != null )
@@ -131,7 +140,7 @@ public class DefaultTrackedEntityAttributeValueService
         else
         {
             TrackedEntityAttributeValueAudit trackedEntityAttributeValueAudit = new TrackedEntityAttributeValueAudit( attributeValue,
-                attributeValue.getValue(), currentUserService.getCurrentUsername(), AuditType.UPDATE );
+                attributeValue.getAuditValue(), currentUserService.getCurrentUsername(), AuditType.UPDATE );
 
             trackedEntityAttributeValueAuditService.addTrackedEntityAttributeValueAudit( trackedEntityAttributeValueAudit );
             attributeValueStore.update( attributeValue );

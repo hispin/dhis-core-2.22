@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@ import org.hisp.dhis.common.MergeStrategy;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.OrderOptions;
+import org.hisp.dhis.dxf2.common.OrderParams;
 import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.metadata.ImportService;
@@ -158,12 +158,12 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
     @RequestMapping( method = RequestMethod.GET )
     public @ResponseBody RootNode getObjectList(
         @RequestParam Map<String, String> rpParameters,
-        TranslateParams translateParams, OrderOptions orderOptions,
+        TranslateParams translateParams, OrderParams orderParams,
         HttpServletResponse response, HttpServletRequest request ) throws QueryParserException
     {
         List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
         List<String> filters = Lists.newArrayList( contextService.getParameterValues( "filter" ) );
-        List<Order> orders = orderOptions.getOrders( getSchema() );
+        List<Order> orders = orderParams.getOrders( getSchema() );
 
         WebOptions options = new WebOptions( rpParameters );
         WebMetaData metaData = new WebMetaData();
@@ -191,12 +191,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         postProcessEntities( entities );
         postProcessEntities( entities, options, rpParameters, translateParams );
 
-        if ( fields.contains( "access" ) )
-        {
-            options.getOptions().put( "viewClass", "sharing" );
-        }
-
-        handleLinksAndAccess( options, entities );
+        handleLinksAndAccess( entities, fields, false );
 
         linkService.generatePagerLinks( pager, getEntityClass() );
 
@@ -433,15 +428,7 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         entities = (List<T>) queryService.query( query );
 
-        if ( options.hasLinks() )
-        {
-            linkService.generateLinks( entities, true );
-        }
-
-        if ( aclService.isSupported( getEntityClass() ) )
-        {
-            addAccessProperties( entities );
-        }
+        handleLinksAndAccess( entities, fields, true );
 
         for ( T entity : entities )
         {
@@ -931,14 +918,41 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
         }
     }
 
-    protected void handleLinksAndAccess( WebOptions options, List<T> entityList )
+    private boolean fieldsContains( String match, List<String> fields )
     {
-        if ( options != null && options.hasLinks() )
+        for ( String field : fields )
         {
-            linkService.generateLinks( entityList, false );
+            // for now assume href/access if * or preset is requested
+            if ( field.contains( match ) || field.equals( "*" ) || field.startsWith( ":" ) )
+            {
+                return true;
+            }
         }
 
-        if ( entityList != null && aclService.isSupported( getEntityClass() ) )
+        return false;
+    }
+
+    protected boolean hasHref( List<String> fields )
+    {
+        return fieldsContains( "href", fields );
+    }
+
+    protected boolean hasAccess( List<String> fields )
+    {
+        return fieldsContains( "access", fields );
+    }
+
+    protected void handleLinksAndAccess( List<T> entityList, List<String> fields, boolean deep )
+    {
+        boolean generateLinks = hasHref( fields );
+        boolean generateAccess = hasAccess( fields );
+
+        if ( generateLinks )
+        {
+            linkService.generateLinks( entityList, deep );
+        }
+
+        if ( generateAccess && aclService.isSupported( getEntityClass() ) )
         {
             addAccessProperties( entityList );
         }

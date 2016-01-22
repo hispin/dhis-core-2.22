@@ -1,7 +1,7 @@
 package org.hisp.dhis.calendar;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -310,7 +310,7 @@ public abstract class ChronologyBasedCalendar extends AbstractCalendar
     @Override
     public DateTimeUnit isoStartOfYear( int year )
     {
-        DateTime dateTime = new DateTime( year, 1, 1, 0, 0, chronology ).withChronology( ISOChronology.getInstance() );
+        DateTime dateTime = new DateTime( year, 1, 1, 11, 0, chronology ).withChronology( ISOChronology.getInstance() );
         return DateTimeUnit.fromJodaDateTime( dateTime );
     }
 }

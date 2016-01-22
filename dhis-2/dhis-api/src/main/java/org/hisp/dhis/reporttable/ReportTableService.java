@@ -1,7 +1,7 @@
 package org.hisp.dhis.reporttable;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,20 +31,15 @@ package org.hisp.dhis.reporttable;
 import java.util.Date;
 import java.util.List;
 
+import org.hisp.dhis.common.AnalyticalObjectService;
 import org.hisp.dhis.common.Grid;
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.i18n.I18nFormat;
-import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.period.Period;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public interface ReportTableService
+    extends AnalyticalObjectService<ReportTable>
 {
     String ID = ReportTableService.class.getName();
 
@@ -141,16 +136,4 @@ public interface ReportTableService
     int getReportTableCount();
 
     int getReportTableCountByName( String name );
-    
-    int countDataSetReportTables( DataSet dataSet );
-    
-    int countIndicatorReportTables( Indicator indicator );
-    
-    int countDataElementReportTables( DataElement dataElement );
-    
-    int countPeriodReportTables( Period period );
-    
-    int countOrganisationUnitReportTables( OrganisationUnit organisationUnit );
-    
-    int countCategoryOptionGroups( CategoryOptionGroup categoryOptionGroup );
 }

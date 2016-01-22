@@ -1,7 +1,7 @@
 package org.hisp.dhis.common.hibernate;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,9 @@ import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.ProgramIndicator;
+import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
+
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -46,9 +49,81 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     extends HibernateIdentifiableObjectStore<T> implements AnalyticalObjectStore<T>
 {
     //TODO program indicator, tracked entity attribute
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjects( Indicator indicator )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.indicator = :indicator";
+        return getQuery( hql ).setEntity( "indicator", indicator ).list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjects( DataElement dataElement )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataElement = :dataElement";
+        return getQuery( hql ).setEntity( "dataElement", dataElement ).list();        
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjectsByDataDimension( DataElement dataElement )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataElementDimensions d where d.dataElement = :dataElement";
+        return getQuery( hql ).setEntity( "dataElement", dataElement ).list();        
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjectsByDataDimension( TrackedEntityAttribute attribute )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.attributeDimensions d where d.attribute = :attribute";
+        return getQuery( hql ).setEntity( "attribute", attribute ).list();        
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjects( DataSet dataSet )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataSet = :dataSet";
+        return getQuery( hql ).setEntity( "dataSet", dataSet ).list(); 
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjects( ProgramIndicator programIndicator )
+    {
+        String hql = "select distinct c from " + clazz.getName() + " c join c.dataDimensionItems d where d.programIndicator = :programIndicator";
+        return getQuery( hql ).setEntity( "programIndicator", programIndicator ).list(); 
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjects( Period period )
+    {
+        String hql = "from " + clazz.getName() + " c where :period in elements(c.periods)";
+        return getQuery( hql ).setEntity( "period", period ).list(); 
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjects( OrganisationUnit organisationUnit )
+    {
+        String hql = "from " + clazz.getName() + " c where :organisationUnit in elements(c.organisationUnits)";
+        return getQuery( hql ).setEntity( "organisationUnit", organisationUnit ).list(); 
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getAnalyticalObjects( CategoryOptionGroup categoryOptionGroup )
+    {
+        String hql = "from " + clazz.getName() + " c where :categoryOptionGroup in elements(c.categoryOptionGroups)";
+        return getQuery( hql ).setEntity( "categoryOptionGroup", categoryOptionGroup ).list(); 
+    }
     
     @Override
-    public int countIndicatorAnalyticalObject( Indicator indicator )
+    public int countAnalyticalObjects( Indicator indicator )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.indicator = :indicator" );
         query.setEntity( "indicator", indicator );
@@ -57,7 +132,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countDataElementAnalyticalObject( DataElement dataElement )
+    public int countAnalyticalObjects( DataElement dataElement )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataElement = :dataElement" );
         query.setEntity( "dataElement", dataElement );
@@ -66,7 +141,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countDataSetAnalyticalObject( DataSet dataSet )
+    public int countAnalyticalObjects( DataSet dataSet )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.dataSet = :dataSet" );
         query.setEntity( "dataSet", dataSet );
@@ -75,7 +150,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countProgramIndicatorAnalyticalObject( ProgramIndicator programIndicator )
+    public int countAnalyticalObjects( ProgramIndicator programIndicator )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c join c.dataDimensionItems d where d.programIndicator = :programIndicator" );
         query.setEntity( "dataSet", programIndicator );
@@ -84,7 +159,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
     
     @Override
-    public int countPeriodAnalyticalObject( Period period )
+    public int countAnalyticalObjects( Period period )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :period in elements(c.periods)" );
         query.setEntity( "period", period );
@@ -93,7 +168,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countOrganisationUnitAnalyticalObject( OrganisationUnit organisationUnit )
+    public int countAnalyticalObjects( OrganisationUnit organisationUnit )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :organisationUnit in elements(c.organisationUnits)" );
         query.setEntity( "organisationUnit", organisationUnit );
@@ -102,7 +177,7 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
     }
 
     @Override
-    public int countCategoryOptionGroupAnalyticalObject( CategoryOptionGroup categoryOptionGroup )
+    public int countAnalyticalObjects( CategoryOptionGroup categoryOptionGroup )
     {
         Query query = getQuery( "select count(distinct c) from " + clazz.getName() + " c where :categoryOptionGroup in elements(c.categoryOptionGroups)" );
         query.setEntity( "categoryOptionGroup", categoryOptionGroup );

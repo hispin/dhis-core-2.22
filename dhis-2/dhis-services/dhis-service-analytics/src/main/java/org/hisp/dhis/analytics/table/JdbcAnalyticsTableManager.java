@@ -1,7 +1,7 @@
 package org.hisp.dhis.analytics.table;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -271,7 +271,7 @@ public class JdbcAnalyticsTableManager
         {
             String sql =
                 "left join _dataapprovalminlevel da " +
-                    "on des.datasetid=da.datasetid and da.periodid=dv.periodid and da.attributeoptioncomboid=dv.attributeoptioncomboid " +
+                    "on des.workflowid=da.workflowid and da.periodid=dv.periodid and da.attributeoptioncomboid=dv.attributeoptioncomboid " +
                     "and (";
 
             Set<OrganisationUnitLevel> levels = dataApprovalLevelService.getOrganisationUnitApprovalLevels();

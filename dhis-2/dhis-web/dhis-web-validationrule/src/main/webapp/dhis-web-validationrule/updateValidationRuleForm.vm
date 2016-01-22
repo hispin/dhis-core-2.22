@@ -75,14 +75,6 @@
 		<td><label for="annualSampleCount">$i18n.getString( "annual_sample_count" )</label></td>
 		<td><input type="text" id="annualSampleCount" name="annualSampleCount" value="$!validationRule.annualSampleCount"></td>
 	</tr>
-	<tr id="highOutliersTR">
-		<td><label for="highOutliers">$i18n.getString( "high_outliers" )</label></td>
-		<td><input type="text" id="highOutliers" name="highOutliers" value="$!validationRule.highOutliers"></td>
-	</tr>
-	<tr id="lowOutliersTR">
-		<td><label for="lowOutliers">$i18n.getString( "low_outliers" )</label></td>
-		<td><input type="text" id="lowOutliers" name="lowOutliers" value="$!validationRule.lowOutliers"></td>
-	</tr>
 	<tr>
 		<td><label for="operatorId">$i18n.getString( "operator" ) <em title="$i18n.getString( "required" )" class="required">*</em></label></td>
 		<td>

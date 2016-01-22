@@ -1,7 +1,9 @@
 package org.hisp.dhis.trackedentity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,6 +123,15 @@ public class TrackedEntityAttribute
     public boolean isDateType()
     {
         return valueType.isDate();
+    }
+    
+    /**
+     * Indicates whether this attribute has confidential information.
+     */
+    @JsonIgnore
+    public boolean isConfidential()
+    {
+        return confidential != null && confidential;
     }
 
     /**

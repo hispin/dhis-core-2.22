@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,8 +37,8 @@ import org.hisp.dhis.appmanager.AppStatus;
 import org.hisp.dhis.dxf2.render.DefaultRenderService;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
-import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.hibernate.exception.ReadAccessDeniedException;
+import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.webapi.utils.ContextUtils;
@@ -78,10 +78,10 @@ public class AppController
     
     @Autowired
     private RenderService renderService;
-
+    
     @Autowired
-    private LocationManager locationManager;
-        
+    private I18nManager i18nManager;
+    
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     // -------------------------------------------------------------------------
@@ -90,14 +90,16 @@ public class AppController
 
     @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
     public void getApps( @RequestParam( required = false ) String key, 
-        HttpServletResponse response )
+        HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {
+        String contextPath = ContextUtils.getContextPath( request );
+        
         List<App> apps = new ArrayList<>();
 
         if ( key != null )
         {
-            App app = appManager.getApp( key );
+            App app = appManager.getApp( key, contextPath );
 
             if ( app == null )
             {
@@ -109,7 +111,7 @@ public class AppController
         }
         else
         {
-            apps = appManager.getApps();
+            apps = appManager.getApps( contextPath );
         }
 
         renderService.toJson( response.getOutputStream(), apps );
@@ -129,7 +131,9 @@ public class AppController
         
         if ( !status.ok() )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( status.getMessage() ) );
+            String message = i18nManager.getI18n().getString( status.getMessage() );
+            
+            throw new WebMessageException( WebMessageUtils.conflict( message ) );
         }
     }
 
@@ -239,39 +243,14 @@ public class AppController
             throw new WebMessageException( WebMessageUtils.conflict( "No config specified" ) );
         }
 
-        String appBaseUrl = StringUtils.trimToNull( config.get( SettingKey.APP_BASE_URL.getName() ) );
-        String appFolderPath = StringUtils.trimToNull( config.get( SettingKey.APP_FOLDER_PATH.getName() ) );
         String appStoreUrl = StringUtils.trimToNull( config.get( SettingKey.APP_STORE_URL.getName() ) );
-
-        if ( appBaseUrl != null )
-        {
-            appManager.setAppBaseUrl( appBaseUrl );
-        }
-
-        if ( appFolderPath != null )
-        {
-            appManager.setAppFolderPath( appFolderPath );
-        }
 
         if ( appStoreUrl != null )
         {
             appManager.setAppStoreUrl( appStoreUrl );
         }
     }
-
-    @RequestMapping( value = "/config", method = RequestMethod.DELETE )
-    @PreAuthorize( "hasRole('ALL') or hasRole('M_dhis-web-maintenance-appmanager')" )
-    public void resetConfig( HttpServletRequest request )
-    {
-        String contextPath = ContextUtils.getContextPath( request );
-
-        String appFolderPath = locationManager.getExternalDirectoryPath() + AppManager.APPS_DIR;
-        String appBaseUrl = contextPath + AppManager.APPS_API_PATH;
-
-        appManager.setAppFolderPath( appFolderPath );
-        appManager.setAppBaseUrl( appBaseUrl );
-    }
-
+    
     //--------------------------------------------------------------------------
     // Helpers
     //--------------------------------------------------------------------------

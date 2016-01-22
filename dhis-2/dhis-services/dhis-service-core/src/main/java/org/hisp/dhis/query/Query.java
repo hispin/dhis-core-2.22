@@ -1,7 +1,7 @@
 package org.hisp.dhis.query;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,9 +64,32 @@ public class Query extends Criteria
         return schema;
     }
 
+    public boolean isEmpty()
+    {
+        return criterions.isEmpty() && orders.isEmpty();
+    }
+
     public List<Order> getOrders()
     {
         return orders;
+    }
+
+    public boolean ordersPersisted()
+    {
+        for ( Order order : orders )
+        {
+            if ( order.isNonPersisted() )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void clearOrders()
+    {
+        orders.clear();
     }
 
     public Integer getFirstResult()
@@ -161,11 +184,11 @@ public class Query extends Criteria
 
         if ( schema.havePersistedProperty( "name" ) )
         {
-            addOrder( Order.asc( schema.getPersistedProperty( "name" ) ) );
+            addOrder( Order.iasc( schema.getPersistedProperty( "name" ) ) );
         }
         if ( schema.havePersistedProperty( "created" ) )
         {
-            addOrder( Order.desc( schema.getPersistedProperty( "created" ) ) );
+            addOrder( Order.idesc( schema.getPersistedProperty( "created" ) ) );
         }
 
         return this;

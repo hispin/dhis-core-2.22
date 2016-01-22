@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.webmessage;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.dxf2.common.Status;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -49,9 +50,9 @@ public class WebMessage
      * Message status, currently two statuses are available: OK, ERROR. Default
      * value is OK.
      *
-     * @see WebMessageStatus
+     * @see Status
      */
-    protected WebMessageStatus status = WebMessageStatus.OK;
+    protected Status status = Status.OK;
 
     /**
      * Internal code for this message. Should be used to help with third party clients which
@@ -92,12 +93,12 @@ public class WebMessage
     {
     }
 
-    public WebMessage( WebMessageStatus status )
+    public WebMessage( Status status )
     {
         this.status = status;
     }
 
-    public WebMessage( WebMessageStatus status, HttpStatus httpStatus )
+    public WebMessage( Status status, HttpStatus httpStatus )
     {
         this.status = status;
         this.httpStatus = httpStatus;
@@ -109,17 +110,17 @@ public class WebMessage
 
     public boolean isOk()
     {
-        return WebMessageStatus.OK == status;
+        return Status.OK == status;
     }
 
     public boolean isWarning()
     {
-        return WebMessageStatus.WARNING == status;
+        return Status.WARNING == status;
     }
 
     public boolean isError()
     {
-        return WebMessageStatus.ERROR == status;
+        return Status.ERROR == status;
     }
 
     // -------------------------------------------------------------------------
@@ -128,12 +129,12 @@ public class WebMessage
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
-    public WebMessageStatus getStatus()
+    public Status getStatus()
     {
         return status;
     }
 
-    public void setStatus( WebMessageStatus status )
+    public void setStatus( Status status )
     {
         this.status = status;
     }

@@ -1,7 +1,7 @@
 package org.hisp.dhis.query;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -294,7 +294,7 @@ public class CriteriaQueryEngineTest
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
-        query.addOrder( new Order( schema.getProperty( "name" ), false ) );
+        query.addOrder( new Order( schema.getProperty( "name" ), Direction.DESCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
@@ -313,7 +313,7 @@ public class CriteriaQueryEngineTest
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
-        query.addOrder( new Order( schema.getProperty( "name" ), true ) );
+        query.addOrder( new Order( schema.getProperty( "name" ), Direction.ASCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
@@ -332,7 +332,7 @@ public class CriteriaQueryEngineTest
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
-        query.addOrder( new Order( schema.getProperty( "created" ), false ) );
+        query.addOrder( new Order( schema.getProperty( "created" ), Direction.DESCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
@@ -351,7 +351,7 @@ public class CriteriaQueryEngineTest
         Schema schema = schemaService.getDynamicSchema( DataElement.class );
 
         Query query = Query.from( schema );
-        query.addOrder( new Order( schema.getProperty( "created" ), true ) );
+        query.addOrder( new Order( schema.getProperty( "created" ), Direction.ASCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );

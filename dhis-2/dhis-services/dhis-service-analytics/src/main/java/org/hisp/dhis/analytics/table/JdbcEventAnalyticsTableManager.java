@@ -1,7 +1,7 @@
 package org.hisp.dhis.analytics.table;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -259,7 +259,7 @@ public class JdbcEventAnalyticsTableManager
             columns.add( col );
         }
 
-        for ( DataElement dataElement : table.getProgram().getAllDataElements() )
+        for ( DataElement dataElement : table.getProgram().getDataElements() )
         {
             ValueType valueType = dataElement.getValueType();
             String dataType = getColumnType( valueType );
@@ -287,7 +287,7 @@ public class JdbcEventAnalyticsTableManager
             columns.add( col );
         }
 
-        for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributes() )
+        for ( TrackedEntityAttribute attribute : table.getProgram().getNonConfidentialTrackedEntityAttributes() )
         {
             String dataType = getColumnType( attribute.getValueType() );
             String dataClause = attribute.isNumericType() ? numericClause : attribute.isDateType() ? dateClause : "";
@@ -300,7 +300,7 @@ public class JdbcEventAnalyticsTableManager
             columns.add( col );
         }
         
-        for ( TrackedEntityAttribute attribute : table.getProgram().getTrackedEntityAttributesWithLegendSet() )
+        for ( TrackedEntityAttribute attribute : table.getProgram().getNonConfidentialTrackedEntityAttributesWithLegendSet() )
         {
             String column = quote( attribute.getUid() + PartitionUtils.SEP + attribute.getLegendSet().getUid() );
             String select = getSelectClause( attribute.getValueType() );

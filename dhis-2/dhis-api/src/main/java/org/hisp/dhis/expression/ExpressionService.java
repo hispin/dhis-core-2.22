@@ -1,7 +1,7 @@
 package org.hisp.dhis.expression;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hisp.dhis.common.DimensionalItemObject;
+import org.hisp.dhis.common.ListMap;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
@@ -157,7 +158,7 @@ public interface ExpressionService
      */
     Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap, 
         Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days );
-    
+
     /**
      * Generates the calculated value for the given expression base on the values
      * supplied in the value map, constant map and days.
@@ -175,8 +176,31 @@ public interface ExpressionService
      *        not all children had a value.)
      * @return the calculated value as a double.
      */
-    Double getExpressionValue( Expression expression, Map<? extends DimensionalItemObject, Double> valueMap, 
-        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, Set<DataElementOperand> incompleteValues );
+    Double getExpressionValue(Expression expression, Map<? extends DimensionalItemObject, Double> valueMap,
+			Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days,
+			Set<DataElementOperand> incompleteValues);
+    
+    /**
+     * Generates the calculated value for the given expression base on the values
+     * supplied in the value map, constant map and days.
+     * 
+     * @param expression the expression which holds the formula for the calculation.
+     * @param valueMap the mapping between data element operands and values to
+     *        use in the calculation.
+     * @param constantMap the mapping between the constant uid and value to use
+     *        in the calculation.
+     * @param orgUnitCountMap the mapping between organisation unit group uid and
+     *        count of organisation units to use in the calculation.
+     * @param days the number of days to use in the calculation.
+     * @param set of data element operands that have values but they are incomplete
+     *        (for example due to aggregation from organisationUnit children where
+     *        not all children had a value.)
+     * @param a map of subexpression strings to List(s) of aggregated samples for the expression
+     * @return the calculated value as a double.
+     */
+    Double getExpressionValue(Expression expression, Map<? extends DimensionalItemObject, Double> valueMap,
+			Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days,
+			Set<DataElementOperand> incompleteValues, ListMap<String, Double> aggregateMap);
     
     /**
      * Returns all data elements included in the given expression string. Returns
@@ -208,6 +232,16 @@ public interface ExpressionService
      * @return A Set of Operands.
      */
     Set<DataElementOperand> getOperandsInExpression( String expression );
+    
+    /**
+     * Returns all aggregates included in an expression string. An aggregate has the form
+     * #[expr]  where expr is a well-formed sub-expression.  This returns the
+     * empty set if the given expression is null or there are no aggregates.
+     * 
+     * @param expression The expression string.
+     * @return A Set of Expression strings.
+     */
+    Set<String> getAggregatesInExpression( String expression );
     
     /**
      * Returns all data elements which are present in the numerator and denominator
@@ -303,12 +337,6 @@ public interface ExpressionService
     String getExpressionDescription( String expression );
 
     /**
-     * Substitutes potential constant and days in the numerator and denominator
-     * on all indicators in the given collection.
-     */
-    void substituteExpressions( Collection<Indicator> indicators, Integer days );
-    
-    /**
      * Populates the explodedExpression property on the Expression object of all
      * validation rules in the given collection. This method uses
      * explodeExpression( String ) internally to generate the exploded expressions.
@@ -327,16 +355,12 @@ public interface ExpressionService
      * @return the exploded expression string.
      */
     String explodeExpression( String expression );
-    
+
     /**
-     * Substitutes potential constants and days in the given expression.
-     * 
-     * @param expression the expression to operate on.
-     * @param days the number of days to substitute for potential days in the
-     *        expression, 0 if null
-     * @return the substituted expression.
+     * Substitutes potential constant and days in the numerator and denominator
+     * on all indicators in the given collection.
      */
-    String substituteExpression( String expression, Integer days );
+    void substituteExpressions( Collection<Indicator> indicators, Integer days );
     
     /**
      * Generates an expression where the Operand identifiers, consisting of 
@@ -356,7 +380,8 @@ public interface ExpressionService
      *        when calculating the expression. Strategy defaults to NEVER_SKIP if null.
      */
     String generateExpression( String expression, Map<? extends DimensionalItemObject, Double> valueMap, 
-        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days, MissingValueStrategy missingValueStrategy );
+        Map<String, Double> constantMap, Map<String, Integer> orgUnitCountMap, Integer days,
+        MissingValueStrategy missingValueStrategy );
     
     /**
      * Returns all Operands included in the formulas for the given collection of
@@ -366,4 +391,5 @@ public interface ExpressionService
      * @param indicators the collection of Indicators.
      */
     List<DataElementOperand> getOperandsInIndicators( List<Indicator> indicators );
+
 }

@@ -66,27 +66,29 @@ function filterExpressionSelect( event, value, fieldName ) {
 }
 
 function getTrackedEntityDataElements( type ) {
-  var fieldId = type + '-data-elements';
-  clearListById(fieldId);
-  
-  var psSelectId = type + '-program-stage';
-  var programStageId = getFieldValue(psSelectId);
+    var fieldId = type + '-data-elements';
+    clearListById(fieldId);
 
-  jQuery.getJSON('getTrackedEntityDataElements.action',
-    {
-      programId: getFieldValue('programId'),
-      programStageUid: programStageId
-    }, function( json ) {
-      var dataElements = jQuery('#' + fieldId);
-      for( i in json.dataElements ) {
-		var de = json.dataElements[i];
-		
-		if ( !('expression' == type && de.valueType && dhis2.pi.aggregatableValueTypes.indexOf(de.valueType) == -1)) {
-          dataElements.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + 
-            "' suggested='" + json.dataElements[i].optionset + "'>" + json.dataElements[i].name + "</option>");
-        }
-      }
-    });
+    var psSelectId = type + '-program-stage';
+    var programStageId = getFieldValue(psSelectId);
+
+    if(programStageId) {
+      jQuery.getJSON('getTrackedEntityDataElements.action',
+        {
+          programId: getFieldValue('programId'),
+          programStageUid: programStageId
+        }, function( json ) {
+          var dataElements = jQuery('#' + fieldId);
+          for( i in json.dataElements ) {
+                    var de = json.dataElements[i];
+
+                    if ( !('expression' == type && de.valueType && dhis2.pi.aggregatableValueTypes.indexOf(de.valueType) == -1)) {
+              dataElements.append("<option value='" + json.dataElements[i].id + "' title='" + json.dataElements[i].name + 
+                "' suggested='" + json.dataElements[i].optionset + "'>" + json.dataElements[i].name + "</option>");
+            }
+          }
+        });
+    }
 }
 
 function insertDataElement( type ) {

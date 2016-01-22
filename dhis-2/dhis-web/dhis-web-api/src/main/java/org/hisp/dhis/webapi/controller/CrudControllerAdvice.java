@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@ import org.hisp.dhis.common.MaintenanceModeException;
 import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.dataapproval.exceptions.DataApprovalException;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
-import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
+import org.hisp.dhis.dxf2.common.Status;
 import org.hisp.dhis.query.QueryException;
 import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.system.util.DateUtils;
@@ -83,7 +83,7 @@ public class CrudControllerAdvice
     @ExceptionHandler( { EncryptionOperationNotPossibleException.class } )
     public void encryptionOperationNotPossibleException( EncryptionOperationNotPossibleException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.unathorized( "Could not encrypt data. This indicates a problem in your setup. Please refer to the DHIS2 manual for setting up encryption." ), response, request );
+        webMessageService.send( WebMessageUtils.conflict( "Could not encrypt data, indicates a configuration issue" ), response, request );
     }
 
     @ExceptionHandler( { NotAuthenticatedException.class } )
@@ -149,6 +149,6 @@ public class CrudControllerAdvice
     @ExceptionHandler( HttpStatusCodeException.class )
     public void httpStatusCodeExceptionHandler( HttpStatusCodeException ex, HttpServletResponse response, HttpServletRequest request )
     {
-        webMessageService.send( WebMessageUtils.createWebMessage( ex.getMessage(), WebMessageStatus.ERROR, ex.getStatusCode() ), response, request );
+        webMessageService.send( WebMessageUtils.createWebMessage( ex.getMessage(), Status.ERROR, ex.getStatusCode() ), response, request );
     }
 }

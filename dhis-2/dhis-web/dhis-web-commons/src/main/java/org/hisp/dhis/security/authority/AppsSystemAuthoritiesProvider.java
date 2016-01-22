@@ -1,7 +1,7 @@
 package org.hisp.dhis.security.authority;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,7 @@ public class AppsSystemAuthoritiesProvider implements SystemAuthoritiesProvider
     @Override
     public Collection<String> getSystemAuthorities()
     {
-        return appManager.getApps().stream()
+        return appManager.getApps( null ).stream()
             .filter( app -> !StringUtils.isEmpty( app.getName() ) )
             .map( app -> "See " + app.getName().trim() )
             .collect( Collectors.toList() );

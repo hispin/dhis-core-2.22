@@ -1,7 +1,7 @@
 package org.hisp.dhis.query.operators;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,14 +73,24 @@ public abstract class Operator
         return args;
     }
 
+    protected <T> T getValue( Class<T> klass, Class<?> secondaryClass, int idx )
+    {
+        return QueryUtils.getValue( klass, secondaryClass, args.get( idx ) );
+    }
+
     protected <T> T getValue( Class<T> klass, int idx )
     {
-        return QueryUtils.getValue( klass, args.get( idx ) );
+        return QueryUtils.getValue( klass, null, args.get( idx ) );
     }
 
     protected <T> T getValue( Class<T> klass )
     {
         return getValue( klass, 0 );
+    }
+
+    protected <T> T getValue( Class<T> klass, Class<?> secondaryClass, Object value )
+    {
+        return QueryUtils.getValue( klass, secondaryClass, value );
     }
 
     protected <T> T getValue( Class<T> klass, Object value )

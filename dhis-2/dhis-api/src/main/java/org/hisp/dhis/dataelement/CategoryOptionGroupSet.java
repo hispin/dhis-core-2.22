@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataelement;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,6 +100,19 @@ public class CategoryOptionGroupSet
         }
 
         return null;
+    }
+
+    @Override
+    public String getShortName()
+    {
+        if ( getName() == null || getName().length() <= 50 )
+        {
+            return getName();
+        }
+        else
+        {
+            return getName().substring( 0, 49 );
+        }
     }
 
     // -------------------------------------------------------------------------

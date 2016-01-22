@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.metadata.importers;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,6 +41,7 @@ import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DataDimensionItem;
 import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.constant.Constant;
 import org.hisp.dhis.dashboard.DashboardItem;
@@ -52,7 +53,6 @@ import org.hisp.dhis.dataelement.DataElementOperandService;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
-import org.hisp.dhis.dxf2.common.ImportUtils;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
 import org.hisp.dhis.dxf2.metadata.Importer;
@@ -234,7 +234,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !aclService.canDelete( user, persistedObject ) )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( persistedObject ), "Permission denied for deletion of object " +
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( persistedObject ), "Permission denied for deletion of object " +
                     persistedObject.getUid() ) );
 
             log.debug( "Permission denied for deletion of object " + persistedObject.getUid() );
@@ -242,7 +242,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             return false;
         }
 
-        log.debug( "Trying to delete object => " + ImportUtils.getDisplayName( persistedObject ) + " (" + persistedObject.getClass()
+        log.debug( "Trying to delete object => " + IdentifiableObjectUtils.getDisplayName( persistedObject ) + " (" + persistedObject.getClass()
             .getSimpleName() + ")" );
 
         try
@@ -252,7 +252,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         catch ( Exception ex )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( persistedObject ), ex.getMessage() ) );
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( persistedObject ), ex.getMessage() ) );
             return false;
         }
 
@@ -274,7 +274,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !aclService.canCreate( user, object.getClass() ) )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( object ), "Permission denied, you are not allowed to create objects of " +
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Permission denied, you are not allowed to create objects of " +
                     "type " + object.getClass() ) );
 
             log.debug( "Permission denied, you are not allowed to create objects of type " + object.getClass() );
@@ -287,7 +287,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !validationViolations.isEmpty() )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
 
             return false;
         }
@@ -306,7 +306,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !validationViolations.isEmpty() )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
 
             return false;
         }
@@ -322,7 +322,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             if ( userCredentials == null )
             {
                 summaryType.getImportConflicts().add(
-                    new ImportConflict( ImportUtils.getDisplayName( object ), "User is missing userCredentials part." ) );
+                    new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "User is missing userCredentials part." ) );
 
                 return false;
             }
@@ -333,7 +333,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
         reattachFields( object, fields, user );
 
-        log.debug( "Trying to save new object => " + ImportUtils.getDisplayName( object ) + " (" + object.getClass().getSimpleName() + ")" +
+        log.debug( "Trying to save new object => " + IdentifiableObjectUtils.getDisplayName( object ) + " (" + object.getClass().getSimpleName() + ")" +
             "" );
 
         updatePeriodTypes( object );
@@ -391,7 +391,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !aclService.canUpdate( user, persistedObject ) )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( persistedObject ), "Permission denied for update of object " +
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( persistedObject ), "Permission denied for update of object " +
                     persistedObject.getUid() ) );
 
             log.debug( "Permission denied for update of object " + persistedObject.getUid() );
@@ -412,7 +412,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !validationViolations.isEmpty() )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
 
             return false;
         }
@@ -423,7 +423,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         if ( !validationViolations.isEmpty() )
         {
             summaryType.getImportConflicts().add(
-                new ImportConflict( ImportUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
+                new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Validation Violations: " + validationViolations ) );
 
             return false;
         }
@@ -440,7 +440,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             if ( userCredentials == null )
             {
                 summaryType.getImportConflicts().add(
-                    new ImportConflict( ImportUtils.getDisplayName( object ), "User is missing userCredentials part." ) );
+                    new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "User is missing userCredentials part." ) );
 
                 return false;
             }
@@ -469,7 +469,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
         reattachCollectionFields( persistedObject, collectionFields, user );
 
-        log.debug( "Starting update of object " + ImportUtils.getDisplayName( persistedObject ) + " (" + persistedObject.getClass()
+        log.debug( "Starting update of object " + IdentifiableObjectUtils.getDisplayName( persistedObject ) + " (" + persistedObject.getClass()
             .getSimpleName() + ")" );
 
         objectBridge.updateObject( persistedObject );
@@ -610,7 +610,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             && !DashboardItem.class.isInstance( object ) && !Translation.class.isInstance( object )
             && !ProgramStageDataElement.class.isInstance( object ) )
         {
-            conflict = new ImportConflict( ImportUtils.getDisplayName( object ), "Empty name for object " + object );
+            conflict = new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Empty name for object " + object );
         }
 
         if ( NameableObject.class.isInstance( object ) )
@@ -627,7 +627,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
                 && !ProgramStageDataElement.class.isAssignableFrom( object.getClass() )
                 && !Constant.class.isAssignableFrom( object.getClass() ) )
             {
-                conflict = new ImportConflict( ImportUtils.getDisplayName( object ), "Empty shortName for object " + object );
+                conflict = new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Empty shortName for object " + object );
             }
         }
 
@@ -866,17 +866,17 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
     private ImportConflict reportLookupConflict( IdentifiableObject object )
     {
-        return new ImportConflict( ImportUtils.getDisplayName( object ), "Object does not exist." );
+        return new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Object does not exist." );
     }
 
     private ImportConflict reportMoreThanOneConflict( IdentifiableObject object )
     {
-        return new ImportConflict( ImportUtils.getDisplayName( object ), "More than one object matches identifiers." );
+        return new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "More than one object matches identifiers." );
     }
 
     private ImportConflict reportConflict( IdentifiableObject object )
     {
-        return new ImportConflict( ImportUtils.getDisplayName( object ), "Object already exists." );
+        return new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), "Object already exists." );
     }
 
     public String identifiableObjectToString( Object object )
@@ -913,7 +913,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
         log.debug( logMsg );
 
-        ImportConflict importConflict = new ImportConflict( ImportUtils.getDisplayName( object ), logMsg );
+        ImportConflict importConflict = new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), logMsg );
         summaryType.getImportConflicts().add( importConflict );
     }
 
@@ -927,7 +927,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
         log.debug( logMsg );
 
-        ImportConflict importConflict = new ImportConflict( ImportUtils.getDisplayName( object ), logMsg );
+        ImportConflict importConflict = new ImportConflict( IdentifiableObjectUtils.getDisplayName( object ), logMsg );
         summaryType.getImportConflicts().add( importConflict );
     }
 

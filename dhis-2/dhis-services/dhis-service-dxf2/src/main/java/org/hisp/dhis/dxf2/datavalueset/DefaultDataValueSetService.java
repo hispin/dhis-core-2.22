@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.datavalueset;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -669,6 +669,7 @@ public class DefaultDataValueSetService
 
         int importCount = 0;
         int updateCount = 0;
+        int deleteCount = 0;
         int totalCount = 0;
 
         // ---------------------------------------------------------------------
@@ -897,6 +898,15 @@ public class DefaultDataValueSetService
 
                     updateCount++;
                 }
+                else if ( strategy.isDelete() )
+                {
+                    if ( !dryRun )
+                    {
+                        batchHandler.deleteObject( internalValue );
+                    }
+                    
+                    deleteCount++;                    
+                }
             }
             else
             {
@@ -915,9 +925,9 @@ public class DefaultDataValueSetService
 
         batchHandler.flush();
 
-        int ignores = totalCount - importCount - updateCount;
+        int ignores = totalCount - importCount - updateCount - deleteCount;
 
-        summary.setImportCount( new ImportCount( importCount, updateCount, ignores, 0 ) );
+        summary.setImportCount( new ImportCount( importCount, updateCount, ignores, deleteCount ) );
         summary.setStatus( ImportStatus.SUCCESS );
         summary.setDescription( "Import process completed successfully" );
 

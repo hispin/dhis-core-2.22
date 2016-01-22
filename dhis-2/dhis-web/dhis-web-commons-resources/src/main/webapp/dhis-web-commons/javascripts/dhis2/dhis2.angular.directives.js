@@ -297,4 +297,148 @@ var d2Directives = angular.module('d2Directives', [])
                     });
         }
     };
-});
+})
+
+.directive('d2FileInput', function(DHIS2EventService, DHIS2EventFactory, FileService, DialogService){
+    
+    return {
+        restrict: "A",
+        scope: {
+            d2FileInputList: '=',
+            d2FileInput: '=',
+            d2FileInputName: '=',
+            d2FileInputCurrentName: '=',
+            d2FileInputPs: '='
+        },
+        link: function (scope, element, attrs) {
+            
+            var de = attrs.inputFieldId;
+            
+            var updateModel = function () {
+                
+                var update = scope.d2FileInput.event &&  scope.d2FileInput.event !== 'SINGLE_EVENT' ? true : false;
+                
+                FileService.upload(element[0].files[0]).then(function(data){
+                    
+                    if(data && data.status === 'OK' && data.response && data.response.fileResource && data.response.fileResource.id && data.response.fileResource.name){
+                                            
+                        scope.d2FileInput[de] = data.response.fileResource.id;   
+                        scope.d2FileInputCurrentName[de] = data.response.fileResource.name;
+                        if( update ){                            
+                            if(!scope.d2FileInputName[scope.d2FileInput.event]){
+                                scope.d2FileInputName[scope.d2FileInput.event] = [];
+                            }                            
+                            scope.d2FileInputName[scope.d2FileInput.event][de] = data.response.fileResource.name;
+                            
+                            var updatedSingleValueEvent = {event: scope.d2FileInput.event, dataValues: [{value: data.response.fileResource.id, dataElement:  de}]};
+                            var updatedFullValueEvent = DHIS2EventService.reconstructEvent(scope.d2FileInput, scope.d2FileInputPs.programStageDataElements);
+                            DHIS2EventFactory.updateForSingleValue(updatedSingleValueEvent, updatedFullValueEvent).then(function(data){
+                                scope.d2FileInputList = DHIS2EventService.refreshList(scope.d2FileInputList, scope.d2FileInput);
+                            });
+                        }
+                    }
+                    else{
+                        var dialogOptions = {
+                            headerText: 'error',
+                            bodyText: 'file_upload_failed'
+                        };		
+                        DialogService.showDialog({}, dialogOptions);
+                    }
+                    
+                });                 
+            };             
+            element.bind('change', updateModel);            
+        }
+    };    
+})
+
+.directive('d2FileInputDelete', function($parse, $timeout, FileService, DialogService){
+    
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            var valueGetter = $parse(attrs.d2FileInputDelete);
+            var nameGetter = $parse(attrs.d2FileInputName);
+            var nameSetter = nameGetter.assign;
+            
+            if(valueGetter(scope)) {
+                FileService.get(valueGetter(scope)).then(function(data){
+                    if(data && data.name && data.id){
+                        $timeout(function(){
+                            nameSetter(scope, data.name);
+                            scope.$apply();
+                        });
+                    }
+                    else{
+                        var dialogOptions = {
+                            headerText: 'error',
+                            bodyText: 'file_missing'
+                        };		
+                        DialogService.showDialog({}, dialogOptions);
+                    }                    
+                });                 
+            }
+        }
+    };    
+})
+
+.directive('d2Audit', function () {
+        return {
+            restrict: 'E',
+            template: '<i class="glyphicon glyphicon-user audit-icon" data-ng-click="showAuditHistory()" ng-if="showAuditIcon()"></i>',
+            scope:{
+                dataElementId: '@dataelementId',
+                dataElementName: '@dataelementName',
+                currentEvent:'@',
+                type:'@',
+                selectedTeiId:'@'
+            },
+            controller:function($scope, $modal) {
+                if (!$scope.dataElementId) {
+                    return;
+                }
+
+                $scope.showAuditIcon = function() {
+                    if ($scope.currentEvent && $scope.currentEvent !== 'SINGLE_EVENT') {
+                        return true;
+                    }
+                    if ($scope.type === "attribute" && $scope.selectedTeiId) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                $scope.showAuditHistory = function() {
+
+                    $modal.open({
+                        templateUrl: "../dhis-web-commons/angular-forms/audit-history.html",
+                        controller: "AuditHistoryController",
+                        resolve: {
+                            dataElementId: function () {
+                                return $scope.dataElementId;
+                            },
+                            dataElementName: function () {
+                                return $scope.dataElementName;
+                            },
+                            dataType: function() {
+                                return $scope.type;
+                            },
+                            currentEvent: function() {
+                                if($scope.currentEvent === "SINGLE_EVENT") {
+                                    alert("Single Event !!!");
+                                }
+                                return $scope.currentEvent;
+                            },
+                            selectedTeiId: function() {
+                                return $scope.selectedTeiId;
+                            }
+                        }
+                    })
+
+                }
+
+            }
+        };
+    });
+
+

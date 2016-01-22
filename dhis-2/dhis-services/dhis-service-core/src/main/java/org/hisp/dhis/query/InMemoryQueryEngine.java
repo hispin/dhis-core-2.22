@@ -1,7 +1,7 @@
 package org.hisp.dhis.query;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@ import org.hisp.dhis.common.PagerUtils;
 import org.hisp.dhis.schema.Property;
 import org.hisp.dhis.schema.Schema;
 import org.hisp.dhis.schema.SchemaService;
+import org.hisp.dhis.system.util.HibernateUtils;
 import org.hisp.dhis.system.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class InMemoryQueryEngine<T extends IdentifiableObject> 
+public class InMemoryQueryEngine<T extends IdentifiableObject>
     implements QueryEngine<T>
 {
     @Autowired
@@ -241,7 +242,16 @@ public class InMemoryQueryEngine<T extends IdentifiableObject>
                 throw new QueryException( "No property found for path " + path );
             }
 
-            object = ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
+            if ( property.isCollection() )
+            {
+                currentSchema = schemaService.getDynamicSchema( property.getItemKlass() );
+            }
+            else
+            {
+                currentSchema = schemaService.getDynamicSchema( property.getKlass() );
+            }
+
+            object = collect( object, property );
 
             if ( i == (paths.length - 1) )
             {
@@ -253,36 +263,37 @@ public class InMemoryQueryEngine<T extends IdentifiableObject>
                 return object;
             }
 
-            if ( property.isCollection() )
-            {
-                currentSchema = schemaService.getDynamicSchema( property.getItemKlass() );
-            }
-            else
-            {
-                currentSchema = schemaService.getDynamicSchema( property.getKlass() );
-            }
-
-            if ( property.isCollection() && i == (paths.length - 2) )
-            {
-                property = currentSchema.getProperty( paths[paths.length - 1] );
-
-                if ( property == null )
-                {
-                    throw new QueryException( "No property found for path " + path );
-                }
-
-                Collection<?> collection = (Collection<?>) object;
-                List<Object> items = new ArrayList<>();
-
-                for ( Object item : collection )
-                {
-                    items.add( ReflectionUtils.invokeMethod( item, property.getGetterMethod() ) );
-                }
-
-                return items;
-            }
         }
 
         throw new QueryException( "No values found for path " + path );
+    }
+
+    private Object collect( Object object, Property property )
+    {
+        object = HibernateUtils.unwrap( object );
+
+        if ( Collection.class.isInstance( object ) )
+        {
+            Collection<?> collection = (Collection<?>) object;
+            List<Object> items = new ArrayList<>();
+
+            for ( Object item : collection )
+            {
+                Object collect = collect( item, property );
+
+                if ( Collection.class.isInstance( collect ) )
+                {
+                    items.addAll( ((Collection) collect) );
+                }
+                else
+                {
+                    items.add( collect );
+                }
+            }
+
+            return items;
+        }
+
+        return ReflectionUtils.invokeMethod( object, property.getGetterMethod() );
     }
 }

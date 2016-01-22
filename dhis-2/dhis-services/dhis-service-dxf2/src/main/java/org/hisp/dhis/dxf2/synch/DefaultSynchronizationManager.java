@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.synch;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,7 @@ public class DefaultSynchronizationManager
     private static final Log log = LogFactory.getLog( DefaultSynchronizationManager.class );
 
     private static final String PING_PATH = "/api/system/ping";
+
     private static final String HEADER_AUTHORIZATION = "Authorization";
 
     @Autowired
@@ -113,11 +114,14 @@ public class DefaultSynchronizationManager
             return new AvailabilityStatus( false, "Remote server is not configured" );
         }
 
-        String url = config.getRemoteServerUrl() + PING_PATH;
+        String url = systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL ) + PING_PATH;
 
-        log.info( "Remote server ping URL: " + url + ", username: " + config.getRemoteServerUsername() );
+        log.info( "Remote server ping URL: " + url + ", username: " + systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_USERNAME ) );
 
-        HttpEntity<String> request = getBasicAuthRequestEntity( config.getRemoteServerUsername(), config.getRemoteServerPassword() );
+        HttpEntity<String> request = getBasicAuthRequestEntity( (String) systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_USERNAME ), (String) systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_PASSWORD ) );
 
         ResponseEntity<String> response = null;
         HttpStatus sc = null;
@@ -148,23 +152,28 @@ public class DefaultSynchronizationManager
 
         if ( HttpStatus.FOUND.equals( sc ) )
         {
-            status = new AvailabilityStatus( false, "Server is available but no authentication was provided, status code: " + sc );
+            status = new AvailabilityStatus( false,
+                "Server is available but no authentication was provided, status code: " + sc );
         }
         else if ( HttpStatus.UNAUTHORIZED.equals( sc ) )
         {
-            status = new AvailabilityStatus( false, "Server is available but authentication failed, status code: " + sc );
+            status = new AvailabilityStatus( false,
+                "Server is available but authentication failed, status code: " + sc );
         }
         else if ( HttpStatus.INTERNAL_SERVER_ERROR.equals( sc ) )
         {
-            status = new AvailabilityStatus( false, "Server is available but experienced an internal error, status code: " + sc );
+            status = new AvailabilityStatus( false,
+                "Server is available but experienced an internal error, status code: " + sc );
         }
         else if ( HttpStatus.OK.equals( sc ) )
         {
-            status = new AvailabilityStatus( true, "Server is available and authentication was successful" );
+            status = new AvailabilityStatus( true,
+                "Server is available and authentication was successful" );
         }
         else
         {
-            status = new AvailabilityStatus( false, "Server is not available, status code: " + sc + ", text: " + st );
+            status = new AvailabilityStatus( false,
+                "Server is not available, status code: " + sc + ", text: " + st );
         }
 
         log.info( status );
@@ -201,26 +210,31 @@ public class DefaultSynchronizationManager
             return null;
         }
 
-        final Configuration config = configurationService.getConfiguration();
-
-        String url = config.getRemoteServerUrl() + "/api/dataValueSets";
+        String url = systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_URL ) + "/api/dataValueSets";
 
         log.info( "Remote server POST URL: " + url );
 
         final RequestCallback requestCallback = new RequestCallback()
         {
             @Override
-            public void doWithRequest( ClientHttpRequest request ) throws IOException
+            public void doWithRequest( ClientHttpRequest request )
+                throws IOException
             {
+                String username = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME );
+                String password = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_PASSWORD );
+                
                 request.getHeaders().setContentType( MediaType.APPLICATION_JSON );
-                request.getHeaders().add( HEADER_AUTHORIZATION, CodecUtils.getBasicAuthString( config.getRemoteServerUsername(), config.getRemoteServerPassword() ) );
+                request.getHeaders().add( HEADER_AUTHORIZATION, CodecUtils.getBasicAuthString( username, password ) );
+
                 dataValueSetService.writeDataValueSetJson( lastSuccessTime, request.getBody(), new IdSchemes() );
             }
         };
 
         ResponseExtractor<ImportSummary> responseExtractor = new ImportSummaryResponseExtractor();
 
-        ImportSummary summary = restTemplate.execute( url, HttpMethod.POST, requestCallback, responseExtractor );
+        ImportSummary summary = restTemplate
+            .execute( url, HttpMethod.POST, requestCallback, responseExtractor );
 
         log.info( "Synch summary: " + summary );
 
@@ -243,15 +257,15 @@ public class DefaultSynchronizationManager
     public org.hisp.dhis.dxf2.metadata.ImportSummary executeMetadataPull( String url )
     {
         User user = currentUserService.getCurrentUser();
-        
+
         String userUid = user != null ? user.getUid() : null;
-        
+
         log.info( "Metadata pull, url: " + url + ", user: " + userUid );
-        
+
         String json = restTemplate.getForObject( url, String.class );
-        
+
         MetaData metaData = null;
-        
+
         try
         {
             metaData = JacksonUtils.fromJson( json, MetaData.class );
@@ -260,12 +274,12 @@ public class DefaultSynchronizationManager
         {
             throw new RuntimeException( "Failed to parse remote JSON document", ex );
         }
-        
+
         org.hisp.dhis.dxf2.metadata.ImportSummary summary = importService.importMetaData( userUid, metaData );
-        
+
         return summary;
     }
-    
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
@@ -294,13 +308,18 @@ public class DefaultSynchronizationManager
      */
     private boolean isRemoteServerConfigured( Configuration config )
     {
-        if ( trimToNull( config.getRemoteServerUrl() ) == null )
+        if ( trimToNull( (String) systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_URL ) ) ==
+            null )
         {
             log.info( "Remote server URL not set" );
             return false;
         }
 
-        if ( trimToNull( config.getRemoteServerUsername() ) == null || trimToNull( config.getRemoteServerPassword() ) == null )
+        if ( trimToNull( (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME ) ) ==
+            null ||
+            trimToNull( (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL ) ) ==
+                null )
         {
             log.info( "Remote server username or password not set" );
             return false;

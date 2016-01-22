@@ -1,7 +1,7 @@
 package org.hisp.dhis.common;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,6 +64,8 @@ public interface IdentifiableObjectManager
     <T extends IdentifiableObject> T get( Collection<Class<? extends IdentifiableObject>> classes, String uid );
 
     <T extends IdentifiableObject> T getByCode( Class<T> clazz, String code );
+
+    <T extends IdentifiableObject> List<T> getByCode( Class<T> clazz, Collection<String> codes );
 
     <T extends IdentifiableObject> T getByName( Class<T> clazz, String name );
 

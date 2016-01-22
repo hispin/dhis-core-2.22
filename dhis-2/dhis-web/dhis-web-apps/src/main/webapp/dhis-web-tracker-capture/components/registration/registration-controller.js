@@ -20,8 +20,10 @@ trackerCapture.controller('RegistrationController',
                 SessionStorageService,
                 TEIGridService,
                 TrackerRulesFactory,
-                CustomIDGenerationService,
-                TrackerRulesExecutionService) {
+                TrackerRulesExecutionService,
+                ModalService,
+				// add for Generate CustomId for plan-customizations
+				CustomIDGenerationService) {
     
     $scope.maxOptionSize = 30;
     
@@ -115,7 +117,7 @@ trackerCapture.controller('RegistrationController',
     $scope.getAttributes = function(_mode){        
         var mode = _mode ? _mode : 'ENROLLMENT';
         AttributesFactory.getByProgram($scope.selectedProgram).then(function(atts){            
-            $scope.attributes = TEIGridService.generateGridColumns(atts, null).columns;
+            $scope.attributes = TEIGridService.generateGridColumns(atts, null,false).columns;
             $scope.customFormExists = false;
             if($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedProgram.dataEntryForm && $scope.selectedProgram.dataEntryForm.htmlCode){
                 $scope.customFormExists = true;
@@ -161,13 +163,11 @@ trackerCapture.controller('RegistrationController',
     };
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
-
-        // add for Generate CustomId
+		
+		// add for Generate CustomId for plan-customizations 
         CustomIDGenerationService.validateAndCreateCustomId($scope.tei,$scope.selectedEnrollment.program,$scope.attributes,destination,$scope.optionSets,$scope.attributesById,$scope.selectedEnrollment.enrollmentDate).then(function(){
             goToDashboard( destination ? destination : 'DASHBOARD', teiId );
-
         });
-
         //goToDashboard( destination ? destination : 'DASHBOARD', teiId );
     };
     
@@ -411,5 +411,17 @@ trackerCapture.controller('RegistrationController',
                 $scope.selectedTei[selectedAttribute.id] = res.id;
             }
         });
-    };    
+    };
+    $scope.cancelRegistrationWarning = function(cancelFunction){
+        
+        var modalOptions = {
+            closeButtonText: 'no',
+            actionButtonText: 'yes',
+            headerText: 'cancel',
+            bodyText: 'are_you_sure_to_cancel_registration'
+        }
+        ModalService.showModal({}, modalOptions).then(function(){
+            cancelFunction();
+        });
+    }
 });

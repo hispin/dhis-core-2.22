@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.webdomain;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,16 +47,6 @@ public class WebOptions
     //--------------------------------------------------------------------------
     // Getters for standard web options
     //--------------------------------------------------------------------------
-
-    public boolean hasLinks( boolean defaultValue )
-    {
-        return stringAsBoolean( options.get( "links" ), defaultValue );
-    }
-
-    public boolean hasLinks()
-    {
-        return stringAsBoolean( options.get( "links" ), true );
-    }
 
     public boolean hasPaging()
     {

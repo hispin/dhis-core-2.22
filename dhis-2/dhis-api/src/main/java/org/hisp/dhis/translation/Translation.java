@@ -1,7 +1,7 @@
 package org.hisp.dhis.translation;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.common.IdentifiableObject;
+import org.hisp.dhis.common.MergeStrategy;
 
 import java.util.Objects;
 
@@ -60,9 +62,17 @@ public class Translation
 
     public Translation()
     {
-
     }
 
+    /**
+     * TODO find some consistent order across object, service, HBM.
+     *
+     * @param className the class name of the translated object.
+     * @param locale    the locale.
+     * @param property  the property name.
+     * @param value     the translation.
+     * @param objectUid the UID of the translated object.
+     */
     public Translation( String className, String locale, String property, String value, String objectUid )
     {
         this.className = className;
@@ -85,6 +95,19 @@ public class Translation
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
+
+    @JsonProperty( value = "objectId" )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getObjectUid()
+    {
+        return objectUid;
+    }
+
+    public void setObjectUid( String objectUid )
+    {
+        this.objectUid = objectUid;
+    }
+
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public String getClassName()
@@ -131,18 +154,6 @@ public class Translation
     public void setValue( String value )
     {
         this.value = value;
-    }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getObjectUid()
-    {
-        return objectUid;
-    }
-
-    public void setObjectUid( String objectUid )
-    {
-        this.objectUid = objectUid;
     }
 
     // -------------------------------------------------------------------------
@@ -193,5 +204,33 @@ public class Translation
         sb.append( '}' );
 
         return sb.toString();
+    }
+
+    @Override
+    public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
+    {
+        super.mergeWith( other, strategy );
+
+        if ( other.getClass().isInstance( this ) )
+        {
+            Translation translation = (Translation) other;
+
+            if ( strategy.isReplace() )
+            {
+                objectUid = translation.getObjectUid();
+                className = translation.getClassName();
+                locale = translation.getLocale();
+                property = translation.getProperty();
+                value = translation.getValue();
+            }
+            else if ( strategy.isMerge() )
+            {
+                objectUid = translation.getObjectUid() == null ? objectUid : translation.getObjectUid();
+                className = translation.getClassName() == null ? className : translation.getClassName();
+                locale = translation.getLocale() == null ? locale : translation.getLocale();
+                property = translation.getProperty() == null ? property : translation.getProperty();
+                value = translation.getValue() == null ? value : translation.getValue();
+            }
+        }
     }
 }

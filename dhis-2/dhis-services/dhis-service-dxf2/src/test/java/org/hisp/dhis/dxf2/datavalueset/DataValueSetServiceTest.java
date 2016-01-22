@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.datavalueset;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@ import org.hisp.dhis.DhisSpringTest;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.AttributeValue;
-import org.hisp.dhis.attribute.exception.NonUniqueAttributeValueException;
 import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
@@ -144,14 +143,7 @@ public class DataValueSetServiceTest
     private AttributeValue addAttributeValue( IdentifiableObject identifiableObject, Attribute attribute, String value )
     {
         AttributeValue attributeValue = new AttributeValue( value, attribute );
-
-        try
-        {
-            attributeService.addAttributeValue( identifiableObject, attributeValue );
-        }
-        catch ( NonUniqueAttributeValueException ignored )
-        {
-        }
+        attributeService.addAttributeValue( identifiableObject, attributeValue );
 
         return attributeValue;
     }

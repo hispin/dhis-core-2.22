@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hisp.dhis.dxf2.webmessage.DescriptiveWebMessage;
-import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
+import org.hisp.dhis.dxf2.common.Status;
 import org.hisp.dhis.expression.ExpressionService;
 import org.hisp.dhis.expression.ExpressionValidationOutcome;
 import org.hisp.dhis.i18n.I18n;
@@ -71,7 +71,7 @@ public class ExpressionController
         ExpressionValidationOutcome result = expressionService.expressionIsValid( expression );
         
         DescriptiveWebMessage message = new DescriptiveWebMessage();
-        message.setStatus( result.isValid() ? WebMessageStatus.OK : WebMessageStatus.ERROR );
+        message.setStatus( result.isValid() ? Status.OK : Status.ERROR );
         message.setMessage( i18n.getString( result.getKey() ) );
         
         if ( result.isValid() )

@@ -1,7 +1,7 @@
 package org.hisp.dhis.common;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -614,6 +614,38 @@ public class IdentifiableObjectManagerTest
         List<DataElement> actual = new ArrayList<>( identifiableObjectManager.getByUidOrdered( DataElement.class, uids ) );
 
         assertEquals( expected, actual );
+    }
+
+    @Test
+    public void getByCodeTest()
+    {
+        DataElement dataElementA = createDataElement( 'A' );
+        DataElement dataElementB = createDataElement( 'B' );
+        DataElement dataElementC = createDataElement( 'C' );
+        DataElement dataElementD = createDataElement( 'D' );
+
+        dataElementA.setCode("DE_A");
+        dataElementB.setCode("DE_B");
+        dataElementC.setCode("DE_C");
+        dataElementD.setCode("DE_D");
+        
+        identifiableObjectManager.save( dataElementA );
+        identifiableObjectManager.save( dataElementB );
+        identifiableObjectManager.save( dataElementC );
+        identifiableObjectManager.save( dataElementD );
+
+        List<DataElement> ab = identifiableObjectManager.getByCode( DataElement.class, Arrays.asList( dataElementA.getCode(), dataElementB.getCode() ) );
+        List<DataElement> cd = identifiableObjectManager.getByCode( DataElement.class, Arrays.asList( dataElementC.getCode(), dataElementD.getCode() ) );
+
+        assertTrue( ab.contains( dataElementA ) );
+        assertTrue( ab.contains( dataElementB ) );
+        assertFalse( ab.contains( dataElementC ) );
+        assertFalse( ab.contains( dataElementD ) );
+
+        assertFalse( cd.contains( dataElementA ) );
+        assertFalse( cd.contains( dataElementB ) );
+        assertTrue( cd.contains( dataElementC ) );
+        assertTrue( cd.contains( dataElementD ) );
     }
     
     @Test

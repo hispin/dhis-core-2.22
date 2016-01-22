@@ -328,8 +328,13 @@
     <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.security.oauth2.OAuth2Client" />
   </bean>
 
+  <bean id="programTrackedEntityAttributeImporter" class="org.hisp.dhis.dxf2.metadata.importers.DefaultIdentifiableObjectImporter"
+    scope="prototype">
+    <constructor-arg name="importerClass" type="java.lang.Class" value="org.hisp.dhis.program.ProgramTrackedEntityAttribute" />
+  </bean>
+
   <bean id="inputUtils" class="org.hisp.dhis.dxf2.utils.InputUtils" />
-  
-  <bean id="org.hisp.dhis.dxf2.AdxDataService" class="org.hisp.dhis.dxf2.adx.DefaultAdxDataService" />    
+
+  <bean id="org.hisp.dhis.dxf2.AdxDataService" class="org.hisp.dhis.dxf2.adx.DefaultAdxDataService" />
 
 </beans>

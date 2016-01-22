@@ -362,16 +362,6 @@ var validationRules = {
         	"min": 0,
         	"max": 10
         },
-        "highOutliers" : {
-        	"number" : true,
-        	"min": 0,
-        	"max": 99
-        },
-        "lowOutliers" : {
-        	"number" : true,
-        	"min": 0,
-        	"max": 99
-        },
         "operator" : {
             "required" : true
         },

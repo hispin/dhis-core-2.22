@@ -1,7 +1,7 @@
 package org.hisp.dhis.hibernate;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -150,6 +150,13 @@ public class DefaultHibernateConfigurationProvider
                 Properties fileProperties = configurationProvider.getProperties();
                 
                 mapToHibernateProperties( fileProperties );
+
+                if ( configurationProvider.isReadOnlyMode() )
+                {
+                    fileProperties.setProperty( "hibernate.hbm2ddl.auto", "validate" );
+                    
+                    log.info( "Read-only mode enabled, setting hibernate.hbm2ddl.auto to 'validate'" );
+                }
                 
                 configuration.addProperties( fileProperties );
             }
@@ -168,7 +175,7 @@ public class DefaultHibernateConfigurationProvider
             configuration.setProperty( "hibernate.cache.use_second_level_cache", "false" );
             configuration.setProperty( "hibernate.cache.use_query_cache", "false" );
         }
-        
+
         log.info( "Hibernate configuration loaded, using dialect: " + configuration.getProperty( "hibernate.dialect" ) );
         
         this.configuration = configuration;

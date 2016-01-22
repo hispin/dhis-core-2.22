@@ -1,7 +1,7 @@
 package org.hisp.dhis.setting;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,35 +40,35 @@ import java.util.Set;
 public interface SystemSettingManager
 {
     void saveSystemSetting( String name, Serializable value );
-    
+
     void saveSystemSetting( SettingKey setting, Serializable value );
 
     void deleteSystemSetting( String name );
-    
+
     void deleteSystemSetting( SettingKey setting );
 
     Serializable getSystemSetting( String name );
 
     Serializable getSystemSetting( SettingKey setting );
-    
+
     Serializable getSystemSetting( SettingKey setting, Serializable defaultValue );
-    
+
     List<SystemSetting> getAllSystemSettings();
 
     Map<String, Serializable> getSystemSettingsAsMap();
-    
+
     Map<String, Serializable> getSystemSettingsAsMap( Set<String> names );
-    
+
     Map<String, Serializable> getSystemSettings( Collection<SettingKey> settings );
-    
+
     void invalidateCache();
-    
+
     // -------------------------------------------------------------------------
     // Specific methods
     // -------------------------------------------------------------------------
 
     List<String> getFlags();
-    
+
     List<StyleObject> getFlagObjects();
 
     String getFlagImage();
@@ -80,7 +80,7 @@ public interface SystemSettingManager
     String getEmailUsername();
 
     boolean getEmailTls();
-    
+
     String getEmailSender();
 
     String getInstanceBaseUrl();
@@ -90,14 +90,16 @@ public interface SystemSettingManager
     boolean selfRegistrationNoRecaptcha();
 
     boolean emailEnabled();
-    
+
     boolean systemNotificationEmailValid();
 
     boolean hideUnapprovedDataInAnalytics();
-    
+
     boolean isOpenIdConfigured();
-    
+
     String googleAnalyticsUA();
 
     Integer credentialsExpires();
+
+    boolean isConfidential( String name );
 }

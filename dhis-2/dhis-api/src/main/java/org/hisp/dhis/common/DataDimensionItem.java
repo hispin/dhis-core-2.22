@@ -1,7 +1,7 @@
 package org.hisp.dhis.common;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -207,6 +207,56 @@ public class DataDimensionItem
         }
         
         return null;
+    }
+
+    // -------------------------------------------------------------------------
+    // Equals and hashCode
+    // -------------------------------------------------------------------------
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( getDimensionalItemObject() == null ) ? 0 : getDimensionalItemObject().hashCode() );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if ( this == obj )
+        {
+            return true;
+        }
+        
+        if ( obj == null )
+        {
+            return false;
+        }
+        
+        if ( getClass() != obj.getClass() )
+        {
+            return false;
+        }
+        
+        DataDimensionItem other = (DataDimensionItem) obj;
+        
+        DimensionalItemObject object = getDimensionalItemObject();
+        
+        if ( object == null )
+        {
+            if ( other.getDimensionalItemObject() != null )
+            {
+                return false;
+            }
+        }
+        else if ( !object.equals( other.getDimensionalItemObject() ) )
+        {
+            return false;
+        }
+        
+        return true;
     }
     
     // -------------------------------------------------------------------------

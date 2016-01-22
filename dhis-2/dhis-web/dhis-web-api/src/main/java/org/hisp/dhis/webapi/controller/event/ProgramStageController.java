@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller.event;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,23 +28,11 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.collect.Lists;
-import org.hisp.dhis.program.Program;
-import org.hisp.dhis.program.ProgramService;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.query.Order;
-import org.hisp.dhis.query.Query;
-import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.schema.descriptors.ProgramStageSchemaDescriptor;
 import org.hisp.dhis.webapi.controller.AbstractCrudController;
-import org.hisp.dhis.webapi.webdomain.WebMetaData;
-import org.hisp.dhis.webapi.webdomain.WebOptions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -54,41 +42,4 @@ import java.util.List;
 public class ProgramStageController
     extends AbstractCrudController<ProgramStage>
 {
-    private ProgramService programService;
-
-    @Autowired
-    public void setProgramService( ProgramService programService )
-    {
-        this.programService = programService;
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    protected List<ProgramStage> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
-    {
-        List<ProgramStage> entityList = new ArrayList<>();
-        Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
-        query.setDefaultOrder();
-
-        if ( options.getOptions().containsKey( "query" ) )
-        {
-            entityList = Lists.newArrayList( manager.filter( getEntityClass(), options.getOptions().get( "query" ) ) );
-        }
-        else if ( options.getOptions().containsKey( "program" ) )
-        {
-            String programId = options.getOptions().get( "program" );
-            Program program = programService.getProgram( programId );
-
-            if ( program != null )
-            {
-                entityList = new ArrayList<>( program.getProgramStages() );
-            }
-        }
-        else
-        {
-            entityList = (List<ProgramStage>) queryService.query( query );
-        }
-
-        return entityList;
-    }
 }

@@ -1,7 +1,7 @@
 package org.hisp.dhis.attribute.exception;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@ import org.hisp.dhis.attribute.AttributeValue;
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class NonUniqueAttributeValueException extends Exception
+public class NonUniqueAttributeValueException extends RuntimeException
 {
     public NonUniqueAttributeValueException( AttributeValue attributeValue )
     {

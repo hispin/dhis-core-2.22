@@ -1,9 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
-import org.hisp.dhis.dxf2.render.RenderService;
-
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +27,8 @@ import org.hisp.dhis.dxf2.render.RenderService;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+import org.hisp.dhis.dxf2.render.RenderService;
 
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.user.CurrentUserService;
@@ -141,23 +141,23 @@ public class UserSettingController
             throw new WebMessageException( WebMessageUtils.conflict( "Key is not supported: " + key ) );
         }
         
-        UserCredentials credentials = userService.getUserCredentialsByUsername( username );
+        User user = null;
         
-        if ( credentials == null )
+        if ( username != null )
         {
-            throw new WebMessageException( WebMessageUtils.conflict( "User does not exist: " + username ) );
+            UserCredentials credentials = userService.getUserCredentialsByUsername( username );
+            
+            if ( credentials != null )
+            {
+                user = credentials.getUser();
+            }
+            else
+            {
+                throw new WebMessageException( WebMessageUtils.conflict( "User does not exist: " + username ) );
+            }
         }
         
-        Serializable value;
-
-        if ( username == null )
-        {
-            value = userSettingService.getUserSetting( keyEnum.get() );
-        }
-        else
-        {
-            value = userSettingService.getUserSetting( keyEnum.get(), credentials.getUser() );
-        }
+        Serializable value = userSettingService.getUserSetting( keyEnum.get(), user );
 
         if ( value == null )
         {

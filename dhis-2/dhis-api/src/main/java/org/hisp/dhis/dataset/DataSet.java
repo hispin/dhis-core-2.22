@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataset;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
-
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -60,6 +59,8 @@ import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.schema.PropertyType;
+import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.user.UserGroup;
 
 import java.util.HashSet;
@@ -243,7 +244,7 @@ public class DataSet
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-    
+
     public void addOrganisationUnit( OrganisationUnit organisationUnit )
     {
         sources.add( organisationUnit );
@@ -271,8 +272,8 @@ public class DataSet
         Set<OrganisationUnit> toRemove = Sets.difference( sources, updates );
         Set<OrganisationUnit> toAdd = Sets.difference( updates, sources );
 
-        toRemove.parallelStream().forEach( u -> u.getDataSets().remove( this ) );
-        toAdd.parallelStream().forEach( u -> u.getDataSets().add( this ) );
+        toRemove.stream().forEach( u -> u.getDataSets().remove( this ) );
+        toAdd.stream().forEach( u -> u.getDataSets().add( this ) );
 
         sources.clear();
         sources.addAll( updates );
@@ -295,8 +296,8 @@ public class DataSet
         Set<DataElement> toRemove = Sets.difference( dataElements, updates );
         Set<DataElement> toAdd = Sets.difference( updates, dataElements );
 
-        toRemove.parallelStream().forEach( d -> d.getDataSets().remove( this ) );
-        toAdd.parallelStream().forEach( d -> d.getDataSets().add( this ) );
+        toRemove.stream().forEach( d -> d.getDataSets().remove( this ) );
+        toAdd.stream().forEach( d -> d.getDataSets().add( this ) );
 
         dataElements.clear();
         dataElements.addAll( updates );
@@ -334,6 +335,14 @@ public class DataSet
         return sections != null && sections.size() > 0;
     }
 
+    /**
+     * Indicates whether data should be approved for this data set, i.e. whether
+     * this data set is part of a data approval workflow.
+     */
+    public boolean isApproveData()
+    {
+        return workflow != null;
+    }
 
     @JsonProperty
     @JsonView( { DetailedView.class } )
@@ -432,6 +441,7 @@ public class DataSet
     @JsonDeserialize( using = JacksonPeriodTypeDeserializer.class )
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @Property( PropertyType.TEXT )
     public PeriodType getPeriodType()
     {
         return periodType;

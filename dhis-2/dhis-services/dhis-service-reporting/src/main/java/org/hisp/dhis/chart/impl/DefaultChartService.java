@@ -1,7 +1,7 @@
 package org.hisp.dhis.chart.impl;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,14 +57,13 @@ import org.hisp.dhis.common.AnalyticalObjectStore;
 import org.hisp.dhis.common.AnalyticsType;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.GenericAnalyticalObjectService;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.NameableObject;
 import org.hisp.dhis.common.NumericSortWrapper;
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementOperand;
-import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.datavalue.DataValue;
 import org.hisp.dhis.datavalue.DataValueService;
 import org.hisp.dhis.i18n.I18nFormat;
@@ -120,6 +119,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class DefaultChartService
+    extends GenericAnalyticalObjectService<Chart>
     implements ChartService
 {
     private static final Font TITLE_FONT = new Font( Font.SANS_SERIF, Font.BOLD, 12 );
@@ -201,6 +201,12 @@ public class DefaultChartService
     // ChartService implementation
     // -------------------------------------------------------------------------
 
+    @Override
+    protected AnalyticalObjectStore<Chart> getAnalyticalObjectStore()
+    {
+        return chartStore;
+    }
+    
     @Override
     public JFreeChart getJFreeChart( int id, I18nFormat format )
     {
@@ -979,41 +985,5 @@ public class DefaultChartService
     public List<Chart> getChartsBetweenByName( String name, int first, int max )
     {
         return chartStore.getAllLikeName( name, first, max );
-    }
-
-    @Override
-    public int countDataSetCharts( DataSet dataSet )
-    {
-        return chartStore.countDataSetAnalyticalObject( dataSet );
-    }
-
-    @Override
-    public int countIndicatorCharts( Indicator indicator )
-    {
-        return chartStore.countIndicatorAnalyticalObject( indicator );
-    }
-
-    @Override
-    public int countDataElementCharts( DataElement dataElement )
-    {
-        return chartStore.countDataElementAnalyticalObject( dataElement );
-    }
-
-    @Override
-    public int countPeriodCharts( Period period )
-    {
-        return chartStore.countPeriodAnalyticalObject( period );
-    }
-    
-    @Override
-    public int countOrganisationUnitCharts( OrganisationUnit organisationUnit )
-    {
-        return chartStore.countOrganisationUnitAnalyticalObject( organisationUnit );
-    }
-
-    @Override
-    public int countCategoryOptionGroups( CategoryOptionGroup categoryOptionGroup )
-    {
-        return chartStore.countCategoryOptionGroupAnalyticalObject( categoryOptionGroup );
     }
 }

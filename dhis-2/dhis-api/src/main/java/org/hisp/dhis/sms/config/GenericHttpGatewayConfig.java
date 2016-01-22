@@ -1,7 +1,7 @@
 package org.hisp.dhis.sms.config;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hisp.dhis.common.adapter.ParametersMapXmlAdapter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class GenericHttpGatewayConfig
     extends SmsGatewayConfig
 {
@@ -53,9 +55,22 @@ public class GenericHttpGatewayConfig
         this.parameters = parameters;
     }
 
+    @JsonProperty( value = "name" )
+    public String getName()
+    {
+        return super.getName();
+    }
+
+    @JsonProperty( value = "urltemplate" )
     public String getUrlTemplate()
     {
         return urlTemplate;
+    }
+
+    @JsonProperty( value = "default" )
+    public boolean getStatus()
+    {
+        return super.isDefault();
     }
 
     public void setUrlTemplate( String urlTemplate )
@@ -63,6 +78,7 @@ public class GenericHttpGatewayConfig
         this.urlTemplate = urlTemplate;
     }
 
+    @JsonProperty( value = "parameters" )
     @XmlJavaTypeAdapter( ParametersMapXmlAdapter.class )
     public Map<String, String> getParameters()
     {

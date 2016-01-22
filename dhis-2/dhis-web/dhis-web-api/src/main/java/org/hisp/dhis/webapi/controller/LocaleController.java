@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@ package org.hisp.dhis.webapi.controller;
 
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.i18n.locale.LocaleManager;
+import org.hisp.dhis.webapi.webdomain.WebLocale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping( value = "/locales" )
@@ -53,7 +55,10 @@ public class LocaleController
     public String getUiLocales( Model model )
     {
         List<Locale> locales = localeManager.getAvailableLocales();
-        model.addAttribute( "model", locales );
+        
+        List<WebLocale> webLocales = locales.stream().map( l -> WebLocale.fromLocale( l ) ).collect( Collectors.toList() );
+        
+        model.addAttribute( "model", webLocales );
         return "locales";
     }
 
@@ -61,7 +66,10 @@ public class LocaleController
     public String getDbLocales( Model model )
     {
         List<Locale> locales = i18nService.getAvailableLocales();
-        model.addAttribute( "model", locales );
+        
+        List<WebLocale> webLocales = locales.stream().map( l -> WebLocale.fromLocale( l ) ).collect( Collectors.toList() );
+        
+        model.addAttribute( "model", webLocales );
         return "locales";
     }
 }

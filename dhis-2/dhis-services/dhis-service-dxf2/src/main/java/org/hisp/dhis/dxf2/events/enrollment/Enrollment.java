@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.events.enrollment;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@ public class Enrollment
 
     private Boolean followup;
     
-    private String completedUser;
+    private String completedBy;
 
     private Date completedDate;
 
@@ -238,14 +238,14 @@ public class Enrollment
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getCompletedUser()
+    public String getCompletedBy()
     {
-        return completedUser;
+        return completedBy;
     }
 
-    public void setCompletedUser( String completedUser )
+    public void setCompletedBy( String completedBy )
     {
-        this.completedUser = completedUser;
+        this.completedBy = completedBy;
     }
 
     @JsonProperty
@@ -277,7 +277,7 @@ public class Enrollment
         if ( program != null ? !program.equals( that.program ) : that.program != null ) return false;
         if ( status != that.status ) return false;
         if ( notes != null ? !notes.equals( that.notes ) : that.notes != null ) return false;
-        if ( completedUser != null ? !completedUser.equals( that.completedUser ) : that.completedUser != null ) return false;
+        if ( completedBy != null ? !completedBy.equals( that.completedBy ) : that.completedBy != null ) return false;
         if ( completedDate != null ? !completedDate.equals( that.completedDate ) : that.completedDate != null ) return false;
 
         return true;
@@ -294,7 +294,7 @@ public class Enrollment
         result = 31 * result + (incidentDate != null ? incidentDate.hashCode() : 0);
         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
-        result = 31 * result + (completedUser != null ? completedUser.hashCode() : 0);
+        result = 31 * result + (completedBy != null ? completedBy.hashCode() : 0);
         result = 31 * result + (completedDate != null ? completedDate.hashCode() : 0);
         return result;
     }
@@ -311,7 +311,7 @@ public class Enrollment
             ", incidentDate=" + incidentDate +
             ", attributes=" + attributes +
             ", notes=" + notes +
-            ", completedUser=" + completedUser +
+            ", completedBy=" + completedBy +
             ", completedDate=" + completedDate +
             '}';
     }

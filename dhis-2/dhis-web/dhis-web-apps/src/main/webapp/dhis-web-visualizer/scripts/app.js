@@ -783,7 +783,8 @@ Ext.onReady( function() {
 			fieldLabel: 'Range axis decimals',
 			labelStyle: 'color:#333',
 			labelWidth: 125,
-			minValue: 0
+			minValue: 0,
+            maxValue: 20
 		});
 
 		rangeAxisTitle = Ext.create('Ext.form.field.Text', {
@@ -3152,6 +3153,7 @@ Ext.onReady( function() {
             loadTotalsPage: function(uid, filter, append, noPaging, fn) {
                 var store = this,
 					params = {},
+                    types = ns.core.conf.valueType.aAggregateTypes.join(','),
                     path;
 
                 if (store.nextPage === store.lastPage) {
@@ -3159,10 +3161,10 @@ Ext.onReady( function() {
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElements.json?fields=id,' + namePropertyUrl + '&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElements.json?fields=id,' + namePropertyUrl + '&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElements.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=domainType:eq:AGGREGATE' + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -3199,6 +3201,7 @@ Ext.onReady( function() {
 			loadDetailsPage: function(uid, filter, append, noPaging, fn) {
                 var store = this,
 					params = {},
+                    types = ns.core.conf.valueType.aAggregateTypes.join(','),
                     path;
 
                 if (store.nextPage === store.lastPage) {
@@ -3206,10 +3209,10 @@ Ext.onReady( function() {
                 }
 
 				if (Ext.isString(uid)) {
-					path = '/dataElementOperands.json?fields=id,' + namePropertyUrl + '&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']&filter=dataElement.dataElementGroups.id:eq:' + uid + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 				else if (uid === 0) {
-					path = '/dataElementOperands.json?fields=id,' + namePropertyUrl + '' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
+					path = '/dataElementOperands.json?fields=dimensionItem|rename(id),' + namePropertyUrl + '&filter=valueType:in:[' + types + ']' + (filter ? '&filter=' + nameProperty + ':ilike:' + filter : '');
 				}
 
 				if (!path) {
@@ -4504,54 +4507,35 @@ Ext.onReady( function() {
         // event data item
         onEventDataItemProgramSelect = function(programId, skipSync) {
             if (!skipSync) {
-                dataSelectedStore.removeByProperty('objectName', ['di','pi']);
+                //dataSelectedStore.removeByProperty('objectName', ['di','pi']);
                 programIndicatorProgram.setValue(programId);
                 onProgramIndicatorProgramSelect(programId, true);
             }
 
+            var types = ns.core.conf.valueType.tAggregateTypes.join(',');
+
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programTrackedEntityAttributes[id,' + namePropertyUrl + '|rename(name),valueType],programStages[programStageDataElements[dataElement[id,name,valueType]]]&paging=false',
+                url: ns.core.init.contextPath + '/api/programDataElements.json?program=' + programId + '&filter=valueType:in:[' + types + ']&fields=dimensionItem|rename(id),name,valueType&paging=false',
+                disableCaching: false,
                 success: function(r) {
-                    r = Ext.decode(r.responseText);
+                    var elements = Ext.decode(r.responseText).programDataElements,
+                        isA = Ext.isArray,
+                        isO = Ext.isObject;
 
-                    var isA = Ext.isArray,
-                        isO = Ext.isObject,
-                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
-                        stages = isO(program) && isA(program.programStages) && program.programStages.length ? program.programStages : [],
-                        teas = isO(program) && isA(program.programTrackedEntityAttributes) ? program.programTrackedEntityAttributes : [],
-                        dataElements = [],
-                        attributes = [],
-                        types = ns.core.conf.valueType.aggregateTypes,
-                        data;
+                    Ext.Ajax.request({
+                        url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&filter=programTrackedEntityAttributes.trackedEntityAttribute.confidential:eq:false&filter=programTrackedEntityAttributes.valueType:in:[' + types + ']&fields=programTrackedEntityAttributes[dimensionItem|rename(id),' + namePropertyUrl + '|rename(name),valueType]&paging=false',
+                        disableCaching: false,
+                        success: function(r) {
+                            var attributes = (Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || [],
+                                data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(elements, attributes))) || [];
 
-                    // data elements
-                    for (var i = 0, stage, elements; i < stages.length; i++) {
-                        stage = stages[i];
-
-                        if (isA(stage.programStageDataElements) && stage.programStageDataElements.length) {
-                            elements = Ext.Array.pluck(stage.programStageDataElements, 'dataElement') || [];
-
-                            for (var j = 0; j < elements.length; j++) {
-                                if (Ext.Array.contains(types, elements[j].valueType)) {
-                                    dataElements.push(elements[j]);
-                                }
+                            if (data) {
+                                eventDataItemAvailableStore.loadDataAndUpdate(data);
                             }
                         }
-                    }
-
-                    // attributes
-                    for (i = 0; i < teas.length; i++) {
-                        if (Ext.Array.contains(types, teas[i].valueType)) {
-                            attributes.push(teas[i]);
-                        }
-                    }
-
-                    data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(dataElements, attributes))) || [];
-
-                    eventDataItemAvailableStore.loadDataAndUpdate(data);
+                    });
                 }
             });
-
         };
 
 		eventDataItemProgram = Ext.create('Ext.form.field.ComboBox', {
@@ -4562,6 +4546,7 @@ Ext.onReady( function() {
 			displayField: 'name',
 			emptyText: NS.i18n.select_program,
 			editable: false,
+            queryMode: 'local',
 			store: programStore,
 			listeners: {
 				select: function(cb) {

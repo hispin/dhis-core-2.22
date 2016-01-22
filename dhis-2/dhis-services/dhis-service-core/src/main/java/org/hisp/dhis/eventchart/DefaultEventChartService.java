@@ -1,7 +1,7 @@
 package org.hisp.dhis.eventchart;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,9 @@ package org.hisp.dhis.eventchart;
 
 import java.util.List;
 
-import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.common.AnalyticalObjectStore;
+import org.hisp.dhis.common.GenericAnalyticalObjectService;
+import org.hisp.dhis.common.hibernate.HibernateAnalyticalObjectStore;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -38,11 +40,12 @@ import org.springframework.transaction.annotation.Transactional;
 */
 @Transactional
 public class DefaultEventChartService
+    extends GenericAnalyticalObjectService<EventChart>
     implements EventChartService
 {
-    private HibernateIdentifiableObjectStore<EventChart> eventChartStore;
+    private HibernateAnalyticalObjectStore<EventChart> eventChartStore;
 
-    public void setEventChartStore( HibernateIdentifiableObjectStore<EventChart> eventChartStore )
+    public void setEventChartStore( HibernateAnalyticalObjectStore<EventChart> eventChartStore )
     {
         this.eventChartStore = eventChartStore;
     }
@@ -51,6 +54,12 @@ public class DefaultEventChartService
     // EventReportService implementation
     // -------------------------------------------------------------------------
 
+    @Override
+    protected AnalyticalObjectStore<EventChart> getAnalyticalObjectStore()
+    {
+        return eventChartStore;
+    }
+    
     @Override
     public int saveEventChart( EventChart eventChart )
     {

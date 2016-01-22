@@ -1,7 +1,7 @@
 package org.hisp.dhis.system.util;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -456,7 +456,7 @@ public class ValidationUtils
             return null;
         }
 
-        if ( storedBy.length() > 31 )
+        if ( storedBy.length() > 255 )
         {
             return "stored_by_length_greater_than_max_length";
         }

@@ -1,7 +1,7 @@
 package org.hisp.dhis.appmanager;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,8 +49,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.datavalue.DefaultDataValueService;
-import org.hisp.dhis.external.conf.ConfigurationKey;
-import org.hisp.dhis.external.conf.DhisConfigurationProvider;
+import org.hisp.dhis.external.location.LocationManager;
+import org.hisp.dhis.external.location.LocationManagerException;
 import org.hisp.dhis.keyjsonvalue.KeyJsonValueService;
 import org.hisp.dhis.setting.SettingKey;
 import org.hisp.dhis.setting.SystemSettingManager;
@@ -85,6 +85,8 @@ public class DefaultAppManager
     @PostConstruct
     private void init()
     {
+        verifyAppFolder();
+        
         reloadApps();
     }
 
@@ -93,34 +95,29 @@ public class DefaultAppManager
 
     @Autowired
     private CurrentUserService currentUserService;
+    
+    @Autowired
+    private LocationManager locationManager;
 
     @Autowired
     private KeyJsonValueService keyJsonValueService;
     
-    @Autowired
-    private DhisConfigurationProvider config;
-
     // -------------------------------------------------------------------------
     // AppManagerService implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public List<App> getApps()
+    public List<App> getApps( String contextPath )
     {
-        String baseUrl = getAppBaseUrl();
-
-        for ( App app : apps )
-        {
-            app.setBaseUrl( baseUrl );
-        }
-
+        apps.forEach( a -> a.init( contextPath ) );
+        
         return apps;
     }
 
     @Override
-    public App getApp( String key )
+    public App getApp( String key, String contextPath )
     {
-        List<App> apps = getApps();
+        List<App> apps = getApps( contextPath );
 
         for ( App app : apps )
         {
@@ -134,18 +131,18 @@ public class DefaultAppManager
     }
 
     @Override
-    public List<App> getAccessibleApps()
+    public List<App> getAccessibleApps( String contextPath )
     {
-        return getApps().stream().filter( this::isAccessible ).collect( Collectors.toList() );
+        User user = currentUserService.getCurrentUser();
+        
+        return getApps( contextPath ).stream().filter( a -> this.isAccessible( a, user ) ).collect( Collectors.toList() );
     }
 
     @Override
     public AppStatus installApp( File file, String fileName )
     {
         try
-        {
-            String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
-            
+        {            
             // -----------------------------------------------------------------
             // Parse ZIP file and it's manifest.webapp file.
             // -----------------------------------------------------------------
@@ -183,29 +180,13 @@ public class DefaultAppManager
             // Unzip the app
             // -----------------------------------------------------------------
 
-            log.info( "Installing app, namespace: " + namespace + ", base URL: " + baseUrl );
+            log.info( "Installing app, namespace: " + namespace );
 
             String dest = getAppFolderPath() + File.separator + fileName.substring( 0, fileName.lastIndexOf( '.' ) );
             Unzip unzip = new Unzip();
             unzip.setSrc( file );
             unzip.setDest( new File( dest ) );
             unzip.execute();
-
-            // -----------------------------------------------------------------
-            // Set DHIS 2 server location
-            // -----------------------------------------------------------------
-
-            File updateManifest = new File( dest + File.separator + MANIFEST_FILENAME );
-            App installedApp = mapper.readValue( updateManifest, App.class );
-
-            if ( installedApp.getActivities() != null && installedApp.getActivities().getDhis() != null )
-            {
-                if ( "*".equals( installedApp.getActivities().getDhis().getHref() ) )
-                {
-                    installedApp.getActivities().getDhis().setHref( baseUrl );
-                    mapper.writeValue( updateManifest, installedApp );
-                }
-            }
 
             log.info( "Installed app: " + app );
             
@@ -241,7 +222,7 @@ public class DefaultAppManager
     @Override
     public boolean exists( String appName )
     {
-        for ( App app : getApps() )
+        for ( App app : getApps( null ) )
         {
             if ( app.getName().equals( appName ) || app.getFolderName().equals( appName ) )
             {
@@ -255,7 +236,7 @@ public class DefaultAppManager
     @Override
     public boolean deleteApp( String name, boolean deleteAppData )
     {
-        for ( App app : getApps() )
+        for ( App app : getApps( null ) )
         {
             if ( app.getName().equals( name ) || app.getFolderName().equals( name ) )
             {
@@ -296,41 +277,15 @@ public class DefaultAppManager
     @Override
     public String getAppFolderPath()
     {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( SettingKey.APP_FOLDER_PATH ) );
-    }
-
-    @Override
-    public void setAppFolderPath( String appFolderPath )
-    {
-        if ( !appFolderPath.isEmpty() )
+        try
         {
-            try
-            {
-                File folder = new File( appFolderPath );
-                if ( !folder.exists() )
-                {
-                    FileUtils.forceMkdir( folder );
-                }
-            }
-            catch ( IOException ex )
-            {
-                log.error( ex.getLocalizedMessage(), ex );
-            }
+            return locationManager.getExternalDirectoryPath() + APPS_DIR;
         }
-
-        appSettingManager.saveSystemSetting( SettingKey.APP_FOLDER_PATH, appFolderPath );
-    }
-
-    @Override
-    public String getAppBaseUrl()
-    {
-        return StringUtils.trimToNull( (String) appSettingManager.getSystemSetting( SettingKey.APP_BASE_URL ) );
-    }
-
-    @Override
-    public void setAppBaseUrl( String appBaseUrl )
-    {
-        appSettingManager.saveSystemSetting( SettingKey.APP_BASE_URL, appBaseUrl );
+        catch ( LocationManagerException ex )
+        {
+            log.info( "Could not get app folder path, external directory not set" );
+            return null;
+        }
     }
 
     @Override
@@ -344,10 +299,6 @@ public class DefaultAppManager
     {
         appSettingManager.saveSystemSetting( SettingKey.APP_STORE_URL, appStoreUrl );
     }
-
-    // -------------------------------------------------------------------------
-    // Supportive methods
-    // -------------------------------------------------------------------------
 
     /**
      * Sets the list of apps with detected apps from the file system.
@@ -430,5 +381,34 @@ public class DefaultAppManager
     public App getAppByNamespace( String namespace )
     {
         return appNamespaces.get( namespace );
+    }
+
+    // -------------------------------------------------------------------------
+    // Supportive methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * Creates the app folder if it does not exist already.
+     */
+    private void verifyAppFolder()
+    {
+        String appFolderPath = getAppFolderPath();
+        
+        if ( appFolderPath != null && !appFolderPath.isEmpty() )
+        {
+            try
+            {
+                File folder = new File( appFolderPath );
+                
+                if ( !folder.exists() )
+                {
+                    FileUtils.forceMkdir( folder );
+                }
+            }
+            catch ( IOException ex )
+            {
+                log.error( ex.getMessage(), ex );
+            }
+        }
     }
 }

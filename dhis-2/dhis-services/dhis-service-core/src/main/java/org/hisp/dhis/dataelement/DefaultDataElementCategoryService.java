@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataelement;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -620,7 +620,7 @@ public class DefaultDataElementCategoryService
         // ---------------------------------------------------------------------
 
         DataElementCategory category = new DataElementCategory( DataElementCategory.DEFAULT_NAME );
-        category.addDataElementCategoryOption( categoryOption );
+        category.addCategoryOption( categoryOption );
         addDataElementCategory( category );
 
         // ---------------------------------------------------------------------

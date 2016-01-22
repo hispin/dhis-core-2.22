@@ -1,7 +1,9 @@
 package org.hisp.dhis.commons.collection;
 
+import java.util.Collection;
+
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +32,7 @@ package org.hisp.dhis.commons.collection;
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 /**
  * Map which allows storing a {@link java.util.concurrent.Callable}
@@ -68,5 +71,29 @@ public class CachingMap<K, V>
         }
         
         return value;
+    }
+    
+    /**
+     * Loads the cache with the given content.
+     * 
+     * @param collection the content collection.
+     * @param keyMapper the function to produce the cache key for each content item.
+     * @return a reference to this caching map.
+     */
+    public CachingMap<K, V> load( Collection<V> collection, Function<V, K> keyMapper )
+    {
+        for ( V item : collection )
+        {
+            K key = keyMapper.apply( item );
+            
+            if ( key == null )
+            {
+                throw new IllegalArgumentException( "Key cannot be null for item: " + item );
+            }
+            
+            super.put( key, item );
+        }
+        
+        return this;
     }
 }

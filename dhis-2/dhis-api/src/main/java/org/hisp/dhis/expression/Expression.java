@@ -1,7 +1,7 @@
 package org.hisp.dhis.expression;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -224,6 +224,20 @@ public class Expression
             "}";
     }
 
+    /* Parsing expressions */
+    public static int matchExpression(String s,int start){
+    	int i=start, depth=0, len=s.length();
+    	while (i<len) {
+	    char c=s.charAt(i);
+    		if ((c==')')||(c==']')) {
+    			if (depth==0) return i; else depth--;}
+    		else if ((c=='(')||(c=='[')) depth++;
+    		else if (c==',') {
+    			if (depth==0) return i;}
+    		else {}
+		i++;}
+    	return -1;}
+
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
@@ -258,7 +272,7 @@ public class Expression
     @JacksonXmlProperty(localName = "dataElement", namespace = DxfNamespaces.DXF_2_0)
     public Set<DataElement> getDataElementsInExpression()
     {
-        return dataElementsInExpression;
+    	return dataElementsInExpression;
     }
 
     public void setDataElementsInExpression( Set<DataElement> dataElementsInExpression )

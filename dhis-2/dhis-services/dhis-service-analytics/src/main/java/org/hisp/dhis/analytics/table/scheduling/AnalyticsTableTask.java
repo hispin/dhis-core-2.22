@@ -1,7 +1,7 @@
 package org.hisp.dhis.analytics.table.scheduling;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,8 +39,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsTableService;
 import org.hisp.dhis.commons.util.DebugUtils;
-import org.hisp.dhis.external.conf.ConfigurationKey;
-import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.security.NoSecurityContextRunnable;
@@ -84,9 +82,6 @@ public class AnalyticsTableTask
     @Autowired
     private SystemSettingManager systemSettingManager;
     
-    @Autowired
-    private DhisConfigurationProvider config;
-
     private Integer lastYears;
 
     public void setLastYears( Integer lastYears )
@@ -168,14 +163,14 @@ public class AnalyticsTableTask
         }
         catch ( RuntimeException ex )
         {
-            String baseUrl = config.getProperty( ConfigurationKey.SYSTEM_BASE_URL );
+            String title = (String) systemSettingManager.getSystemSetting( SettingKey.APPLICATION_TITLE );
 
             notifier.notify( taskId, ERROR, "Process failed: " + ex.getMessage(), true );
 
             messageService.sendSystemNotification(
                 "Analytics table process failed",
                 "Analytics table process failed, please check the logs. Time: " + new DateTime().toString() + ". " +
-                    "System: " + baseUrl + " " +
+                    "System: " + title + " " +
                     "Message: " + ex.getMessage() + " " +
                     "Cause: " + DebugUtils.getStackTrace( ex.getCause() ) );
 

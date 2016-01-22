@@ -1,7 +1,7 @@
 package org.hisp.dhis.common;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,6 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryDimension;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementGroup;
-import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.i18n.I18nFormat;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -262,6 +261,21 @@ public abstract class BaseAnalyticalObject
         if ( object != null && DataDimensionItem.DATA_DIMENSION_CLASSES.contains( object.getClass() ) )
         {
             return dataDimensionItems.add( DataDimensionItem.create( object ) );
+        }
+        
+        return false;
+    }
+
+    /**
+     * Removes a data dimension object.
+     * 
+     * @return true if a data dimension was removed, false if not.
+     */
+    public boolean removeDataDimensionItem( DimensionalItemObject object )
+    {
+        if ( object != null && DataDimensionItem.DATA_DIMENSION_CLASSES.contains( object.getClass() ) )
+        {
+            return dataDimensionItems.remove( DataDimensionItem.create( object ) );
         }
         
         return false;
@@ -752,24 +766,17 @@ public abstract class BaseAnalyticalObject
      * Generates an identifier based on the given lists of NameableObjects. Uses
      * the UIDs for each NameableObject, sorts them and writes them out as a key.
      */
-    public static String getIdentifier( List<NameableObject> column, List<NameableObject> row )
+    public static String getIdentifier( List<DimensionalItemObject> column, List<DimensionalItemObject> row )
     {
         List<String> ids = new ArrayList<>();
 
-        List<NameableObject> dimensions = new ArrayList<>();
+        List<DimensionalItemObject> dimensions = new ArrayList<>();
         dimensions.addAll( column != null ? column : new ArrayList<>() );
         dimensions.addAll( row != null ? row : new ArrayList<>() );
 
-        for ( NameableObject item : dimensions )
+        for ( DimensionalItemObject item : dimensions )
         {
-            if ( item.getClass().equals( DataElementOperand.class ) )
-            {
-                ids.add( ((DataElementOperand) item).getDimensionItem() );
-            }
-            else
-            {
-                ids.add( item.getUid() );
-            }
+            ids.add( item.getDimensionItem() );
         }
 
         Collections.sort( ids );

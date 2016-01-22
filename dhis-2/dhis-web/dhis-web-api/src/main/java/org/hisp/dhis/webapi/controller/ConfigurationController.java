@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,18 +33,21 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
 import org.hisp.dhis.dataelement.DataElementGroup;
 import org.hisp.dhis.dxf2.render.RenderService;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.indicator.IndicatorGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.setting.SettingKey;
+import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.webapi.controller.exception.NotFoundException;
@@ -69,6 +72,9 @@ public class ConfigurationController
     private ConfigurationService configurationService;
 
     @Autowired
+    private DhisConfigurationProvider config;
+
+    @Autowired
     private IdentifiableObjectManager identifiableObjectManager;
 
     @Autowired
@@ -76,6 +82,9 @@ public class ConfigurationController
 
     @Autowired
     private RenderService renderService;
+
+    @Autowired
+    private SystemSettingManager systemSettingManager;
 
     // -------------------------------------------------------------------------
     // Resources
@@ -86,7 +95,7 @@ public class ConfigurationController
     {
         return setModel( model, configurationService.getConfiguration() );
     }
-    
+
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/systemId", method = RequestMethod.GET )
@@ -234,7 +243,7 @@ public class ConfigurationController
         }
 
         Configuration config = configurationService.getConfiguration();
-        
+
         periodType = periodService.reloadPeriodType( periodType );
 
         config.setInfrastructuralPeriodType( periodType );
@@ -293,64 +302,18 @@ public class ConfigurationController
         configurationService.setConfiguration( config );
     }
 
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/smtpPassword", method = RequestMethod.POST )
-    public void setSmtpPassword( @RequestBody String password  )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setSmtpPassword( StringUtils.trimToNull( password ) );
-        
-        configurationService.setConfiguration( config );
-    }    
-
     @RequestMapping( value = "/remoteServerUrl", method = RequestMethod.GET )
     public String getRemoteServerUrl( Model model, HttpServletRequest request )
     {
-        return setModel( model, configurationService.getConfiguration().getRemoteServerUrl() );
-    }
-    
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerUrl", method = RequestMethod.POST )
-    public void setRemoteServerUrl( @RequestBody String url )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setRemoteServerUrl( StringUtils.trimToNull( url ) );
-        
-        configurationService.setConfiguration( config );
+        return setModel( model, systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_URL ) );
     }
 
     @RequestMapping( value = "/remoteServerUsername", method = RequestMethod.GET )
     public String getRemoteServerUsername( Model model, HttpServletRequest request )
     {
-        return setModel( model, configurationService.getConfiguration().getRemoteServerUsername() );
-    }
-    
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerUsername", method = RequestMethod.POST )
-    public void setRemoteServerUsername( @RequestBody String username )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setRemoteServerUsername( StringUtils.trimToNull( username ) );
-        
-        configurationService.setConfiguration( config );
-    }
-    
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
-    @ResponseStatus( value = HttpStatus.OK )
-    @RequestMapping( value = "/remoteServerPassword", method = RequestMethod.POST )
-    public void setRemoteServerPassword( @RequestBody String password )
-    {
-        Configuration config = configurationService.getConfiguration();
-        
-        config.setRemoteServerPassword( StringUtils.trimToNull( password ) );
-        
-        configurationService.setConfiguration( config );
+        return setModel( model, systemSettingManager.getSystemSetting(
+            SettingKey.REMOTE_INSTANCE_USERNAME ) );
     }
 
     @RequestMapping( value = "/corsWhitelist", method = RequestMethod.GET, produces = "application/json" )
@@ -358,8 +321,8 @@ public class ConfigurationController
     {
         return setModel( model, configurationService.getConfiguration().getCorsWhitelist() );
     }
-    
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings( "unchecked" )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_SYSTEM_SETTING')" )
     @ResponseStatus( value = HttpStatus.OK )
     @RequestMapping( value = "/corsWhitelist", method = RequestMethod.POST, consumes = "application/json" )
@@ -367,12 +330,18 @@ public class ConfigurationController
         throws IOException
     {
         Set<String> corsWhitelist = renderService.fromJson( input, Set.class );
-        
+
         Configuration config = configurationService.getConfiguration();
-        
+
         config.setCorsWhitelist( corsWhitelist );
-        
+
         configurationService.setConfiguration( config );
+    }
+    
+    @RequestMapping( value = "/systemReadOnlyMode", method = RequestMethod.GET )
+    public String getSystemReadOnlyMode( Model model, HttpServletRequest request )
+    {
+        return setModel( model, config.getProperty( ConfigurationKey.SYSTEM_READ_ONLY_MODE ) );
     }
 
     // -------------------------------------------------------------------------

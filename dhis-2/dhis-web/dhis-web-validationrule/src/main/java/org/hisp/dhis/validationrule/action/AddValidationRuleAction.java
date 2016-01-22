@@ -1,7 +1,7 @@
 package org.hisp.dhis.validationrule.action;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -194,20 +194,6 @@ public class AddValidationRuleAction
         this.annualSampleCount = annualSampleCount;
     }
 
-    private Integer highOutliers;
-
-    public void setHighOutliers( Integer highOutliers )
-    {
-        this.highOutliers = highOutliers;
-    }
-
-    private Integer lowOutliers;
-
-    public void setLowOutliers( Integer lowOutliers )
-    {
-        this.lowOutliers = lowOutliers;
-    }
-
     // -------------------------------------------------------------------------
     // Action implementation
     // -------------------------------------------------------------------------
@@ -246,8 +232,6 @@ public class AddValidationRuleAction
 
         validationRule.setSequentialSampleCount( sequentialSampleCount );
         validationRule.setAnnualSampleCount( annualSampleCount );
-        validationRule.setHighOutliers( highOutliers );
-        validationRule.setLowOutliers( lowOutliers );
         validationRuleService.saveValidationRule( validationRule );
 
         return SUCCESS;

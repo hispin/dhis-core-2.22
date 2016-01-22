@@ -1,7 +1,7 @@
 package org.hisp.dhis.common;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,6 +52,8 @@ public class IdScheme
         put( IdentifiableProperty.UUID, IdScheme.UUID ).
         put( IdentifiableProperty.CODE, IdScheme.CODE ).
         put( IdentifiableProperty.NAME, IdScheme.NAME ).build();
+    
+    private static final String ATTR_ID_SCHEME_PREFIX = "ATTRIBUTE:";
     
     private IdentifiableProperty identifiableProperty;
 
@@ -151,7 +153,7 @@ public class IdScheme
 
     public static boolean isAttribute( String str )
     {
-        return !StringUtils.isEmpty( str ) && str.toUpperCase().startsWith( "ATTRIBUTE:" ) && str.length() == 21;
+        return !StringUtils.isEmpty( str ) && str.toUpperCase().startsWith( ATTR_ID_SCHEME_PREFIX ) && str.length() == 21;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataapproval;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,6 +82,14 @@ class DataApprovalPermissionsEvaluator
         .maximumSize( 50000 ).build();
 
     /**
+     * Clears the user approval level cache, for unit testing when the same
+     * user ID may have different approval levels in quick succession.
+     */
+    public static void invalidateCache() {
+        USER_APPROVAL_LEVEL_CACHE.invalidateAll();
+    }
+
+    /**
      * Allocates and populates the context for determining user permissions
      * on one or more DataApproval objects.
      *
@@ -127,6 +135,9 @@ class DataApprovalPermissionsEvaluator
      * the context of system settings and user information.
      * <p>
      * If there is a data permissions state, also takes this into account.
+     * <p>
+     * It is assumed that the org units have been filtered already for only
+     * the org units that a user may see (read).
      *
      * @param status the data approval status (if any)
      * @param orgUnit the organisation unit being looked at
@@ -135,35 +146,33 @@ class DataApprovalPermissionsEvaluator
      */
     public DataApprovalPermissions getPermissions( DataApprovalStatus status, OrganisationUnit orgUnit, DataApprovalWorkflow workflow )
     {
-        DataApproval da = status.getDataApproval();
-
         DataApprovalState s = status.getState();
 
         DataApprovalPermissions permissions = new DataApprovalPermissions();
 
-        if ( da == null || da.getOrganisationUnit() == null )
+        if ( status.getOrganisationUnitUid() == null )
         {
-            log.debug( "getPermissions da " + da + ( da != null ? ( " " + da.getOrganisationUnit() ) : "" ) );
+            log.debug( "getPermissions organisationUnitUid null for user " + ( user == null ? "(null)" : user.getUsername() ) + " orgUnit " + ( orgUnit == null ? "[null]" : orgUnit.getName() ) );
 
-            permissions.setMayReadData( organisationUnitService.isInUserHierarchy( orgUnit ) );
+            permissions.setMayReadData( true );
 
             return permissions; // No approval permissions set.
         }
 
-        DataApprovalLevel userApprovalLevel = getUserApprovalLevelWithCache( da, workflow );
+        DataApprovalLevel userApprovalLevel = getUserApprovalLevelWithCache( status.getOrganisationUnitUid(), workflow );
 
         if ( userApprovalLevel == null )
         {
-            log.debug( "getPermissions userApprovalLevel null for user " + ( user == null ? "(null)" : user.getUsername() ) + " orgUnit " + da.getOrganisationUnit().getName() );
+            log.debug( "getPermissions userApprovalLevel null for user " + ( user == null ? "(null)" : user.getUsername() ) + " orgUnit " + ( orgUnit == null ? "[null]" : orgUnit.getName() ) );
 
-            permissions.setMayReadData( organisationUnitService.isInUserHierarchy( orgUnit ) );
+            permissions.setMayReadData( true );
 
             return permissions; // Can't find user approval level, so no approval permissions are set.
         }
 
         int userLevel = userApprovalLevel.getLevel();
 
-        DataApprovalLevel dal = da.getDataApprovalLevel();
+        DataApprovalLevel dal = status.getActionLevel();
         int dataLevel = ( dal != null ? dal.getLevel() : maxApprovalLevel );
 
         boolean approvableAtNextHigherLevel = s.isApproved() && dal != null && dataLevel > 1;
@@ -198,12 +207,11 @@ class DataApprovalPermissionsEvaluator
         }
 
         boolean mayReadData = mayApprove || mayUnapprove || mayAccept || mayUnaccept ||
-                ( ( userLevel >= dataLevel || mayViewLowerLevelUnapprovedData )
-                    && organisationUnitService.isInUserHierarchy( da.getOrganisationUnit() ) );
+                ( userLevel >= dataLevel || mayViewLowerLevelUnapprovedData );
 
-        log.debug( "getPermissions orgUnit " + ( da.getOrganisationUnit() == null ? "(null)" : da.getOrganisationUnit().getName() )
+        log.debug( "getPermissions orgUnit " + ( orgUnit == null ? "[null]" : orgUnit.getName() )
             + " workflow " + workflow.getName()
-            + " combo " + da.getAttributeOptionCombo().getName() + " state " + s.name()
+            + " comboUid " + status.getAttributeOptionComboUid() + " state " + s.name()
             + " isApproved " + s.isApproved() + " isApprovable " + s.isApprovable() + " isUnapprovable " + s.isUnapprovable()
             + " isAccepted " + s.isAccepted() + " isAcceptable " + s.isAcceptable() + " isUnacceptable " + s.isUnacceptable()
             + " userLevel " + userLevel + " dataLevel " + dataLevel
@@ -220,18 +228,20 @@ class DataApprovalPermissionsEvaluator
         return permissions;
     }
 
-    private DataApprovalLevel getUserApprovalLevelWithCache( DataApproval da, DataApprovalWorkflow workflow )
+    private DataApprovalLevel getUserApprovalLevelWithCache( String orgUnitUid, DataApprovalWorkflow workflow )
     {
         DataApprovalLevel userApprovalLevel = null;
 
-        final DataApproval dataApproval = da;
+        final String organisationUnitUid = orgUnitUid;
 
         final DataApprovalWorkflow dataApprovalWorkflow = workflow;
 
         try
         {
-            userApprovalLevel = USER_APPROVAL_LEVEL_CACHE.get( user.getId() + "-" + da.getOrganisationUnit().getId(),
-                () -> dataApprovalLevelService.getUserApprovalLevel( user, dataApproval.getOrganisationUnit(), dataApprovalWorkflow.getSortedLevels() ) );
+            userApprovalLevel = USER_APPROVAL_LEVEL_CACHE.get( user.getId() + "-" + organisationUnitUid,
+                () -> dataApprovalLevelService.getUserApprovalLevel( user,
+                    organisationUnitService.getOrganisationUnit( organisationUnitUid ),
+                    dataApprovalWorkflow.getSortedLevels() ) );
         }
         catch ( CacheLoader.InvalidCacheLoadException ex )
         {

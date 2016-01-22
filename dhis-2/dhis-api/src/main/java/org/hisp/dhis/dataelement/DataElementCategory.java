@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataelement;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseDimensionalObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
@@ -72,6 +71,8 @@ public class DataElementCategory
     @Scanned
     private List<DataElementCategoryOption> categoryOptions = new ArrayList<>();
 
+    private List<DataElementCategoryCombo> categoryCombos = new ArrayList<>();
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -96,13 +97,13 @@ public class DataElementCategory
     // Logic
     // -------------------------------------------------------------------------
 
-    public void addDataElementCategoryOption( DataElementCategoryOption dataElementCategoryOption )
+    public void addCategoryOption( DataElementCategoryOption dataElementCategoryOption )
     {
         categoryOptions.add( dataElementCategoryOption );
         dataElementCategoryOption.getCategories().add( this );
     }
 
-    public void removeDataElementCategoryOption( DataElementCategoryOption dataElementCategoryOption )
+    public void removeCategoryOption( DataElementCategoryOption dataElementCategoryOption )
     {
         categoryOptions.remove( dataElementCategoryOption );
         dataElementCategoryOption.getCategories().remove( this );
@@ -116,6 +117,28 @@ public class DataElementCategory
         }
 
         categoryOptions.clear();
+    }
+
+    public void addCategoryCombo( DataElementCategoryCombo categoryCombo )
+    {
+        categoryCombos.add( categoryCombo );
+        categoryCombo.getCategories().add( this );
+    }
+
+    public void removeCategoryCombo( DataElementCategoryCombo categoryCombo )
+    {
+        categoryCombos.remove( categoryCombo );
+        categoryCombo.getCategories().remove( this );
+    }
+
+    public void removeAllCategoryCombos()
+    {
+        for ( DataElementCategoryCombo categoryCombo : categoryCombos )
+        {
+            categoryCombo.getCategories().remove( this );
+        }
+
+        categoryCombos.clear();
     }
 
     public DataElementCategoryOption getCategoryOption( DataElementCategoryOptionCombo categoryOptionCombo )
@@ -212,6 +235,21 @@ public class DataElementCategory
         this.categoryOptions = categoryOptions;
     }
 
+    @JsonProperty
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
+    @JsonView( { DetailedView.class, ExportView.class } )
+    @JacksonXmlElementWrapper( localName = "categoryCombos", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "categoryCombo", namespace = DxfNamespaces.DXF_2_0 )
+    public List<DataElementCategoryCombo> getCategoryCombos()
+    {
+        return categoryCombos;
+    }
+
+    public void setCategoryCombos( List<DataElementCategoryCombo> categoryCombos )
+    {
+        this.categoryCombos = categoryCombos;
+    }
+
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
     {
@@ -231,11 +269,10 @@ public class DataElementCategory
             }
 
             removeAllCategoryOptions();
+            removeAllCategoryCombos();
 
-            for ( DataElementCategoryOption dataElementCategoryOption : category.getCategoryOptions() )
-            {
-                addDataElementCategoryOption( dataElementCategoryOption );
-            }
+            category.getCategoryOptions().forEach( this::addCategoryOption );
+            category.getCategoryCombos().forEach( this::addCategoryCombo );
         }
     }
 }

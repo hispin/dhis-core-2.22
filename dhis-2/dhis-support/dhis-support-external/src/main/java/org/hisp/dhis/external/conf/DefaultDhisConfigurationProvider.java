@@ -1,7 +1,7 @@
 package org.hisp.dhis.external.conf;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,12 +30,16 @@ package org.hisp.dhis.external.conf;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.encryption.EncryptionStatus;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.external.location.LocationManagerException;
+
+import javax.crypto.Cipher;
 
 /**
  * @author Lars Helge Overland
@@ -46,14 +50,15 @@ public class DefaultDhisConfigurationProvider
     private static final Log log = LogFactory.getLog( DefaultDhisConfigurationProvider.class );
 
     private static final String CONF_FILENAME = "dhis.conf";
+
     private static final String ENABLED_VALUE = "on";
-    
+
     // -------------------------------------------------------------------------
     // Dependencies
     // -------------------------------------------------------------------------
 
     private LocationManager locationManager;
-    
+
     public void setLocationManager( LocationManager locationManager )
     {
         this.locationManager = locationManager;
@@ -63,11 +68,11 @@ public class DefaultDhisConfigurationProvider
      * Cache for properties.
      */
     private Properties properties;
-    
+
     public void init()
     {
         InputStream in = null;
-        
+
         try
         {
             in = locationManager.getInputStream( CONF_FILENAME );
@@ -75,7 +80,7 @@ public class DefaultDhisConfigurationProvider
         catch ( LocationManagerException ex1 )
         {
             log.debug( "Could not load dhis.conf, looking for hibernate.properties" );
-                        
+
             try // Deprecated
             {
                 in = locationManager.getInputStream( "hibernate.properties" );
@@ -85,9 +90,9 @@ public class DefaultDhisConfigurationProvider
                 log.debug( "Could not load hibernate.properties" );
             }
         }
-        
+
         Properties properties = new Properties();
-        
+
         if ( in != null )
         {
             try
@@ -99,7 +104,7 @@ public class DefaultDhisConfigurationProvider
                 throw new IllegalStateException( "Properties could not be loaded", ex );
             }
         }
-        
+
         this.properties = properties;
     }
 
@@ -114,7 +119,7 @@ public class DefaultDhisConfigurationProvider
     }
 
     @Override
-    public String getProperty( ConfigurationKey key  )
+    public String getProperty( ConfigurationKey key )
     {
         return properties.getProperty( key.getKey(), key.getDefaultValue() );
     }
@@ -124,7 +129,7 @@ public class DefaultDhisConfigurationProvider
     {
         return properties.getProperty( key.getKey(), defaultValue );
     }
-    
+
     @Override
     public boolean isEnabled( ConfigurationKey key )
     {
@@ -132,12 +137,56 @@ public class DefaultDhisConfigurationProvider
     }
 
     @Override
+    public boolean isReadOnlyMode()
+    {
+        return ENABLED_VALUE.equals( getProperty( ConfigurationKey.SYSTEM_READ_ONLY_MODE ) );
+    }
+
+    @Override
     public boolean isLdapConfigured()
     {
         String ldapUrl = getProperty( ConfigurationKey.LDAP_URL );
         String managerDn = getProperty( ConfigurationKey.LDAP_MANAGER_DN );
-        
+
         return !( ConfigurationKey.LDAP_URL.getDefaultValue().equals( ldapUrl ) ||
             ldapUrl == null || managerDn == null );
+    }
+
+    @Override
+    public EncryptionStatus isEncryptionConfigured()
+    {
+        String password;
+        
+        int maxKeyLength;
+
+        // Check for JCE files is present (key length > 128) and AES is available
+        
+        try
+        {
+            maxKeyLength = Cipher.getMaxAllowedKeyLength( "AES" );
+            
+            if ( maxKeyLength == 128 )
+            {
+                return EncryptionStatus.MISSING_JCE_POLICY;
+            }
+        }
+        catch ( NoSuchAlgorithmException e )
+        {
+            return EncryptionStatus.MISSING_JCE_POLICY;
+        }
+
+        password = getProperty( ConfigurationKey.ENCRYPTION_PASSWORD );
+
+        if ( password.length() == 0 )
+        {
+            return EncryptionStatus.MISSING_ENCRYPTION_PASSWORD;
+        }
+
+        if ( password.length() < 24 )
+        {
+            return EncryptionStatus.ENCRYPTION_PASSWORD_TOO_SHORT;
+        }
+
+        return EncryptionStatus.OK;
     }
 }

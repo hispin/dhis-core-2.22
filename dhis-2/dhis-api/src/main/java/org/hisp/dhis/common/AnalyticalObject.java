@@ -1,7 +1,7 @@
 package org.hisp.dhis.common;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.hisp.dhis.dataelement.CategoryOptionGroup;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.period.Period;
 import org.hisp.dhis.program.Program;
 
 /**
 * @author Lars Helge Overland
 */
 public interface AnalyticalObject
+    extends IdentifiableObject
 {
     void populateAnalyticalProperties();
     
@@ -54,5 +57,15 @@ public interface AnalyticalObject
     
     OrganisationUnit getRelativeOrganisationUnit();
     
+    List<Period> getPeriods();
+    
+    List<OrganisationUnit> getOrganisationUnits();
+    
+    List<CategoryOptionGroup> getCategoryOptionGroups();
+    
     Program getProgram();
+    
+    boolean addDataDimensionItem( DimensionalItemObject object );
+    
+    boolean removeDataDimensionItem( DimensionalItemObject object );
 }

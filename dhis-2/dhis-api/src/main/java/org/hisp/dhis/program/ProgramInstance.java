@@ -1,7 +1,7 @@
 package org.hisp.dhis.program;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,7 +84,7 @@ public class ProgramInstance
 
     private List<TrackedEntityComment> comments = new ArrayList<>();
     
-    private String completedUser;
+    private String completedBy;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -407,13 +407,13 @@ public class ProgramInstance
         this.comments = comments;
     }
 
-    public String getCompletedUser()
+    public String getCompletedBy()
     {
-        return completedUser;
+        return completedBy;
     }
 
-    public void setCompletedUser( String completedUser )
+    public void setCompletedBy( String completedBy )
     {
-        this.completedUser = completedUser;
+        this.completedBy = completedBy;
     }  
 }

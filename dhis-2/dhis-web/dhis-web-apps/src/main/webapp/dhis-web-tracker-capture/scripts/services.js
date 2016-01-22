@@ -695,6 +695,21 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     att.value = AttributesFactory.formatAttributeValue(att, attributesById, optionSets, 'USER');
                 });
                 return tei;
+            }, function(error){
+                if(error){
+                    var dialogOptions = {
+                        headerText: 'error',
+                        bodyText: 'access_denied'
+                    };
+                    if(error.statusText) {
+                        dialogOptions.headerText = error.statusText;
+                    }
+                    if(error.data && error.data.message) {
+                        dialogOptions.bodyText = error.data.message;
+                    }
+                    
+                    DialogService.showDialog({}, dialogOptions);
+                }
             });
             
             return promise;
@@ -932,15 +947,20 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 }                
             }
             else{
-                if(val){                    
-                    if( type === 'NUMBER' ){
-                        if(dhis2.validation.isNumber(val)){                            
-                            //val = new Number(val);
-                            val = parseInt(val);                            
-                        }
-                        else{
-                            //val = new Number('0');
-                            val = parseInt('0');      
+                if(val){  
+                    if(type === 'NUMBER' ||
+                        type === 'INTEGER' ||
+                        type === 'INTEGER_POSITIVE' ||
+                        type === 'INTEGER_NEGATIVE' ||
+                        type === 'INTEGER_ZERO_OR_POSITIVE'){
+                        if( dhis2.validation.isNumber(val)){
+                            if(type === 'NUMBER'){
+                                val = parseFloat(val);
+                            }else{
+                                val = parseInt(val);
+                            }
+                        } else {
+                            val = parseInt('0');
                         }
                     }
                     if(type === 'DATE'){
@@ -1461,75 +1481,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     }; 
 })
 
-/* current selections */
-.service('CurrentSelection', function(){
-    this.currentSelection = {};
-    this.relationshipInfo = {};
-    this.optionSets = null;
-    this.attributesById = null;
-    this.ouLevels = null;
-    this.sortedTeiIds = [];
-    this.selectedTeiEvents = null;
-    this.relationshipOwner = {};
-    this.selectedTeiEvents = [];
-    
-    this.set = function(currentSelection){  
-        this.currentSelection = currentSelection;        
-    };    
-    this.get = function(){
-        return this.currentSelection;
-    };
-    
-    this.setRelationshipInfo = function(relationshipInfo){  
-        this.relationshipInfo = relationshipInfo;        
-    };    
-    this.getRelationshipInfo = function(){
-        return this.relationshipInfo;
-    };
-    
-    this.setOptionSets = function(optionSets){
-        this.optionSets = optionSets;
-    };
-    this.getOptionSets = function(){
-        return this.optionSets;
-    };    
-    
-    this.setAttributesById = function(attributesById){
-        this.attributesById = attributesById;
-    };
-    this.getAttributesById = function(){
-        return this.attributesById;
-    }; 
-    
-    this.setOuLevels = function(ouLevels){
-        this.ouLevels = ouLevels;
-    };
-    this.getOuLevels = function(){
-        return this.ouLevels;
-    };
-    
-    this.setSortedTeiIds = function(sortedTeiIds){
-        this.sortedTeiIds = sortedTeiIds;
-    };
-    this.getSortedTeiIds = function(){
-        return this.sortedTeiIds;
-    };
-    
-    this.setSelectedTeiEvents = function(selectedTeiEvents){
-        this.selectedTeiEvents = selectedTeiEvents;
-    };
-    this.getSelectedTeiEvents = function(){
-        return this.selectedTeiEvents;
-    };
-    
-    this.setRelationshipOwner = function(relationshipOwner){
-        this.relationshipOwner = relationshipOwner;
-    };
-    this.getRelationshipOwner = function(){
-        return this.relationshipOwner;
-    };
-})
-
 /*Orgunit service for local db */
 .service('OuService', function($window, $q){
     
@@ -1663,24 +1614,35 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return {headers: attributes, rows: entityList, pager: grid.metaData.pager};
             
         },
-        generateGridColumns: function(attributes, ouMode){
+        generateGridColumns: function(attributes, ouMode, nonConfidential){
             
             if( ouMode === null ){
                 ouMode = 'SELECTED';
             }
             var filterTypes = {}, filterText = {};
             var columns = [];
+            
+            var returnAttributes = [];
+            if(nonConfidential) {
+                //Filter out attributes that is confidential, so they will not be part of any grid:
+                returnAttributes = angular.copy($filter('nonConfidential')(attributes));
+            }
+            else
+            {
+                returnAttributes = angular.copy(attributes);
+            }
        
             //also add extra columns which are not part of attributes (orgunit for example)
             columns.push({id: 'orgUnitName', name: $translate.instant('registering_unit'), valueType: 'TEXT', displayInListNoProgram: false, attribute: false});
             columns.push({id: 'created', name: $translate.instant('registration_date'), valueType: 'DATE', displayInListNoProgram: false, attribute: false});
             columns.push({id: 'inactive', name: $translate.instant('inactive'), valueType: 'BOOLEAN', displayInListNoProgram: false, attribute: false});
-            columns = columns.concat(attributes ? angular.copy(attributes) : []);
+            columns = columns.concat(returnAttributes ? returnAttributes : []);
             
             //generate grid column for the selected program/attributes
             angular.forEach(columns, function(column){
                 column.attribute = angular.isUndefined(column.attribute) ? true : false;
-                column.show = false;                    
+                column.show = false;
+
                 if( (column.id === 'orgUnitName' && ouMode !== 'SELECTED') ||
                     column.displayInListNoProgram || 
                     column.displayInList){
@@ -1845,7 +1807,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         autoGenerateEvents: function(teiId, program, orgUnit, enrollment){
             var dhis2Events = {events: []};
-            if(teiId && program && orgUnit && enrollment){                
+            if(teiId && program && orgUnit && enrollment){
                 angular.forEach(program.programStages, function(stage){
                     if(stage.autoGenerateEvent){
                         var newEvent = {
@@ -1881,7 +1843,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
             
            return dhis2Events;
-        },        
+        },
         reconstruct: function(dhis2Event, programStage, optionSets){
             
             var e = {dataValues: [], 
@@ -1896,7 +1858,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 
             angular.forEach(programStage.programStageDataElements, function(prStDe){
                 if(dhis2Event[prStDe.dataElement.id]){                    
-                    var value = CommonUtils.formatDataValue(dhis2Event[prStDe.dataElement.id], prStDe.dataElement, optionSets, 'API');                    
+                    var value = CommonUtils.formatDataValue(dhis2Event.event, dhis2Event[prStDe.dataElement.id], prStDe.dataElement, optionSets, 'API');                    
                     var val = {value: value, dataElement: prStDe.dataElement.id};
                     if(dhis2Event.providedElsewhere[prStDe.dataElement.id]){
                         val.providedElsewhere = dhis2Event.providedElsewhere[prStDe.dataElement.id];
@@ -1925,7 +1887,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if( prStDe ){                
                     var val = dataValue.value;
                     if(prStDe.dataElement){
-                        val = CommonUtils.formatDataValue(val, prStDe.dataElement, optionSets, 'USER');                        
+                        val = CommonUtils.formatDataValue(event.event, val, prStDe.dataElement, optionSets, 'USER');                        
                     }    
                     event[dataValue.dataElement] = val;
                     if(dataValue.providedElsewhere){
@@ -1955,27 +1917,51 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
 .service('EventCreationService', function($modal){
             
-        this.showModal = function(stage, dummyEvent,eventCreationAction, autoCreate){
+        this.showModal = function(eventsByStage, stage, availableStages,programStages,selectedEntity,selectedProgram,selectedOrgUnit,selectedEnrollment, autoCreate, eventCreationAction,allEventsSorted, suggestedStage){
             var modalInstance = $modal.open({
                 templateUrl: 'components/dataentry/new-event.html',
                 controller: 'EventCreationController',
                 resolve: {                    
-                    dummyEvent: function () {
-                        return dummyEvent;
+                    eventsByStage: function () {
+                        return eventsByStage;
+                    },
+                    stage: function () {
+                        return stage;
+                    },                
+                    stages: function(){
+                        return availableStages;
+                    },
+                    allStages: function(){
+                        return programStages;
+                    },
+                    tei: function(){
+                        return selectedEntity;
+                    },
+                    program: function(){
+                        return selectedProgram;
+                    },
+                    orgUnit: function(){
+                        return selectedOrgUnit;
+                    },
+                    enrollment: function(){
+                        return selectedEnrollment;
                     },
                     autoCreate: function () {
-                        //In case the programstage is a table, autocreate
                         return autoCreate;
                     },
-                    eventCreationAction: function() {
+                    eventCreationAction: function(){
                         return eventCreationAction;
-                    },                    
-                    stage: function(){
-                        return stage;
+                    },
+                    events: function(){
+                        return allEventsSorted;
+                    },
+                    suggestedStage: function(){
+                        return suggestedStage;
                     }
                 }
-            });
+            }).result;
             return modalInstance;
         };
         this.eventCreationActions = { add: 'ADD',  schedule: 'SCHEDULE', referral: 'REFERRAL'};
-});
+})
+

@@ -1,7 +1,19 @@
 package org.hisp.dhis.validation;
 
+import static org.hisp.dhis.system.util.MathUtils.expressionIsTrue;
+import static org.hisp.dhis.system.util.MathUtils.roundSignificant;
+import static org.hisp.dhis.system.util.MathUtils.zeroIfNull;
+
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,19 +55,6 @@ import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.MathUtils;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.hisp.dhis.system.util.MathUtils.*;
 
 /**
  * Runs a validation task on a thread within a multi-threaded validation run.
@@ -100,12 +99,13 @@ public class ValidatorThread
 
     private void runInternal()
     {
-        if ( context.getValidationResults().size() < (ValidationRunType.INTERACTIVE == context.getRunType() ?
-            ValidationRuleService.MAX_INTERACTIVE_ALERTS : ValidationRuleService.MAX_SCHEDULED_ALERTS) )
+        if ( context.getValidationResults().size() < (ValidationRunType.INTERACTIVE == context.getRunType()
+            ? ValidationRuleService.MAX_INTERACTIVE_ALERTS : ValidationRuleService.MAX_SCHEDULED_ALERTS) )
         {
             for ( PeriodTypeExtended periodTypeX : context.getPeriodTypeExtendedMap().values() )
             {
-                Collection<DataElement> sourceDataElements = periodTypeX.getSourceDataElements().get( sourceX.getSource() );
+                Collection<DataElement> sourceDataElements = periodTypeX.getSourceDataElements()
+                    .get( sourceX.getSource() );
                 Set<ValidationRule> rules = getRulesBySourceAndPeriodType( sourceX, periodTypeX, sourceDataElements );
                 context.getExpressionService().explodeValidationRuleExpressions( rules );
 
@@ -119,25 +119,38 @@ public class ValidatorThread
                         SetMap<Integer, DataElementOperand> incompleteValuesMap = new SetMap<>();
                         MapMap<Integer, DataElementOperand, Double> currentValueMap = getValueMap( periodTypeX,
                             periodTypeX.getDataElements(), sourceDataElements, recursiveCurrentDataElements,
-                            periodTypeX.getAllowedPeriodTypes(), period, sourceX.getSource(), lastUpdatedMap, incompleteValuesMap );
+                            periodTypeX.getAllowedPeriodTypes(), period, sourceX.getSource(), lastUpdatedMap,
+                            incompleteValuesMap );
 
-                        log.trace( "Source " + sourceX.getSource().getName()
-                            + " [" + period.getStartDate() + " - " + period.getEndDate() + "]"
-                            + " currentValueMap[" + currentValueMap.size() + "]" );
+                        log.trace( "Source " + sourceX.getSource().getName() + " [" + period.getStartDate() + " - "
+                            + period.getEndDate() + "]" + " currentValueMap[" + currentValueMap.size() + "]" );
 
                         for ( ValidationRule rule : rules )
                         {
                             if ( evaluateValidationCheck( currentValueMap, lastUpdatedMap, rule ) )
                             {
-                                Map<Integer, Double> leftSideValues = getExpressionValueMap( rule.getLeftSide(),
-                                    currentValueMap, incompleteValuesMap );
+                                int n_years = rule.getAnnualSampleCount() == null ? 0 : rule.getAnnualSampleCount();
+                                int window = rule.getSequentialSampleCount() == null ? 0
+                                    : rule.getSequentialSampleCount();
+                                Collection<PeriodType> periodTypes = context.getRuleXMap().get( rule )
+                                    .getAllowedPastPeriodTypes();
 
-                                if ( !leftSideValues.isEmpty() || Operator.compulsory_pair.equals( rule.getOperator() ) )
+                                log.debug( "Rule " + rule.getName() + " @" + period.getDisplayShortName() + " & "
+                                    + sourceX.getSource() + " window=" + window + ", years=" + n_years );
+                                Map<Integer, Double> leftSideValues = getRuleExpressionValueMap( rule.getLeftSide(),
+                                    currentValueMap, incompleteValuesMap, sourceX.getSource(), period, window, n_years,
+                                    periodTypeX, periodTypes, lastUpdatedMap, sourceDataElements );
+
+                                if ( !leftSideValues.isEmpty()
+                                    || Operator.compulsory_pair.equals( rule.getOperator() ) )
                                 {
-                                    Map<Integer, Double> rightSideValues = getRightSideValue( sourceX.getSource(), periodTypeX, period, rule,
-                                        currentValueMap, sourceDataElements );
+                                    Map<Integer, Double> rightSideValues = getRuleExpressionValueMap(
+                                        rule.getRightSide(), currentValueMap, incompleteValuesMap, sourceX.getSource(),
+                                        period, window, n_years, periodTypeX, periodTypes, lastUpdatedMap,
+                                        sourceDataElements );
 
-                                    if ( !rightSideValues.isEmpty() || Operator.compulsory_pair.equals( rule.getOperator() ) )
+                                    if ( !rightSideValues.isEmpty()
+                                        || Operator.compulsory_pair.equals( rule.getOperator() ) )
                                     {
                                         Set<Integer> attributeOptionCombos = leftSideValues.keySet();
 
@@ -160,23 +173,27 @@ public class ValidatorThread
                                             }
                                             else if ( leftSide != null && rightSide != null )
                                             {
-                                                violation = !expressionIsTrue( leftSide, rule.getOperator(), rightSide );
+                                                violation = !expressionIsTrue( leftSide, rule.getOperator(),
+                                                    rightSide );
                                             }
 
                                             if ( violation )
                                             {
-                                                context.getValidationResults().add( new ValidationResult(
-                                                    period, sourceX.getSource(),
-                                                    context.getDataElementCategoryService().getDataElementCategoryOptionCombo( optionCombo ), rule,
-                                                    roundSignificant( zeroIfNull( leftSide ) ),
-                                                    roundSignificant( zeroIfNull( rightSide ) ) ) );
+                                                context.getValidationResults()
+                                                    .add( new ValidationResult( period, sourceX.getSource(),
+                                                        context.getDataElementCategoryService()
+                                                            .getDataElementCategoryOptionCombo( optionCombo ),
+                                                        rule, roundSignificant( zeroIfNull( leftSide ) ),
+                                                        roundSignificant( zeroIfNull( rightSide ) ) ) );
                                             }
 
-                                            log.trace( "Evaluated " + rule.getName()
-                                                + ", combo id " + optionCombo + ": "
-                                                + (violation ? "violation" : "OK") + " " + (leftSide == null ? "(null)" : leftSide.toString())
-                                                + " " + rule.getOperator() + " " + (rightSide == null ? "(null)" : rightSide.toString())
-                                                + " (" + context.getValidationResults().size() + " results)" );
+                                            log.debug( "Evaluated " + rule.getName() + ", combo id " + optionCombo
+                                                + ": " + (violation ? "violation" : "OK") + " "
+                                                + (leftSide == null ? "(null)" : leftSide.toString()) + " "
+                                                + rule.getOperator() + " "
+                                                + (rightSide == null ? "(null)" : rightSide.toString()) + " ("
+                                                + context.getValidationResults().size() + " results)" );
+
                                         }
                                     }
                                 }
@@ -192,10 +209,10 @@ public class ValidatorThread
      * Gets the rules that should be evaluated for a given organisation unit and
      * period type.
      *
-     * @param sourceX            the organisation unit extended information
-     * @param periodTypeX        the period type extended information
+     * @param sourceX the organisation unit extended information
+     * @param periodTypeX the period type extended information
      * @param sourceDataElements all data elements collected for this
-     *                           organisation unit
+     *        organisation unit
      * @return set of rules for this org unit and period type
      */
     private Set<ValidationRule> getRulesBySourceAndPeriodType( OrganisationUnitExtended sourceX,
@@ -239,14 +256,14 @@ public class ValidatorThread
      * evaluationRule, after the "current" data to evaluate has been fetched.
      * For INTERACTIVE runs, we always go further (always return true.) For
      * SCHEDULED runs, we go further only if something has changed since the
-     * last successful scheduled run -- either the rule definition or one of
-     * the "current" data element / option values on the left or right sides.
+     * last successful scheduled run -- either the rule definition or one of the
+     * "current" data element / option values on the left or right sides.
      * <p>
      * For scheduled runs, remove all values for any attribute option combos
      * where nothing has changed since the last run.
      *
      * @param lastUpdatedMapMap when each data value was last updated
-     * @param rule              the rule that may be evaluated
+     * @param rule the rule that may be evaluated
      * @return true if the rule should be evaluated with this data, false if not
      */
     private boolean evaluateValidationCheck( MapMap<Integer, DataElementOperand, Double> currentValueMapMap,
@@ -256,21 +273,23 @@ public class ValidatorThread
 
         if ( ValidationRunType.SCHEDULED == context.getRunType() )
         {
-            if ( context.getLastScheduledRun() != null ) // True if no previous scheduled run
+            if ( context.getLastScheduledRun() != null ) // True if no previous
+                                                         // scheduled run
             {
                 if ( rule.getLastUpdated().before( context.getLastScheduledRun() ) )
                 {
                     // Get the "current" DataElementOperands from this rule:
                     // Left+Right sides for VALIDATION, Left side only for
                     // SURVEILLANCE.
-                    Collection<DataElementOperand> deos = context.getExpressionService().getOperandsInExpression(
-                        rule.getLeftSide().getExpression() );
+                    Collection<DataElementOperand> deos = context.getExpressionService()
+                        .getOperandsInExpression( rule.getLeftSide().getExpression() );
 
                     if ( rule.getRuleType() == RuleType.VALIDATION )
                     {
                         // Make a copy so we can add to it.
                         deos = new HashSet<>( deos );
-                        deos.addAll( context.getExpressionService().getOperandsInExpression( rule.getRightSide().getExpression() ) );
+                        deos.addAll( context.getExpressionService()
+                            .getOperandsInExpression( rule.getRightSide().getExpression() ) );
                     }
 
                     // Return true if any data is more recent than the last
@@ -287,7 +306,8 @@ public class ValidatorThread
 
                             if ( lastUpdated != null && lastUpdated.after( context.getLastScheduledRun() ) )
                             {
-                                saveThisCombo = true; // True if new/updated data.
+                                saveThisCombo = true; // True if new/updated
+                                                      // data.
                                 evaluate = true;
                                 break;
                             }
@@ -327,158 +347,23 @@ public class ValidatorThread
     }
 
     /**
-     * Returns the right-side evaluated value of the validation rule.
-     *
-     * @param source             organisation unit being evaluated
-     * @param periodTypeX        period type being evaluated
-     * @param period             period being evaluated
-     * @param rule               ValidationRule being evaluated
-     * @param currentValueMap    current values already fetched
-     * @param sourceDataElements the data elements collected by the organisation
-     *                           unit
-     * @return the right-side values, map by attribute category combo
-     */
-    private Map<Integer, Double> getRightSideValue( OrganisationUnit source, PeriodTypeExtended periodTypeX, Period period,
-        ValidationRule rule, MapMap<Integer, DataElementOperand, Double> currentValueMap,
-        Collection<DataElement> sourceDataElements )
-    {
-        Map<Integer, Double> rightSideValues = null;
-
-        // If ruleType is VALIDATION, the right side is evaluated using the same
-        // (current) data values. If ruleType is SURVEILLANCE but there are no
-        // data elements in the right side, then it doesn't matter what data
-        // values we use, so just supply the current data values in order to
-        // evaluate the (constant) expression.
-
-        if ( rule.getRuleType() == RuleType.VALIDATION || rule.getRightSide().getDataElementsInExpression().isEmpty() )
-        {
-            rightSideValues = getExpressionValueMap( rule.getRightSide(), currentValueMap, new SetMap<>() );
-        }
-        else
-        // ruleType equals SURVEILLANCE, and there are some data elements in the
-        // right side expression
-        {
-            CalendarPeriodType calendarPeriodType = (CalendarPeriodType) period.getPeriodType();
-            Collection<PeriodType> rightSidePeriodTypes = context.getRuleXMap().get( rule ).getAllowedPastPeriodTypes();
-            ListMap<Integer, Double> sampleValuesMap = new ListMap<>();
-            Calendar yearlyCalendar = PeriodType.createCalendarInstance( period.getStartDate() );
-            int annualSampleCount = rule.getAnnualSampleCount() == null ? 0 : rule.getAnnualSampleCount();
-            int sequentialSampleCount = rule.getSequentialSampleCount() == null ? 0 : rule
-                .getSequentialSampleCount();
-
-            for ( int annualCount = 0; annualCount <= annualSampleCount; annualCount++ )
-            {
-                // Defensive copy because createPeriod mutates Calendar.
-                Calendar calCopy = PeriodType.createCalendarInstance( yearlyCalendar.getTime() );
-
-                // To track the period at the same time in preceding years.
-                Period yearlyPeriod = calendarPeriodType.createPeriod( calCopy );
-
-                // For past years, fetch the period at the same time of year
-                // as this period, and any periods after this period within the
-                // sequentialPeriod limit. For the year of the stating period,
-                // we will only fetch previous sequential periods.
-
-                if ( annualCount > 0 )
-                {
-                    // Fetch the period at the same time of year as the
-                    // starting period.
-                    evaluateRightSidePeriod( periodTypeX, sampleValuesMap, source, rightSidePeriodTypes, yearlyPeriod,
-                        rule, sourceDataElements );
-
-                    // Fetch the sequential periods after this prior-year
-                    // period.
-                    Period sequentialPeriod = new Period( yearlyPeriod );
-
-                    for ( int sequentialCount = 0; sequentialCount < sequentialSampleCount; sequentialCount++ )
-                    {
-                        sequentialPeriod = calendarPeriodType.getNextPeriod( sequentialPeriod );
-                        evaluateRightSidePeriod( periodTypeX, sampleValuesMap, source, rightSidePeriodTypes,
-                            sequentialPeriod, rule, sourceDataElements );
-                    }
-                }
-
-                // Fetch the sequential periods before this period (both this
-                // year and past years).
-                Period sequentialPeriod = new Period( yearlyPeriod );
-
-                for ( int sequentialCount = 0; sequentialCount < sequentialSampleCount; sequentialCount++ )
-                {
-                    sequentialPeriod = calendarPeriodType.getPreviousPeriod( sequentialPeriod );
-                    evaluateRightSidePeriod( periodTypeX, sampleValuesMap, source, rightSidePeriodTypes,
-                        sequentialPeriod, rule, sourceDataElements );
-                }
-
-                // Move to the previous year.
-                yearlyCalendar.set( Calendar.YEAR, yearlyCalendar.get( Calendar.YEAR ) - 1 );
-            }
-
-            rightSideValues = new HashMap<>();
-
-            for ( Map.Entry<Integer, List<Double>> e : sampleValuesMap.entrySet() )
-            {
-                rightSideValues.put( e.getKey(), rightSideAverage( rule, e.getValue(), annualSampleCount, sequentialSampleCount ) );
-            }
-
-        }
-        return rightSideValues;
-    }
-
-    /**
-     * Evaluates the right side of a surveillance-type validation rule for
-     * a given organisation unit and period, and adds the value to a list
-     * of sample values.
-     * <p>
-     * Note that for a surveillance-type rule, evaluating the right side
-     * expression can result in sampling multiple periods and/or child
-     * organisation units.
-     *
-     * @param periodTypeX        the period type extended information
-     * @param sampleValuesMap    the lists of sample values to add to
-     * @param source             the organisation unit
-     * @param allowedPeriodTypes the period types in which the data may exist
-     * @param period             the main period for the validation rule evaluation
-     * @param rule               the surveillance-type rule being evaluated
-     * @param sourceDataElements the data elements configured for this
-     *                           organisation unit
-     */
-    private void evaluateRightSidePeriod( PeriodTypeExtended periodTypeX, ListMap<Integer, Double> sampleValuesMap,
-        OrganisationUnit source, Collection<PeriodType> allowedPeriodTypes, Period period, ValidationRule rule,
-        Collection<DataElement> sourceDataElements )
-    {
-        Period periodInstance = context.getPeriodService().getPeriod( period.getStartDate(), period.getEndDate(),
-            period.getPeriodType() );
-
-        if ( periodInstance != null )
-        {
-            Set<DataElement> dataElements = rule.getRightSide().getDataElementsInExpression();
-            SetMap<Integer, DataElementOperand> incompleteValuesMap = new SetMap<>();
-            MapMap<Integer, DataElementOperand, Double> dataValueMapByAttributeCombo = getValueMap( periodTypeX, dataElements,
-                sourceDataElements, dataElements, allowedPeriodTypes, period, source, null, incompleteValuesMap );
-            sampleValuesMap.putValueMap( getExpressionValueMap( rule.getRightSide(), dataValueMapByAttributeCombo, incompleteValuesMap ) );
-        }
-    }
-
-    /**
      * Evaluates an expression, returning a map of values by attribute option
      * combo.
      *
-     * @param expression          expression to evaluate.
-     * @param valueMap            Map of value maps, by attribute option combo.
+     * @param expression expression to evaluate.
+     * @param valueMap Map of value maps, by attribute option combo.
      * @param incompleteValuesMap map of values that were incomplete.
      * @return map of values.
      */
     private Map<Integer, Double> getExpressionValueMap( Expression expression,
-        MapMap<Integer, DataElementOperand, Double> valueMap,
-        SetMap<Integer, DataElementOperand> incompleteValuesMap )
+        MapMap<Integer, DataElementOperand, Double> valueMap, SetMap<Integer, DataElementOperand> incompleteValuesMap )
     {
         Map<Integer, Double> expressionValueMap = new HashMap<>();
 
         for ( Map.Entry<Integer, Map<DataElementOperand, Double>> entry : valueMap.entrySet() )
         {
-            Double value = context.getExpressionService().getExpressionValue( expression,
-                entry.getValue(), context.getConstantMap(), null, null,
-                incompleteValuesMap.getSet( entry.getKey() ) );
+            Double value = context.getExpressionService().getExpressionValue( expression, entry.getValue(),
+                context.getConstantMap(), null, null, incompleteValuesMap.getSet( entry.getKey() ), null );
 
             if ( MathUtils.isValidDouble( value ) )
             {
@@ -490,78 +375,22 @@ public class ValidatorThread
     }
 
     /**
-     * Finds the average right-side sample value. This is used as the right-side
-     * expression value to evaluate a surveillance-type rule.
-     *
-     * @param rule                  surveillance-type rule being evaluated
-     * @param sampleValues          sample values actually collected
-     * @param annualSampleCount     number of annual samples tried for
-     * @param sequentialSampleCount number of sequential samples tried for
-     * @return average right-side sample value
-     */
-    private Double rightSideAverage( ValidationRule rule, List<Double> sampleValues,
-        int annualSampleCount, int sequentialSampleCount )
-    {
-        // Find the expected sample count for the last period of its type in the
-        // database: sequentialSampleCount for the immediately preceding periods 
-        // in this year and for every past year: one sample for the same period 
-        // in that year, plus sequentialSampleCounts before and after.
-        Double average = null;
-
-        if ( !sampleValues.isEmpty() )
-        {
-            int expectedSampleCount = sequentialSampleCount + annualSampleCount * (1 + 2 * sequentialSampleCount);
-            int highOutliers = rule.getHighOutliers() == null ? 0 : rule.getHighOutliers();
-            int lowOutliers = rule.getLowOutliers() == null ? 0 : rule.getLowOutliers();
-
-            // If fewer than the expected number of samples, then scale back
-            if ( sampleValues.size() < expectedSampleCount )
-            {
-                highOutliers = (highOutliers * sampleValues.size()) / expectedSampleCount;
-                lowOutliers = (lowOutliers * sampleValues.size()) / expectedSampleCount;
-            }
-
-            // If we still have any high and/or low outliers to remove, then
-            // sort the sample values and remove the high and/or low outliers
-            if ( highOutliers + lowOutliers > 0 )
-            {
-                Collections.sort( sampleValues );
-                log.trace( "Removing " + highOutliers + " high and " + lowOutliers + " low outliers from "
-                    + Arrays.toString( sampleValues.toArray() ) );
-                sampleValues = sampleValues.subList( lowOutliers, sampleValues.size() - highOutliers );
-                log.trace( "Result: " + Arrays.toString( sampleValues.toArray() ) );
-            }
-
-            Double sum = 0.0;
-
-            for ( Double sample : sampleValues )
-            {
-                sum += sample;
-            }
-
-            average = sum / sampleValues.size();
-        }
-
-        return average;
-    }
-
-    /**
      * Gets data values for a given organisation unit and period, recursing if
      * necessary to sum the values from child organisation units.
      *
-     * @param periodTypeX           period type which we are evaluating
-     * @param ruleDataElements      data elements configured for the rule
-     * @param sourceDataElements    data elements configured for the organisation
-     *                              unit
+     * @param periodTypeX period type which we are evaluating
+     * @param ruleDataElements data elements configured for the rule
+     * @param sourceDataElements data elements configured for the organisation
+     *        unit
      * @param recursiveDataElements data elements for which we will recurse if
-     *                              necessary
-     * @param allowedPeriodTypes    all the periods in which we might find the data
-     *                              values
-     * @param period                period in which we are looking for values
-     * @param source                organisation unit for which we are looking for values
-     * @param lastUpdatedMap        map showing when each data values was last updated
-     * @param incompleteValuesMap   ongoing set showing which values were found
-     *                              but not from all children, mapped by attribute option combo.
+     *        necessary
+     * @param allowedPeriodTypes all the periods in which we might find the data
+     *        values
+     * @param period period in which we are looking for values
+     * @param source organisation unit for which we are looking for values
+     * @param lastUpdatedMap map showing when each data values was last updated
+     * @param incompleteValuesMap ongoing set showing which values were found
+     *        but not from all children, mapped by attribute option combo.
      * @return map of attribute option combo to map of values found.
      */
     private MapMap<Integer, DataElementOperand, Double> getValueMap( PeriodTypeExtended periodTypeX,
@@ -573,11 +402,9 @@ public class ValidatorThread
         Set<DataElement> dataElementsToGet = new HashSet<>( ruleDataElements );
         dataElementsToGet.retainAll( sourceDataElements );
 
-        log.trace( "getDataValueMapRecursive: source:" + source.getName()
-            + " ruleDataElements[" + ruleDataElements.size()
-            + "] sourceDataElements[" + sourceDataElements.size()
-            + "] elementsToGet[" + dataElementsToGet.size()
-            + "] recursiveDataElements[" + recursiveDataElements.size()
+        log.trace( "getDataValueMapRecursive: source:" + source.getName() + " ruleDataElements["
+            + ruleDataElements.size() + "] sourceDataElements[" + sourceDataElements.size() + "] elementsToGet["
+            + dataElementsToGet.size() + "] recursiveDataElements[" + recursiveDataElements.size()
             + "] allowedPeriodTypes[" + allowedPeriodTypes.size() + "]" );
 
         MapMap<Integer, DataElementOperand, Double> dataValueMap = null;
@@ -651,4 +478,183 @@ public class ValidatorThread
 
         return dataValueMap;
     }
+
+    /* Generalized surveillance rules */
+
+    /**
+     * Returns the right-side evaluated value of the validation rule.
+     *
+     * @param source organisation unit being evaluated
+     * @param periodTypeX period type being evaluated
+     * @param period period being evaluated
+     * @param rule ValidationRule being evaluated
+     * @param currentValueMap current values already fetched
+     * @param periodTypes applicable period types
+     * @param sourceDataElements the data elements collected by the organisation
+     *        unit
+     * @return the right-side values, map by attribute category combo
+     */
+    private ListMap<Integer, Double> getAggregateValueMap( Expression expression, OrganisationUnit source,
+        Period period, int window, int n_years, PeriodTypeExtended px, Collection<PeriodType> periodTypes,
+        MapMap<Integer, DataElementOperand, Date> lastUpdatedMap, Collection<DataElement> sourceDataElements )
+    {
+        ListMap<Integer, Double> results = new ListMap<Integer, Double>();
+        CalendarPeriodType periodType = (CalendarPeriodType) period.getPeriodType();
+        Calendar yearly = PeriodType.createCalendarInstance( period.getStartDate() );
+
+        for ( int years = 0; years <= n_years; years++ )
+        {
+            // Defensive copy because createPeriod mutates Calendar.
+            Calendar each_year = PeriodType.createCalendarInstance( yearly.getTime() );
+            // To track the period at the same time in preceding years.
+            Period base_period = periodType.createPeriod( each_year );
+
+            if ( years > 0 )
+            {
+                // For past years, fetch a window around the period at the
+                // same time of year as this period.
+                gatherPeriodValues( results, expression, source, base_period, 0, px, periodTypes, lastUpdatedMap,
+                    sourceDataElements );
+                if ( window != 0 )
+                    gatherPeriodValues( results, expression, source, periodType.getNextPeriod( base_period ),
+                        window - 1, px, periodTypes, lastUpdatedMap, sourceDataElements );
+            }
+            if ( window != 0 )
+                gatherPeriodValues( results, expression, source, periodType.getPreviousPeriod( base_period ),
+                    1 - window, px, periodTypes, lastUpdatedMap, sourceDataElements );
+
+            // Move to the previous year.
+            yearly.set( Calendar.YEAR, yearly.get( Calendar.YEAR ) - 1 );
+        }
+
+        return results;
+    }
+
+    /**
+     * Gathers the values of an expression for a given organisation unit and
+     * period, accumulating a range of values around the given period.
+     * <p>
+     * Note that for a surveillance-type rule, evaluating the right side
+     * expression can result in sampling multiple periods and/or child
+     * organisation units.
+     *
+     * @param results the ListMap into which results will be stored
+     * @param expression the expression to be evaluated
+     * @param source the organisation unit
+     * @param period the main period for the validation rule evaluation
+     * @param window how many periods (before and after) to collect
+     * @param px the period type extended information
+     * @param periodTypes the period types in which the data may exist
+     * @param sourceElements the data elements configured for this organisation
+     *        unit
+     */
+    private void gatherPeriodValues( ListMap<Integer, Double> results, Expression expression, OrganisationUnit source,
+        Period period, int window, PeriodTypeExtended px, Collection<PeriodType> periodTypes,
+        MapMap<Integer, DataElementOperand, Date> lastUpdatedMap, Collection<DataElement> sourceElements )
+    {
+        CalendarPeriodType periodType = (CalendarPeriodType) period.getPeriodType();
+        Period periodInstance = context.getPeriodService().getPeriod( period.getStartDate(), period.getEndDate(),
+            periodType );
+        if ( periodInstance == null )
+            return;
+        Set<DataElement> dataElements = getExpressionDataElements( expression );
+        SetMap<Integer, DataElementOperand> incompleteValuesMap = new SetMap<>();
+        MapMap<Integer, DataElementOperand, Double> dataValueMapByAttributeCombo = getValueMap( px, dataElements,
+            sourceElements, dataElements, periodTypes, periodInstance, source, lastUpdatedMap, incompleteValuesMap );
+        Map<Integer, Double> eValues = getExpressionValueMap( expression, dataValueMapByAttributeCombo,
+            incompleteValuesMap );
+        int direction = ((window < 0) ? (-1) : (window > 0) ? (1) : (0));
+        int steps = ((direction > 0) ? (window) : (direction < 0) ? (-window) : (0));
+        results.putValueMap( eValues );
+        log.debug( "Gathering '" + expression.getExpression() + "' " + "at " + period + " (" + window + ") " + "from "
+            + source.getName() + " starting with:\n\t" + eValues );
+        if ( direction == 0 )
+            return;
+        Period scan = new Period( periodInstance );
+        for ( int count = 0; count < steps; count++ )
+        {
+            if ( direction < 0 )
+                scan = periodType.getPreviousPeriod( scan );
+            else
+                scan = periodType.getNextPeriod( scan );
+            gatherPeriodValues( results, expression, source, scan, 0, px, periodTypes, lastUpdatedMap, sourceElements );
+        }
+    }
+
+    /**
+     * Returns the data elements referenced in an expression, as a set.
+     *
+     * This will return an empty set if e.getDataElementsInExpression returns
+     * null
+     *
+     * @param expression expression to evaluate.
+     * @return a Set of DataElement(s)
+     */
+    private Set<DataElement> getExpressionDataElements( Expression e )
+    {
+        Set<DataElement> elts = e.getDataElementsInExpression();
+        if ( elts == null )
+            return new HashSet<DataElement>();
+        else
+            return elts;
+    }
+
+    /**
+     * Evaluates an expression, returning a map of values by attribute option
+     * combo.
+     *
+     * @param expression expression to evaluate.
+     * @param valueMap Map of value maps, by attribute option combo.
+     * @param incompleteValuesMap map of values that were incomplete.
+     * @return map of values.
+     */
+    private Map<Integer, Double> getRuleExpressionValueMap( Expression expression,
+        MapMap<Integer, DataElementOperand, Double> valueMap, SetMap<Integer, DataElementOperand> incompleteValuesMap,
+        OrganisationUnit source, Period period, int window, int n_years, PeriodTypeExtended px,
+        Collection<PeriodType> periodTypes, MapMap<Integer, DataElementOperand, Date> lastUpdatedMap,
+        Collection<DataElement> sourceElements )
+    {
+        Map<Integer, Double> expressionValueMap = new HashMap<>();
+        Map<Integer, ListMap<String, Double>> aggregateValuesMap = new HashMap<>();
+        Set<String> aggregates = context.getExpressionService().getAggregatesInExpression( expression.getExpression() );
+
+        if ( aggregates.size() == 0 )
+            return getExpressionValueMap( expression, valueMap, incompleteValuesMap );
+
+        for ( String subExpression : aggregates )
+        {
+            Expression subexp = new Expression( subExpression, "aggregated",
+                new HashSet<DataElement>( sourceElements ) );
+            ListMap<Integer, Double> aggregateValues = getAggregateValueMap( subexp, source, period, window, n_years,
+                px, periodTypes, lastUpdatedMap, sourceElements );
+            for ( Integer attributeOptionCombo : aggregateValues.keySet() )
+            {
+                ListMap<String, Double> aggmap;
+                if ( aggregateValuesMap.containsKey( attributeOptionCombo ) )
+                    aggmap = aggregateValuesMap.get( attributeOptionCombo );
+                else
+                {
+                    aggmap = new ListMap<>();
+                    aggregateValuesMap.put( attributeOptionCombo, aggmap );
+                }
+
+                aggmap.put( subExpression, aggregateValues.get( attributeOptionCombo ) );
+            }
+        }
+
+        for ( Map.Entry<Integer, Map<DataElementOperand, Double>> entry : valueMap.entrySet() )
+        {
+            Double value = context.getExpressionService().getExpressionValue( expression, entry.getValue(),
+                context.getConstantMap(), null, null, incompleteValuesMap.getSet( entry.getKey() ),
+                aggregateValuesMap.get( entry.getKey() ) );
+
+            if ( MathUtils.isValidDouble( value ) )
+            {
+                expressionValueMap.put( entry.getKey(), value );
+            }
+        }
+
+        return expressionValueMap;
+    }
+
 }

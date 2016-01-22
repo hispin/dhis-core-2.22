@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataelement;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -98,12 +98,12 @@ public class DataElementCategoryComboServiceTest
         categoryB = new DataElementCategory( "CategoryB" );
         categoryC = new DataElementCategory( "CategoryC" );
         
-        categoryA.addDataElementCategoryOption( categoryOptionA );
-        categoryA.addDataElementCategoryOption( categoryOptionB );
-        categoryB.addDataElementCategoryOption( categoryOptionC );
-        categoryB.addDataElementCategoryOption( categoryOptionD );
-        categoryC.addDataElementCategoryOption( categoryOptionE );
-        categoryC.addDataElementCategoryOption( categoryOptionF );
+        categoryA.addCategoryOption( categoryOptionA );
+        categoryA.addCategoryOption( categoryOptionB );
+        categoryB.addCategoryOption( categoryOptionC );
+        categoryB.addCategoryOption( categoryOptionD );
+        categoryC.addCategoryOption( categoryOptionE );
+        categoryC.addCategoryOption( categoryOptionF );
         
         categoryService.addDataElementCategory( categoryA );
         categoryService.addDataElementCategory( categoryB );
@@ -212,7 +212,7 @@ public class DataElementCategoryComboServiceTest
         assertEquals( 8, categoryComboA.getOptionCombos().size() );
         assertOptionCombos( categoryComboA.getOptionCombos() );
         
-        categoryC.addDataElementCategoryOption( categoryOptionG );
+        categoryC.addCategoryOption( categoryOptionG );
         categoryService.updateDataElementCategory( categoryC );
         
         categoryService.updateOptionCombos( categoryComboA );
@@ -258,7 +258,7 @@ public class DataElementCategoryComboServiceTest
         assertEquals( 8, categoryComboA.getOptionCombos().size() );
         assertOptionCombos( categoryComboA.getOptionCombos() );
         
-        categoryC.addDataElementCategoryOption( categoryOptionG );
+        categoryC.addCategoryOption( categoryOptionG );
         categoryService.updateDataElementCategory( categoryC );
         
         categoryService.updateOptionCombos( categoryC );

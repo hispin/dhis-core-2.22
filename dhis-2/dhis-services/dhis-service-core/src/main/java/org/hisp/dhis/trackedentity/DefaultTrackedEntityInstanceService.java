@@ -1,7 +1,7 @@
 package org.hisp.dhis.trackedentity;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hisp.dhis.common.OrganisationUnitSelectionMode.*;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ACCESSIBLE;
+import static org.hisp.dhis.common.OrganisationUnitSelectionMode.ALL;
 import static org.hisp.dhis.trackedentity.TrackedEntityInstanceQueryParams.*;
 
 /**
@@ -122,13 +123,24 @@ public class DefaultTrackedEntityInstanceService
         validate( params );
 
         params.setUser( currentUserService.getCurrentUser() );
-        
+
         if ( !params.isPaging() && !params.isSkipPaging() )
         {
             params.setDefaultPaging();
         }
 
         return trackedEntityInstanceStore.getTrackedEntityInstances( params );
+    }
+
+    @Override
+    public int getTrackedEntityInstanceCount( TrackedEntityInstanceQueryParams params )
+    {
+        decideAccess( params );
+        validate( params );
+
+        params.setUser( currentUserService.getCurrentUser() );
+
+        return trackedEntityInstanceStore.countTrackedEntityInstances( params );
     }
 
     // TODO lower index on attribute value?
@@ -139,7 +151,7 @@ public class DefaultTrackedEntityInstanceService
         validate( params );
 
         params.setUser( currentUserService.getCurrentUser() );
-        
+
         // ---------------------------------------------------------------------
         // If params of type query and no attributes or filters defined, use
         // attributes from program if program is defined, if not, use 

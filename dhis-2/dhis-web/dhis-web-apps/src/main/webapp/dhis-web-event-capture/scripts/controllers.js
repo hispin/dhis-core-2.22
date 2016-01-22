@@ -339,7 +339,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                             if($scope.prStDes[dataValue.dataElement]){
                                 var val = dataValue.value;                                  
                                 if(angular.isObject($scope.prStDes[dataValue.dataElement].dataElement)){
-                                    val = CommonUtils.formatDataValue(val, $scope.prStDes[dataValue.dataElement].dataElement, $scope.optionSets, 'USER');                                                                          
+                                    val = CommonUtils.formatDataValue(null, val, $scope.prStDes[dataValue.dataElement].dataElement, $scope.optionSets, 'USER');                                                                          
                                 }
 
                                 event[dataValue.dataElement] = val;
@@ -511,6 +511,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         $scope.editingEventInGrid = false;
         $scope.currentElement.updated = false;        
         $scope.currentEvent = {};
+        $scope.fileNames['SINGLE_EVENT'] = [];
         $scope.currentElement = {};
         $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
     };
@@ -518,6 +519,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.showEventRegistration = function(){        
         $scope.displayCustomForm = $scope.customForm ? true : false;
         $scope.currentEvent = {};
+        $scope.fileNames['SINGLE_EVENT'] = [];
         $scope.eventRegistration = !$scope.eventRegistration;          
         $scope.currentEvent = angular.copy($scope.newDhis2Event);        
         $scope.outerForm.submitted = false;
@@ -592,7 +594,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             var val = $scope.currentEvent[dataElement];
             if(val){
                 valueExists = true;                
-                val = CommonUtils.formatDataValue(val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');
+                val = CommonUtils.formatDataValue(null, val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');
             }
             dataValues.push({dataElement: dataElement, value: val});
         }
@@ -690,6 +692,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.currentEvent = {};
                 $scope.currentEvent = angular.copy($scope.newDhis2Event); 
                 $scope.currentEventOriginialValue = angular.copy($scope.currentEvent);
+                $scope.fileNames['SINGLE_EVENT'] = [];
                                
                 $scope.note = {};
                 $scope.outerForm.submitted = false;
@@ -723,7 +726,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         var dataValues = [];        
         for(var dataElement in $scope.prStDes){
             var val = $scope.currentEvent[dataElement];            
-            val = CommonUtils.formatDataValue(val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
+            val = CommonUtils.formatDataValue(null, val, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
             dataValues.push({dataElement: dataElement, value: val});
         }
         
@@ -851,7 +854,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
         }        
                 
         if( newValue !== oldValue ){            
-            newValue = CommonUtils.formatDataValue(newValue, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
+            newValue = CommonUtils.formatDataValue(null, newValue, $scope.prStDes[dataElement].dataElement, $scope.optionSets, 'API');            
             var updatedSingleValueEvent = {event: $scope.currentEvent.event, dataValues: [{value: newValue, dataElement: dataElement}]};
             var updatedFullValueEvent = DHIS2EventService.reconstructEvent($scope.currentEvent, $scope.selectedProgramStage.programStageDataElements);
 
@@ -900,7 +903,8 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                     }
                 }
                 $scope.dhis2Events.splice(index,1);                
-                $scope.currentEvent = {};             
+                $scope.currentEvent = {}; 
+                $scope.fileNames['SINGLE_EVENT'] = [];
             });
         });        
     };
@@ -1111,6 +1115,19 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.formatNumberResult = function(val){        
         return dhis2.validation.isNumber(val) ? val : '';
     };
+    
+    //check if field is hidden
+    $scope.isHidden = function(id) {
+        //In case the field contains a value, we cant hide it. 
+        //If we hid a field with a value, it would falsely seem the user was aware that the value was entered in the UI.
+        if($scope.currentEvent[id]) {
+           return false; 
+        }
+        else {
+            return $scope.hiddenFields[id];
+        }
+    }; 
+    
     
     $scope.saveDatavalue = function(){        
         $scope.executeRules();

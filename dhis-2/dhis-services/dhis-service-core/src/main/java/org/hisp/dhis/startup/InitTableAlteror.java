@@ -1,7 +1,7 @@
 package org.hisp.dhis.startup;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,12 +33,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
-import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
-
 
 /**
  * @author Lars Helge Overland
@@ -53,12 +49,6 @@ public class InitTableAlteror
 
     @Autowired
     private StatementBuilder statementBuilder;
-
-    @Resource( name = "stringEncryptor" )
-    PBEStringEncryptor oldPBEStringEncryptor;
-
-    @Resource( name = "strongStringEncryptor" )
-    PBEStringEncryptor newPBEStringEncryptor;
 
     // -------------------------------------------------------------------------
     // Execute
@@ -88,27 +78,41 @@ public class InitTableAlteror
         updateFeatureTypes();
         updateValidationRuleEnums();
         updateProgramStatus();
-        updateSmtpPasswordColumn();
+        removeDeprecatedConfigurationColumns();
         updateTimestamps();
+        updateCompletedBy();
 
         executeSql( "ALTER TABLE program ALTER COLUMN \"type\" TYPE varchar(255);" );
         executeSql( "update program set \"type\"='WITH_REGISTRATION' where type='1' or type='2'" );
         executeSql( "update program set \"type\"='WITHOUT_REGISTRATION' where type='3'" );
     }
 
+    private void updateCompletedBy()
+    {
+        executeSql( "update programinstance set completedby=completeduser where completedby is null" );
+        executeSql( "update programstageinstance set completedby=completeduser where completedby is null" );
+
+        executeSql( "alter table programinstance drop column completeduser" );
+        executeSql( "alter table programstageinstance drop column completeduser" );
+    }
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void updateSmtpPasswordColumn()
+    private void removeDeprecatedConfigurationColumns()
     {
         try
         {
-            executeSql( "UPDATE configuration SET smtppassword = smptpassword" );
             executeSql( "ALTER TABLE configuration DROP COLUMN smptpassword" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN smtppassword" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverurl" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverusername" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remotepassword" );
+            executeSql( "ALTER TABLE configuration DROP COLUMN remoteserverpassword" );
 
         }
-        catch(Exception ex)
+        catch ( Exception ex )
         {
             log.debug( ex );
         }
@@ -127,6 +131,7 @@ public class InitTableAlteror
         executeSql( "update trackedentityattributevalue set created=now() where created is null" );
         executeSql( "update trackedentityattributevalue set lastupdated=now() where lastupdated is null" );
     }
+
     private void updateProgramStatus()
     {
         executeSql( "alter table programinstance alter column status type varchar(50)" );
@@ -230,6 +235,17 @@ public class InitTableAlteror
         executeSql( "update trackedentityattribute set valuetype='TEXT' where valuetype is null" );
 
         executeSql( "update optionset set valuetype='TEXT' where valuetype is null" );
+
+        executeSql( "update attribute set valuetype='TEXT' where valuetype='string'" );
+        executeSql( "update attribute set valuetype='LONG_TEXT' where valuetype='text'" );
+        executeSql( "update attribute set valuetype='BOOLEAN' where valuetype='bool'" );
+        executeSql( "update attribute set valuetype='DATE' where valuetype='date'" );
+        executeSql( "update attribute set valuetype='NUMBER' where valuetype='number'" );
+        executeSql( "update attribute set valuetype='INTEGER' where valuetype='integer'" );
+        executeSql( "update attribute set valuetype='INTEGER_POSITIVE' where valuetype='positive_integer'" );
+        executeSql( "update attribute set valuetype='INTEGER_NEGATIVE' where valuetype='negative_integer'" );
+        executeSql( "update attribute set valuetype='TEXT' where valuetype='option_set'" );
+        executeSql( "update attribute set valuetype='TEXT' where valuetype is null" );
     }
 
     private void upgradeProgramStageDataElements()

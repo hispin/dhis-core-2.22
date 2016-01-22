@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller.event;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,13 +28,15 @@ package org.hisp.dhis.webapi.controller.event;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.common.collect.Lists;
+import com.google.common.io.ByteSource;
 import org.apache.commons.io.IOUtils;
+import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.commons.util.StreamUtils;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementService;
-import org.hisp.dhis.common.IdSchemes;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.events.event.DataValue;
 import org.hisp.dhis.dxf2.events.event.Event;
@@ -55,7 +57,15 @@ import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
 import org.hisp.dhis.dxf2.webmessage.responses.FileResourceWebMessageResponse;
 import org.hisp.dhis.event.EventStatus;
+import org.hisp.dhis.fieldfilter.FieldFilterService;
+import org.hisp.dhis.fileresource.FileResource;
+import org.hisp.dhis.fileresource.FileResourceDomain;
+import org.hisp.dhis.fileresource.FileResourceService;
+import org.hisp.dhis.fileresource.FileResourceStorageStatus;
 import org.hisp.dhis.importexport.ImportStrategy;
+import org.hisp.dhis.node.NodeUtils;
+import org.hisp.dhis.node.Preset;
+import org.hisp.dhis.node.types.RootNode;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStageInstanceService;
 import org.hisp.dhis.program.ProgramStatus;
@@ -63,6 +73,7 @@ import org.hisp.dhis.scheduling.TaskCategory;
 import org.hisp.dhis.scheduling.TaskId;
 import org.hisp.dhis.system.scheduling.Scheduler;
 import org.hisp.dhis.user.CurrentUserService;
+import org.hisp.dhis.webapi.service.ContextService;
 import org.hisp.dhis.webapi.service.WebMessageService;
 import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
@@ -77,16 +88,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.hisp.dhis.fileresource.FileResource;
-import org.hisp.dhis.fileresource.FileResourceDomain;
-import org.hisp.dhis.fileresource.FileResourceService;
-import org.hisp.dhis.fileresource.FileResourceStorageStatus;
-
-import com.google.common.io.ByteSource;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -142,9 +147,15 @@ public class EventController
 
     @Autowired
     private ProgramStageInstanceService programStageInstanceService;
-    
+
     @Autowired
     private FileResourceService fileResourceService;
+
+    @Autowired
+    private FieldFilterService fieldFilterService;
+
+    @Autowired
+    private ContextService contextService;
 
     // -------------------------------------------------------------------------
     // READ
@@ -152,7 +163,7 @@ public class EventController
 
     @RequestMapping( value = "", method = RequestMethod.GET )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
-    public String getEvents(
+    public @ResponseBody RootNode getEvents(
         @RequestParam( required = false ) String program,
         @RequestParam( required = false ) String programStage,
         @RequestParam( required = false ) ProgramStatus programStatus,
@@ -176,6 +187,12 @@ public class EventController
         throws WebMessageException
     {
         WebOptions options = new WebOptions( parameters );
+        List<String> fields = Lists.newArrayList( contextService.getParameterValues( "fields" ) );
+
+        if ( fields.isEmpty() )
+        {
+            fields.addAll( Preset.ALL.getFields() );
+        }
 
         DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( attributeCc, attributeCos );
 
@@ -189,12 +206,9 @@ public class EventController
 
         Events events = eventService.getEvents( params );
 
-        if ( options.hasLinks() )
+        for ( Event event : events.getEvents() )
         {
-            for ( Event event : events.getEvents() )
-            {
-                event.setHref( ContextUtils.getRootPath( request ) + RESOURCE_PATH + "/" + event.getEvent() );
-            }
+            event.setHref( ContextUtils.getRootPath( request ) + RESOURCE_PATH + "/" + event.getEvent() );
         }
 
         if ( !skipMeta && params.getProgram() != null )
@@ -210,7 +224,16 @@ public class EventController
             response.addHeader( "Content-Disposition", "attachment; filename=" + attachment );
         }
 
-        return "events";
+        RootNode rootNode = NodeUtils.createMetadata();
+
+        if ( events.getPager() != null )
+        {
+            rootNode.addChild( NodeUtils.createPager( events.getPager() ) );
+        }
+
+        rootNode.addChild( fieldFilterService.filter( Event.class, events.getEvents(), fields ) );
+
+        return rootNode;
     }
 
     @RequestMapping( value = "", method = RequestMethod.GET, produces = { "application/csv", "application/csv+gzip", "text/csv" } )
@@ -318,10 +341,7 @@ public class EventController
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + uid ) );
         }
 
-        if ( options.hasLinks() )
-        {
-            event.setHref( ContextUtils.getRootPath( request ) + RESOURCE_PATH + "/" + uid );
-        }
+        event.setHref( ContextUtils.getRootPath( request ) + RESOURCE_PATH + "/" + uid );
 
         model.addAttribute( "model", event );
         model.addAttribute( "viewClass", options.getViewClass( "detailed" ) );
@@ -337,7 +357,7 @@ public class EventController
         {
             Map<String, String> dataElements = new HashMap<>();
 
-            for ( DataElement de : program.getAllDataElements() )
+            for ( DataElement de : program.getDataElements() )
             {
                 dataElements.put( de.getUid(), de.getDisplayName() );
             }
@@ -348,12 +368,12 @@ public class EventController
         return metaData;
     }
 
-    @RequestMapping( value = "/files", method = RequestMethod.GET)
+    @RequestMapping( value = "/files", method = RequestMethod.GET )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_TRACKED_ENTITY_DATAVALUE_ADD')" )
     public void getEventDataValueFile( @RequestParam String eventUid, @RequestParam String dataElementUid, HttpServletResponse response, HttpServletRequest request ) throws Exception
     {
         Event event = eventService.getEvent( eventUid );
-        
+
         if ( event == null )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Event not found for ID " + eventUid ) );
@@ -365,32 +385,32 @@ public class EventController
         {
             throw new WebMessageException( WebMessageUtils.notFound( "DataElement not found for ID " + dataElementUid ) );
         }
-        
+
         if ( !dataElement.isFileType() )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "DataElement must be of type file" ) );
-        }        
-        
+        }
+
         // ---------------------------------------------------------------------
         // Get file resource
         // ---------------------------------------------------------------------
 
         String uid = null;
-        
+
         for ( DataValue value : event.getDataValues() )
         {
             if ( value.getDataElement() == dataElement.getUid() )
             {
                 uid = value.getValue();
                 break;
-            }            
+            }
         }
-        
-        if( uid == null)
+
+        if ( uid == null )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "DataElement must be of type file" ) );
         }
-        
+
 
         FileResource fileResource = fileResourceService.getFileResource( uid );
 
@@ -463,9 +483,9 @@ public class EventController
         {
             IOUtils.closeQuietly( inputStream );
         }
-        
+
     }
-    
+
     // -------------------------------------------------------------------------
     // CREATE
     // -------------------------------------------------------------------------

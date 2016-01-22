@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.dxf2.webmessage.WebMessage;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
-import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
+import org.hisp.dhis.dxf2.common.Status;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.external.location.LocationManagerException;
 import org.hisp.dhis.setting.SettingKey;
@@ -165,7 +165,7 @@ public class StaticContentController
 
         if( !mimeType.isCompatibleWith( MimeTypeUtils.IMAGE_PNG ))
         {
-            throw new WebMessageException( new WebMessage( WebMessageStatus.WARNING, HttpStatus.UNSUPPORTED_MEDIA_TYPE ) );
+            throw new WebMessageException( new WebMessage( Status.WARNING, HttpStatus.UNSUPPORTED_MEDIA_TYPE ) );
         }
 
         // Only keys in the white list are accepted at the current time

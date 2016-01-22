@@ -1,7 +1,7 @@
 package org.hisp.dhis.eventreport;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,24 @@ package org.hisp.dhis.eventreport;
  */
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
+import org.hisp.dhis.common.AnalyticalObjectService;
+import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
+import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
-import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Chau Thu Tran
  */
 public class EventReportDeletionHandler
-    extends DeletionHandler
+    extends GenericAnalyticalObjectDeletionHandler<EventReport>
 {
     // -------------------------------------------------------------------------
     // Dependencies
@@ -59,13 +66,52 @@ public class EventReportDeletionHandler
     }
 
     @Override
+    protected AnalyticalObjectService<EventReport> getAnalyticalObjectService()
+    {
+        return eventReportService;
+    }
+
+    @Override
+    public void deleteIndicator( Indicator indicator )
+    {
+        // Ignore default implementation
+    }
+    
+    @Override
+    public void deleteDataElement( DataElement dataElement )
+    {
+        List<EventReport> eventReports = getAnalyticalObjectService().getAnalyticalObjectsByDataDimension( dataElement );
+        
+        for ( EventReport report : eventReports )
+        {
+            Iterator<TrackedEntityDataElementDimension> dimensions = report.getDataElementDimensions().iterator();
+            
+            while ( dimensions.hasNext() )
+            {
+                if ( dimensions.next().getDataElement().equals( dataElement ) )
+                {
+                    dimensions.remove();
+                }
+            }
+            
+            eventReportService.update( report );
+        }
+    }
+
+    @Override
+    public void deleteDataSet( DataSet dataSet )
+    {
+        // Ignore default implementation
+    }
+
+    @Override
     public void deleteProgramStage( ProgramStage programStage )
     {
         Collection<EventReport> charts = eventReportService.getAllEventReports();
         
-        for( EventReport chart : charts )
+        for ( EventReport chart : charts )
         {
-            if( chart.getProgramStage().equals( programStage ))
+            if ( chart.getProgramStage().equals( programStage ))
             {
                eventReportService.deleteEventReport( chart );
             }
@@ -77,7 +123,7 @@ public class EventReportDeletionHandler
     {
         Collection<EventReport> charts = eventReportService.getAllEventReports();
         
-        for( EventReport chart : charts )
+        for ( EventReport chart : charts )
         {
             if( chart.getProgram().equals( program ))
             {

@@ -1,7 +1,7 @@
 package org.hisp.dhis.webapi.utils;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.hisp.dhis.dxf2.metadata.ImportTypeSummary;
 import org.hisp.dhis.validation.ValidationViolation;
 import org.hisp.dhis.dxf2.webmessage.WebMessage;
-import org.hisp.dhis.dxf2.webmessage.WebMessageStatus;
+import org.hisp.dhis.dxf2.common.Status;
 import org.hisp.dhis.dxf2.webmessage.responses.ValidationViolationsWebMessageResponse;
 import org.springframework.http.HttpStatus;
 
@@ -45,7 +45,7 @@ import java.util.List;
  */
 public final class WebMessageUtils
 {
-    public static WebMessage createWebMessage( String message, WebMessageStatus status, HttpStatus httpStatus )
+    public static WebMessage createWebMessage( String message, Status status, HttpStatus httpStatus )
     {
         WebMessage webMessage = new WebMessage( status, httpStatus );
         webMessage.setMessage( message );
@@ -53,7 +53,7 @@ public final class WebMessageUtils
         return webMessage;
     }
 
-    public static WebMessage createWebMessage( String message, String devMessage, WebMessageStatus status, HttpStatus httpStatus )
+    public static WebMessage createWebMessage( String message, String devMessage, Status status, HttpStatus httpStatus )
     {
         WebMessage webMessage = new WebMessage( status, httpStatus );
         webMessage.setMessage( message );
@@ -64,108 +64,108 @@ public final class WebMessageUtils
 
     public static WebMessage ok( String message )
     {
-        return createWebMessage( message, WebMessageStatus.OK, HttpStatus.OK );
+        return createWebMessage( message, Status.OK, HttpStatus.OK );
     }
 
     public static WebMessage ok( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.OK, HttpStatus.OK );
+        return createWebMessage( message, devMessage, Status.OK, HttpStatus.OK );
     }
 
     public static WebMessage created( String message )
     {
-        return createWebMessage( message, WebMessageStatus.OK, HttpStatus.CREATED );
+        return createWebMessage( message, Status.OK, HttpStatus.CREATED );
     }
 
     public static WebMessage created( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.OK, HttpStatus.CREATED );
+        return createWebMessage( message, devMessage, Status.OK, HttpStatus.CREATED );
     }
 
     public static WebMessage notFound( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.NOT_FOUND );
+        return createWebMessage( message, Status.ERROR, HttpStatus.NOT_FOUND );
     }
 
     public static WebMessage notFound( Class<?> klass, String id )
     {
         String message = klass.getSimpleName() + " with id " + id + " could not be found.";
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.NOT_FOUND );
+        return createWebMessage( message, Status.ERROR, HttpStatus.NOT_FOUND );
     }
 
     public static WebMessage notFound( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.NOT_FOUND );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.NOT_FOUND );
     }
 
     public static WebMessage conflict( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.CONFLICT );
+        return createWebMessage( message, Status.ERROR, HttpStatus.CONFLICT );
     }
 
     public static WebMessage conflict( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.CONFLICT );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.CONFLICT );
     }
 
     public static WebMessage error( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.INTERNAL_SERVER_ERROR );
+        return createWebMessage( message, Status.ERROR, HttpStatus.INTERNAL_SERVER_ERROR );
     }
 
     public static WebMessage error( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.INTERNAL_SERVER_ERROR );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.INTERNAL_SERVER_ERROR );
     }
 
     public static WebMessage badRequest( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.BAD_REQUEST );
+        return createWebMessage( message, Status.ERROR, HttpStatus.BAD_REQUEST );
     }
 
     public static WebMessage badRequest( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.BAD_REQUEST );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.BAD_REQUEST );
     }
 
     public static WebMessage forbidden( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.FORBIDDEN );
+        return createWebMessage( message, Status.ERROR, HttpStatus.FORBIDDEN );
     }
 
     public static WebMessage forbidden( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.FORBIDDEN );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.FORBIDDEN );
     }
 
     public static WebMessage serviceUnavailable( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.SERVICE_UNAVAILABLE );
+        return createWebMessage( message, Status.ERROR, HttpStatus.SERVICE_UNAVAILABLE );
     }
 
     public static WebMessage serviceUnavailable( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.SERVICE_UNAVAILABLE );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.SERVICE_UNAVAILABLE );
     }
 
     public static WebMessage unprocessableEntity( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.UNPROCESSABLE_ENTITY );
+        return createWebMessage( message, Status.ERROR, HttpStatus.UNPROCESSABLE_ENTITY );
     }
 
     public static WebMessage unprocessableEntity( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.UNPROCESSABLE_ENTITY );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.UNPROCESSABLE_ENTITY );
     }
 
     public static WebMessage unathorized( String message )
     {
-        return createWebMessage( message, WebMessageStatus.ERROR, HttpStatus.UNAUTHORIZED );
+        return createWebMessage( message, Status.ERROR, HttpStatus.UNAUTHORIZED );
     }
 
     public static WebMessage unathorized( String message, String devMessage )
     {
-        return createWebMessage( message, devMessage, WebMessageStatus.ERROR, HttpStatus.UNAUTHORIZED );
+        return createWebMessage( message, devMessage, Status.ERROR, HttpStatus.UNAUTHORIZED );
     }
 
     public static WebMessage importTypeSummary( ImportTypeSummary importTypeSummary )
@@ -175,19 +175,19 @@ public final class WebMessageUtils
         if ( importTypeSummary.isStatus( ImportStatus.ERROR ) )
         {
             webMessage.setMessage( "An error occurred, please check import summary." );
-            webMessage.setStatus( WebMessageStatus.ERROR );
+            webMessage.setStatus( Status.ERROR );
             webMessage.setHttpStatus( HttpStatus.CONFLICT );
         }
         else if ( !importTypeSummary.getConflicts().isEmpty() )
         {
             webMessage.setMessage( "One more conflicts encountered, please check import summary." );
-            webMessage.setStatus( WebMessageStatus.WARNING );
+            webMessage.setStatus( Status.WARNING );
             webMessage.setHttpStatus( HttpStatus.CONFLICT );
         }
         else
         {
             webMessage.setMessage( "Import was successful." );
-            webMessage.setStatus( WebMessageStatus.OK );
+            webMessage.setStatus( Status.OK );
             webMessage.setHttpStatus( HttpStatus.OK );
         }
 
@@ -203,19 +203,19 @@ public final class WebMessageUtils
         if ( importSummary.isStatus( ImportStatus.ERROR ) )
         {
             webMessage.setMessage( "An error occurred, please check import summary." );
-            webMessage.setStatus( WebMessageStatus.ERROR );
+            webMessage.setStatus( Status.ERROR );
             webMessage.setHttpStatus( HttpStatus.CONFLICT );
         }
         else if ( !importSummary.getConflicts().isEmpty() )
         {
             webMessage.setMessage( "One more conflicts encountered, please check import summary." );
-            webMessage.setStatus( WebMessageStatus.WARNING );
+            webMessage.setStatus( Status.WARNING );
             webMessage.setHttpStatus( HttpStatus.CONFLICT );
         }
         else
         {
             webMessage.setMessage( "Import was successful." );
-            webMessage.setStatus( WebMessageStatus.OK );
+            webMessage.setStatus( Status.OK );
             webMessage.setHttpStatus( HttpStatus.OK );
         }
 
@@ -231,13 +231,13 @@ public final class WebMessageUtils
         if ( importSummaries.getIgnored() > 0 )
         {
             webMessage.setMessage( "One more conflicts encountered, please check import summary." );
-            webMessage.setStatus( WebMessageStatus.WARNING );
+            webMessage.setStatus( Status.WARNING );
             webMessage.setHttpStatus( HttpStatus.CONFLICT );
         }
         else
         {
             webMessage.setMessage( "Import was successful." );
-            webMessage.setStatus( WebMessageStatus.OK );
+            webMessage.setStatus( Status.OK );
             webMessage.setHttpStatus( HttpStatus.OK );
         }
 
@@ -253,7 +253,7 @@ public final class WebMessageUtils
 
         if ( !validationViolations.isEmpty() )
         {
-            webMessage.setStatus( WebMessageStatus.ERROR );
+            webMessage.setStatus( Status.ERROR );
             webMessage.setHttpStatus( HttpStatus.BAD_REQUEST );
         }
 

@@ -1,7 +1,7 @@
 package org.hisp.dhis.query;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -437,7 +437,7 @@ public class InMemoryQueryEngineTest
 
         Query query = Query.from( schema );
         query.setObjects( dataElements );
-        query.addOrder( new Order( schema.getProperty( "name" ), false ) );
+        query.addOrder( new Order( schema.getProperty( "name" ), Direction.DESCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
@@ -457,7 +457,7 @@ public class InMemoryQueryEngineTest
 
         Query query = Query.from( schema );
         query.setObjects( dataElements );
-        query.addOrder( new Order( schema.getProperty( "name" ), true ) );
+        query.addOrder( new Order( schema.getProperty( "name" ), Direction.ASCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
@@ -477,7 +477,7 @@ public class InMemoryQueryEngineTest
 
         Query query = Query.from( schema );
         query.setObjects( dataElements );
-        query.addOrder( new Order( schema.getProperty( "created" ), false ) );
+        query.addOrder( new Order( schema.getProperty( "created" ), Direction.DESCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
@@ -497,7 +497,7 @@ public class InMemoryQueryEngineTest
 
         Query query = Query.from( schema );
         query.setObjects( dataElements );
-        query.addOrder( new Order( schema.getProperty( "created" ), true ) );
+        query.addOrder( new Order( schema.getProperty( "created" ), Direction.ASCENDING ) );
         List<? extends IdentifiableObject> objects = queryEngine.query( query );
 
         assertEquals( 6, objects.size() );
@@ -557,6 +557,18 @@ public class InMemoryQueryEngineTest
         assertEquals( 2, objects.size() );
         assertTrue( collectionContainsUid( objects, "abcdefghijA" ) );
         assertTrue( collectionContainsUid( objects, "abcdefghijB" ) );
+    }
+
+    @Test
+    public void testCollectionDeep()
+    {
+        Query query = Query.from( schemaService.getDynamicSchema( DataElementGroup.class ) );
+        query.setObjects( dataElementGroups );
+
+        query.add( Restrictions.like( "dataElements.dataElementGroups.name", "A", MatchMode.END ) );
+        List<? extends IdentifiableObject> objects = queryEngine.query( query );
+
+        System.err.println( "xyz: " + objects );
     }
 
     @Test

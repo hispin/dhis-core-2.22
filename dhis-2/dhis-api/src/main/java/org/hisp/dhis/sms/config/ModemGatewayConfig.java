@@ -1,7 +1,9 @@
 package org.hisp.dhis.sms.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +53,7 @@ public class ModemGatewayConfig
 
     private boolean outbound;
 
+    @JsonProperty( value = "port" )
     public String getPort()
     {
         return port;
@@ -61,9 +64,22 @@ public class ModemGatewayConfig
         this.port = port;
     }
 
+    @JsonProperty( value = "name" )
+    public String getName()
+    {
+        return super.getName();
+    }
+
+    @JsonProperty( value = "baudrate" )
     public int getBaudRate()
     {
         return baudRate;
+    }
+
+    @JsonProperty( value = "default" )
+    public boolean getStatus()
+    {
+        return super.isDefault();
     }
 
     public void setBaudRate( int baudRate )
@@ -71,6 +87,7 @@ public class ModemGatewayConfig
         this.baudRate = baudRate;
     }
 
+    @JsonProperty( value = "manufacturer" )
     public String getManufacturer()
     {
         return manufacturer;
@@ -81,6 +98,7 @@ public class ModemGatewayConfig
         this.manufacturer = manufacturer;
     }
 
+    @JsonProperty( value = "model" )
     public String getModel()
     {
         return model;
@@ -91,6 +109,7 @@ public class ModemGatewayConfig
         this.model = model;
     }
 
+    @JsonProperty( value = "pin" )
     public String getPin()
     {
         return pin;
@@ -123,6 +142,7 @@ public class ModemGatewayConfig
         this.outbound = outbound;
     }
 
+    @JsonProperty( value = "getsimmemlocation" )
     public String getSimMemLocation()
     {
         return simMemLocation;
@@ -133,6 +153,7 @@ public class ModemGatewayConfig
         this.simMemLocation = simMemLocation;
     }
 
+    @JsonProperty( value = "poolinterval" )
     public Integer getPollingInterval()
     {
         return pollingInterval;

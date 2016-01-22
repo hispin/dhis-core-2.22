@@ -1,7 +1,7 @@
 package org.hisp.dhis.query;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,8 +33,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.hisp.dhis.system.util.DateUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -43,6 +45,12 @@ public final class QueryUtils
 {
     @SuppressWarnings( { "rawtypes", "unchecked" } )
     static public <T> T getValue( Class<T> klass, Object objectValue )
+    {
+        return getValue( klass, null, objectValue );
+    }
+
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
+    static public <T> T getValue( Class<T> klass, Class<?> secondaryKlass, Object objectValue )
     {
         if ( klass.isInstance( objectValue ) )
         {
@@ -117,7 +125,26 @@ public final class QueryUtils
             }
 
             String[] split = value.substring( 1, value.length() - 1 ).split( "," );
-            return (T) Lists.newArrayList( split );
+            List<String> items = Lists.newArrayList( split );
+
+            if ( secondaryKlass != null )
+            {
+                List<Object> convertedList = new ArrayList<>();
+
+                for ( String item : items )
+                {
+                    Object convertedValue = getValue( secondaryKlass, null, item );
+
+                    if ( convertedValue != null )
+                    {
+                        convertedList.add( convertedValue );
+                    }
+                }
+
+                return (T) convertedList;
+            }
+
+            return (T) items;
         }
 
         return null;

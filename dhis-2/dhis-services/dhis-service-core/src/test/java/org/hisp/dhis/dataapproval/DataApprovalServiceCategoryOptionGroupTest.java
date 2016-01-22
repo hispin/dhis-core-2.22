@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataapproval;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -317,10 +317,18 @@ public class DataApprovalServiceCategoryOptionGroupTest
         int chinaId = china.getId();
         int indiaId = india.getId();
 
+        String globalUid = global.getUid();
+        String americasUid = americas.getUid();
+        String asiaUid = asia.getUid();
+        String brazilUid = brazil.getUid();
+        String chinaUid = china.getUid();
+        String indiaUid = india.getUid();
+
         jdbcTemplate.execute(
                 "CREATE TABLE _orgunitstructure "+
                         "(" +
                         "  organisationunitid integer NOT NULL, " +
+                        "  organisationunituid character(11) NOT NULL, " +
                         "  level integer, " +
                         "  idlevel1 integer, " +
                         "  idlevel2 integer, " +
@@ -328,12 +336,12 @@ public class DataApprovalServiceCategoryOptionGroupTest
                         "  CONSTRAINT _orgunitstructure_pkey PRIMARY KEY (organisationunitid)" +
                         ");" );
 
-        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + globalId + ", 1, " + globalId + ", null, null);" );
-        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + americasId + ", 2, " + globalId + ", " + americasId + ", null);" );
-        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + asiaId + ", 2, " + globalId + ", " + asiaId + ", null);" );
-        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + brazilId + ", 3, " + globalId + ", " + americasId + ", " + brazilId + ");" );
-        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + chinaId + ", 3, " + globalId + ", " + asiaId + ", " + chinaId + ");" );
-        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + indiaId + ", 3, " + globalId + ", " + asiaId + ", " + indiaId + ");" );
+        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + globalId + ", '" + globalUid + "', 1, " + globalId + ", null, null);" );
+        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + americasId + ", '" + americasUid + "', 2, " + globalId + ", " + americasId + ", null);" );
+        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + asiaId + ", '" + asiaUid + "', 2, " + globalId + ", " + asiaId + ", null);" );
+        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + brazilId + ", '" + brazilUid + "', 3, " + globalId + ", " + americasId + ", " + brazilId + ");" );
+        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + chinaId + ", '" + chinaUid + "', 3, " + globalId + ", " + asiaId + ", " + chinaId + ");" );
+        jdbcTemplate.execute( "INSERT INTO _orgunitstructure VALUES (" + indiaId + ", '" + indiaUid + "', 3, " + globalId + ", " + asiaId + ", " + indiaId + ");" );
 
         userA = createUser( 'A' );
         userService.addUser( userA );
@@ -539,6 +547,8 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
         systemSettingManager.saveSystemSetting( SettingKey.HIDE_UNAPPROVED_DATA_IN_ANALYTICS, false );
         systemSettingManager.saveSystemSetting( SettingKey.ACCEPTANCE_REQUIRED_FOR_APPROVAL, false );
+
+        DataApprovalPermissionsEvaluator.invalidateCache();
     }
 
     // -------------------------------------------------------------------------
@@ -561,11 +571,11 @@ public class DataApprovalServiceCategoryOptionGroupTest
 
     private String getStatusString( DataApprovalStatus status )
     {
-        DataApproval da = status.getDataApproval();
-        String approval = da == null ? "approval=null" :
-                "ou=" + ( da.getOrganisationUnit() == null ? "(null)" : da.getOrganisationUnit().getName() )
-                        + " mechanism=" + ( da.getAttributeOptionCombo() == null ? "(null)" : da.getAttributeOptionCombo().getName() )
-                        + " level=" + ( da.getDataApprovalLevel() == null ? "(null)" : da.getDataApprovalLevel().getLevel() );
+        DataApprovalLevel dal = status.getActionLevel();
+        String approval = dal == null ? "approval=null" :
+                "ou=" + ( status.getOrganisationUnitUid() == null ? "(null)" : organisationUnitService.getOrganisationUnit( status.getOrganisationUnitUid() ).getName() )
+                        + " mechanism=" + ( status.getAttributeOptionComboUid() == null ? "(null)" : categoryService.getDataElementCategoryOptionCombo( status.getAttributeOptionComboUid() ).getName() )
+                        + " level=" + ( dal == null ? "(null)" : dal.getLevel() );
 
         DataApprovalPermissions p = status.getPermissions();
 

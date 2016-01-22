@@ -105,7 +105,7 @@ dhis2.period.DatePicker.prototype.createInstance = function( el, fromIso, option
   if (options) {
 	  options.altField = '#' + isoFieldId;
   }
-  
+
   $el.calendarsPicker($.extend({}, this.defaults, options));
 };
 
@@ -280,10 +280,10 @@ dhis2.period.PeriodGenerator.prototype.generateReversedPeriods = function( gener
  */
 dhis2.period.PeriodGenerator.prototype.filterOpenPeriods = function( generator, periods, n ) {
   var max = this.generators[generator].todayPlusPeriods(n);
-	
+
   var array = [];
   var today = this.calendar.today();
-  
+
   $.each(periods, function() {
     if( this['_endDate'].compareTo(max) < 0 ) {
       array.push(this);
@@ -465,7 +465,7 @@ $.extend(dhis2.period.BaseGenerator.prototype, {
   /**
    * Get the date calculated from current date added the given number of periods
    * of this period type.
-   * 
+   *
    * @param {int} n number of periods.
    * @return date object.
    */
@@ -540,7 +540,7 @@ $.extend(dhis2.period.WeeklyGenerator.prototype, {
     var year = offset + this.calendar.today().year();
     var periods = [];
 
-    var startDate = this.calendar.newDate(year, 1, 1);
+    var startDate = this.calendar.newDate(year, 1, 4); // first ISO week of the year always contains 4th January
     startDate.add(-(startDate.dayOfWeek() - 1), 'd'); // rewind to start of week, might cross year boundary
 
     // no reliable way to figure out number of weeks in a year (can differ in different calendars)
@@ -595,7 +595,7 @@ $.extend(dhis2.period.MonthlyGenerator.prototype, {
   $generate: function( offset ) {
     var year = offset + this.calendar.today().year();
     var periods = [];
-    
+
     for( var month = 1; month <= getHMISMonthsInYear(this.calendar, year); month++ ) {
       var startDate = this.calendar.newDate(year, month, 1);
       var endDate = this.calendar.newDate(startDate).set(startDate.daysInMonth(month), 'd');
@@ -978,15 +978,15 @@ dhis2.period.FinancialOctoberGenerator = function( calendar, format ) {
 dhis2.period.FinancialOctoberGenerator.prototype = Object.create(dhis2.period.FinancialBaseGenerator.prototype);
 
 /**
- * Convenience method to get DHIS2/HMIS months in a year 
+ * Convenience method to get DHIS2/HMIS months in a year
  */
 function getHMISMonthsInYear( calendar, year ) {
-	
+
 	var monthsInYear = calendar.monthsInYear(year);
-	
+
 	if( $.calendars.calendars.ethiopian && calendar instanceof $.calendars.calendars.ethiopian ){
 		monthsInYear = monthsInYear - 1;
 	}
-  	
+
   	return monthsInYear;
 }

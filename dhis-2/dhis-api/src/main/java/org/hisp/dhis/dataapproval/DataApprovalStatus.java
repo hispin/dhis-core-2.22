@@ -1,7 +1,7 @@
 package org.hisp.dhis.dataapproval;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,10 @@ package org.hisp.dhis.dataapproval;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.user.User;
+
+import java.util.Date;
+
 /**
  * Current status of data approval for a given selection of data from a
  * data set. Returns the approval state and, if approved for this particular
@@ -43,24 +47,52 @@ public class DataApprovalStatus
     private DataApprovalState state;
 
     /**
-     * If the selection of data is approved, the data approval object.
-     * If the selection is approved at more than one level, this is the
-     * approval object for the highest level of approval.
-     */
-    private DataApproval dataApproval;
-
-    /**
      * If the selection of data is approved, the data approval level object
      * at which it is approved. If the selection is approved at more than
      * one level, this is for the highest level of approval.
      */
-    private DataApprovalLevel dataApprovalLevel;
-    
+    private DataApprovalLevel approvedLevel;
+
+    /**
+     * If the selection of data is approved, the approval level (same as above)
+     * but if the selection is not approved, the level for this orgUnit at
+     * which it could be approved (if any).
+     */
+    private DataApprovalLevel actionLevel;
+
+    /*
+     * If the selection is approved, the OrganisationUnit UID.
+     */
+    private String organisationUnitUid;
+
+    /**
+     * If the selection is approved, the attribute category option combo UID.
+     */
+    private String attributeOptionComboUid;
+
+    /**
+     * If the selection is approved, whether or not it is accepted
+     * at the highest level approved.
+     */
+    private boolean accepted;
+
     /**
      * Permissions granted for current user for the this approval state.
      */
     private DataApprovalPermissions permissions;
-    
+
+    /**
+     * If the selection is approved, and if present (not always needed),
+     * the date at which the highest level of approval was created.
+     */
+    private Date created;
+
+    /**
+     * If the selection is approved, and if present (not always needed),
+     * The user who made this approval.
+     */
+    private User creator;
+
     // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
@@ -69,23 +101,28 @@ public class DataApprovalStatus
     {
     }
 
-    public DataApprovalStatus( DataApprovalState state, DataApproval dataApproval,
-        DataApprovalLevel dataApprovalLevel, DataApprovalPermissions permissions )
+    public DataApprovalStatus( DataApprovalState state )
     {
         this.state = state;
-        this.dataApproval = dataApproval;
-        this.dataApprovalLevel = dataApprovalLevel;
+    }
+
+    public DataApprovalStatus( DataApprovalState state,
+        DataApprovalLevel approvedLevel, DataApprovalLevel actionLevel,
+        String organisationUnitUid, String attributeOptionComboUid,
+        boolean accepted, DataApprovalPermissions permissions )
+    {
+        this.state = state;
+        this.approvedLevel = approvedLevel;
+        this.actionLevel = actionLevel;
+        this.organisationUnitUid = organisationUnitUid;
+        this.attributeOptionComboUid = attributeOptionComboUid;
+        this.accepted = accepted;
         this.permissions = permissions;
     }
 
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
-
-    public DataApproval getDataApproval()
-    {
-        return dataApproval;
-    }
 
     public DataApprovalState getState()
     {
@@ -97,19 +134,54 @@ public class DataApprovalStatus
         this.state = state;
     }
 
-    public void setDataApproval( DataApproval dataApproval )
+    public DataApprovalLevel getApprovedLevel()
     {
-        this.dataApproval = dataApproval;
+        return approvedLevel;
     }
 
-    public DataApprovalLevel getDataApprovalLevel()
+    public void setApprovedLevel( DataApprovalLevel approvedLevel )
     {
-        return dataApprovalLevel;
+        this.approvedLevel = approvedLevel;
     }
 
-    public void setDataApprovalLevel( DataApprovalLevel dataApprovalLevel )
+    public DataApprovalLevel getActionLevel()
     {
-        this.dataApprovalLevel = dataApprovalLevel;
+        return actionLevel;
+    }
+
+    public void setActionLevel( DataApprovalLevel actionLevel )
+    {
+        this.actionLevel = actionLevel;
+    }
+
+    public String getOrganisationUnitUid()
+    {
+        return organisationUnitUid;
+    }
+
+    public void setOrganisationUnitUid( String organisationUnitUid )
+    {
+        this.organisationUnitUid = organisationUnitUid;
+    }
+
+    public String getAttributeOptionComboUid()
+    {
+        return attributeOptionComboUid;
+    }
+
+    public void setAttributeOptionComboUid( String attributeOptionComboUid )
+    {
+        this.attributeOptionComboUid = attributeOptionComboUid;
+    }
+
+    public boolean isAccepted()
+    {
+        return accepted;
+    }
+
+    public void setAccepted( boolean accepted )
+    {
+        this.accepted = accepted;
     }
 
     public DataApprovalPermissions getPermissions()
@@ -120,5 +192,25 @@ public class DataApprovalStatus
     public void setPermissions( DataApprovalPermissions permissions )
     {
         this.permissions = permissions;
+    }
+
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated( Date created )
+    {
+        this.created = created;
+    }
+
+    public User getCreator()
+    {
+        return creator;
+    }
+
+    public void setCreator( User creator )
+    {
+        this.creator = creator;
     }
 }

@@ -1,7 +1,7 @@
 package org.hisp.dhis.trackedentityattributevalue;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,15 @@ public class TrackedEntityAttributeValue
      */
     private String value;
 
+    // -------------------------------------------------------------------------
+    // Transient properties
+    // -------------------------------------------------------------------------
+
+    private transient boolean auditValueIsSet = false;
+
+    private transient boolean valueIsSet = false;
+
+    private transient String auditValue;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -91,7 +100,8 @@ public class TrackedEntityAttributeValue
         setEntityInstance( entityInstance );
     }
 
-    public TrackedEntityAttributeValue( TrackedEntityAttribute attribute, TrackedEntityInstance entityInstance, String value )
+    public TrackedEntityAttributeValue( TrackedEntityAttribute attribute, TrackedEntityInstance entityInstance,
+        String value )
     {
         setAttribute( attribute );
         setEntityInstance( entityInstance );
@@ -187,7 +197,8 @@ public class TrackedEntityAttributeValue
     @Override
     public String toString()
     {
-        return "[Tracked attribute=" + attribute + ", entityInstance=" + entityInstance + ", value='" + getValue() + "']";
+        return "[Tracked attribute=" + attribute + ", entityInstance=" + entityInstance + ", value='" + getValue() +
+            "']";
     }
 
     // -------------------------------------------------------------------------
@@ -234,6 +245,12 @@ public class TrackedEntityAttributeValue
     public void setEncryptedValue( String encryptedValue )
     {
         this.encryptedValue = encryptedValue;
+
+        if ( getAttribute().getConfidential() )
+        {
+            auditValue = encryptedValue;
+            auditValueIsSet = true;
+        }
     }
 
     /**
@@ -252,11 +269,17 @@ public class TrackedEntityAttributeValue
     public void setPlainValue( String plainValue )
     {
         this.plainValue = plainValue;
+
+        if ( !getAttribute().getConfidential() )
+        {
+            auditValue = plainValue;
+            auditValueIsSet = true;
+        }
     }
 
     /**
-     * Returns the encrypted or the plain-text value, based on the attribute's
-     * confidential value.
+     * Returns the encrypted or the plain-text value based on the confidential
+     * state of the attribute.
      *
      * @return String with value, either plain-text or decrypted.
      */
@@ -269,14 +292,22 @@ public class TrackedEntityAttributeValue
     }
 
     /**
-     * Since we never can be 100% certain Attribute is not null, we store the
-     * value in a temporary variable. The getEncrypted and getPlaintext methods
-     * will handle this value when requested.
+     * Property which temporarily stores the attribute value. The
+     * {@link getEncryptedValue} and {@link getPlainValue} methods handle the
+     * value when requested.
      *
-     * @param value the value to be stored
+     * @param value the value to be stored.
      */
     public void setValue( String value )
     {
+        if ( !auditValueIsSet )
+        {
+            this.auditValue = valueIsSet ? this.value : value;
+            auditValueIsSet = true;
+        }
+
+        valueIsSet = true;
+
         this.value = value;
     }
 
@@ -306,5 +337,10 @@ public class TrackedEntityAttributeValue
     public void setEntityInstance( TrackedEntityInstance entityInstance )
     {
         this.entityInstance = entityInstance;
+    }
+
+    public String getAuditValue()
+    {
+        return auditValue;
     }
 }

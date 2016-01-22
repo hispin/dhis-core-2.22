@@ -1,7 +1,7 @@
 package org.hisp.dhis.webportal.module;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -152,10 +152,10 @@ public class DefaultModuleManager
     }
 
     @Override
-    public List<Module> getAccessibleMenuModulesAndApps()
+    public List<Module> getAccessibleMenuModulesAndApps( String contextPath )
     {
         List<Module> modules = getAccessibleMenuModules();
-        List<App> apps = appManager.getAccessibleApps();
+        List<App> apps = appManager.getAccessibleApps( contextPath );
 
         modules.addAll( apps.stream().map( Module::getModule ).collect( Collectors.toList() ) );
 

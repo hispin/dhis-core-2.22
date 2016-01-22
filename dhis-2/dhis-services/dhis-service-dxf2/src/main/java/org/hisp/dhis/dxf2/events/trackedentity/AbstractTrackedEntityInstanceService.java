@@ -1,7 +1,7 @@
 package org.hisp.dhis.dxf2.events.trackedentity;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -118,6 +118,12 @@ public abstract class AbstractTrackedEntityInstanceService
         }
 
         return teiItems;
+    }
+
+    @Override
+    public int getTrackedEntityInstanceCount( TrackedEntityInstanceQueryParams params )
+    {
+        return entityInstanceService.getTrackedEntityInstanceCount( params );
     }
 
     @Override

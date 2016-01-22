@@ -1,7 +1,7 @@
 package org.hisp.dhis.resourcetable.jdbc;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,7 +76,16 @@ public class JdbcResourceTableStore
         final List<String> createIndexSql = resourceTable.getCreateIndexStatements();
 
         // ---------------------------------------------------------------------
-        // Create table
+        // Drop temporary table if it exists
+        // ---------------------------------------------------------------------
+
+        if ( dbmsManager.tableExists( resourceTable.getTempTableName() ) )
+        {
+            jdbcTemplate.execute( resourceTable.getDropTempTableStatement() );
+        }
+                
+        // ---------------------------------------------------------------------
+        // Create temporary table
         // ---------------------------------------------------------------------
 
         log.info( "Create table SQL: " + createTableSql );
@@ -84,7 +93,7 @@ public class JdbcResourceTableStore
         jdbcTemplate.execute( createTableSql );
 
         // ---------------------------------------------------------------------
-        // Populate table through SQL or object batch update
+        // Populate temporary table through SQL or object batch update
         // ---------------------------------------------------------------------
 
         if ( populateTableSql.isPresent() )

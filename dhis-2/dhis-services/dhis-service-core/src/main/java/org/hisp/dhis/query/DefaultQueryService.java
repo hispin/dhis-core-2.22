@@ -1,7 +1,7 @@
 package org.hisp.dhis.query;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@ import java.util.List;
  *
  * @author Morten Olav Hansen <mortenoh@gmail.com>
  */
-public class DefaultQueryService 
+public class DefaultQueryService
     implements QueryService
 {
     private static final Log log = LogFactory.getLog( DefaultQueryService.class );
@@ -104,13 +104,13 @@ public class DefaultQueryService
         {
             objects = criteriaQueryEngine.query( query );
 
-            if ( query.getCriterions().isEmpty() )
+            if ( query.isEmpty() )
             {
                 return objects;
             }
         }
 
-        log.debug( "Doing in-memory filtering for " + query.getCriterions().size() + " criterions." );
+        log.debug( "Doing in-memory for " + query.getCriterions().size() + " criterions and " + query.getOrders().size() + " orders." );
 
         query.setObjects( objects );
         return inMemoryQueryEngine.query( query );

@@ -1,7 +1,7 @@
 package org.hisp.dhis.sms.incoming;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,11 @@ package org.hisp.dhis.sms.incoming;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+@JacksonXmlRootElement( localName = "inboundsms" )
 public class IncomingSms
     implements Serializable
 {
@@ -84,6 +89,8 @@ public class IncomingSms
         this.id = id;
     }
 
+    @JsonProperty( value = "smsencoding", defaultValue = "1" )
+    @JacksonXmlProperty( localName = "smsencoding" )
     public SmsMessageEncoding getEncoding()
     {
         return encoding;
@@ -94,6 +101,8 @@ public class IncomingSms
         this.encoding = encoding;
     }
 
+    @JsonProperty( value = "sentdate" )
+    @JacksonXmlProperty( localName = "sentdate" )
     public Date getSentDate()
     {
         return sentDate;
@@ -104,6 +113,8 @@ public class IncomingSms
         this.sentDate = sentDate;
     }
 
+    @JsonProperty( value = "receiveddate" )
+    @JacksonXmlProperty( localName = "receiveddate" )
     public Date getReceivedDate()
     {
         return receivedDate;
@@ -114,6 +125,8 @@ public class IncomingSms
         this.receivedDate = receivedDate;
     }
 
+    @JsonProperty( value = "originator" )
+    @JacksonXmlProperty( localName = "originator" )
     public String getOriginator()
     {
         return originator;
@@ -124,6 +137,8 @@ public class IncomingSms
         this.originator = originator;
     }
 
+    @JsonProperty( value = "gatewayid", defaultValue = "unknown" )
+    @JacksonXmlProperty( localName = "gatewayid" )
     public String getGatewayId()
     {
         return gatewayId;
@@ -134,6 +149,8 @@ public class IncomingSms
         this.gatewayId = gatewayId;
     }
 
+    @JsonProperty( value = "text" )
+    @JacksonXmlProperty( localName = "text" )
     public String getText()
     {
         return text;
@@ -162,6 +179,8 @@ public class IncomingSms
         this.bytes = bytes;
     }
 
+    @JsonProperty( value = "smsstatus", defaultValue = "1" )
+    @JacksonXmlProperty( localName = "smsstatus" )
     public SmsMessageStatus getStatus()
     {
         return status;

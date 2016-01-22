@@ -1,7 +1,7 @@
 package org.hisp.dhis.chart;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,20 +28,14 @@ package org.hisp.dhis.chart;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.dataelement.CategoryOptionGroup;
-import org.hisp.dhis.dataelement.DataElement;
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.indicator.Indicator;
-import org.hisp.dhis.organisationunit.OrganisationUnit;
-import org.hisp.dhis.period.Period;
-import org.hisp.dhis.system.deletion.DeletionHandler;
+import org.hisp.dhis.common.AnalyticalObjectService;
+import org.hisp.dhis.common.GenericAnalyticalObjectDeletionHandler;
 
 /**
  * @author Lars Helge Overland
- * @version $Id$
  */
 public class ChartDeletionHandler
-    extends DeletionHandler
+    extends GenericAnalyticalObjectDeletionHandler<Chart>
 {
     // -------------------------------------------------------------------------
     // Dependencies
@@ -59,44 +53,14 @@ public class ChartDeletionHandler
     // -------------------------------------------------------------------------
 
     @Override
+    protected AnalyticalObjectService<Chart> getAnalyticalObjectService()
+    {
+        return chartService;
+    }
+    
+    @Override
     public String getClassName()
     {
         return Chart.class.getSimpleName();
-    }
-
-    @Override
-    public String allowDeleteDataSet( DataSet dataSet )
-    {
-        return chartService.countDataSetCharts( dataSet ) == 0 ? null : ERROR;
-    }
-
-    @Override
-    public String allowDeleteIndicator( Indicator indicator )
-    {
-        return chartService.countIndicatorCharts( indicator ) == 0 ? null : ERROR;
-    }
-
-    @Override
-    public String allowDeleteDataElement( DataElement dataElement )
-    {
-        return chartService.countDataElementCharts( dataElement ) == 0 ? null : ERROR;
-    }
-
-    @Override
-    public String allowDeletePeriod( Period period )
-    {
-        return chartService.countPeriodCharts( period ) == 0 ? null : ERROR;
-    }
-    
-    @Override
-    public String allowDeleteOrganisationUnit( OrganisationUnit organisationUnit )
-    {
-        return chartService.countOrganisationUnitCharts( organisationUnit ) == 0 ? null : ERROR;
-    }
-    
-    @Override
-    public String allowDeleteCategoryOptionGroup( CategoryOptionGroup categoryOptionGroup )
-    {
-        return chartService.countCategoryOptionGroups( categoryOptionGroup ) == 0 ? null : ERROR;
     }
 }

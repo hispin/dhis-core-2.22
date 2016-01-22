@@ -1,7 +1,7 @@
 package org.hisp.dhis.trackedentity;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -118,6 +118,8 @@ public interface TrackedEntityInstanceService
      * @return List of TEIs matching the params
      */
     List<TrackedEntityInstance> getTrackedEntityInstances( TrackedEntityInstanceQueryParams params );
+
+    int getTrackedEntityInstanceCount( TrackedEntityInstanceQueryParams params );
 
     /**
      * Returns a TrackedEntityInstanceQueryParams based on the given input.

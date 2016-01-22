@@ -1,7 +1,7 @@
 package org.hisp.dhis.sms.outbound;
 
 /*
- * Copyright (c) 2004-2015, University of Oslo
+ * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,8 @@ public interface OutboundSmsTransportService
     extends SmsConfigurable
 {
     Map<String, String> getGatewayMap();
+
+    void updateGatewayMap( String key );
 
     void stopService();
 
