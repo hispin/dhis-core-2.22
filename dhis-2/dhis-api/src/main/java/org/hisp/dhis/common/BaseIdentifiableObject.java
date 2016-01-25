@@ -279,6 +279,7 @@ public class BaseIdentifiableObject
         this.lastUpdated = lastUpdated;
     }
 
+    @Override
     @JsonProperty( "attributeValues" )
     @JsonView( { DetailedView.class, ExportView.class } )
     @JacksonXmlElementWrapper( localName = "attributeValues", namespace = DxfNamespaces.DXF_2_0 )

@@ -154,7 +154,9 @@ public class Attribute
         {
             return false;
         }
+
         final Attribute other = (Attribute) obj;
+
         return Objects.equals( this.valueType, other.valueType )
             && Objects.equals( this.dataElementAttribute, other.dataElementAttribute )
             && Objects.equals( this.dataElementGroupAttribute, other.dataElementGroupAttribute )
@@ -490,6 +492,8 @@ public class Attribute
         this.sortOrder = sortOrder;
     }
 
+
+
     public List<Class<? extends IdentifiableObject>> getSupportedClasses()
     {
         List<Class<? extends IdentifiableObject>> klasses = new ArrayList<>();
@@ -516,7 +520,6 @@ public class Attribute
 
         return klasses;
     }
-
 
     @Override
     public void mergeWith( IdentifiableObject other, MergeStrategy strategy )
