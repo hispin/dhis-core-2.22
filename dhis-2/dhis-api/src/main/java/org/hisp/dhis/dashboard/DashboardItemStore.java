@@ -50,4 +50,6 @@ public interface DashboardItemStore
     int countReportDashboardItems( Report report );
 
     int countDocumentDashboardItems( Document document );
+
+    Dashboard getDashboardFromDashboardItem( DashboardItem dashboardItem );
 }

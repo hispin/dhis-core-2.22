@@ -29,12 +29,13 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import com.google.common.collect.Lists;
-
 import org.hisp.dhis.common.Pager;
+import org.hisp.dhis.dashboard.Dashboard;
 import org.hisp.dhis.dashboard.DashboardItem;
 import org.hisp.dhis.dashboard.DashboardItemShape;
 import org.hisp.dhis.dashboard.DashboardService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.query.Order;
 import org.hisp.dhis.schema.descriptors.DashboardItemSchemaDescriptor;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
@@ -48,7 +49,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 
 /**
@@ -93,6 +93,13 @@ public class DashboardItemController
         if ( item == null )
         {
             throw new WebMessageException( WebMessageUtils.notFound( "Dashboard item does not exist: " + uid ) );
+        }
+
+        Dashboard dashboard = dashboardService.getDashboardFromDashboardItem( item );
+
+        if ( !aclService.canUpdate( currentUserService.getCurrentUser(), dashboard ) )
+        {
+            throw new UpdateAccessDeniedException( "You don't have the proper permissions to update this dashboard." );
         }
 
         item.setShape( shape );
