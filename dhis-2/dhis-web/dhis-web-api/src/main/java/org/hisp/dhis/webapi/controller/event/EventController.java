@@ -79,6 +79,7 @@ import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -699,7 +700,15 @@ public class EventController
         }
 
         response.setStatus( HttpServletResponse.SC_OK );
-        ImportSummary importSummary = eventService.deleteEvent( uid );
-        webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
+
+        try
+        {
+            ImportSummary importSummary = eventService.deleteEvent( uid );
+            webMessageService.send( WebMessageUtils.importSummary( importSummary ), response, request );
+        }
+        catch ( Exception ex )
+        {
+            webMessageService.send( WebMessageUtils.conflict( "Unable to delete event " + uid, ex.getMessage() ), response, request );
+        }
     }
 }
