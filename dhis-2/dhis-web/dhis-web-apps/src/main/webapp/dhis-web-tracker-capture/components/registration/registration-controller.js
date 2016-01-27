@@ -22,8 +22,8 @@ trackerCapture.controller('RegistrationController',
                 TrackerRulesFactory,
                 TrackerRulesExecutionService,
                 ModalService,
-				// add for Generate CustomId for plan-customizations
-				CustomIDGenerationService) {
+                // add for Generate CustomId for plan-customizations
+                CustomIDGenerationService) {
     
     $scope.maxOptionSize = 30;
     
@@ -163,8 +163,8 @@ trackerCapture.controller('RegistrationController',
     };
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
-		
-		// add for Generate CustomId for plan-customizations 
+
+        // add for Generate CustomId for plan-customizations
         CustomIDGenerationService.validateAndCreateCustomId($scope.tei,$scope.selectedEnrollment.program,$scope.attributes,destination,$scope.optionSets,$scope.attributesById,$scope.selectedEnrollment.enrollmentDate).then(function(){
             goToDashboard( destination ? destination : 'DASHBOARD', teiId );
         });
