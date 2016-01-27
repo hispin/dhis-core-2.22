@@ -28,11 +28,7 @@ package org.hisp.dhis.dashboard.impl;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.hisp.dhis.chart.Chart;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
@@ -54,7 +50,10 @@ import org.hisp.dhis.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hisp.dhis.common.IdentifiableObjectUtils.getUids;
 
 /**
  * Note: The remove associations methods must be altered if caching is introduced.
@@ -303,6 +302,12 @@ public class DefaultDashboardService
     public DashboardItem getDashboardItem( String uid )
     {
         return dashboardItemStore.getByUid( uid );
+    }
+
+    @Override
+    public Dashboard getDashboardFromDashboardItem( DashboardItem dashboardItem )
+    {
+        return dashboardItemStore.getDashboardFromDashboardItem( dashboardItem );
     }
 
     @Override

@@ -88,7 +88,7 @@ public class DefaultTrackedEntityDataValueService
 
         if ( StringUtils.isEmpty( trackedEntityDataValue.getValue() ) )
         {
-            dataValueStore.delete( trackedEntityDataValue );
+            deleteTrackedEntityDataValue( trackedEntityDataValue );
         }
         else
         {

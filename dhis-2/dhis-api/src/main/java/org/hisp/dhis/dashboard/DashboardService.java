@@ -74,7 +74,9 @@ public interface DashboardService
     void updateDashboardItem( DashboardItem item );
     
     DashboardItem getDashboardItem( String uid );
-    
+
+    Dashboard getDashboardFromDashboardItem( DashboardItem dashboardItem );
+
     void deleteDashboardItem( DashboardItem item );
     
     int countMapDashboardItems( Map map );
