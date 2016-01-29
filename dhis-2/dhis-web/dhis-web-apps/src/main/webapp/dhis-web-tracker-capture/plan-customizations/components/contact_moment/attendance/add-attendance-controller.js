@@ -15,8 +15,7 @@ trackerCapture.controller('ADDAttendanceController',
         $scope.checkedTrackedEntityInstancesMap = [];
 
         $scope.alreadyAttendedTEIMap = [];
-
-
+        /*
         AjaxCalls.getEventsByTrackedEntityInstancesAndProgramStageUid( $modalInstance.selectedEventAttendance.programStage, $modalInstance.selectedEventAttendance.trackedEntityInstance ).then(function(attendEvents){
 
             if( attendEvents.events[0].event )
@@ -66,6 +65,7 @@ trackerCapture.controller('ADDAttendanceController',
             }
 
         });
+        */
 
         $scope.eventMemberMap = [];
 
@@ -134,42 +134,51 @@ trackerCapture.controller('ADDAttendanceController',
                 if( $scope.trackedEntityInstanceList.eventMembers )
                 {
 
-                    for (var i=0;i<$scope.trackedEntityInstanceList.eventMembers.length;i++)
-                    {
+                    //$scope.alreadyAttendedTEIMap = utilityService.getAlreadyAttendedTEIMap( $modalInstance.selectedEventAttendance.programStage, $modalInstance.selectedEventAttendance.trackedEntityInstance );
 
-                        /*
-                        if( $scope.alreadyAttendedTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntityInstance] )
+                    utilityService.getAlreadyAttendedTEIMap($modalInstance.selectedEventAttendance.programStage, $modalInstance.selectedEventAttendance.trackedEntityInstance).then(function( responseMap ){
+
+                        $scope.alreadyAttendedTEIMap = responseMap ;
+
+                        console.log(  " Map length -- " +  responseMap.length );
+
+
+                        for (var i=0;i<$scope.trackedEntityInstanceList.eventMembers.length;i++)
                         {
-                            $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = true;
+                            $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = "";
+
+                            if( $scope.alreadyAttendedTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntityInstance] )
+                            {
+                                $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = true;
+                            }
+                            else
+                            {
+                                $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = false;
+                            }
+
+                            //$scope.trackedEntityInstanceList.eventMembers[i].checkedValue = "";
+
+                            if (!$scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity])
+                            {
+                                $scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity] = [];
+                            }
+
+                            $scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity].push($scope.trackedEntityInstanceList.eventMembers[i]);
+
                         }
-                        else
-                        {
-                            $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = false;
+
+                        for (key in $scope.TEtoEventTEIMap){
+                            var TEIList = [];
+                            for (var j=0;j<$scope.TEtoEventTEIMap[key].length;j++) {
+                                updateMap($scope.TEtoEventTEIMap[key][j]);
+                                TEIList.push($scope.TEtoEventTEIMap[key][j])
+                            }
+                            $scope.TEWiseEventTEIs.push({
+                                id: key,
+                                trackedEntity: $scope.trackedEntityMap[key].displayName,
+                                TEIList :TEIList});
                         }
-                        */
-
-                        $scope.trackedEntityInstanceList.eventMembers[i].checkedValue = "";
-
-                        if (!$scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity])
-                        {
-                            $scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity] = [];
-                        }
-
-                        $scope.TEtoEventTEIMap[$scope.trackedEntityInstanceList.eventMembers[i].trackedEntity].push($scope.trackedEntityInstanceList.eventMembers[i]);
-
-                    }
-
-                    for (key in $scope.TEtoEventTEIMap){
-                        var TEIList = [];
-                        for (var j=0;j<$scope.TEtoEventTEIMap[key].length;j++) {
-                            updateMap($scope.TEtoEventTEIMap[key][j]);
-                            TEIList.push($scope.TEtoEventTEIMap[key][j])
-                        }
-                        $scope.TEWiseEventTEIs.push({
-                            id: key,
-                            trackedEntity: $scope.trackedEntityMap[key].displayName,
-                            TEIList :TEIList});
-                    }
+                    });
                 }
 
                 else
@@ -263,7 +272,10 @@ trackerCapture.controller('ADDAttendanceController',
                 }
                 */
 
-                //Add selected event to TEI associations
+                //Add selected event to TEI attended
+
+                event.eventMembers = [];
+
                 for (var i=0;i<$scope.trackedEntityInstanceList.eventMembers.length;i++)
                 {
                     if( $scope.trackedEntityInstanceList.eventMembers[i].checkedValue )

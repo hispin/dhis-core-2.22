@@ -21,7 +21,7 @@
                     <td align="center">{{$index+1}}</td>
                     <td ng-repeat="attr in attendanceAttributes">{{teiAttributesMapAttendance[TEI.trackedEntityInstance][attr.id]}}</td>
 
-                    <td><input  type="checkbox" ng-model="TEI.checkedValue"  ng-checked="false"></td>
+                    <td><input  type="checkbox" ng-model="TEI.checkedValue"></td>
 
                     <!--
                     <div ng-if="alreadyAttendedTEIMap[TEI.trackedEntityInstance]"  >

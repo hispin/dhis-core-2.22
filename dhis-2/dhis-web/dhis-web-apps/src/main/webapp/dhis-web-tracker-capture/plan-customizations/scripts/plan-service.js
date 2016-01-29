@@ -79,8 +79,6 @@ trackerCapture
                 return promise;
             },
 
-
-
             getRootOrgUnit : function(){
                 var promise = $http.get(  '../api/organisationUnits?filter=level:eq:1').then(function(response){
                     return response.data;
@@ -132,18 +130,81 @@ trackerCapture
                 });
                 return promise;
             }
+
         }
 
     })
-    .service('utilityService', function() {
-        return{
-            prepareIdToObjectMap : function(object,id){
+
+    .service('utilityService', function( AjaxCalls ) {
+        return {
+            prepareIdToObjectMap: function (object, id) {
                 var map = [];
-                for (var i=0;i<object.length;i++){
+                for (var i = 0; i < object.length; i++) {
                     map[object[i][id]] = object[i];
                 }
                 return map;
+            },
+
+            getAlreadyAttendedTEIMap: function (programStageUid, inviteTEI) {
+
+                var alreadyAttendedTEIMap = [];
+                var def = $.Deferred();
+
+                AjaxCalls.getEventsByTrackedEntityInstancesAndProgramStageUid(programStageUid, inviteTEI).then(function (attendEvents) {
+
+                    if( attendEvents.events[0].event )
+                    {
+                        var attendEvent = attendEvents.events[0].event;
+
+                        AjaxCalls.getEventMemberByEvent( attendEvent ).then(function( alreadyAttendedTEIs ){
+
+                            var attendTrackedEntityInstanceList = alreadyAttendedTEIs;
+
+                            AjaxCalls.getEventsByTrackedEntityInstancesAndProgramStage( inviteTEI ).then(function(inviteEventMember){
+
+                                var inviteEventUid = inviteEventMember.events[0].event;
+
+                                AjaxCalls.getEventMemberByEvent( inviteEventUid ).then(function(invitedTrackedEntityInstances){
+
+                                    var invitedTrackedEntityInstanceList = invitedTrackedEntityInstances;
+
+                                    if( invitedTrackedEntityInstanceList.eventMembers )
+                                    {
+                                        if( attendTrackedEntityInstanceList.eventMembers )
+                                        {
+                                            for (var i=0;i<invitedTrackedEntityInstanceList.eventMembers.length;i++)
+                                            {
+                                                for (var j=0;j<attendTrackedEntityInstanceList.eventMembers.length;j++)
+                                                {
+                                                    if( invitedTrackedEntityInstanceList.eventMembers[i].trackedEntityInstance == attendTrackedEntityInstanceList.eventMembers[j].trackedEntityInstance)
+                                                    {
+                                                        alreadyAttendedTEIMap[ attendTrackedEntityInstanceList.eventMembers[j].trackedEntityInstance] = true;
+
+                                                        //console.log(  " alreadyAttended -- " +  $scope.attendTrackedEntityInstanceList.eventMembers[j].trackedEntityInstance );
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        alreadyAttendedTEIMap[ invitedTrackedEntityInstanceList.eventMembers[i].trackedEntityInstance] = false;
+                                                        //console.log(  " invited -- " +  $scope.invitedTrackedEntityInstanceList.eventMembers[i].trackedEntityInstance );
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        def.resolve( alreadyAttendedTEIMap );
+                                    }
+
+                                });
+
+                            });
+                        });
+                    }
+
+                });
+
+                return def;
+                //return alreadyAttendedTEIMap;
             }
         }
-
-    })
+    });
