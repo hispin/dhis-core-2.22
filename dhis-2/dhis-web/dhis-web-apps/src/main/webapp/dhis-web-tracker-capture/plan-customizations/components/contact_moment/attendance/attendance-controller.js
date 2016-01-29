@@ -5,6 +5,9 @@ trackerCapture.controller('AttendanceController',
               $timeout,
               AjaxCalls,
               SessionStorageService,
+              CurrentSelection,
+              ModalService,
+              DHIS2EventFactory,
               utilityService) {
 
 
@@ -49,13 +52,13 @@ trackerCapture.controller('AttendanceController',
                 $scope.selectedEventAttendance = undefined;
             }
 
-
         });
 
 
         //get attributes for display in association widget
         AjaxCalls.getInvitationAndAttendedWidgetAttributes().then(function(attendanceAttributes){
             $scope.attendanceAttributes = attendanceAttributes;
+
         });
 
         // get all tracked entities
@@ -83,6 +86,7 @@ trackerCapture.controller('AttendanceController',
             });
         };
 
+
         $scope.updateMap = function(tei){
 
             for (var i=0;i<tei.attributes.length;i++){
@@ -92,5 +96,52 @@ trackerCapture.controller('AttendanceController',
                 }
                 $scope.teiAttributesMapAttendance[tei.trackedEntityInstance][tei.attributes[i].attribute] = tei.attributes[i].value;
             }
-        }
+        };
+
+        $scope.deleteTrackedEntityInstanceFromEvent = function(trackedEntityInstance, attendanceEvent){
+
+            var modalOptions = {
+                closeButtonText: 'cancel',
+                actionButtonText: 'delete',
+                headerText: 'delete',
+                bodyText: 'are_you_sure_to_delete'
+            };
+
+            ModalService.showModal({}, modalOptions).then(function(result){
+                //alert( trackedEntityInstance  + "--" + attendanceEvent.eventMembers.length );
+                if (attendanceEvent.eventMembers.length)
+                {
+                    for ( var i=0;i<attendanceEvent.eventMembers.length;i++ )
+                    {
+                        if (attendanceEvent.eventMembers[i].trackedEntityInstance == trackedEntityInstance)
+                        {
+                            attendanceEvent.eventMembers.splice(i,1);
+                        }
+                    }
+                }
+
+                if (attendanceEvent.eventMembers.length == 0)
+                {
+                    delete(attendanceEvent.eventMembers);
+                }
+
+                //update events list after delete tei
+
+                DHIS2EventFactory.update(attendanceEvent).then(function(response)
+                {
+                    if (response.httpStatus == "OK")
+                    {
+                        $timeout(function () {
+                            $rootScope.$broadcast('attendance-div', {event : attendanceEvent, show :true});
+                        }, 200);
+                    }
+                    else
+                    {
+                        alert("An unexpected thing occurred.");
+                    }
+                });
+
+            });
+        };
+
     });
