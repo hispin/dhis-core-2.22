@@ -22,8 +22,8 @@
             <tr ng-repeat="TEI in TEWise.TEIList">
                 <td>{{$index+1}}</td>
                 <td ng-repeat="attr in attendanceAttributes">{{teiAttributesMapAttendance[TEI.trackedEntityInstance][attr.id]}}</td>
-
-                <td  ng-click="deleteTrackedEntityInstanceFromEvent(TEI.trackedEntityInstance,selectedEventAttendance)" title="{{'delete'| translate}}">
+                <!-- for Delete TEI -->
+                <td  ng-click="deleteTrackedEntityInstanceFromEventAttendance(TEI.trackedEntityInstance,selectedEventAttendance)" title="{{'delete'| translate}}">
                     <i class="fa fa-trash-o alert-danger bold"></i>
                 </td>
 

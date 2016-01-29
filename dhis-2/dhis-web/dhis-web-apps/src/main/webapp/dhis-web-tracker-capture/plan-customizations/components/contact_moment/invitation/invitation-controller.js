@@ -4,6 +4,8 @@ trackerCapture.controller('InvitationController',
               $modal,
               $timeout,
               AjaxCalls,
+              ModalService,
+              DHIS2EventFactory,
               utilityService) {
 
         $scope.teiAttributesMapInvitation = [];
@@ -137,4 +139,53 @@ trackerCapture.controller('InvitationController',
                 $scope.teiAttributesMapInvitation[tei.trackedEntityInstance][tei.attributes[i].attribute] = tei.attributes[i].value;
             }
         }
+
+
+        // delete Tracked Entity Instance From Event Invitation
+        $scope.deleteTrackedEntityInstanceFromEventInvitation = function(trackedEntityInstance, invitationEvent){
+
+            var modalOptions = {
+                closeButtonText: 'cancel',
+                actionButtonText: 'delete',
+                headerText: 'delete',
+                bodyText: 'are_you_sure_to_delete'
+            };
+
+            ModalService.showModal({}, modalOptions).then(function(result){
+                //alert( trackedEntityInstance  + "--" + attendanceEvent.eventMembers.length );
+                if (invitationEvent.eventMembers.length)
+                {
+                    for ( var i=0;i<invitationEvent.eventMembers.length;i++ )
+                    {
+                        if (invitationEvent.eventMembers[i].trackedEntityInstance == trackedEntityInstance)
+                        {
+                            invitationEvent.eventMembers.splice(i,1);
+                        }
+                    }
+                }
+
+                if (invitationEvent.eventMembers.length == 0)
+                {
+                    delete(invitationEvent.eventMembers);
+                }
+
+                //update events list after delete tei
+
+                DHIS2EventFactory.update(invitationEvent).then(function(response)
+                {
+                    if (response.httpStatus == "OK")
+                    {
+                        $timeout(function () {
+                            $rootScope.$broadcast('invitation-div', {event : invitationEvent, show :true});
+                        }, 200);
+                    }
+                    else
+                    {
+                        alert("An unexpected thing occurred.");
+                    }
+                });
+
+            });
+        };
+
     });

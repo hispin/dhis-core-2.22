@@ -5,7 +5,6 @@ trackerCapture.controller('AttendanceController',
               $timeout,
               AjaxCalls,
               SessionStorageService,
-              CurrentSelection,
               ModalService,
               DHIS2EventFactory,
               utilityService) {
@@ -18,8 +17,7 @@ trackerCapture.controller('AttendanceController',
 
             $scope.TEtoEventTEIMap = [];
             $scope.TEWiseEventTEIs = [];
-
-
+            
             if (args.show)
             {
                 $scope.eventSelected = true;
@@ -98,7 +96,8 @@ trackerCapture.controller('AttendanceController',
             }
         };
 
-        $scope.deleteTrackedEntityInstanceFromEvent = function(trackedEntityInstance, attendanceEvent){
+        // delete Tracked Entity Instance From Event Attendance
+        $scope.deleteTrackedEntityInstanceFromEventAttendance = function(trackedEntityInstance, attendanceEvent){
 
             var modalOptions = {
                 closeButtonText: 'cancel',
