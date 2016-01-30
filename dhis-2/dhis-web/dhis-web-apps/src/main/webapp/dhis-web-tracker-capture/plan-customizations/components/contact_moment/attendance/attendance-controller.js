@@ -138,7 +138,7 @@ trackerCapture.controller('AttendanceController',
 
         $scope.updateMap = function(tei){
 		 // *******************for csv export**************** //
-            $scope.data.length=2;
+            $scope.data.length=3;
 
             AjaxCalls.getInvitationAndAttendedWidgetAttributes().then(function(attendanceAttributes){
           // for csv export end  //

@@ -22,15 +22,21 @@
 
         <div  ng-show="selectedEvent" class="widgetDiv">
             <table class="table table-striped dhis2-table-hover table-bordered">
-               <tr><th># {{selectedEvent.eventMembers.length}} </th>
+               <tr>
+                   <th># {{selectedEvent.eventMembers.length}} </th>
                    <th ng-repeat="attr in associationWidgetAttributes">{{attr.displayName}}</th>
+                   <th></th>
                </tr>
 
                 <tbody ng-repeat="TEWise in TEWiseEventTEIs" >
-                    <tr><td colspan ="{{associationWidgetAttributes.length+1}}" class="teiHeading"><i>{{TEWise.trackedEntity}}</i></td></tr>
+                    <tr><td colspan ="{{associationWidgetAttributes.length+2}}" class="teiHeading"><i>{{TEWise.trackedEntity}}</i></td></tr>
                 <tr ng-repeat="TEI in TEWise.TEIList">
                     <td>{{$index+1}}</td>
                     <td ng-repeat="attr in associationWidgetAttributes">{{teiAttributesMap[TEI.trackedEntityInstance][attr.id]}}</td>
+                    <!-- for Delete TEI -->
+                    <td  ng-click="deleteTrackedEntityInstanceFromEventAssociation(TEI.trackedEntityInstance,selectedEvent)" title="{{'delete'| translate}}">
+                        <i class="fa fa-trash-o alert-danger bold"></i>
+                    </td>
                 </tr>
                 </tbody >
             </table>

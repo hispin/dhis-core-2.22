@@ -39,10 +39,10 @@
             for (var i=0;i<event.eventMembers.length;i++){
                 $scope.eventMemberMap[event.eventMembers[i].trackedEntityInstance] = event.eventMembers[i];
             }
-        }
+        };
         $timeout(function(){
             $scope.updateEventTeiMap($modalInstance.selectedEvent);
-        })
+        });
 
         $scope.close = function () {
             $timeout(function() {
@@ -77,7 +77,7 @@
                     });
                 })
             })
-        }
+        };
 
 
         $scope.maxOptionSize = 30;

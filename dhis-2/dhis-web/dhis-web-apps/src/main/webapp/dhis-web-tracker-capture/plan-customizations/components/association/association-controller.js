@@ -4,6 +4,8 @@ trackerCapture.controller('EventToTEIAssociations',
               $modal,
               $timeout,
               AjaxCalls,
+              ModalService,
+              DHIS2EventFactory,
               utilityService) {
 
         $scope.teiAttributesMap = [];
@@ -130,5 +132,54 @@ trackerCapture.controller('EventToTEIAssociations',
                 }
                 $scope.teiAttributesMap[tei.trackedEntityInstance][tei.attributes[i].attribute] = tei.attributes[i].value;
             }
-        }
+        };
+
+
+        // delete Tracked Entity Instance From Event Invitation
+        $scope.deleteTrackedEntityInstanceFromEventAssociation = function(trackedEntityInstance, selectedEventAssociation){
+
+            var modalOptions = {
+                closeButtonText: 'cancel',
+                actionButtonText: 'delete',
+                headerText: 'delete',
+                bodyText: 'are_you_sure_to_delete'
+            };
+
+            ModalService.showModal({}, modalOptions).then(function(result){
+                //alert( trackedEntityInstance  + "--" + selectedEventAssociation.eventMembers.length );
+                if (selectedEventAssociation.eventMembers.length)
+                {
+                    for ( var i=0;i<selectedEventAssociation.eventMembers.length;i++ )
+                    {
+                        if (selectedEventAssociation.eventMembers[i].trackedEntityInstance == trackedEntityInstance)
+                        {
+                            selectedEventAssociation.eventMembers.splice(i,1);
+                        }
+                    }
+                }
+
+                if (selectedEventAssociation.eventMembers.length == 0)
+                {
+                    delete(selectedEventAssociation.eventMembers);
+                }
+
+                //update events list after delete tei
+
+                DHIS2EventFactory.update(selectedEventAssociation).then(function(response)
+                {
+                    if (response.httpStatus == "OK")
+                    {
+                        $timeout(function () {
+                            $rootScope.$broadcast('association-widget', {event : selectedEventAssociation, show :true});
+                        }, 200);
+                    }
+                    else
+                    {
+                        alert("An unexpected thing occurred.");
+                    }
+                });
+
+            });
+        };
+
     });
