@@ -120,9 +120,11 @@ public class InitTableAlteror
 
     private void updateTimestamps()
     {
-        executeSql( "alter table datavalueaudit rename column timestamp to created" );
-        executeSql( "alter table trackedentitydatavalueaudit rename column timestamp to created" );
+        executeSql( "update datavalueaudit set created=timestamp where created is null" );
+        executeSql( "update datavalueaudit set created=now() where created is null" );
+        executeSql( "alter table datavalueaudit drop column timestamp" );
 
+        executeSql( "alter table trackedentitydatavalueaudit rename column timestamp to created" );
         executeSql( "update trackedentitydatavalue set created=timestamp where created is null" );
         executeSql( "update trackedentitydatavalue set lastupdated=timestamp where lastupdated is null" );
         executeSql( "alter table trackedentitydatavalue drop column timestamp" );
