@@ -10,6 +10,8 @@
         <span class="nav-pills" ng-if="selectedEventInvitation && selectedEventInvitation.eventMembers.length > 0">
             | <label>{{selectedEventInvitation.eventMembers.length}} {{'member_invited'| translate}}</label>
         </span>
+		 <!-- for csv export -->
+		<button type="button" ng-csv="data1"  filename="test1.csv">Export</button>
 
     </div>
     <div ng-show="selectedEventInvitation" class="widgetDiv">

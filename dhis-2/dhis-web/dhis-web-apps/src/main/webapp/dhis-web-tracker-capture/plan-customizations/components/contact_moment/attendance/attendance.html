@@ -8,7 +8,9 @@
         <span class="nav-pills" ng-if="selectedEventAttendance && selectedEventAttendance.eventMembers.length > 0">
             | <label>{{selectedEventAttendance.eventMembers.length}} {{'member_attended'| translate}}</label>
         </span>
-
+		  <!-- for csv export-->
+		<button type="button" ng-csv="data" filename="test.csv">Export</button>
+		   
     </div>
     <div ng-show="selectedEventAttendance" class="widgetDiv">
         <table class="table table-striped dhis2-table-hover table-bordered">

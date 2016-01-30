@@ -5,12 +5,22 @@ trackerCapture.controller('InvitationController',
               $timeout,
               AjaxCalls,
               ModalService,
+		
+			CurrentSelection,
               DHIS2EventFactory,
               utilityService) {
 
         $scope.teiAttributesMapInvitation = [];
         $scope.trackedEntityMap = [];
-
+		 // ***********************for csv export******************* //
+        $scope.attendancelist=[];
+        selections = CurrentSelection.get();
+        $scope.selectedTei = angular.copy(selections.tei);
+        $scope.selectedProgram = selections.pr;
+        $scope.contactmomenttype=[];
+        $scope.data1=[];
+        $scope.filename = "test1";
+        // *****************for csv export end***********************//
 
         $scope.$on('invitation-div', function (event, args) {
 
@@ -37,7 +47,7 @@ trackerCapture.controller('InvitationController',
                     for (key in $scope.TEtoEventTEIMap){
                         var TEIList = [];
                         for (var j=0;j<$scope.TEtoEventTEIMap[key].length;j++) {
-                            updateMap($scope.TEtoEventTEIMap[key][j]);
+                             $scope.updateMap($scope.TEtoEventTEIMap[key][j]);
                             TEIList.push($scope.TEtoEventTEIMap[key][j])
                         }
                         $scope.TEWiseEventTEIs.push({
@@ -102,6 +112,45 @@ trackerCapture.controller('InvitationController',
         //get attributes for display in association widget
         AjaxCalls.getInvitationAndAttendedWidgetAttributes().then(function(invitationAttributes){
             $scope.invitationAttributes = invitationAttributes;
+			
+			  // *******************for csv export*********************** //
+            if (angular.isUndefined($scope.selectedProgram.name))
+            {
+                $scope.attendancelist[5] = " ";}
+            else {
+                $scope.attendancelist[5] =$scope.selectedProgram.name;
+            }
+            if (angular.isUndefined($scope.selectedOrgUnit.name))
+            {
+                $scope.attendancelist[6] = " ";}
+            else {
+                $scope.attendancelist[6] =$scope.selectedOrgUnit.name;
+            }
+            if (angular.isUndefined( $scope.selectedTei.attributes[0].value)||(($scope.selectedTei.attributes[0].value).startsWith("PLAN")))
+            {
+                $scope.contactmomenttype[0] = " ";}
+            else {
+                $scope.contactmomenttype[0]=  $scope.selectedTei.attributes[0].value;
+            }
+
+            $scope.data1 = [{
+                a:"Program:   "+$scope.attendancelist[5],
+                b:"",
+                c:"Enrolling organisation unit:"+ $scope.attendancelist[6],
+                d:"",
+                e:"Contact Moment Type:    "+$scope.contactmomenttype[0]}];
+
+            $scope.data1.length=2;
+            $scope.data1 = $scope.data1.concat ({
+                a: invitationAttributes[0]['displayName'],
+                b:invitationAttributes[1]['displayName'],
+                c:invitationAttributes[2]['displayName'],
+                d:invitationAttributes[3]['displayName'],
+                e:invitationAttributes[4]['displayName']	});
+
+            // *******************for csv export end*******************//
+			
+			
         });
 
         // get all tracked entities
@@ -129,7 +178,11 @@ trackerCapture.controller('InvitationController',
             });
         };
 
-        updateMap = function(tei){
+        $scope.updateMap = function(tei){
+		      // *************************for csv export**************************** //
+            $scope.data1.length=3;
+            AjaxCalls.getInvitationAndAttendedWidgetAttributes().then(function(invitationAttributes){
+                // ***********************for csv export end**********************************//
 
             for (var i=0;i<tei.attributes.length;i++){
 
@@ -138,6 +191,26 @@ trackerCapture.controller('InvitationController',
                 }
                 $scope.teiAttributesMapInvitation[tei.trackedEntityInstance][tei.attributes[i].attribute] = tei.attributes[i].value;
             }
+			
+			   $scope.invitationAttributes = invitationAttributes;
+                // ********************************for csv export************************* //
+                for(var i =0;i<5;i++) {
+                   if (angular.isUndefined($scope.teiAttributesMapInvitation[tei.trackedEntityInstance][invitationAttributes[i]['id']]))
+                    {
+                        $scope.attendancelist[i] = " ";}
+                    else {
+                        $scope.attendancelist[i] = $scope.teiAttributesMapInvitation[tei.trackedEntityInstance][invitationAttributes[i]['id']];
+                    }
+                }
+                $scope.data1 = $scope.data1.concat({
+                    a:$scope.attendancelist[0],
+                    b:$scope.attendancelist[1],
+                    c:$scope.attendancelist[2],
+                    d:$scope.attendancelist[3],
+                    e:$scope.attendancelist[4]});
+
+            });
+			   
         }
 
 
