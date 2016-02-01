@@ -3003,7 +3003,7 @@ dhis2.de.loadOptionSets = function()
                 if( !obj || !obj.optionSet || !obj.optionSet.version || !item.v || obj.optionSet.version !== item.v ) {
                     promise = promise.then( function () {
                         return $.ajax( {
-                            url: '../api/optionSets/' + item.uid + '.json?links=false',
+                            url: '../api/optionSets/' + item.uid + '.json?fields=:all,options[:all]',
                             type: 'GET',
                             cache: false
                         } ).done( function ( data ) {
@@ -3050,9 +3050,9 @@ dhis2.de.insertOptionSets = function()
         var optionSetUid = dhis2.de.optionSets[optionSetKey].uid;
         //dhis2.de.autocompleteOptionSetField( item, optionSetUid );
         
-        DAO.store.get( 'optionSets', optionSetUid ).done( function( obj ) {		
+        DAO.store.get( 'optionSets', optionSetUid ).done( function( obj ) {
 		if ( obj && obj.optionSet && obj.optionSet.options ) {
-                    
+
                     $.each( obj.optionSet.options, function( inx, option ) {
                         option.text = option.name;
                         option.id = option.code;
