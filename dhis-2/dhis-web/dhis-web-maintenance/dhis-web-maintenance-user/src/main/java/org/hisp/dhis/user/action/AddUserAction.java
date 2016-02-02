@@ -289,7 +289,7 @@ public class AddUserAction
     {
         if ( !userService.canAddOrUpdateUser( ugSelected ) )
         {
-            throw new AccessDeniedException( "You cannot edit this user" );
+            throw new AccessDeniedException( "You cannot add this user" );
         }
         
         User currentUser = currentUserService.getCurrentUser();
