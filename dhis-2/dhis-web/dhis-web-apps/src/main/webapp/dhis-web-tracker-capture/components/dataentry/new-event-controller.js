@@ -22,7 +22,9 @@ trackerCapture.controller('EventCreationController',
                 autoCreate,
                 EventUtils,
                 events,
-                suggestedStage) {
+                suggestedStage,
+                //for Plan
+                AssociationService) {
     $scope.stages = stages;
     $scope.allStages = allStages;
     $scope.events = events;
@@ -213,6 +215,9 @@ trackerCapture.controller('EventCreationController',
             if (response.response && response.response.importSummaries[0].status === 'SUCCESS') {
                 newEvent.event = response.response.importSummaries[0].reference;
                 $modalInstance.close({dummyEvent: dummyEvent, ev: newEvent});
+
+                //for plan for add all existing EventMembers to New Event
+                AssociationService.addEventMembersToEventAndUpdate(newEvent);
             }
             else {
                 var dialogOptions = {

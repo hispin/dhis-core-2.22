@@ -129,6 +129,14 @@ trackerCapture
                     return associationWidgets;
                 });
                 return promise;
+            },
+
+            // Get all Events for TEI UID
+            getAllEventsByTEI: function (teiId) {
+                var promise = $http.get('../api/events?trackedEntityInstance=' + teiId).then(function (response) {
+                    return response.data;
+                });
+                return promise;
             }
 
         }
@@ -205,6 +213,56 @@ trackerCapture
 
                 return def;
                 //return alreadyAttendedTEIMap;
+            }
+        }
+    })
+
+
+
+    .service('AssociationService', function (AjaxCalls,DHIS2EventFactory,$timeout,$rootScope) {
+        return {
+            extractAllEventMembers: function (events) {
+                var eventMembers = [];
+                var eventMembersMap = [];
+                for (var i = 0; i < events.length; i++) {
+                    if (events[i].eventMembers) {
+                        for (var j = 0; j < events[i].eventMembers.length; j++) {
+                            if (!eventMembersMap[events[i].eventMembers[j].trackedEntityInstance]) {
+                                eventMembers.push(events[i].eventMembers[j]);
+                                eventMembersMap[events[i].eventMembers[j].trackedEntityInstance] = events[i].eventMembers[j];
+                            }
+                        }
+                    }
+                }
+                return eventMembers;
+            },
+            addEventMembersToEventAndUpdate: function (event) {
+                var thiz = this;
+                // this will add association to event
+                // get all events of this TEI and extract all event members to add to this event
+                AjaxCalls.getAllEventsByTEI(event.trackedEntityInstance).then(function (data) {
+
+                    var allEventMembers = thiz.extractAllEventMembers(data.events);
+                    if (allEventMembers.length > 0) {
+                        event.eventMembers = allEventMembers;
+                    }
+                    DHIS2EventFactory.update(event).then(function(response){
+                        if (response.httpStatus == "OK"){
+                            console.log("EventMembers added successfully");
+                            $timeout(function () {
+                                $rootScope.$broadcast('association-widget', {event : event , show :true});
+                            });
+                        }else{
+                            console.log("An unexpected thing occurred.");
+                        }
+                    })
+                })
+
+            },
+            addEventMemberIfExist : function(eventTo,eventFrom){
+                if (eventFrom.eventMembers)
+                    eventTo.eventMembers = eventFrom.eventMembers;
+                return eventTo;
             }
         }
     });
