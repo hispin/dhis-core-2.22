@@ -96,10 +96,10 @@ function getExpressionText()
 			},
 			success: function( json, status, xhr ) {
 				if ( 'OK' == json.status ) {
-					jQuery( "#formulaText").html( json.description );
+					jQuery( "#formulaText" ).html( json.description );
 				}
 				else {
-					jQuery( "#formulaText").html( json.message );
+					jQuery( "#formulaText" ).html( json.message );
 				}
 			}
 		});
@@ -154,4 +154,20 @@ function insertExpression()
 			}
 		}
 	});
+}
+
+function clearRuleExpression()
+{
+    var description = $( "#leftSideDescription" ).val();
+    $( "#leftSideExpression" ).val( "" );
+    $( "#leftSideTextualExpression" ).val( "" );
+    saveExpression( "left", description, "", "" );
+
+    description = $( "#rightSideDescription" ).val();
+    $( "#rightSideExpression" ).val( "" );
+    $( "#rightSideTextualExpression" ).val( "" );
+    saveExpression( "right", description, "", "" );
+
+	enable( "ruleType" );
+	enable( "periodTypeName" );
 }
