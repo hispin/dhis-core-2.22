@@ -50,6 +50,7 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -244,8 +245,11 @@ public class UpdateUserAction
     public String execute()
         throws Exception
     {
-        //TODO: Allow user with F_USER_ADD_WITHIN_MANAGED_GROUP to update a user within managed groups.
-
+        if ( !userService.canAddOrUpdateUser( ugSelected ) )
+        {
+            throw new AccessDeniedException( "You cannot edit this user" );
+        }
+        
         User currentUser = currentUserService.getCurrentUser();
 
         // ---------------------------------------------------------------------
