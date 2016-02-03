@@ -114,7 +114,8 @@ public class UserController
     // -------------------------------------------------------------------------
 
     @Override
-    protected List<User> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    @SuppressWarnings( "unchecked" )
+    protected List<User> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
     {
         UserQueryParams params = new UserQueryParams();
         params.setQuery( options.get( "query" ) );
