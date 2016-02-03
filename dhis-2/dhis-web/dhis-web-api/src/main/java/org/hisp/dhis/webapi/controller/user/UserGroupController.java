@@ -42,4 +42,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserGroupController
     extends AbstractCrudController<UserGroup>
 {
+    @Override
+    protected void postUpdateEntity( UserGroup entity )
+    {
+        hibernateCacheManager.clearCache();
+    }
 }
