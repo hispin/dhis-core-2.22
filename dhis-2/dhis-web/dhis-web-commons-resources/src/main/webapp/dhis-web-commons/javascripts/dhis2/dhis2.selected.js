@@ -173,7 +173,7 @@
       };
 
       if( context.like !== undefined && context.like.length > 0 ) {
-        request.data.filter = 'name:like:' + context.like;
+        request.data.filter = 'displayName:ilike:' + context.like;
       }
 
       context.searchButton.find('i').removeClass('fa-search');
