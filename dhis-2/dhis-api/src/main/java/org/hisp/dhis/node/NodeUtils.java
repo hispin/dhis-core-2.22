@@ -82,6 +82,7 @@ public final class NodeUtils
         pagerNode.addChild( new SimpleNode( "page", pager.getPage() ) );
         pagerNode.addChild( new SimpleNode( "pageCount", pager.getPageCount() ) );
         pagerNode.addChild( new SimpleNode( "total", pager.getTotal() ) );
+        pagerNode.addChild( new SimpleNode( "pageSize", pager.getPageSize() ) );
         pagerNode.addChild( new SimpleNode( "nextPage", pager.getNextPage() ) );
         pagerNode.addChild( new SimpleNode( "prevPage", pager.getPrevPage() ) );
 

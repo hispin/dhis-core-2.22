@@ -61,6 +61,7 @@ import org.hisp.dhis.webapi.utils.WebMessageUtils;
 import org.hisp.dhis.webapi.webdomain.approval.Approval;
 import org.hisp.dhis.webapi.webdomain.approval.Approvals;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -172,6 +173,7 @@ public class DataApprovalController
         DataApprovalPermissions permissions = status.getPermissions();
         permissions.setState( status.getState().toString() );
 
+        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
         renderService.toJson( response.getOutputStream(), status.getPermissions() );
     }
 
@@ -226,6 +228,7 @@ public class DataApprovalController
             }
         }
 
+        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
         renderService.toJson( response.getOutputStream(), dataApprovalStateResponses );
     }
 
@@ -309,6 +312,7 @@ public class DataApprovalController
             list.add( item );
         }
 
+        response.setContentType( MediaType.APPLICATION_JSON_VALUE );
         renderService.toJson( response.getOutputStream(), list );
     }
 

@@ -269,10 +269,7 @@ public class DataElementCategory
             }
 
             removeAllCategoryOptions();
-            removeAllCategoryCombos();
-
             category.getCategoryOptions().forEach( this::addCategoryOption );
-            category.getCategoryCombos().forEach( this::addCategoryCombo );
         }
     }
 }

@@ -31,10 +31,12 @@ package org.hisp.dhis.user.action.usergroup;
 import com.opensymphony.xwork2.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.attribute.AttributeService;
+import org.hisp.dhis.cache.HibernateCacheManager;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserGroupService;
 import org.hisp.dhis.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.List;
@@ -63,6 +65,9 @@ public class UpdateUserGroupAction
     {
         this.attributeService = attributeService;
     }
+
+    @Autowired
+    private HibernateCacheManager hibernateCacheManager;
 
     // -------------------------------------------------------------------------
     // Parameters
@@ -140,6 +145,8 @@ public class UpdateUserGroupAction
         userGroup.updateManagedGroups( managedGroups );
 
         userGroupService.updateUserGroup( userGroup );
+
+        hibernateCacheManager.clearCache();
 
         return SUCCESS;
     }

@@ -44,6 +44,8 @@ import org.hisp.dhis.hibernate.exception.UpdateAccessDeniedException;
 import org.hisp.dhis.importexport.ImportStrategy;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
 import org.hisp.dhis.query.Order;
+import org.hisp.dhis.query.Query;
+import org.hisp.dhis.query.QueryParserException;
 import org.hisp.dhis.schema.descriptors.UserSchemaDescriptor;
 import org.hisp.dhis.security.RestoreOptions;
 import org.hisp.dhis.security.SecurityService;
@@ -103,7 +105,7 @@ public class UserController
 
     @Autowired
     private OrganisationUnitService organisationUnitService;
-    
+
     @Autowired
     private UserSettingService userSettingService;
 
@@ -112,7 +114,8 @@ public class UserController
     // -------------------------------------------------------------------------
 
     @Override
-    protected List<User> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders )
+    @SuppressWarnings( "unchecked" )
+    protected List<User> getEntityList( WebMetaData metaData, WebOptions options, List<String> filters, List<Order> orders ) throws QueryParserException
     {
         UserQueryParams params = new UserQueryParams();
         params.setQuery( options.get( "query" ) );
@@ -148,7 +151,13 @@ public class UserController
             params.setMax( pager.getPageSize() );
         }
 
-        return userService.getUsers( params );
+        List<User> users = userService.getUsers( params );
+
+        Query query = queryService.getQueryFromUrl( getEntityClass(), filters, orders );
+        query.setDefaultOrder();
+        query.setObjects( users );
+
+        return (List<User>) queryService.query( query );
     }
 
     @Override
@@ -356,17 +365,17 @@ public class UserController
         // ---------------------------------------------------------------------
 
         List<UserSetting> settings = userSettingService.getUserSettings( existingUser );
-        
+
         for ( UserSetting setting : settings )
         {
             Optional<UserSettingKey> key = UserSettingKey.getByName( setting.getName() );
-            
+
             if ( key.isPresent() )
             {
                 userSettingService.saveUserSetting( key.get(), setting.getValue(), userReplica );
-            }            
+            }
         }
-        
+
         response.addHeader( "Location", UserSchemaDescriptor.API_ENDPOINT + "/" + userReplica.getUid() );
         webMessageService.send( WebMessageUtils.created( "User replica created" ), response, request );
     }

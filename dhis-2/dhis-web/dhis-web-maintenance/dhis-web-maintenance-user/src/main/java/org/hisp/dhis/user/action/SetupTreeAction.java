@@ -33,6 +33,7 @@ import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeService;
 import org.hisp.dhis.attribute.comparator.AttributeSortOrderComparator;
 import org.hisp.dhis.common.DimensionalObject;
+import org.hisp.dhis.common.IdentifiableObjectUtils;
 import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.oust.manager.SelectionTreeManager;
@@ -47,6 +48,7 @@ import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -221,6 +223,11 @@ public class SetupTreeAction
         {
             user = userService.getUser( id );
 
+            if ( !userService.canAddOrUpdateUser( IdentifiableObjectUtils.getUids( user.getGroups() ) ) )
+            {
+                throw new AccessDeniedException( "You cannot edit this user" );
+            }
+            
             if ( user.hasOrganisationUnit() )
             {
                 selectionManager.setSelectedOrganisationUnits( user.getOrganisationUnits() );
