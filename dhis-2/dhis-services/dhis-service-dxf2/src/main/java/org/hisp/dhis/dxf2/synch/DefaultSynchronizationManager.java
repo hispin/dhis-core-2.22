@@ -28,7 +28,7 @@ package org.hisp.dhis.dxf2.synch;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.apache.commons.lang3.StringUtils.trimToNull;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 import java.io.IOException;
 import java.util.Date;
@@ -115,13 +115,12 @@ public class DefaultSynchronizationManager
         }
 
         String url = systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL ) + PING_PATH;
+        String username = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME );
+        String password = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_PASSWORD );
 
-        log.info( "Remote server ping URL: " + url + ", username: " + systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_USERNAME ) );
+        log.info( "Remote server ping URL: " + url + ", username: " + username );
 
-        HttpEntity<String> request = getBasicAuthRequestEntity( (String) systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_USERNAME ), (String) systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_PASSWORD ) );
+        HttpEntity<String> request = getBasicAuthRequestEntity( username, password );
 
         ResponseEntity<String> response = null;
         HttpStatus sc = null;
@@ -243,6 +242,10 @@ public class DefaultSynchronizationManager
             setLastSynchSuccess( startTime );
             log.info( "Synch successful, setting last success time: " + startTime );
         }
+        else
+        {
+            log.debug( "Sync failed: " + summary );
+        }
 
         return summary;
     }
@@ -308,18 +311,17 @@ public class DefaultSynchronizationManager
      */
     private boolean isRemoteServerConfigured( Configuration config )
     {
-        if ( trimToNull( (String) systemSettingManager.getSystemSetting(
-            SettingKey.REMOTE_INSTANCE_URL ) ) ==
-            null )
+        String url = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL );
+        String username = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME );
+        String password = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_PASSWORD );
+        
+        if ( isEmpty( url ) )
         {
             log.info( "Remote server URL not set" );
             return false;
         }
 
-        if ( trimToNull( (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME ) ) ==
-            null ||
-            trimToNull( (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL ) ) ==
-                null )
+        if ( isEmpty( username ) || isEmpty( password ) )
         {
             log.info( "Remote server username or password not set" );
             return false;
