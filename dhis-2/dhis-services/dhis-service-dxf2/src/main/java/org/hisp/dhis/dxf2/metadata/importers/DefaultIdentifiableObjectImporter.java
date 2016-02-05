@@ -478,6 +478,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         {
             if ( object instanceof User )
             {
+                Map<Field, Object> fieldsUserCredentials = detachFields( userCredentials );
                 Map<Field, Collection<Object>> collectionFieldsUserCredentials = detachCollectionFields( userCredentials );
 
                 if ( userCredentials.getPassword() != null )
@@ -487,6 +488,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
                 ((User) persistedObject).getUserCredentials().mergeWith( userCredentials, options.getMergeStrategy() );
                 // mergeService.merge( ((User) persistedObject).getUserCredentials(), userCredentials, options.getMergeStrategy() );
+                reattachFields( ((User) persistedObject).getUserCredentials(), fieldsUserCredentials, user );
                 reattachCollectionFields( ((User) persistedObject).getUserCredentials(), collectionFieldsUserCredentials, user );
 
                 sessionFactory.getCurrentSession().saveOrUpdate( ((User) persistedObject).getUserCredentials() );
