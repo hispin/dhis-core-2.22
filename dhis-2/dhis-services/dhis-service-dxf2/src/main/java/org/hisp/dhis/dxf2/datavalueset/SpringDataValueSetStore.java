@@ -115,9 +115,9 @@ public class SpringDataValueSetStore
     @Override
     public void writeDataValueSetJson( Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes )
     {
-        String deScheme = idSchemes.getDataElementIdScheme().toString().toLowerCase();
-        String ouScheme = idSchemes.getOrgUnitIdScheme().toString().toLowerCase();
-        String ocScheme = idSchemes.getCategoryOptionComboIdScheme().toString().toLowerCase();
+        String deScheme = idSchemes.getDataElementIdScheme().getIdentifiableString().toLowerCase();
+        String ouScheme = idSchemes.getOrgUnitIdScheme().getIdentifiableString().toLowerCase();
+        String ocScheme = idSchemes.getCategoryOptionComboIdScheme().getIdentifiableString().toLowerCase();
 
         DataValueSet dataValueSet = new StreamingJsonDataValueSet( outputStream );
 
