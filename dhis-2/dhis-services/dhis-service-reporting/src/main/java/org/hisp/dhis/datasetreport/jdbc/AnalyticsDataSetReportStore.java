@@ -73,7 +73,7 @@ public class AnalyticsDataSetReportStore
 
     @Override
     public Map<String, Object> getAggregatedValues( DataSet dataSet, Period period, OrganisationUnit unit, 
-        Set<String> dimensions, boolean rawData )
+        Set<String> dimensions )
     {
         List<DataElement> dataElements = new ArrayList<>( dataSet.getDataElements() );
         

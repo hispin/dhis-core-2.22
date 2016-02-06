@@ -107,7 +107,7 @@ public class DefaultDataSetReportService
     public String getCustomDataSetReport( DataSet dataSet, Period period, OrganisationUnit unit, Set<String> dimensions,
         boolean selectedUnitOnly, I18nFormat format )
     {
-        Map<String, Object> valueMap = dataSetReportStore.getAggregatedValues( dataSet, period, unit, dimensions, selectedUnitOnly );
+        Map<String, Object> valueMap = dataSetReportStore.getAggregatedValues( dataSet, period, unit, dimensions );
         
         valueMap.putAll( dataSetReportStore.getAggregatedTotals( dataSet, period, unit, dimensions ) );
         
@@ -139,7 +139,7 @@ public class DefaultDataSetReportService
         List<Section> sections = new ArrayList<>( dataSet.getSections() );
         Collections.sort( sections, new SectionOrderComparator() );
 
-        Map<String, Object> valueMap = dataSetReportStore.getAggregatedValues( dataSet, period, unit, dimensions, selectedUnitOnly );
+        Map<String, Object> valueMap = dataSetReportStore.getAggregatedValues( dataSet, period, unit, dimensions );
         Map<String, Object> subTotalMap = dataSetReportStore.getAggregatedSubTotals( dataSet, period, unit, dimensions );
         Map<String, Object> totalMap = dataSetReportStore.getAggregatedTotals( dataSet, period, unit, dimensions );
 
