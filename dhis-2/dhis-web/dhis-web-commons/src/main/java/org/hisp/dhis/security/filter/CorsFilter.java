@@ -66,7 +66,7 @@ public class CorsFilter
     public static final String CORS_REQUEST_METHOD = "Access-Control-Request-Method";
     public static final String CORS_ORIGIN = "Origin";
 
-    private static final String EXPOSED_HEADERS = "ETag Location";
+    private static final String EXPOSED_HEADERS = "ETag, Location";
 
     private static final Integer MAX_AGE = 60 * 60; // 1hr max-age
 
