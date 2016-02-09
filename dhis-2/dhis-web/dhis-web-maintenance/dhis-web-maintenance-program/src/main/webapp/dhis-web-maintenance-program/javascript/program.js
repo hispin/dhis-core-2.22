@@ -178,7 +178,7 @@ function selectProperties() {
 	  html += "<td onmousedown='select(event,this)'>" + item.text + "</td>";
       html += "<td align='center'><input type='checkbox' name='displayed' value='" + item.value + "'></td>"
 	  html += "<td align='center'><input type='checkbox' name='mandatory'></td>";
-	  if( jQuery(item).attr('valuetype') =='date'){
+	  if( jQuery(item).attr('valuetype') =='DATE'){
 		html += "<td align='center'><input type='checkbox' name='allowFutureDate'></td>";
 	  }
 	  else{
@@ -203,7 +203,7 @@ function selectAllProperties() {
 	html += "<td onmousedown='select(this)'>" + item.text + "</td>";
     html += "<td align='center'><input type='checkbox' name='displayed' value='" + item.value + "'></td>";
     html += "<td align='center'><input type='checkbox' name='mandatory'></td>";
-    if( jQuery(item).attr('valuetype') =='date'){
+    if( jQuery(item).attr('valuetype') =='DATE'){
 		html += "<td align='center'><input type='checkbox' name='allowFutureDate'></td>";
 	}
 	else{
