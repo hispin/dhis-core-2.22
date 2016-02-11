@@ -1392,6 +1392,7 @@
         <value>usergroup</value>
         <value>userrole</value>
         <value>optionset</value>
+        <value>option</value>
         <value>optionvalue</value>
         <value>validationcriteria</value>
         <value>trackedentity</value>
