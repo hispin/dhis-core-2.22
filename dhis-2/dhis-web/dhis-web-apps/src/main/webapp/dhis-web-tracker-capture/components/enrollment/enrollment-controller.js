@@ -9,7 +9,6 @@ trackerCapture.controller('EnrollmentController',
                 DateUtils,
                 SessionStorageService,
                 CurrentSelection,
-                OrgUnitService,
                 EnrollmentService,
                 DialogService,
                 ModalService) {
@@ -59,17 +58,6 @@ trackerCapture.controller('EnrollmentController',
             });
             
             angular.forEach($scope.enrollments, function(enrollment){
-                if(enrollment.orgUnit !== $scope.selectedOrgUnit.id) {
-                    OrgUnitService.get(enrollment.orgUnit).then(function(ou){
-                        if(ou){
-                            enrollment.orgUnitName = $scope.selectedOrgUnit.name;
-                        }                                                       
-                    });
-                }
-                else{
-                    enrollment.orgUnitName = $scope.selectedOrgUnit.name;
-                }
-                
                 if(enrollment.program === $scope.selectedProgram.id ){
                     if(enrollment.status === 'ACTIVE'){
                         selectedEnrollment = enrollment;
@@ -80,8 +68,7 @@ trackerCapture.controller('EnrollmentController',
                         $scope.hasEnrollmentHistory = true;
                     }
                 }
-            });
-            
+            });            
             if(selectedEnrollment){
                 $scope.selectedEnrollment = selectedEnrollment;
                 $scope.loadEnrollmentDetails(selectedEnrollment);
