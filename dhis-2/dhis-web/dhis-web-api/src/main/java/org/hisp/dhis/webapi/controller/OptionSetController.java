@@ -28,10 +28,15 @@ package org.hisp.dhis.webapi.controller;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.hisp.dhis.dxf2.common.TranslateParams;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.schema.descriptors.OptionSetSchemaDescriptor;
+import org.hisp.dhis.webapi.webdomain.WebOptions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Morten Olav Hansen <mortenoh@gmail.com>
@@ -41,4 +46,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class OptionSetController
     extends AbstractCrudController<OptionSet>
 {
+    @Override
+    protected void postProcessEntities( List<OptionSet> optionSets, WebOptions options, Map<String, String> parameters, TranslateParams translateParams )
+    {
+        if ( translateParams.isTranslate() )
+        {
+            optionSets.forEach( o -> translateOptions( o, translateParams ) );
+        }
+    }
+
+    @Override
+    protected void postProcessEntity( OptionSet optionSet, WebOptions options, Map<String, String> parameters, TranslateParams translateParams ) throws Exception
+    {
+        if ( translateParams.isTranslate() )
+        {
+            translateOptions( optionSet, translateParams );
+        }
+    }
+
+    private void translateOptions( OptionSet optionSet, TranslateParams translateParams )
+    {
+        if ( translateParams.defaultLocale() )
+        {
+            i18nService.internationalise( optionSet.getOptions() );
+        }
+        else
+        {
+            i18nService.internationalise( optionSet.getOptions(), translateParams.getLocale() );
+        }
+    }
 }

@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
 import org.hisp.dhis.common.DimensionalObject;
@@ -274,7 +273,7 @@ public class UserCredentials
 
         return dataSets;
     }
-    
+
     /**
      * Returns a set of the programs for all user authority groups
      * of this user credentials.
@@ -290,10 +289,10 @@ public class UserCredentials
 
         return programs;
     }
-    
+
     /**
      * Indicates if the given program is accessible.
-     * 
+     *
      * @param program the program.
      * @return true if if the given program is accessible.
      */
@@ -306,7 +305,7 @@ public class UserCredentials
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -785,11 +784,13 @@ public class UserCredentials
             {
                 openId = userCredentials.getOpenId();
                 ldapId = userCredentials.getLdapId();
+                userInfo = userCredentials.getUserInfo();
             }
             else if ( strategy.isMerge() )
             {
                 openId = userCredentials.getOpenId() == null ? openId : userCredentials.getOpenId();
                 ldapId = userCredentials.getLdapId() == null ? ldapId : userCredentials.getLdapId();
+                userInfo = userCredentials.getUserInfo() == null ? userInfo : userCredentials.getUserInfo();
             }
 
             userAuthorityGroups.clear();

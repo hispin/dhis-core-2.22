@@ -66,7 +66,7 @@ div.inputSection {
 
 <div class="inputSection">
 <label>$i18n.getString( "report_period" )</label><br>
-<select id="periodType" name="periodType" style="width:174px" onchange="dhis2.dsr.displayPeriods()">
+<select id="periodType" name="periodType" style="width:173px" onchange="dhis2.dsr.displayPeriods()">
   <option value="">[ $i18n.getString( "select_period_type" ) ]</option>
   #foreach ( $type in $periodTypes )
   <option value="$type.name">$i18n.getString( $type.name )</option>

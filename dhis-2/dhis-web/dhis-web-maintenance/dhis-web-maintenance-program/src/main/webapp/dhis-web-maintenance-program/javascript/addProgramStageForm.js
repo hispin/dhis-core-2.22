@@ -13,7 +13,7 @@ jQuery(document).ready(function() {
         option.attr("valuetype", "optionset");
       }
       else {
-        option.attr("valuetype", item.type);
+        option.attr("valuetype", item.valueType);
       }
       return option;
     }

@@ -115,7 +115,7 @@ function selectDataElements()
 			html += "<td align='center'><input type='checkbox' name='compulsory'></td>";
 			html += "<td align='center'><input type='checkbox' name='allowProvided'></td>";
 			html += "<td align='center'><input type='checkbox' name='displayInReport'></td>";
-			if( jQuery(item).attr('valuetype') =='date'){
+			if( jQuery(item).attr('valuetype') =='DATE'){
 				html += "<td align='center'><input type='checkbox' name='allowFutureDate'></td>";
 			}
 			else{
@@ -139,7 +139,7 @@ function selectAllDataElements()
 		html += "<td align='center'><input type='checkbox' name='allowProvided'></td>";
 		html += "<td align='center'><input type='checkbox' name='displayInReport'></td>";
 		
-		if( jQuery(item).attr('valuetype') =='date'){
+		if( jQuery(item).attr('valuetype') =='DATE'){
 			html += "<td align='center'><input type='checkbox' name='allowFutureDate'></td>";
 		}
 		else{

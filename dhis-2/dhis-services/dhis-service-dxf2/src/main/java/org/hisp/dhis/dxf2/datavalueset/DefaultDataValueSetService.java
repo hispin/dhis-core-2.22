@@ -90,12 +90,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
-import static org.hisp.dhis.common.IdentifiableProperty.UUID;
 import static org.hisp.dhis.system.notification.NotificationLevel.ERROR;
 import static org.hisp.dhis.system.notification.NotificationLevel.INFO;
 import static org.hisp.dhis.system.util.DateUtils.getDefaultDate;
@@ -587,16 +585,8 @@ public class DefaultDataValueSetService
         CachingMap<String, Optional<Set<String>>> dataElementOptionsMap = new CachingMap<>();
 
         //----------------------------------------------------------------------
-        // Load meta-data maps
+        // Get meta-data maps
         //----------------------------------------------------------------------
-
-        if ( importOptions.isPreheatCache() )
-        {
-            notifier.notify( id, "Loading data elements and organisation units" );
-            dataElementMap.putAll( identifiableObjectManager.getIdMap( DataElement.class, dataElementIdScheme ) );
-            orgUnitMap.putAll( getOrgUnitMap( orgUnitIdScheme ) );
-            clock.logTime( "Preheated data element and organisation unit caches" );
-        }
 
         IdentifiableObjectCallable<DataElement> dataElementCallable = new IdentifiableObjectCallable<>(
             identifiableObjectManager, DataElement.class, dataElementIdScheme, null );
@@ -981,12 +971,5 @@ public class DefaultDataValueSetService
         }
 
         summary.setDataSetComplete( DateUtils.getMediumDateString( completeDate ) );
-    }
-
-    private Map<String, OrganisationUnit> getOrgUnitMap( IdScheme idScheme )
-    {
-        return idScheme.is( UUID ) ?
-            organisationUnitService.getUuidOrganisationUnitMap() :
-            identifiableObjectManager.getIdMap( OrganisationUnit.class, idScheme );
     }
 }

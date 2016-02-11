@@ -78,7 +78,7 @@ dhis2.dsr.dataSetSelected = function()
 	
 	var html = '';
 	
-	$.getJSON( "../api/dimensions/dataSet/" + ds, function( json ) {
+	$.getJSON( "../api/dimensions/dataSet/" + ds + ".json", function( json ) {
 		
 		if ( !json.dimensions ) {
 			$( "#dimensionsDiv" ).hide();
@@ -88,7 +88,7 @@ dhis2.dsr.dataSetSelected = function()
 			var rx = [];
 			
 			$.each( json.dimensions, function( idx, dim ) {
-				rx.push( $.get( "../api/dimensions/" + dim.id + ".json" ) );
+				rx.push( $.get( "../api/dimensions/" + dim.id + ".json?fields=:all,items[id,displayName]" ) );
 			} );
 			
 			$.when.apply( $, rx ).done( function() {
@@ -107,7 +107,7 @@ dhis2.dsr.dataSetSelected = function()
 						dim.items.sort( dhis2.util.nameSort );
 						
 						$.each( dim.items, function( idx, option ) {
-							html += '<option value="' + option.id + '">' + option.name + '</option>';
+							html += '<option value="' + option.id + '">' + option.displayName + '</option>';
 						} );
 						
 						html += '</select>';

@@ -346,7 +346,7 @@
 									<td align="center"><input type="checkbox" name="displayed" value="attr_$programAttribute.attribute.id" #if($programAttribute.displayInList == true ) checked #end #if($program.programType.value=="without_registration") disabled #end  /></td>
 									<td align="center"><input type="checkbox" name="mandatory" #if($programAttribute.mandatory == "true" ) checked #end #if($program.tprogramType.value=="without_registration") disabled #end  /></td>
 									<td align="center">
-										#if($attribute.valueType=='date')
+										#if($attribute.valueType=='DATE')
 											<input type="checkbox" name="allowFutureDate" #if($programAttribute.allowFutureDate == "true" ) checked #end #if($program.programType.value=="without_registration") disabled #end />
 										#else
 											<input type="hidden" name="allowFutureDate" />

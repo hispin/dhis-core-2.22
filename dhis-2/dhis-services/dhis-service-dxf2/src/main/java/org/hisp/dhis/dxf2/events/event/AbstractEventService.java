@@ -673,7 +673,7 @@ public abstract class AbstractEventService
             programStageInstance.setCompletedBy( completedBy );
             programStageInstance.setCompletedDate( executionDate );
 
-            if ( !programStageInstance.isCompleted() )
+            if ( programStageInstance.isCompleted() )
             {
                 programStageInstanceService.completeProgramStageInstance( programStageInstance,
                     i18nManager.getI18nFormat() );
