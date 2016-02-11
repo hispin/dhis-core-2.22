@@ -69,6 +69,7 @@
 			<map>
 				<entry key="scheduleMessage" value-ref="scheduleMessage" />
 				<entry key="sendMessageScheduled" value-ref="sendMessageScheduled" />
+				<entry key="sendMessageScheduledNow" value-ref="sendMessageScheduledNow" />
 			</map>
 		</property>
 	</bean>
@@ -89,12 +90,21 @@
 		class="org.hisp.dhis.scheduling.SendScheduledMessageTask"
 		parent="abstractScheduledMessageTask" scope="prototype">
 		<property name="sendingMessage" value="true" />
+		<property name="sendNow" value="false"/>
 	</bean>
 
 	<bean id="scheduleMessage"
 		class="org.hisp.dhis.scheduling.SendScheduledMessageTask"
 		parent="abstractScheduledMessageTask" scope="prototype">
 		<property name="sendingMessage" value="false" />
+		<property name="sendNow" value="false"/>
+	</bean>
+	
+	<bean id="sendMessageScheduledNow"
+		class="org.hisp.dhis.scheduling.SendScheduledMessageTask"
+		parent="abstractScheduledMessageTask" scope="prototype">
+		<property name="sendingMessage" value="false" />
+		<property name="sendNow" value="true"/>
 	</bean>
 	
 	<!-- DeletionManager -->
