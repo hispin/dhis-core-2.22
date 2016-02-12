@@ -234,7 +234,14 @@ public class Program
      */
     public List<TrackedEntityAttribute> getTrackedEntityAttributes()
     {
-        return programAttributes.stream().map( p -> p.getAttribute() ).collect( Collectors.toList() );
+        List<TrackedEntityAttribute> attributes = new ArrayList<>();
+        
+        for ( ProgramTrackedEntityAttribute attribute : programAttributes )
+        {
+            attributes.add( attribute.getAttribute() );
+        }
+        
+        return attributes;
     }
 
     /**
@@ -243,7 +250,7 @@ public class Program
      */
     public List<TrackedEntityAttribute> getNonConfidentialTrackedEntityAttributes()
     {
-        return programAttributes.stream().map( p -> p.getAttribute() ).filter( a -> !a.isConfidential() ).collect( Collectors.toList() );
+        return getTrackedEntityAttributes().stream().filter( a -> !a.isConfidential() ).collect( Collectors.toList() );
     }
 
     /**
