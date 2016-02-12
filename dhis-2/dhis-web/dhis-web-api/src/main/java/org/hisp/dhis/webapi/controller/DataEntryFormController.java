@@ -1,4 +1,4 @@
-package org.hisp.dhis.dataentryform;
+package org.hisp.dhis.webapi.controller;
 
 /*
  * Copyright (c) 2004-2016, University of Oslo
@@ -28,28 +28,17 @@ package org.hisp.dhis.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.dataentryform.DataEntryForm;
+import org.hisp.dhis.schema.descriptors.DataEntryFormSchemaDescriptor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
-public interface DataEntryFormStore
-    extends GenericIdentifiableObjectStore<DataEntryForm>
+/**
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
+@Controller
+@RequestMapping( value = DataEntryFormSchemaDescriptor.API_ENDPOINT )
+public class DataEntryFormController
+    extends AbstractCrudController<DataEntryForm>
 {
-    String ID = DataEntryFormStore.class.getName();
-
-    // -------------------------------------------------------------------------
-    // DataEntryForm
-    // -------------------------------------------------------------------------
-
-    /**
-     * Returns a DataEntryForm with the given name.
-     *
-     * @param name The name.
-     * @return A DataEntryForm with the given name.
-     */
-    DataEntryForm getDataEntryFormByName( String name );
-
-    List<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds );
-
-    List<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds );
 }

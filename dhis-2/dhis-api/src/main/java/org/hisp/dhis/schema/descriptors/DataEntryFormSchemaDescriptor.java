@@ -1,4 +1,4 @@
-package org.hisp.dhis.dataentryform;
+package org.hisp.dhis.schema.descriptors;
 
 /*
  * Copyright (c) 2004-2016, University of Oslo
@@ -28,28 +28,31 @@ package org.hisp.dhis.dataentryform;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.hisp.dhis.common.GenericIdentifiableObjectStore;
+import org.hisp.dhis.dataentryform.DataEntryForm;
+import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaDescriptor;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-public interface DataEntryFormStore
-    extends GenericIdentifiableObjectStore<DataEntryForm>
+/**
+ * @author Morten Olav Hansen <mortenoh@gmail.com>
+ */
+@Component
+public class DataEntryFormSchemaDescriptor implements SchemaDescriptor
 {
-    String ID = DataEntryFormStore.class.getName();
+    public static final String SINGULAR = "dataEntryForm";
 
-    // -------------------------------------------------------------------------
-    // DataEntryForm
-    // -------------------------------------------------------------------------
+    public static final String PLURAL = "dataEntryForms";
 
-    /**
-     * Returns a DataEntryForm with the given name.
-     *
-     * @param name The name.
-     * @return A DataEntryForm with the given name.
-     */
-    DataEntryForm getDataEntryFormByName( String name );
+    public static final String API_ENDPOINT = "/" + PLURAL;
 
-    List<DataEntryForm> listDistinctDataEntryFormByProgramStageIds( List<Integer> programStageIds );
+    @Override
+    public Schema getSchema()
+    {
+        Schema schema = new Schema( DataEntryForm.class, SINGULAR, PLURAL );
+        schema.setRelativeApiEndpoint( API_ENDPOINT );
+        schema.setShareable( false );
+        schema.setOrder( 1300 );
 
-    List<DataEntryForm> listDistinctDataEntryFormByDataSetIds( List<Integer> dataSetIds );
+        return schema;
+    }
 }
