@@ -243,7 +243,7 @@ public class Program
      */
     public List<TrackedEntityAttribute> getNonConfidentialTrackedEntityAttributes()
     {
-        return programAttributes.stream().map( p -> p.getAttribute() ).filter( a -> a.isConfidential() ).collect( Collectors.toList() );
+        return programAttributes.stream().map( p -> p.getAttribute() ).filter( a -> !a.isConfidential() ).collect( Collectors.toList() );
     }
 
     /**
@@ -252,7 +252,7 @@ public class Program
      */
     public List<TrackedEntityAttribute> getNonConfidentialTrackedEntityAttributesWithLegendSet()
     {
-        return getTrackedEntityAttributes().stream().filter( a -> a.isConfidential() && a.hasLegendSet() && a.isNumericType() ).collect( Collectors.toList() );
+        return getTrackedEntityAttributes().stream().filter( a -> !a.isConfidential() && a.hasLegendSet() && a.isNumericType() ).collect( Collectors.toList() );
     }
 
     public ProgramStage getProgramStageByStage( int stage )
