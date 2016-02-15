@@ -2878,15 +2878,22 @@ function StorageManager()
  */
 dhis2.de.setOptionNameInField = function( fieldId, value )
 {
-	var optionSetUid = dhis2.de.optionSets[value.id].uid;
+  var id = value.id;
+
+  if(value.id.split("-").length == 3)
+  {
+    id = id.substr(12);
+  }
+
+  var optionSetUid = dhis2.de.optionSets[id].uid;
 	
 	DAO.store.get( 'optionSets', optionSetUid ).done( function( obj ) {		
 		if ( obj && obj.optionSet && obj.optionSet.options ) {			
 			$.each( obj.optionSet.options, function( inx, option ) {
 				if ( option && option.code == value.val ) {
-                                        option.id = option.code;
-                                        option.text = option.name;					
-                                        $( fieldId ).select2("val", option.text );
+          option.id = option.code;
+          option.text = option.name;
+          $( fieldId ).select2("val", option.text );
 					return false;
 				}
 			} );
