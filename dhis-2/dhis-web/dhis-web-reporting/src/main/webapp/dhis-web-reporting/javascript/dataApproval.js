@@ -318,8 +318,10 @@ dhis2.appr.getUiState = function()
 /**
  * Gets an approval payload object based on the given state.
  * @param ui the ui state.
+ * @param permissionProperty name of permission property which must be
+ *        true for the approval record to be included.
  */
-dhis2.appr.getApprovalPayload = function( ui ) {
+dhis2.appr.getApprovalPayload = function( ui, permissionProperty ) {
 	
 	var json = {
 		ds: [ui.ds],
@@ -328,10 +330,13 @@ dhis2.appr.getApprovalPayload = function( ui ) {
 	};
 	
 	$.each( ui.approvals, function( inx, ap ) {
-		json.approvals.push( {
-			ou: ap.ou,
-			aoc: ap.aoc
-		} );
+		
+		if ( ap.permissions && ap.permissions[permissionProperty] ) {
+			json.approvals.push( {
+				ou: ap.ou,
+				aoc: ap.aoc
+			} );
+		}
 	} );
 	
 	return json;
@@ -617,7 +622,7 @@ dhis2.appr.approveData = function()
 	
 	var ui = dhis2.appr.getUiState(),
 		ds = dhis2.appr.dataSets[ui.ds],
-		json = dhis2.appr.getApprovalPayload( ui );
+		json = dhis2.appr.getApprovalPayload( ui, "mayApprove" );
 	
 	if ( ds.hasCategoryCombo ) {
 		$.ajax( {
@@ -658,7 +663,7 @@ dhis2.appr.unapproveData = function()
 
 	var ui = dhis2.appr.getUiState(),
 		ds = dhis2.appr.dataSets[ui.ds],
-		json = dhis2.appr.getApprovalPayload( ui );
+		json = dhis2.appr.getApprovalPayload( ui, "mayUnapprove" );
 	
 	if ( ds.hasCategoryCombo ) {
 		$.ajax( {
@@ -699,7 +704,7 @@ dhis2.appr.acceptData = function()
 
 	var ui = dhis2.appr.getUiState(),
 		ds = dhis2.appr.dataSets[ui.ds],
-		json = dhis2.appr.getApprovalPayload( ui );
+		json = dhis2.appr.getApprovalPayload( ui, "mayAccept" );
 	
 	if ( ds.hasCategoryCombo ) {
 		$.ajax( {
@@ -740,7 +745,7 @@ dhis2.appr.unacceptData = function()
 
 	var ui = dhis2.appr.getUiState(),
 		ds = dhis2.appr.dataSets[ui.ds],
-		json = dhis2.appr.getApprovalPayload( ui );
+		json = dhis2.appr.getApprovalPayload( ui, "mayUnaccept" );
 		
 	if ( ds.hasCategoryCombo ) {
 		$.ajax( {
