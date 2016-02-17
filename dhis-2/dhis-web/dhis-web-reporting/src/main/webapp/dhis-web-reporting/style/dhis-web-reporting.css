@@ -29,6 +29,23 @@
   margin-left: 10px;
 }
 
+#attributeOptionComboTable
+{
+  width: 600px;
+}
+
+#attributeOptionComboItemDiv
+{
+  height: 460px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#attributeOptionComboButtonDiv
+{
+  padding: 10px 0;
+}
+
 @media print
 {
 	div#control 
