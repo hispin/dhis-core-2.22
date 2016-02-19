@@ -138,7 +138,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 p.endDate = DateUtils.formatFromApiToUser(p.endDate);
                 p.startDate = DateUtils.formatFromApiToUser(p.startDate);
                 
-                if(moment(p.endDate).isAfter(eventDateOffSet)){                    
+                if(moment(p.endDate, calendarSetting.momentFormat).isAfter(moment(eventDateOffSet,calendarSetting.momentFormat))){
                     availablePeriods.push( p );
                 }
             });                
