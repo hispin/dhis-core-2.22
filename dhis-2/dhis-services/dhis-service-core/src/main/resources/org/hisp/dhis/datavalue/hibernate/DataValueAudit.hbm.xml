@@ -27,7 +27,7 @@
 
     <property name="value" length="50000" />
 
-    <property name="created" column="created" type="timestamp" not-null="true" index="id_datavalueaudit_created" />
+    <property name="created" column="created" type="timestamp" not-null="false" index="id_datavalueaudit_created" />
 
     <property name="modifiedBy" column="modifiedby" length="100" />
 
