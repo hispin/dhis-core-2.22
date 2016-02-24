@@ -1627,6 +1627,7 @@ function insertDataValues( json )
 	else
 	{
         $( '#contentDiv input' ).removeAttr( 'readonly' );
+	 $( '#contentDiv textarea' ).removeAttr( 'readonly' );
 		$( '#completenessDiv' ).show();
 	}
 	
