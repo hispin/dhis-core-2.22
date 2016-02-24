@@ -1619,6 +1619,7 @@ function insertDataValues( json )
 	if ( json.locked )
 	{
         $( '#contentDiv input').attr( 'readonly', 'readonly' );
+        $( '#contentDiv textarea').attr( 'readonly', 'readonly' );
         $( '.sectionFilter').removeAttr( 'disabled' );
         $( '#completenessDiv' ).hide();
 		setHeaderDelayMessage( i18n_dataset_is_locked );
