@@ -291,7 +291,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         $scope.teiFetched = false;
         $scope.selectedEventsTodayFilter = eventsTodayFilter;
         $scope.trackedEntityList = null;
-        var today = DateUtils.getToday();
+        var today = DateUtils.formatFromUserToApi(DateUtils.getToday());
         var promises = [];
         
         if(!eventsTodayFilter.status){
@@ -305,7 +305,7 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
             $scope.trackedEntityList = { rows: {own:[]}};
             var ids = [];
             angular.forEach(data, function(result){
-                if(result.eventRows){
+                if(result && result.eventRows){
                     angular.forEach(result.eventRows, function(eventRow){
                         if(ids.indexOf(eventRow.trackedEntityInstance) === -1){
                             
