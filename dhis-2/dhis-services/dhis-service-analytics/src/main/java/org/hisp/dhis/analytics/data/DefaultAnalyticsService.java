@@ -630,8 +630,6 @@ public class DefaultAnalyticsService
             }
         }
         
-        i18nService.internationalise( null );
-
         reportTable.setGridColumns( new CombinationGenerator<>( tableColumns.toArray( IRT2D ) ).getCombinations() );
         reportTable.setGridRows( new CombinationGenerator<>( tableRows.toArray( IRT2D ) ).getCombinations() );
 
