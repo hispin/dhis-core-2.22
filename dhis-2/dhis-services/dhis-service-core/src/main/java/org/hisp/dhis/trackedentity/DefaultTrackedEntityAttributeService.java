@@ -214,7 +214,7 @@ public class DefaultTrackedEntityAttributeService
     public String validateScope( TrackedEntityAttribute trackedEntityAttribute,
         String value, TrackedEntityInstance trackedEntityInstance, OrganisationUnit organisationUnit, Program program )
     {
-        Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
+        Assert.notNull( trackedEntityAttribute, "tracked entity attribute is required." );
 
         if ( !trackedEntityAttribute.isUnique() || value == null )
         {
@@ -232,7 +232,7 @@ public class DefaultTrackedEntityAttributeService
 
             if ( !program.getOrganisationUnits().contains( organisationUnit ) )
             {
-                return "Given orgUnit is not assigned to program " + program.getUid();
+                return "Organisation unit is not assigned to program " + program.getUid();
             }
 
             params.setProgram( program );
@@ -241,7 +241,7 @@ public class DefaultTrackedEntityAttributeService
         }
         else if ( trackedEntityAttribute.getOrgunitScope() )
         {
-            Assert.notNull( organisationUnit, "organisationUnit is required for org unit scope" );
+            Assert.notNull( organisationUnit, "organisation unit is required for org unit scope" );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
             params.addOrganisationUnit( organisationUnit );
         }
@@ -272,7 +272,7 @@ public class DefaultTrackedEntityAttributeService
     @Override
     public String validateValueType( TrackedEntityAttribute trackedEntityAttribute, String value )
     {
-        Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
+        Assert.notNull( trackedEntityAttribute, "tracked entity attribute is required" );
         ValueType valueType = trackedEntityAttribute.getValueType();
 
         String errorValue = StringUtils.substring( value, 0, 30 );
@@ -284,19 +284,19 @@ public class DefaultTrackedEntityAttributeService
 
         if ( ValueType.NUMBER == valueType && !MathUtils.isNumeric( value ) )
         {
-            return "Value '" + errorValue + "'is not a valid numeric for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not a valid numeric type for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.BOOLEAN == valueType && !MathUtils.isBool( value ) )
         {
-            return "Value '" + errorValue + "'is not a valid boolean for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not a valid boolean type for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.DATE == valueType && DateUtils.parseDate( value ) == null )
         {
-            return "Value '" + errorValue + "'is not a valid date for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not a valid date type for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.TRUE_ONLY == valueType && !"true".equals( value ) )
         {
-            return "Value '" + errorValue + "'is not true (true-only value type) for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not true (true-only type) for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.USERNAME == valueType )
         {
@@ -307,7 +307,8 @@ public class DefaultTrackedEntityAttributeService
         }
         else if ( trackedEntityAttribute.hasOptionSet() && !trackedEntityAttribute.isValidOptionValue( value ) )
         {
-            return "Value '" + errorValue + "'is not a valid option for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "'is not a valid option for attribute " + 
+                trackedEntityAttribute.getUid() + " and option set " + trackedEntityAttribute.getOptionSet().getUid();
         }
 
         return null;
