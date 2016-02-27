@@ -930,12 +930,14 @@ public class DefaultAnalyticsService
         Map<String, String> map = new HashMap<>();
         
         Calendar calendar = PeriodType.getCalendar();
+        
+        Locale locale = i18nService.getCurrentLocale();
 
         for ( DimensionalObject dimension : dimensions )
         {
             List<DimensionalItemObject> items = new ArrayList<>( dimension.getItems() );
             
-            i18nService.internationalise( items );
+            i18nService.internationalise( items, locale );
 
             for ( DimensionalItemObject object : items )
             {
