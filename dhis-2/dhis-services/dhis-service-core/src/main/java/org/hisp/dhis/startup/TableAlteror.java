@@ -184,9 +184,6 @@ public class TableAlteror
         executeSql( "ALTER TABLE mapview DROP COLUMN bounds" );
         executeSql( "ALTER TABLE mapview DROP COLUMN valuetype" );
         executeSql( "ALTER TABLE mapview DROP COLUMN legendtype" );
-        executeSql( "ALTER TABLE mapview RENAME COLUMN mapvaluetype TO valuetype" );
-        executeSql( "ALTER TABLE mapview RENAME COLUMN maplegendtype TO legendtype" );
-        executeSql( "ALTER TABLE mapview RENAME COLUMN maplegendsetid TO legendsetid" );
         executeSql( "ALTER TABLE mapview ALTER COLUMN opacity TYPE double precision" );
 
         executeSql( "ALTER TABLE maplegend DROP CONSTRAINT maplegend_name_key" );
@@ -693,7 +690,6 @@ public class TableAlteror
 
         executeSql( "UPDATE dataset SET dataelementdecoration=false WHERE dataelementdecoration is null" );
 
-        executeSql( "alter table validationrulegroup rename column validationgroupid to validationrulegroupid" );
         executeSql( "update sqlview set sqlviewid=viweid" );
         executeSql( "alter table sqlview drop column viewid" );
         executeSql( "update sqlview set type = 'QUERY' where query is true" );
