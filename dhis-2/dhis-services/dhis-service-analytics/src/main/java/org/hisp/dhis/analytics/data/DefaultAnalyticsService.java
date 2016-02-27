@@ -54,6 +54,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -596,6 +597,8 @@ public class DefaultAnalyticsService
             return getAggregatedDataValues( params );
         }
         
+        Locale locale = i18nService.getCurrentLocale();
+        
         params.setOutputIdScheme( null );
         
         Grid grid = getAggregatedDataValues( params );
@@ -615,8 +618,12 @@ public class DefaultAnalyticsService
             for ( String dimension : columns )
             {
                 reportTable.getColumnDimensions().add( dimension );
+                
+                List<DimensionalItemObject> items = params.getDimensionArrayExplodeCoc( dimension );
+                
+                i18nService.internationalise( items, locale );
 
-                tableColumns.add( params.getDimensionArrayExplodeCoc( dimension ) );
+                tableColumns.add( items.toArray( new DimensionalItemObject[0] ) );
             }
         }
 
@@ -625,8 +632,12 @@ public class DefaultAnalyticsService
             for ( String dimension : rows )
             {
                 reportTable.getRowDimensions().add( dimension );
+                
+                List<DimensionalItemObject> items = params.getDimensionArrayExplodeCoc( dimension );
+                
+                i18nService.internationalise( items, locale );
 
-                tableRows.add( params.getDimensionArrayExplodeCoc( dimension ) );
+                tableRows.add( items.toArray( new DimensionalItemObject[0] ) );
             }
         }
         

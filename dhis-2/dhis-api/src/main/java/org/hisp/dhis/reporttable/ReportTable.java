@@ -412,7 +412,7 @@ public class ReportTable
 
         for ( DimensionalItemObject object : objects )
         {
-            builder.append( object != null ? (object.getShortName() + SPACE) : EMPTY );
+            builder.append( object != null ? (object.getDisplayShortName() + SPACE) : EMPTY );
         }
 
         return builder.length() > 0 ? builder.substring( 0, builder.lastIndexOf( SPACE ) ) : TOTAL_COLUMN_PRETTY_NAME;
@@ -593,9 +593,9 @@ public class ReportTable
             for ( DimensionalItemObject object : row )
             {
                 grid.addValue( object.getUid() );
-                grid.addValue( object.getName() );
+                grid.addValue( object.getDisplayName() );
                 grid.addValue( object.getCode() );
-                grid.addValue( object.getDescription() );
+                grid.addValue( object.getDisplayDescription() );
             }
 
             if ( paramColumns )
