@@ -47,6 +47,7 @@ import org.hisp.dhis.common.DimensionalItemObject;
 import org.hisp.dhis.common.DimensionalObject;
 import org.hisp.dhis.common.DimensionalObjectUtils;
 import org.hisp.dhis.common.DisplayDensity;
+import org.hisp.dhis.common.DisplayProperty;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.FontSize;
 import org.hisp.dhis.common.Grid;
@@ -515,13 +516,14 @@ public class ReportTable
      * Generates a grid for this report table based on the given aggregate value
      * map.
      *
-     * @param grid         the grid, should be empty and not null.
-     * @param valueMap     the mapping of identifiers to aggregate values.
+     * @param grid the grid, should be empty and not null.
+     * @param valueMap the mapping of identifiers to aggregate values.
+     * @param displayProperty the display property to use for meta data.
      * @param paramColumns whether to include report parameter columns.
      * @return a grid.
      */
     @SuppressWarnings( "unchecked" )
-    public Grid getGrid( Grid grid, Map<String, Object> valueMap, boolean paramColumns )
+    public Grid getGrid( Grid grid, Map<String, Object> valueMap, DisplayProperty displayProperty, boolean paramColumns )
     {
         valueMap = new HashMap<>( valueMap );
 
@@ -593,7 +595,7 @@ public class ReportTable
             for ( DimensionalItemObject object : row )
             {
                 grid.addValue( object.getUid() );
-                grid.addValue( object.getDisplayName() );
+                grid.addValue( object.getDisplayProperty( displayProperty ) );
                 grid.addValue( object.getCode() );
                 grid.addValue( object.getDisplayDescription() );
             }

@@ -653,7 +653,7 @@ public class DefaultAnalyticsService
 
         Map<String, Object> valueMap = getAggregatedDataValueMapping( grid );
 
-        return reportTable.getGrid( new ListGrid( grid.getMetaData() ), valueMap, false );
+        return reportTable.getGrid( new ListGrid( grid.getMetaData() ), valueMap, params.getDisplayProperty(), false );
     }
 
     @Override
