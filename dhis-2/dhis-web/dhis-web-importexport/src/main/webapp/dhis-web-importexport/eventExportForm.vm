@@ -52,12 +52,12 @@ $( function() {
     selectionTree.clearSelectedOrganisationUnitsAndBuildTree();
 
     $.ajax({
-       url: '../api/programs.json'
+       url: '../api/programs.json?fields=id,displayName'
     } ).done(function(data) {
         var options = [];
 
         $.each(data.programs, function() {
-            var option = $( '<option/>' ).html( this.name ).val(this.id);
+            var option = $( '<option/>' ).html( this.displayName ).val(this.id);
             options.push( option );
         });
 
@@ -77,12 +77,12 @@ $( function() {
                 .html($( '<option/>' ).html('$i18n.getString( "no_program_stages_available" )'));
 
         $.ajax({
-           url: '../api/programs/' + program + '.json'
+           url: '../api/programs/' + program + '.json?fields=id,displayName,programStages[id,displayName]'
         } ).done(function(data) {
             var options = [];
 
             $.each(data.programStages, function() {
-                var option = $( '<option/>' ).html( this.name ).val(this.id);
+                var option = $( '<option/>' ).html( this.displayName ).val(this.id);
                 options.push( option );
             });
 
