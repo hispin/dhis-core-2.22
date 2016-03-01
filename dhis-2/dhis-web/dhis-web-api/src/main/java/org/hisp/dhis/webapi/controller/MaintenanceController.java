@@ -1,5 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
+import org.hisp.dhis.analytics.AnalyticsTableService;
+
 /*
  * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
@@ -106,6 +108,26 @@ public class MaintenanceController
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
+    @Autowired
+    private List<AnalyticsTableService> analyticsTableService;
+
+    @RequestMapping( value = "/analyticsTablesClear", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
+    public void clearAnalyticsTables()
+    {
+        for ( AnalyticsTableService service : analyticsTableService )
+        {
+            service.dropTables();
+        }
+    }
+
+    @RequestMapping( value = "/expiredInvitationsClear", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
+    public void clearExpiredInvitations()
+    {
+        maintenanceService.removeExpiredInvitations();
+    }
+    
     @RequestMapping( value = "/ouPathsUpdate", method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
     public void forceUpdatePaths()
