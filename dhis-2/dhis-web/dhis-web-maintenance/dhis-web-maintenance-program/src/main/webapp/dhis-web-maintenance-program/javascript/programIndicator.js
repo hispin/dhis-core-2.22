@@ -73,7 +73,7 @@ function getTrackedEntityDataElements( type ) {
 	var programStageId = getFieldValue(psSelectId);
 
 	if(programStageId) {
-		jQuery.getJSON('../api/programStages/' + programStageId + '.json?fields=programStageDataElements[dataElement[id,displayName|rename(name)]',
+		jQuery.getJSON('../api/programStages/' + programStageId + '.json?fields=programStageDataElements[dataElement[id,displayName|rename(name),valueType]',
 		{
 			programId: getFieldValue('programId'),
 			programStageUid: programStageId
