@@ -78,6 +78,9 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
+import org.hisp.dhis.user.UserGroup;
+import org.hisp.dhis.user.UserGroupAccess;
+import org.hisp.dhis.user.UserGroupAccessService;
 import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationViolation;
@@ -141,6 +144,9 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserGroupAccessService userGroupAccessService;
 
     @Autowired( required = false )
     private List<ObjectHandler<T>> objectHandlers;
@@ -943,7 +949,8 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
     // keeping this internal for now, might be split into several classes
     private class NonIdentifiableObjects
     {
-        private Set<AttributeValue> attributeValues = Sets.newHashSet();
+        private Set<AttributeValue> attributeValues = new HashSet<>();
+        private Set<UserGroupAccess> userGroupAccesses = new HashSet<>();
 
         private Expression leftSide;
         private Expression rightSide;
@@ -993,6 +1000,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         {
             schema = schemaService.getDynamicSchema( object.getClass() );
             attributeValues = extractAttributeValues( object );
+            userGroupAccesses = extractUserGroupAccesses( object );
             leftSide = extractExpression( object, "leftSide" );
             rightSide = extractExpression( object, "rightSide" );
             compulsoryDataElementOperands = Sets.newHashSet( extractDataElementOperands( object, "compulsoryDataElementOperands" ) );
@@ -1025,6 +1033,7 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             schema = schemaService.getDynamicSchema( object.getClass() );
 
             saveAttributeValues( object, attributeValues );
+            saveUserGroupAccess( object, userGroupAccesses );
             saveExpression( object, "leftSide", leftSide );
             saveExpression( object, "rightSide", rightSide );
             saveDataElementOperands( object, "compulsoryDataElementOperands", compulsoryDataElementOperands );
@@ -1167,6 +1176,19 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             return attributeValues;
         }
 
+        private Set<UserGroupAccess> extractUserGroupAccesses( T object )
+        {
+            Set<UserGroupAccess> userGroupAccesses = new HashSet<>();
+
+            if ( schema.havePersistedProperty( "userGroupAccesses" ) )
+            {
+                userGroupAccesses = ReflectionUtils.invokeGetterMethod( "userGroupAccesses", object );
+                ReflectionUtils.invokeSetterMethod( "userGroupAccesses", object, new HashSet<>() );
+            }
+
+            return userGroupAccesses;
+        }
+
         private void saveAttributeValues( T object, Collection<AttributeValue> attributeValues )
         {
             for ( AttributeValue attributeValue : attributeValues )
@@ -1189,6 +1211,24 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             catch ( Exception ex )
             {
                 log.info( ex.getMessage() );
+            }
+        }
+
+        private void saveUserGroupAccess( T object, Set<UserGroupAccess> userGroupAccesses )
+        {
+            for ( UserGroupAccess uga : userGroupAccesses )
+            {
+                UserGroup userGroup = objectBridge.getObject( uga.getUserGroup() );
+
+                if ( userGroup == null )
+                {
+                    log.info( "Unknown reference to " + uga.getUserGroup() + " on object " + uga );
+                    return;
+                }
+
+                uga.setUserGroup( userGroup );
+                userGroupAccessService.addUserGroupAccess( uga );
+                object.getUserGroupAccesses().add( uga );
             }
         }
 
