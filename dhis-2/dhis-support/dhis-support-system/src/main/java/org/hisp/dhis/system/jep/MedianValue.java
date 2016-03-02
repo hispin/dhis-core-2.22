@@ -53,7 +53,6 @@ public class MedianValue
     public void run( Stack inStack )
         throws ParseException
     {
-        // check the stack
         checkStack( inStack );
 
         Object param = inStack.pop();
@@ -65,6 +64,8 @@ public class MedianValue
             inStack.push( new Double( (vals.get( n / 2 ) + vals.get( n / 2 + 1 )) / 2 ) );
         }
         else
+        {
             inStack.push( new Double( vals.get( (n + 1) / 2 ) ) );
+        }
     }
 }

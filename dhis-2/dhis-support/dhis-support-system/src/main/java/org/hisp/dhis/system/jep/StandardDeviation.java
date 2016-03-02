@@ -53,12 +53,12 @@ public class StandardDeviation
     public void run( Stack inStack )
         throws ParseException
     {
-        // check the stack
         checkStack( inStack );
 
         Object param = inStack.pop();
         List<Double> vals = CustomFunctions.checkVector( param );
         int n = vals.size();
+        
         if ( n == 0 )
         {
             inStack.push( new Double( 0 ) );
@@ -66,16 +66,19 @@ public class StandardDeviation
         else
         {
             double sum = 0, sum2 = 0, mean, variance;
+            
             for ( Double v : vals )
             {
                 sum = sum + v;
             }
 
             mean = sum / n;
+            
             for ( Double v : vals )
             {
                 sum2 = sum2 + ((v - mean) * (v - mean));
             }
+            
             variance = sum2 / n;
             inStack.push( new Double( Math.sqrt( variance ) ) );
         }

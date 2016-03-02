@@ -53,7 +53,6 @@ public class MinValue
     public void run( Stack inStack )
         throws ParseException
     {
-        // check the stack
         checkStack( inStack );
 
         Object param = inStack.pop();
@@ -62,9 +61,13 @@ public class MinValue
         for ( Double v : vals )
         {
             if ( min == null )
+            {
                 min = v;
+            }
             else if ( v < min )
+            {
                 min = v;
+            }
         }
         inStack.push( new Double( min ) );
     }
