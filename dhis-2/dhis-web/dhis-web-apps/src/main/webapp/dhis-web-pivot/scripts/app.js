@@ -8017,7 +8017,7 @@ console.log(table);
 
                                         // organisation unit levels
                                         requests.push({
-                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,' + namePropertyUrl + ',level&paging=false',
+                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,name,level&paging=false',
                                             success: function(r) {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
