@@ -190,7 +190,7 @@ public class MaintenanceController
         categoryService.updateAllOptionCombos();
     }
 
-    @RequestMapping( value = "/cacheClear", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @RequestMapping( value = { "/cacheClear", "/cache" }, method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
     public void clearCache()
     {
