@@ -307,7 +307,7 @@ public class DefaultTrackedEntityAttributeService
         }
         else if ( trackedEntityAttribute.hasOptionSet() && !trackedEntityAttribute.isValidOptionValue( value ) )
         {
-            return "Value '" + errorValue + "'is not a valid option for attribute " + 
+            return "Value '" + errorValue + "' is not a valid option for attribute " + 
                 trackedEntityAttribute.getUid() + " and option set " + trackedEntityAttribute.getOptionSet().getUid();
         }
 
