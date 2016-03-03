@@ -204,7 +204,7 @@ dhis2.appr.showItemsDialog = function()
 	
 	$( "#attributeOptionComboDialog" ).dialog( {
 		modal : true,
-		width : 700,
+		width : 800,
 		height : 600,
 		title : i18n_select_items
 	} );
