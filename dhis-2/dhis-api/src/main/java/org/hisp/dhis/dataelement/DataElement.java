@@ -686,7 +686,7 @@ public class DataElement
             {
                 formName = dataElement.getFormName() == null ? formName : dataElement.getFormName();
                 domainType = dataElement.getDomainType() == null ? domainType : dataElement.getDomainType();
-                aggregationType = dataElement.getAggregationType() == null ? domainType : dataElement.getAggregationType();
+                aggregationType = dataElement.getAggregationType() == null ? aggregationType : dataElement.getAggregationType();
                 valueType = dataElement.getValueType() == null ? valueType : dataElement.getValueType();
                 categoryCombo = dataElement.getCategoryCombo() == null ? categoryCombo : dataElement.getCategoryCombo();
                 url = dataElement.getUrl() == null ? url : dataElement.getUrl();
