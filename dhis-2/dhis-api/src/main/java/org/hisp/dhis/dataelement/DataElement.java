@@ -28,16 +28,13 @@ package org.hisp.dhis.dataelement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.hisp.dhis.dataset.DataSet.NO_EXPIRY;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.Sets;
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
@@ -60,13 +57,15 @@ import org.hisp.dhis.schema.annotation.Property;
 import org.hisp.dhis.schema.annotation.PropertyRange;
 import org.joda.time.DateTime;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.hisp.dhis.dataset.DataSet.NO_EXPIRY;
 
 /**
  * A DataElement is a definition (meta-information about) of the entities that
@@ -168,7 +167,7 @@ public class DataElement
     // -------------------------------------------------------------------------
     // Logic
     // -------------------------------------------------------------------------
-    
+
     public void addDataElementGroup( DataElementGroup group )
     {
         groups.add( group );
@@ -333,7 +332,7 @@ public class DataElement
         int maxOpenPeriods = 0;
 
         for ( DataSet dataSet : dataSets )
-        {            
+        {
             maxOpenPeriods = Math.max( maxOpenPeriods, dataSet.getOpenFuturePeriods() );
         }
 
@@ -451,20 +450,20 @@ public class DataElement
 
         return expiryDays == Integer.MAX_VALUE ? NO_EXPIRY : expiryDays;
     }
-    
+
     /**
      * Indicates whether the given period is considered expired for the end date
-     * of the given date based on the expiry days of the data sets associated 
+     * of the given date based on the expiry days of the data sets associated
      * with this data element.
-     * 
+     *
      * @param period the period.
-     * @param now the date used as basis.
+     * @param now    the date used as basis.
      * @return true or false.
      */
     public boolean isExpired( Period period, Date now )
     {
         int expiryDays = getExpiryDays();
-        
+
         return expiryDays != DataSet.NO_EXPIRY && new DateTime( period.getEndDate() ).plusDays( expiryDays ).isBefore( new DateTime( now ) );
     }
 
@@ -676,6 +675,7 @@ public class DataElement
             {
                 formName = dataElement.getFormName();
                 domainType = dataElement.getDomainType();
+                aggregationType = dataElement.getAggregationType();
                 valueType = dataElement.getValueType();
                 categoryCombo = dataElement.getCategoryCombo();
                 url = dataElement.getUrl();
@@ -686,6 +686,7 @@ public class DataElement
             {
                 formName = dataElement.getFormName() == null ? formName : dataElement.getFormName();
                 domainType = dataElement.getDomainType() == null ? domainType : dataElement.getDomainType();
+                aggregationType = dataElement.getAggregationType() == null ? domainType : dataElement.getAggregationType();
                 valueType = dataElement.getValueType() == null ? valueType : dataElement.getValueType();
                 categoryCombo = dataElement.getCategoryCombo() == null ? categoryCombo : dataElement.getCategoryCombo();
                 url = dataElement.getUrl() == null ? url : dataElement.getUrl();
