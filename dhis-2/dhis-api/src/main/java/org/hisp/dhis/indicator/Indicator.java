@@ -35,7 +35,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
@@ -155,7 +154,7 @@ public class Indicator
     // -------------------------------------------------------------------------
     // Getters and setters
     // -------------------------------------------------------------------------
-    
+
     @Override
     public boolean haveUniqueNames()
     {
@@ -333,6 +332,7 @@ public class Indicator
 
             if ( strategy.isReplace() )
             {
+                decimals = indicator.getDecimals();
                 denominator = indicator.getDenominator();
                 denominatorDescription = indicator.getDenominatorDescription();
                 numerator = indicator.getNumerator();
@@ -343,6 +343,7 @@ public class Indicator
             }
             else if ( strategy.isMerge() )
             {
+                decimals = indicator.getDecimals() == null ? decimals : indicator.getDecimals();
                 denominator = indicator.getDenominator() == null ? denominator : indicator.getDenominator();
                 denominatorDescription = indicator.getDenominatorDescription() == null ? denominatorDescription : indicator.getDenominatorDescription();
                 numerator = indicator.getNumerator() == null ? numerator : indicator.getNumerator();
