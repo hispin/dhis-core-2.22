@@ -306,6 +306,7 @@ public class DataApprovalController
             item.put( "id", status.getAttributeOptionComboUid() );
             item.put( "level", approvalLevel );
             item.put( "ou", status.getOrganisationUnitUid() );
+            item.put( "ouName", status.getOrganisationUnitName() );
             item.put( "accepted", status.isAccepted() );
             item.put( "permissions", status.getPermissions() );
 

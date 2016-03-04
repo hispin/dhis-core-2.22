@@ -352,7 +352,7 @@ public class HibernateDataApprovalStore
         int workflowPeriodId = getWorkflowPeriodId( workflow, endDate );
 
         final String sql =
-            "select coc.uid as categoryoptioncombouid, o.organisationunituid, " +
+            "select coc.uid as cocuid, o.organisationunituid as ouuid, ou.name as ouname, " +
             "(select min(dal.level + case when da.accepted then .0 else .1 end) " +
                 "from dataapproval da " +
                 "join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
@@ -370,6 +370,7 @@ public class HibernateDataApprovalStore
             "join dataelementcategoryoption co on co.categoryoptionid = cocco.categoryoptionid " +
                 "and (co.startdate is null or co.startdate <= '" + endDate + "') and (co.enddate is null or co.enddate >= '" + startDate + "') " +
             "join _orgunitstructure o on " + orgUnitJoinOn + " " +
+            "join organisationunit ou on o.organisationunitid = ou.organisationunitid " +
             "left join categoryoption_organisationunits coo on coo.categoryoptionid = co.categoryoptionid " +
             "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
             joinAncestors +
@@ -395,9 +396,10 @@ public class HibernateDataApprovalStore
         {
             final String aocUid = rowSet.getString( 1 );
             final String ouUid = rowSet.getString( 2 );
-            final Double highestApproved = rowSet.getDouble( 3 );
-            final boolean readyBelow = rowSet.getBoolean( 4 );
-            final boolean approvedAbove = rowSet.getBoolean( 5 );
+            final String ouName = rowSet.getString( 3 );
+            final Double highestApproved = rowSet.getDouble( 4 );
+            final boolean readyBelow = rowSet.getBoolean( 5 );
+            final boolean approvedAbove = rowSet.getBoolean( 6 );
 
             final int level = highestApproved == null ? 0 : highestApproved.intValue();
             final boolean accepted = ( highestApproved != 0 && highestApproved == level );
@@ -422,7 +424,7 @@ public class HibernateDataApprovalStore
                                 ACCEPTED_HERE :
                                 APPROVED_HERE );
     
-                statusList.add( new DataApprovalStatus( state, approvedLevel, actionLevel, ouUid, aocUid, accepted, null ) );
+                statusList.add( new DataApprovalStatus( state, approvedLevel, actionLevel, ouUid, ouName, aocUid, accepted, null ) );
     
                 log.debug( "Get approval result: level " + level + " dataApprovalLevel " + ( actionLevel != null ? actionLevel.getLevel() : "[none]" )
                     + " approved " + ( approvedLevel != null )

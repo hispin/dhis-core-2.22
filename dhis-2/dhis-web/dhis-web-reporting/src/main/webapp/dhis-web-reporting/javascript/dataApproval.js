@@ -131,7 +131,7 @@ dhis2.appr.setItemsDialog = function()
 				html += "<td><input type='checkbox' class='itemCheckbox' id='coc-" + ap.id + "-" + ap.ou + "' data-coc='" + ap.id + "' data-ou='" + ap.ou + "' ";
 				html += "data-approve='" + pm.mayApprove + "' data-unapprove='" + pm.mayUnapprove + "' data-accept='" + pm.mayAccept + "' data-unaccept='" + pm.mayUnaccept + "'>";
 				html += "<label for='coc-" + ap.id + "-" + ap.ou + "'>" + cocName + "</label></td>";
-				html += "<td>" + ap.ou + "</td>";
+				html += "<td>" + ap.ouName + "</td>";
 				html += "<td>" + dhis2.appr.getPermissions( ap ) + "</td>";
 				html += "</tr>";
 			} );

@@ -60,10 +60,15 @@ public class DataApprovalStatus
      */
     private DataApprovalLevel actionLevel;
 
-    /*
+    /**
      * If the selection is approved, the OrganisationUnit UID.
      */
     private String organisationUnitUid;
+    
+    /**
+     * If the selection is approved, the OrganisationUnit name.
+     */
+    private String organisationUnitName;
 
     /**
      * If the selection is approved, the attribute category option combo UID.
@@ -108,13 +113,14 @@ public class DataApprovalStatus
 
     public DataApprovalStatus( DataApprovalState state,
         DataApprovalLevel approvedLevel, DataApprovalLevel actionLevel,
-        String organisationUnitUid, String attributeOptionComboUid,
+        String organisationUnitUid, String organisationUnitName, String attributeOptionComboUid,
         boolean accepted, DataApprovalPermissions permissions )
     {
         this.state = state;
         this.approvedLevel = approvedLevel;
         this.actionLevel = actionLevel;
         this.organisationUnitUid = organisationUnitUid;
+        this.organisationUnitName = organisationUnitName;
         this.attributeOptionComboUid = attributeOptionComboUid;
         this.accepted = accepted;
         this.permissions = permissions;
@@ -162,6 +168,16 @@ public class DataApprovalStatus
     public void setOrganisationUnitUid( String organisationUnitUid )
     {
         this.organisationUnitUid = organisationUnitUid;
+    }
+
+    public String getOrganisationUnitName()
+    {
+        return organisationUnitName;
+    }
+
+    public void setOrganisationUnitName( String organisationUnitName )
+    {
+        this.organisationUnitName = organisationUnitName;
     }
 
     public String getAttributeOptionComboUid()
