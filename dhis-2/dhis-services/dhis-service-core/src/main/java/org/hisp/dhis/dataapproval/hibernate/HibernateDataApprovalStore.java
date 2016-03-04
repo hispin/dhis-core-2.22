@@ -365,23 +365,23 @@ public class HibernateDataApprovalStore
             approvedAboveSubquery + " as approved_above " +
             "from categoryoptioncombo coc " +
             "join categoryoptioncombos_categoryoptions cocco on cocco.categoryoptioncomboid = coc.categoryoptioncomboid " +
-                ( attributeCombo == null ? "" : "join categorycombos_optioncombos ccoc on ccoc.categoryoptioncomboid = cocco.categoryoptioncomboid " +
-                    "and ccoc.categorycomboid = " + attributeCombo.getId() + " " ) +
-                "join dataelementcategoryoption co on co.categoryoptionid = cocco.categoryoptionid " +
-                    "and (co.startdate is null or co.startdate <= '" + endDate + "') and (co.enddate is null or co.enddate >= '" + startDate + "') " +
-                "join _orgunitstructure o on " + orgUnitJoinOn + " " +
-                "left join categoryoption_organisationunits coo on coo.categoryoptionid = co.categoryoptionid " +
-                "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
-                joinAncestors +
-                "where ( coo.categoryoptionid is null or ous.organisationunitid is not null " + testAncestors + ")" +
-                ( attributeOptionCombos == null || attributeOptionCombos.isEmpty() ? "" : " and cocco.categoryoptioncomboid in (" +
-                    StringUtils.join( IdentifiableObjectUtils.getIdentifiers( attributeOptionCombos ), "," ) + ") " ) +
-                ( isSuperUser || user == null ? "" :
-                    " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid is null or co.userid = " + user.getId() + " or exists ( " +
-                    "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
-                    "left join usergroupaccess uga on uga.usergroupaccessid = couga.usergroupaccessid " +
-                    "left join usergroupmembers ugm on ugm.usergroupid = uga.usergroupid " +
-                    "where couga.categoryoptionid = cocco.categoryoptionid and ugm.userid = " + user.getId() + ") )" );
+            ( attributeCombo == null ? "" : "join categorycombos_optioncombos ccoc on ccoc.categoryoptioncomboid = cocco.categoryoptioncomboid " +
+                "and ccoc.categorycomboid = " + attributeCombo.getId() + " " ) +
+            "join dataelementcategoryoption co on co.categoryoptionid = cocco.categoryoptionid " +
+                "and (co.startdate is null or co.startdate <= '" + endDate + "') and (co.enddate is null or co.enddate >= '" + startDate + "') " +
+            "join _orgunitstructure o on " + orgUnitJoinOn + " " +
+            "left join categoryoption_organisationunits coo on coo.categoryoptionid = co.categoryoptionid " +
+            "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
+            joinAncestors +
+            "where ( coo.categoryoptionid is null or ous.organisationunitid is not null " + testAncestors + ")" +
+            ( attributeOptionCombos == null || attributeOptionCombos.isEmpty() ? "" : " and cocco.categoryoptioncomboid in (" +
+                StringUtils.join( IdentifiableObjectUtils.getIdentifiers( attributeOptionCombos ), "," ) + ") " ) +
+            ( isSuperUser || user == null ? "" :
+                " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid is null or co.userid = " + user.getId() + " or exists ( " +
+                "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
+                "left join usergroupaccess uga on uga.usergroupaccessid = couga.usergroupaccessid " +
+                "left join usergroupmembers ugm on ugm.usergroupid = uga.usergroupid " +
+                "where couga.categoryoptionid = cocco.categoryoptionid and ugm.userid = " + user.getId() + ") )" );
 
         log.debug( "Get approval SQL: " + sql );
 
