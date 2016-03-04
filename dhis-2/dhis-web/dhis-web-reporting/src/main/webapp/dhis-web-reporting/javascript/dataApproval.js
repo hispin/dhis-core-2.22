@@ -4,6 +4,7 @@ dhis2.util.namespace( 'dhis2.appr' );
 dhis2.appr.currentPeriodOffset = 0;
 dhis2.appr.permissions = null;
 dhis2.appr.dataSets = {};
+dhis2.appr.dataApprovalLevels = {};
 
 /**
  * Object with properties: ds, pe, ou, array of approvals with aoc, ou.
@@ -32,6 +33,12 @@ $( document ).ready( function()
 		} );
 		
 		$( "#dataSetId" ).html( dsHtml );
+	} );
+	
+	$.getJSON( "../api/dataApprovalLevels.json", function( json ) {
+		$.each( json.dataApprovalLevels, function( inx, al ) {
+			dhis2.appr.dataApprovalLevels[al.id] = al;
+		} );
 	} );
 } );
 
@@ -120,19 +127,28 @@ dhis2.appr.setItemsDialog = function()
 		$.getJSON( apUrl, function( approvals ) {
 		
 			html = "<table id='attributeOptionComboTable'>";
-			html += "<tr><th>" + i18n_item + "</th><th>" + i18n_organisation_unit + "</th><th>" + i18n_action + "</th></tr>";
+			html += "<col width='2%'><col width='53%'><col width='17%'><col width='15%'><col width='10%'>";
+			html += "<tr><th></th><th>" + i18n_item + "</th><th>" + i18n_organisation_unit + "</th><th>" + i18n_approval_level + "</th><th>" + i18n_action + "</th></tr>";
 			
 			$.each( approvals, function( inx, ap ) {
 				
 				var cocName = cocs[ap.id].displayName,
-					pm = ap.permissions;
+					pm = ap.permissions,
+					level,
+					levelName = i18n_not_yet_approved;
+				
+				if ( ap.level && ap.level.hasOwnProperty( "level" ) ) {
+					level = dhis2.appr.dataApprovalLevels[ap.level.id];
+					levelName = level && level.displayName ? level.displayName : levelName;
+				}
 				
 				if ( cocName && pm ) {
 					html += "<tr>";
 					html += "<td><input type='checkbox' class='itemCheckbox' id='coc-" + ap.id + "-" + ap.ou + "' data-coc='" + ap.id + "' data-ou='" + ap.ou + "' ";
-					html += "data-approve='" + pm.mayApprove + "' data-unapprove='" + pm.mayUnapprove + "' data-accept='" + pm.mayAccept + "' data-unaccept='" + pm.mayUnaccept + "'>";
-					html += "<label for='coc-" + ap.id + "-" + ap.ou + "'>" + cocName + "</label></td>";
+					html += "data-approve='" + pm.mayApprove + "' data-unapprove='" + pm.mayUnapprove + "' data-accept='" + pm.mayAccept + "' data-unaccept='" + pm.mayUnaccept + "'></td>";
+					html += "<td><label for='coc-" + ap.id + "-" + ap.ou + "'>" + cocName + "</label></td>";
 					html += "<td>" + ap.ouName + "</td>";
+					html += "<td>" + levelName + "</td>";
 					html += "<td>" + dhis2.appr.getPermissions( ap ) + "</td>";
 					html += "</tr>";
 				}

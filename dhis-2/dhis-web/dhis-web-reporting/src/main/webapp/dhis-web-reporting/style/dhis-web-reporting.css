@@ -31,7 +31,19 @@
 
 #attributeOptionComboTable
 {
+  border-collapse: collapse;
   width: 97%;
+}
+
+#attributeOptionComboTable th
+{
+  padding: 2px 3px 2px 3px;
+}
+
+#attributeOptionComboTable td
+{
+  padding: 5px 3px 6px 3px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 #attributeOptionComboItemDiv
