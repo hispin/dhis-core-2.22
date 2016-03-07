@@ -7,6 +7,7 @@ function changeRuleType() {
     hideById('annualSampleCountTR');
 
     showById('compulsory_pair');
+    showById('exclusive_pair');
   }
   else {
     showById('organisationUnitLevelTR');
@@ -14,10 +15,11 @@ function changeRuleType() {
     showById('annualSampleCountTR');
 
     var op = document.getElementById('operator');
-    if( 'compulsory_pair' == op.value ) {
+    if( 'compulsory_pair' == op.value || 'exclusive_pair' == op.value ) {
       showById('select_operator');
       op.selectedIndex = 0;
     }
     hideById('compulsory_pair');
+    hideById('exclusive_pair');
   }
 }
