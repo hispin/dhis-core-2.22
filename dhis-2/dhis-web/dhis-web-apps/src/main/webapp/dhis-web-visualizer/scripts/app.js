@@ -2948,7 +2948,13 @@ Ext.onReady( function() {
             },
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -3107,7 +3113,13 @@ Ext.onReady( function() {
             },
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -3427,7 +3439,13 @@ Ext.onReady( function() {
 			},
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -3465,7 +3483,13 @@ Ext.onReady( function() {
 			},
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -3713,8 +3737,6 @@ Ext.onReady( function() {
                 dataSet.hide();
                 eventDataItem.hide();
                 programIndicator.hide();
-
-                //dataSelected.show();
             }
             else if (type === 'de') {
                 indicator.hide();
@@ -3776,7 +3798,7 @@ Ext.onReady( function() {
                 data: [
                      {id: 'in', name: NS.i18n.indicators},
                      {id: 'de', name: NS.i18n.data_elements},
-                     {id: 'ds', name: NS.i18n.data_sets},
+                     {id: 'ds', name: NS.i18n.reporting_rates},
                      {id: 'di', name: NS.i18n.event_data_items},
                      {id: 'pi', name: NS.i18n.program_indicators}
                 ]
@@ -4531,9 +4553,7 @@ Ext.onReady( function() {
                             var attributes = (Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || [],
                                 data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(elements, attributes))) || [];
 
-                            if (data) {
-                                eventDataItemAvailableStore.loadDataAndUpdate(data);
-                            }
+                            eventDataItemAvailableStore.loadDataAndUpdate(data);
                         }
                     });
                 }
@@ -4763,21 +4783,17 @@ Ext.onReady( function() {
         // program indicator
         onProgramIndicatorProgramSelect = function(programId, skipSync) {
             if (!skipSync) {
-                dataSelectedStore.removeByProperty('objectName', ['di','pi']);
+                //dataSelectedStore.removeByProperty('objectName', ['di','pi']);
                 eventDataItemProgram.setValue(programId);
                 onEventDataItemProgramSelect(programId, true);
             }
 
             Ext.Ajax.request({
-                url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programIndicators[id,' + namePropertyUrl + ']&paging=false',
-                success: function(r) {
-                    r = Ext.decode(r.responseText);
-
-                    var isA = Ext.isArray,
-                        isO = Ext.isObject,
-                        program = isA(r.programs) && r.programs.length ? r.programs[0] : null,
-                        programIndicators = isO(program) && isA(program.programIndicators) && program.programIndicators.length ? program.programIndicators : [],
-                        data = ns.core.support.prototype.array.sort(Ext.Array.clean(programIndicators)) || [];
+                url: ns.core.init.contextPath + '/api/programs.json?filter=id:eq:' + programId + '&fields=programIndicators[dimensionItem|rename(id),' + namePropertyUrl + ']&paging=false',
+				disableCaching: false,
+				success: function(r) {
+                    var indicators = (Ext.decode(r.responseText).programs[0] || {}).programIndicators || [],
+                        data = ns.core.support.prototype.array.sort(indicators);
 
                     programIndicatorAvailableStore.loadDataAndUpdate(data);
                 }
@@ -4792,6 +4808,7 @@ Ext.onReady( function() {
 			displayField: 'name',
 			emptyText: NS.i18n.select_program,
 			editable: false,
+            queryMode: 'local',
 			store: programStore,
 			listeners: {
 				select: function(cb) {
