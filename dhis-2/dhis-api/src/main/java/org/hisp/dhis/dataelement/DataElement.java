@@ -46,6 +46,7 @@ import org.hisp.dhis.common.view.DetailedView;
 import org.hisp.dhis.common.view.DimensionalView;
 import org.hisp.dhis.common.view.ExportView;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.dataset.comparator.DataSetApprovalFrequencyComparator;
 import org.hisp.dhis.dataset.comparator.DataSetFrequencyComparator;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -233,6 +234,13 @@ public class DataElement
         return !list.isEmpty() ? list.get( 0 ) : null;
     }
 
+    public DataSet getApprovalDataSet()
+    {
+        List<DataSet> list = new ArrayList<>( dataSets );
+        Collections.sort( list, DataSetApprovalFrequencyComparator.INSTANCE );
+        return !list.isEmpty() ? list.get( 0 ) : null;
+    }
+    
     /**
      * Returns the category combinations associated with the data sets of this
      * data element.
