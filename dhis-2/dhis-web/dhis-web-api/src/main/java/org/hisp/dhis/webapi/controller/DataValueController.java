@@ -198,7 +198,7 @@ public class DataValueController
         // Locking validation
         // ---------------------------------------------------------------------
 
-        validateDataSetNotLocked( dataElement, period, organisationUnit );
+        validateDataSetNotLocked( dataElement, period, organisationUnit, attributeOptionCombo );
 
         // ---------------------------------------------------------------------
         // Assemble and save data value
@@ -333,7 +333,7 @@ public class DataValueController
         // Locking validation
         // ---------------------------------------------------------------------
 
-        validateDataSetNotLocked( dataElement, period, organisationUnit );
+        validateDataSetNotLocked( dataElement, period, organisationUnit, attributeOptionCombo );
 
         // ---------------------------------------------------------------------
         // Delete data value
@@ -382,7 +382,7 @@ public class DataValueController
         // Locking validation
         // ---------------------------------------------------------------------
 
-        validateDataSetNotLocked( dataElement, period, organisationUnit );
+        validateDataSetNotLocked( dataElement, period, organisationUnit, attributeOptionCombo );
 
         // ---------------------------------------------------------------------
         // Get data value
@@ -440,7 +440,7 @@ public class DataValueController
         // Locking validation
         // ---------------------------------------------------------------------
 
-        validateDataSetNotLocked( dataElement, period, organisationUnit );
+        validateDataSetNotLocked( dataElement, period, organisationUnit, attributeOptionCombo );
 
         // ---------------------------------------------------------------------
         // Get data value
@@ -633,10 +633,11 @@ public class DataValueController
         }
     }
 
-    private void validateDataSetNotLocked( DataElement dataElement, Period period, OrganisationUnit organisationUnit )
+    private void validateDataSetNotLocked( DataElement dataElement, Period period,
+        OrganisationUnit organisationUnit, DataElementCategoryOptionCombo attributeOptionCombo )
         throws WebMessageException
     {
-        if ( dataSetService.isLocked( dataElement, period, organisationUnit, null ) )
+        if ( dataSetService.isLocked( dataElement, period, organisationUnit, attributeOptionCombo, null ) )
         {
             throw new WebMessageException( WebMessageUtils.conflict( "Data set is locked" ) );
         }

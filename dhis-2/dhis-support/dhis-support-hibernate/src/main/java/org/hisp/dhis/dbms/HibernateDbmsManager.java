@@ -147,6 +147,8 @@ public class HibernateDbmsManager
 
         emptyTable( "dataapproval" );
 
+        emptyTable( "lockexception" );
+
         emptyTable( "datasetsource" );
         emptyTable( "datasetmembers" );
         emptyTable( "datasetindicators" );
