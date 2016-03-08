@@ -184,6 +184,7 @@ public class HibernateTranslationStore
 
         Criteria criteria = session.createCriteria( Translation.class );
         criteria.add( Restrictions.eq( "className", className ) );
+        criteria.setMaxResults( 1 );
 
         criteria.setCacheable( true );
 
