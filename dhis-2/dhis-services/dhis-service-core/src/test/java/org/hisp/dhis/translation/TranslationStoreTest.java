@@ -163,19 +163,4 @@ public class TranslationStoreTest
 
         assertEquals( 5, translationStore.getAll().size() );
     }
-
-    @Test
-    public void testHasTranslations()
-    {
-        translation1a = new Translation( className1, locale1, "name", "cheers", className1 + uid1 );
-        translation1b = new Translation( className1, locale1, "shortName", "goodbye", className1 + uid1 );
-        translation2a = new Translation( className1, locale2, "name", "hello", className1 + uid1 );
-
-        translationStore.save( translation1a );
-        translationStore.save( translation1b );
-        translationStore.save( translation2a );
-        
-        assertTrue( translationStore.hasTranslations( className1 ) );
-        assertFalse( translationStore.hasTranslations( className2 ) );
-    }
 }
