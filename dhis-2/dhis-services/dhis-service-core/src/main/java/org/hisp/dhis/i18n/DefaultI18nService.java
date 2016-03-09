@@ -46,6 +46,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.hisp.dhis.system.util.ReflectionUtils.*;
 
@@ -136,6 +137,8 @@ public class DefaultI18nService
             return;
         }
 
+        objects = objects.stream().filter( o -> o != null ).collect( Collectors.toList() );
+        
         Map<String, List<Object>> classNameObjectMap = Multimaps.asMap( Multimaps.index( objects, o -> getClassName( o ) ) );
         
         for ( String className : classNameObjectMap.keySet() )
