@@ -30,8 +30,10 @@ package org.hisp.dhis.resourcetable.table;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.hisp.dhis.calendar.Calendar;
 import org.hisp.dhis.common.IdentifiableObjectUtils;
@@ -87,18 +89,27 @@ public class PeriodResourceTable
         Calendar calendar = PeriodType.getCalendar();
 
         List<Object[]> batchArgs = new ArrayList<>();
-
+        
+        Set<String> uniqueIsoDates = new HashSet<>();
+        
         for ( Period period : objects )
         {
             if ( period != null && period.isValid() )
             {
                 final Date startDate = period.getStartDate();
                 final PeriodType rowType = period.getPeriodType();
+                final String isoDate = period.getIsoDate();
 
+                if ( !uniqueIsoDates.add( isoDate ) )
+                {
+                    log.warn( "Duplicate ISO date for period, ignoring: " + period + ", ISO date: " + isoDate );
+                    continue;
+                }
+                
                 List<Object> values = new ArrayList<>();
 
                 values.add( period.getId() );
-                values.add( period.getIsoDate() );
+                values.add( isoDate );
                 values.add( period.getDaysInPeriod() );
 
                 for ( PeriodType periodType : PeriodType.PERIOD_TYPES )
