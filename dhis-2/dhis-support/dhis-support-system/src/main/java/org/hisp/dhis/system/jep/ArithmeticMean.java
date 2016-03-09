@@ -53,11 +53,10 @@ public class ArithmeticMean
     public void run( Stack inStack )
         throws ParseException
     {
-
-        // check the stack
         checkStack( inStack );
 
         Object param = inStack.pop();
+        
         if ( param instanceof List )
         {
             List<Double> vals = CustomFunctions.checkVector( param );
@@ -78,6 +77,8 @@ public class ArithmeticMean
             }
         }
         else
+        {
             throw new ParseException( "Invalid aggregate value in expression" );
+        }
     }
 }

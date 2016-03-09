@@ -48,6 +48,8 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author Abyot Asalefew
  */
@@ -212,7 +214,7 @@ public class DefaultTrackedEntityAttributeService
     public String validateScope( TrackedEntityAttribute trackedEntityAttribute,
         String value, TrackedEntityInstance trackedEntityInstance, OrganisationUnit organisationUnit, Program program )
     {
-        Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
+        Assert.notNull( trackedEntityAttribute, "tracked entity attribute is required." );
 
         if ( !trackedEntityAttribute.isUnique() || value == null )
         {
@@ -230,7 +232,7 @@ public class DefaultTrackedEntityAttributeService
 
             if ( !program.getOrganisationUnits().contains( organisationUnit ) )
             {
-                return "Given orgUnit is not assigned to program " + program.getUid();
+                return "Organisation unit is not assigned to program " + program.getUid();
             }
 
             params.setProgram( program );
@@ -239,7 +241,7 @@ public class DefaultTrackedEntityAttributeService
         }
         else if ( trackedEntityAttribute.getOrgunitScope() )
         {
-            Assert.notNull( organisationUnit, "organisationUnit is required for org unit scope" );
+            Assert.notNull( organisationUnit, "organisation unit is required for org unit scope" );
             params.setOrganisationUnitMode( OrganisationUnitSelectionMode.SELECTED );
             params.addOrganisationUnit( organisationUnit );
         }
@@ -270,40 +272,43 @@ public class DefaultTrackedEntityAttributeService
     @Override
     public String validateValueType( TrackedEntityAttribute trackedEntityAttribute, String value )
     {
-        Assert.notNull( trackedEntityAttribute, "trackedEntityAttribute is required." );
+        Assert.notNull( trackedEntityAttribute, "tracked entity attribute is required" );
         ValueType valueType = trackedEntityAttribute.getValueType();
+
+        String errorValue = StringUtils.substring( value, 0, 30 );
 
         if ( value.length() > 255 )
         {
-            return "Value length is greater than 256 chars for attribute " + trackedEntityAttribute.getUid();
+            return "Value length is greater than 255 chars for attribute " + trackedEntityAttribute.getUid();
         }
 
         if ( ValueType.NUMBER == valueType && !MathUtils.isNumeric( value ) )
         {
-            return "Value is not numeric for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not a valid numeric type for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.BOOLEAN == valueType && !MathUtils.isBool( value ) )
         {
-            return "Value is not boolean for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not a valid boolean type for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.DATE == valueType && DateUtils.parseDate( value ) == null )
         {
-            return "Value is not date for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not a valid date type for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.TRUE_ONLY == valueType && !"true".equals( value ) )
         {
-            return "Value is not true (true-only value type) for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not true (true-only type) for attribute " + trackedEntityAttribute.getUid();
         }
         else if ( ValueType.USERNAME == valueType )
         {
             if ( userService.getUserCredentialsByUsername( value ) == null )
             {
-                return "Value is not pointing to a valid username for attribute " + trackedEntityAttribute.getUid();
+                return "Value '" + errorValue + "' is not a valid username for attribute " + trackedEntityAttribute.getUid();
             }
         }
         else if ( trackedEntityAttribute.hasOptionSet() && !trackedEntityAttribute.isValidOptionValue( value ) )
         {
-            return "Value is not pointing to a valid option for attribute " + trackedEntityAttribute.getUid();
+            return "Value '" + errorValue + "' is not a valid option for attribute " + 
+                trackedEntityAttribute.getUid() + " and option set " + trackedEntityAttribute.getOptionSet().getUid();
         }
 
         return null;
@@ -317,38 +322,38 @@ public class DefaultTrackedEntityAttributeService
     public ProgramTrackedEntityAttribute getOrAddProgramTrackedEntityAttribute( String programUid, String attributeUid )
     {
         Program program = programService.getProgram( programUid );
-        
+
         TrackedEntityAttribute attribute = getTrackedEntityAttribute( attributeUid );
-        
+
         if ( program == null || attribute == null )
         {
             return null;
         }
-        
+
         ProgramTrackedEntityAttribute programAttribute = programAttributeStore.get( program, attribute );
-        
+
         if ( programAttribute == null )
         {
             programAttribute = new ProgramTrackedEntityAttribute( program, attribute );
-            
+
             programAttributeStore.save( programAttribute );
         }
-        
+
         return programAttribute;
-    }        
-    
+    }
+
     @Override
     public ProgramTrackedEntityAttribute getProgramTrackedEntityAttribute( String programUid, String attributeUid )
     {
         Program program = programService.getProgram( programUid );
-        
+
         TrackedEntityAttribute attribute = getTrackedEntityAttribute( attributeUid );
-        
+
         if ( program == null || attribute == null )
         {
             return null;
         }
-        
+
         return new ProgramTrackedEntityAttribute( program, attribute );
     }
 }

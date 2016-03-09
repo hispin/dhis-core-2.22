@@ -53,19 +53,24 @@ public class MaxValue
     public void run( Stack inStack )
         throws ParseException
     {
-        // check the stack
         checkStack( inStack );
 
         Object param = inStack.pop();
         List<Double> vals = CustomFunctions.checkVector( param );
         Double max = null;
+        
         for ( Double v : vals )
         {
             if ( max == null )
+            {
                 max = v;
+            }
             else if ( v > max )
+            {
                 max = v;
+            }
         }
+        
         inStack.push( new Double( max ) );
     }
 }

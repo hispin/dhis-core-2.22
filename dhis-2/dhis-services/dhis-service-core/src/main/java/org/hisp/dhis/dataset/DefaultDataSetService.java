@@ -397,13 +397,28 @@ public class DefaultDataSetService
     }
 
     @Override
-    public boolean isLocked( DataElement dataElement, Period period, OrganisationUnit organisationUnit, Date now )
+    public boolean isLocked( DataElement dataElement, Period period, OrganisationUnit organisationUnit,
+        DataElementCategoryOptionCombo attributeOptionCombo, Date now )
     {
         now = now != null ? now : new Date();
 
         boolean expired = dataElement.isExpired( period, now );
-        
-        return expired && lockExceptionStore.getCount( dataElement, period, organisationUnit ) == 0L;
+
+        if ( expired && lockExceptionStore.getCount( dataElement, period, organisationUnit ) == 0L )
+        {
+            return true;
+        }
+
+        DataSet dataSet = dataElement.getApprovalDataSet();
+
+        if ( dataSet == null || dataSet.getWorkflow() == null )
+        {
+            return false;
+        }
+
+        DataApprovalStatus dataApprovalStatus = dataApprovalService.getDataApprovalStatus( dataSet.getWorkflow(), period, organisationUnit, attributeOptionCombo );
+
+        return dataApprovalStatus.getState().isApproved();
     }
     
     @Override

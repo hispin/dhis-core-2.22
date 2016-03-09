@@ -52,6 +52,26 @@
         <td><img src="${base}24.png" onclick="selectSymbol( '24.png' )"></td>
         <td><img src="${base}25.png" onclick="selectSymbol( '25.png' )"></td>
     </tr>
+    <tr>
+        <td><img src="${base}26.svg" onclick="selectSymbol( '26.svg' )"></td>
+        <td><img src="${base}27.svg" onclick="selectSymbol( '27.svg' )"></td>
+        <td><img src="${base}28.svg" onclick="selectSymbol( '28.svg' )"></td>
+        <td><img src="${base}29.svg" onclick="selectSymbol( '29.svg' )"></td>
+        <td><img src="${base}30.svg" onclick="selectSymbol( '30.svg' )"></td>
+    </tr>
+        <tr>
+        <td><img src="${base}31.svg" onclick="selectSymbol( '31.svg' )"></td>
+        <td><img src="${base}32.svg" onclick="selectSymbol( '32.svg' )"></td>
+        <td><img src="${base}33.svg" onclick="selectSymbol( '33.svg' )"></td>
+        <td><img src="${base}34.svg" onclick="selectSymbol( '34.svg' )"></td>
+        <td><img src="${base}35.svg" onclick="selectSymbol( '35.svg' )"></td>
+    </tr>
+    <tr>
+        <td><img src="${base}36.svg" onclick="selectSymbol( '36.svg' )"></td>
+        <td><img src="${base}37.svg" onclick="selectSymbol( '37.svg' )"></td>
+        <td><img src="${base}38.svg" onclick="selectSymbol( '38.svg' )"></td>
+        <td><img src="${base}39.svg" onclick="selectSymbol( '39.svg' )"></td>
+        <td><img src="${base}40.svg" onclick="selectSymbol( '40.svg' )"></td>
 </table>
 
 </div>

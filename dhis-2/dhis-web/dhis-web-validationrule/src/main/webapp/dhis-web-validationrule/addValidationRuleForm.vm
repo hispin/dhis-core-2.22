@@ -79,6 +79,7 @@
 				<option value="less_than">$i18n.getString( "less_than" )</option>
 				<option value="less_than_or_equal_to">$i18n.getString( "less_than_or_equal_to" )</option>
                 <option value="compulsory_pair" id="compulsory_pair">$i18n.getString( "compulsory_pair" )</option>
+                <option value="exclusive_pair" id="exclusive_pair">$i18n.getString( "exclusive_pair" )</option>
 			</select>
 		</td>
 	</tr>

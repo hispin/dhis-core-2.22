@@ -1,5 +1,5 @@
 <form name="outerForm" novalidate>
-    <table class="dhis2-list-table-striped default-form-table dhis2-table-hover" ng-if='currentEvent && !currentStage.programStageSections.length'>
+    <table class="dhis2-list-table-striped default-form-table" ng-if='currentEvent && !currentStage.programStageSections.length'>
         <thead>
         <tr>
             <th ng-bind="dataElementLabel">
@@ -369,7 +369,7 @@
                     <div class="alert alert-warning">{{'section'| translate}} {{section.name}} {{'has_no_dataelements'| translate}}</div>
                 </div>
 
-                <table class="dhis2-list-table-striped default-form-table dhis2-table-hover" ng-if="section.programStageDataElements && section.programStageDataElements.length > 0">
+                <table class="dhis2-list-table-striped default-form-table" ng-if="section.programStageDataElements && section.programStageDataElements.length > 0">
                     <thead>
                     <tr>
                         <th ng-bind="dataElementLabel">

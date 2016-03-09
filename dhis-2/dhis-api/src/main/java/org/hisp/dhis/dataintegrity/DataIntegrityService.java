@@ -205,4 +205,18 @@ public interface DataIntegrityService
      * Gets all ValidationRules with invalid right side expressions.
      */
     SortedMap<ValidationRule, String> getInvalidValidationRuleRightSideExpressions();
+
+    // -------------------------------------------------------------------------
+    // DataIntegrityReport
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns a DataIntegrityReport.
+     */
+    DataIntegrityReport getDataIntegrityReport();
+
+    /**
+     * Returns a FlattenedDataIntegrityReport.
+     */
+    FlattenedDataIntegrityReport getFlattenedDataIntegrityReport();
 }

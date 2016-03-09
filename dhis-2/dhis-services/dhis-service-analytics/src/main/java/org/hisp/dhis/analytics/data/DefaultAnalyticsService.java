@@ -54,6 +54,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -578,7 +579,7 @@ public class DefaultAnalyticsService
      */
     private void applyIdScheme( DataQueryParams params, Grid grid )
     {
-        if ( params.hasNonUidOutputIdScheme() )
+        if ( !params.isSkipMeta() && params.hasNonUidOutputIdScheme() )
         {
             List<DimensionalItemObject> items = params.getAllDimensionItems();
             
@@ -595,6 +596,8 @@ public class DefaultAnalyticsService
         {
             return getAggregatedDataValues( params );
         }
+        
+        Locale locale = i18nService.getCurrentLocale();
         
         params.setOutputIdScheme( null );
         
@@ -615,8 +618,12 @@ public class DefaultAnalyticsService
             for ( String dimension : columns )
             {
                 reportTable.getColumnDimensions().add( dimension );
+                
+                List<DimensionalItemObject> items = params.getDimensionArrayExplodeCoc( dimension );
+                
+                i18nService.internationalise( items, locale );
 
-                tableColumns.add( params.getDimensionArrayExplodeCoc( dimension ) );
+                tableColumns.add( items.toArray( new DimensionalItemObject[0] ) );
             }
         }
 
@@ -625,11 +632,15 @@ public class DefaultAnalyticsService
             for ( String dimension : rows )
             {
                 reportTable.getRowDimensions().add( dimension );
+                
+                List<DimensionalItemObject> items = params.getDimensionArrayExplodeCoc( dimension );
+                
+                i18nService.internationalise( items, locale );
 
-                tableRows.add( params.getDimensionArrayExplodeCoc( dimension ) );
+                tableRows.add( items.toArray( new DimensionalItemObject[0] ) );
             }
         }
-
+        
         reportTable.setGridColumns( new CombinationGenerator<>( tableColumns.toArray( IRT2D ) ).getCombinations() );
         reportTable.setGridRows( new CombinationGenerator<>( tableRows.toArray( IRT2D ) ).getCombinations() );
 
@@ -642,7 +653,7 @@ public class DefaultAnalyticsService
 
         Map<String, Object> valueMap = getAggregatedDataValueMapping( grid );
 
-        return reportTable.getGrid( new ListGrid( grid.getMetaData() ), valueMap, false );
+        return reportTable.getGrid( new ListGrid( grid.getMetaData() ), valueMap, params.getDisplayProperty(), false );
     }
 
     @Override
@@ -919,12 +930,14 @@ public class DefaultAnalyticsService
         Map<String, String> map = new HashMap<>();
         
         Calendar calendar = PeriodType.getCalendar();
+        
+        Locale locale = i18nService.getCurrentLocale();
 
         for ( DimensionalObject dimension : dimensions )
         {
             List<DimensionalItemObject> items = new ArrayList<>( dimension.getItems() );
             
-            i18nService.internationalise( items );
+            i18nService.internationalise( items, locale );
 
             for ( DimensionalItemObject object : items )
             {

@@ -391,5 +391,4 @@ public interface ExpressionService
      * @param indicators the collection of Indicators.
      */
     List<DataElementOperand> getOperandsInIndicators( List<Indicator> indicators );
-
 }

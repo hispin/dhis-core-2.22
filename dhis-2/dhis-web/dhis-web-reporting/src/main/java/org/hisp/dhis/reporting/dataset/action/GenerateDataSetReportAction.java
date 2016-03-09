@@ -150,6 +150,10 @@ public class GenerateDataSetReportAction
         this.ou = ou;
     }
 
+    /**
+     * Dimensional parameters, follows the standard analytics format, e.g.
+     * <dim-id>:<dim-item>;<dim-item>
+     */
     private Set<String> dimension;
 
     public void setDimension( Set<String> dimension )

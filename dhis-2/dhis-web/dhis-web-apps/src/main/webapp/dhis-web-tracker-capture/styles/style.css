@@ -178,18 +178,26 @@ textarea {
 }
 
 .event-container {
-    display: inline-block;
+    display: -webkit-flex;
+    display: flex;
     cursor: pointer;
-    opacity: 1.0;
-    text-align: center;
+    opacity: 1.0;    
     margin: 5px;
-    padding: 5px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;    
     border: 2px dotted;
-    border-radius: 4px;
-    width: 130px;
-    height: 70px;
+    border-radius: 4px;  
+    width: 150px;
+    height: 90px;
     overflow: hidden;
-    float: left;
+    float: left;    
+    justify-content: center;
+    align-items: center;
+    align-content: center;  
+    flex-direction: column;
+    text-align: center;
 }
 
 .event-container:hover {
@@ -200,7 +208,16 @@ textarea {
 .arrow-container {
     display: inline-block;
     float: left;
-    padding-top: 30px;
+    padding-top: 40px;
+}
+
+.event-container-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .stage-completed {

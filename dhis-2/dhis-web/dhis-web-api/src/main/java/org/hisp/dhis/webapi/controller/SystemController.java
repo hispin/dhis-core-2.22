@@ -29,8 +29,6 @@ package org.hisp.dhis.webapi.controller;
  */
 
 import org.hisp.dhis.common.CodeGenerator;
-import org.hisp.dhis.dataintegrity.DataIntegrityReport;
-import org.hisp.dhis.dataintegrity.FlattenedDataIntegrityReport;
 import org.hisp.dhis.dxf2.metadata.ImportSummary;
 import org.hisp.dhis.dxf2.render.RenderService;
 import org.hisp.dhis.node.exception.InvalidTypeException;
@@ -159,11 +157,9 @@ public class SystemController
 
             TaskId taskId = new TaskId( taskCategory, currentUserService.getCurrentUser() );
 
-            // TODO Make task summary generic. (We use tasks for more than importing data).
-            if ( taskCategory.equals( TaskCategory.DATAINTEGRITY ) )
+            if ( taskCategory.equals( TaskCategory.DATAINTEGRITY ) ) //TODO
             {
-                DataIntegrityReport dataIntegrityReport = (DataIntegrityReport) notifier.getTaskSummary( taskId );
-                renderService.toJson( response.getOutputStream(), new FlattenedDataIntegrityReport( dataIntegrityReport ) );
+                renderService.toJson( response.getOutputStream(), notifier.getTaskSummary( taskId ) );
                 return;
             }
             else

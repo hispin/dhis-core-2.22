@@ -1121,6 +1121,8 @@ Ext.onReady( function() {
 				delete favorite.parentGraphMap;
 
                 delete favorite.id;
+
+                delete favorite.program;
 			}
 
 			return favorite;
@@ -2867,7 +2869,13 @@ console.log(table);
             },
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -3026,7 +3034,13 @@ console.log(table);
             },
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -3346,7 +3360,13 @@ console.log(table);
 			},
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -3384,7 +3404,13 @@ console.log(table);
 			},
             loadDataAndUpdate: function(data, append) {
                 this.clearFilter(); // work around
+
+                if (!append) {
+                    this.removeAll();
+                }
+
                 this.loadData(data, append);
+
                 this.updateFilter();
             },
             getRecordsByIds: function(ids) {
@@ -4462,9 +4488,7 @@ console.log(table);
                             var attributes = (Ext.decode(r.responseText).programs[0] || {}).programTrackedEntityAttributes || [],
                                 data = ns.core.support.prototype.array.sort(Ext.Array.clean([].concat(elements, attributes))) || [];
 
-                            if (data) {
-                                eventDataItemAvailableStore.loadDataAndUpdate(data);
-                            }
+                            eventDataItemAvailableStore.loadDataAndUpdate(data);
                         }
                     });
                 }
@@ -4706,9 +4730,7 @@ console.log(table);
                     var indicators = (Ext.decode(r.responseText).programs[0] || {}).programIndicators || [],
                         data = ns.core.support.prototype.array.sort(indicators);
 
-                    if (data) {
-                        programIndicatorAvailableStore.loadDataAndUpdate(data);
-                    }
+                    programIndicatorAvailableStore.loadDataAndUpdate(data);
                 }
             });
 
@@ -8015,7 +8037,7 @@ console.log(table);
 
                                         // organisation unit levels
                                         requests.push({
-                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,' + namePropertyUrl + ',level&paging=false',
+                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,name,level&paging=false',
                                             success: function(r) {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 

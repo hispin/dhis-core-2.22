@@ -91,7 +91,7 @@ public class DataElementResourceTable
         {
             List<Object> values = new ArrayList<>();
 
-            final DataSet dataSet = dataElement.getDataSet();
+            final DataSet dataSet = dataElement.getApprovalDataSet();
             final PeriodType periodType = dataElement.getPeriodType();
 
             // -----------------------------------------------------------------

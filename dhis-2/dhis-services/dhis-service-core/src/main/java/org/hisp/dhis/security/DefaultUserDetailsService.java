@@ -82,11 +82,9 @@ public class DefaultUserDetailsService
             }
         }
 
-        boolean credentialsExpired = userService.credentialsNonExpired( credentials );
+        boolean credentialsNonExpired = userService.credentialsNonExpired( credentials );
 
-        boolean enabled = !credentials.isDisabled() && !credentials.isExternalAuth();
-        
         return new User( credentials.getUsername(), credentials.getPassword(),
-            enabled, true, credentialsExpired, true, SecurityUtils.getGrantedAuthorities( credentials ) );
+            !credentials.isDisabled(), true, credentialsNonExpired, true, SecurityUtils.getGrantedAuthorities( credentials ) );
     }
 }

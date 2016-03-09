@@ -2992,7 +2992,7 @@ Ext.onReady(function() {
                 failure;
 
             success = function(r) {
-                var geojson = layer.core.decode(r),
+                var geojson = layer.core.decode(Ext.decode(r.responseText)),
                     format = new OpenLayers.Format.GeoJSON(),
                     features = gis.util.map.getTransformedFeatureArray(format.read(geojson));
 
@@ -3058,7 +3058,7 @@ Ext.onReady(function() {
             layer.styleMap = GIS.core.StyleMap(view);
 
             success = function(r) {
-                var data = r.organisationUnitGroups,
+                var data = Ext.decode(r.responseText).organisationUnitGroups,
                     options = {
                         indicator: view.organisationUnitGroupSet.id
                     };

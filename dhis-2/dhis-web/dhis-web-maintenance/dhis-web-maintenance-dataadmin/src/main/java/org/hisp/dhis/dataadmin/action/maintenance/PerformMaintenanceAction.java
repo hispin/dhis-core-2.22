@@ -1,5 +1,7 @@
 package org.hisp.dhis.dataadmin.action.maintenance;
 
+import java.util.List;
+
 /*
  * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
@@ -28,8 +30,6 @@ package org.hisp.dhis.dataadmin.action.maintenance;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.annotation.Resource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.analytics.AnalyticsTableService;
@@ -54,20 +54,8 @@ public class PerformMaintenanceAction
     // Dependencies
     // -------------------------------------------------------------------------
 
-    @Resource( name = "org.hisp.dhis.analytics.AnalyticsTableService" )
-    private AnalyticsTableService analyticsTableService;
-
-    @Resource( name = "org.hisp.dhis.analytics.CompletenessTableService" )
-    private AnalyticsTableService completenessTableService;
-
-    @Resource( name = "org.hisp.dhis.analytics.CompletenessTargetTableService" )
-    private AnalyticsTableService completenessTargetTableService;
-
-    @Resource( name = "org.hisp.dhis.analytics.OrgUnitTargetTableService" )
-    private AnalyticsTableService orgUnitTargetTableService;
-
-    @Resource( name = "org.hisp.dhis.analytics.EventAnalyticsTableService" )
-    private AnalyticsTableService eventAnalyticsTableService;
+    @Autowired
+    private List<AnalyticsTableService> analyticsTableService;
 
     private MaintenanceService maintenanceService;
 
@@ -170,14 +158,16 @@ public class PerformMaintenanceAction
     {
         String username = currentUserService.getCurrentUsername();
 
-        if ( clearAnalytics )
+        if ( clearAnalytics && analyticsTableService != null )
         {
             resourceTableService.dropAllSqlViews();
-            analyticsTableService.dropTables();
-            completenessTableService.dropTables();
-            completenessTargetTableService.dropTables();
-            orgUnitTargetTableService.dropTables();
-            eventAnalyticsTableService.dropTables();
+            
+            for ( AnalyticsTableService service : analyticsTableService )
+            {
+                service.dropTables();
+                
+                log.debug( "Cleared analytics tables: " + service.getClass().getSimpleName() );
+            }
 
             log.info( "'" + username + "': Cleared analytics tables" );
         }

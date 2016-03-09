@@ -352,7 +352,7 @@ public class HibernateDataApprovalStore
         int workflowPeriodId = getWorkflowPeriodId( workflow, endDate );
 
         final String sql =
-            "select coc.uid as categoryoptioncombouid, o.organisationunituid, " +
+            "select coc.uid as cocuid, o.organisationunituid as ouuid, ou.name as ouname, " +
             "(select min(dal.level + case when da.accepted then .0 else .1 end) " +
                 "from dataapproval da " +
                 "join dataapprovallevel dal on dal.dataapprovallevelid = da.dataapprovallevelid " +
@@ -365,23 +365,24 @@ public class HibernateDataApprovalStore
             approvedAboveSubquery + " as approved_above " +
             "from categoryoptioncombo coc " +
             "join categoryoptioncombos_categoryoptions cocco on cocco.categoryoptioncomboid = coc.categoryoptioncomboid " +
-                ( attributeCombo == null ? "" : "join categorycombos_optioncombos ccoc on ccoc.categoryoptioncomboid = cocco.categoryoptioncomboid " +
-                    "and ccoc.categorycomboid = " + attributeCombo.getId() + " " ) +
-                "join dataelementcategoryoption co on co.categoryoptionid = cocco.categoryoptionid " +
-                    "and (co.startdate is null or co.startdate <= '" + endDate + "') and (co.enddate is null or co.enddate >= '" + startDate + "') " +
-                "join _orgunitstructure o on " + orgUnitJoinOn + " " +
-                "left join categoryoption_organisationunits coo on coo.categoryoptionid = co.categoryoptionid " +
-                "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
-                joinAncestors +
-                "where ( coo.categoryoptionid is null or ous.organisationunitid is not null " + testAncestors + ")" +
-                ( attributeOptionCombos == null || attributeOptionCombos.isEmpty() ? "" : " and cocco.categoryoptioncomboid in (" +
-                    StringUtils.join( IdentifiableObjectUtils.getIdentifiers( attributeOptionCombos ), "," ) + ") " ) +
-                ( isSuperUser || user == null ? "" :
-                    " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid is null or co.userid = " + user.getId() + " or exists ( " +
-                    "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
-                    "left join usergroupaccess uga on uga.usergroupaccessid = couga.usergroupaccessid " +
-                    "left join usergroupmembers ugm on ugm.usergroupid = uga.usergroupid " +
-                    "where couga.categoryoptionid = cocco.categoryoptionid and ugm.userid = " + user.getId() + ") )" );
+            ( attributeCombo == null ? "" : "join categorycombos_optioncombos ccoc on ccoc.categoryoptioncomboid = cocco.categoryoptioncomboid " +
+                "and ccoc.categorycomboid = " + attributeCombo.getId() + " " ) +
+            "join dataelementcategoryoption co on co.categoryoptionid = cocco.categoryoptionid " +
+                "and (co.startdate is null or co.startdate <= '" + endDate + "') and (co.enddate is null or co.enddate >= '" + startDate + "') " +
+            "join _orgunitstructure o on " + orgUnitJoinOn + " " +
+            "join organisationunit ou on o.organisationunitid = ou.organisationunitid " +
+            "left join categoryoption_organisationunits coo on coo.categoryoptionid = co.categoryoptionid " +
+            "left join _orgunitstructure ous on ous.idlevel" + orgUnitLevel + " = o.organisationunitid and ous.organisationunitid = coo.organisationunitid " +
+            joinAncestors +
+            "where ( coo.categoryoptionid is null or ous.organisationunitid is not null " + testAncestors + ")" +
+            ( attributeOptionCombos == null || attributeOptionCombos.isEmpty() ? "" : " and cocco.categoryoptioncomboid in (" +
+                StringUtils.join( IdentifiableObjectUtils.getIdentifiers( attributeOptionCombos ), "," ) + ") " ) +
+            ( isSuperUser || user == null ? "" :
+                " and ( co.publicaccess is null or left(co.publicaccess, 1) = 'r' or co.userid is null or co.userid = " + user.getId() + " or exists ( " +
+                "select 1 from dataelementcategoryoptionusergroupaccesses couga " +
+                "left join usergroupaccess uga on uga.usergroupaccessid = couga.usergroupaccessid " +
+                "left join usergroupmembers ugm on ugm.usergroupid = uga.usergroupid " +
+                "where couga.categoryoptionid = cocco.categoryoptionid and ugm.userid = " + user.getId() + ") )" );
 
         log.debug( "Get approval SQL: " + sql );
 
@@ -395,12 +396,13 @@ public class HibernateDataApprovalStore
         {
             final String aocUid = rowSet.getString( 1 );
             final String ouUid = rowSet.getString( 2 );
-            final Double highestApproved = rowSet.getDouble( 3 );
-            final boolean readyBelow = rowSet.getBoolean( 4 );
-            final boolean approvedAbove = rowSet.getBoolean( 5 );
+            final String ouName = rowSet.getString( 3 );
+            final Double highestApproved = rowSet.getDouble( 4 );
+            final boolean readyBelow = rowSet.getBoolean( 5 );
+            final boolean approvedAbove = rowSet.getBoolean( 6 );
 
             final int level = highestApproved == null ? 0 : highestApproved.intValue();
-            final boolean accepted = ( highestApproved == level );
+            final boolean accepted = ( highestApproved != 0 && highestApproved == level );
 
             DataApprovalLevel approvedLevel = ( level == 0 ? null : levelMap.get( level ) ); // null if not approved
             DataApprovalLevel actionLevel = ( approvedLevel == null ? lowestApprovalLevelForOrgUnit : approvedLevel );
@@ -422,7 +424,7 @@ public class HibernateDataApprovalStore
                                 ACCEPTED_HERE :
                                 APPROVED_HERE );
     
-                statusList.add( new DataApprovalStatus( state, approvedLevel, actionLevel, ouUid, aocUid, accepted, null ) );
+                statusList.add( new DataApprovalStatus( state, approvedLevel, actionLevel, ouUid, ouName, aocUid, accepted, null ) );
     
                 log.debug( "Get approval result: level " + level + " dataApprovalLevel " + ( actionLevel != null ? actionLevel.getLevel() : "[none]" )
                     + " approved " + ( approvedLevel != null )

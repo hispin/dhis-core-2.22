@@ -491,12 +491,13 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
-            postCreateEntity( parsed );
-
             if ( importTypeSummary.getImportCount().getImported() == 1 && importTypeSummary.getLastImported() != null )
             {
                 response.setHeader( "Location", contextService.getApiPath() + getSchema().getRelativeApiEndpoint()
                     + "/" + importTypeSummary.getLastImported() );
+
+                T entity = manager.get( importTypeSummary.getLastImported() );
+                postCreateEntity( entity );
             }
         }
 
@@ -521,12 +522,13 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
-            postCreateEntity( parsed );
-
             if ( importTypeSummary.getImportCount().getImported() == 1 && importTypeSummary.getLastImported() != null )
             {
                 response.setHeader( "Location", contextService.getApiPath() + getSchema().getRelativeApiEndpoint()
                     + "/" + importTypeSummary.getLastImported() );
+
+                T entity = manager.get( importTypeSummary.getLastImported() );
+                postCreateEntity( entity );
             }
         }
 
@@ -562,7 +564,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
-            postUpdateEntity( parsed );
+            T entity = manager.get( pvUid );
+            postUpdateEntity( entity );
         }
 
         webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );
@@ -593,7 +596,8 @@ public abstract class AbstractCrudController<T extends IdentifiableObject>
 
         if ( ImportStatus.SUCCESS.equals( importTypeSummary.getStatus() ) )
         {
-            postUpdateEntity( parsed );
+            T entity = manager.get( pvUid );
+            postUpdateEntity( entity );
         }
 
         webMessageService.send( WebMessageUtils.importTypeSummary( importTypeSummary ), response, request );

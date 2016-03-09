@@ -1,5 +1,7 @@
 package org.hisp.dhis.webapi.controller;
 
+import org.hisp.dhis.analytics.AnalyticsTableService;
+
 /*
  * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
@@ -106,7 +108,27 @@ public class MaintenanceController
     @Autowired
     private OrganisationUnitService organisationUnitService;
 
-    @RequestMapping( value = "/ouPathUpdate", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @Autowired
+    private List<AnalyticsTableService> analyticsTableService;
+
+    @RequestMapping( value = "/analyticsTablesClear", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
+    public void clearAnalyticsTables()
+    {
+        for ( AnalyticsTableService service : analyticsTableService )
+        {
+            service.dropTables();
+        }
+    }
+
+    @RequestMapping( value = "/expiredInvitationsClear", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
+    public void clearExpiredInvitations()
+    {
+        maintenanceService.removeExpiredInvitations();
+    }
+    
+    @RequestMapping( value = "/ouPathsUpdate", method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
     public void forceUpdatePaths()
     {
@@ -147,18 +169,18 @@ public class MaintenanceController
         maintenanceService.deleteZeroDataValues();
     }
 
-    @RequestMapping( value = "/dropSqlViews", method = { RequestMethod.PUT, RequestMethod.POST } )
-    @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
-    public void dropSqlViews()
-    {
-        resourceTableService.dropAllSqlViews();
-    }
-
-    @RequestMapping( value = "/createSqlViews", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @RequestMapping( value = "/sqlViewsCreate", method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
     public void createSqlViews()
     {
         resourceTableService.createAllSqlViews();
+    }
+
+    @RequestMapping( value = "/sqlViewsDrop", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
+    public void dropSqlViews()
+    {
+        resourceTableService.dropAllSqlViews();
     }
 
     @RequestMapping( value = "/categoryOptionComboUpdate", method = { RequestMethod.PUT, RequestMethod.POST } )
@@ -168,7 +190,7 @@ public class MaintenanceController
         categoryService.updateAllOptionCombos();
     }
 
-    @RequestMapping( value = "/cache", method = { RequestMethod.PUT, RequestMethod.POST } )
+    @RequestMapping( value = { "/cacheClear", "/cache" }, method = { RequestMethod.PUT, RequestMethod.POST } )
     @PreAuthorize( "hasRole('ALL') or hasRole('F_PERFORM_MAINTENANCE')" )
     public void clearCache()
     {

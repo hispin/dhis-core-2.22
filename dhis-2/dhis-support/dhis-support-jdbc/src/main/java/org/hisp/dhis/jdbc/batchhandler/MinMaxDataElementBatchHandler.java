@@ -95,7 +95,7 @@ public class MinMaxDataElementBatchHandler
         statementBuilder.setColumn( "categoryoptioncomboid" );
         statementBuilder.setColumn( "minimumvalue" );
         statementBuilder.setColumn( "maximumvalue" );
-        statementBuilder.setColumn( "generated" );
+        statementBuilder.setColumn( "generatedvalue" );
     }
 
     @Override

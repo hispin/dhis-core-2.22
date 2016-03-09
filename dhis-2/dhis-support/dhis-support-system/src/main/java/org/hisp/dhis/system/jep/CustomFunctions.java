@@ -44,7 +44,6 @@ import org.nfunk.jep.function.PostfixMathCommandI;
  */
 public class CustomFunctions
 {
-
     private static Boolean init_done = false;
 
     public static Map<String, PostfixMathCommandI> aggregate_functions = new HashMap<String, PostfixMathCommandI>();
@@ -52,7 +51,10 @@ public class CustomFunctions
     public static void addFunctions( JEP parser )
     {
         if ( !(init_done) )
+        {
             initCustomFunctions();
+        }
+        
         for ( Entry<String, PostfixMathCommandI> e : aggregate_functions.entrySet() )
         {
             String fname = e.getKey();
@@ -68,14 +70,20 @@ public class CustomFunctions
     public static Pattern getAggregatePrefixPattern()
     {
         if ( !(init_done) )
+        {
             initCustomFunctions();
+        }
+        
         if ( n_aggregates == aggregate_functions.size() )
+        {
             return aggregate_prefix;
+        }
         else
         {
             StringBuffer s = new StringBuffer();
             int i = 0;
             s.append( "(" );
+            
             for ( String key : aggregate_functions.keySet() )
             {
                 if ( i > 0 )
@@ -84,6 +92,7 @@ public class CustomFunctions
                     i++;
                 s.append( key );
             }
+            
             s.append( ")\\s*\\(" );
             aggregate_prefix = Pattern.compile( s.toString() );
             n_aggregates = aggregate_functions.size();
@@ -103,23 +112,34 @@ public class CustomFunctions
         if ( param instanceof List )
         {
             List<?> vals = (List<?>) param;
+            
             for ( Object val : vals )
             {
                 if ( !(val instanceof Double) )
+                {
                     throw new ParseException( "Non numeric vector" );
+                }
             }
+            
             return (List<Double>) param;
         }
         else
+        {
             throw new ParseException( "Invalid vector argument" );
+        }
     }
 
     private synchronized static void initCustomFunctions()
     {
         if ( init_done )
+        {
             return;
+        }
         else
+        {
             init_done = true;
+        }
+        
         CustomFunctions.addAggregateFunction( "AVG", new ArithmeticMean() );
         CustomFunctions.addAggregateFunction( "STDDEV", new StandardDeviation() );
         CustomFunctions.addAggregateFunction( "MEDIAN", new MedianValue() );

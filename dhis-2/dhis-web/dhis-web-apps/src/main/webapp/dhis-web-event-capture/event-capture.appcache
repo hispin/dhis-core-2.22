@@ -80,6 +80,8 @@ scripts/filters.js
 ../dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js
 ../main.js
 
+../api/files/script
+
 ../dhis-web-commons/font-awesome/css/font-awesome.min.css
 ../dhis-web-commons/css/light_blue/light_blue.css
 ../dhis-web-commons/css/widgets.css
@@ -90,6 +92,8 @@ scripts/filters.js
 ../dhis-web-commons/javascripts/angular/plugins/select2.png
 
 styles/style.css
+
+../api/files/style
 
 ../dhis-web-commons/css/light_blue/logo_banner.png
 ../images/ajax-loader-bar.gif

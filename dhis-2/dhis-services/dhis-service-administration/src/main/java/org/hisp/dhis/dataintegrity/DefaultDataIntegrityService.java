@@ -68,6 +68,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -647,5 +648,70 @@ public class DefaultDataIntegrityService
         }
 
         return invalids;
+    }
+
+    @Override
+    public DataIntegrityReport getDataIntegrityReport()
+    {
+        DataIntegrityReport report = new DataIntegrityReport();
+        
+        report.setDataElementsWithoutDataSet( new ArrayList<>( getDataElementsWithoutDataSet() ) );
+        report.setDataElementsWithoutGroups( new ArrayList<>( getDataElementsWithoutGroups() ) );
+        report.setDataElementsAssignedToDataSetsWithDifferentPeriodTypes( getDataElementsAssignedToDataSetsWithDifferentPeriodTypes() );
+        report.setDataElementsViolatingExclusiveGroupSets( getDataElementsViolatingExclusiveGroupSets() );
+        report.setDataElementsInDataSetNotInForm( getDataElementsInDataSetNotInForm() );
+
+        log.info( "Checked data elements" );
+
+        report.setCategoryOptionCombosNotInDataElementCategoryCombo( getCategoryOptionCombosNotInDataElementCategoryCombo() );
+        report.setDataSetsNotAssignedToOrganisationUnits( new ArrayList<>( getDataSetsNotAssignedToOrganisationUnits() ) );
+        report.setSectionsWithInvalidCategoryCombinations( new ArrayList<>( getSectionsWithInvalidCategoryCombinations() ) );
+
+        log.info( "Checked data sets" );
+
+        report.setIndicatorsWithIdenticalFormulas( getIndicatorsWithIdenticalFormulas() );
+        report.setIndicatorsWithoutGroups( new ArrayList<>( getIndicatorsWithoutGroups() ) );
+        report.setInvalidIndicatorNumerators( getInvalidIndicatorNumerators() );
+        report.setInvalidIndicatorDenominators( getInvalidIndicatorDenominators() );
+        report.setIndicatorsViolatingExclusiveGroupSets( getIndicatorsViolatingExclusiveGroupSets() );
+
+        log.info( "Checked indicators" );
+
+        report.setDuplicatePeriods( getDuplicatePeriods() );
+
+        log.info( "Checked periods" );
+
+        report.setOrganisationUnitsWithCyclicReferences( new ArrayList<>( getOrganisationUnitsWithCyclicReferences() ) );
+        report.setOrphanedOrganisationUnits( new ArrayList<>( getOrphanedOrganisationUnits() ) );
+        report.setOrganisationUnitsWithoutGroups( new ArrayList<>( getOrganisationUnitsWithoutGroups() ) );
+        report.setOrganisationUnitsViolatingExclusiveGroupSets( getOrganisationUnitsViolatingExclusiveGroupSets() );
+        report.setOrganisationUnitGroupsWithoutGroupSets( new ArrayList<>( getOrganisationUnitGroupsWithoutGroupSets() ) );
+        report.setValidationRulesWithoutGroups( new ArrayList<>( getValidationRulesWithoutGroups() ) );
+
+        log.info( "Checked organisation units" );
+
+        report.setInvalidValidationRuleLeftSideExpressions( getInvalidValidationRuleLeftSideExpressions() );
+        report.setInvalidValidationRuleRightSideExpressions( getInvalidValidationRuleRightSideExpressions() );
+
+        log.info( "Checked validation rules" );
+
+        Collections.sort( report.getDataElementsWithoutDataSet(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getDataElementsWithoutGroups(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getDataSetsNotAssignedToOrganisationUnits(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getSectionsWithInvalidCategoryCombinations(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getIndicatorsWithoutGroups(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getOrganisationUnitsWithCyclicReferences(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getOrphanedOrganisationUnits(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getOrganisationUnitsWithoutGroups(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getOrganisationUnitGroupsWithoutGroupSets(), IdentifiableObjectNameComparator.INSTANCE );
+        Collections.sort( report.getValidationRulesWithoutGroups(), IdentifiableObjectNameComparator.INSTANCE );
+
+        return report;
+    }
+
+    @Override
+    public FlattenedDataIntegrityReport getFlattenedDataIntegrityReport()
+    {
+        return new FlattenedDataIntegrityReport( getDataIntegrityReport() );
     }
 }

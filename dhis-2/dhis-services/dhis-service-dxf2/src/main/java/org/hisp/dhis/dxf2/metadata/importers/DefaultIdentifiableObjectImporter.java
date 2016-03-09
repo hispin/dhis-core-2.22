@@ -50,7 +50,6 @@ import org.hisp.dhis.dataelement.DataElementCategoryDimension;
 import org.hisp.dhis.dataelement.DataElementCategoryOption;
 import org.hisp.dhis.dataelement.DataElementOperand;
 import org.hisp.dhis.dataelement.DataElementOperandService;
-import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataentryform.DataEntryFormService;
 import org.hisp.dhis.dxf2.common.ImportOptions;
 import org.hisp.dhis.dxf2.importsummary.ImportConflict;
@@ -79,6 +78,9 @@ import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
 import org.hisp.dhis.translation.Translation;
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserCredentials;
+import org.hisp.dhis.user.UserGroup;
+import org.hisp.dhis.user.UserGroupAccess;
+import org.hisp.dhis.user.UserGroupAccessService;
 import org.hisp.dhis.user.UserService;
 import org.hisp.dhis.validation.ValidationRule;
 import org.hisp.dhis.validation.ValidationViolation;
@@ -142,6 +144,9 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserGroupAccessService userGroupAccessService;
 
     @Autowired( required = false )
     private List<ObjectHandler<T>> objectHandlers;
@@ -944,12 +949,11 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
     // keeping this internal for now, might be split into several classes
     private class NonIdentifiableObjects
     {
-        private Set<AttributeValue> attributeValues = Sets.newHashSet();
+        private Set<AttributeValue> attributeValues = new HashSet<>();
+        private Set<UserGroupAccess> userGroupAccesses = new HashSet<>();
 
         private Expression leftSide;
         private Expression rightSide;
-
-        private DataEntryForm dataEntryForm;
 
         private Set<DataElementOperand> compulsoryDataElementOperands = new HashSet<>();
         private Set<DataElementOperand> greyedFields = new HashSet<>();
@@ -996,9 +1000,9 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
         {
             schema = schemaService.getDynamicSchema( object.getClass() );
             attributeValues = extractAttributeValues( object );
+            userGroupAccesses = extractUserGroupAccesses( object );
             leftSide = extractExpression( object, "leftSide" );
             rightSide = extractExpression( object, "rightSide" );
-            dataEntryForm = extractDataEntryForm( object, "dataEntryForm" );
             compulsoryDataElementOperands = Sets.newHashSet( extractDataElementOperands( object, "compulsoryDataElementOperands" ) );
             greyedFields = Sets.newHashSet( extractDataElementOperands( object, "greyedFields" ) );
             dataElementOperands = Lists.newArrayList( extractDataElementOperands( object, "dataElementOperands" ) );
@@ -1014,7 +1018,6 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             {
                 deleteExpression( object, "leftSide" );
                 deleteExpression( object, "rightSide" );
-                deleteDataEntryForm( object, "dataEntryForm" );
 
                 if ( options.getImportStrategy().isDelete() )
                 {
@@ -1030,56 +1033,14 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             schema = schemaService.getDynamicSchema( object.getClass() );
 
             saveAttributeValues( object, attributeValues );
+            saveUserGroupAccess( object, userGroupAccesses );
             saveExpression( object, "leftSide", leftSide );
             saveExpression( object, "rightSide", rightSide );
-            saveDataEntryForm( object, "dataEntryForm", dataEntryForm );
             saveDataElementOperands( object, "compulsoryDataElementOperands", compulsoryDataElementOperands );
             saveDataElementOperands( object, "greyedFields", greyedFields );
             saveDataElementOperands( object, "dataElementOperands", dataElementOperands );
             saveCategoryDimensions( object, categoryDimensions );
             saveDataDimensionItems( object, dataDimensionItems );
-        }
-
-        private void saveDataEntryForm( T object, String fieldName, DataEntryForm dataEntryForm )
-        {
-            if ( dataEntryForm != null )
-            {
-                Map<Field, Collection<Object>> identifiableObjectCollections = detachCollectionFields( dataEntryForm );
-                reattachCollectionFields( dataEntryForm, identifiableObjectCollections, user );
-
-                dataEntryForm.setId( 0 );
-                dataEntryFormService.addDataEntryForm( dataEntryForm );
-
-                ReflectionUtils.invokeSetterMethod( fieldName, object, dataEntryForm );
-            }
-        }
-
-        private DataEntryForm extractDataEntryForm( T object, String fieldName )
-        {
-            DataEntryForm dataEntryForm = null;
-
-            if ( ReflectionUtils.findGetterMethod( fieldName, object ) != null )
-            {
-                dataEntryForm = ReflectionUtils.invokeGetterMethod( fieldName, object );
-
-                if ( dataEntryForm != null )
-                {
-                    ReflectionUtils.invokeSetterMethod( fieldName, object, new Object[]{ null } );
-                }
-            }
-
-            return dataEntryForm;
-        }
-
-        private void deleteDataEntryForm( T object, String fieldName )
-        {
-            DataEntryForm dataEntryForm = extractDataEntryForm( object, fieldName );
-
-            if ( dataEntryForm != null )
-            {
-                dataEntryFormService.deleteDataEntryForm( dataEntryForm );
-                sessionFactory.getCurrentSession().flush();
-            }
         }
 
         private Expression extractExpression( T object, String fieldName )
@@ -1215,6 +1176,19 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             return attributeValues;
         }
 
+        private Set<UserGroupAccess> extractUserGroupAccesses( T object )
+        {
+            Set<UserGroupAccess> userGroupAccesses = new HashSet<>();
+
+            if ( schema.havePersistedProperty( "userGroupAccesses" ) )
+            {
+                userGroupAccesses = ReflectionUtils.invokeGetterMethod( "userGroupAccesses", object );
+                ReflectionUtils.invokeSetterMethod( "userGroupAccesses", object, new HashSet<>() );
+            }
+
+            return userGroupAccesses;
+        }
+
         private void saveAttributeValues( T object, Collection<AttributeValue> attributeValues )
         {
             for ( AttributeValue attributeValue : attributeValues )
@@ -1237,6 +1211,24 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
             catch ( Exception ex )
             {
                 log.info( ex.getMessage() );
+            }
+        }
+
+        private void saveUserGroupAccess( T object, Set<UserGroupAccess> userGroupAccesses )
+        {
+            for ( UserGroupAccess uga : userGroupAccesses )
+            {
+                UserGroup userGroup = objectBridge.getObject( uga.getUserGroup() );
+
+                if ( userGroup == null )
+                {
+                    log.info( "Unknown reference to " + uga.getUserGroup() + " on object " + uga );
+                    return;
+                }
+
+                uga.setUserGroup( userGroup );
+                userGroupAccessService.addUserGroupAccess( uga );
+                object.getUserGroupAccesses().add( uga );
             }
         }
 

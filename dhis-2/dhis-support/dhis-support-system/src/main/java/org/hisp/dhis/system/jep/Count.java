@@ -53,7 +53,6 @@ public class Count
     public void run( Stack inStack )
         throws ParseException
     {
-        // check the stack
         checkStack( inStack );
 
         Object param = inStack.pop();

@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.configuration.ConfigurationService;
@@ -42,6 +43,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.email.Email;
 import org.hisp.dhis.email.EmailService;
 import org.hisp.dhis.i18n.I18nManager;
+import org.hisp.dhis.i18n.locale.LocaleManager;
 import org.hisp.dhis.setting.SystemSettingManager;
 import org.hisp.dhis.system.velocity.VelocityManager;
 import org.hisp.dhis.user.CurrentUserService;
@@ -49,6 +51,7 @@ import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserGroup;
 import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.user.UserSettingService;
+import org.hisp.dhis.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,9 +65,7 @@ public class DefaultMessageService
     private static final Log log = LogFactory.getLog( DefaultMessageService.class );
 
     private static final String COMPLETE_SUBJECT = "Form registered as complete";
-
     private static final String COMPLETE_TEMPLATE = "completeness_message";
-
     private static final String MESSAGE_EMAIL_FOOTER_TEMPLATE = "message_email_footer";
 
     // -------------------------------------------------------------------------
@@ -417,18 +418,19 @@ public class DefaultMessageService
     private String getMessageFooter( MessageConversation conversation )
     {
         HashMap<String, Object> values = new HashMap<>( 2 );
+        
         String baseUrl = systemSettingManager.getInstanceBaseUrl();
 
         if ( baseUrl == null )
         {
-            return ""; // No base url is configured for this instance. Cannot
-                       // create a reply link.
+            return StringUtils.EMPTY;
         }
-
-        values.put( "responseUrl",
-            baseUrl + "/dhis-web-dashboard-integration/readMessage.action?id=" + conversation.getUid() );
-
+        
         Locale locale = (Locale) userSettingService.getUserSetting( UserSettingKey.UI_LOCALE, conversation.getUser() );
+        
+        locale = ObjectUtils.firstNonNull( locale, LocaleManager.DEFAULT_LOCALE );
+        
+        values.put( "responseUrl", baseUrl + "/dhis-web-dashboard-integration/readMessage.action?id=" + conversation.getUid() );        
         values.put( "i18n", i18nManager.getI18n( locale ) );
 
         return new VelocityManager().render( values, MESSAGE_EMAIL_FOOTER_TEMPLATE );

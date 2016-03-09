@@ -115,6 +115,10 @@ function i18nalizeOperator( operator )
     {
         return i18n_compulsory_pair;
     }
+	else if ( operator == "exclusive_pair" )
+	{
+		return i18n_exclusive_pair;
+	}
     
     return null;
 }

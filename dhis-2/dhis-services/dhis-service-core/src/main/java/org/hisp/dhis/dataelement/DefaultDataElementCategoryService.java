@@ -777,6 +777,12 @@ public class DefaultDataElementCategoryService
         return options.size() == categoryOptionCombo.getCategoryOptions().size();
     }
 
+    @Override
+    public void updateCategoryOptionComboNames()
+    {
+        categoryOptionComboStore.updateNames();
+    }
+
     // -------------------------------------------------------------------------
     // DataElementOperand
     // -------------------------------------------------------------------------

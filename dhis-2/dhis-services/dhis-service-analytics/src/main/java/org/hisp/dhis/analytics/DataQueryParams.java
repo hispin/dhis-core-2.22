@@ -1497,7 +1497,7 @@ public class DataQueryParams
      * dimension is specified, all category option combos for the first data 
      * element is returned. Returns an empty array if the dimension is not present.
      */
-    public DimensionalItemObject[] getDimensionArrayExplodeCoc( String dimension )
+    public List<DimensionalItemObject> getDimensionArrayExplodeCoc( String dimension )
     {
         List<DimensionalItemObject> items = new ArrayList<>();
         
@@ -1520,7 +1520,7 @@ public class DataQueryParams
             items.addAll( getDimensionOptions( dimension ) );
         }
         
-        return items.toArray( new DimensionalItemObject[0] );
+        return items;
     }
     
     /**

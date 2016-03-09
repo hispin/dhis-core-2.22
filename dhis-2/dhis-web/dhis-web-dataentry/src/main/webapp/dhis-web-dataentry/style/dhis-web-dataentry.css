@@ -171,6 +171,11 @@
   padding-left: 3px;
 }
 
+textarea:read-only
+{ 
+    background-color: rgb(238, 238, 238) !important;
+}
+
 /* jQuery UI tab style overrides for data value history view */
 
 #historyTabs
