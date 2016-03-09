@@ -407,7 +407,7 @@ angular.module('trackerCaptureServices')
 
         getTotalTeiByProgram: function ( programUid ) {
             var def = $q.defer();
-            $http.get('../api/trackedEntityInstances.json?program=' + programUid + "&ouMode=ALL").then(function (response) {
+            $http.get('../api/trackedEntityInstances.json?program=' + programUid + "&ouMode=ALL&skipPaging=true").then(function (response) {
 
                 def.resolve(response.data);
             });
