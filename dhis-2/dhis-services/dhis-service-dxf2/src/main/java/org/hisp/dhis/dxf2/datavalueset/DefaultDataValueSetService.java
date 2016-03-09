@@ -922,7 +922,7 @@ public class DefaultDataValueSetService
         summary.setDescription( "Import process completed successfully" );
 
         notifier.notify( id, INFO, "Import done", true ).addTaskSummary( id, summary );
-        clock.logTime( "Data value import done, total: " + totalCount + ", import: " + importCount + ", update: " + updateCount );
+        clock.logTime( "Data value import done, total: " + totalCount + ", import: " + importCount + ", update: " + updateCount + ", delete: " + deleteCount );
 
         dataValueSet.close();
 
