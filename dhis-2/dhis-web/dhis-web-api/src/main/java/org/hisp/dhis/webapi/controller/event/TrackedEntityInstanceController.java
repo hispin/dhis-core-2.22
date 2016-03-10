@@ -233,7 +233,7 @@ public class TrackedEntityInstanceController
         GridUtils.toXml( grid, response.getOutputStream() );
     }
 
-    @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_EXCEL )
+    @RequestMapping( value = "/query", method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_EXCEL )
     public void queryTrackedEntityInstancesXls(
         @RequestParam( required = false ) String query,
         @RequestParam( required = false ) Set<String> attribute,
@@ -266,7 +266,7 @@ public class TrackedEntityInstanceController
         GridUtils.toXls( grid, response.getOutputStream() );
     }
 
-    @RequestMapping( method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_CSV )
+    @RequestMapping( value = "/query", method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_CSV )
     public void queryTrackedEntityInstancesCsv(
         @RequestParam( required = false ) String query,
         @RequestParam( required = false ) Set<String> attribute,
