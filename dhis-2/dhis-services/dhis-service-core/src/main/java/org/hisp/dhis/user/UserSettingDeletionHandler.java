@@ -1,5 +1,7 @@
 package org.hisp.dhis.user;
 
+import java.util.Iterator;
+
 /*
  * Copyright (c) 2004-2016, University of Oslo
  * All rights reserved.
@@ -57,8 +59,12 @@ public class UserSettingDeletionHandler
     @Override
     public void deleteUser( User user )
     {
-        for ( UserSetting setting : userSettingService.getUserSettings( user ) )
+        Iterator<UserSetting> settings = userSettingService.getUserSettings( user ).iterator();
+        
+        while ( settings.hasNext() )
         {
+            UserSetting setting = settings.next();
+            settings.remove();
             userSettingService.deleteUserSetting( setting );
         }
     }
