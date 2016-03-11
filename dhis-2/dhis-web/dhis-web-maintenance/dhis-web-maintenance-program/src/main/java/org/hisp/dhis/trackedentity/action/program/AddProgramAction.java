@@ -370,6 +370,7 @@ public class AddProgramAction
 
                 ProgramTrackedEntityAttribute programAttribute = new ProgramTrackedEntityAttribute( program, attribute,
                     personDisplayNames.get( index ), mandatory.get( index ), allowFutureDate.get( index ) );
+                programAttribute.setAutoFields();
 
                 program.getProgramAttributes().add( programAttribute );
             }
