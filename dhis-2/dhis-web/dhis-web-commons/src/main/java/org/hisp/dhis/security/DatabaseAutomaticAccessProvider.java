@@ -28,15 +28,15 @@ package org.hisp.dhis.security;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.HashSet;
-
 import org.hisp.dhis.user.User;
 import org.hisp.dhis.user.UserAuthorityGroup;
 import org.hisp.dhis.user.UserCredentials;
 
+import java.util.HashSet;
+
 /**
  * This access provider will put a user with all granted authorities in the database.
- * 
+ *
  * @author Torgeir Lorange Ostby
  */
 public class DatabaseAutomaticAccessProvider
@@ -57,13 +57,18 @@ public class DatabaseAutomaticAccessProvider
         String password = "district";
 
         User user = new User();
+        user.setUid( "M5zQapPyTZI" );
+        user.setCode( "admin" );
         user.setFirstName( username );
         user.setSurname( username );
 
         userService.addUser( user );
 
         UserAuthorityGroup userAuthorityGroup = new UserAuthorityGroup();
+        userAuthorityGroup.setUid( "yrB6vc5Ip3r" );
+        userAuthorityGroup.setCode( "Superuser" );
         userAuthorityGroup.setName( "Superuser" );
+        userAuthorityGroup.setDescription( "Superuser" );
 
         userAuthorityGroup.setAuthorities( new HashSet<>( getAuthorities() ) );
 
@@ -75,7 +80,6 @@ public class DatabaseAutomaticAccessProvider
         userCredentials.getUserAuthorityGroups().add( userAuthorityGroup );
 
         userService.encodeAndSetPassword( userCredentials, password );
-
         userService.addUserCredentials( userCredentials );
     }
 
