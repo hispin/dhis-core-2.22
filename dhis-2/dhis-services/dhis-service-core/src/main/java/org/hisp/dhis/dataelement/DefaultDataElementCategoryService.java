@@ -610,8 +610,9 @@ public class DefaultDataElementCategoryService
         // DataElementCategoryOption
         // ---------------------------------------------------------------------
 
-        DataElementCategoryOption categoryOption = new DataElementCategoryOption(
-            DataElementCategoryOption.DEFAULT_NAME );
+        DataElementCategoryOption categoryOption = new DataElementCategoryOption( DataElementCategoryOption.DEFAULT_NAME );
+        categoryOption.setUid( "xYerKDKCefk" );
+        categoryOption.setCode( "default" );
 
         addDataElementCategoryOption( categoryOption );
 
@@ -620,6 +621,9 @@ public class DefaultDataElementCategoryService
         // ---------------------------------------------------------------------
 
         DataElementCategory category = new DataElementCategory( DataElementCategory.DEFAULT_NAME );
+        category.setUid( "GLevLNI9wkl" );
+        category.setCode( "default" );
+
         category.addCategoryOption( categoryOption );
         addDataElementCategory( category );
 
@@ -627,8 +631,10 @@ public class DefaultDataElementCategoryService
         // DataElementCategoryCombo
         // ---------------------------------------------------------------------
 
-        DataElementCategoryCombo categoryCombo = new DataElementCategoryCombo(
-            DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME );
+        DataElementCategoryCombo categoryCombo = new DataElementCategoryCombo( DataElementCategoryCombo.DEFAULT_CATEGORY_COMBO_NAME );
+        categoryCombo.setUid( "bjDvmb4bfuf" );
+        categoryCombo.setCode( "default" );
+
         categoryCombo.addDataElementCategory( category );
         addDataElementCategoryCombo( categoryCombo );
 
@@ -637,6 +643,8 @@ public class DefaultDataElementCategoryService
         // ---------------------------------------------------------------------
 
         DataElementCategoryOptionCombo categoryOptionCombo = new DataElementCategoryOptionCombo();
+        categoryOptionCombo.setUid( "HllvX50cXC0" );
+        categoryOptionCombo.setCode( "default" );
 
         categoryOptionCombo.setCategoryCombo( categoryCombo );
         categoryOptionCombo.addDataElementCategoryOption( categoryOption );
@@ -695,7 +703,7 @@ public class DefaultDataElementCategoryService
             log.warn( "Category combo is null or invalid, could not update option combos: " + categoryCombo );
             return;
         }
-        
+
         List<DataElementCategoryOptionCombo> generatedOptionCombos = categoryCombo.generateOptionCombosList();
         Set<DataElementCategoryOptionCombo> persistedOptionCombos = categoryCombo.getOptionCombos();
 
