@@ -196,7 +196,7 @@ public class EnrollmentController
         ImportSummaries importSummaries = enrollmentService.addEnrollmentsJson( request.getInputStream(), importOptions );
         response.setContentType( MediaType.APPLICATION_JSON_VALUE );
 
-        if ( importSummaries.getImportSummaries().size() > 1 )
+        if ( importSummaries.getImportSummaries().isEmpty() || importSummaries.getImportSummaries().size() > 1 )
         {
             response.setStatus( HttpServletResponse.SC_CREATED );
             renderService.toJson( response.getOutputStream(), importSummaries );
