@@ -35,6 +35,7 @@ import static org.hisp.dhis.program.ProgramExpression.SEPARATOR_OBJECT;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -482,10 +483,13 @@ public class TableAlteror
         
         if ( exist == 0 )
         {
-            String id = statementBuilder.getAutoIncrementValue();
 
-            jdbcTemplate.execute( "INSERT INTO trackedentity(trackedentityid,uid, name, description) values(" + id
-                + ",'" + CodeGenerator.generateCode() + "','Person','Person')" );
+            String id = statementBuilder.getAutoIncrementValue();
+            String uid = "MCPQUTHX1Ze";
+            String date = DateUtils.getSqlDateString( new Date() );
+
+            jdbcTemplate.execute( "INSERT INTO trackedentity(trackedentityid,uid, code, created, lastupdated,name, description) values("
+                + id + ",'" + uid + "','Person','" + date + "','" + date + "','Person','Person')" );
 
             jdbcTemplate.execute( "UPDATE program SET trackedentityid="
                 + "  (SELECT trackedentityid FROM trackedentity where name='Person') where trackedentityid is null" );
