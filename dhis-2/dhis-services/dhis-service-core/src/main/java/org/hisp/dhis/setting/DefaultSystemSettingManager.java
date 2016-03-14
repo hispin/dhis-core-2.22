@@ -37,7 +37,10 @@ import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.system.util.ValidationUtils;
 import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -47,10 +50,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
+ * Declare transactions on individual methods. The get-methods do not have
+ * transactions declared, instead a programmatic transaction is initiated on
+ * cache miss in order to reduce the number of transactions to improve performance.
+ * 
  * @author Stian Strandli
  * @author Lars Helge Overland
  */
-@Transactional
 public class DefaultSystemSettingManager
     implements SystemSettingManager
 {
@@ -83,6 +89,9 @@ public class DefaultSystemSettingManager
     {
         this.flags = flags;
     }
+    
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
     @Autowired
     private I18nManager i18nManager;
@@ -95,6 +104,7 @@ public class DefaultSystemSettingManager
     // -------------------------------------------------------------------------
 
     @Override
+    @Transactional
     public void saveSystemSetting( String name, Serializable value )
     {
         SETTING_CACHE.invalidate( name );
@@ -124,12 +134,14 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    @Transactional
     public void saveSystemSetting( SettingKey setting, Serializable value )
     {
         saveSystemSetting( setting.getName(), value );
     }
 
     @Override
+    @Transactional
     public void deleteSystemSetting( String name )
     {
         SystemSetting setting = systemSettingStore.getByName( name );
@@ -143,12 +155,14 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    @Transactional
     public void deleteSystemSetting( SettingKey setting )
     {
         deleteSystemSetting( setting.getName() );
     }
 
     @Override
+    @Transactional
     public Serializable getSystemSetting( String name )
     {
         SystemSetting setting = systemSettingStore.getByName( name );
@@ -161,6 +175,10 @@ public class DefaultSystemSettingManager
         return setting != null && setting.hasValue() ? setting.getValue() : null;
     }
 
+    /**
+     * No transaction for this method, transaction is initiated in 
+     * {@link getSystemSettingOptional} on cache miss.
+     */
     @Override
     public Serializable getSystemSetting( SettingKey setting )
     {
@@ -177,15 +195,33 @@ public class DefaultSystemSettingManager
         }
     }
 
+    /**
+     * No transaction for this method, transaction is initiated in 
+     * {@link getSystemSettingOptional}.
+     */
     @Override
     public Serializable getSystemSetting( SettingKey setting, Serializable defaultValue )
     {
         return getSystemSettingOptional( setting.getName(), defaultValue ).orElse( null );
     }
 
+    /**
+     * Get system setting. The database call is executed in a programmatic 
+     * transaction.
+     * 
+     * @param name the system setting name.
+     * @param defaultValue the default value for the system setting.
+     * @return an optional system setting value.
+     */
     private Optional<Serializable> getSystemSettingOptional( String name, Serializable defaultValue )
     {
-        SystemSetting setting = systemSettingStore.getByName( name );
+        SystemSetting setting = transactionTemplate.execute( new TransactionCallback<SystemSetting>()
+        {
+            public SystemSetting doInTransaction( TransactionStatus status) 
+            {
+                return systemSettingStore.getByName( name );
+            }
+        } );
 
         if ( setting != null && setting.hasValue() )
         {
@@ -197,10 +233,10 @@ public class DefaultSystemSettingManager
         {
             return Optional.ofNullable( defaultValue );
         }
-
     }
 
     @Override
+    @Transactional
     public List<SystemSetting> getAllSystemSettings()
     {
         return systemSettingStore.getAll().stream()
@@ -209,6 +245,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    @Transactional
     public Map<String, Serializable> getSystemSettingsAsMap()
     {
         Map<String, Serializable> settingsMap = new HashMap<>();
@@ -236,6 +273,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    @Transactional
     public Map<String, Serializable> getSystemSettingsAsMap( Set<String> names )
     {
         Map<String, Serializable> map = new HashMap<>();
@@ -264,6 +302,7 @@ public class DefaultSystemSettingManager
     }
 
     @Override
+    @Transactional
     public Map<String, Serializable> getSystemSettings( Collection<SettingKey> settings )
     {
         Map<String, Serializable> map = new HashMap<>();
