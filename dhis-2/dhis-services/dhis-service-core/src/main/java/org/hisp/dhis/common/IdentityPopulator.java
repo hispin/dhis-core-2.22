@@ -52,7 +52,9 @@ public class IdentityPopulator
     private static final Map<String, String> TABLE_ID_MAP = DimensionalObjectUtils.asMap(
         "dataelementcategoryoption", "categoryoptionid",
         "dataelementcategory", "categoryid",
-        "program_attributes", "programtrackedentityattributeid" );
+        "program_attributes", "programtrackedentityattributeid",
+        "users", "userid"
+    );
 
     private List<String> tables = new ArrayList<>();
     
