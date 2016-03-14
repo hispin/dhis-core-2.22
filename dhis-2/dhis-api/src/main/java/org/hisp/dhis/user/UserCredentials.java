@@ -163,6 +163,7 @@ public class UserCredentials
     {
         this.lastLogin = new Date();
         this.passwordLastUpdated = new Date();
+        this.setAutoFields();
     }
 
     // -------------------------------------------------------------------------
