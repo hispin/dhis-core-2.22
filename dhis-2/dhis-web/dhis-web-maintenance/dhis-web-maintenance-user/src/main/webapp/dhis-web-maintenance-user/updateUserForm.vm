@@ -180,6 +180,8 @@
     "objects": $userAuthorityGroups
   })
 
+  <div style="padding: 5px 0" class="tipText">$i18n.getString( "selecting_org_unit_provides_access_to_sub_hierarchy" )</div>
+
   <table style="margin-bottom: 20px;">
     <tr>
       <th>$i18n.getString( "data_capture_maintenance_org_units" )</th>
