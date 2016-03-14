@@ -73,7 +73,7 @@
                     <a href="javascript:hideDetails()" title="$i18n.getString( 'hide_details' )"><img src="../images/hide.png" alt="$i18n.getString( 'hide_details' )"/></a>
                 </div>
                 <p><label>$i18n.getString( "organisation_unit" ):</label><br/><span id="organisationUnitField"></span></p>
-                <p><label>$i18n.getString( "dataset" ):</label><br/><span id="dataSetField"></span></p>
+                <p><label>$i18n.getString( "data_set" ):</label><br/><span id="dataSetField"></span></p>
                 <p><label>$i18n.getString( "period" ):</label><br/><span id="periodField"></span></p>
             </div>
 
