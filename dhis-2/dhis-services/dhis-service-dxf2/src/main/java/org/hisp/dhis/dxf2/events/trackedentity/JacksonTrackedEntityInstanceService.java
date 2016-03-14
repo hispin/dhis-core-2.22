@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.events.trackedentity;
  */
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -108,7 +109,7 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
             TrackedEntityInstances fromXml = fromXml( input, TrackedEntityInstances.class );
             trackedEntityInstances.addAll( fromXml.getTrackedEntityInstances() );
         }
-        catch ( Exception ex )
+        catch ( JsonMappingException ex )
         {
             TrackedEntityInstance fromXml = fromXml( input, TrackedEntityInstance.class );
             trackedEntityInstances.add( fromXml );
@@ -128,7 +129,7 @@ public class JacksonTrackedEntityInstanceService extends AbstractTrackedEntityIn
             TrackedEntityInstances fromJson = fromJson( input, TrackedEntityInstances.class );
             trackedEntityInstances.addAll( fromJson.getTrackedEntityInstances() );
         }
-        catch ( Exception ex )
+        catch ( JsonMappingException ex )
         {
             TrackedEntityInstance fromJson = fromJson( input, TrackedEntityInstance.class );
             trackedEntityInstances.add( fromJson );

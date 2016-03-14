@@ -29,6 +29,7 @@ package org.hisp.dhis.dxf2.events.enrollment;
  */
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.hisp.dhis.dxf2.common.ImportOptions;
@@ -108,7 +109,7 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
             Enrollments fromJson = fromJson( input, Enrollments.class );
             enrollments.addAll( fromJson.getEnrollments() );
         }
-        catch ( Exception ex )
+        catch ( JsonMappingException ex )
         {
             Enrollment fromJson = fromJson( input, Enrollment.class );
             enrollments.add( fromJson );
@@ -128,7 +129,7 @@ public class JacksonEnrollmentService extends AbstractEnrollmentService
             Enrollments fromXml = fromXml( input, Enrollments.class );
             enrollments.addAll( fromXml.getEnrollments() );
         }
-        catch ( Exception ex )
+        catch ( JsonMappingException ex )
         {
             Enrollment fromXml = fromXml( input, Enrollment.class );
             enrollments.add( fromXml );
