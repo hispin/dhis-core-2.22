@@ -68,6 +68,8 @@
 	<property name="fetchSize" value="1000" />
   </bean>
 
+  <!-- TODO move to external configuration in 2.24 -->
+
   <bean id="driverClass" class="org.hisp.dhis.hibernate.ConnectionPropertyFactoryBean">
     <property name="hibernateConfigurationProvider" ref="hibernateConfigurationProvider" />
     <property name="hibernateProperty" value="hibernate.connection.driver_class" />
