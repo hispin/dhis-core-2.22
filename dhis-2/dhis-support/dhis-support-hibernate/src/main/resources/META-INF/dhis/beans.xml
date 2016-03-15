@@ -60,7 +60,7 @@
     <property name="password" ref="password" />
     <property name="maxPoolSize" ref="maxPoolSize" />
     <property name="acquireIncrement" value="6" />
-    <property name="maxIdleTime" value="7200" />
+    <property name="maxIdleTime" value="21600" />
   </bean>
 
   <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
