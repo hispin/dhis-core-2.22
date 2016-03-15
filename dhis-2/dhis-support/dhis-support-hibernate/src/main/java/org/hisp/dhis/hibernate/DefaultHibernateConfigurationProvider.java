@@ -215,6 +215,7 @@ public class DefaultHibernateConfigurationProvider
         putIfExists( properties, ConfigurationKey.CONNECTION_USERNAME.getKey(), "hibernate.connection.username" );
         putIfExists( properties, ConfigurationKey.CONNECTION_PASSWORD.getKey(), "hibernate.connection.password" );
         putIfExists( properties, ConfigurationKey.CONNECTION_SCHEMA.getKey(), "hibernate.hbm2ddl.auto" );
+        putIfExists( properties, ConfigurationKey.CONNECTION_POOL_MAX_SIZE.getKey(), "hibernate.c3p0.max_size" );
     }
     
     private void putIfExists( Properties properties, String from, String to )
