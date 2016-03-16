@@ -5,7 +5,7 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
   <!-- OAuth2 -->
-  
+
   <bean id="oauthAuthenticationEntryPoint"
     class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
     <property name="realmName" value="dhis2/oauth2" />
@@ -380,7 +380,42 @@
         <value>F_TRACKED_ENTITY_INSTANCE_ADD</value>
         <value>F_TRACKED_ENTITY_INSTANCE_DELETE</value>
         <value>F_PROGRAM_ENROLLMENT</value>
-        <value>F_PROGRAM_UNENROLLMENT</value>	
+        <value>F_PROGRAM_UNENROLLMENT</value>
+        <value>F_DATAELEMENT_PUBLIC_ADD</value>
+        <value>F_DATAELEMENT_PRIVATE_ADD</value>
+        <value>F_DATAELEMENT_DELETE</value>
+        <value>F_DATAELEMENTGROUP_PUBLIC_ADD</value>
+        <value>F_DATAELEMENTGROUP_PRIVATE_ADD</value>
+        <value>F_DATAELEMENTGROUP_DELETE</value>
+        <value>F_DATAELEMENTGROUPSET_PUBLIC_ADD</value>
+        <value>F_DATAELEMENTGROUPSET_PRIVATE_ADD</value>
+        <value>F_DATAELEMENTGROUPSET_DELETE</value>
+        <value>F_INDICATOR_PUBLIC_ADD</value>
+        <value>F_INDICATOR_PRIVATE_ADD</value>
+        <value>F_INDICATOR_DELETE</value>
+        <value>F_INDICATORGROUP_PUBLIC_ADD</value>
+        <value>F_INDICATORGROUP_PRIVATE_ADD</value>
+        <value>F_INDICATORGROUP_DELETE</value>
+        <value>F_INDICATORGROUPSET_PUBLIC_ADD</value>
+        <value>F_INDICATORGROUPSET_PRIVATE_ADD</value>
+        <value>F_INDICATORGROUPSET_DELETE</value>
+        <value>F_INDICATORTYPE_ADD</value>
+        <value>F_INDICATORTYPE_DELETE</value>
+        <value>F_CATEGORY_PUBLIC_ADD</value>
+        <value>F_CATEGORY_PRIVATE_ADD</value>
+        <value>F_CATEGORY_DELETE</value>
+        <value>F_CATEGORY_OPTION_PUBLIC_ADD</value>
+        <value>F_CATEGORY_OPTION_PRIVATE_ADD</value>
+        <value>F_CATEGORY_OPTION_DELETE</value>
+        <value>F_CATEGORY_COMBO_PUBLIC_ADD</value>
+        <value>F_CATEGORY_COMBO_PRIVATE_ADD</value>
+        <value>F_CATEGORY_COMBO_DELETE</value>
+        <value>F_CATEGORY_OPTION_GROUP_PUBLIC_ADD</value>
+        <value>F_CATEGORY_OPTION_GROUP_PRIVATE_ADD</value>
+        <value>F_CATEGORY_OPTION_GROUP_DELETE</value>
+        <value>F_CATEGORY_OPTION_GROUP_SET_PUBLIC_ADD</value>
+        <value>F_CATEGORY_OPTION_GROUP_SET_PRIVATE_ADD</value>
+        <value>F_CATEGORY_OPTION_GROUP_SET_DELETE</value>
       </set>
     </property>
   </bean>
