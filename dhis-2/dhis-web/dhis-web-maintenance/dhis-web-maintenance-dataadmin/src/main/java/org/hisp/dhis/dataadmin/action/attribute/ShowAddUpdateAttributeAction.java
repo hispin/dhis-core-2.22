@@ -36,6 +36,7 @@ import org.hisp.dhis.option.OptionSet;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -92,6 +93,7 @@ public class ShowAddUpdateAttributeAction
         }
 
         optionSets = new ArrayList<>( optionService.getAllOptionSets() );
+        Collections.sort( optionSets );
 
         return SUCCESS;
     }
