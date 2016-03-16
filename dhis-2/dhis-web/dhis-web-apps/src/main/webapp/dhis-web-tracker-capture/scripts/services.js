@@ -1199,6 +1199,19 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
 /* Returns a function for getting rules for a specific program */
 .factory('TrackerRulesFactory', function($q,MetaDataFactory,$filter){
+    var staticReplacements = 
+                        [{regExp:new RegExp("([^\w\d])(and)([^\w\d])","gi"), replacement:"$1&&$3"},
+                        {regExp:new RegExp("([^\w\d])(or)([^\w\d])","gi"), replacement:"$1||$3"},
+                        {regExp:new RegExp("V{execution_date}","g"), replacement:"V{event_date}"}];
+                    
+    var performStaticReplacements = function(expression) {
+        angular.forEach(staticReplacements, function(staticReplacement) {
+            expression = expression.replace(staticReplacement.regExp, staticReplacement.replacement);
+        });
+        
+        return expression;
+    };
+    
     return{                
         getRules : function(programUid){            
             var def = $q.defer();            
@@ -1322,6 +1335,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 newRule.condition = newRule.condition.replace(new RegExp("V{zero_pos_value_count}", 'g'),zeroPosValueCountText);
                                 newAction.data = newAction.data.replace(new RegExp("V{zero_pos_value_count}", 'g'),zeroPosValueCountText);
                             }
+                            
+                            newAction.data = performStaticReplacements(newAction.data);
+                            newRule.condition = performStaticReplacements(newRule.condition);
                         }
                     });
 
