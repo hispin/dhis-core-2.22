@@ -54,11 +54,11 @@ function getConstantsPage()
 	var target = jQuery( "#expression-container select[id=constantId]" );
 	target.children().remove();
 	
-	jQuery.get( '../api/constants.json?paging=false&links=false', {}, function( json ) 
+	jQuery.get( '../api/constants.json?fields=id,name&paging=false&links=false', {}, function( json ) 
 	{
 		if ( !json.constants || json.constants.length == 0 )
 		{
-			setInnerHTML( 'constantHeader', "<i style='color:red'>"+i18n_no_constant_to_select+"</i>" );
+			setInnerHTML( 'constantHeader', "<i style='color:red'>" + i18n_no_constant_to_select + "</i>" );
 			return;
 		}
 		
