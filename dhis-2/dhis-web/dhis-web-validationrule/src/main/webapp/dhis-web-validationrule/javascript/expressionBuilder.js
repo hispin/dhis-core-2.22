@@ -171,3 +171,22 @@ function clearRuleExpression()
 	enable( "ruleType" );
 	enable( "periodTypeName" );
 }
+
+function saveExpression( side, description, expression, textualDescription )
+{
+    if ( side == "left" )
+    {
+        $( "#leftSideDescription" ).val( description );
+        $( "#leftSideExpression" ).val( expression );
+        $( "#leftSideTextualExpression" ).val( textualDescription );
+    } 
+    else if ( side == "right" )
+    {
+    	$( "#rightSideDescription" ).val( description );
+    	$( "#rightSideExpression" ).val( expression );
+    	$( "#rightSideTextualExpression" ).val( textualDescription );
+    }
+
+    hideById( 'dynamicContent' );
+    unLockScreen();
+}
