@@ -259,13 +259,13 @@ public abstract class AbstractEventService
 
         if ( program == null )
         {
-            return new ImportSummary( ImportStatus.ERROR, "Event.program does not point to a valid program" ).incrementIgnored();
+            return new ImportSummary( ImportStatus.ERROR, "Event.program does not point to a valid program: " + event.getProgram() ).incrementIgnored();
         }
 
         if ( programStage == null && program.isRegistration() )
         {
             return new ImportSummary( ImportStatus.ERROR,
-                "Event.programStage does not point to a valid programStage, and program is multi stage" ).incrementIgnored();
+                "Event.programStage does not point to a valid programStage, and program is multi stage: " + event.getProgramStage() ).incrementIgnored();
         }
         else if ( programStage == null )
         {
@@ -295,7 +295,7 @@ public abstract class AbstractEventService
             if ( entityInstance == null )
             {
                 return new ImportSummary( ImportStatus.ERROR,
-                    "Event.trackedEntityInstance does not point to a valid tracked entity instance" ).incrementIgnored();
+                    "Event.trackedEntityInstance does not point to a valid tracked entity instance: " + event.getTrackedEntityInstance() ).incrementIgnored();
             }
 
             List<ProgramInstance> programInstances = new ArrayList<>( programInstanceService.getProgramInstances(
@@ -303,13 +303,13 @@ public abstract class AbstractEventService
 
             if ( programInstances.isEmpty() )
             {
-                return new ImportSummary( ImportStatus.ERROR, "TrackedEntityInstance " + entityInstance.getUid()
-                    + " is not enrolled in program " + program.getUid() ).incrementIgnored();
+                return new ImportSummary( ImportStatus.ERROR, "Tracked entity instance: " + entityInstance.getUid()
+                    + " is not enrolled in program: " + program.getUid() ).incrementIgnored();
             }
             else if ( programInstances.size() > 1 )
             {
-                return new ImportSummary( ImportStatus.ERROR, "TrackedEntityInstance " + entityInstance.getUid()
-                    + " have multiple active enrollments in program " + program.getUid() ).incrementIgnored();
+                return new ImportSummary( ImportStatus.ERROR, "Tracked entity instance: " + entityInstance.getUid()
+                    + " have multiple active enrollments in program: " + program.getUid() ).incrementIgnored();
             }
 
             programInstance = programInstances.get( 0 );
@@ -321,13 +321,13 @@ public abstract class AbstractEventService
 
                 if ( programStageInstances.isEmpty() )
                 {
-                    return new ImportSummary( ImportStatus.ERROR, "TrackedEntityInstance " + entityInstance.getUid()
-                        + " is not enrolled in program stage " + programStage.getUid() ).incrementIgnored();
+                    return new ImportSummary( ImportStatus.ERROR, "Tracked entity instance: " + entityInstance.getUid()
+                        + " is not enrolled in program stage: " + programStage.getUid() ).incrementIgnored();
                 }
                 else if ( programStageInstances.size() > 1 )
                 {
-                    return new ImportSummary( ImportStatus.ERROR, "TrackedEntityInstance " + entityInstance.getUid()
-                        + " have multiple active enrollments in program stage " + programStage.getUid() ).incrementIgnored();
+                    return new ImportSummary( ImportStatus.ERROR, "Tracked entity instance: " + entityInstance.getUid()
+                        + " have multiple active enrollments in program stage: " + programStage.getUid() ).incrementIgnored();
                 }
 
                 programStageInstance = programStageInstances.get( 0 );
@@ -349,7 +349,7 @@ public abstract class AbstractEventService
                         {
                             if ( !CodeGenerator.isValidCode( event.getEvent() ) )
                             {
-                                return new ImportSummary( ImportStatus.ERROR, "Event.event did not point to a valid event" ).incrementIgnored();
+                                return new ImportSummary( ImportStatus.ERROR, "Event.event did not point to a valid event: " + event.getEvent() ).incrementIgnored();
                             }
                         }
                     }
@@ -377,7 +377,7 @@ public abstract class AbstractEventService
             else if ( programInstances.size() > 1 )
             {
                 return new ImportSummary( ImportStatus.ERROR,
-                    "Multiple active program instances exists for program " + program.getUid() ).incrementIgnored();
+                    "Multiple active program instances exists for program: " + program.getUid() ).incrementIgnored();
             }
 
             programInstance = programInstances.get( 0 );
@@ -390,7 +390,7 @@ public abstract class AbstractEventService
                 {
                     if ( !CodeGenerator.isValidCode( event.getEvent() ) )
                     {
-                        return new ImportSummary( ImportStatus.ERROR, "Event.event did not point to a valid event" ).incrementIgnored();
+                        return new ImportSummary( ImportStatus.ERROR, "Event.event did not point to a valid event: " + event.getEvent() ).incrementIgnored();
                     }
                 }
             }
@@ -400,12 +400,12 @@ public abstract class AbstractEventService
 
         if ( organisationUnit == null )
         {
-            return new ImportSummary( ImportStatus.ERROR, "Event.orgUnit does not point to a valid organisation unit" ).incrementIgnored();
+            return new ImportSummary( ImportStatus.ERROR, "Event.orgUnit does not point to a valid organisation unit: " + event.getOrgUnit() ).incrementIgnored();
         }
 
         if ( verifyProgramOrganisationUnitAssociation( program, organisationUnit ) )
         {
-            return new ImportSummary( ImportStatus.ERROR, "Program is not assigned to this organisation unit" ).incrementIgnored();
+            return new ImportSummary( ImportStatus.ERROR, "Program is not assigned to this organisation unit: " + event.getOrgUnit() ).incrementIgnored();
         }
 
         return saveEvent( program, programInstance, programStage, programStageInstance, organisationUnit, event,
@@ -818,10 +818,10 @@ public abstract class AbstractEventService
         if ( programStageInstance != null )
         {
             programStageInstanceService.deleteProgramStageInstance( programStageInstance );
-            return new ImportSummary( ImportStatus.SUCCESS, "Deletion of event " + uid + " was successful." ).incrementDeleted();
+            return new ImportSummary( ImportStatus.SUCCESS, "Deletion of event " + uid + " was successful" ).incrementDeleted();
         }
 
-        return new ImportSummary( ImportStatus.ERROR, "ID " + uid + " does not point to a valid event" ).incrementIgnored();
+        return new ImportSummary( ImportStatus.ERROR, "ID " + uid + " does not point to a valid event: " + uid ).incrementIgnored();
     }
 
     @Override
