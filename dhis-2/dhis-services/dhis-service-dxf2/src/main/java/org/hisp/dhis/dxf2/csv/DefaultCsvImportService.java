@@ -333,9 +333,6 @@ public class DefaultCsvImportService
                 {
                     OrganisationUnit parent = new OrganisationUnit();
                     parent.setUid( parentUid );
-                    parent.setCode( parentUid );
-                    parent.setName( parentUid );
-
                     object.setParent( parent );
                 }
 
