@@ -30,6 +30,8 @@ package org.hisp.dhis.dxf2.events.event;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -1017,10 +1019,10 @@ public abstract class AbstractEventService
             importOptions = new ImportOptions();
         }
 
+        boolean existingEvent = programStageInstance != null;        
         boolean dryRun = importOptions.isDryRun();
 
         Date eventDate = DateUtils.parseDate( event.getEventDate() );
-
         Date dueDate = DateUtils.parseDate( event.getDueDate() );
 
         String storedBy = getStoredBy( event, importSummary, user );
@@ -1060,8 +1062,13 @@ public abstract class AbstractEventService
             importSummary.setReference( programStageInstance.getUid() );
         }
 
-        Collection<TrackedEntityDataValue> existingDataValues = dataValueService.getTrackedEntityDataValues( programStageInstance );
-        Map<String, TrackedEntityDataValue> dataElementValueMap = getDataElementDataValueMap( existingDataValues );
+        Map<String, TrackedEntityDataValue> dataElementValueMap = Maps.newHashMap();
+        
+        if ( existingEvent )
+        {
+            dataElementValueMap = getDataElementDataValueMap( 
+                dataValueService.getTrackedEntityDataValues( programStageInstance ) );
+        }
 
         for ( DataValue dataValue : event.getDataValues() )
         {
