@@ -1001,50 +1001,105 @@ public abstract class AbstractEventService
         return true;
     }
 
-    private String getStoredBy( Event event, ImportSummary importSummary, User fallbackUser )
+    private ImportSummary saveEvent( Program program, ProgramInstance programInstance, ProgramStage programStage,
+        ProgramStageInstance programStageInstance, OrganisationUnit organisationUnit, Event event, User user,
+        ImportOptions importOptions )
     {
-        String storedBy = event.getStoredBy();
+        Assert.notNull( program );
+        Assert.notNull( programInstance );
+        Assert.notNull( programStage );
 
-        if ( storedBy == null )
+        ImportSummary importSummary = new ImportSummary();
+        importSummary.setStatus( ImportStatus.SUCCESS );
+
+        if ( importOptions == null )
         {
-            storedBy = User.getSafeUsername( fallbackUser );
+            importOptions = new ImportOptions();
         }
-        else if ( storedBy.length() >= 31 )
+
+        boolean dryRun = importOptions.isDryRun();
+
+        Date eventDate = DateUtils.parseDate( event.getEventDate() );
+
+        Date dueDate = DateUtils.parseDate( event.getDueDate() );
+
+        String storedBy = getStoredBy( event, importSummary, user );
+        String completedBy = getCompletedBy( event, importSummary, user );
+
+        DataElementCategoryOptionCombo coc = null;
+
+        if ( event.getAttributeCategoryOptions() != null && program.getCategoryCombo() != null )
         {
-            if ( importSummary != null )
+            coc = inputUtils.getAttributeOptionCombo( program.getCategoryCombo(), event.getAttributeCategoryOptions() );
+
+            if ( coc == null )
             {
-                importSummary.getConflicts().add(
-                    new ImportConflict( "stored by", storedBy
-                        + " is more than 31 characters, using current username instead" ) );
+                importSummary.getConflicts().add( new ImportConflict( "Invalid attribute option combo for option names.", event.getAttributeCategoryOptions() ) );
+            }
+        }
+        else
+        {
+            coc = categoryService.getDefaultDataElementCategoryOptionCombo();
+        }
+
+        if ( !dryRun )
+        {
+            if ( programStageInstance == null )
+            {
+                programStageInstance = createProgramStageInstance( programStage, programInstance, organisationUnit,
+                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), completedBy, event.getEvent(), coc );
+            }
+            else
+            {
+                updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, eventDate, event
+                    .getStatus().getValue(), event.getCoordinate(), completedBy, programStageInstance, coc );
             }
 
-            storedBy = User.getSafeUsername( fallbackUser );
+            saveTrackedEntityComment( programStageInstance, event, storedBy );
+
+            importSummary.setReference( programStageInstance.getUid() );
         }
 
-        return storedBy;
-    }
+        Collection<TrackedEntityDataValue> existingDataValues = dataValueService.getTrackedEntityDataValues( programStageInstance );
+        Map<String, TrackedEntityDataValue> dataElementValueMap = getDataElementDataValueMap( existingDataValues );
 
-    private String getCompletedBy( Event event, ImportSummary importSummary, User fallbackUser )
-    {
-        String completedBy = event.getCompletedBy();
+        for ( DataValue dataValue : event.getDataValues() )
+        {
+            DataElement dataElement;
 
-        if ( completedBy == null )
-        {
-            completedBy = User.getSafeUsername( fallbackUser );
-        }
-        else if ( completedBy.length() >= 31 )
-        {
-            if ( importSummary != null )
+            if ( dataElementValueMap.containsKey( dataValue.getDataElement() ) )
             {
-                importSummary.getConflicts().add(
-                    new ImportConflict( "completed by", completedBy
-                        + " is more than 31 characters, using current username instead" ) );
+                dataElement = dataElementValueMap.get( dataValue.getDataElement() ).getDataElement();
+            }
+            else
+            {
+                dataElement = getDataElement( importOptions.getIdSchemes().getDataElementIdScheme(), dataValue.getDataElement() );
             }
 
-            completedBy = User.getSafeUsername( fallbackUser );
+            if ( dataElement != null )
+            {
+                if ( validateDataValue( dataElement, dataValue.getValue(), importSummary ) )
+                {
+                    String dataValueStoredBy = dataValue.getStoredBy() != null ? dataValue.getStoredBy() : storedBy;
+
+                    if ( !dryRun )
+                    {
+                        TrackedEntityDataValue existingDataValue = dataElementValueMap.get( dataValue.getDataElement() );
+
+                        saveDataValue( programStageInstance, dataValueStoredBy, dataElement, dataValue.getValue(),
+                            dataValue.getProvidedElsewhere(), existingDataValue, importSummary );
+                    }
+                }
+            }
+            else
+            {
+                importSummary.getConflicts().add(
+                    new ImportConflict( "dataElement", dataValue.getDataElement() + " is not a valid data element" ) );
+                importSummary.getImportCount().incrementIgnored();
+            }
         }
 
-        return completedBy;
+        return importSummary;
     }
 
     private void saveDataValue( ProgramStageInstance programStageInstance, String storedBy, DataElement dataElement,
@@ -1150,112 +1205,6 @@ public abstract class AbstractEventService
         }
     }
 
-    private ImportSummary saveEvent( Program program, ProgramInstance programInstance, ProgramStage programStage,
-        ProgramStageInstance programStageInstance, OrganisationUnit organisationUnit, Event event, User user,
-        ImportOptions importOptions )
-    {
-        Assert.notNull( program );
-        Assert.notNull( programInstance );
-        Assert.notNull( programStage );
-
-        ImportSummary importSummary = new ImportSummary();
-        importSummary.setStatus( ImportStatus.SUCCESS );
-
-        if ( importOptions == null )
-        {
-            importOptions = new ImportOptions();
-        }
-
-        boolean dryRun = importOptions.isDryRun();
-
-        Date eventDate = DateUtils.parseDate( event.getEventDate() );
-
-        Date dueDate = DateUtils.parseDate( event.getDueDate() );
-
-        String storedBy = getStoredBy( event, importSummary, user );
-        String completedBy = getCompletedBy( event, importSummary, user );
-
-        DataElementCategoryOptionCombo coc = null;
-
-        if ( event.getAttributeCategoryOptions() != null && program.getCategoryCombo() != null )
-        {
-            coc = inputUtils.getAttributeOptionCombo( program.getCategoryCombo(), event.getAttributeCategoryOptions() );
-
-            if ( coc == null )
-            {
-                importSummary.getConflicts().add( new ImportConflict( "Invalid attribute option combo for option names.", event.getAttributeCategoryOptions() ) );
-            }
-        }
-        else
-        {
-            coc = categoryService.getDefaultDataElementCategoryOptionCombo();
-        }
-
-        if ( !dryRun )
-        {
-            if ( programStageInstance == null )
-            {
-                programStageInstance = createProgramStageInstance( programStage, programInstance, organisationUnit,
-                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), completedBy, event.getEvent(), coc );
-            }
-            else
-            {
-                updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, eventDate, event
-                    .getStatus().getValue(), event.getCoordinate(), completedBy, programStageInstance, coc );
-            }
-
-            saveTrackedEntityComment( programStageInstance, event, storedBy );
-
-            importSummary.setReference( programStageInstance.getUid() );
-        }
-
-        Collection<TrackedEntityDataValue> existingDataValues = dataValueService.getTrackedEntityDataValues( programStageInstance );
-        Map<String, TrackedEntityDataValue> dataElementValueMap = getDataElementDataValueMap( existingDataValues );
-
-        for ( DataValue dataValue : event.getDataValues() )
-        {
-            DataElement dataElement;
-
-            if ( dataElementValueMap.containsKey( dataValue.getDataElement() ) )
-            {
-                dataElement = dataElementValueMap.get( dataValue.getDataElement() ).getDataElement();
-            }
-            else
-            {
-                dataElement = getDataElement( importOptions.getIdSchemes().getDataElementIdScheme(), dataValue.getDataElement() );
-            }
-
-            if ( dataElement != null )
-            {
-                if ( validateDataValue( dataElement, dataValue.getValue(), importSummary ) )
-                {
-                    String dataValueStoredBy = dataValue.getStoredBy() != null ? dataValue.getStoredBy() : storedBy;
-
-                    if ( !dryRun )
-                    {
-                        TrackedEntityDataValue existingDataValue = dataElementValueMap.get( dataValue.getDataElement() );
-
-                        saveDataValue( programStageInstance, dataValueStoredBy, dataElement, dataValue.getValue(),
-                            dataValue.getProvidedElsewhere(), existingDataValue, importSummary );
-                    }
-                }
-            }
-            else
-            {
-                importSummary.getConflicts().add(
-                    new ImportConflict( "dataElement", dataValue.getDataElement() + " is not a valid data element" ) );
-                importSummary.getImportCount().incrementIgnored();
-            }
-        }
-
-        return importSummary;
-    }
-
-    private Map<String, TrackedEntityDataValue> getDataElementDataValueMap( Collection<TrackedEntityDataValue> dataValues )
-    {
-        return dataValues.stream().collect( Collectors.toMap( dv -> dv.getDataElement().getUid(), dv -> dv ) );
-    }
-
     private void saveTrackedEntityComment( ProgramStageInstance programStageInstance, Event event, String storedBy )
     {
         for ( Note note : event.getNotes() )
@@ -1271,6 +1220,57 @@ public abstract class AbstractEventService
 
             programStageInstanceService.updateProgramStageInstance( programStageInstance );
         }
+    }
+
+    private String getCompletedBy( Event event, ImportSummary importSummary, User fallbackUser )
+    {
+        String completedBy = event.getCompletedBy();
+
+        if ( completedBy == null )
+        {
+            completedBy = User.getSafeUsername( fallbackUser );
+        }
+        else if ( completedBy.length() >= 31 )
+        {
+            if ( importSummary != null )
+            {
+                importSummary.getConflicts().add(
+                    new ImportConflict( "completed by", completedBy
+                        + " is more than 31 characters, using current username instead" ) );
+            }
+
+            completedBy = User.getSafeUsername( fallbackUser );
+        }
+
+        return completedBy;
+    }
+
+    private String getStoredBy( Event event, ImportSummary importSummary, User fallbackUser )
+    {
+        String storedBy = event.getStoredBy();
+
+        if ( storedBy == null )
+        {
+            storedBy = User.getSafeUsername( fallbackUser );
+        }
+        else if ( storedBy.length() >= 31 )
+        {
+            if ( importSummary != null )
+            {
+                importSummary.getConflicts().add(
+                    new ImportConflict( "stored by", storedBy
+                        + " is more than 31 characters, using current username instead" ) );
+            }
+
+            storedBy = User.getSafeUsername( fallbackUser );
+        }
+
+        return storedBy;
+    }
+
+    private Map<String, TrackedEntityDataValue> getDataElementDataValueMap( Collection<TrackedEntityDataValue> dataValues )
+    {
+        return dataValues.stream().collect( Collectors.toMap( dv -> dv.getDataElement().getUid(), dv -> dv ) );
     }
 
     private OrganisationUnit getOrganisationUnit( IdSchemes idSchemes, String id )
