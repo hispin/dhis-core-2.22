@@ -284,6 +284,11 @@ public class Program
         return programStages != null && programStages.size() == 1;
     }
 
+    public boolean hasOrganisationUnit( OrganisationUnit unit )
+    {
+        return organisationUnits.contains( unit );
+    }
+    
     @Override
     public int increaseVersion()
     {

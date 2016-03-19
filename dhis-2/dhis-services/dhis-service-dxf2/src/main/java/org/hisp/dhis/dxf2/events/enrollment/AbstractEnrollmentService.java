@@ -526,9 +526,9 @@ public abstract class AbstractEnrollmentService
         }
 
         // ignore attributes which do not belong to this program
-        trackedEntityInstance.getTrackedEntityAttributeValues().stream()
-            .filter( value -> mandatoryMap.containsKey( value.getAttribute() ) )
-            .forEach( value -> attributeValueMap.put( value.getAttribute().getUid(), value.getValue() ) );
+        trackedEntityInstance.getTrackedEntityAttributeValues().stream().
+            filter( value -> mandatoryMap.containsKey( value.getAttribute() ) ).
+            forEach( value -> attributeValueMap.put( value.getAttribute().getUid(), value.getValue() ) );
 
         for ( Attribute attribute : enrollment.getAttributes() )
         {
@@ -592,8 +592,8 @@ public abstract class AbstractEnrollmentService
 
     private void updateAttributeValues( Enrollment enrollment, ImportOptions importOptions )
     {
-        org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance = teiService.getTrackedEntityInstance(
-            enrollment.getTrackedEntityInstance() );
+        org.hisp.dhis.trackedentity.TrackedEntityInstance trackedEntityInstance = teiService.
+            getTrackedEntityInstance( enrollment.getTrackedEntityInstance() );
         Map<String, String> attributeValueMap = Maps.newHashMap();
 
         for ( Attribute attribute : enrollment.getAttributes() )
@@ -601,9 +601,9 @@ public abstract class AbstractEnrollmentService
             attributeValueMap.put( attribute.getAttribute(), attribute.getValue() );
         }
 
-        trackedEntityInstance.getTrackedEntityAttributeValues().stream()
-            .filter( value -> attributeValueMap.containsKey( value.getAttribute().getUid() ) )
-            .forEach( value -> {
+        trackedEntityInstance.getTrackedEntityAttributeValues().stream().
+            filter( value -> attributeValueMap.containsKey( value.getAttribute().getUid() ) ).
+            forEach( value -> {
                 String newValue = attributeValueMap.get( value.getAttribute().getUid() );
                 value.setValue( newValue );
 
@@ -630,8 +630,8 @@ public abstract class AbstractEnrollmentService
 
     private org.hisp.dhis.trackedentity.TrackedEntityInstance getTrackedEntityInstance( String trackedEntityInstance )
     {
-        org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = teiService
-            .getTrackedEntityInstance( trackedEntityInstance );
+        org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = teiService.
+            getTrackedEntityInstance( trackedEntityInstance );
 
         if ( entityInstance == null )
         {
