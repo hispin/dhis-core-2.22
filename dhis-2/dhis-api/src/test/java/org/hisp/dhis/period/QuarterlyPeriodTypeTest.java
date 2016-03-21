@@ -109,6 +109,22 @@ public class QuarterlyPeriodTypeTest
     }
 
     @Test
+    public void testGetNextPeriods()
+    {
+        testDate = new DateTime( 2009, 8, 15, 0, 0 );
+
+        Period period = periodType.createPeriod( testDate.toDate() );
+
+        period = periodType.getNextPeriod( period, 3 );
+
+        startDate = new DateTime( 2010, 4, 1, 0, 0 );
+        endDate = new DateTime( 2010, 6, 30, 0, 0 );
+
+        assertEquals( startDate.toDate(), period.getStartDate() );
+        assertEquals( endDate.toDate(), period.getEndDate() );
+    }
+
+    @Test
     public void testGetPreviousPeriod()
     {
         testDate = new DateTime(  2009, 8, 15, 0, 0 );

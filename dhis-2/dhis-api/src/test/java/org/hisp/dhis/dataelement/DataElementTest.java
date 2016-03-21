@@ -34,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.period.MonthlyPeriodType;
+import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.QuarterlyPeriodType;
 import org.junit.Test;
@@ -44,11 +45,11 @@ import org.junit.Test;
  */
 public class DataElementTest
 {
+    private PeriodType periodType = new MonthlyPeriodType();
+    
     @Test
     public void testGetPeriodType()
-    {
-        PeriodType periodType = new MonthlyPeriodType();
-        
+    {        
         DataElement element = new DataElement();
         
         DataSet dataSetA = new DataSet( "A", periodType );
@@ -101,5 +102,26 @@ public class DataElementTest
         dsB.addDataElement( deA );
         
         assertEquals( 3, deA.getOpenFuturePeriods() );
+    }
+
+    @Test
+    public void testGetLatestOpenFuturePeriod()
+    {
+        DataElement deA = new DataElement( "A" );
+        
+        assertEquals( 0, deA.getOpenFuturePeriods() );
+        
+        DataSet dsA = new DataSet( "A", periodType );
+        DataSet dsB = new DataSet( "B", periodType );
+
+        dsA.setOpenFuturePeriods( 3 );
+        dsB.setOpenFuturePeriods( 3 );
+        
+        dsA.addDataElement( deA );
+        dsB.addDataElement( deA );
+        
+        Period lastOpen = deA.getLatestOpenFuturePeriod();
+        
+        assertTrue( lastOpen.isAfter( new MonthlyPeriodType().createPeriod() ) );        
     }
 }

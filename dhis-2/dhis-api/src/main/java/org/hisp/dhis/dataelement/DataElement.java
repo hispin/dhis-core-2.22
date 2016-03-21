@@ -35,6 +35,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.Sets;
+
 import org.hisp.dhis.common.BaseDimensionalItemObject;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DimensionType;
@@ -50,6 +51,7 @@ import org.hisp.dhis.dataset.comparator.DataSetApprovalFrequencyComparator;
 import org.hisp.dhis.dataset.comparator.DataSetFrequencyComparator;
 import org.hisp.dhis.option.OptionSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
@@ -345,6 +347,32 @@ public class DataElement
         }
 
         return maxOpenPeriods;
+    }
+    
+    /**
+     * Returns the latest period which is open for data input. Returns null if
+     * data set is not associated with any data sets.
+     * 
+     * @return the latest period which is open for data input.
+     */
+    public Period getLatestOpenFuturePeriod()
+    {        
+        int periods = getOpenFuturePeriods();
+        
+        CalendarPeriodType periodType = (CalendarPeriodType) getPeriodType();
+        
+        if ( periodType != null )
+        {
+            Period period = periodType.createPeriod();
+            
+            // Rewind one as 0 open periods implies current period is locked
+            
+            period = periodType.getPreviousPeriod( period );
+        
+            return periodType.getNextPeriod( period, periods );
+        }
+        
+        return null;
     }
 
     /**

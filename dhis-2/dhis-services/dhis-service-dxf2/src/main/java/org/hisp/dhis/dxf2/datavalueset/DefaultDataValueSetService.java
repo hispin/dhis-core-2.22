@@ -580,7 +580,7 @@ public class DefaultDataValueSetService
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementCategoryOptionComboMap = new CachingMap<>();
         CachingMap<String, Set<DataElementCategoryOptionCombo>> dataElementAttrOptionComboMap = new CachingMap<>();
         CachingMap<String, Boolean> dataElementOrgUnitMap = new CachingMap<>();
-        CachingMap<String, Boolean> dataElementOpenFuturePeriodsMap = new CachingMap<>();
+        CachingMap<String, Period> dataElementLatestFuturePeriodMap = new CachingMap<>();
         CachingMap<String, Boolean> orgUnitInHierarchyMap = new CachingMap<>();
         CachingMap<String, Optional<Set<String>>> dataElementOptionsMap = new CachingMap<>();
 
@@ -730,11 +730,12 @@ public class DefaultDataValueSetService
                 continue;
             }
 
-            boolean invalidFuturePeriod = period.isFuture() && !dataElementOpenFuturePeriodsMap.get( dataElement.getUid(), () -> dataElement.getOpenFuturePeriods() > 0 );
-
-            if ( invalidFuturePeriod )
+            Period latestFuturePeriod = dataElementLatestFuturePeriodMap.get( dataElement.getUid(), () -> dataElement.getLatestOpenFuturePeriod() );
+            
+            if ( period.isAfter( latestFuturePeriod ) )
             {
-                summary.getConflicts().add( new ImportConflict( period.getIsoDate(), "Data element does not allow for future periods through data sets: " + dataElement.getUid() ) );
+                summary.getConflicts().add( new ImportConflict( period.getIsoDate(), "Period: " + 
+                    period.getIsoDate() + " is after latest open future period: " + latestFuturePeriod.getIsoDate() + " for data element: " + dataElement.getUid() ) );
                 continue;
             }
 

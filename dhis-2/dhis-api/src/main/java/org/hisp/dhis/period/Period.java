@@ -280,6 +280,24 @@ public class Period
     {
         return getEndDate().after( new Date() );
     }
+    
+    /**
+     * Indicates whether this period is after the given period. Bases the 
+     * comparison on the end dates of the periods. If the given period is null,
+     * false is returned.
+     * 
+     * @param period the period to compare.
+     * @return true if this period is after the given period.
+     */
+    public boolean isAfter( Period period )
+    {
+        if ( period == null || period.getEndDate() == null )
+        {
+            return false;
+        }
+        
+        return getEndDate().after( period.getEndDate() );
+    }
 
     // -------------------------------------------------------------------------
     // hashCode, equals and toString
