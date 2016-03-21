@@ -596,6 +596,7 @@ Ext.onReady( function() {
 					{id: finalsStyleConf.default_, text: NS.i18n.by_data_element},
 					{id: 'COUNT', text: NS.i18n.count},
 					{id: 'SUM', text: NS.i18n.sum},
+					{id: 'AVERAGE', text: NS.i18n.average},
 					{id: 'STDDEV', text: NS.i18n.stddev},
 					{id: 'VARIANCE', text: NS.i18n.variance},
 					{id: 'MIN', text: NS.i18n.min},

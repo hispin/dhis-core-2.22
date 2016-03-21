@@ -2116,7 +2116,7 @@ Ext.onReady( function() {
 					map = xLayout.dimensionNameItemsMap,
 					dx = dimConf.indicator.dimensionName,
 					co = dimConf.category.dimensionName,
-                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                    aggTypes = ['COUNT', 'SUM', 'AVERAGE', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     propertyMap = {
                         'name': 'name',
                         'displayName': 'name',

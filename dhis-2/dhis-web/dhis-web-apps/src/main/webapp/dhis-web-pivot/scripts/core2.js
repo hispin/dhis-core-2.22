@@ -916,23 +916,28 @@ $(function() {
                     id: 'SUM',
                     name: N.I18nManager.get('sum') || 'Sum'
                 },
+                'average': {
+					index: 4,
+					id: 'AVERAGE',
+					name: N.I18nManager.get('average') || 'Average'
+				},
                 'stddev': {
-                    index: 4,
+                    index: 5,
                     id: 'STDDEV',
                     name: N.I18nManager.get('stddev') || 'Standard deviation'
                 },
                 'variance': {
-                    index: 5,
+                    index: 6,
                     id: 'VARIANCE',
                     name: N.I18nManager.get('variance') || 'Variance'
                 },
                 'min': {
-                    index: 6,
+                    index: 7,
                     id: 'MIN',
                     name: N.I18nManager.get('min') || 'Min'
                 },
                 'max': {
-                    index: 7,
+                    index: 8,
                     id: 'MAX',
                     name: N.I18nManager.get('max') || 'Max'
                 }
@@ -1468,7 +1473,7 @@ $(function() {
             };
 
             Layout.prototype.req = function(baseUrl, isSorted) {
-                var aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                var aggTypes = ['COUNT', 'SUM', 'AVERAGE', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     //displayProperty = this.displayProperty || init.userAccount.settings.keyAnalysisDisplayProperty || 'name',
                     displayProperty = this.displayProperty || 'name',
                     request = new N.Api.Request(),

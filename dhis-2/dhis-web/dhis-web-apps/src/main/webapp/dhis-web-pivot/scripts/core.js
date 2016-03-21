@@ -410,7 +410,7 @@ Ext.onReady( function() {
 
                 // skipRounding: boolean (false)
 
-                // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
+                // aggregationType: string ('DEFAULT') - 'DEFAULT', 'COUNT', 'SUM', 'AVERAGE', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'
 
                 // dataApprovalLevel: object
 
@@ -2123,7 +2123,7 @@ Ext.onReady( function() {
 					map = xLayout.dimensionNameItemsMap,
 					dx = dimConf.indicator.dimensionName,
 					co = dimConf.category.dimensionName,
-                    aggTypes = ['COUNT', 'SUM', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
+                    aggTypes = ['COUNT', 'SUM', 'AVERAGE', 'STDDEV', 'VARIANCE', 'MIN', 'MAX'],
                     propertyMap = {
                         'name': 'name',
                         'displayName': 'name',
