@@ -800,7 +800,63 @@ public class QueryPlannerTest
             assertDimensionNameNotNull( query );
         }
     }
+    
+    /**
+     * Split on two data elements. Set aggregation type average and value type
+     * integer on query. Convert aggregation type from data elements to average 
+     * and then to average integer.
+     */
+    @Test
+    public void planQueryAggregationTypeA()
+    {
+        DataElement deA = createDataElement( 'A', ValueType.INTEGER, AggregationType.SUM );
+        DataElement deB = createDataElement( 'B', ValueType.INTEGER, AggregationType.COUNT );
+        
+        DataQueryParams params = new DataQueryParams();
+        params.setDataElements( getList( deA, deB ) );
+        params.setOrganisationUnits( getList( ouA ) );
+        params.setPeriods( getList( createPeriod( "200101" ) ) );
+        params.setAggregationType( AggregationType.AVERAGE );
 
+        DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
+
+        assertEquals( 2, queryGroups.getAllQueries().size() );
+        
+        for ( DataQueryParams query : queryGroups.getAllQueries() )
+        {
+            assertNotNull( query.getAggregationType() );
+            assertEquals( AggregationType.AVERAGE_INT, query.getAggregationType() );
+        }
+    }
+
+    /**
+     * Split on two data elements. Set aggregation type average and value type
+     * boolean on query. Convert aggregation type from data elements to average 
+     * and then to average boolean.
+     */
+    @Test
+    public void planQueryAggregationTypeB()
+    {
+        DataElement deA = createDataElement( 'A', ValueType.BOOLEAN, AggregationType.SUM );
+        DataElement deB = createDataElement( 'B', ValueType.BOOLEAN, AggregationType.COUNT );
+        
+        DataQueryParams params = new DataQueryParams();
+        params.setDataElements( getList( deA, deB ) );
+        params.setOrganisationUnits( getList( ouA ) );
+        params.setPeriods( getList( createPeriod( "200101" ) ) );
+        params.setAggregationType( AggregationType.AVERAGE );
+
+        DataQueryGroups queryGroups = queryPlanner.planQuery( params, 4, ANALYTICS_TABLE_NAME );
+
+        assertEquals( 2, queryGroups.getAllQueries().size() );
+        
+        for ( DataQueryParams query : queryGroups.getAllQueries() )
+        {
+            assertNotNull( query.getAggregationType() );
+            assertEquals( AggregationType.AVERAGE_BOOL, query.getAggregationType() );
+        }
+    }
+    
     @Test
     public void validateSuccesA()
     {
