@@ -624,12 +624,12 @@ public class DataValueController
     private void validateInvalidFuturePeriod( Period period, DataElement dataElement )
         throws WebMessageException
     {
-        boolean invalidFuturePeriod = period.isFuture() && dataElement.getOpenFuturePeriods() <= 0;
-
-        if ( invalidFuturePeriod )
+        Period latestFuturePeriod = dataElement.getLatestOpenFuturePeriod();
+        
+        if ( period.isAfter( latestFuturePeriod ) )
         {
-            throw new WebMessageException(
-                WebMessageUtils.conflict( "One or more data sets for data element does not allow future periods: " + dataElement.getUid() ) );
+            throw new WebMessageException( WebMessageUtils.conflict( "Period: " + 
+                period.getIsoDate() + " is after latest open future period: " + latestFuturePeriod.getIsoDate() + " for data element: " + dataElement.getUid() ) );
         }
     }
 
