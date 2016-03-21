@@ -41,6 +41,8 @@ import org.apache.commons.io.IOUtils;
 import org.hisp.dhis.calendar.CalendarService;
 import org.hisp.dhis.configuration.Configuration;
 import org.hisp.dhis.configuration.ConfigurationService;
+import org.hisp.dhis.external.conf.ConfigurationKey;
+import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.external.location.LocationManager;
 import org.hisp.dhis.external.location.LocationManagerException;
 import org.hisp.dhis.setting.SettingKey;
@@ -65,6 +67,9 @@ public class DefaultSystemService
 
     @Autowired
     private ConfigurationService configurationService;
+    
+    @Autowired
+    private DhisConfigurationProvider dhisConfig;
 
     @Autowired
     private CalendarService calendarService;
@@ -172,6 +177,8 @@ public class DefaultSystemService
             info.setExternalDirectory( "Not set" );
         }
 
+        info.setFileStoreProvider( dhisConfig.getProperty( ConfigurationKey.FILESTORE_PROVIDER ) );
+        
         // ---------------------------------------------------------------------
         // Database
         // ---------------------------------------------------------------------
