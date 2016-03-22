@@ -623,6 +623,7 @@ public class DefaultDataElementCategoryService
         DataElementCategory category = new DataElementCategory( DataElementCategory.DEFAULT_NAME );
         category.setUid( "GLevLNI9wkl" );
         category.setCode( "default" );
+        category.setDataDimension( false );
 
         category.addCategoryOption( categoryOption );
         addDataElementCategory( category );
