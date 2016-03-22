@@ -1216,6 +1216,8 @@ public class DefaultIdentifiableObjectImporter<T extends BaseIdentifiableObject>
 
         private void saveUserGroupAccess( T object, Set<UserGroupAccess> userGroupAccesses )
         {
+            object.getUserGroupAccesses().clear();
+
             for ( UserGroupAccess uga : userGroupAccesses )
             {
                 UserGroup userGroup = objectBridge.getObject( uga.getUserGroup() );
