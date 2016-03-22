@@ -1395,7 +1395,21 @@ trackerCapture.controller('DataEntryController',
     };
     
     $scope.completeIncompleteEvent = function (inTableView, outerForm) {
-            
+        
+        if($scope.currentEvent.status !== 'COMPLETED'){
+            outerForm.$setSubmitted();
+            if(outerForm.$invalid){
+                var dialogOptions = {
+                    headerText: 'error',
+                    bodyText: 'form_invalid'
+                };                
+                
+                DialogService.showDialog({}, dialogOptions);
+                
+                return;
+            }
+        }
+
         var modalOptions;
         var modalDefaults = {};
         var dhis2Event = $scope.makeDhis2EventToUpdate();        
