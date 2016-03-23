@@ -44,7 +44,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.hisp.dhis.appmanager.App;
 import org.hisp.dhis.appmanager.AppManager;
-import org.hisp.dhis.appmanager.AppType;
 import org.hisp.dhis.i18n.I18n;
 import org.hisp.dhis.i18n.I18nManager;
 import org.hisp.dhis.security.ActionAccessResolver;
@@ -78,7 +77,7 @@ public class DefaultModuleManager
 
     @Autowired
     private AppManager appManager;
-
+    
     @Autowired
     private I18nManager i18nManager;
 
@@ -156,12 +155,7 @@ public class DefaultModuleManager
     public List<Module> getAccessibleMenuModulesAndApps( String contextPath )
     {
         List<Module> modules = getAccessibleMenuModules();
-        List<App> apps = appManager
-                .getAccessibleApps( contextPath )
-                .stream()
-                // Prevent widgets and resource type apps from showing up as menu modules
-                .filter( app -> app.getAppType() == AppType.APP )
-                .collect( Collectors.toList() );
+        List<App> apps = appManager.getAccessibleApps( contextPath );
 
         modules.addAll( apps.stream().map( Module::getModule ).collect( Collectors.toList() ) );
 
@@ -198,7 +192,7 @@ public class DefaultModuleManager
         {
             return;
         }
-
+        
         I18n i18n = i18nManager.getI18n();
 
         for ( PackageConfig packageConfig : getPackageConfigs() )
