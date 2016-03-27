@@ -781,6 +781,23 @@ public class OrganisationUnit
         return map;
     }
 
+    /**
+     * Indicates whether this organisation unit is associated with the given
+     * data element through its data set associations.
+     */
+    public boolean hasDataElement( DataElement dataElement )
+    {
+        for ( DataSet dataSet : dataSets )
+        {
+            if ( dataSet.getDataElements().contains( dataElement ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     @Override
     public boolean haveUniqueNames()
     {

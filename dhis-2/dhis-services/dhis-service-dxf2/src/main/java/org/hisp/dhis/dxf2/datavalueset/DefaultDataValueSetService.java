@@ -824,7 +824,7 @@ public class DefaultDataValueSetService
             }
 
             if ( strictOrgUnits && BooleanUtils.isFalse( dataElementOrgUnitMap.get( dataElement.getUid() + orgUnit.getUid(),
-                () -> dataElement.hasDataSetOrganisationUnit( orgUnit ) ) ) )
+                () -> orgUnit.hasDataElement( dataElement ) ) ) )
             {
                 summary.getConflicts().add( new ImportConflict( orgUnit.getUid(),
                     "Data element: " + dataElement.getUid() + " must be assigned through data sets to organisation unit: " + orgUnit.getUid() ) );
