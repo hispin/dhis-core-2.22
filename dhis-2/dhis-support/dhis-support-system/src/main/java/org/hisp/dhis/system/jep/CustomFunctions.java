@@ -51,10 +51,8 @@ public class CustomFunctions
         put( "MEDIAN", new MedianValue() ).put( "MAX", new MaxValue() ).
         put( "MIN", new MinValue() ).put( "COUNT", new Count() ).
         put( "VSUM", new VectorSum() ).build();
-
-    private static Pattern aggregatePrefix = Pattern.compile( "" );
-
-    private static int nAggregates = 0;
+    
+    public static final Pattern AGGREGATE_PATTERN_PREFIX = Pattern.compile( "(AVG|STDDEV|MEDIAN|MAX|MIN|COUNT|VSUM)\\s*\\(" );
 
     public static void addFunctions( JEP parser )
     {        
@@ -63,39 +61,6 @@ public class CustomFunctions
             String fname = e.getKey();
             PostfixMathCommandI cmd = e.getValue();
             parser.addFunction( fname, cmd );
-        }
-    }
-
-    public static Pattern getAggregatePrefixPattern()
-    {        
-        if ( nAggregates == AGGREGATE_FUNCTIONS.size() )
-        {
-            return aggregatePrefix;
-        }
-        else
-        {
-            StringBuffer s = new StringBuffer();
-            int i = 0;
-            s.append( "(" );
-            
-            for ( String key : AGGREGATE_FUNCTIONS.keySet() )
-            {
-                if ( i > 0 )
-                {
-                    s.append( '|' );
-                }
-                else
-                {
-                    i++;
-                }
-                
-                s.append( key );
-            }
-            
-            s.append( ")\\s*\\(" );
-            aggregatePrefix = Pattern.compile( s.toString() );
-            nAggregates = AGGREGATE_FUNCTIONS.size();
-            return aggregatePrefix;
         }
     }
 

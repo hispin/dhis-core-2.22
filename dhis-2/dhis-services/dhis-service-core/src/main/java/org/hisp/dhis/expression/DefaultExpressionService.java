@@ -345,19 +345,19 @@ public class DefaultExpressionService
     @Transactional
     public Set<String> getAggregatesInExpression( String expression )
     {
-        Pattern prefix = CustomFunctions.getAggregatePrefixPattern();
+        Pattern prefix = CustomFunctions.AGGREGATE_PATTERN_PREFIX;
         Set<String> aggregates = new HashSet<>();
 
         if ( expression != null )
         {
             final Matcher matcher = prefix.matcher( expression );
             
-            int scan = 0, len = expression.length();
+            int scan = 0;
+            int len = expression.length();
 
             while ( (scan < len) && (matcher.find( scan )) )
             {
-                int start = matcher.end();
-                
+                int start = matcher.end();                
                 int end = Expression.matchExpression( expression, start );
                 
                 if ( end < 0 )
@@ -943,7 +943,7 @@ public class DefaultExpressionService
 
         StringBuffer sb = new StringBuffer();
 
-        Pattern prefix = CustomFunctions.getAggregatePrefixPattern();
+        Pattern prefix = CustomFunctions.AGGREGATE_PATTERN_PREFIX;
         Matcher matcher = prefix.matcher( expression );
 
         int scan = 0, len = expression.length(), tail = 0;
