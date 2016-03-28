@@ -44,18 +44,18 @@ import org.nfunk.jep.function.PostfixMathCommandI;
  */
 public class CustomFunctions
 {
-    private static Boolean init_done = false;
+    private static Boolean initDone = false;
 
-    public static Map<String, PostfixMathCommandI> aggregate_functions = new HashMap<String, PostfixMathCommandI>();
+    public static Map<String, PostfixMathCommandI> aggregateFunctions = new HashMap<String, PostfixMathCommandI>();
 
     public static void addFunctions( JEP parser )
     {
-        if ( !(init_done) )
+        if ( !( initDone ) )
         {
             initCustomFunctions();
         }
         
-        for ( Entry<String, PostfixMathCommandI> e : aggregate_functions.entrySet() )
+        for ( Entry<String, PostfixMathCommandI> e : aggregateFunctions.entrySet() )
         {
             String fname = e.getKey();
             PostfixMathCommandI cmd = e.getValue();
@@ -63,20 +63,20 @@ public class CustomFunctions
         }
     }
 
-    private static Pattern aggregate_prefix = Pattern.compile( "" );
+    private static Pattern aggregatePrefix = Pattern.compile( "" );
 
-    private static int n_aggregates = 0;
+    private static int nAggregates = 0;
 
     public static Pattern getAggregatePrefixPattern()
     {
-        if ( !(init_done) )
+        if ( !( initDone ) )
         {
             initCustomFunctions();
         }
         
-        if ( n_aggregates == aggregate_functions.size() )
+        if ( nAggregates == aggregateFunctions.size() )
         {
-            return aggregate_prefix;
+            return aggregatePrefix;
         }
         else
         {
@@ -84,25 +84,30 @@ public class CustomFunctions
             int i = 0;
             s.append( "(" );
             
-            for ( String key : aggregate_functions.keySet() )
+            for ( String key : aggregateFunctions.keySet() )
             {
                 if ( i > 0 )
+                {
                     s.append( '|' );
+                }
                 else
+                {
                     i++;
+                }
+                
                 s.append( key );
             }
             
             s.append( ")\\s*\\(" );
-            aggregate_prefix = Pattern.compile( s.toString() );
-            n_aggregates = aggregate_functions.size();
-            return aggregate_prefix;
+            aggregatePrefix = Pattern.compile( s.toString() );
+            nAggregates = aggregateFunctions.size();
+            return aggregatePrefix;
         }
     }
 
     public static void addAggregateFunction( String name, PostfixMathCommandI fn )
     {
-        aggregate_functions.put( name, fn );
+        aggregateFunctions.put( name, fn );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -131,13 +136,13 @@ public class CustomFunctions
 
     private synchronized static void initCustomFunctions()
     {
-        if ( init_done )
+        if ( initDone )
         {
             return;
         }
         else
         {
-            init_done = true;
+            initDone = true;
         }
         
         CustomFunctions.addAggregateFunction( "AVG", new ArithmeticMean() );
