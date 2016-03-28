@@ -440,7 +440,7 @@ public class DataElementStoreTest
         dataElementStore.update( dataElementA );
 
         DataElement dataElement = dataElementStore.getByAttribute( attribute );
-        assertEquals( dataElement.getUid(), dataElementA.getUid() );
+        assertEquals( dataElement, dataElementA );
     }
 
     @Test
