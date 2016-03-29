@@ -168,7 +168,7 @@ function getUserRoles()
     
     var def = $.Deferred();
     var promise = def.promise();
-    promise = promise.then( dhis2.tracker.getTrackerObject(null, 'USER_ROLES', '../api/me.json', 'fields=id,name,userCredentials[userRoles[id,authorities]]', 'sessionStorage', dhis2.tc.store) );
+    promise = promise.then( dhis2.tracker.getTrackerObject(null, 'USER_ROLES', '../api/me.json', 'fields=id,displayName|rename(name),userCredentials[userRoles[id,authorities]]', 'sessionStorage', dhis2.tc.store) );
     promise = promise.done(function(){});    
     def.resolve();
 }
@@ -188,7 +188,7 @@ function getConstants()
         if(res.length > 0){
             return;
         }        
-        return dhis2.tracker.getTrackerObjects('constants', 'constants', '../api/constants.json', 'paging=false&fields=id,name,displayName,value', 'idb', dhis2.tc.store);        
+        return dhis2.tracker.getTrackerObjects('constants', 'constants', '../api/constants.json', 'paging=false&fields=id,displayName|rename(name),value', 'idb', dhis2.tc.store);        
     });    
 }
 
@@ -198,7 +198,7 @@ function getOrgUnitLevels()
         if(res.length > 0){
             return;
         }        
-        return dhis2.tracker.getTrackerObjects('ouLevels', 'organisationUnitLevels', '../api/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,name,level&paging=false', 'idb', dhis2.tc.store);
+        return dhis2.tracker.getTrackerObjects('ouLevels', 'organisationUnitLevels', '../api/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,displayName|rename(name),level&paging=false', 'idb', dhis2.tc.store);
     }); 
 }
 
@@ -208,7 +208,7 @@ function getRelationships()
         if(res.length > 0){
             return;
         }
-        return dhis2.tracker.getTrackerObjects('relationshipTypes', 'relationshipTypes', '../api/relationshipTypes.json', 'paging=false&fields=id,name,aIsToB,bIsToA,displayName', 'idb', dhis2.tc.store);
+        return dhis2.tracker.getTrackerObjects('relationshipTypes', 'relationshipTypes', '../api/relationshipTypes.json', 'paging=false&fields=id,displayName|rename(name),aIsToB,bIsToA,displayName', 'idb', dhis2.tc.store);
     });    
 }
 
@@ -218,7 +218,7 @@ function getTrackedEntities()
         if(res.length > 0){
             return;
         }        
-        return dhis2.tracker.getTrackerObjects('trackedEntities', 'trackedEntities', '../api/trackedEntities.json', 'paging=false&fields=id,name', 'idb', dhis2.tc.store);
+        return dhis2.tracker.getTrackerObjects('trackedEntities', 'trackedEntities', '../api/trackedEntities.json', 'paging=false&fields=id,displayName|rename(name)', 'idb', dhis2.tc.store);
     });    
 }
 
@@ -287,7 +287,7 @@ function getAllPrograms( ids )
         return $.ajax( {
             url: '../api/programs.json',
             type: 'GET',
-            data: 'fields=id,name,type,version,displayFrontPageList,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,dataEntryForm[id,name,style,htmlCode,format],relationshipText,relationshipFromA,relatedProgram[id,name],relationshipType[id,name],trackedEntity[id,name,description],userRoles[id,name],organisationUnits[id,name],userRoles[id,name],programStages[id,name,sortOrder,version,dataEntryForm[id,name,style,htmlCode,format],captureCoordinates,blockEntryForm,autoGenerateEvent,allowGenerateNextVisit,generatedByEnrollmentDate,remindCompleted,hideDueDate,excecutionDateLabel,minDaysFromStart,repeatable,openAfterEnrollment,standardInterval,periodType,reportDateToUse,programStageSections[id,name,programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,code,name,description,formName,valueType,optionSetValue,optionSet[id],dataElementGroups[id,name]]]],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]&paging=false&filter=id:in:' + ids
+            data: 'fields=id,displayName|rename(name),type,version,displayFrontPageList,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,selectEnrollmentDatesInFuture,selectIncidentDatesInFuture,onlyEnrollOnce,externalAccess,displayOnAllOrgunit,registration,dataEntryForm[id,displayName|rename(name),style,htmlCode,format],relationshipText,relationshipFromA,relatedProgram[id,displayName|rename(name)],relationshipType[id,displayName|rename(name)],trackedEntity[id,displayName|rename(name),description],userRoles[id,displayName|rename(name)],organisationUnits[id,displayName|rename(name)],userRoles[id,displayName|rename(name)],programStages[id,displayName|rename(name),sortOrder,version,dataEntryForm[id,displayName|rename(name),style,htmlCode,format],captureCoordinates,blockEntryForm,autoGenerateEvent,allowGenerateNextVisit,generatedByEnrollmentDate,remindCompleted,hideDueDate,excecutionDateLabel,minDaysFromStart,repeatable,openAfterEnrollment,standardInterval,periodType,reportDateToUse,programStageSections[id,displayName|rename(name),programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,code,displayName|rename(name),description,formName,valueType,optionSetValue,optionSet[id],dataElementGroups[id,displayName|rename(name)]]]],programTrackedEntityAttributes[displayInList,mandatory,allowFutureDate,trackedEntityAttribute[id,unique]]&paging=false&filter=id:in:' + ids
         }).done( function( response ){
             
             if(response.programs){
@@ -437,7 +437,7 @@ function getTrackedEntityAttributes( data )
                 var _attributesInPromise = attributesInPromise.toString();
                 _attributesInPromise = '[' + _attributesInPromise + ']';
                 
-                var filter = 'fields=id,name,code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,programScope,orgunitScope,confidential,optionSet[id,version],trackedEntity[id,name]';
+                var filter = 'fields=id,displayName|rename(name),code,version,description,valueType,optionSetValue,confidential,inherit,sortOrderInVisitSchedule,sortOrderInListNoProgram,displayOnVisitSchedule,displayInListNoProgram,unique,programScope,orgunitScope,confidential,optionSet[id,version],trackedEntity[id,displayName|rename(name)]';
                 filter = filter + '&filter=id:in:' + _attributesInPromise + '&paging=false';
                 
                 var url = '../api/trackedEntityAttributes';
@@ -496,7 +496,7 @@ function getOptionSetsForAttributes( data )
                 var _optionSetsInPromise = optionSetsInPromise.toString();
                 _optionSetsInPromise = '[' + _optionSetsInPromise + ']';
                 
-                var filter = 'fields=id,name,version,options[id,name,code]';                
+                var filter = 'fields=id,displayName|rename(name),version,options[id,displayName|rename(name),code]';                
                 filter = filter + '&filter=id:in:' + _optionSetsInPromise + '&paging=false';
                 
                 var url = '../api/optionSets';
@@ -522,7 +522,7 @@ function getMetaProgramValidations( programs, programIds )
 
 function getProgramValidations( programValidations )
 {
-    return dhis2.tracker.checkAndGetTrackerObjects( programValidations, 'programValidations', '../api/programValidations', 'fields=id,name,displayName,operator,rightSide[expression,description],leftSide[expression,description],program[id]', dhis2.tc.store);
+    return dhis2.tracker.checkAndGetTrackerObjects( programValidations, 'programValidations', '../api/programValidations', 'fields=id,displayName|rename(name),operator,rightSide[expression,description],leftSide[expression,description],program[id]', dhis2.tc.store);
 }
 
 function getMetaProgramIndicators( programs )
@@ -532,7 +532,7 @@ function getMetaProgramIndicators( programs )
 
 function getProgramIndicators( programIndicators )
 {
-    return dhis2.tracker.checkAndGetTrackerObjects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,name,code,shortName,displayInForm,expression,displayDescription,rootDate,description,valueType,DisplayName,filter,program[id]', dhis2.tc.store);
+    return dhis2.tracker.checkAndGetTrackerObjects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,displayName|rename(name),code,shortName,displayInForm,expression,displayDescription,rootDate,description,valueType,filter,program[id]', dhis2.tc.store);
 }
 
 function getMetaProgramRules( programs )
@@ -542,7 +542,7 @@ function getMetaProgramRules( programs )
 
 function getProgramRules( programRules )
 {
-    return dhis2.tracker.checkAndGetTrackerObjects( programRules, 'programRules', '../api/programRules', 'fields=id,name,condition,description,program[id],programStage[id],priority,programRuleActions[id,content,location,data,programRuleActionType,programStageSection[id],dataElement[id],trackedEntityAttribute[id],programIndicator[id],programStage[id]]', dhis2.tc.store);
+    return dhis2.tracker.checkAndGetTrackerObjects( programRules, 'programRules', '../api/programRules', 'fields=id,displayName|rename(name),condition,description,program[id],programStage[id],priority,programRuleActions[id,content,location,data,programRuleActionType,programStageSection[id],dataElement[id],trackedEntityAttribute[id],programIndicator[id],programStage[id]]', dhis2.tc.store);
 }
 
 function getMetaProgramRuleVariables( programs )
@@ -552,5 +552,5 @@ function getMetaProgramRuleVariables( programs )
 
 function getProgramRuleVariables( programRuleVariables )
 {
-    return dhis2.tracker.checkAndGetTrackerObjects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,name,displayName,programRuleVariableSourceType,program[id],programStage[id],dataElement[id],trackedEntityAttribute[id]', dhis2.tc.store);
+    return dhis2.tracker.checkAndGetTrackerObjects( programRuleVariables, 'programRuleVariables', '../api/programRuleVariables', 'fields=id,displayName|rename(name),programRuleVariableSourceType,program[id],programStage[id],dataElement[id],trackedEntityAttribute[id]', dhis2.tc.store);
 }
