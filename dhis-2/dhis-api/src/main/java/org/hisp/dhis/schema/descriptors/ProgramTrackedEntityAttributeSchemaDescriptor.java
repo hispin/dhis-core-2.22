@@ -53,7 +53,6 @@ public class ProgramTrackedEntityAttributeSchemaDescriptor implements SchemaDesc
     {
         Schema schema = new Schema( ProgramTrackedEntityAttribute.class, SINGULAR, PLURAL );
         schema.setRelativeApiEndpoint( API_ENDPOINT );
-        schema.setShareable( true );
         schema.setOrder( 1420 );
 
         schema.getAuthorities().add( new Authority( AuthorityType.CREATE_PUBLIC, Lists.newArrayList( "F_PROGRAM_PUBLIC_ADD" ) ) );
