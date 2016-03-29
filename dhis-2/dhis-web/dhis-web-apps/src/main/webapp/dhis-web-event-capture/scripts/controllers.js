@@ -885,7 +885,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             closeButtonText: 'cancel',
             actionButtonText: 'remove',
             headerText: 'remove',
-            bodyText: 'are_you_sure_to_remove'
+            bodyText: 'are_you_sure_to_remove_with_audit'
         };
 
         ModalService.showModal({}, modalOptions).then(function(result){

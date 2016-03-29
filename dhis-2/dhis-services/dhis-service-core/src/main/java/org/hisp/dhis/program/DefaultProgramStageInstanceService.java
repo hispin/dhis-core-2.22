@@ -41,7 +41,9 @@ import org.hisp.dhis.system.util.DateUtils;
 import org.hisp.dhis.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminder;
 import org.hisp.dhis.trackedentity.TrackedEntityInstanceReminderService;
+import org.hisp.dhis.trackedentitydatavalue.TrackedEntityDataValueAuditService;
 import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -104,6 +106,9 @@ public class DefaultProgramStageInstanceService
     {
         this.messageService = messageService;
     }
+    
+    @Autowired
+    private TrackedEntityDataValueAuditService dataValueAuditService;
 
     // -------------------------------------------------------------------------
     // Implementation methods
@@ -119,6 +124,7 @@ public class DefaultProgramStageInstanceService
     @Override
     public void deleteProgramStageInstance( ProgramStageInstance programStageInstance )
     {
+    	dataValueAuditService.deleteTrackedEntityDataValueAudits( programStageInstance );
         programStageInstanceStore.delete( programStageInstance );
     }
 
