@@ -47,7 +47,6 @@ import org.hisp.dhis.i18n.I18nService;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.organisationunit.OrganisationUnitService;
-import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
@@ -378,9 +377,8 @@ public class DefaultValidationRuleService
 
         for ( PeriodType periodType : rulePeriodTypes )
         {
-            CalendarPeriodType calendarPeriodType = (CalendarPeriodType) periodType;
-            Period currentPeriod = calendarPeriodType.createPeriod();
-            Period previousPeriod = calendarPeriodType.getPreviousPeriod( currentPeriod );
+            Period currentPeriod = periodType.createPeriod();
+            Period previousPeriod = periodType.getPreviousPeriod( currentPeriod );
             periods.addAll( periodService.getIntersectingPeriodsByPeriodType( periodType,
                 previousPeriod.getStartDate(), currentPeriod.getEndDate() ) );
         }

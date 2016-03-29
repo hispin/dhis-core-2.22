@@ -50,7 +50,6 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.comparator.DataSetApprovalFrequencyComparator;
 import org.hisp.dhis.dataset.comparator.DataSetFrequencyComparator;
 import org.hisp.dhis.option.OptionSet;
-import org.hisp.dhis.period.CalendarPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.period.YearlyPeriodType;
@@ -341,7 +340,7 @@ public class DataElement
     {        
         int periods = getOpenFuturePeriods();
         
-        CalendarPeriodType periodType = (CalendarPeriodType) getPeriodType();
+        PeriodType periodType = getPeriodType();
         
         if ( periodType != null )
         {
