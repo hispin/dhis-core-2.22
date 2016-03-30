@@ -188,7 +188,7 @@ public class DefaultProgramStageInstanceService
     }
 
     @Override
-    public void completeProgramStageInstance( ProgramStageInstance programStageInstance, I18nFormat format )
+    public void completeProgramStageInstance( ProgramStageInstance programStageInstance, boolean sendNotifications, I18nFormat format )
     {
         Calendar today = Calendar.getInstance();
         PeriodType.clearTimeOfDay( today );
@@ -198,33 +198,36 @@ public class DefaultProgramStageInstanceService
         programStageInstance.setCompletedDate( date );
         programStageInstance.setCompletedBy( currentUserService.getCurrentUsername() );
 
-        // ---------------------------------------------------------------------
-        // Send sms-message when to completed the event
-        // ---------------------------------------------------------------------
-
-        List<OutboundSms> outboundSms = programStageInstance.getOutboundSms();
-
-        if ( outboundSms == null )
+        if ( sendNotifications )
         {
-            outboundSms = new ArrayList<>();
+            // ---------------------------------------------------------------------
+            // Send SMS message when to completed the event
+            // ---------------------------------------------------------------------
+    
+            List<OutboundSms> outboundSms = programStageInstance.getOutboundSms();
+    
+            if ( outboundSms == null )
+            {
+                outboundSms = new ArrayList<>();
+            }
+    
+            outboundSms.addAll( sendMessages( programStageInstance,
+                TrackedEntityInstanceReminder.SEND_WHEN_TO_C0MPLETED_EVENT, format ) );
+    
+            // ---------------------------------------------------------------------
+            // Send DHIS message when to completed the event
+            // ---------------------------------------------------------------------
+    
+            List<MessageConversation> messageConversations = programStageInstance.getMessageConversations();
+    
+            if ( messageConversations == null )
+            {
+                messageConversations = new ArrayList<>();
+            }
+    
+            messageConversations.addAll( sendMessageConversations( programStageInstance,
+                TrackedEntityInstanceReminder.SEND_WHEN_TO_C0MPLETED_EVENT, format ) );
         }
-
-        outboundSms.addAll( sendMessages( programStageInstance,
-            TrackedEntityInstanceReminder.SEND_WHEN_TO_C0MPLETED_EVENT, format ) );
-
-        // ---------------------------------------------------------------------
-        // Send DHIS message when to completed the event
-        // ---------------------------------------------------------------------
-
-        List<MessageConversation> messageConversations = programStageInstance.getMessageConversations();
-
-        if ( messageConversations == null )
-        {
-            messageConversations = new ArrayList<>();
-        }
-
-        messageConversations.addAll( sendMessageConversations( programStageInstance,
-            TrackedEntityInstanceReminder.SEND_WHEN_TO_C0MPLETED_EVENT, format ) );
 
         // ---------------------------------------------------------------------
         // Update the event
@@ -239,14 +242,14 @@ public class DefaultProgramStageInstanceService
 
         if ( programStageInstance.getProgramInstance().getProgram().isRegistration() )
         {
-            boolean canCompleted = programInstanceService.canAutoCompleteProgramInstanceStatus( programStageInstance
-                .getProgramInstance() );
-            if ( canCompleted )
+            boolean canComplete = programInstanceService.canAutoCompleteProgramInstanceStatus( 
+                programStageInstance.getProgramInstance() );
+            
+            if ( canComplete )
             {
                 programInstanceService.completeProgramInstanceStatus( programStageInstance.getProgramInstance() );
             }
         }
-
     }
 
     @Override

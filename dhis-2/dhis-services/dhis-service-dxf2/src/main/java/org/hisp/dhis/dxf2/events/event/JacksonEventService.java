@@ -177,6 +177,7 @@ public class JacksonEventService extends AbstractEventService
         {
             Event fromJson = fromJson( input, Event.class );
             events.add( fromJson );
+            importOptions.setSendNotifications( true );
         }
 
         return addEvents( events, taskId, importOptions );

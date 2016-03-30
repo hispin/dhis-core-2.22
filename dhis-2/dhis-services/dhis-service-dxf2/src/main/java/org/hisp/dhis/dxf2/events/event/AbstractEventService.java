@@ -681,7 +681,7 @@ public abstract class AbstractEventService
 
             if ( programStageInstance.isCompleted() )
             {
-                programStageInstanceService.completeProgramStageInstance( programStageInstance,
+                programStageInstanceService.completeProgramStageInstance( programStageInstance, importOptions.isSendNotifications(),
                     i18nManager.getI18nFormat() );
             }
         }
@@ -1049,12 +1049,12 @@ public abstract class AbstractEventService
             if ( programStageInstance == null )
             {
                 programStageInstance = createProgramStageInstance( programStage, programInstance, organisationUnit,
-                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), completedBy, event.getEvent(), coc );
+                    dueDate, eventDate, event.getStatus().getValue(), event.getCoordinate(), completedBy, event.getEvent(), coc, importOptions );
             }
             else
             {
                 updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, eventDate, event
-                    .getStatus().getValue(), event.getCoordinate(), completedBy, programStageInstance, coc );
+                    .getStatus().getValue(), event.getCoordinate(), completedBy, programStageInstance, coc, importOptions );
             }
 
             saveTrackedEntityComment( programStageInstance, event, storedBy );
@@ -1159,20 +1159,20 @@ public abstract class AbstractEventService
 
     private ProgramStageInstance createProgramStageInstance( ProgramStage programStage, ProgramInstance programInstance,
         OrganisationUnit organisationUnit, Date dueDate, Date executionDate, int status,
-        Coordinate coordinate, String completedBy, String programStageInstanceUid, DataElementCategoryOptionCombo coc )
+        Coordinate coordinate, String completedBy, String programStageInstanceUid, DataElementCategoryOptionCombo coc, ImportOptions importOptions )
     {
         ProgramStageInstance programStageInstance = new ProgramStageInstance();
         programStageInstance.setUid( CodeGenerator.isValidCode( programStageInstanceUid ) ? programStageInstanceUid : CodeGenerator.generateCode() );
 
         updateProgramStageInstance( programStage, programInstance, organisationUnit, dueDate, executionDate, status,
-            coordinate, completedBy, programStageInstance, coc );
+            coordinate, completedBy, programStageInstance, coc, importOptions );
 
         return programStageInstance;
     }
 
     private void updateProgramStageInstance( ProgramStage programStage, ProgramInstance programInstance,
         OrganisationUnit organisationUnit, Date dueDate, Date executionDate, int status, Coordinate coordinate,
-        String completedBy, ProgramStageInstance programStageInstance, DataElementCategoryOptionCombo coc )
+        String completedBy, ProgramStageInstance programStageInstance, DataElementCategoryOptionCombo coc, ImportOptions importOptions )
     {
         programStageInstance.setProgramInstance( programInstance );
         programStageInstance.setProgramStage( programStage );
@@ -1208,7 +1208,7 @@ public abstract class AbstractEventService
             programStageInstance.setStatus( EventStatus.COMPLETED );
             programStageInstance.setCompletedDate( new Date() );
             programStageInstance.setCompletedBy( completedBy );
-            programStageInstanceService.completeProgramStageInstance( programStageInstance, i18nManager.getI18nFormat() );
+            programStageInstanceService.completeProgramStageInstance( programStageInstance, importOptions.isSendNotifications(), i18nManager.getI18nFormat() );
         }
     }
 

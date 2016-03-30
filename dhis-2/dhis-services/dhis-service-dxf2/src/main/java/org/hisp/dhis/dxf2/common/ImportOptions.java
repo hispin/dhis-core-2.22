@@ -59,6 +59,8 @@ public class ImportOptions
     private boolean skipExistingCheck;
 
     private boolean sharing;
+    
+    private boolean sendNotifications;
 
     private boolean strictPeriods;
 
@@ -136,6 +138,11 @@ public class ImportOptions
     public boolean isSharing()
     {
         return sharing;
+    }
+    
+    public boolean isSendNotifications()
+    {
+        return sendNotifications;
     }
 
     public boolean isStrictPeriods()
@@ -265,6 +272,12 @@ public class ImportOptions
     public ImportOptions setSharing( boolean sharing )
     {
         this.sharing = sharing;
+        return this;
+    }
+
+    public ImportOptions setSendNotifications( boolean sendNotifications )
+    {
+        this.sendNotifications = sendNotifications;
         return this;
     }
 
