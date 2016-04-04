@@ -62,6 +62,7 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
     $scope.displayCustomForm = false;
     $scope.currentElement = {id: '', update: false};
     $scope.optionSets = [];
+    $scope.dataElementTranslations = [];
     $scope.proceedSelection = true;
     $scope.formUnsaved = false;
     $scope.fileNames = [];
@@ -105,11 +106,17 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
             
             if($scope.optionSets.length < 1){
                 $scope.optionSets = [];
+                $scope.dataElementTranslations = [];
                 MetaDataFactory.getAll('optionSets').then(function(optionSets){
                     angular.forEach(optionSets, function(optionSet){  
                         $scope.optionSets[optionSet.id] = optionSet;
                     });                    
-                    $scope.loadPrograms();
+                    MetaDataFactory.getAll('dataElements').then(function(des){
+                        angular.forEach(des, function(de){  
+                            $scope.dataElementTranslations[de.id] = de;
+                        });
+                        $scope.loadPrograms();
+                    });
                 });
             }
             else{
@@ -201,13 +208,15 @@ var eventCaptureControllers = angular.module('eventCaptureControllers', [])
                 $scope.filterText['eventDate']= {};
 
                 angular.forEach($scope.selectedProgramStage.programStageDataElements, function(prStDe){
+                    var tx = $scope.dataElementTranslations[prStDe.dataElement.id];                    
+                    prStDe.dataElement.displayFormName = tx.displayFormName && tx.displayFormName !== "" ? tx.displayFormName : tx.displayName;
                     $scope.prStDes[prStDe.dataElement.id] = prStDe;
-                    $scope.newDhis2Event[prStDe.dataElement.id] = '';                    
-
+                    $scope.newDhis2Event[prStDe.dataElement.id] = ''; 
+                    
                     //generate grid headers using program stage data elements
                     //create a template for new event
                     //for date type dataelements, filtering is based on start and end dates
-                    $scope.eventGridColumns.push({name: prStDe.dataElement.formName ? prStDe.dataElement.formName : prStDe.dataElement.name, 
+                    $scope.eventGridColumns.push({name: prStDe.dataElement.displayFormName,
                                                   id: prStDe.dataElement.id, 
                                                   valueType: prStDe.dataElement.valueType, 
                                                   compulsory: prStDe.compulsory, 

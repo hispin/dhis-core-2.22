@@ -18,7 +18,11 @@ var i18n_uploading_data_notification = 'Uploading locally stored data to the ser
 var PROGRAMS_METADATA = 'EVENT_PROGRAMS';
 
 var EVENT_VALUES = 'EVENT_VALUES';
-var optionSetsInPromise = [];
+
+var optionSetIds = [];
+var dataElementIds = [];
+
+var batchSize = 50;
 
 dhis2.ec.isOffline = false;
 dhis2.ec.store = null;
@@ -33,7 +37,7 @@ if( dhis2.ec.memoryOnly ) {
 dhis2.ec.store = new dhis2.storage.Store({
     name: 'dhis2ec',
     adapters: [dhis2.storage.IndexedDBAdapter, dhis2.storage.DomSessionStorageAdapter, dhis2.storage.InMemoryAdapter],
-    objectStores: ['programs', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants']
+    objectStores: ['programs', 'optionSets', 'events', 'programValidations', 'programRules', 'programRuleVariables', 'programIndicators', 'ouLevels', 'constants', 'dataElements']
 });
 
 (function($) {
@@ -62,7 +66,6 @@ $(document).ready(function()
     $('#loaderSpan').show();
     
 });
-
 
 $(document).bind('dhis2.online', function(event, loggedIn)
 {
@@ -152,17 +155,12 @@ function downloadMetaData(){
     promise = promise.then( getCalendarSetting );
     promise = promise.then( getConstants );
     promise = promise.then( getOrgUnitLevels );    
-    promise = promise.then( getMetaPrograms );     
-    promise = promise.then( getPrograms );     
-    promise = promise.then( getMetaProgramValidations );
-    promise = promise.then( getProgramValidations );
-    promise = promise.then( getMetaProgramIndicators );
-    promise = promise.then( getProgramIndicators );
-    promise = promise.then( getMetaProgramRules );
-    promise = promise.then( getProgramRules );
-    promise = promise.then( getMetaProgramRuleVariables );
-    promise = promise.then( getProgramRuleVariables );
-    promise = promise.then( getOptionSets );    
+    promise = promise.then( getMetaPrograms );
+    promise = promise.then( filterMissingPrograms );
+    promise = promise.then( getPrograms );    
+    promise = promise.then( getOptionSetsForDataElements );
+    promise = promise.then( getOptionSets );
+    promise = promise.then( getDataElements );
     promise.done( function() {    
         //Enable ou selection after meta-data has downloaded
         $( "#orgUnitTree" ).removeClass( "disable-clicks" );
@@ -183,20 +181,16 @@ function getUserRoles()
        return; 
     }
     
-    var def = $.Deferred();
-    var promise = def.promise();
-    promise = promise.then( dhis2.tracker.getTrackerObject(null, 'USER_ROLES', '../api/me.json', 'fields=id,displayName|rename(name),userCredentials[userRoles[id,authorities]]', 'sessionStorage', dhis2.ec.store) );
-    promise = promise.done(function(){});    
-    def.resolve();
+    return dhis2.tracker.getTrackerObject(null, 'USER_ROLES', '../api/me.json', 'fields=id,displayName|rename(name)|rename(name),userCredentials[userRoles[id,authorities]]', 'sessionStorage', dhis2.ec.store);
 }
 
 function getCalendarSetting()
 {   
-    var def = $.Deferred();
-    var promise = def.promise();
-    promise = promise.then( dhis2.tracker.getTrackerObject(null, 'CALENDAR_SETTING', '../api/systemSettings', 'key=keyCalendar&key=keyDateFormat', 'localStorage', dhis2.ec.store) );
-    promise = promise.done(function(){});    
-    def.resolve();    
+    if(localStorage['CALENDAR_SETTING']){
+       return; 
+    }
+    
+    return dhis2.tracker.getTrackerObject(null, 'CALENDAR_SETTING', '../api/systemSettings', 'key=keyCalendar&key=keyDateFormat', 'localStorage', dhis2.ec.store);
 }
 
 function getConstants()
@@ -224,7 +218,7 @@ function getMetaPrograms()
     return dhis2.tracker.getTrackerObjects('programs', 'programs', '../api/programs.json', 'filter=programType:eq:WITHOUT_REGISTRATION&paging=false&fields=id,version,categoryCombo[id,isDefault,categories[id]],programStages[id,version,programStageSections[id],programStageDataElements[dataElement[id,optionSet[id,version]]]]', 'temp', dhis2.ec.store);    
 }
 
-function getPrograms( programs )
+function filterMissingPrograms( programs )
 {
     if( !programs ){
         return;
@@ -240,36 +234,70 @@ function getPrograms( programs )
     var build = builder.promise();
 
     var ids = [];
-    _.each( _.values( programs ), function ( program ) {
-        
+    _.each( _.values( programs ), function ( program ) {        
         if(program.programStages && program.programStages[0].programStageDataElements){
             build = build.then(function() {
                 var d = $.Deferred();
                 var p = d.promise();
                 dhis2.ec.store.get('programs', program.id).done(function(obj) {
-                    if(!obj || obj.version !== program.version) {
+                    if(!obj || obj.version !== program.version) {                        
                         ids.push( program.id );
                     }
-
                     d.resolve();
                 });
-
                 return p;
             });
         }        
     });
 
     build.done(function() {
+        def.resolve();
         promise = promise.done( function () {
-            var _ids = null;
-            if( ids && ids.length > 0 ){
-                _ids = ids.toString();
-                _ids = '[' + _ids + ']';
-                promise = promise.then( getAllPrograms( _ids ) );
-            }            
             mainDef.resolve( programs, ids );
         } );
+    }).fail(function(){
+        mainDef.resolve( null, null );
+    });
+
+    builder.resolve();
+
+    return mainPromise;
+}
+
+function getPrograms( programs, ids )
+{
+    if( !ids || !ids.length || ids.length < 1){
+        return;
+    }
+    
+    var batches = ids.chunk( batchSize );
+    
+    var mainDef = $.Deferred();
+    var mainPromise = mainDef.promise();
+
+    var def = $.Deferred();
+    var promise = def.promise();
+
+    var builder = $.Deferred();
+    var build = builder.promise();
+    
+    _.each( _.values( batches ), function ( batch ) {        
+        promise = getBatchPrograms( programs, batch );
+        promise = promise.then( getMetaProgramValidations );
+        promise = promise.then( getProgramValidations );
+        promise = promise.then( getMetaProgramIndicators );
+        promise = promise.then( getProgramIndicators );
+        promise = promise.then( getMetaProgramRules );
+        promise = promise.then( getProgramRules );
+        promise = promise.then( getMetaProgramRuleVariables );
+        promise = promise.then( getProgramRuleVariables );
+    });
+
+    build.done(function() {
         def.resolve();
+        promise = promise.done( function () {                      
+            mainDef.resolve( programs, ids );
+        } );        
         
     }).fail(function(){
         mainDef.resolve( null, null );
@@ -280,38 +308,44 @@ function getPrograms( programs )
     return mainPromise;
 }
 
-function getAllPrograms( ids )
-{    
-    return function() {
-        return $.ajax( {
-            url: '../api/programs.json',
-            type: 'GET',
-            data: 'fields=id,displayName|rename(name),programType,version,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,displayName|rename(name),isDefault,categories[id,displayName|rename(name),categoryOptions[id,displayName|rename(name)]]],organisationUnits[id,displayName|rename(name)],programStages[id,displayName|rename(name),version,description,excecutionDateLabel,captureCoordinates,dataEntryForm[id,displayName|rename(name),style,htmlCode,format],minDaysFromStart,repeatable,preGenerateUID,programStageSections[id,displayName|rename(name),programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,sortOrder,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,displayName|rename(name),valueType,optionSetValue,formName,optionSet[id]]]],userRoles[id,displayName|rename(name)]&paging=false&filter=id:in:' + ids
-        }).done( function( response ){
-            
-            if(response.programs){
-                _.each(_.values( response.programs), function(program){
-                    var ou = {};
-                    _.each(_.values( program.organisationUnits), function(o){
-                        ou[o.id] = o.name;
-                    });
-                    program.organisationUnits = ou;
+function getBatchPrograms( programs, batch )
+{   
+    var ids = '[' + batch.toString() + ']';
+    
+    var def = $.Deferred();
+    
+    $.ajax( {
+        url: '../api/programs.json',
+        type: 'GET',
+        data: 'fields=id,displayName|rename(name),programType,version,dataEntryMethod,enrollmentDateLabel,incidentDateLabel,displayIncidentDate,ignoreOverdueEvents,categoryCombo[id,displayName|rename(name),isDefault,categories[id,displayName|rename(name),categoryOptions[id,displayName|rename(name)]]],organisationUnits[id,displayName|rename(name)],programStages[id,displayName|rename(name),version,description,excecutionDateLabel,captureCoordinates,dataEntryForm[id,displayName|rename(name),style,htmlCode,format],minDaysFromStart,repeatable,preGenerateUID,programStageSections[id,displayName|rename(name),programStageDataElements[dataElement[id]]],programStageDataElements[displayInReports,sortOrder,allowProvidedElsewhere,allowFutureDate,compulsory,dataElement[id,name,url,description,valueType,optionSetValue,optionSet[id]]]],userRoles[id,displayName|rename(name)]&paging=false&filter=id:in:' + ids
+    }).done( function( response ){
 
-                    var ur = {};
-                    _.each(_.values( program.userRoles), function(u){
-                        ur[u.id] = u.name;
-                    });
-                    program.userRoles = ur;
-
-                    dhis2.ec.store.set( 'programs', program );
+        if(response.programs){
+            _.each(_.values( response.programs), function(program){
+                var ou = {};
+                _.each(_.values( program.organisationUnits), function(o){
+                    ou[o.id] = o.name;
                 });
-            }
-        });
-    };
+                program.organisationUnits = ou;
+
+                var ur = {};
+                _.each(_.values( program.userRoles), function(u){
+                    ur[u.id] = u.name;
+                });
+                program.userRoles = ur;
+
+                dhis2.ec.store.set( 'programs', program );
+            });
+        }
+        
+        def.resolve( programs, batch );
+    });
+
+    return def.promise();
 }
 
-function getOptionSets( programs )
-{    
+function getOptionSetsForDataElements( programs )
+{   
     if( !programs ){
         return;
     }
@@ -325,59 +359,63 @@ function getOptionSets( programs )
     var promise = def.promise();
 
     var builder = $.Deferred();
-    var build = builder.promise();    
-
-    _.each( _.values( programs ), function ( program ) {
-        
-        if(program.programStages && program.programStages[0].programStageDataElements){
-            _.each(_.values( program.programStages[0].programStageDataElements), function(prStDe){
-                if( prStDe.dataElement && prStDe.dataElement.optionSet && prStDe.dataElement.optionSet.id ){
-                    build = build.then(function() {
-                        var d = $.Deferred();
-                        var p = d.promise();
-                        dhis2.ec.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {
-                            if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetsInPromise.indexOf(prStDe.dataElement.optionSet.id) === -1) {
-                                optionSetsInPromise.push( prStDe.dataElement.optionSet.id );
+    var build = builder.promise();
+    
+    _.each( _.values( programs ), function ( program ) {        
+        if(program.programStages){
+            _.each(_.values( program.programStages), function( programStage) {                
+                if(programStage.programStageDataElements){
+                    _.each(_.values( programStage.programStageDataElements), function(prStDe){                        
+                        if( prStDe.dataElement ){                            
+                            if(dataElementIds.indexOf( prStDe.dataElement.id ) === -1){
+                                dataElementIds.push( prStDe.dataElement.id);
+                            }                                                        
+                            if( prStDe.dataElement.optionSet && prStDe.dataElement.optionSet.id ){
+                                build = build.then(function() {
+                                    var d = $.Deferred();
+                                    var p = d.promise();
+                                    dhis2.ec.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {                                    
+                                        if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetIds.indexOf(prStDe.dataElement.optionSet.id) === -1) {                                
+                                            optionSetIds.push( prStDe.dataElement.optionSet.id );
+                                        }
+                                        d.resolve();
+                                    });
+                                    return p;
+                                });
                             }
-                            d.resolve();
-                        });
-
-                        return p;
+                        }
                     });
-                }            
-            }); 
-        }                             
+                }
+            });
+        }
     });
-
+    
     build.done(function() {
         def.resolve();
-
         promise = promise.done( function () {
-            
-            if( optionSetsInPromise && optionSetsInPromise.length > 0 ){
-                var _optionSetsInPromise = optionSetsInPromise.toString();
-                _optionSetsInPromise = '[' + _optionSetsInPromise + ']';
-                
-                var filter = 'fields=id,displayName|rename(name),version,options[id,displayName|rename(name),code]';                
-                filter = filter + '&filter=id:in:' + _optionSetsInPromise + '&paging=false';
-                
-                var url = '../api/optionSets';
-                promise = promise.then( dhis2.tracker.getTrackerObjects( 'optionSets', 'optionSets', url, filter, 'idb', dhis2.ec.store ) );
-            }
-            
-            mainDef.resolve( programs );
+            mainDef.resolve();
         } );
     }).fail(function(){
-        mainDef.resolve( null );
+        mainDef.resolve( null, null );
     });
-
+    
     builder.resolve();
 
     return mainPromise;    
 }
 
+function getOptionSets()
+{    
+    return dhis2.tracker.getBatches( optionSetIds, batchSize, null, 'optionSets', 'optionSets', '../api/optionSets.json', 'paging=false&fields=id,displayName|rename(name),version,options[id,displayName|rename(name),code]', 'idb', dhis2.ec.store );
+}
+
+function getDataElements()
+{    
+    return dhis2.tracker.getBatches( dataElementIds, batchSize, null, 'dataElements', 'dataElements', '../api/dataElements.json', 'paging=false&fields=id,displayName,displayFormName', 'idb', dhis2.ec.store );
+}
+
 function getMetaProgramValidations( programs, programIds )
-{
+{   
     programs.programIds = programIds;
     return dhis2.tracker.getTrackerMetaObjects(programs, 'programValidations', '../api/programValidations.json', 'paging=false&fields=id&filter=program.id:in:');
 }
@@ -394,7 +432,7 @@ function getMetaProgramIndicators( programs )
 
 function getProgramIndicators( programIndicators )
 {
-    return dhis2.tracker.checkAndGetTrackerObjects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,displayName|rename(name),code,shortName,displayInForm,expression,displayDescription,rootDate,description,valueType,displayName|rename(name),filter,program[id]', dhis2.ec.store);
+    return dhis2.tracker.checkAndGetTrackerObjects( programIndicators, 'programIndicators', '../api/programIndicators', 'fields=id,displayName|rename(name),code,shortName,displayInForm,expression,displayDescription,rootDate,description,valueType,filter,program[id]', dhis2.ec.store);
 }
 
 function getMetaProgramRules( programs )

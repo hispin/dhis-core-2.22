@@ -338,7 +338,7 @@
             <tbody>       
                 <tr ng-repeat="de in section.programStageDataElements" ng-if="!hiddenFields[de.dataElement.id]">
                     <td >
-                        {{prStDes[de.dataElement.id].dataElement.formName ? prStDes[de.dataElement.id].dataElement.formName : prStDes[de.dataElement.id].dataElement.name}}                         
+                        {{prStDes[de.dataElement.id].dataElement.displayFormName}}
                         <span ng-if="prStDes[de.dataElement.id].compulsory" class="required">*</span>
                     </td>
                     <td >

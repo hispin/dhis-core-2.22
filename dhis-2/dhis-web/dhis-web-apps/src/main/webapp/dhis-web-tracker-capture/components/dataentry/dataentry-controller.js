@@ -26,6 +26,7 @@ trackerCapture.controller('DataEntryController',
                 PeriodService,
                 TrackerRulesFactory,
                 EventCreationService,
+                MetaDataFactory,
                 $q,$location) {
     $scope.printForm = false;
     $scope.printEmptyForm = false;
@@ -319,46 +320,54 @@ trackerCapture.controller('DataEntryController',
         $scope.selectedProgram = selections.pr;
         $scope.selectedEnrollment = selections.selectedEnrollment;        
         $scope.optionSets = selections.optionSets;
-
+        $scope.dataElementTranslations = [];
         $scope.stagesById = [];
         if ($scope.selectedOrgUnit && $scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedEntity && $scope.selectedEnrollment && $scope.selectedEnrollment.enrollment) {
-            ProgramStageFactory.getByProgram($scope.selectedProgram).then(function (stages) {
+            MetaDataFactory.getAll('dataElements').then(function(des){
+                angular.forEach(des, function(de){  
+                    $scope.dataElementTranslations[de.id] = de;
+                });
                 
-                $scope.programStages = stages;
-                angular.forEach(stages, function (stage) {
-                    if (stage.openAfterEnrollment) {
-                        $scope.currentStage = stage;
-                    }
-          
-                    angular.forEach(stage.programStageDataElements, function (prStDe) {
-                        $scope.prStDes[prStDe.dataElement.id] = prStDe;
-                        if(prStDe.allowProvidedElsewhere){
-                            $scope.allowProvidedElsewhereExists[stage.id] = true;
+                ProgramStageFactory.getByProgram($scope.selectedProgram).then(function (stages) {
+
+                    $scope.programStages = stages;
+                    angular.forEach(stages, function (stage) {
+                        if (stage.openAfterEnrollment) {
+                            $scope.currentStage = stage;
+                        }
+
+                        angular.forEach(stage.programStageDataElements, function (prStDe) {                            
+                            var tx = $scope.dataElementTranslations[prStDe.dataElement.id];                    
+                            prStDe.dataElement.displayFormName = tx.displayFormName && tx.displayFormName !== "" ? tx.displayFormName : tx.displayName;
+                            $scope.prStDes[prStDe.dataElement.id] = prStDe;
+                            if(prStDe.allowProvidedElsewhere){
+                                $scope.allowProvidedElsewhereExists[stage.id] = true;
+                            }
+                        });
+
+                        $scope.stagesById[stage.id] = stage;
+                        $scope.eventsByStage[stage.id] = [];
+
+                        //If one of the stages has less than $scope.tableMaxNumberOfDataElements data elements, allow sorting as table:
+                        if ($scope.stageCanBeShownAsTable(stage)) {
+                            $scope.stagesCanBeShownAsTable = true;
                         }
                     });
-
-                    $scope.stagesById[stage.id] = stage;
-                    $scope.eventsByStage[stage.id] = [];
-
-                    //If one of the stages has less than $scope.tableMaxNumberOfDataElements data elements, allow sorting as table:
-                    if ($scope.stageCanBeShownAsTable(stage)) {
-                        $scope.stagesCanBeShownAsTable = true;
+                    var s = dateFilter(new Date(), 'YYYY-MM-dd');
+                    $scope.programStages = orderByFilter($scope.programStages, '-sortOrder').reverse();
+                    if (!$scope.currentStage) {
+                        $scope.currentStage = $scope.programStages[0];
                     }
+
+                    $scope.setDisplayTypeForStages();
+
+                    TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
+                        $scope.allProgramRules = rules;
+                        $scope.getEvents();
+                        $scope.getEventPageForEvent($scope.currentEvent);
+                        $rootScope.$broadcast('dataEntryControllerData', {programStages: $scope.programStages, eventsByStage: $scope.eventsByStage, addNewEvent: $scope.addNewEvent });
+                    });           
                 });
-                var s = dateFilter(new Date(), 'YYYY-MM-dd');
-                $scope.programStages = orderByFilter($scope.programStages, '-sortOrder').reverse();
-                if (!$scope.currentStage) {
-                    $scope.currentStage = $scope.programStages[0];
-                }
-                
-                $scope.setDisplayTypeForStages();
-                
-                TrackerRulesFactory.getRules($scope.selectedProgram.id).then(function(rules){                    
-                    $scope.allProgramRules = rules;
-                    $scope.getEvents();
-                    $scope.getEventPageForEvent($scope.currentEvent);
-                    $rootScope.$broadcast('dataEntryControllerData', {programStages: $scope.programStages, eventsByStage: $scope.eventsByStage, addNewEvent: $scope.addNewEvent });
-                });           
             });
         }
     });

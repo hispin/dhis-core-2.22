@@ -1533,4 +1533,8 @@ a.disable-link-effects:focus {
     display: inline-block;
 }
 
+.select2-hidden-accessible {
+    display: none !important; 
+    visibility: hidden !important;
+}
 
