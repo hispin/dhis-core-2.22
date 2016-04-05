@@ -26,21 +26,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-Array.prototype.chunk = function ( size ) {
-    if ( !this.length ) {
-        return [];
-    }
-    
-    var groups = [];
-    var chunks = this.length / size;
-    
-    for (var i = 0, j = 0; i < chunks; i++, j += size) {
-        groups[i] = this.slice(j, j + size);
-    }
-    return groups;
-};
 
 dhis2.util.namespace('dhis2.tracker');
+
+dhis2.tracker.chunk = function( array, size ){
+	if( !array.length || !size || size < 1 ){
+		return []
+	}
+	
+	var groups = [];
+	var chunks = array.length / size;
+	for (var i = 0, j = 0; i < chunks; i++, j += size) {
+        groups[i] = array.slice(j, j + size);
+    }
+	
+    return groups;
+}
 
 dhis2.tracker.getTrackerMetaObjects = function( programs, objNames, url, filter )
 {
@@ -132,11 +133,7 @@ dhis2.tracker.getTrackerObjects = function( store, objs, url, filter, storage, d
     }).done(function(response) {
         if(response[objs]){
             if(storage === 'idb'){
-                //db.setAll( store, response[objs] );
-                _.each( _.values( response[objs] ), function ( obj ) {        
-                    db.set( store, obj );
-                });
-                
+                db.setAll( store, response[objs] );                
             }
             if(storage === 'localStorage'){                
                 localStorage[store] = JSON.stringify(response[objs]);
@@ -200,7 +197,7 @@ dhis2.tracker.getBatches = function( ids, batchSize, data, store, objs, url, fil
         return;
     }
     
-    var batches = ids.chunk( batchSize );
+    var batches = dhis2.tracker.chunk( ids, batchSize );
 
     var mainDef = $.Deferred();
     var mainPromise = mainDef.promise();

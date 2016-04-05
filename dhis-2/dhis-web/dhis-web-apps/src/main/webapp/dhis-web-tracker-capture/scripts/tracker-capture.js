@@ -271,7 +271,7 @@ function getPrograms( programs, ids )
         return;
     }
     
-    var batches = ids.chunk( batchSize );
+    var batches = dhis2.tracker.chunk( ids, batchSize );
     
     var mainDef = $.Deferred();
     var mainPromise = mainDef.promise();
