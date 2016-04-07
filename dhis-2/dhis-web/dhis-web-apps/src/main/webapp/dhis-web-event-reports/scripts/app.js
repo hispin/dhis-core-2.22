@@ -3200,7 +3200,7 @@ Ext.onReady( function() {
 							this.currentValue = this.getValue();
 
 							var value = this.getValue(),
-								url = value ? ns.core.init.contextPath + '/api/eventReports.json?fields=id,name,access&filter=name:ilike:' + value : null;
+								url = value ? ns.core.init.contextPath + '/api/eventReports.json?fields=id,displayName|rename(name),access&filter=displayName:ilike:' + value : null;
 								store = ns.app.stores.eventReport;
 
 							store.page = 1;
@@ -3216,7 +3216,7 @@ Ext.onReady( function() {
 			text: NS.i18n.prev,
 			handler: function() {
 				var value = searchTextfield.getValue(),
-					url = value ? ns.core.init.contextPath + '/api/eventReports?fields=id,name,access' + (value ? '&filter=name:ilike:' + value : '') : null,
+					url = value ? ns.core.init.contextPath + '/api/eventReports?fields=id,displayName|rename(name),access' + (value ? '&filter=displayName:ilike:' + value : '') : null,
 					store = ns.app.stores.eventReport;
 
 				store.page = store.page <= 1 ? 1 : store.page - 1;
@@ -3228,7 +3228,7 @@ Ext.onReady( function() {
 			text: NS.i18n.next,
 			handler: function() {
 				var value = searchTextfield.getValue(),
-					url = value ? ns.core.init.contextPath + '/api/eventReports.json?fields=id,name,access' + (value ? '&filter=name:ilike:' + value : '') : null,
+					url = value ? ns.core.init.contextPath + '/api/eventReports.json?fields=id,displayName|rename(name),access' + (value ? '&filter=displayName:ilike:' + value : '') : null,
 					store = ns.app.stores.eventReport;
 
 				store.page = store.page + 1;
@@ -7573,7 +7573,7 @@ Ext.onReady( function() {
 			isLoaded: false,
 			pageSize: 10,
 			page: 1,
-			defaultUrl: ns.core.init.contextPath + '/api/eventReports.json?fields=id,name,access',
+			defaultUrl: ns.core.init.contextPath + '/api/eventReports.json?fields=id,displayName|rename(name),access',
 			loadStore: function(url) {
 				this.proxy.url = url || this.defaultUrl;
 
@@ -8540,7 +8540,7 @@ Ext.onReady( function() {
 
                                         // organisation unit levels
                                         requests.push({
-                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,displayName,level&paging=false',
+                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,displayName|rename(name),level&paging=false',
                                             success: function(r) {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
@@ -8594,7 +8594,7 @@ Ext.onReady( function() {
 
                                         // dimensions
                                         requests.push({
-                                            url: contextPath + '/api/dimensions.json?fields=id,' + namePropertyUrl + '&paging=false',
+                                            url: contextPath + '/api/dimensions.json?fields=id,displayName|rename(name)&paging=false',
                                             success: function(r) {
                                                 init.dimensions = Ext.decode(r.responseText).organisationUnitGroupSets || [];
                                                 fn();

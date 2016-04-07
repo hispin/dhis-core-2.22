@@ -2886,7 +2886,7 @@ Ext.onReady( function() {
 							this.currentValue = this.getValue();
 
 							var value = this.getValue(),
-								url = value ? ns.core.init.contextPath + '/api/eventCharts.json?fields=id,name,access&filter=name:like:' + value : null;
+								url = value ? ns.core.init.contextPath + '/api/eventCharts.json?fields=id,displayName|rename(name),access&filter=displayName:like:' + value : null;
 								store = ns.app.stores.eventChart;
 
 							store.page = 1;
@@ -2902,7 +2902,7 @@ Ext.onReady( function() {
 			text: NS.i18n.prev,
 			handler: function() {
 				var value = searchTextfield.getValue(),
-					url = value ? ns.core.init.contextPath + '/api/eventCharts.json?fields=id,name,access&filter=name:like:' + value : null;
+					url = value ? ns.core.init.contextPath + '/api/eventCharts.json?fields=id,displayName|rename(name),access&filter=displayName:like:' + value : null;
 					store = ns.app.stores.eventChart;
 
 				store.page = store.page <= 1 ? 1 : store.page - 1;
@@ -2914,7 +2914,7 @@ Ext.onReady( function() {
 			text: NS.i18n.next,
 			handler: function() {
 				var value = searchTextfield.getValue(),
-					url = value ? ns.core.init.contextPath + '/api/eventCharts.json?fields=id,name,access&filter=name:like:' + value : null;
+					url = value ? ns.core.init.contextPath + '/api/eventCharts.json?fields=id,displayName|rename(name),access&filter=displayName:like:' + value : null;
 					store = ns.app.stores.eventChart;
 
 				store.page = store.page + 1;
@@ -8193,7 +8193,7 @@ Ext.onReady( function() {
 
                                         // organisation unit levels
                                         requests.push({
-                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,displayName,level&paging=false',
+                                            url: contextPath + '/api/organisationUnitLevels.json?fields=id,displayName|rename(name),level&paging=false',
                                             success: function(r) {
                                                 init.organisationUnitLevels = Ext.decode(r.responseText).organisationUnitLevels || [];
 
