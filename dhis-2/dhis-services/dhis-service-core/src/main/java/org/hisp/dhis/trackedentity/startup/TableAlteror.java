@@ -39,7 +39,6 @@ import org.hisp.dhis.program.ProgramExpression;
 import org.hisp.dhis.program.ProgramStageService;
 import org.hisp.dhis.system.startup.AbstractStartupRoutine;
 import org.hisp.dhis.system.util.DateUtils;
-import org.hisp.dhis.system.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -186,8 +185,6 @@ public class TableAlteror
         executeSql( "update programstage set autoGenerateEvent=true where programid in ( select programid from program where type=2 )" );
 
         executeSql( "ALTER TABLE programstageinstance ALTER COLUMN executiondate TYPE timestamp" );
-
-        updateCoordinatesProgramStageInstance();
 
         executeSql( "ALTER TABLE program DROP COLUMN useBirthDateAsIncidentDate" );
         executeSql( "ALTER TABLE program DROP COLUMN useBirthDateAsEnrollmentDate" );
@@ -439,38 +436,6 @@ public class TableAlteror
 
         // Drop the column with name as completed
         executeSql( "ALTER TABLE programinstance DROP COLUMN completed" );
-    }
-
-    private void updateCoordinatesProgramStageInstance()
-    {
-        StatementHolder holder = statementManager.getHolder();
-
-        try
-        {
-            Statement statement = holder.getStatement();
-
-            ResultSet resultSet = statement
-                .executeQuery( "SELECT programstageinstanceid, coordinates FROM programstageinstance where coordinates is not null" );
-
-            while ( resultSet.next() )
-            {
-                String coordinates = resultSet.getString( "coordinates" );
-                String longitude = ValidationUtils.getLongitude( coordinates );
-                String latitude = ValidationUtils.getLatitude( coordinates );
-                executeSql( "UPDATE programstageinstance SET longitude='" + longitude + "', latitude='" + latitude
-                    + "'  WHERE programstageinstanceid=" + resultSet.getInt( "programstageinstanceid" ) );
-            }
-
-            executeSql( "ALTER TABLE programstageinstance DROP COLUMN coordinates" );
-        }
-        catch ( Exception ex )
-        {
-            log.debug( ex );
-        }
-        finally
-        {
-            holder.close();
-        }
     }
 
     private void createPersonTrackedEntity()
