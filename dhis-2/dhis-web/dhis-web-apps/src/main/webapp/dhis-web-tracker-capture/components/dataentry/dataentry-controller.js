@@ -1,7 +1,7 @@
 /* global angular, trackerCapture */
 
 trackerCapture.controller('DataEntryController',
-        function ($rootScope,
+        function ($rootScope,associationService,AjaxCalls,
                 $scope,
                 $modal,
                 $filter,
@@ -633,6 +633,9 @@ trackerCapture.controller('DataEntryController',
                 $scope.currentEvent = null;
                 $scope.currentElement = {id: '', saved: false};
                 $scope.showDataEntryDiv = !$scope.showDataEntryDiv;
+                $timeout(function () {
+                    $rootScope.$broadcast('association-widget', {event : null, show :false});
+                });
             }
             else {
                 $scope.currentElement = {};                
@@ -660,7 +663,9 @@ trackerCapture.controller('DataEntryController',
                         $scope.currentEvent.notes = orderByFilter($scope.currentEvent.notes, '-storedDate');
                     }
                 }
-
+                $timeout(function () {
+                    $rootScope.$broadcast('association-widget', {event : $scope.currentEvent , show :true});
+                });
                 $scope.getDataEntryForm();
             }
         }
@@ -1130,6 +1135,9 @@ trackerCapture.controller('DataEntryController',
             trackedEntityInstance: $scope.currentEvent.trackedEntityInstance
         };
 
+        //greenstar
+        e = associationService.addEventMemberIfExist(e,$scope.currentEvent);
+
         if ($scope.currentStage.periodType) {
             e.eventDate = e.dueDate;
         }
@@ -1383,7 +1391,9 @@ trackerCapture.controller('DataEntryController',
         var dhis2Event = EventUtils.reconstruct($scope.currentEvent, $scope.currentStage, $scope.optionSets);
         var dhis2EventToUpdate = angular.copy(dhis2Event);
         dhis2EventToUpdate.dataValues = [];
-        
+
+        //greenstar - $scope.fetchedEvent set in completeIncompleteMethod call
+        associationService.addEventMemberIfExist(dhis2EventToUpdate,$scope.fetchedEvent);
         if(dhis2Event.dataValues){
             angular.forEach(dhis2Event.dataValues, function(dataValue){
                 if(dataValue.value && dataValue.value.selections){
@@ -1404,78 +1414,91 @@ trackerCapture.controller('DataEntryController',
     };
     
     $scope.completeIncompleteEvent = function (inTableView, outerForm) {
-        
-        if($scope.currentEvent.status !== 'COMPLETED'){
-            outerForm.$setSubmitted();
-            if(outerForm.$invalid){
-                var dialogOptions = {
-                    headerText: 'error',
-                    bodyText: 'form_invalid'
-                };                
-                
-                DialogService.showDialog({}, dialogOptions);
-                
-                return;
-            }
-        }
+        AjaxCalls.getEventbyId($scope.currentEvent.event).then(function(fetchedEvent) {
+            $scope.fetchedEvent = fetchedEvent;
+            if ($scope.currentEvent.status !== 'COMPLETED') {
+                outerForm.$setSubmitted();
+                if (outerForm.$invalid) {
+                    var dialogOptions = {
+                        headerText: 'error',
+                        bodyText: 'form_invalid'
+                    };
 
-        var modalOptions;
-        var modalDefaults = {};
-        var dhis2Event = $scope.makeDhis2EventToUpdate();        
-        
-        if ($scope.currentEvent.status === 'COMPLETED') {//activiate event
-            modalOptions = {
-                closeButtonText: 'cancel',
-                actionButtonText: 'edit',
-                headerText: 'edit',
-                bodyText: 'are_you_sure_to_incomplete_event'
-            };
-            dhis2Event.status = 'ACTIVE';
-        }
-        else {//complete event
-                if(angular.isUndefined(inTableView) || inTableView === false){
-                    if(!outerForm){
+                    DialogService.showDialog({}, dialogOptions);
+
+                    return;
+                }
+            }
+
+            var modalOptions;
+            var modalDefaults = {};
+            var dhis2Event = $scope.makeDhis2EventToUpdate();
+
+            if ($scope.currentEvent.status === 'COMPLETED') {//activiate event
+                modalOptions = {
+                    closeButtonText: 'cancel',
+                    actionButtonText: 'edit',
+                    headerText: 'edit',
+                    bodyText: 'are_you_sure_to_incomplete_event'
+                };
+                dhis2Event.status = 'ACTIVE';
+            }
+            else {//complete event
+                if (angular.isUndefined(inTableView) || inTableView === false) {
+                    if (!outerForm) {
                         outerForm = $scope.outerForm;
                     }
                     outerForm.$setSubmitted();
-                    if(outerForm.$invalid){
+                    if (outerForm.$invalid) {
                         return;
                     }
-            }
-            
-            if(angular.isDefined($scope.errorMessages[$scope.currentEvent.event]) && $scope.errorMessages[$scope.currentEvent.event].length > 0) {
-                //There is unresolved program rule errors - show error message.
-                var dialogOptions = {
-                    headerText: 'errors',
-                    bodyText: 'please_fix_errors_before_completing',
-                    bodyList: $scope.errorMessages[$scope.currentEvent.event]
-                };                
-                
-                DialogService.showDialog({}, dialogOptions);
-                
-                return;
-            }
-            else
-            {
-                modalOptions = {
-                    closeButtonText: 'cancel',
-                    actionButtonText: 'complete',
-                    secondActionButtonText: 'complete_and_exit',
-                    headerText: 'complete',
-                    bodyText: 'are_you_sure_to_complete_event'
-                };
-                modalDefaults.templateUrl = 'components/dataentry/modal-complete-event.html';
-                dhis2Event.status = 'COMPLETED';
-            }
-        }        
+                }
 
-        ModalService.showModal(modalDefaults, modalOptions).then(function (result) {
-            var backToDashboard = false;
-            if(result === 'ok-exit'){
-                backToDashboard = true;
+                var isAssociationMandatory = associationService.associationMandatoryCheck($scope.stagesById[$scope.currentEvent.programStage], fetchedEvent);
+                if (isAssociationMandatory) {
+                    var dialogOptions = {
+                        headerText: 'errors',
+                        bodyText: 'please_fix_errors_before_completing',
+                        bodyList: ["Please make associations"]
+                    };
+
+                    DialogService.showDialog({}, dialogOptions);
+                    return;
+                }
+
+                if (angular.isDefined($scope.errorMessages[$scope.currentEvent.event]) && $scope.errorMessages[$scope.currentEvent.event].length > 0) {
+                    //There is unresolved program rule errors - show error message.
+                    var dialogOptions = {
+                        headerText: 'errors',
+                        bodyText: 'please_fix_errors_before_completing',
+                        bodyList: $scope.errorMessages[$scope.currentEvent.event]
+                    };
+
+                    DialogService.showDialog({}, dialogOptions);
+
+                    return;
+                }
+                else {
+                    modalOptions = {
+                        closeButtonText: 'cancel',
+                        actionButtonText: 'complete',
+                        secondActionButtonText: 'complete_and_exit',
+                        headerText: 'complete',
+                        bodyText: 'are_you_sure_to_complete_event'
+                    };
+                    modalDefaults.templateUrl = 'components/dataentry/modal-complete-event.html';
+                    dhis2Event.status = 'COMPLETED';
+                }
             }
-            $scope.executeCompleteIncompleteEvent(dhis2Event,backToDashboard);
-        });           
+
+            ModalService.showModal(modalDefaults, modalOptions).then(function (result) {
+                var backToDashboard = false;
+                if (result === 'ok-exit') {
+                    backToDashboard = true;
+                }
+                $scope.executeCompleteIncompleteEvent(dhis2Event, backToDashboard);
+            });
+        });
     };
     
     $scope.executeCompleteIncompleteEvent = function(dhis2Event, backToDashboard){

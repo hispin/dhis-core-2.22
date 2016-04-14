@@ -2,7 +2,7 @@
 /* global trackerCapture, angular */
 
 trackerCapture.controller('EventCreationController',
-        function ($scope,
+        function ($scope,associationService,
                 $modalInstance,
                 $timeout,
                 DateUtils,
@@ -213,6 +213,8 @@ trackerCapture.controller('EventCreationController',
             if (response.response && response.response.importSummaries[0].status === 'SUCCESS') {
                 newEvent.event = response.response.importSummaries[0].reference;
                 $modalInstance.close({dummyEvent: dummyEvent, ev: newEvent});
+                //greenstar
+                associationService.addEventMembersToEventAndUpdate(newEvent);
             }
             else {
                 var dialogOptions = {
