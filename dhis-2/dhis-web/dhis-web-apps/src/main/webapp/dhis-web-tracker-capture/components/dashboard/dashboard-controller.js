@@ -240,6 +240,15 @@ trackerCapture.controller('DashboardController',
                 });  
             });
         });
+    }else{
+        ProgramFactory.get($scope.selectedProgramId).then(function(program){
+            $scope.programs = [];
+            $scope.programs.push(program);
+            $scope.selectedProgram = program;
+            $rootScope.onHold = true;
+            CurrentSelection.set({});
+            getDashboardLayout();
+        });
     }
     
     

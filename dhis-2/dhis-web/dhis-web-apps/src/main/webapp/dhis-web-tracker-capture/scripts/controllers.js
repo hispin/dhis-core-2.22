@@ -398,9 +398,11 @@ var trackerCaptureControllers = angular.module('trackerCaptureControllers', [])
         if($scope.showRegistrationDiv){
             $scope.showTrackedEntityDiv = false;
             $scope.showSearchDiv = false;
-            $timeout(function() { 
-                $rootScope.$broadcast('registrationWidget', {registrationMode: 'REGISTRATION'});
-            }, 200);
+            //$timeout(function() {
+            //    $rootScope.$broadcast('registrationWidget', {registrationMode: 'REGISTRATION'});
+            //}, 200);
+            $location.path('/dashboard').search({tei: null,
+              program: $scope.selectedProgram ? $scope.selectedProgram.id: null});
         }
     };    
     

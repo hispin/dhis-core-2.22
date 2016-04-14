@@ -1392,7 +1392,7 @@ trackerCapture.controller('DataEntryController',
         var dhis2EventToUpdate = angular.copy(dhis2Event);
         dhis2EventToUpdate.dataValues = [];
 
-        //greenstar - $scope.fetchedEvent set in completeIncompleteMethod call
+        //greenstar - $scope.fetchedEvent - set in completeIncompleteMethod call
         associationService.addEventMemberIfExist(dhis2EventToUpdate,$scope.fetchedEvent);
         if(dhis2Event.dataValues){
             angular.forEach(dhis2Event.dataValues, function(dataValue){

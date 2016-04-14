@@ -414,7 +414,9 @@ trackerCapture.controller('RegistrationController',
             bodyText: 'are_you_sure_to_cancel_registration'
         }
         ModalService.showModal({}, modalOptions).then(function(){
-            cancelFunction();
+            $rootScope.onHold = false;
+            $location.path('/').search({program: $scope.selectedProgramId});
+            //cancelFunction();
         });
     }
 });
