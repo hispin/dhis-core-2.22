@@ -1,7 +1,7 @@
 /* global trackerCapture, angular */
 
 trackerCapture.controller('RegistrationController', 
-        function($rootScope,
+        function($rootScope,CustomIDGenerationService,
                 $scope,
                 $location,
                 $timeout,
@@ -161,7 +161,9 @@ trackerCapture.controller('RegistrationController',
     };
     
     var notifyRegistrtaionCompletion = function(destination, teiId){
-        goToDashboard( destination ? destination : 'DASHBOARD', teiId );
+        CustomIDGenerationService.validateAndCreateCustomId($scope.tei,$scope.selectedEnrollment.program,$scope.attributes,destination,$scope.optionSets,$scope.attributesById).then(function() {
+            goToDashboard(destination ? destination : 'DASHBOARD', teiId);
+        });
     };
     
     var performRegistration = function(destination){
