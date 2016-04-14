@@ -127,6 +127,12 @@ public abstract class AbstractTrackedEntityInstanceService
     }
 
     @Override
+    public TrackedEntityInstance getTrackedEntityInstance( int id )
+    {
+        return getTrackedEntityInstance( teiService.getTrackedEntityInstance( id ) );
+    }
+    
+    @Override
     public TrackedEntityInstance getTrackedEntityInstance( String uid )
     {
         return getTrackedEntityInstance( teiService.getTrackedEntityInstance( uid ) );

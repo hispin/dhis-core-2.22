@@ -710,6 +710,8 @@ public abstract class AbstractEventService
                 programStageInstance.setLatitude( null );
                 programStageInstance.setLongitude( null );
             }
+            saveEventMembers( programStageInstance, event, storedBy );
+
         }
 
         programStageInstanceService.updateProgramStageInstance( programStageInstance );
@@ -975,6 +977,37 @@ public abstract class AbstractEventService
 
             event.getNotes().add( note );
         }
+        for(org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance : programStageInstance.getProgramStageInstanceMembers())
+        	         {
+        	             //TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance();
+        	             org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance trackedEntityInstance = new org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance();
+        	  
+        	             trackedEntityInstance.setTrackedEntityInstance( entityInstance.getUid() );
+        	            trackedEntityInstance.setOrgUnit( entityInstance.getOrganisationUnit().getUid() );
+        	            trackedEntityInstance.setTrackedEntity( entityInstance.getTrackedEntity().getUid() );
+        	             //trackedEntityInstance.setActive( entityInstance.isActive() );
+        	             trackedEntityInstance.setInactive( entityInstance.isInactive() );
+        	             trackedEntityInstance.setCreated( entityInstance.getCreated().toString() );
+        	             trackedEntityInstance.setLastUpdated( entityInstance.getLastUpdated().toString() );
+        	             trackedEntityInstance.setInactive( entityInstance.isInactive());
+        	             
+        	             for ( org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue attributeValue : entityInstance.getTrackedEntityAttributeValues() )
+        	             {
+        	                 org.hisp.dhis.dxf2.events.trackedentity.Attribute attribute = new org.hisp.dhis.dxf2.events.trackedentity.Attribute();
+        	  
+        	                 attribute.setDisplayName( attributeValue.getAttribute().getDisplayName() );
+        	                 attribute.setAttribute( attributeValue.getAttribute().getUid() );
+        	                 //attribute.setType( attributeValue.getAttribute().getValueType() );
+        	                 attribute.setValueType( attributeValue.getAttribute().getValueType() );
+        	                 attribute.setCode( attributeValue.getAttribute().getCode() );
+        	                 attribute.setValue( attributeValue.getValue() );
+        	  
+        	                 trackedEntityInstance.getAttributes().add( attribute );
+        	             }
+        	             
+        	             event.getEventMembers().add( trackedEntityInstance );
+        	                 
+        	         }
 
         return event;
     }
@@ -1105,6 +1138,7 @@ public abstract class AbstractEventService
                 importSummary.getImportCount().incrementIgnored();
             }
         }
+        saveEventMembers( programStageInstance, event, storedBy );
 
         return importSummary;
     }
@@ -1299,4 +1333,23 @@ public abstract class AbstractEventService
     {
         return dataElementCache.get( id, new IdentifiableObjectCallable<>( manager, DataElement.class, idScheme, id ) );
     }
+    
+    private void saveEventMembers( ProgramStageInstance programStageInstance, Event event, String storedBy )
+        {
+            Set<org.hisp.dhis.trackedentity.TrackedEntityInstance> members = new HashSet<>();
+            for( org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance tei : event.getEventMembers() )
+            {
+                    org.hisp.dhis.trackedentity.TrackedEntityInstance entityInstance = entityInstanceService.getTrackedEntityInstance( tei.getTrackedEntityInstance() );
+                    
+                    if( entityInstance != null)
+                    {
+                            //programStageInstance.getProgramStageInstanceMembers().add( entityInstance);
+                            members.add( entityInstance );
+                    }
+            }
+     
+            programStageInstance.setProgramStageInstanceMembers( members );
+            programStageInstanceService.updateProgramStageInstance( programStageInstance );
+        }
+
 }

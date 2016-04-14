@@ -36,6 +36,8 @@ import org.hisp.dhis.common.BaseLinkableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dxf2.events.enrollment.EnrollmentStatus;
 import org.hisp.dhis.event.EventStatus;
+import org.hisp.dhis.dxf2.events.trackedentity.TrackedEntityInstance;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +90,9 @@ public class Event
     private String completedBy;
 
     private String completedDate;
+    
+    // association between event and list of tracked entity instances
+    private List<TrackedEntityInstance> eventMembers = new ArrayList<>();
 
     public Event()
     {
@@ -347,6 +352,19 @@ public class Event
         this.completedDate = completedDate;
     }
 
+    @JsonProperty
+        @JacksonXmlElementWrapper( localName = "eventMembers", namespace = DxfNamespaces.DXF_2_0 )
+        @JacksonXmlProperty( localName = "eventMembers", namespace = DxfNamespaces.DXF_2_0 )
+        public List<TrackedEntityInstance> getEventMembers()
+        {
+            return eventMembers;
+        }
+     
+        public void setEventMembers( List<TrackedEntityInstance> eventMembers )
+        {
+            this.eventMembers = eventMembers;
+        }
+    
     @Override
     public boolean equals( Object o )
     {
@@ -384,6 +402,8 @@ public class Event
             ", attributeCategoryOptions=" + attributeCategoryOptions +
             ", completedBy=" + completedBy +
             ", completedDate=" + completedDate +
+            ", eventMembers=" + eventMembers +
+
             '}';
     }
 }
